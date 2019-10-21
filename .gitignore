@@ -1,0 +1,41 @@
+# sphinx
+docs/_build/*
+docs/_static/*
+docs/_modules/*
+!.gitkeep
+
+# IDE 
+.idea/
+__pycache__
+*.pyc
+
+# setuptools
+*egg-info*
+
+# miscellaneous
+ddpg_DcSeries-Cont-v0_weights_actor\.h5f
+ddpg_DcSeries-Cont-v0_weights_critic\.h5f
+
+
+envs/gym_dcm/__pycache__/
+
+
+misc/Paper/IEEEtran_HOWTO.pdf
+
+misc/Paper/IEEEtran/PaperRLTraueBook.aux
+
+misc/Paper/IEEEtran/PaperRLTraueBook.bbl
+
+misc/Paper/IEEEtran/PaperRLTraueBook.blg
+
+misc/Paper/IEEEtran/PaperRLTraueBook.log
+
+misc/Paper/IEEEtran/PaperRLTraueBook.pdf
+
+misc/Paper/IEEEtran/PaperRLTraueBook.synctex(busy)
+
+misc/Paper/IEEEtran/PaperRLTraueBook.synctex.gz
+
+misc/Paper/IEEEtran/Images/
+
+examples/logs/
