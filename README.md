@@ -3,6 +3,9 @@
 The gym-electric-motor package is a software toolbox for the simulation of different electric motors. 
 The toolbox is built upon the [OpenAI Gym Environments](https://gym.openai.com/) for reinforcement learning. 
 Therefore, the toolbox is especially designed for running reinforcement learning algorithms to train agents to control electric motors.
+
+[Read the detailed docs!](https://upb-lea.github.io/gym-electric-motor/)
+
 So far, several DC-motor models and a permanent magnet synchronous motor (PMSM) are available. Beside electrical 
 motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or 
 switching commands (discrete mode). 
