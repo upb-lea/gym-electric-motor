@@ -23,7 +23,7 @@ pip install gym-electric-motor
 - Install from Github source:
 
 ```
-git clone #ToDo
+git clone git@github.com:upb-lea/gym-electric-motor.git
 cd gym-electric-motor
 # Then either
 python setup.py install
