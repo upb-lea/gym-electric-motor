@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dashboard &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Environments" href="environments.html" />
+    <link rel="prev" title="Technical Background" href="technicalbackground.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="technicalbackground.html">Technical Background</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Dashboard</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/parts/dashboard.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dashboard">
+<h1>Dashboard<a class="headerlink" href="#dashboard" title="Permalink to this headline">¶</a></h1>
+<p>In the dashboard, the environment states are visualized during an episode. The plot is updated simultaneously to the
+run time of the control. The input voltage is drawn in  magenta and the other state variables are plotted in blue.
+References are shown in green.
+Furthermore, nominal limits (dotted-yellow) and technical limits (dashed-red) are depicted.
+The plots can be used to analyze the behaviour of the controller.</p>
+<span class="target" id="module-gym_electric_motor.envs.dashboard"></span><dl class="class">
+<dt id="gym_electric_motor.envs.dashboard.MotorDashboard">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.envs.dashboard.</code><code class="descname">MotorDashboard</code><span class="sig-paren">(</span><em>variables</em>, <em>tau</em>, <em>low</em>, <em>high</em>, <em>episode_length</em>, <em>safety_margin</em>, <em>with_ref</em>, <em>update_cycle=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/dashboard.html#MotorDashboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.dashboard.MotorDashboard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualization of the variables of the motor in graphs. This can be the angular velocity omega, torque
+phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.</p>
+<p>In the table are all variables given that can be shown for a specific motor.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="16%" />
+<col width="18%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">variable</th>
+<th class="head">extex</th>
+<th class="head">shunt</th>
+<th class="head">permex</th>
+<th class="head">series</th>
+<th class="head">PMSM</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>omega</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>torque</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>u_sup</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>i</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+<td>x</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>i_e</td>
+<td>x</td>
+<td>x</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>u</td>
+<td>&#160;</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>u_e</td>
+<td>x</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>u_a</td>
+<td>x</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>u_b</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>u_c</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>i_a</td>
+<td>x</td>
+<td>x</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>i_b</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>i_c</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>epsilon</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
+<p>Constructor of the dashboard.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>variables</strong> – Names of the variables that shall be shown on the dashboard</li>
+<li><strong>tau</strong> – system time constant</li>
+<li><strong>low</strong> – Array of lowest possible values for the variables in the same order as the variables</li>
+<li><strong>high</strong> – Array of highest possible values for the variables in the same order as the variables</li>
+<li><strong>episode_length</strong> – episode length of the system</li>
+<li><strong>safety_margin</strong> – Ratio between maximal and nominal power of the motor parameters.</li>
+<li><strong>with_ref</strong> – Array of Booleans indicating if the variables have a reference that has to be plotted</li>
+<li><strong>update_cycle</strong> – Number of steps after which the dashboard shall be updated.
+| Updating every cycle leads to a very low speed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gym_electric_motor.envs.dashboard.MotorDashboard.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/dashboard.html#MotorDashboard.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.dashboard.MotorDashboard.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this function when the environment is closed to close all windows.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.dashboard.MotorDashboard.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><em>references</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/dashboard.html#MotorDashboard.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.dashboard.MotorDashboard.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to call when a new episode has started</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>references</strong> – the references for the new episode</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.dashboard.MotorDashboard.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>state</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/dashboard.html#MotorDashboard.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.dashboard.MotorDashboard.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to call in every step of the environment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>state</strong> – current state to plot</li>
+<li><strong>k</strong> – current step of the environment</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="environments.html" class="btn btn-neutral float-right" title="Environments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="technicalbackground.html" class="btn btn-neutral float-left" title="Technical Background" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

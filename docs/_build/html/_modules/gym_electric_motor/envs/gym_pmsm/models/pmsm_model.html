@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.envs.gym_pmsm.models.pmsm_model &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/technicalbackground.html">Technical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/dashboard.html">Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/environments.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.envs.gym_pmsm.models.pmsm_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.envs.gym_pmsm.models.pmsm_model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">root_scalar</span>
+<span class="kn">from</span> <span class="nn">.conf</span> <span class="k">import</span> <span class="n">default_motor_parameter</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<div class="viewcode-block" id="PmsmModel"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel">[docs]</a><span class="k">class</span> <span class="nc">PmsmModel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Technical Model of a Permanent Magnet Synchronous Motor (PMSM).</span>
+
+<span class="sd">        Description:</span>
+<span class="sd">            This class contains the technical properties of a PMSM.</span>
+<span class="sd">            This includes the differential equation (model), the motor parameters like inductances and resistances,</span>
+<span class="sd">            the torque equation, the motor bandwidth and its limits.</span>
+<span class="sd">            The motor will be represented in dq-coordinates.</span>
+
+<span class="sd">        Source:</span>
+
+<span class="sd">        State Variables:</span>
+<span class="sd">            +-----+--------+---------------------------------------------------+</span>
+<span class="sd">            |Index| State  | Description                                       |</span>
+<span class="sd">            +=====+========+===================================================+</span>
+<span class="sd">            |0    | omega  | mechanical angular velocity of the motor in rad/s |</span>
+<span class="sd">            +-----+--------+---------------------------------------------------+</span>
+<span class="sd">            |1    | i_q    | current flowing into branch a                     |</span>
+<span class="sd">            +-----+--------+---------------------------------------------------+</span>
+<span class="sd">            |2    | i_d    | current flowing into branch b                     |</span>
+<span class="sd">            +-----+--------+---------------------------------------------------+</span>
+<span class="sd">            |3    | epsilon| rotation angle of the rotor                       |</span>
+<span class="sd">            +-----+--------+---------------------------------------------------+</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">I_Q_IDX</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">I_D_IDX</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">EPSILON_IDX</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="c1"># transformation matrix from abc to alpha-beta representation</span>
+    <span class="n">t23</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>            <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+    <span class="p">])</span>
+
+    <span class="c1"># transformation matrix from alpha-beta to abc representation</span>
+    <span class="n">t32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+    <span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">motor_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load_fct</span><span class="o">=</span><span class="k">lambda</span> <span class="n">omega</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">load_j</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the motor.  Set its parameters, determine constants, initialize the load model</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            motor_parameter: motor parameters</span>
+<span class="sd">            load_fct:  load function</span>
+<span class="sd">            load_j: jacobian of the load function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set Motor param to motor parameter, if they are not None otherwise to 0</span>
+        <span class="n">motor_param</span> <span class="o">=</span> <span class="n">motor_parameter</span> <span class="k">if</span> <span class="n">motor_parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">motor_param</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span> <span class="o">=</span> <span class="n">motor_param</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">motor_param</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span> <span class="o">=</span> <span class="n">default_motor_parameter</span><span class="p">[</span><span class="n">motor_param</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Invalid Type for motor parameter, fell back to default set 0&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span> <span class="o">=</span> <span class="n">default_motor_parameter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Invalid Index for motor parameter, fell back to default set 0&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span> <span class="o">=</span> <span class="n">default_motor_parameter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Set operating region borders</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span>
+        <span class="c1"># Solve Quadratic equation over omega_el to find border of first operation region</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;u_N&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_1</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
+        <span class="c1"># For the second</span>
+        <span class="n">i_0</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="n">i_0</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">i_d_2</span> <span class="o">=</span> <span class="o">-</span><span class="n">i_0</span>
+            <span class="n">i_q_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">i_d_2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">u_q_2</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_q_2</span>
+            <span class="n">u_d_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;u_N&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">u_q_2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_omega_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_d_2</span> <span class="o">-</span> <span class="n">u_d_2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_q_2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_omega_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_jac_constants</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_j</span> <span class="o">=</span> <span class="n">load_j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_model</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">load_fct</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PmsmModel.t_23"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.t_23">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">t_23</span><span class="p">(</span><span class="n">quantities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation of PMSM-quantities like currents or voltages from abc representation to alpha-beta representation</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantities: The properties in the abc representation like &#39;&#39;[u_a, u_b, u_c]&#39;&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The converted quantities in the alpha-beta representation like &#39;&#39;[u_alpha, u_beta]&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">PmsmModel</span><span class="o">.</span><span class="n">t23</span><span class="p">,</span> <span class="n">quantities</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PmsmModel.t_32"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.t_32">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">t_32</span><span class="p">(</span><span class="n">quantities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation of PMSM-quantities like currents or voltages from alpha-beta representation to abc representation</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantities: The properties in the alpha-beta representation like &#39;&#39;[u_alpha, u_beta]&#39;&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The converted quantities in the abc representation like &#39;&#39;[u_a, u_b, u_c]&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">PmsmModel</span><span class="o">.</span><span class="n">t32</span><span class="p">,</span> <span class="n">quantities</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PmsmModel.q"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation of the dq-representation into alpha-beta using the electrical angle</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]</span>
+<span class="sd">            epsilon: Current electrical angle of the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
+        <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PmsmModel.q_inv"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q_inv">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">q_inv</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation of the alpha-beta-representation into dq using the elctrical angle</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]</span>
+<span class="sd">            epsilon: Current electrical angle of the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Array of the two quantities converted to dq-representation. Example [u_d, u_q]</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.</span>
+<span class="sd">            So this method calls q(quantities, -epsilon).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PmsmModel</span><span class="o">.</span><span class="n">q</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="o">-</span><span class="n">epsilon</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PmsmModel.q_me"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q_me">[docs]</a>    <span class="k">def</span> <span class="nf">q_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation of the dq-representation into alpha-beta using the mechanical angle</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]</span>
+<span class="sd">            epsilon: Current mechanical angle of the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PmsmModel.q_inv_me"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q_inv_me">[docs]</a>    <span class="k">def</span> <span class="nf">q_inv_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation of the alpha-beta-representation into dq using the mechanical angle</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]</span>
+<span class="sd">            epsilon: Current mechanical angle of the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Array of the two quantities converted to dq-representation. Example [u_d, u_q]</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.</span>
+<span class="sd">            So this method calls q(quantities, -epsilon).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_me</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="o">-</span><span class="n">epsilon</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PmsmModel.bandwidth"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.bandwidth">[docs]</a>    <span class="k">def</span> <span class="nf">bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculation of the motors q and d components bandwidth.</span>
+<span class="sd">        This is especially important for the reference generation in the environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The bandwidth of the q and the d component of the motor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">_update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="c1"># omega                  i_q                          i_d         u_q u_d omega*i_q             omega*i_d       load_fct</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span>                      <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>                    <span class="mi">0</span><span class="p">,</span>                   <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">],</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">],</span>                  <span class="mi">0</span><span class="p">,</span>           <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>                    <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span>                      <span class="mi">0</span><span class="p">,</span>                           <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">],</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">],</span>  <span class="mi">0</span><span class="p">,</span>                    <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span>                      <span class="mi">0</span><span class="p">,</span>                           <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>                    <span class="mi">0</span><span class="p">,</span>                    <span class="mi">0</span><span class="p">]</span>
+        <span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">/=</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;J_rotor&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_j</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_Q_IDX</span><span class="p">]</span> <span class="o">/=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_D_IDX</span><span class="p">]</span> <span class="o">/=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_fct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the maximal parameters for the motor.</span>
+
+<span class="sd">        If a maximum value of a motor state is not given in advance(state_N == 0), then it will be calculated to its</span>
+<span class="sd">        maximum physical possible value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            load_fct: The load function of the system with the signature load_fct(self, omega)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+        <span class="k">if</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;u_N&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;torque_N&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;torque_N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span>
+        <span class="c1"># If the torque(omega/p) will never reach zero set omega max to the value when omega_dot equals 0.001 * omega</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">omega_max</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">omega</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_torque</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">-</span> <span class="n">load_fct</span><span class="p">(</span><span class="n">omega</span><span class="p">),</span>
+                <span class="n">bracket</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">100000.0</span><span class="p">]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">omega_max</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">omega</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_torque</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="n">load_fct</span><span class="p">(</span><span class="n">omega</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;J_rotor&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_j</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">omega</span><span class="p">,</span>
+                <span class="n">bracket</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">100000.0</span><span class="p">]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">root</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;omega_N&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;omega_N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">omega_max</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;omega_N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">omega_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;omega_N&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="PmsmModel.max_torque"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.max_torque">[docs]</a>    <span class="k">def</span> <span class="nf">max_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the maximum possible torque for a given speed omega.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            omega: angular velocity</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Maximum possible torque at angular velocity omega.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">omega</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">omega</span>
+        <span class="n">i_q_max</span><span class="p">,</span> <span class="n">i_d_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">([</span><span class="n">omega</span><span class="p">,</span> <span class="n">i_q_max</span><span class="p">,</span> <span class="n">i_d_max</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">i_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega</span><span class="p">):</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span>
+        <span class="n">omega_el</span> <span class="o">=</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Determine the operating region</span>
+        <span class="k">if</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;u_N&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]:</span>
+            <span class="c1"># Motor cannot exceed current limits due to voltage limitations</span>
+            <span class="k">return</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;u_N&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">],</span> <span class="mi">0</span>
+        <span class="c1"># Equation is solvable with omega &gt; 0 if u_n &gt; R_s * i_N</span>
+        <span class="k">elif</span> <span class="n">omega_el</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_omega_1</span><span class="p">:</span>
+            <span class="c1"># Motor works at current limit, but no flux weakening current is required</span>
+            <span class="k">return</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">],</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">omega_el</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_omega_2</span><span class="p">:</span>
+            <span class="c1"># Motor works at current and voltage limits</span>
+            <span class="n">i_q_max</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">],</span> <span class="o">-</span>  <span class="n">omega_el</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]))</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;u_N&#39;</span><span class="p">]</span>
+                <span class="o">+</span> <span class="n">omega_el</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">],</span> <span class="o">-</span><span class="n">omega_el</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]))</span>
+                <span class="o">-</span> <span class="n">omega_el</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span>
+            <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">omega_el</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">])</span>
+            <span class="n">i_d_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;i_N&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">i_q_max</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">i_q_max</span><span class="p">,</span> <span class="n">i_d_max</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">omega_el</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega_el</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;R_s&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;u_N&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+            <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">),</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="PmsmModel.torque"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.torque">[docs]</a>    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the torque generated at a given state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: State array of the Motor in the form &#39;&#39;[omega, i_q, i_d, epsilon]&#39;&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The active torque for the given state.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+        <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;Psi_p&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_d&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;L_q&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_D_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_Q_IDX</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PmsmModel.model"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.model">[docs]</a>    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">t_load</span><span class="p">,</span> <span class="n">u_qd</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The differential equation of the PMSM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: The current state of the motor. [omega, i_q, i_d, epsilon]</span>
+<span class="sd">            t_load: The mechanical load</span>
+<span class="sd">            u_qd: The input voltages [u_q, u_d]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The derivatives of the state vector d/dt([omega, i_a, i_d, epsilon])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="c1"># omega   i_q       i_d       u_q      u_d      omega * i_q          omega * i_d          load_fct</span>
+            <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">],</span>
+            <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_Q_IDX</span><span class="p">],</span>
+            <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_D_IDX</span><span class="p">],</span>
+            <span class="n">u_qd</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">u_qd</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_Q_IDX</span><span class="p">],</span>
+            <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_D_IDX</span><span class="p">],</span>
+            <span class="n">t_load</span>
+        <span class="p">]))</span></div>
+
+<div class="viewcode-block" id="PmsmModel.jac"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.jac">[docs]</a>    <span class="k">def</span> <span class="nf">jac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">dt_load_dt</span><span class="p">,</span> <span class="n">u_in</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Not implemented yet, maybe obsolete.</span>
+<span class="sd">        Calculate the Jacobian matrix for the system at given state, t_load and u_in.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: state of the electric motor</span>
+<span class="sd">            dt_load_dt: derivative of the load equation</span>
+<span class="sd">            u_in: input voltage</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Jacobian matrix for the system at given state, t_load and u_in.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

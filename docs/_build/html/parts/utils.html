@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Utils &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Technical Models" href="technical_models.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="technicalbackground.html">Technical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dashboard.html">Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="technical_models.html">Technical Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/parts/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="utils">
+<h1>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
+<p>The Utils module contains a wrapper for the discrete externally excited motor, an simple Euler integrator and an
+optionparsing to specify parameter, e.g. motor parameter.
+The wrapper is needed that the motor fits to the kers-rl DQN.
+The Euler integrator has go the same interface as the dopri5 integrator from the scipy.integrate.ode package.</p>
+<span class="target" id="module-gym_electric_motor.envs.utils"></span><dl class="class">
+<dt id="gym_electric_motor.envs.utils.EulerSolver">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.envs.utils.</code><code class="descname">EulerSolver</code><span class="sig-paren">(</span><em>system_eq</em>, <em>nsteps=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#EulerSolver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.EulerSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves a system of differential equations of first order for a given timestep with linear approximation.</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(x^\prime(t) = f(x(t))\)</span></p>
+<p><span class="math notranslate nohighlight">\(x(t + \frac{\tau}{nsteps}) = x(t) + x^\prime(t) * \frac{\tau}{nsteps}\)</span></p>
+</div></blockquote>
+<p>Interface is a subset of the scipy.ode solver interfaces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>system_eq</strong> – Function pointer to the systems differential equation. Must accept an n-dimensional state and
+return the n-dimensional derivative of the state.</li>
+<li><strong>nsteps</strong> – Number of cycles to calculate for each iteration. Higher steps make the system more accurate,
+but take also longer to compute.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gym_electric_motor.envs.utils.EulerSolver.set_f_params">
+<code class="descname">set_f_params</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#EulerSolver.set_f_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.EulerSolver.set_f_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set further arguments for the systems function call like input quantities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – Ordered List of arguments for the next function calls.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.utils.EulerSolver.set_initial_value">
+<code class="descname">set_initial_value</code><span class="sig-paren">(</span><em>x</em>, <em>t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#EulerSolver.set_initial_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.EulerSolver.set_initial_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the state of the system to the desired value x at point in time t.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> – The new state of the system.</li>
+<li><strong>t</strong> – The new time of the system.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gym_electric_motor.envs.utils.FlattenActionWrapper">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.envs.utils.</code><code class="descname">FlattenActionWrapper</code><span class="sig-paren">(</span><em>env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#FlattenActionWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.FlattenActionWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for the discrete action externally excited motor environment to make the actions fit to keras-rl DQN agent.</p>
+<dl class="method">
+<dt id="gym_electric_motor.envs.utils.FlattenActionWrapper.action">
+<code class="descname">action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#FlattenActionWrapper.action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.FlattenActionWrapper.action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the action from {0,…self.nominator * self.modulo - 1}
+to two dimensional {0, self.nominator - 1} x {0, self.modulo - 1}</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – action from keras-rl</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Action for the Environment</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.utils.FlattenActionWrapper.reverse_action">
+<code class="descname">reverse_action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#FlattenActionWrapper.reverse_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.FlattenActionWrapper.reverse_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backwards transformation of the action.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – Action for the environment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Action for keras-rl</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gym_electric_motor.envs.utils.parse_env_args">
+<code class="descclassname">gym_electric_motor.envs.utils.</code><code class="descname">parse_env_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#parse_env_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.parse_env_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Option parsing function for the gym motor environments.</p>
+<dl class="docutils">
+<dt><strong>Options:</strong></dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">--env_id</span></kbd></td>
+<td>Environment id that is used for the gym.make(env_id) call.</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--env_parameter</span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>Parameter json file path, that contains parameters that can be set in the environments
+| constructor except load_parameter and motor_parameter.</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--motor_parameter</span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>Parameter json file path that contains the technical motor parameters.
+| These parameters will be set at env_parameter[‘motor_parameter’] when returned.</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--load_parameter</span></kbd></td>
+</tr>
+<tr><td>&#160;</td><td>Parameter json file path that contains the technical load parameters.
+| These parameters will be set at env_parameter[‘load_parameter’] when returned.</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple of the environment_id and the environment constructor parameters including the motor and load parameters.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="technical_models.html" class="btn btn-neutral float-left" title="Technical Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

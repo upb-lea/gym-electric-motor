@@ -1,0 +1,664 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.envs.gym_dcm.models.converter_models &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/technicalbackground.html">Technical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/dashboard.html">Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/environments.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.envs.gym_dcm.models.converter_models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.envs.gym_dcm.models.converter_models</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">gym</span> <span class="k">import</span> <span class="n">spaces</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="Converter"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter">[docs]</a><span class="k">class</span> <span class="nc">Converter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that is modeling DC converter. It can be parametrized to the following converters</span>
+<span class="sd">    by passing type=&#39;{disc,cont}-{1Q,2Q,4Q}&#39; :</span>
+<span class="sd">                            disc_act   / cont_act           / returns_cont:\n</span>
+<span class="sd">        1 Quadrant: actions: 0, 1      / [0, 1]             / [0, 1]\n</span>
+<span class="sd">        2 Quadrant: actions: 0, 1, 2   / [0, 1]             / [0, 1]\n</span>
+<span class="sd">        4 Quadrant: actions: 0, 1, 2, 3/ [-1 , 1]           / [-1, 1]\n</span>
+
+<span class="sd">    The specific converter also specifies the action space of the surrounding gym environment.</span>
+<span class="sd">    Call convert(action, i_in) to calculate the normalised current output voltage at the converter.</span>
+<span class="sd">    The return value is limited due to the constraints. Converter can consider a fixed dead time of one time step.</span>
+<span class="sd">    If this option is selected, the action will be applied in the subsequent time step.</span>
+
+<span class="sd">    cont:</span>
+<span class="sd">        In this case dynamic averaging is applied and assumed that the converter works ideally except interlocking time.</span>
+<span class="sd">        Due to this the output voltage is the same as the input voltage and the added voltage error of the interlocking.</span>
+<span class="sd">        The interlocking has got only an effect at the 2Q converter.</span>
+
+<span class="sd">    disc:</span>
+<span class="sd">        In this case the action includes the switching commands for the transistors and the converter determines the</span>
+<span class="sd">        output voltage, depending on the last switching state, input current and action. The interlocking time is</span>
+<span class="sd">        considered as well. It is not possible to switch between every switching states instantaneously and due to this,</span>
+<span class="sd">        further states are included. This is described more detailed in the subclass of the 4Q Converter.</span>
+
+<span class="sd">    1Q: It consists of one transistor and at least on diode and only positive voltages and currents are possible.\n</span>
+<span class="sd">    2Q: It is an asymmetric half-bridge, such that only positive voltages and currents in both directions are possible.\n</span>
+<span class="sd">    4Q: Two half-bridges are in parallel and voltage and currents can be positive and negative.\n</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The converter determines the action space of the environment</span>
+    <span class="n">action_space</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># The possible voltages (low, high) this converter can generate at the input terminals of the motor</span>
+    <span class="c1"># If voltages[0] == 0 the converter cannot invert the voltages. If voltages[0] == -1 it can.</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># The possible currents (low, high) this converter can generate at the input terminals of the motor</span>
+    <span class="c1"># If currents[0] == 0 the converter cannot invert the currents. If currents[0] == -1 it is possible.</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Converter.make"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.make">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">converter_type</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dead_time</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Factory class method for generating a converter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            converter_type:  Type of the converter as string.</span>
+<span class="sd">            tau: Cycle time of the environment</span>
+<span class="sd">            interlocking_time: interlocking time of the converter that it takes to set a voltage at the output</span>
+<span class="sd">            dead_time: specifies if a dead time will be considered</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An initialized converter instance of the described type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;disc-1Q&#39;</span><span class="p">:</span> <span class="n">DiscreteOneQuadrantConverter</span><span class="p">,</span>
+            <span class="s1">&#39;disc-2Q&#39;</span><span class="p">:</span> <span class="n">DiscreteTwoQuadrantConverter</span><span class="p">,</span>
+            <span class="s1">&#39;disc-4Q&#39;</span><span class="p">:</span> <span class="n">DiscreteFourQuadrantConverter</span><span class="p">,</span>
+            <span class="s1">&#39;cont-1Q&#39;</span><span class="p">:</span> <span class="n">ContOneQuadrantConverter</span><span class="p">,</span>
+            <span class="s1">&#39;cont-2Q&#39;</span><span class="p">:</span> <span class="n">ContTwoQuadrantConverter</span><span class="p">,</span>
+            <span class="s1">&#39;cont-4Q&#39;</span><span class="p">:</span> <span class="n">ContFourQuadrantConverter</span>
+        <span class="p">}[</span><span class="n">converter_type</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="n">interlocking_time</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        General converter constructor.</span>
+
+<span class="sd">        Basic components tau and the interlocking_time are set.</span>
+<span class="sd">        The dead_time_action contains the action of the previous time step.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            interlocking_time: interlocking time of the Converter between the switches of the Transistors</span>
+<span class="sd">            tau: Time constant of the whole system</span>
+<span class="sd">            dead_time: Specifies if a dead time of one time step is considered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time</span> <span class="o">=</span> <span class="n">dead_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time_action</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_last_call</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># time of last call of convert  to consider interlocking time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># currently applied action</span>
+
+<div class="viewcode-block" id="Converter.convert"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The concrete conversion function of the converter.</span>
+
+<span class="sd">        Call this function and the selected conversion function will be called.</span>
+<span class="sd">        It is implemented by the subclasses</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: The selected action by the agent.</span>
+<span class="sd">            i_in: The current flowing into the motor.</span>
+<span class="sd">            t: The time of the system</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The concrete conversion function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">interlocking_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            interlocking time of the Converter in seconds</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span>
+
+    <span class="nd">@interlocking_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">interlocking_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        interlocking Time &gt; 0 in seconds</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Converter.determine_current_action_disc"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.determine_current_action_disc">[docs]</a>    <span class="k">def</span> <span class="nf">determine_current_action_disc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function determines the applied action based on the current and previous action and the dead time for</span>
+<span class="sd">        discrete converter.</span>
+<span class="sd">        If the current time is larger than at the last call plus the interlocking time, the next sampling step is</span>
+<span class="sd">        reached and the action of the previous time steps needs to be applied.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: The selected action by the agent</span>
+<span class="sd">            t: current time of the motor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_last_call</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time_action</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time_action</span> <span class="o">=</span> <span class="n">action</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_time_last_call</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="n">action</span></div>
+
+<div class="viewcode-block" id="Converter.determine_current_action_cont"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.determine_current_action_cont">[docs]</a>    <span class="k">def</span> <span class="nf">determine_current_action_cont</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function determines the applied action based on the current and previous action and the dead time for</span>
+<span class="sd">        continuous converter.</span>
+<span class="sd">        If a dead time is considered the action will be applied one step later.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: The selected action by the agent</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time_action</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dead_time_action</span> <span class="o">=</span> <span class="n">action</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="n">action</span></div></div>
+
+
+<div class="viewcode-block" id="DiscreteOneQuadrantConverter"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteOneQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscreteOneQuadrantConverter</span><span class="p">(</span><span class="n">Converter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A discrete one quadrant converter (1QC).\n</span>
+<span class="sd">    Actions: {0,1}\n</span>
+<span class="sd">    For further information on all converters, look at the Converter Base class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># Only positive voltages can be applied</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Only positive currents</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DiscreteOneQuadrantConverter.convert"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteOneQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to calculate the effective voltage at the output of a discrete controlled 1QC.</span>
+
+<span class="sd">        Calculates the resulting input voltage at the input terminals of a DC motor by using a one quadrant converter.</span>
+<span class="sd">        The action space is 0,1\n</span>
+<span class="sd">        action = 0: Transistor is off\n</span>
+<span class="sd">        action = 1: Transistor is on\n</span>
+
+<span class="sd">        A dead time of one sampling time step can be considered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: Valid values are 0 , 1</span>
+<span class="sd">            i_in: output current of the converter and input current of the motor</span>
+<span class="sd">            t: current time</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The resulting voltage at the input of the following circuit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">determine_current_action_disc</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="k">if</span> <span class="n">i_in</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span></div></div>
+
+
+<div class="viewcode-block" id="ContOneQuadrantConverter"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContOneQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">ContOneQuadrantConverter</span><span class="p">(</span><span class="n">Converter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A continuous one quadrant converter.\n</span>
+<span class="sd">    Actions: [0,1]\n</span>
+<span class="sd">    For further information on all converters, look at the Converter Base class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="c1"># Only positive voltages can be applied</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Only positive currents</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContOneQuadrantConverter.convert"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContOneQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to calculate the effective voltage at the output of a continuously controlled 1QC.</span>
+
+<span class="sd">        Calculates the resulting input voltage at the input terminals of a DC motor by using a buck converter.</span>
+<span class="sd">        The action space is [0,1], so only positive voltages are possible.</span>
+<span class="sd">        A dead time of one sampling time step can be considered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: normalized desired voltage with respect to the supply voltage</span>
+<span class="sd">            i_in:output current of the converter and input current of the motor, which must be positive</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The resulting voltage at the input of the DC motor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">determine_current_action_cont</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="k">if</span> <span class="n">i_in</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span></div></div>
+
+
+<div class="viewcode-block" id="DiscreteTwoQuadrantConverter"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteTwoQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscreteTwoQuadrantConverter</span><span class="p">(</span><span class="n">Converter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class models the 2Q Converter as an asymmetric half bridge. Actions are the switching commands.\n</span>
+<span class="sd">    Actions: {0, 1, 2}\n</span>
+<span class="sd">    For further information on all converters, look at the Converter Base class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="c1"># Only positive voltages can be applied</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Positive and negative currents</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        General converter constructor.</span>
+
+<span class="sd">        Basic components tau and the interlocking_time are set.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            interlocking_time: Interlocking time of the Converter between the switches of the Transistors</span>
+<span class="sd">            tau: Time constant of the whole system</span>
+<span class="sd">            dead_time: specifies if a dead time will be considered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">interlocking_time</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="DiscreteTwoQuadrantConverter.convert"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteTwoQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to calculate the effective voltage at the output of a discrete controlled 2Q-Converter.</span>
+
+<span class="sd">        Calculates the resulting input voltage at the input terminals of a DC motor by using a two quadrant converter</span>
+<span class="sd">        without pulse width modulation.\n</span>
+<span class="sd">        The actions are the discrete states of transistor 1 and 2.\n</span>
+<span class="sd">        0: no transistor active, both are blocking\n</span>
+<span class="sd">        1: Transistor 1 conducting\n</span>
+<span class="sd">        2: Transistor 2 conducting\n</span>
+<span class="sd">        Both transistors active would result in an short circuit and is illegal</span>
+<span class="sd">        A dead time of one sampling time step can be considered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: Valid values are 0 (T1 off ,T2 off), 1 (T1 on, T2 off), 2 (T1 off, T2 on)</span>
+<span class="sd">            i_in: output current of the converter and input current of the motor</span>
+<span class="sd">            t: current time</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The resulting voltage at the input of the following circuit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">determine_current_action_disc</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">next_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">next_action</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">=</span> <span class="n">next_action</span>
+        <span class="k">if</span> <span class="n">next_action</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i_in</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">i_in</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">next_action</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">next_action</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span></div></div>
+
+
+<div class="viewcode-block" id="ContTwoQuadrantConverter"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContTwoQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">ContTwoQuadrantConverter</span><span class="p">(</span><span class="n">Converter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class models the 2QC as an asymmetric half bridge. The action is the desired normalised input voltage</span>
+<span class="sd">    for the motor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+
+    <span class="c1"># Only positive voltages can be applied</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Positive and negative currents</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContTwoQuadrantConverter.convert"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContTwoQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to calculate the effective voltage at the output of a continuously controlled 2QC.</span>
+
+<span class="sd">        Calculates the resulting input voltage at the input terminals of a DC motor by using an ideal</span>
+<span class="sd">        two quadrant converter.</span>
+<span class="sd">        The action space is [0 , 1]. Only positive voltages but bidirectional currents are possible.</span>
+<span class="sd">        A dead time of one sampling time step can be considered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: Valid values are in the range [0, 1] as a normalized desired voltage.</span>
+<span class="sd">            i_in: output current of the converter and input current of the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The resulting average voltage at the input of the following circuit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">determine_current_action_cont</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_in</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span></div></div>
+
+
+<div class="viewcode-block" id="DiscreteFourQuadrantConverter"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteFourQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscreteFourQuadrantConverter</span><span class="p">(</span><span class="n">Converter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    4QC, consisting of two parallel half bridges</span>
+<span class="sd">    The state space of the converter is larger, because it includes also the cases, when only one or no transistor</span>
+<span class="sd">    is conducting. The definition of the states is given below. &#39;1&#39; means conducting and &#39;0&#39; is switched of. The</span>
+<span class="sd">    first four (0-3) states are the actions of the action space.\n</span>
+<span class="sd">    T1 (upper left), T2( lower left), T3 (upper right), T4 (lower right)\n</span>
+
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |  |T1|T2|T3|T4|</span>
+<span class="sd">    +==+==+==+==+==+</span>
+<span class="sd">    |0:|1 |0 |1 |0 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |1:|1 |0 |0 |1 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |2:|0 |1 |1 |0 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |3:|0 |1 |0 |1 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |4:|0 |0 |0 |0 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |5:|1 |0 |0 |0 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |6:|0 |1 |0 |0 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |7:|0 |0 |1 |0 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+<span class="sd">    |8:|0 |0 |0 |1 |</span>
+<span class="sd">    +--+--+--+--+--+</span>
+
+<span class="sd">    The switching table includes all transitions during the switching. The last state specifies the row and the</span>
+<span class="sd">    column and the column is specified by the next action. The elements in the table define states that needs to be</span>
+<span class="sd">    applied if you want to go from the last state to the next state. Due to the interlocking time, this can not</span>
+<span class="sd">    always be done directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># Positive and negative voltages can be applied</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Positive and negative currents</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialisation of the discrete 4QC is special because further transformation matrices to consider the</span>
+<span class="sd">        interlocking time needs to be setup. More details can be found in the init of the base class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            interlocking_time: Interlocking time of the Converter between the switches of the Transistors</span>
+<span class="sd">            tau: Time constant of the whole system</span>
+<span class="sd">            dead_time: specifies if a dead time will be considered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">interlocking_time</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="c1"># Defines the transitions which are necessary between to states and if there is an interlocking time necessary</span>
+        <span class="c1"># From row to column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_switching_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+
+        <span class="c1"># Defines the input voltage row selected by the state and the column 0 if i_in&gt;0 and 1 else</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_voltage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+
+<div class="viewcode-block" id="DiscreteFourQuadrantConverter.convert"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteFourQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to calculate the effective voltage at the output of a discrete controlled 4QC.</span>
+
+<span class="sd">        Calculates the resulting input voltage at the input terminals of a DC motor by using an ideal</span>
+<span class="sd">        four quadrant converter. The Transistors in one branch are switched complementary, so T1 and T3 define</span>
+<span class="sd">        the states of T2 and T4.\n</span>
+<span class="sd">        The discrete action space is {0,1,2,3}.\n</span>
+<span class="sd">        A dead time of one sampling time step can be considered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: Valid values are {0,1,2,3} for the switching states.</span>
+<span class="sd">            i_in: output current of the converter and input current of the motor</span>
+<span class="sd">            t: current time</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The resulting average voltage at the input of the following circuit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">determine_current_action_disc</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">next_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">=</span> <span class="n">next_action</span>
+        <span class="n">temp_val_i_in</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i_in</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_voltage</span><span class="p">[</span><span class="n">next_action</span><span class="p">,</span> <span class="n">temp_val_i_in</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="ContFourQuadrantConverter"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContFourQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">ContFourQuadrantConverter</span><span class="p">(</span><span class="n">Converter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    4QC, consisting of two parallel half bridges</span>
+<span class="sd">    The action is the desired input voltage for the motor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+
+    <span class="c1"># Positive and negative voltages can be applied</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Positive and negative currents can flow</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContFourQuadrantConverter.convert"><a class="viewcode-back" href="../../../../../parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContFourQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to calculate the effective voltage at the output of a continuously controlled 4QC.</span>
+
+<span class="sd">        Calculates the resulting input voltage at the input terminals of a DC motor by using an ideal</span>
+<span class="sd">        four quadrant converter.</span>
+<span class="sd">        The action space is [-1, 1] and positive and negative voltages and currents are possible.</span>
+
+<span class="sd">        A dead time of one sampling time step can be considered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: Valid values are in the range [-1, 1] as a normalized desired voltage.</span>
+<span class="sd">            i_in: output current of the converter and input current of the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The resulting average voltage at the input of the following circuit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">determine_current_action_cont</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_in</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

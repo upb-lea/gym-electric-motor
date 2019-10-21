@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Readme File &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Technical Background" href="technicalbackground.html" />
+    <link rel="prev" title="Welcome to gym-electric-motor’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Readme File</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gym-electric-motor">Gym Electric Motor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#physical-structure-of-the-environments-components">Physical Structure of the Environments Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#control-flow-of-a-step-cycle-of-the-environment">Control Flow of a Step Cycle of the Environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#installing">Installing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#important-notes">Important notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#getting-started">Getting started</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gym-make-call">Gym Make Call</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reset">Reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step">Step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#render">Render</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motor-models">Motor Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#converter">Converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load">Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes-about-the-parameters">Notes about the Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="technicalbackground.html">Technical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dashboard.html">Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Readme File</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/parts/readme.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="readme-file">
+<h1>Readme File<a class="headerlink" href="#readme-file" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gym-electric-motor">
+<h2>Gym Electric Motor<a class="headerlink" href="#gym-electric-motor" title="Permalink to this headline">¶</a></h2>
+<p>The gym-electric-motor package is a software toolbox for the simulation of different electric motors.
+The toolbox is built upon the <a class="reference external" href="https://gym.openai.com/">OpenAI Gym Environments</a> for reinforcement learning.
+Therefore, the toolbox is especially designed for running reinforcement learning algorithms to train agents to control electric motors.
+So far, several DC-motor models and a permanent magnet synchronous motor (PMSM) are available. Beside electrical
+motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or
+switching commands (discrete mode).
+The figure shows the basic scheme of the converter, motor and load.</p>
+<div class="section" id="physical-structure-of-the-environments-components">
+<h3>Physical Structure of the Environments Components<a class="headerlink" href="#physical-structure-of-the-environments-components" title="Permalink to this headline">¶</a></h3>
+<a class="reference external image-reference" href="docs/plots/FigureConvMotorLoad6.svg"><img alt="" src="../_images/FigureConvMotorLoad6.svg" /></a>
+</div>
+<div class="section" id="control-flow-of-a-step-cycle-of-the-environment">
+<h3>Control Flow of a Step Cycle of the Environment<a class="headerlink" href="#control-flow-of-a-step-cycle-of-the-environment" title="Permalink to this headline">¶</a></h3>
+<a class="reference external image-reference" href="docs/plots/CycleScheme.svg"><img alt="" src="../_images/CycleScheme.svg" /></a>
+<div class="section" id="installing">
+<h4>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>Install gym-electric-motor from PyPI (recommended):</li>
+</ul>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pip install gym-electric-motor
+</pre></div>
+</div>
+<ul class="simple">
+<li>Install from Github source:</li>
+</ul>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:upb-lea/gym-electric-motor.git
+cd gym-electric-motor
+# Then either
+python setup.py install
+# or alternatively
+pip install -e .
+</pre></div>
+</div>
+</div>
+<div class="section" id="authors">
+<h4>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h4>
+<p>Arne Traue, Gerrit Book</p>
+</div>
+<div class="section" id="important-notes">
+<h4>Important notes<a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h4>
+<p>Latest readme update: 01-10-2019</p>
+</div>
+<div class="section" id="getting-started">
+<h4>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h4>
+<p>Like every gym environment, the basic user interface consists of four main functions.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">gym.make(environment-id,</span> <span class="pre">**kwargs)</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Returns an instantiated motor environment. Call this function at the beginning.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">env.reset()</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Resets the motor. This includes a new initial state and new reference trajectories.
+Call this function before a new episode starts.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Simulate one single time step on the motor with an action.
+Call this function iteratively until termination is reached.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">env.render()</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Update the visualization of the motor states.</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="gym-make-call">
+<h3>Gym Make Call<a class="headerlink" href="#gym-make-call" title="Permalink to this headline">¶</a></h3>
+<p>The make function takes the environment-ids and several constructor arguments.
+With the environment-id you select a certain motor type and action type (continuous or discrete) and with the further
+constructor arguments you can parametrize the environment to your control problem.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>externally excited DC motor with continuous actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>externally excited DC motor with discrete actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>permanently excited DC motor with continuous actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>permanently excited DC motor with discrete actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>DC shunt motor with continuous actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>DC shunt motor with discrete actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>DC series motor with continuous actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>DC series motor with discrete actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-cont-v0'</span></code>:<span class="raw-html-m2r"><br></span></dt>
+<dd>permanent magnet synchronous motor with continuous actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-disc-v0'</span></code>:<span class="raw-html-m2r"><br></span></dt>
+<dd>permanent magnet synchronous motor with discrete actions.</dd>
+</dl>
+</li>
+</ul>
+<p>With the constructor arguments you can parametrize the control problem.
+You can select, which motor model to take, which quantities to control, etc.
+For further information have a look at [Link for the APIDOC Base Env Site]</p>
+</div>
+<div class="section" id="reset">
+<h3>Reset<a class="headerlink" href="#reset" title="Permalink to this headline">¶</a></h3>
+<p>The reset function determines new references, new initial values and resets the visualization.
+Call this function before a new episode begins.
+The parameters of the motor, converter and load will be those during instantiation.</p>
+</div>
+<div class="section" id="step">
+<h3>Step<a class="headerlink" href="#step" title="Permalink to this headline">¶</a></h3>
+<p>This function performs one action on the environment for one time step.
+It simulates the motor and needs to be called in every time step. It takes the action as parameter only.
+First the input voltage to the motor from the converter is determined and afterwards an integrator is used to compute
+the next state.
+Eventually, the reward is evaluated and returned together with the next observation and a flag indicating termination.
+Several reward functions are available.</p>
+</div>
+<div class="section" id="render">
+<h3>Render<a class="headerlink" href="#render" title="Permalink to this headline">¶</a></h3>
+<p>The visualization contains graphs of the motor quantities ‘speed, voltages, currents, torque’ for one episode.
+What should be shown is to be specified in the configuration-parameter.
+The quantities that should be displayed can be specified in the constructor-parameters.
+All visualizations are optional and recommended to be disabled for increased speed of training.</p>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Conventional PI controller as speed controller on a dc series motor <a class="reference external" href="examples/pi_series_omega_control.py">(jump to source)</a>.</li>
+<li>Training and testing of a <a class="reference external" href="https://github.com/keras-rl/keras-rl">Keras-rl</a> DDPG-Agent as a speed controller on a dc series motor <a class="reference external" href="examples/ddpg_series_omega_control.py">(jump to source)</a>.</li>
+</ul>
+<div class="section" id="motor-models">
+<h4>Motor Models<a class="headerlink" href="#motor-models" title="Permalink to this headline">¶</a></h4>
+<p>The following motor models are included:</p>
+<p>Four DC motors:</p>
+<ul class="simple">
+<li>permanently excited motor</li>
+<li>externally excited motor</li>
+<li>series motor</li>
+<li>shunt motor</li>
+</ul>
+<p>and the PMSM (permanent magnet synchronous motor)</p>
+</div>
+</div>
+<div class="section" id="converter">
+<h3>Converter<a class="headerlink" href="#converter" title="Permalink to this headline">¶</a></h3>
+<p>Following converters are included:</p>
+<ul class="simple">
+<li>1 quadrant converter (1QC)</li>
+<li>2 quadrant converter (2QC) as an asymmetric half bridge with both current polarities</li>
+<li>4 quadrant converter (4QC)</li>
+</ul>
+<p>All converters can consider interlocking times and a dead time of one sampling interval.
+Furthermore, they can be controlled with a discrete action space or a continuous action space.</p>
+<p>Discrete actions are the direct switching states of the transistors.
+Continuous actions are the duty cycles for a pulse width modulation on the transistors.</p>
+</div>
+<div class="section" id="load">
+<h3>Load<a class="headerlink" href="#load" title="Permalink to this headline">¶</a></h3>
+<p>The load model consists of a quadratic load function, with user defined coefficients.
+Furthermore the moment of inertia of the load attached to the motor can be specified.</p>
+</div>
+<div class="section" id="notes-about-the-parameters">
+<h3>Notes about the Parameters<a class="headerlink" href="#notes-about-the-parameters" title="Permalink to this headline">¶</a></h3>
+<p>All nominal values of voltages and currents are DC values in the case of a DC motor and peak phase values for the PMSM.
+Therefore, data sheet values for line voltage and phase currents of a PMSM has to be transformed with:</p>
+<a class="reference external image-reference" href="docs/plots/voltagetransformation.svg"><img alt="" src="../_images/voltagetransformation.svg" /></a>
+<p>Furthermore, the angular velocity is the mechanical one and not the electrical:</p>
+<a class="reference external image-reference" href="docs/plots/omegame.svg"><img alt="" src="../_images/omegame.svg" /></a>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="technicalbackground.html" class="btn btn-neutral float-right" title="Technical Background" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to gym-electric-motor’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

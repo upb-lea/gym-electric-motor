@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.envs.utils &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/technicalbackground.html">Technical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/dashboard.html">Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.envs.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.envs.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">gym.core</span> <span class="k">import</span> <span class="n">ActionWrapper</span><span class="p">,</span> <span class="n">Wrapper</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span>
+
+
+<div class="viewcode-block" id="FlattenActionWrapper"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.envs.utils.FlattenActionWrapper">[docs]</a><span class="k">class</span> <span class="nc">FlattenActionWrapper</span><span class="p">(</span><span class="n">ActionWrapper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper for the discrete action externally excited motor environment to make the actions fit to keras-rl DQN agent.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="c1"># Number of actions of the armature circuit converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nominator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">nvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Number of actions of the excitation Circuit converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modulo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">nvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<div class="viewcode-block" id="FlattenActionWrapper.action"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.envs.utils.FlattenActionWrapper.action">[docs]</a>    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transform the action from {0,...self.nominator * self.modulo - 1}</span>
+<span class="sd">        to two dimensional {0, self.nominator - 1} x {0, self.modulo - 1}</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: action from keras-rl</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Action for the Environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">action1</span> <span class="o">=</span> <span class="n">action</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">nominator</span>
+        <span class="n">action2</span> <span class="o">=</span> <span class="n">action</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulo</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">action1</span><span class="p">,</span> <span class="n">action2</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="FlattenActionWrapper.reverse_action"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.envs.utils.FlattenActionWrapper.reverse_action">[docs]</a>    <span class="k">def</span> <span class="nf">reverse_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Backwards transformation of the action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: Action for the environment</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Action for keras-rl</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nominator</span> <span class="o">*</span> <span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">action</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="EulerSolver"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.envs.utils.EulerSolver">[docs]</a><span class="k">class</span> <span class="nc">EulerSolver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solves a system of differential equations of first order for a given timestep with linear approximation.</span>
+
+<span class="sd">        :math:`x^\prime(t) = f(x(t))`</span>
+
+<span class="sd">        :math:`x(t + \\frac{\\tau}{nsteps}) = x(t) + x^\prime(t) * \\frac{\\tau}{nsteps}`</span>
+
+<span class="sd">    Interface is a subset of the scipy.ode solver interfaces.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_f_params</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">t</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_eq</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            system_eq: Function pointer to the systems differential equation. Must accept an n-dimensional state and</span>
+<span class="sd">                return the n-dimensional derivative of the state.</span>
+<span class="sd">            nsteps: Number of cycles to calculate for each iteration. Higher steps make the system more accurate,</span>
+<span class="sd">                but take also longer to compute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="o">=</span> <span class="n">system_eq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nsteps</span> <span class="o">=</span> <span class="n">nsteps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_integrate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrate_onestep</span> <span class="k">if</span> <span class="n">nsteps</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrate_nsteps</span>
+
+<div class="viewcode-block" id="EulerSolver.set_initial_value"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.envs.utils.EulerSolver.set_initial_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the state of the system to the desired value x at point in time t.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: The new state of the system.</span>
+<span class="sd">            t: The new time of the system.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span></div>
+
+<div class="viewcode-block" id="EulerSolver.set_f_params"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.envs.utils.EulerSolver.set_f_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set further arguments for the systems function call like input quantities.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Ordered List of arguments for the next function calls.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span> <span class="o">=</span> <span class="n">args</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrate</span>
+
+    <span class="k">def</span> <span class="nf">_integrate_nsteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integration method for nsteps &gt; 1</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t: Time until the system shall be calculated</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The new state of the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nsteps</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nsteps</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">state</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span><span class="p">)</span> <span class="o">*</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+
+    <span class="k">def</span> <span class="nf">_integrate_onestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integration method for nsteps = 1. (For faster computation)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t: Time until the system shall be calculated</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The new state of the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span></div>
+
+
+<div class="viewcode-block" id="parse_env_args"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.envs.utils.parse_env_args">[docs]</a><span class="k">def</span> <span class="nf">parse_env_args</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Option parsing function for the gym motor environments.</span>
+
+<span class="sd">    **Options:**</span>
+<span class="sd">        --env_id                Environment id that is used for the gym.make(env_id) call.</span>
+
+<span class="sd">        --env_parameter         Parameter json file path, that contains parameters that can be set in the environments</span>
+<span class="sd">                                | constructor except load_parameter and motor_parameter.</span>
+
+<span class="sd">        --motor_parameter       Parameter json file path that contains the technical motor parameters.</span>
+<span class="sd">                                | These parameters will be set at env_parameter[&#39;motor_parameter&#39;] when returned.</span>
+
+<span class="sd">        --load_parameter        Parameter json file path that contains the technical load parameters.</span>
+<span class="sd">                                | These parameters will be set at env_parameter[&#39;load_parameter&#39;] when returned.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">         Tuple of the environment_id and the environment constructor parameters including the motor and load parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">argument_parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">allow_abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">argument_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--env_id&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Identification id for the environment.&#39;</span><span class="p">)</span>
+    <span class="n">argument_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--env_parameter&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;File path to the json containing (a subset)&#39;</span>
+                                                              <span class="s1">&#39; of the environment parameters. All parameters&#39;</span>
+                                                              <span class="s1">&#39; that are not in this file will be set to default&#39;</span><span class="p">)</span>
+    <span class="n">argument_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--load_parameter&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;File path to the json containing (a subset)&#39;</span>
+                                                               <span class="s1">&#39; of the load parameters [a,b,c, J_load], &#39;</span>
+                                                               <span class="s1">&#39;or the number of the standard parameters&#39;</span>
+                                                               <span class="s1">&#39;All parameters that are not in this file will be&#39;</span>
+                                                               <span class="s1">&#39; set to default&#39;</span><span class="p">)</span>
+    <span class="n">argument_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--motor_parameter&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;File path to the json containing (a subset)&#39;</span>
+                                                                <span class="s1">&#39; of the motor parameters or the number of the standard&#39;</span>
+                                                                <span class="s1">&#39; parameters All parameters&#39;</span>
+                                                                <span class="s1">&#39; that are not in this file will be set to default&#39;</span><span class="p">)</span>
+    <span class="n">arguments</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">argument_parser</span><span class="o">.</span><span class="n">parse_known_args</span><span class="p">()</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="vm">__dict__</span>
+
+    <span class="c1"># If an environment parameter file was passed take these parameters, otherwise an empty_dictionary</span>
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;env_parameter&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;env_parameter&#39;</span><span class="p">])</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+            <span class="n">env_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">env_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># If a load parameter file was passed take these parameters or the number</span>
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;load_parameter&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">env_dict</span><span class="p">[</span><span class="s1">&#39;load_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;load_parameter&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;load_parameter&#39;</span><span class="p">])</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+                <span class="n">env_dict</span><span class="p">[</span><span class="s1">&#39;load_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+    <span class="c1"># If a motor parameter file was passed take these parameters or the number</span>
+    <span class="k">if</span> <span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;motor_parameter&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">env_dict</span><span class="p">[</span><span class="s1">&#39;motor_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;motor_parameter&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;motor_parameter&#39;</span><span class="p">])</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+                <span class="n">env_dict</span><span class="p">[</span><span class="s1">&#39;motor_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;env_id&#39;</span><span class="p">],</span> <span class="n">env_dict</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
