@@ -1,6 +1,6 @@
-# Gym Electric Motor
+# Gym Electric Motor (GEM)
 
-The gym-electric-motor package is a software toolbox for the simulation of different electric motors. 
+The gym-electric-motor (GEM) package is a software toolbox for the simulation of different electric motors. 
 The toolbox is built upon the [OpenAI Gym Environments](https://gym.openai.com/) for reinforcement learning. 
 Therefore, the toolbox is especially designed for running reinforcement learning algorithms to train agents to control electric motors.
 
