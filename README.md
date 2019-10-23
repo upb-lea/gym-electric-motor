@@ -1,8 +1,13 @@
 # Gym Electric Motor (GEM)
+![](docs/plots/project_banner.jpg)
 
-The gym-electric-motor (GEM) package is a software toolbox for the simulation of different electric motors. 
+__The gym-electric-motor (GEM) package is a software toolbox for the
+ simulation of
+ different electric motors.__
+
 The toolbox is built upon the [OpenAI Gym Environments](https://gym.openai.com/) for reinforcement learning. 
-Therefore, the toolbox is especially designed for running reinforcement learning algorithms to train agents to control electric motors.
+Therefore, the toolbox is specifically designed for running reinforcement 
+learning algorithms to train agents controlling electric motors.
 
 [Read the detailed docs!](https://upb-lea.github.io/gym-electric-motor/)
 
@@ -10,10 +15,24 @@ So far, several DC-motor models and a permanent magnet synchronous motor (PMSM) 
 motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or 
 switching commands (discrete mode). 
 The figure shows the basic scheme of the converter, motor and load. 
-### Physical Structure of the Environments Components
+### Physical Structure of the Environment's Components
 ![](docs/plots/FigureConvMotorLoad6.svg)
 ### Control Flow of a Step Cycle of the Environment 
 ![](docs/plots/CycleScheme.svg)
+
+### Citation
+A whitepaper for this framework is available under [arxiv.org/abs/1910.09434
+](https://arxiv.org/abs/1910.09434). Please use the following BibTeX entry for citing us:
+```
+@misc{traue2019reinforcement,
+    title={Towards a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},
+    author={Arne Traue and Gerrit Book and Wilhelm Kirchgässner and Oliver Wallscheid},
+    year={2019},
+    eprint={1910.09434},
+    archivePrefix={arXiv},
+    primaryClass={eess.SY}
+}
+```
 
 ## Installing
 
@@ -35,10 +54,6 @@ pip install -e .
 ```
 ## Authors
 Arne Traue, Gerrit Book
-
-## Important notes
-Latest readme update: 01-10-2019
-
 
 ## Getting started
 Like every gym environment, the basic user interface consists of four main functions.
@@ -97,7 +112,6 @@ constructor arguments you can parametrize the environment to your control proble
 #### Make Arguments
 With the constructor arguments you can parametrize the control problem. 
 You can select, which motor model to take, which quantities to control, etc.
-For further information have a look at [Link for the APIDOC Base Env Site]
 
 ### Reset
 The reset function determines new references, new initial values and resets the visualization.
