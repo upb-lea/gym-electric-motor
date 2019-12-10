@@ -78,7 +78,7 @@ class MotorDashboard(object):
         self._figure.show()
         self._figure.canvas.draw()
         self._figure.canvas.flush_events()
-        self._update_figure = self._figure.canvas.update
+        self._update_figure = self._figure.canvas.draw
 
     def reset(self, references):
         """
