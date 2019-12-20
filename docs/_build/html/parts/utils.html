@@ -45,7 +45,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Technical Models" href="technical_models.html" /> 
+    <link rel="prev" title="Console Printer" href="visualizations/console_printer.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,12 +93,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="technicalbackground.html">Technical Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dashboard.html">Dashboard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Utils</a></li>
 </ul>
 
@@ -164,145 +165,117 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="utils">
-<h1>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
-<p>The Utils module contains a wrapper for the discrete externally excited motor, an simple Euler integrator and an
-optionparsing to specify parameter, e.g. motor parameter.
-The wrapper is needed that the motor fits to the kers-rl DQN.
-The Euler integrator has go the same interface as the dopri5 integrator from the scipy.integrate.ode package.</p>
-<span class="target" id="module-gym_electric_motor.envs.utils"></span><dl class="class">
-<dt id="gym_electric_motor.envs.utils.EulerSolver">
-<em class="property">class </em><code class="descclassname">gym_electric_motor.envs.utils.</code><code class="descname">EulerSolver</code><span class="sig-paren">(</span><em>system_eq</em>, <em>nsteps=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#EulerSolver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.EulerSolver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves a system of differential equations of first order for a given timestep with linear approximation.</p>
-<blockquote>
-<div><p><span class="math notranslate nohighlight">\(x^\prime(t) = f(x(t))\)</span></p>
-<p><span class="math notranslate nohighlight">\(x(t + \frac{\tau}{nsteps}) = x(t) + x^\prime(t) * \frac{\tau}{nsteps}\)</span></p>
-</div></blockquote>
-<p>Interface is a subset of the scipy.ode solver interfaces.</p>
+  <div class="section" id="module-gym_electric_motor.utils">
+<span id="utils"></span><h1>Utils<a class="headerlink" href="#module-gym_electric_motor.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="gym_electric_motor.utils.instantiate">
+<code class="descclassname">gym_electric_motor.utils.</code><code class="descname">instantiate</code><span class="sig-paren">(</span><em>superclass</em>, <em>instance</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#instantiate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.instantiate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiation of an instance that inherits from the passed superclass.</p>
+<p>The instance can be passed as a key-string, a class pointer or an already instantiated object. In the latter case
+the same object will be simply returned. If a string is passed the corresponding class will be taken from the
+registry and instantiated with the given kwargs. If a class pointer is passed, then the class is instantiated with
+with given kwargs, directly.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>system_eq</strong> – Function pointer to the systems differential equation. Must accept an n-dimensional state and
-return the n-dimensional derivative of the state.</li>
-<li><strong>nsteps</strong> – Number of cycles to calculate for each iteration. Higher steps make the system more accurate,
-but take also longer to compute.</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>superclass</strong> (<em>class</em>) – Superclass pointer for registry access</li>
+<li><strong>instance</strong> (<em>str</em><em>, </em><em>class</em><em>, </em><em>object</em>) – Instance to instantiate</li>
+<li><strong>kwargs</strong> – Arguments for the instantiation of the object</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An instantiated object.</p>
 </td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="gym_electric_motor.envs.utils.EulerSolver.set_f_params">
-<code class="descname">set_f_params</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#EulerSolver.set_f_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.EulerSolver.set_f_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set further arguments for the systems function call like input quantities.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> – Ordered List of arguments for the next function calls.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.envs.utils.EulerSolver.set_initial_value">
-<code class="descname">set_initial_value</code><span class="sig-paren">(</span><em>x</em>, <em>t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#EulerSolver.set_initial_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.EulerSolver.set_initial_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the state of the system to the desired value x at point in time t.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>x</strong> – The new state of the system.</li>
-<li><strong>t</strong> – The new time of the system.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="gym_electric_motor.envs.utils.FlattenActionWrapper">
-<em class="property">class </em><code class="descclassname">gym_electric_motor.envs.utils.</code><code class="descname">FlattenActionWrapper</code><span class="sig-paren">(</span><em>env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#FlattenActionWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.FlattenActionWrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for the discrete action externally excited motor environment to make the actions fit to keras-rl DQN agent.</p>
-<dl class="method">
-<dt id="gym_electric_motor.envs.utils.FlattenActionWrapper.action">
-<code class="descname">action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#FlattenActionWrapper.action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.FlattenActionWrapper.action" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform the action from {0,…self.nominator * self.modulo - 1}
-to two dimensional {0, self.nominator - 1} x {0, self.modulo - 1}</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – action from keras-rl</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Action for the Environment</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.envs.utils.FlattenActionWrapper.reverse_action">
-<code class="descname">reverse_action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#FlattenActionWrapper.reverse_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.FlattenActionWrapper.reverse_action" title="Permalink to this definition">¶</a></dt>
-<dd><p>Backwards transformation of the action.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – Action for the environment</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Action for keras-rl</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="function">
-<dt id="gym_electric_motor.envs.utils.parse_env_args">
-<code class="descclassname">gym_electric_motor.envs.utils.</code><code class="descname">parse_env_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/utils.html#parse_env_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.utils.parse_env_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Option parsing function for the gym motor environments.</p>
-<dl class="docutils">
-<dt><strong>Options:</strong></dt>
-<dd><table class="first last docutils option-list" frame="void" rules="none">
-<col class="option" />
-<col class="description" />
-<tbody valign="top">
-<tr><td class="option-group">
-<kbd><span class="option">--env_id</span></kbd></td>
-<td>Environment id that is used for the gym.make(env_id) call.</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">--env_parameter</span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>Parameter json file path, that contains parameters that can be set in the environments
-| constructor except load_parameter and motor_parameter.</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">--motor_parameter</span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>Parameter json file path that contains the technical motor parameters.
-| These parameters will be set at env_parameter[‘motor_parameter’] when returned.</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd><span class="option">--load_parameter</span></kbd></td>
-</tr>
-<tr><td>&#160;</td><td>Parameter json file path that contains the technical load parameters.
-| These parameters will be set at env_parameter[‘load_parameter’] when returned.</td></tr>
-</tbody>
-</table>
-</dd>
-</dl>
+<dt id="gym_electric_motor.utils.make">
+<code class="descclassname">gym_electric_motor.utils.</code><code class="descname">make</code><span class="sig-paren">(</span><em>id</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym/envs/registration.html#make"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.make" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short notation for the gym.make call to avoid the necessary import of gym when making environments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gym_electric_motor.utils.make_module">
+<code class="descclassname">gym_electric_motor.utils.</code><code class="descname">make_module</code><span class="sig-paren">(</span><em>superclass</em>, <em>keystring</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#make_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.make_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiation by an object that is specified by the key-string an its superclass from the registry.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple of the environment_id and the environment constructor parameters including the motor and load parameters.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>superclass</strong> (<em>class</em>) – Superclass pointer for registry access</li>
+<li><strong>keystring</strong> (<em>str</em>) – String to access the class pointer in the registry.</li>
+<li><strong>kwargs</strong> – Arguments for the instantiation of the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An instantiated object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gym_electric_motor.utils.register_class">
+<code class="descclassname">gym_electric_motor.utils.</code><code class="descname">register_class</code><span class="sig-paren">(</span><em>subclass</em>, <em>superclass</em>, <em>keystring</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#register_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.register_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to register a new class with a key-string into the registry of the superclass
+to be instantiable with the key-string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gym_electric_motor.utils.register_superclass">
+<code class="descclassname">gym_electric_motor.utils.</code><code class="descname">register_superclass</code><span class="sig-paren">(</span><em>superclass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#register_superclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.register_superclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to register a new superclass that can contain several key-strings for instantiation in the registry.</p>
+<p>Basically, all superclasses in GEM are already registered like the Physical Systems, Reference Generators, …</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gym_electric_motor.utils.set_state_array">
+<code class="descclassname">gym_electric_motor.utils.</code><code class="descname">set_state_array</code><span class="sig-paren">(</span><em>input_values</em>, <em>state_names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#set_state_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.set_state_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setting of the input values to a valid state array with the shape of the physical systems state.</p>
+<p>The input values can be passed as dict with state_name: value pairs or as list  / ndarray. In the latter case the
+shape of the list has to fit the state_names shape and the list will just be returned as array. If a float is
+passed as input value, then this value will be set onto all positions of the state array equally.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_values</strong> (<em>dict</em><em>(</em><em>float</em><em>) </em><em>/ list</em><em>(</em><em>float</em><em>) </em><em>/ ndarray</em><em>(</em><em>float</em><em>) </em><em>/ float</em>) – Values to be set onto the state array.</li>
+<li><strong>state_names</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List containing the state names of the physical system.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An initialized state array with all values passed in input values set onto the corresponding position in
+the state_names and zero otherwise.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gym_electric_motor.utils.state_dict_to_state_array">
+<code class="descclassname">gym_electric_motor.utils.</code><code class="descname">state_dict_to_state_array</code><span class="sig-paren">(</span><em>state_dict</em>, <em>state_array</em>, <em>state_names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#state_dict_to_state_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.state_dict_to_state_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mapping of a passed state dictionary to a fitting state array.</p>
+<p>This function is mainly used in the initialization phase to map a dictionary of passed state_name, state_value pairs
+to a numpy state array with the entries of the state_dict at the corresponding places of the state_names.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>state_dict</strong> (<em>dict</em>) – Dictionary containing pairs of state_name, state_values for the state_array</li>
+<li><strong>state_array</strong> (<em>iterable</em>) – Array into which the state_dict entries shall be passed</li>
+<li><strong>state_names</strong> (<em>list/ndarray</em><em>(</em><em>str</em><em>)</em>) – List of the state names.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -319,7 +292,7 @@ to two dimensional {0, self.nominator - 1} x {0, self.modulo - 1}</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="technical_models.html" class="btn btn-neutral float-left" title="Technical Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="visualizations/console_printer.html" class="btn btn-neutral float-left" title="Console Printer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

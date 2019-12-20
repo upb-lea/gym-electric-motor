@@ -55,33 +55,23 @@ DC Motor Parameter Dictionary
 +----------------------------+------------------------------------------------------------+
 
 
-PMSM Parameter Dictionary
-'''''''''''''''''''''''''
+PMSM and SynRM Parameter Dictionary
+'''''''''''''''''''''''''''''''''''
 
 +------------------+------------------------------------------------+---------------------+
 | **Key**          |  **Description**                               | **Default**         |
 +==================+================================================+=====================+
-| R_s              | Stator Resistance in Ohm                       | 4.9                 |
+| r_s              | Stator Resistance in Ohm                       | 4.9                 |
 +------------------+------------------------------------------------+---------------------+
-| L_d              | d-axis inductance in Henry                     | 79e-3               |
+| l_d              | d-axis inductance in Henry                     | 79e-3               |
 +------------------+------------------------------------------------+---------------------+
-| L_q              | q-axis inductance in Henry                     | 113e-3              |
+| l_q              | q-axis inductance in Henry                     | 113e-3              |
 +------------------+------------------------------------------------+---------------------+
-| J_rotor          | Moment of inertia of the rotor                 | 2.45e-3             |
+| j_rotor          | Moment of inertia of the rotor                 | 2.45e-3             |
 +------------------+------------------------------------------------+---------------------+
-| Psi_p            | Permanent linked rotor flux                    | 0.165               |
+| psi_p            | Permanent linked rotor flux                    | 0.165               |
 +------------------+------------------------------------------------+---------------------+
 | p                | Pole pair Number                               | 2                   |
-+------------------+------------------------------------------------+---------------------+
-| u_sup            | Supply voltage of the motor in Volt            | 326.6               |
-+------------------+------------------------------------------------+---------------------+
-| i_N              | Nominal peak phase current in Ampere           | 11.3                |
-+------------------+------------------------------------------------+---------------------+
-| u_N              | Nominal peak phase voltage in Volt             | 326.6               |
-+------------------+------------------------------------------------+---------------------+
-| torque_N         | Nominal torque in Nm                           | 9.55                |
-+------------------+------------------------------------------------+---------------------+
-| omega_N          | Nominal mechanical angular velocity rad/s      | 75.0                |
 +------------------+------------------------------------------------+---------------------+
 
 
@@ -103,7 +93,7 @@ Load Parameter Dictionary
 +----------------------------+----------------------------------------------------------+
 | c                          | Quadratic factor in the load equation                    |
 +----------------------------+----------------------------------------------------------+
-| J_load                     | Moment of inertia of the load                            |
+| j_load                     | Moment of inertia of the load                            |
 +----------------------------+----------------------------------------------------------+
 
 DC Shunt Default Models
@@ -122,18 +112,9 @@ DC Shunt Default Models
 +----------------------------+------------------------------+
 | l_e_prime                  | 0.94                         |
 +----------------------------+------------------------------+
-| j                          | 0.017                        |
+| j_rotor                    | 0.017                        |
 +----------------------------+------------------------------+
-| u_sup                      | 420.0                        |
-+----------------------------+------------------------------+
-| i_a_N                      | 50.0                         |
-+----------------------------+------------------------------+
-| i_e_N                      | 1.2                          |
-+----------------------------+------------------------------+
-| torque_N                   | 40.0                         |
-+----------------------------+------------------------------+
-| omega_N                    | 368.0                        |
-+----------------------------+------------------------------+
+
 
 
 DC Series Default Models
@@ -152,15 +133,7 @@ DC Series Default Models
 +----------------------------+------------------------------+
 | l_e_prime                  | 0.05                         |
 +----------------------------+------------------------------+
-| j                          | 0.017                        |
-+----------------------------+------------------------------+
-| u_sup                      | 420.0                        |
-+----------------------------+------------------------------+
-| i_N                        | 50.0                         |
-+----------------------------+------------------------------+
-| torque_N                   | 250.0                        |
-+----------------------------+------------------------------+
-| omega_N                    | 368.0                        |
+| j_rotor                    | 0.017                        |
 +----------------------------+------------------------------+
 
 
@@ -178,16 +151,9 @@ DC Permanently Excited Default Models
 +----------------------------+------------------------------+
 | psi_e                      | 18                           |
 +----------------------------+------------------------------+
-| j                          | 1.0                          |
+| j_rotor                    | 0.0017                       |
 +----------------------------+------------------------------+
-| u_sup                      | 400.0                        |
-+----------------------------+------------------------------+
-| omega_N                    | 22.0                         |
-+----------------------------+------------------------------+
-| i_N                        | 16.0                         |
-+----------------------------+------------------------------+
-| torque_N                   | 288.0                        |
-+----------------------------+------------------------------+
+
 
 DC Externally Excited Default Models
 ''''''''''''''''''''''''''''''''''''
@@ -221,90 +187,3 @@ DC Externally Excited Default Models
 +----------------------------+------------------------------+
 | omega_N                    | 368.0                        |
 +----------------------------+------------------------------+
-
-
-
-DC Motor Models
-***************
-
-DC Base Motor Model
-'''''''''''''''''''
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor
-    :members:
-
-DC Externally Excited Motor Model
-'''''''''''''''''''''''''''''''''
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcExternallyExcited
-    :members:
-
-DC Permanently Excited Motor Model
-''''''''''''''''''''''''''''''''''
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited
-    :members:
-
-DC Series Motor Model
-'''''''''''''''''''''''''''''''''
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor
-    :members:
-
-DC Shunt Motor Model
-'''''''''''''''''''''''''''''''''
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor
-    :members:
-
-PMSM Motor Model
-****************
-
-.. autoclass:: gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel
-    :members:
-
-Converters
-*************
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.converter_models.Converter
-    :members:
-
-One Quadrant Converter
-'''''''''''''''''''''''
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteOneQuadrantConverter
-    :members:
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.converter_models.ContOneQuadrantConverter
-    :members:
-
-Two Quadrant Converters
-''''''''''''''''''''''''
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteTwoQuadrantConverter
-    :members:
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.converter_models.ContTwoQuadrantConverter
-    :members:
-
-Four Quadrant Converters
-''''''''''''''''''''''''
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteFourQuadrantConverter
-    :members:
-
-.. autoclass:: gym_electric_motor.envs.gym_dcm.models.converter_models.ContFourQuadrantConverter
-    :members:
-
-Two Level Three Phase Converters
-''''''''''''''''''''''''''''''''
-
-.. autoclass:: gym_electric_motor.envs.gym_pmsm.models.converter_models.Disc2Level3PhaseConverter
-    :members:
-
-.. autoclass:: gym_electric_motor.envs.gym_pmsm.models.converter_models.Cont2Level3PhaseConverter
-    :members:
-
-Load Model
-**********
-
-.. autoclass:: gym_electric_motor.envs.gym_pmsm.models.load_models.Load
-    :members:

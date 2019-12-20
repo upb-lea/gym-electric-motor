@@ -92,12 +92,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../parts/technicalbackground.html">Technical Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parts/dashboard.html">Dashboard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parts/environments.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parts/technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -160,19 +161,40 @@
            <div itemprop="articleBody">
             
   <h1>All modules for which code is available</h1>
-<ul><li><a href="gym_electric_motor/envs/dashboard.html">gym_electric_motor.envs.dashboard</a></li>
+<ul><li><a href="gym/envs/registration.html">gym.envs.registration</a></li>
+<li><a href="gym_electric_motor/core.html">gym_electric_motor.core</a></li>
+<li><a href="gym_electric_motor/envs/dashboard.html">gym_electric_motor.envs.dashboard</a></li>
+<li><a href="gym_electric_motor/envs/gym_dcm/dc_extex_motor_env.html">gym_electric_motor.envs.gym_dcm.dc_extex_motor_env</a></li>
+<li><a href="gym_electric_motor/envs/gym_dcm/dc_permex_motor_env.html">gym_electric_motor.envs.gym_dcm.dc_permex_motor_env</a></li>
+<li><a href="gym_electric_motor/envs/gym_dcm/dc_series_motor_env.html">gym_electric_motor.envs.gym_dcm.dc_series_motor_env</a></li>
+<li><a href="gym_electric_motor/envs/gym_dcm/dc_shunt_motor_env.html">gym_electric_motor.envs.gym_dcm.dc_shunt_motor_env</a></li>
 <li><a href="gym_electric_motor/envs/gym_dcm/dcm_base_env.html">gym_electric_motor.envs.gym_dcm.dcm_base_env</a></li>
 <li><a href="gym_electric_motor/envs/gym_dcm/dcm_extex.html">gym_electric_motor.envs.gym_dcm.dcm_extex</a></li>
 <li><a href="gym_electric_motor/envs/gym_dcm/dcm_permex.html">gym_electric_motor.envs.gym_dcm.dcm_permex</a></li>
 <li><a href="gym_electric_motor/envs/gym_dcm/dcm_series.html">gym_electric_motor.envs.gym_dcm.dcm_series</a></li>
 <li><a href="gym_electric_motor/envs/gym_dcm/dcm_shunt.html">gym_electric_motor.envs.gym_dcm.dcm_shunt</a></li>
-<li><a href="gym_electric_motor/envs/gym_dcm/models/converter_models.html">gym_electric_motor.envs.gym_dcm.models.converter_models</a></li>
-<li><a href="gym_electric_motor/envs/gym_dcm/models/dcmotor_model.html">gym_electric_motor.envs.gym_dcm.models.dcmotor_model</a></li>
-<li><a href="gym_electric_motor/envs/gym_pmsm/models/converter_models.html">gym_electric_motor.envs.gym_pmsm.models.converter_models</a></li>
-<li><a href="gym_electric_motor/envs/gym_pmsm/models/load_models.html">gym_electric_motor.envs.gym_pmsm.models.load_models</a></li>
-<li><a href="gym_electric_motor/envs/gym_pmsm/models/pmsm_model.html">gym_electric_motor.envs.gym_pmsm.models.pmsm_model</a></li>
+<li><a href="gym_electric_motor/envs/gym_pmsm/perm_mag_syn_motor_env.html">gym_electric_motor.envs.gym_pmsm.perm_mag_syn_motor_env</a></li>
 <li><a href="gym_electric_motor/envs/gym_pmsm/pmsm_env.html">gym_electric_motor.envs.gym_pmsm.pmsm_env</a></li>
-<li><a href="gym_electric_motor/envs/utils.html">gym_electric_motor.envs.utils</a></li>
+<li><a href="gym_electric_motor/envs/gym_synrm/syn_reluctance_motor_env.html">gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env</a></li>
+<li><a href="gym_electric_motor/physical_systems/converters.html">gym_electric_motor.physical_systems.converters</a></li>
+<li><a href="gym_electric_motor/physical_systems/electric_motors.html">gym_electric_motor.physical_systems.electric_motors</a></li>
+<li><a href="gym_electric_motor/physical_systems/mechanical_loads.html">gym_electric_motor.physical_systems.mechanical_loads</a></li>
+<li><a href="gym_electric_motor/physical_systems/noise_generators.html">gym_electric_motor.physical_systems.noise_generators</a></li>
+<li><a href="gym_electric_motor/physical_systems/physical_systems.html">gym_electric_motor.physical_systems.physical_systems</a></li>
+<li><a href="gym_electric_motor/physical_systems/solvers.html">gym_electric_motor.physical_systems.solvers</a></li>
+<li><a href="gym_electric_motor/physical_systems/voltage_supplies.html">gym_electric_motor.physical_systems.voltage_supplies</a></li>
+<li><a href="gym_electric_motor/reference_generators/multi_reference_generator.html">gym_electric_motor.reference_generators.multi_reference_generator</a></li>
+<li><a href="gym_electric_motor/reference_generators/sawtooth_reference_generator.html">gym_electric_motor.reference_generators.sawtooth_reference_generator</a></li>
+<li><a href="gym_electric_motor/reference_generators/sinusoidal_reference_generator.html">gym_electric_motor.reference_generators.sinusoidal_reference_generator</a></li>
+<li><a href="gym_electric_motor/reference_generators/step_reference_generator.html">gym_electric_motor.reference_generators.step_reference_generator</a></li>
+<li><a href="gym_electric_motor/reference_generators/subepisoded_reference_generator.html">gym_electric_motor.reference_generators.subepisoded_reference_generator</a></li>
+<li><a href="gym_electric_motor/reference_generators/triangle_reference_generator.html">gym_electric_motor.reference_generators.triangle_reference_generator</a></li>
+<li><a href="gym_electric_motor/reference_generators/wiener_process_reference_generator.html">gym_electric_motor.reference_generators.wiener_process_reference_generator</a></li>
+<li><a href="gym_electric_motor/reference_generators/zero_reference_generator.html">gym_electric_motor.reference_generators.zero_reference_generator</a></li>
+<li><a href="gym_electric_motor/reward_functions/weighted_sum_of_errors.html">gym_electric_motor.reward_functions.weighted_sum_of_errors</a></li>
+<li><a href="gym_electric_motor/utils.html">gym_electric_motor.utils</a></li>
+<li><a href="gym_electric_motor/visualization/console_printer.html">gym_electric_motor.visualization.console_printer</a></li>
+<li><a href="gym_electric_motor/visualization/motor_dashboard.html">gym_electric_motor.visualization.motor_dashboard</a></li>
 </ul>
 
            </div>

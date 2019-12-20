@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to gym-electric-motor’s documentation! &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Welcome to gym-electric-motor(GEM)’s documentation! &mdash; gym-electric-motor 2019 documentation</title>
   
 
   
@@ -93,12 +93,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="parts/technicalbackground.html">Technical Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/dashboard.html">Dashboard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/environments.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/utils.html">Utils</a></li>
 </ul>
 
@@ -145,7 +146,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Welcome to gym-electric-motor’s documentation!</li>
+      <li>Welcome to gym-electric-motor(GEM)’s documentation!</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -164,43 +165,109 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-gym-electric-motor-s-documentation">
-<h1>Welcome to gym-electric-motor’s documentation!<a class="headerlink" href="#welcome-to-gym-electric-motor-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="welcome-to-gym-electric-motor-gem-s-documentation">
+<h1>Welcome to gym-electric-motor(GEM)’s documentation!<a class="headerlink" href="#welcome-to-gym-electric-motor-gem-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The gym-electric-motor (GEM) package is a software toolbox for the simulation of different electric motors to
+train and test reinforcement learning motor controllers and to compare them with classical motor controllers.</p>
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>A quick start guide can be found in the following Readme-File.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parts/readme.html">Readme File</a></li>
 </ul>
 </div>
+</div>
+<div class="section" id="content">
+<h2>Content<a class="headerlink" href="#content" title="Permalink to this headline">¶</a></h2>
+<p>In the environments section all available GEM-environments are presented with their default configuration.
+For quick start, one of these can be selected and used out of the box.</p>
+<p>The documentation of the base classes is important for the development of own modules like further reward functions or
+reference generators. In this part, the basic interfaces of each module are specified.
+For the development of physical models like further motor models or further mechanical load models, the physical system
+documentation specifies the basic interfaces inside a physical system.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="parts/technicalbackground.html">Technical Background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parts/technicalbackground.html#dc-motors">DC Motors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technicalbackground.html#permanent-magnet-synchronous-motor-pmsm">Permanent Magnet Synchronous Motor (PMSM)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technicalbackground.html#converter">Converter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technicalbackground.html#load-models">Load Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technicalbackground.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/environments/environment.html">Environments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_extex_cont.html">Continuous DC Externally Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_extex_disc.html">Discrete DC Externally Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_permex_cont.html">Continuous DC Permanently Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_permex_disc.html">Discrete DC Permanently Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_series_cont.html">Continuous DC Series Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_series_disc.html">Discrete DC Series Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_shunt_cont.html">Continuous DC Shunt Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/dc_shunt_disc.html">Discrete DC Shunt Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/pmsm_cont.html">Continuous Permanent Magnet Synchronous Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/pmsm_disc.html">Discrete Permanent Magnet Synchronous Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/synrm_cont.html">Continuous Synchronous Reluctance Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/environments/synrm_disc.html">Discrete Synchronous Reluctance Motor Environment</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="parts/dashboard.html">Dashboard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/environments.html">Environments</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parts/dc_base_environment.html">DC Motor Base Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/dc_extex_environment.html">DC Externally Excited Motor Environments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/dc_series_environment.html">DC Series Motor Environments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/dc_shunt_environment.html">DC Shunt Motor Environments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/dc_permex_environment.html">DC Permanently Excited Motor Environments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/pmsm_environment.html">Permanent Magnet Synchronous Motor Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/reference_generators/reference_generator.html">Reference Generators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/subepisoded_reference_generator.html">Subepisoded Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/wiener_process_reference_generator.html">Wiener Process Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/sinusoidal_reference_generator.html">Sinusoidal Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/step_reference_generator.html">Step Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/triangular_reference_generator.html">Triangular Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/sawtooth_reference_generator.html">Sawtooth Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/zero_reference_generator.html">Zero Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reference_generators/multi_reference_generator.html">Multi Reference Generator</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="parts/technical_models.html">Technical Models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parts/technical_models.html#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technical_models.html#dc-motor-models">DC Motor Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technical_models.html#pmsm-motor-model">PMSM Motor Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technical_models.html#converters">Converters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts/technical_models.html#load-model">Load Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/reward_functions/reward_function.html">Reward Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parts/reward_functions/weighted_sum_of_errors.html">Weighted Sum of Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/reward_functions/shifted_weighted_sum_of_errors.html">Shifted Weighted Sum of Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parts/physical_systems/physical_system.html">Physical Systems</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parts/physical_systems/scml_system.html">Supply Converter Motor Load System (SCML)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="parts/physical_systems/converters/converter.html">Power Electronic Converters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/converters/1QC.html">One Quadrant Converters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/converters/2QC.html">Two Quadrant Converters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/converters/4QC.html">Four Quadrant Converters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/converters/B6C.html">Three Phase Converters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/converters/DoubleConv.html">Double Converters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="parts/physical_systems/mechanical_loads/mechanical_load.html">Mechanical Loads</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/mechanical_loads/polystatic.html">Polynomial Static Load</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="parts/physical_systems/noise_generators/noise_generator.html">Noise Generators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/noise_generators/gaussian_white_noise.html">Gaussian White Noise Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="parts/physical_systems/electric_motors/electric_motor.html">Electric Motors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/permex.html">Permanently Excited DC Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/extex.html">Externally Excited DC Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/series.html">DC Series Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/shunt.html">DC Shunt Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/pmsm.html">Permanent Magnet Synchronous Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/synrm.html">Synchronous Reluctance Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/dc_base.html">Base DC Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/electric_motors/synchronous_base.html">Synchronous Base Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="parts/physical_systems/voltage_supplies/voltage_supply.html">Voltage Supplies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/voltage_supplies/ideal_voltage_supply.html">Ideal Voltage Supply</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="parts/physical_systems/ode_solvers/ode_solver.html">ODE-Solvers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/ode_solvers/euler.html">Euler Solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html">scipy.integrate.solve_ivp Solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/ode_solvers/scipy_ode.html">scipy.integrate.ode Solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts/physical_systems/ode_solvers/scipy_odeint.html">scipy.integrate.odeint Solver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parts/visualizations/visualization.html">Visualization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parts/visualizations/motor_dashboard.html">Motor Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts/visualizations/console_printer.html">Console Printer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parts/utils.html">Utils</a></li>

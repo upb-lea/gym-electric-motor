@@ -93,12 +93,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="parts/technicalbackground.html">Technical Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/dashboard.html">Dashboard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/environments.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/utils.html">Utils</a></li>
 </ul>
 
@@ -168,23 +169,27 @@
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
- | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
- | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -193,8 +198,6 @@
       <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv">_DCMBaseEnv (class in gym_electric_motor.envs.gym_dcm.dcm_base_env)</a>
 </li>
       <li><a href="parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex._DCMExtEx">_DCMExtEx (class in gym_electric_motor.envs.gym_dcm.dcm_extex)</a>
-</li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor">_DcMotor (class in gym_electric_motor.envs.gym_dcm.models.dcmotor_model)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -210,24 +213,10 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/utils.html#gym_electric_motor.envs.utils.FlattenActionWrapper.action">action() (gym_electric_motor.envs.utils.FlattenActionWrapper method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="B">B</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.bandwidth">bandwidth() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.action_space">action_space (gym_electric_motor.core.PhysicalSystem attribute)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.bandwidth">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.bandwidth">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor.bandwidth">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.bandwidth">(gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel method)</a>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.action_space">(gym_electric_motor.physical_systems.converters.PowerElectronicConverter attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -236,45 +225,111 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.close">close() (gym_electric_motor.envs.dashboard.MotorDashboard method)</a>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.close">close() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>
 
       <ul>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.close">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
+</li>
+        <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.close">(gym_electric_motor.core.PhysicalSystem method)</a>
+</li>
+        <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.close">(gym_electric_motor.core.ReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.close">(gym_electric_motor.core.RewardFunction method)</a>
+</li>
+        <li><a href="parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.close">(gym_electric_motor.envs.dashboard.MotorDashboard method)</a>
+</li>
         <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.close">(gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv method)</a>
 </li>
         <li><a href="parts/pmsm_environment.html#gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv.close">(gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv method)</a>
 </li>
-      </ul></li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.converter_models.Cont2Level3PhaseConverter">Cont2Level3PhaseConverter (class in gym_electric_motor.envs.gym_pmsm.models.converter_models)</a>
+        <li><a href="parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.close">(gym_electric_motor.reference_generators.MultiReferenceGenerator method)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContFourQuadrantConverter">ContFourQuadrantConverter (class in gym_electric_motor.envs.gym_dcm.models.converter_models)</a>
+        <li><a href="parts/reference_generators/sawtooth_reference_generator.html#gym_electric_motor.reference_generators.SawtoothReferenceGenerator.close">(gym_electric_motor.reference_generators.SawtoothReferenceGenerator method)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContOneQuadrantConverter">ContOneQuadrantConverter (class in gym_electric_motor.envs.gym_dcm.models.converter_models)</a>
+        <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.close">(gym_electric_motor.reference_generators.SinusoidalReferenceGenerator method)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContTwoQuadrantConverter">ContTwoQuadrantConverter (class in gym_electric_motor.envs.gym_dcm.models.converter_models)</a>
+        <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.close">(gym_electric_motor.reference_generators.StepReferenceGenerator method)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContFourQuadrantConverter.convert">convert() (gym_electric_motor.envs.gym_dcm.models.converter_models.ContFourQuadrantConverter method)</a>
-
-      <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContOneQuadrantConverter.convert">(gym_electric_motor.envs.gym_dcm.models.converter_models.ContOneQuadrantConverter method)</a>
+        <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator.close">(gym_electric_motor.reference_generators.TriangularReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.ContTwoQuadrantConverter.convert">(gym_electric_motor.envs.gym_dcm.models.converter_models.ContTwoQuadrantConverter method)</a>
+        <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.close">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.convert">(gym_electric_motor.envs.gym_dcm.models.converter_models.Converter method)</a>
+        <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.close">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteFourQuadrantConverter.convert">(gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteFourQuadrantConverter method)</a>
+        <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.close">(gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteOneQuadrantConverter.convert">(gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteOneQuadrantConverter method)</a>
+        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.close">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteTwoQuadrantConverter.convert">(gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteTwoQuadrantConverter method)</a>
+        <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.converter_models.Cont2Level3PhaseConverter.convert">(gym_electric_motor.envs.gym_pmsm.models.converter_models.Cont2Level3PhaseConverter method)</a>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.close">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.converter_models.Disc2Level3PhaseConverter.convert">(gym_electric_motor.envs.gym_pmsm.models.converter_models.Disc2Level3PhaseConverter method)</a>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.close">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
 </li>
       </ul></li>
+      <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter">ConsolePrinter (class in gym_electric_motor.visualization.console_printer)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter">ContB6BridgeConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/environments/dc_extex_cont.html#gym_electric_motor.envs.ContDcExternallyExcitedMotorEnvironment">ContDcExternallyExcitedMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/environments/dc_permex_cont.html#gym_electric_motor.envs.ContDcPermanentlyExcitedMotorEnvironment">ContDcPermanentlyExcitedMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/environments/dc_series_cont.html#gym_electric_motor.envs.ContDcSeriesMotorEnvironment">ContDcSeriesMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter">Converter (class in gym_electric_motor.envs.gym_dcm.models.converter_models)</a>
+      <li><a href="parts/environments/dc_shunt_cont.html#gym_electric_motor.envs.ContDcShuntMotorEnvironment">ContDcShuntMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter">ContDoubleConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter">ContDynamicallyAveragedConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter">ContFourQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter">ContOneQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/environments/pmsm_cont.html#gym_electric_motor.envs.ContPermanentMagnetSynchronousMotorEnvironment">ContPermanentMagnetSynchronousMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/environments/synrm_cont.html#gym_electric_motor.envs.ContSynchronousReluctanceMotorEnvironment">ContSynchronousReluctanceMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter">ContTwoQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.convert">convert() (gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.convert">(gym_electric_motor.physical_systems.converters.ContDoubleConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.convert">(gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.convert">(gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter.convert">(gym_electric_motor.physical_systems.converters.DiscConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.convert">(gym_electric_motor.physical_systems.converters.DiscDoubleConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.convert">(gym_electric_motor.physical_systems.converters.PowerElectronicConverter method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter">converter (gym_electric_motor.physical_systems.physical_systems.SCMLSystem attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents">currents (gym_electric_motor.physical_systems.converters.PowerElectronicConverter attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS">CURRENTS (gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS">[1]</a>
+</li>
+      <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX">CURRENTS_IDX (gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -282,11 +337,15 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcExternallyExcited">DcExternallyExcited (class in gym_electric_motor.envs.gym_dcm.models.dcmotor_model)</a>
+      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor">DcExternallyExcitedMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
 </li>
       <li><a href="parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex.DCMExtExCont">DCMExtExCont (class in gym_electric_motor.envs.gym_dcm.dcm_extex)</a>
 </li>
       <li><a href="parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex.DCMExtExDisc">DCMExtExDisc (class in gym_electric_motor.envs.gym_dcm.dcm_extex)</a>
+</li>
+      <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor">DcMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
+</li>
+      <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">DcMotorSystem (class in gym_electric_motor.physical_systems.physical_systems)</a>
 </li>
       <li><a href="parts/dc_permex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_permex.DCMPermExCont">DCMPermExCont (class in gym_electric_motor.envs.gym_dcm.dcm_permex)</a>
 </li>
@@ -300,25 +359,37 @@
 </li>
       <li><a href="parts/dc_shunt_environment.html#gym_electric_motor.envs.gym_dcm.dcm_shunt.DCMShuntDisc">DCMShuntDisc (class in gym_electric_motor.envs.gym_dcm.dcm_shunt)</a>
 </li>
+      <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor">DcPermanentlyExcitedMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
+</li>
+      <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor">DcSeriesMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited">DcPermanentlyExcited (class in gym_electric_motor.envs.gym_dcm.models.dcmotor_model)</a>
+      <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor">DcShuntMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor">DcSeriesMotor (class in gym_electric_motor.envs.gym_dcm.models.dcmotor_model)</a>
+      <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter">DiscB6BridgeConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor">DcShuntMotor (class in gym_electric_motor.envs.gym_dcm.models.dcmotor_model)</a>
+      <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter">DiscConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.determine_current_action_cont">determine_current_action_cont() (gym_electric_motor.envs.gym_dcm.models.converter_models.Converter method)</a>
+      <li><a href="parts/environments/dc_extex_disc.html#gym_electric_motor.envs.DiscDcExternallyExcitedMotorEnvironment">DiscDcExternallyExcitedMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.determine_current_action_disc">determine_current_action_disc() (gym_electric_motor.envs.gym_dcm.models.converter_models.Converter method)</a>
+      <li><a href="parts/environments/dc_permex_disc.html#gym_electric_motor.envs.DiscDcPermanentlyExcitedMotorEnvironment">DiscDcPermanentlyExcitedMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.converter_models.Disc2Level3PhaseConverter">Disc2Level3PhaseConverter (class in gym_electric_motor.envs.gym_pmsm.models.converter_models)</a>
+      <li><a href="parts/environments/dc_series_disc.html#gym_electric_motor.envs.DiscDcSeriesMotorEnvironment">DiscDcSeriesMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteFourQuadrantConverter">DiscreteFourQuadrantConverter (class in gym_electric_motor.envs.gym_dcm.models.converter_models)</a>
+      <li><a href="parts/environments/dc_shunt_disc.html#gym_electric_motor.envs.DiscDcShuntMotorEnvironment">DiscDcShuntMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteOneQuadrantConverter">DiscreteOneQuadrantConverter (class in gym_electric_motor.envs.gym_dcm.models.converter_models)</a>
+      <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter">DiscDoubleConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.DiscreteTwoQuadrantConverter">DiscreteTwoQuadrantConverter (class in gym_electric_motor.envs.gym_dcm.models.converter_models)</a>
+      <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter">DiscFourQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter">DiscOneQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
+      <li><a href="parts/environments/pmsm_disc.html#gym_electric_motor.envs.DiscPermanentMagnetSynchronousMotorEnvironment">DiscPermanentMagnetSynchronousMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/environments/synrm_disc.html#gym_electric_motor.envs.DiscSynchronousReluctanceMotorEnvironment">DiscSynchronousReluctanceMotorEnvironment (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter">DiscTwoQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -326,19 +397,39 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor">electrical_motor (gym_electric_motor.physical_systems.physical_systems.SCMLSystem attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.electrical_ode">electrical_ode() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.DcMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.ElectricMotor method)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.electrical_ode">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.electrical_ode">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor">ElectricMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor">[1]</a>
+</li>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment">ElectricMotorEnvironment (class in gym_electric_motor.core)</a>
+</li>
+      <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization">ElectricMotorVisualization (class in gym_electric_motor.core)</a>
+</li>
       <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.episode_length">episode_length (gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/utils.html#gym_electric_motor.envs.utils.EulerSolver">EulerSolver (class in gym_electric_motor.envs.utils)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="F">F</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/utils.html#gym_electric_motor.envs.utils.FlattenActionWrapper">FlattenActionWrapper (class in gym_electric_motor.envs.utils)</a>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver">EulerSolver (class in gym_electric_motor.physical_systems.solvers)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -354,11 +445,75 @@
         <li><a href="parts/pmsm_environment.html#gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv.get_motor_param">(gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv method)</a>
 </li>
       </ul></li>
+      <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference">get_reference() (gym_electric_motor.core.ReferenceGenerator method)</a>
+
+      <ul>
+        <li><a href="parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.MultiReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sawtooth_reference_generator.html#gym_electric_motor.reference_generators.SawtoothReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.SawtoothReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.SinusoidalReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.StepReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.TriangularReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.get_reference">(gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference_observation">get_reference_observation() (gym_electric_motor.core.ReferenceGenerator method)</a>
+
+      <ul>
+        <li><a href="parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.MultiReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sawtooth_reference_generator.html#gym_electric_motor.reference_generators.SawtoothReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.SawtoothReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.SinusoidalReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.StepReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.TriangularReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.get_reference_observation">(gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.get_state_space">get_state_space() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.get_state_space">(gym_electric_motor.physical_systems.electric_motors.DcMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.get_state_space">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.get_state_space">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.get_state_space">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.get_state_space">(gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad method)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.get_state_space">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply.get_voltage">get_voltage() (gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">(gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/environments/environment.html#module-gym_electric_motor.core">gym_electric_motor.core (module)</a>
+</li>
       <li><a href="parts/dashboard.html#module-gym_electric_motor.envs.dashboard">gym_electric_motor.envs.dashboard (module)</a>
 </li>
-      <li><a href="parts/utils.html#module-gym_electric_motor.envs.utils">gym_electric_motor.envs.utils (module)</a>
+      <li><a href="parts/utils.html#module-gym_electric_motor.utils">gym_electric_motor.utils (module)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -366,40 +521,70 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.i_a_max">i_a_max() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.i_in">i_in() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.i_a_max">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.DcMotor method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.i_a_max">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.ElectricMotor method)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.i_in">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.i_in">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor method)</a>
 </li>
       </ul></li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.i_in">i_in() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.i_sup">i_sup() (gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.i_in">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.i_sup">(gym_electric_motor.physical_systems.converters.ContDoubleConverter method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.i_in">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.i_sup">(gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor.i_in">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor method)</a>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.i_sup">(gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter.i_sup">(gym_electric_motor.physical_systems.converters.DiscConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.i_sup">(gym_electric_motor.physical_systems.converters.DiscDoubleConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.i_sup">(gym_electric_motor.physical_systems.converters.PowerElectronicConverter method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.induced_voltage">induced_voltage() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply">IdealVoltageSupply (class in gym_electric_motor.physical_systems.voltage_supplies)</a>
+</li>
+      <li><a href="parts/utils.html#gym_electric_motor.utils.instantiate">instantiate() (in module gym_electric_motor.utils)</a>
+</li>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.integrate">integrate() (gym_electric_motor.physical_systems.solvers.EulerSolver method)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.induced_voltage">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
+        <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.integrate">(gym_electric_motor.physical_systems.solvers.OdeSolver method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.induced_voltage">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.integrate">(gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver method)</a>
 </li>
-      </ul></li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.interlocking_time">interlocking_time (gym_electric_motor.envs.gym_dcm.models.converter_models.Converter attribute)</a>
-
-      <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.converter_models.Cont2Level3PhaseConverter.interlocking_time">(gym_electric_motor.envs.gym_pmsm.models.converter_models.Cont2Level3PhaseConverter attribute)</a>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.integrate">(gym_electric_motor.physical_systems.solvers.ScipyOdeSolver method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.converter_models.Disc2Level3PhaseConverter.interlocking_time">(gym_electric_motor.envs.gym_pmsm.models.converter_models.Disc2Level3PhaseConverter attribute)</a>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.integrate">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -408,18 +593,10 @@
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.jac">jac() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.j_total">j_total (gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad attribute)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.jac">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.jac">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor.jac">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.load_models.Load.jac">(gym_electric_motor.envs.gym_pmsm.models.load_models.Load method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.jac">(gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel method)</a>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.j_total">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -428,19 +605,49 @@
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.k">k (gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv attribute)</a>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.k">k (gym_electric_motor.core.PhysicalSystem attribute)</a>
+
+      <ul>
+        <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.k">(gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.load_models.Load">Load (class in gym_electric_motor.envs.gym_pmsm.models.load_models)</a>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.limits">limits (gym_electric_motor.core.PhysicalSystem attribute)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.limits">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor attribute)</a>
 </li>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.limits">(gym_electric_motor.physical_systems.electric_motors.DcMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.limits">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.limits">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.limits">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.limits">(gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.limits">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.limits">(gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.limits">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.limits">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.limits">(gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.limits">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits">(gym_electric_motor.physical_systems.physical_systems.SCMLSystem attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.load_models.Load.load">load() (gym_electric_motor.envs.gym_pmsm.models.load_models.Load method)</a>
+      <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.load_parameter">load_parameter (gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -448,27 +655,99 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.converter_models.Converter.make">make() (gym_electric_motor.envs.gym_dcm.models.converter_models.Converter class method)</a>
+      <li><a href="parts/utils.html#gym_electric_motor.utils.make">make() (in module gym_electric_motor.utils)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.max_torque">max_torque() (gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel method)</a>
+      <li><a href="parts/utils.html#gym_electric_motor.utils.make_module">make_module() (in module gym_electric_motor.utils)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.model">model() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load">mechanical_load (gym_electric_motor.physical_systems.physical_systems.SCMLSystem attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.mechanical_ode">mechanical_ode() (gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad method)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.model">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_ode">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad method)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.model">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
+      </ul></li>
+      <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad">MechanicalLoad (class in gym_electric_motor.physical_systems.mechanical_loads)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor.model">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor method)</a>
+      <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.motor_parameter">motor_parameter (gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv attribute)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor attribute)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.model">(gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel method)</a>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.DcMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.motor_parameter">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.motor_parameter">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.motor_parameter">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.motor_parameter">motor_parameter (gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv attribute)</a>
-</li>
       <li><a href="parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard">MotorDashboard (class in gym_electric_motor.envs.dashboard)</a>
+
+      <ul>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard">(class in gym_electric_motor.visualization.motor_dashboard)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator">MultiReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/noise_generators/gaussian_white_noise.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.noise">noise() (gym_electric_motor.physical_systems.noise_generators.NoiseGenerator method)</a>, <a href="parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.noise">[1]</a>
+</li>
+      <li><a href="parts/physical_systems/noise_generators/gaussian_white_noise.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator">NoiseGenerator (class in gym_electric_motor.physical_systems.noise_generators)</a>, <a href="parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator">[1]</a>
+</li>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.nominal_state">nominal_state (gym_electric_motor.core.PhysicalSystem attribute)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state">(gym_electric_motor.physical_systems.physical_systems.SCMLSystem attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.nominal_values">nominal_values (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor attribute)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.DcMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.nominal_values">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.nominal_values">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.nominal_values">(gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.nominal_values">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver">OdeSolver (class in gym_electric_motor.physical_systems.solvers)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -476,7 +755,11 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/utils.html#gym_electric_motor.envs.utils.parse_env_args">parse_env_args() (in module gym_electric_motor.envs.utils)</a>
+      <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor">PermanentMagnetSynchronousMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>, <a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor">[1]</a>
+</li>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.physical_system">physical_system (gym_electric_motor.core.ElectricMotorEnvironment attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem">PhysicalSystem (class in gym_electric_motor.core)</a>
 </li>
       <li><a href="parts/pmsm_environment.html#gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmCont">PmsmCont (class in gym_electric_motor.envs.gym_pmsm.pmsm_env)</a>
 </li>
@@ -486,7 +769,9 @@
 </li>
       <li><a href="parts/pmsm_environment.html#gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv">PmsmEnv (class in gym_electric_motor.envs.gym_pmsm.pmsm_env)</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel">PmsmModel (class in gym_electric_motor.envs.gym_pmsm.models.pmsm_model)</a>
+      <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad">PolynomialStaticLoad (class in gym_electric_motor.physical_systems.mechanical_loads)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter">PowerElectronicConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -494,39 +779,197 @@
 <h2 id="Q">Q</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q">q() (gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel static method)</a>
+      <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.q">q() (gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor static method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor static method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q">[1]</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q_inv">q_inv() (gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel static method)</a>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.q">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor static method)</a>
 </li>
+      </ul></li>
+      <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.q_inv">q_inv() (gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor static method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor static method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.q_inv">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor static method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q_inv_me">q_inv_me() (gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel method)</a>
+      <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.q_inv_me">q_inv_me() (gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv_me">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv_me">[1]</a>
 </li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.q_me">q_me() (gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel method)</a>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.q_inv_me">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor method)</a>
 </li>
+      </ul></li>
+      <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.q_me">q_me() (gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_me">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_me">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.q_me">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.render">render() (gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv method)</a>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reference_generator">reference_generator (gym_electric_motor.core.ElectricMotorEnvironment attribute)</a>
+</li>
+      <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.reference_space">reference_space (gym_electric_motor.core.ReferenceGenerator attribute)</a>
+</li>
+      <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.referenced_states">referenced_states (gym_electric_motor.core.ReferenceGenerator attribute)</a>
 
       <ul>
+        <li><a href="parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.MultiReferenceGenerator attribute)</a>
+</li>
+        <li><a href="parts/reference_generators/sawtooth_reference_generator.html#gym_electric_motor.reference_generators.SawtoothReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.SawtoothReferenceGenerator attribute)</a>
+</li>
+        <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.SinusoidalReferenceGenerator attribute)</a>
+</li>
+        <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.StepReferenceGenerator attribute)</a>
+</li>
+        <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.TriangularReferenceGenerator attribute)</a>
+</li>
+        <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator attribute)</a>
+</li>
+        <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.ZeroReferenceGenerator attribute)</a>
+</li>
+        <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.referenced_states">(gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator">ReferenceGenerator (class in gym_electric_motor.core)</a>
+</li>
+      <li><a href="parts/utils.html#gym_electric_motor.utils.register_class">register_class() (in module gym_electric_motor.utils)</a>
+</li>
+      <li><a href="parts/utils.html#gym_electric_motor.utils.register_superclass">register_superclass() (in module gym_electric_motor.utils)</a>
+</li>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.render">render() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>
+
+      <ul>
+        <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.render">(gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv method)</a>
+</li>
         <li><a href="parts/pmsm_environment.html#gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv.render">(gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv method)</a>
 </li>
       </ul></li>
-      <li><a href="parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.reset">reset() (gym_electric_motor.envs.dashboard.MotorDashboard method)</a>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reset">reset() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>
 
       <ul>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.reset">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
+</li>
+        <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.reset">(gym_electric_motor.core.PhysicalSystem method)</a>
+</li>
+        <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.reset">(gym_electric_motor.core.ReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reset">(gym_electric_motor.core.RewardFunction method)</a>
+</li>
+        <li><a href="parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.reset">(gym_electric_motor.envs.dashboard.MotorDashboard method)</a>
+</li>
         <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.reset">(gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv method)</a>
 </li>
         <li><a href="parts/pmsm_environment.html#gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv.reset">(gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv method)</a>
 </li>
+        <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.reset">(gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.reset">(gym_electric_motor.physical_systems.converters.ContDoubleConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.reset">(gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.reset">(gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter.reset">(gym_electric_motor.physical_systems.converters.DiscConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.reset">(gym_electric_motor.physical_systems.converters.DiscDoubleConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.reset">(gym_electric_motor.physical_systems.converters.PowerElectronicConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.reset">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.reset">(gym_electric_motor.physical_systems.electric_motors.DcMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.reset">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.reset">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.reset">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">(gym_electric_motor.physical_systems.electric_motors.ElectricMotor method)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.reset">(gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.reset">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.reset">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.reset">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.reset">(gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad method)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.reset">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad method)</a>
+</li>
+        <li><a href="parts/physical_systems/noise_generators/gaussian_white_noise.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.reset">(gym_electric_motor.physical_systems.noise_generators.NoiseGenerator method)</a>, <a href="parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.reset">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset">(gym_electric_motor.physical_systems.physical_systems.SCMLSystem method)</a>
+</li>
+        <li><a href="parts/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply.reset">(gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply method)</a>
+</li>
+        <li><a href="parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.reset">(gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply method)</a>
+</li>
+        <li><a href="parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.reset">(gym_electric_motor.reference_generators.MultiReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sawtooth_reference_generator.html#gym_electric_motor.reference_generators.SawtoothReferenceGenerator.reset">(gym_electric_motor.reference_generators.SawtoothReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.reset">(gym_electric_motor.reference_generators.SinusoidalReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.reset">(gym_electric_motor.reference_generators.StepReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator.reset">(gym_electric_motor.reference_generators.TriangularReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.reset">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.reset">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.reset">(gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reset">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
+</li>
+        <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
+</li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.reset">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/utils.html#gym_electric_motor.envs.utils.FlattenActionWrapper.reverse_action">reverse_action() (gym_electric_motor.envs.utils.FlattenActionWrapper method)</a>
+      <li><a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward">reward() (gym_electric_motor.core.RewardFunction method)</a>
+
+      <ul>
+        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reward">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
+</li>
+        <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reward_function">reward_function (gym_electric_motor.core.ElectricMotorEnvironment attribute)</a>
+</li>
+      <li><a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward_range">reward_range (gym_electric_motor.core.RewardFunction attribute)</a>
+</li>
+      <li><a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction">RewardFunction (class in gym_electric_motor.core)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -534,15 +977,171 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/reference_generators/sawtooth_reference_generator.html#gym_electric_motor.reference_generators.SawtoothReferenceGenerator">SawtoothReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
+      <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver">ScipyOdeIntSolver (class in gym_electric_motor.physical_systems.solvers)</a>
+</li>
+      <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver">ScipyOdeSolver (class in gym_electric_motor.physical_systems.solvers)</a>
+</li>
+      <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver">ScipySolveIvpSolver (class in gym_electric_motor.physical_systems.solvers)</a>
+</li>
+      <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem">SCMLSystem (class in gym_electric_motor.physical_systems.physical_systems)</a>
+</li>
       <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.seed">seed() (gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv method)</a>
 </li>
-      <li><a href="parts/utils.html#gym_electric_motor.envs.utils.EulerSolver.set_f_params">set_f_params() (gym_electric_motor.envs.utils.EulerSolver method)</a>
-</li>
-      <li><a href="parts/utils.html#gym_electric_motor.envs.utils.EulerSolver.set_initial_value">set_initial_value() (gym_electric_motor.envs.utils.EulerSolver method)</a>
-</li>
-      <li><a href="parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.step">step() (gym_electric_motor.envs.dashboard.MotorDashboard method)</a>
+      <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.set_action">set_action() (gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
 
       <ul>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.set_action">(gym_electric_motor.physical_systems.converters.ContDoubleConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.set_action">(gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.set_action">(gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter.set_action">(gym_electric_motor.physical_systems.converters.DiscConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.set_action">(gym_electric_motor.physical_systems.converters.DiscDoubleConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.set_action">(gym_electric_motor.physical_systems.converters.PowerElectronicConverter method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.set_f_params">set_f_params() (gym_electric_motor.physical_systems.solvers.EulerSolver method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_f_params">(gym_electric_motor.physical_systems.solvers.OdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_f_params">(gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_f_params">(gym_electric_motor.physical_systems.solvers.ScipyOdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_f_params">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.set_initial_value">set_initial_value() (gym_electric_motor.physical_systems.solvers.EulerSolver method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_initial_value">(gym_electric_motor.physical_systems.solvers.OdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_initial_value">(gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_initial_value">(gym_electric_motor.physical_systems.solvers.ScipyOdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_initial_value">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.set_j_params">set_j_params() (gym_electric_motor.physical_systems.solvers.EulerSolver method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_j_params">(gym_electric_motor.physical_systems.solvers.OdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_j_params">(gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_j_params">(gym_electric_motor.physical_systems.solvers.ScipyOdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_j_params">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.set_j_rotor">set_j_rotor() (gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.set_j_rotor">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.set_modules">set_modules() (gym_electric_motor.core.ElectricMotorVisualization method)</a>
+
+      <ul>
+        <li><a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.set_modules">(gym_electric_motor.core.ReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.set_modules">(gym_electric_motor.core.RewardFunction method)</a>
+</li>
+        <li><a href="parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.MultiReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sawtooth_reference_generator.html#gym_electric_motor.reference_generators.SawtoothReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.SawtoothReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.SinusoidalReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.StepReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.TriangularReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator method)</a>
+</li>
+        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.set_modules">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
+</li>
+        <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
+</li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.set_modules">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/noise_generators/gaussian_white_noise.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_signal_power_level">set_signal_power_level() (gym_electric_motor.physical_systems.noise_generators.NoiseGenerator method)</a>, <a href="parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_signal_power_level">[1]</a>
+</li>
+      <li><a href="parts/utils.html#gym_electric_motor.utils.set_state_array">set_state_array() (in module gym_electric_motor.utils)</a>
+</li>
+      <li><a href="parts/physical_systems/noise_generators/gaussian_white_noise.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_state_names">set_state_names() (gym_electric_motor.physical_systems.noise_generators.NoiseGenerator method)</a>, <a href="parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_state_names">[1]</a>
+</li>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.set_system_equation">set_system_equation() (gym_electric_motor.physical_systems.solvers.EulerSolver method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_system_equation">(gym_electric_motor.physical_systems.solvers.OdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_system_equation">(gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_system_equation">(gym_electric_motor.physical_systems.solvers.ScipyOdeSolver method)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_system_equation">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors">ShiftedWeightedSumOfErrors (class in gym_electric_motor.reward_functions.weighted_sum_of_errors)</a>
+</li>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.simulate">simulate() (gym_electric_motor.core.PhysicalSystem method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate">(gym_electric_motor.physical_systems.physical_systems.SCMLSystem method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator">SinusoidalReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
+      <li><a href="parts/utils.html#gym_electric_motor.utils.state_dict_to_state_array">state_dict_to_state_array() (in module gym_electric_motor.utils)</a>
+</li>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.state_names">state_names (gym_electric_motor.core.PhysicalSystem attribute)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.state_names">(gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.state_names">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.state_positions">state_positions (gym_electric_motor.core.PhysicalSystem attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.state_space">state_space (gym_electric_motor.core.PhysicalSystem attribute)</a>
+</li>
+      <li><a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.step">step() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>
+
+      <ul>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.step">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
+</li>
+        <li><a href="parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.step">(gym_electric_motor.envs.dashboard.MotorDashboard method)</a>
+</li>
         <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.step">(gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv method)</a>
 </li>
         <li><a href="parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex.DCMExtExCont.step">(gym_electric_motor.envs.gym_dcm.dcm_extex.DCMExtExCont method)</a>
@@ -557,57 +1156,153 @@
 </li>
         <li><a href="parts/pmsm_environment.html#gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv.step">(gym_electric_motor.envs.gym_pmsm.pmsm_env.PmsmEnv method)</a>
 </li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.step">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
       </ul></li>
+      <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator">StepReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
+      <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator">SubepisodedReferenceGenerator (class in gym_electric_motor.reference_generators.subepisoded_reference_generator)</a>
+</li>
+      <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply">supply (gym_electric_motor.physical_systems.physical_systems.SCMLSystem attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.supply_range">supply_range (gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply attribute)</a>
+</li>
+      <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor">SynchronousMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor">[1]</a>
+</li>
+      <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">SynchronousMotorSystem (class in gym_electric_motor.physical_systems.physical_systems)</a>
+</li>
+      <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor">SynchronousReluctanceMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>, <a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor">[1]</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.t_23">t_23() (gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel static method)</a>
-</li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.t_32">t_32() (gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel static method)</a>
-</li>
-      <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.tau">tau (gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv attribute)</a>
-</li>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.torque">torque() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.t">t (gym_electric_motor.physical_systems.solvers.EulerSolver attribute)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.torque">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
+        <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.t">(gym_electric_motor.physical_systems.solvers.OdeSolver attribute)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.torque">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.t">(gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver attribute)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor.torque">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor method)</a>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.t">(gym_electric_motor.physical_systems.solvers.ScipyOdeSolver attribute)</a>
 </li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel.torque">(gym_electric_motor.envs.gym_pmsm.models.pmsm_model.PmsmModel method)</a>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.t">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.t_23">t_23() (gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor static method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_23">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor static method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_23">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.t_23">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor static method)</a>
+</li>
+      </ul></li>
+      <li><a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.t_32">t_32() (gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor static method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_32">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor static method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_32">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.t_32">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor static method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.torque_max">torque_max() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.tau">tau (gym_electric_motor.core.PhysicalSystem attribute)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.torque_max">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.torque_max">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor.torque_max">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcShuntMotor method)</a>
+        <li><a href="parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.tau">(gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv attribute)</a>
 </li>
       </ul></li>
+      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.torque">torque() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.torque">(gym_electric_motor.physical_systems.electric_motors.DcMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.torque">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.torque">(gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor.torque">(gym_electric_motor.physical_systems.electric_motors.DcShuntMotor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.torque">(gym_electric_motor.physical_systems.electric_motors.ElectricMotor method)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.torque">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.torque">(gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor method)</a>, <a href="parts/physical_systems/electric_motors/pmsm.html#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.torque">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.torque">(gym_electric_motor.physical_systems.electric_motors.SynchronousMotor method)</a>, <a href="parts/physical_systems/electric_motors/synchronous_base.html#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.torque">[1]</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.torque">(gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor method)</a>, <a href="parts/physical_systems/electric_motors/synrm.html#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.torque">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator">TriangularReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor.update_params">update_params() (gym_electric_motor.envs.gym_dcm.models.dcmotor_model._DcMotor method)</a>
+      <li><a href="parts/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply.u_nominal">u_nominal (gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply attribute)</a>
 
       <ul>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited.update_params">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcPermanentlyExcited method)</a>
-</li>
-        <li><a href="parts/technical_models.html#gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor.update_params">(gym_electric_motor.envs.gym_dcm.models.dcmotor_model.DcSeriesMotor method)</a>
+        <li><a href="parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.u_nominal">(gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.voltages">voltages (gym_electric_motor.physical_systems.converters.PowerElectronicConverter attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES">VOLTAGES (gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES">[1]</a>
+</li>
+      <li><a href="parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply">VoltageSupply (class in gym_electric_motor.physical_systems.voltage_supplies)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors">WeightedSumOfErrors (class in gym_electric_motor.reward_functions.weighted_sum_of_errors)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator">WienerProcessReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.y">y (gym_electric_motor.physical_systems.solvers.EulerSolver attribute)</a>
+
+      <ul>
+        <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.y">(gym_electric_motor.physical_systems.solvers.OdeSolver attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.y">(gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.y">(gym_electric_motor.physical_systems.solvers.ScipyOdeSolver attribute)</a>
+</li>
+        <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.y">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator">ZeroReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
   </ul></td>
 </tr></table>
 

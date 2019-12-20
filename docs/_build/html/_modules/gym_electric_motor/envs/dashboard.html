@@ -92,12 +92,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/technicalbackground.html">Technical Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/dashboard.html">Dashboard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -242,7 +243,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">update</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span>
 
 <div class="viewcode-block" id="MotorDashboard.reset"><a class="viewcode-back" href="../../../parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

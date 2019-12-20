@@ -45,8 +45,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Technical Background" href="technicalbackground.html" />
-    <link rel="prev" title="Welcome to gym-electric-motor’s documentation!" href="../index.html" /> 
+    <link rel="next" title="Environments" href="environments/environment.html" />
+    <link rel="prev" title="Welcome to gym-electric-motor(GEM)’s documentation!" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,16 +93,16 @@
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Readme File</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#gym-electric-motor">Gym Electric Motor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#physical-structure-of-the-environments-components">Physical Structure of the Environments Components</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#control-flow-of-a-step-cycle-of-the-environment">Control Flow of a Step Cycle of the Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gym-electric-motor-gem">Gym Electric Motor (GEM)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#physical-structure-of-the-environment-s-components">Physical Structure of the Environment’s Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#control-flow-of-a-step-cycle-of-the-environment">Control Flow of a Step Cycle of the Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#citation">Citation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#installing">Installing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#authors">Authors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#important-notes">Important notes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#getting-started">Getting started</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#gym-make-call">Gym Make Call</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gem-make-call">Gem Make Call</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#reset">Reset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#step">Step</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#render">Render</a></li>
@@ -113,17 +113,19 @@
 <li class="toctree-l3"><a class="reference internal" href="#converter">Converter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#load">Load</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#notes-about-the-parameters">Notes about the Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-unittests-with-pytest">Running Unittests with Pytest</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Environments Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="technicalbackground.html">Technical Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dashboard.html">Dashboard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="technical_models.html">Technical Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
 </ul>
 
@@ -191,22 +193,42 @@
             
   <div class="section" id="readme-file">
 <h1>Readme File<a class="headerlink" href="#readme-file" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="gym-electric-motor">
-<h2>Gym Electric Motor<a class="headerlink" href="#gym-electric-motor" title="Permalink to this headline">¶</a></h2>
-<p>The gym-electric-motor package is a software toolbox for the simulation of different electric motors.
-The toolbox is built upon the <a class="reference external" href="https://gym.openai.com/">OpenAI Gym Environments</a> for reinforcement learning.
-Therefore, the toolbox is especially designed for running reinforcement learning algorithms to train agents to control electric motors.
-So far, several DC-motor models and a permanent magnet synchronous motor (PMSM) are available. Beside electrical
-motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or
+<div class="section" id="gym-electric-motor-gem">
+<h2>Gym Electric Motor (GEM)<a class="headerlink" href="#gym-electric-motor-gem" title="Permalink to this headline">¶</a></h2>
+<a class="reference external image-reference" href="docs/plots/project_banner.jpg"><img alt="" src="../_images/project_banner.jpg" /></a>
+<p><strong>The gym-electric-motor (GEM) package is a software toolbox for the
+simulation of
+different electric motors.</strong></p>
+<p>The toolbox is built upon the <a class="reference external" href="https://gym.openai.com/">OpenAI Gym Environments</a> for reinforcement learning.
+Therefore, the toolbox is specifically designed for running reinforcement
+learning algorithms to train agents controlling electric motors.</p>
+<p><a class="reference external" href="https://upb-lea.github.io/gym-electric-motor/">Read the detailed docs!</a></p>
+<p>So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM)
+and synchronous reluctance motor (SynRM) are available.
+Beside electrical motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or
 switching commands (discrete mode).
 The figure shows the basic scheme of the converter, motor and load.</p>
-<div class="section" id="physical-structure-of-the-environments-components">
-<h3>Physical Structure of the Environments Components<a class="headerlink" href="#physical-structure-of-the-environments-components" title="Permalink to this headline">¶</a></h3>
-<a class="reference external image-reference" href="docs/plots/FigureConvMotorLoad6.svg"><img alt="" src="../_images/FigureConvMotorLoad6.svg" /></a>
+<div class="section" id="physical-structure-of-the-environment-s-components">
+<h3>Physical Structure of the Environment’s Components<a class="headerlink" href="#physical-structure-of-the-environment-s-components" title="Permalink to this headline">¶</a></h3>
+<a class="reference external image-reference" href="docs/plots/SCML_Setting.svg"><img alt="" src="parts/docs/plots/SCML_Setting.svg" /></a>
 </div>
 <div class="section" id="control-flow-of-a-step-cycle-of-the-environment">
 <h3>Control Flow of a Step Cycle of the Environment<a class="headerlink" href="#control-flow-of-a-step-cycle-of-the-environment" title="Permalink to this headline">¶</a></h3>
 <a class="reference external image-reference" href="docs/plots/CycleScheme.svg"><img alt="" src="../_images/CycleScheme.svg" /></a>
+</div>
+<div class="section" id="citation">
+<h3>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h3>
+<p>A whitepaper for this framework is available under <a class="reference external" href="https://arxiv.org/abs/1910.09434">arxiv.org/abs/1910.09434</a>. Please use the following BibTeX entry for citing us:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>@misc{traue2019reinforcement,
+    title={Towards a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},
+    author={Arne Traue and Gerrit Book and Wilhelm Kirchgässner and Oliver Wallscheid},
+    year={2019},
+    eprint={1910.09434},
+    archivePrefix={arXiv},
+    primaryClass={eess.SY}
+}
+</pre></div>
+</div>
 <div class="section" id="installing">
 <h4>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -231,27 +253,29 @@ pip install -e .
 <h4>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h4>
 <p>Arne Traue, Gerrit Book</p>
 </div>
-<div class="section" id="important-notes">
-<h4>Important notes<a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h4>
-<p>Latest readme update: 01-10-2019</p>
-</div>
 <div class="section" id="getting-started">
 <h4>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h4>
 <p>Like every gym environment, the basic user interface consists of four main functions.</p>
 <ul class="simple">
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">gym.make(environment-id,</span> <span class="pre">**kwargs)</span></code><span class="raw-html-m2r"><br></span></dt>
-<dd>Returns an instantiated motor environment. Call this function at the beginning.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">gym_electric_motor</span> <span class="pre">as</span> <span class="pre">gem</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Import of the package.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">env.reset()</span></code><span class="raw-html-m2r"><br></span></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">env</span> <span class="pre">=</span> <span class="pre">gem.make(environment-id,</span> <span class="pre">**kwargs)</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Returns an instantiated motor environment. Call this function at the beginning.
+The <code class="docutils literal notranslate"><span class="pre">gem.make()</span></code> method is equal to the <code class="docutils literal notranslate"><span class="pre">gym.make()</span></code>. By using <code class="docutils literal notranslate"><span class="pre">gem.make()</span></code>you can avoid importing gym additionally.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">(initial_state,</span> <span class="pre">initial_reference)</span> <span class="pre">=</span> <span class="pre">env.reset()</span></code><span class="raw-html-m2r"><br></span></dt>
 <dd>Resets the motor. This includes a new initial state and new reference trajectories.
 Call this function before a new episode starts.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">env.step(action)</span></code><span class="raw-html-m2r"><br></span></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">(state,</span> <span class="pre">reference),</span> <span class="pre">reward,</span> <span class="pre">done,</span> <span class="pre">_</span> <span class="pre">=</span> <span class="pre">env.step(action)</span></code><span class="raw-html-m2r"><br></span></dt>
 <dd>Simulate one single time step on the motor with an action.
 Call this function iteratively until termination is reached.</dd>
 </dl>
@@ -264,66 +288,123 @@ Call this function iteratively until termination is reached.</dd>
 </ul>
 </div>
 </div>
-<div class="section" id="gym-make-call">
-<h3>Gym Make Call<a class="headerlink" href="#gym-make-call" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="gem-make-call">
+<h3>Gem Make Call<a class="headerlink" href="#gem-make-call" title="Permalink to this headline">¶</a></h3>
 <p>The make function takes the environment-ids and several constructor arguments.
+Every environment also works without further parameters with default values.
+These default parameters can be looked up in the API-documentation of every GEM-environment.
 With the environment-id you select a certain motor type and action type (continuous or discrete) and with the further
 constructor arguments you can parametrize the environment to your control problem.</p>
 <ul class="simple">
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
-<dd>externally excited DC motor with continuous actions.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Externally excited DC motor with continuous actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
-<dd>externally excited DC motor with discrete actions.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Externally excited DC motor with discrete actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
-<dd>permanently excited DC motor with continuous actions.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Permanently excited DC motor with continuous actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
-<dd>permanently excited DC motor with discrete actions.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dd>Permanently excited DC motor with discrete actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
 <dd>DC shunt motor with continuous actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
 <dd>DC shunt motor with discrete actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-cont-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
 <dd>DC series motor with continuous actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-disc-v0'</span></code><span class="raw-html-m2r"><br></span></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt>
 <dd>DC series motor with discrete actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-cont-v0'</span></code>:<span class="raw-html-m2r"><br></span></dt>
-<dd>permanent magnet synchronous motor with continuous actions.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-cont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt>
+<dd>Permanent magnet synchronous motor with continuous actions.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-disc-v0'</span></code>:<span class="raw-html-m2r"><br></span></dt>
-<dd>permanent magnet synchronous motor with discrete actions.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-disc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt>
+<dd>Permanent magnet synchronous motor with discrete actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-synrm-cont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt>
+<dd>Synchronous reluctance motor with continuous actions.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'emotor-synrm-disc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt>
+<dd>Synchronous reluctance motor with discrete actions.</dd>
 </dl>
 </li>
 </ul>
-<p>With the constructor arguments you can parametrize the control problem.
-You can select, which motor model to take, which quantities to control, etc.
-For further information have a look at [Link for the APIDOC Base Env Site]</p>
+<p>Using the keyword arguments in the <code class="docutils literal notranslate"><span class="pre">gem.make(id,</span> <span class="pre">**kwargs)</span></code> function you can select different function modules for the
+environment and parametrize these modules.
+The main level modules of each GEM-environment consists of four function modules:</p>
+<ul class="simple">
+<li>Physical System<ul>
+<li>keyword: <code class="docutils literal notranslate"><span class="pre">physical_system</span></code></li>
+<li>Specification and simulation of the system model.</li>
+</ul>
+</li>
+<li>Reference Generator<ul>
+<li>keyword: <code class="docutils literal notranslate"><span class="pre">reference_generator</span></code></li>
+<li>Generation of references that the physical system has to follow.</li>
+</ul>
+</li>
+<li>Reward Function<ul>
+<li>keyword: <code class="docutils literal notranslate"><span class="pre">reward_function</span></code></li>
+<li>Reward calculation based on the current state and reference.</li>
+</ul>
+</li>
+<li>Visualization<ul>
+<li>keyword: <code class="docutils literal notranslate"><span class="pre">visualization</span></code></li>
+<li>Visualization of the physical systems state, reference and rewards.</li>
+</ul>
+</li>
+<li>State Filter<ul>
+<li>keyword: <code class="docutils literal notranslate"><span class="pre">state_filter</span></code></li>
+<li>Selection of states that shall be shown to the agent.</li>
+</ul>
+</li>
+</ul>
+<p>These function modules can be selected in three ways:</p>
+<ul class="simple">
+<li>Passing a keystring (and further keyword arguments for the class) :<ul>
+<li><code class="docutils literal notranslate"><span class="pre">reference_generator='SinusoidalReference',</span> <span class="pre">amplitude_range=(0.2,</span> <span class="pre">0.8)</span></code></li>
+</ul>
+</li>
+<li>Passing a class pointer (and further keyword arguments for the class)<ul>
+<li><code class="docutils literal notranslate"><span class="pre">reference_generator=SinusoidalReferenceGenerator,</span> <span class="pre">amplitude_range=(0.2,0.8)</span></code></li>
+</ul>
+</li>
+<li>Passing an instantiated object<ul>
+<li><code class="docutils literal notranslate"><span class="pre">reference_generator</span> <span class="pre">=</span> <span class="pre">SinusoidalReferenceGenerator(amplitude_range=(0.2,0.8)</span></code></li>
+</ul>
+</li>
+</ul>
+<p>Furthermore, the internal function modules of the physical systems like the converter, motor, load can be selected in
+the make keyword-arguments in the same way.</p>
+<p>The available modules and specific keyword-arguments for each module can be looked up in the API-documentation.</p>
 </div>
 <div class="section" id="reset">
 <h3>Reset<a class="headerlink" href="#reset" title="Permalink to this headline">¶</a></h3>
@@ -363,7 +444,11 @@ All visualizations are optional and recommended to be disabled for increased spe
 <li>series motor</li>
 <li>shunt motor</li>
 </ul>
-<p>and the PMSM (permanent magnet synchronous motor)</p>
+<p>Two three phase motors:</p>
+<ul class="simple">
+<li>PMSM (permanent magnet synchronous motor)</li>
+<li>SynRM (synchronous reluctance motor)</li>
+</ul>
 </div>
 </div>
 <div class="section" id="converter">
@@ -373,6 +458,7 @@ All visualizations are optional and recommended to be disabled for increased spe
 <li>1 quadrant converter (1QC)</li>
 <li>2 quadrant converter (2QC) as an asymmetric half bridge with both current polarities</li>
 <li>4 quadrant converter (4QC)</li>
+<li>B6 Bridge Converter (B6C)</li>
 </ul>
 <p>All converters can consider interlocking times and a dead time of one sampling interval.
 Furthermore, they can be controlled with a discrete action space or a continuous action space.</p>
@@ -392,6 +478,16 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
 <p>Furthermore, the angular velocity is the mechanical one and not the electrical:</p>
 <a class="reference external image-reference" href="docs/plots/omegame.svg"><img alt="" src="../_images/omegame.svg" /></a>
 </div>
+<div class="section" id="running-unittests-with-pytest">
+<h3>Running Unittests with Pytest<a class="headerlink" href="#running-unittests-with-pytest" title="Permalink to this headline">¶</a></h3>
+<p>To run the unittests ‘’pytest’’ is required.
+All tests can be found in the ‘’tests’’ folder.
+Execute pytest in the project’s root folder:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; pytest
+</pre></div>
+</div>
+<p>All tests shall pass.</p>
+</div>
 </div>
 </div>
 
@@ -403,10 +499,10 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="technicalbackground.html" class="btn btn-neutral float-right" title="Technical Background" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="environments/environment.html" class="btn btn-neutral float-right" title="Environments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to gym-electric-motor’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to gym-electric-motor(GEM)’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
