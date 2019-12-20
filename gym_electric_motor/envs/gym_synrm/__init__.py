@@ -1,0 +1,2 @@
+from .syn_reluctance_motor_env import DiscSynchronousReluctanceMotorEnvironment
+from .syn_reluctance_motor_env import ContSynchronousReluctanceMotorEnvironment

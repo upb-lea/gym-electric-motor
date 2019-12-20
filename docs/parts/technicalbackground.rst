@@ -15,9 +15,10 @@ The DC motors
 - series
 - shunt
 
-and the
+and the synchronous motors
 
 - permanent magnet synchronous motor (PMSM)
+- synchronous reluctance motor (SynRM)
 
 are included. The figure below shows the basic structure of converter, motor and load that is modeled.
 

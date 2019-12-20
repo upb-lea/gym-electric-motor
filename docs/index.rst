@@ -3,12 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to gym-electric-motor's documentation!
-==============================================
+Welcome to gym-electric-motor(GEM)'s documentation!
+===================================================
+
+The gym-electric-motor (GEM) package is a software toolbox for the simulation of different electric motors to
+train and test reinforcement learning motor controllers and to compare them with classical motor controllers.
 
 
 Getting started
 ***************************
+
+A quick start guide can be found in the following Readme-File.
 
 .. toctree::
    :maxdepth: 1
@@ -17,16 +22,29 @@ Getting started
    parts/readme
 
 
+Content
+*******
+
+In the environments section all available GEM-environments are presented with their default configuration.
+For quick start, one of these can be selected and used out of the box.
+
+
+The documentation of the base classes is important for the development of own modules like further reward functions or
+reference generators. In this part, the basic interfaces of each module are specified.
+For the development of physical models like further motor models or further mechanical load models, the physical system
+documentation specifies the basic interfaces inside a physical system.
+
 ..  toctree::
-    :maxdepth: 2
-    :caption: Environments Contents:
+    :maxdepth: 4
+    :titlesonly:
+    :caption: gym-electric-motor Contents:
 
-    parts/technicalbackground
-    parts/dashboard
-    parts/environments
-    parts/technical_models
+    parts/environments/environment
+    parts/reference_generators/reference_generator
+    parts/reward_functions/reward_function
+    parts/physical_systems/physical_system
+    parts/visualizations/visualization
     parts/utils
-
 
 Indices and tables
 ==================

@@ -1,47 +1,60 @@
-import gym
-from keras.models import Sequential, Model, model_from_json
+import numpy as np
+from keras.models import Sequential, Model
 from keras.layers import Dense, Activation, Flatten, Input, Concatenate
 from keras.optimizers import Adam
-import gym_electric_motor
+import gym_electric_motor as gem
 from rl.agents import DDPGAgent
 from rl.memory import SequentialMemory
-from rl.random import OrnsteinUhlenbeckProcess, GaussianWhiteNoiseProcess, AnnealedGaussianProcess
-from rl.callbacks import FileLogger
-
+from rl.random import GaussianWhiteNoiseProcess
+from gym_electric_motor.reference_generators import MultiReferenceGenerator, WienerProcessReferenceGenerator, \
+    StepReferenceGenerator, SinusoidalReferenceGenerator
+from gym_electric_motor.visualization import MotorDashboard
+from gym.wrappers import FlattenObservation
 
 # Create the environment
-env_name = 'emotor-dc-series-cont-v0'
-env = gym.make(
-    env_name,
-    episode_length=10000,
-    on_dashboard=['omega', 'u'],
-    reward_weight=[["omega", 1.0]],
-    reward_fct='swsae',
-    limit_observer='no_punish',
-    safety_margin=1.3
-)
+env = gem.make(
+    'emotor-dc-series-cont-v1',
+    # Pass a class with extra parameters
+    visualization=MotorDashboard, visu_period=1,
 
+    # Take standard class and pass parameters (Load)
+    load_parameter=dict(a=0, b=.0, c=0.0, j_load=.5),
+
+    # Pass a string (with extra parameters)
+    ode_solver='euler', solver_kwargs={},
+    # Pass an instance
+    reference_generator=WienerProcessReferenceGenerator(reference_state='i')
+)
+# Keras-rl DDPG-agent only accepts flat observations
+env = FlattenObservation(env)
 nb_actions = env.action_space.shape[0]
 
-action_input = Input(shape=(nb_actions,), name='action_input')
-
-# Actor Model
 actor = Sequential()
 actor.add(Flatten(input_shape=(1,) + env.observation_space.shape))
-actor.add(Dense(64))
+actor.add(Dense(16))
+actor.add(Activation('relu'))
+actor.add(Dense(16))
+actor.add(Activation('relu'))
+actor.add(Dense(16))
 actor.add(Activation('relu'))
 actor.add(Dense(nb_actions))
-actor.add(Activation('sigmoid'))
+actor.add(Activation('linear'))
+print(actor.summary())
 
-# Critic Model
+action_input = Input(shape=(nb_actions,), name='action_input')
 observation_input = Input(shape=(1,) + env.observation_space.shape, name='observation_input')
 flattened_observation = Flatten()(observation_input)
 x = Concatenate()([action_input, flattened_observation])
-x = Dense(64)(x)
+x = Dense(32)(x)
+x = Activation('relu')(x)
+x = Dense(32)(x)
+x = Activation('relu')(x)
+x = Dense(32)(x)
 x = Activation('relu')(x)
 x = Dense(1)(x)
 x = Activation('linear')(x)
-critic = Model(inputs=[action_input, observation_input], outputs=x)
+critic = Model(inputs=(action_input, observation_input), outputs=x)
+print(critic.summary())
 
 # Create a replay memory
 memory = SequentialMemory(

@@ -1,61 +1,36 @@
-import gym
-import numpy as np
+from gym_electric_motor.visualization import MotorDashboard
 from examples.agents.simple_controllers import Controller
-import gym_electric_motor
+from gym_electric_motor.reference_generators import *
 
-# Initialize the environment
-env_name = 'emotor-dc-series-cont-v0'
+import numpy as np
+import time
 
-motor_type = env_name.split('-')[2]
+import gym_electric_motor as gem
 
+env = gem.make(
+    'emotor-dc-series-cont-v1',
+    # Pass an instance
+    visualization=MotorDashboard(plotted_variables=['all'], visu_period=1),
 
-env = gym.make(
-    env_name,
-    episode_length=10000,
-    on_dashboard=['True'],
-    reward_weight=[["omega", 1.0]],
-    reward_fct='swsae',
-    limit_observer='no_punish',
-    safety_margin=1.3
+    # Take standard class and pass parameters (Load)
+    load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.05),
+
+    # Pass a string (with extra parameters)
+    ode_solver='euler', solver_kwargs={},
+    # Pass a Class with extra parameters
+    reference_generator=MultiReferenceGenerator(
+        sub_generators=[SinusoidalReferenceGenerator, WienerProcessReferenceGenerator(), StepReferenceGenerator()],
+        p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
+    )
 )
-agent = 'cascaded_PI_controller'  # Specify the controller
-
-
-# necessary to fit the controller parameters to the plant and specify the controller
-params = env.get_motor_param()
-params['env_name'] = env_name
-controller = Controller(agent, params)
-
-controller.action_space = env.action_space
-controller.observation_space = env.observation_space
-
-
-# Reset before every episode starts
-omega, torque, i_, u_in, *ref = env.reset()
-
-# state = [omega, armature current, excitation current]
-# armature and excitation current are the same at the series DC motor
-state = np.array([omega, i_, i_])
-
-done = False
-k = 0
+controller = Controller.make('cascaded_pi', env)
+state, reference = env.reset()
+start = time.time()
 cum_rew = 0
-while not done:
-    # Visualization call
+for i in range(100000):
     env.render()
-
-    # The controller determines the next action
-    action = controller.control(state, ref[0], i_)
-
-    # The action is applied to the environment which returns the next observation
-    (omega, torque, i_, u_in, u_sup, *ref), rew, done, _ = env.step(action)
-
-    # next motor state
-    state = np.array([omega, i_, i_])
-
-    # cumulative reward
-    cum_rew += rew
-    k += 1
-print('Episode Reward: ', cum_rew)
-
-
+    action = controller.control(state, reference)
+    (state, reference), reward, done, _ = env.step(action)
+    cum_rew += reward
+print(cum_rew)
+print(time.time() - start)

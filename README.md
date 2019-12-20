@@ -2,8 +2,8 @@
 ![](docs/plots/project_banner.jpg)
 
 __The gym-electric-motor (GEM) package is a software toolbox for the
- simulation of
- different electric motors.__
+simulation of
+different electric motors.__ 
 
 The toolbox is built upon the [OpenAI Gym Environments](https://gym.openai.com/) for reinforcement learning. 
 Therefore, the toolbox is specifically designed for running reinforcement 
@@ -11,12 +11,13 @@ learning algorithms to train agents controlling electric motors.
 
 [Read the detailed docs!](https://upb-lea.github.io/gym-electric-motor/)
 
-So far, several DC-motor models and a permanent magnet synchronous motor (PMSM) are available. Beside electrical 
-motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or 
+So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM)
+and synchronous reluctance motor (SynRM) are available.
+Beside electrical motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or 
 switching commands (discrete mode). 
 The figure shows the basic scheme of the converter, motor and load. 
 ### Physical Structure of the Environment's Components
-![](docs/plots/FigureConvMotorLoad6.svg)
+![](docs/plots/SCML_Setting.svg)
 ### Control Flow of a Step Cycle of the Environment 
 ![](docs/plots/CycleScheme.svg)
 
@@ -45,7 +46,7 @@ pip install gym-electric-motor
 - Install from Github source:
 
 ```
-git clone git@github.com:upb-lea/gym-electric-motor.git
+git clone git@github.com:upb-lea/gym-electric-motor.git 
 cd gym-electric-motor
 # Then either
 python setup.py install
@@ -57,62 +58,105 @@ Arne Traue, Gerrit Book
 
 ## Getting started
 Like every gym environment, the basic user interface consists of four main functions.
+* `import gym_electric_motor as gem`  
+    Import of the package. 
 
-* `gym.make(environment-id, **kwargs)`  
+* `env = gem.make(environment-id, **kwargs)`  
     Returns an instantiated motor environment. Call this function at the beginning.
+    The `gem.make()` method is equal to the `gym.make()`. By using `gem.make()`you can avoid importing gym additionally. 
  
-* `env.reset()`  
+* `(initial_state, initial_reference) = env.reset()`  
     Resets the motor. This includes a new initial state and new reference trajectories.
     Call this function before a new episode starts. 
 
-* `env.step(action)`      
+* `(state, reference), reward, done, _ = env.step(action)`      
     Simulate one single time step on the motor with an action.
     Call this function iteratively until termination is reached.
 
 * `env.render()`    
     Update the visualization of the motor states.
 
-### Gym Make Call
+### Gem Make Call
 The make function takes the environment-ids and several constructor arguments.
+Every environment also works without further parameters with default values.
+These default parameters can be looked up in the API-documentation of every GEM-environment.
 With the environment-id you select a certain motor type and action type (continuous or discrete) and with the further 
 constructor arguments you can parametrize the environment to your control problem.
 
 ##### Environment Ids
 
-* `'emotor-dc-extex-cont-v0'`     
-    externally excited DC motor with continuous actions.
+* `'emotor-dc-extex-cont-v1'`     
+    Externally excited DC motor with continuous actions.
  
-* `'emotor-dc-extex-disc-v0'`   
-    externally excited DC motor with discrete actions.
+* `'emotor-dc-extex-disc-v1'`   
+    Externally excited DC motor with discrete actions.
 
-* `'emotor-dc-permex-cont-v0'`    
-    permanently excited DC motor with continuous actions.
+* `'emotor-dc-permex-cont-v1'`    
+    Permanently excited DC motor with continuous actions.
 
-* `'emotor-dc-permex-disc-v0'`    
-    permanently excited DC motor with discrete actions.
+* `'emotor-dc-permex-disc-v1'`    
+    Permanently excited DC motor with discrete actions.
 
-* `'emotor-dc-shunt-cont-v0'`    
+* `'emotor-dc-shunt-cont-v1'`    
     DC shunt motor with continuous actions.
 
-* `'emotor-dc-shunt-disc-v0'`    
+* `'emotor-dc-shunt-disc-v1'`    
     DC shunt motor with discrete actions.
 
-* `'emotor-dc-series-cont-v0'`    
+* `'emotor-dc-series-cont-v1'`    
     DC series motor with continuous actions.
 
-* `'emotor-dc-series-disc-v0'`  
+* `'emotor-dc-series-disc-v1'`  
     DC series motor with discrete actions.
     
-* `'emotor-pmsm-cont-v0'`:  
-    permanent magnet synchronous motor with continuous actions.
+* `'emotor-pmsm-cont-v1'`:  
+    Permanent magnet synchronous motor with continuous actions.
 
-* `'emotor-pmsm-disc-v0'`:  
-    permanent magnet synchronous motor with discrete actions.
+* `'emotor-pmsm-disc-v1'`:  
+    Permanent magnet synchronous motor with discrete actions.
+    
+* `'emotor-synrm-cont-v1'`:  
+    Synchronous reluctance motor with continuous actions.
 
-#### Make Arguments
-With the constructor arguments you can parametrize the control problem. 
-You can select, which motor model to take, which quantities to control, etc.
+* `'emotor-synrm-disc-v1'`:  
+    Synchronous reluctance motor with discrete actions.
 
+#### Make Keyword-Arguments
+Using the keyword arguments in the `gem.make(id, **kwargs)` function you can select different function modules for the 
+environment and parametrize these modules. 
+The main level modules of each GEM-environment consists of four function modules:
+
+* Physical System
+    * keyword: `physical_system`
+    * Specification and simulation of the system model.
+* Reference Generator
+    * keyword: `reference_generator`
+    * Generation of references that the physical system has to follow.
+* Reward Function
+    * keyword: `reward_function`
+    * Reward calculation based on the current state and reference.
+* Visualization    
+    * keyword: `visualization`
+    * Visualization of the physical systems state, reference and rewards.
+* State Filter
+    * keyword: `state_filter`
+    * Selection of states that shall be shown to the agent.
+    
+These function modules can be selected in three ways:
+
+* Passing a keystring (and further keyword arguments for the class) :
+     * `reference_generator='SinusoidalReference', amplitude_range=(0.2, 0.8)`
+
+* Passing a class pointer (and further keyword arguments for the class)
+    * `reference_generator=SinusoidalReferenceGenerator, amplitude_range=(0.2,0.8)`
+
+* Passing an instantiated object
+  * `reference_generator = SinusoidalReferenceGenerator(amplitude_range=(0.2,0.8)`
+      
+Furthermore, the internal function modules of the physical systems like the converter, motor, load can be selected in
+the make keyword-arguments in the same way. 
+
+The available modules and specific keyword-arguments for each module can be looked up in the API-documentation.
 ### Reset
 The reset function determines new references, new initial values and resets the visualization.
 Call this function before a new episode begins.
@@ -148,7 +192,10 @@ Four DC motors:
 - series motor
 - shunt motor
 
-and the PMSM (permanent magnet synchronous motor)
+Two three phase motors:
+
+- PMSM (permanent magnet synchronous motor)
+- SynRM (synchronous reluctance motor)
 
 ### Converter
 Following converters are included:
@@ -158,6 +205,8 @@ Following converters are included:
 - 2 quadrant converter (2QC) as an asymmetric half bridge with both current polarities
 
 - 4 quadrant converter (4QC)
+
+- B6 Bridge Converter (B6C)
 
 All converters can consider interlocking times and a dead time of one sampling interval.
 Furthermore, they can be controlled with a discrete action space or a continuous action space.
@@ -178,3 +227,13 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
 Furthermore, the angular velocity is the mechanical one and not the electrical: 
 
 ![](docs/plots/omegame.svg)
+
+
+### Running Unittests with Pytest
+To run the unittests ''pytest'' is required.
+All tests can be found in the ''tests'' folder.
+Execute pytest in the project's root folder:
+```
+>>> pytest
+```
+All tests shall pass.

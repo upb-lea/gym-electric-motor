@@ -1,0 +1,2 @@
+from .perm_mag_syn_motor_env import ContPermanentMagnetSynchronousMotorEnvironment
+from .perm_mag_syn_motor_env import DiscPermanentMagnetSynchronousMotorEnvironment

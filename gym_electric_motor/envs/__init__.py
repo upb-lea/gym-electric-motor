@@ -1,10 +1,19 @@
-# DC Motor
-from gym_electric_motor.envs.gym_dcm.dcm_extex import DCMExtExCont, DCMExtExDisc
-from gym_electric_motor.envs.gym_dcm.dcm_permex import DCMPermExCont, \
-    DCMPermExDisc
-from gym_electric_motor.envs.gym_dcm.dcm_series import DCMSeriesCont, \
-    DCMSeriesDisc
-from gym_electric_motor.envs.gym_dcm.dcm_shunt import DCMShuntCont, DCMShuntDisc
+# Version 1
+from .gym_dcm.dc_permex_motor_env import ContDcPermanentlyExcitedMotorEnvironment
+from .gym_dcm.dc_permex_motor_env import DiscDcPermanentlyExcitedMotorEnvironment
 
-# Permanent Magnet Synchronous Motor
-from gym_electric_motor.envs.gym_pmsm.pmsm_env import PmsmCont, PmsmDisc
+from .gym_dcm.dc_extex_motor_env import ContDcExternallyExcitedMotorEnvironment
+from .gym_dcm.dc_extex_motor_env import DiscDcExternallyExcitedMotorEnvironment
+
+from .gym_dcm.dc_series_motor_env import ContDcSeriesMotorEnvironment
+from .gym_dcm.dc_series_motor_env import DiscDcSeriesMotorEnvironment
+
+from .gym_dcm.dc_shunt_motor_env import ContDcShuntMotorEnvironment
+from .gym_dcm.dc_shunt_motor_env import DiscDcShuntMotorEnvironment
+
+from .gym_pmsm.perm_mag_syn_motor_env import ContPermanentMagnetSynchronousMotorEnvironment
+from .gym_pmsm.perm_mag_syn_motor_env import DiscPermanentMagnetSynchronousMotorEnvironment
+
+from gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env import ContSynchronousReluctanceMotorEnvironment
+from gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env import DiscSynchronousReluctanceMotorEnvironment
+
