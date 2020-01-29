@@ -3,7 +3,7 @@ language: python
 install:
   - pip install -r requirements.txt --prefer-binary
   - pip install .
-  - pip install sphinx m2r
+  - pip install sphinx m2r sphinx_rtd_theme
 
 script: 
   - pytest
