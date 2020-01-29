@@ -1,7 +1,7 @@
 language: python
 
 install:
-  - pip install -r requirements.txt
+  - pip install -r requirements.txt --prefer-binary
   - pip install .
   - pip install sphinx
 
