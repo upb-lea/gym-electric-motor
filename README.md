@@ -1,6 +1,8 @@
 # Gym Electric Motor (GEM)
 ![](docs/plots/project_banner.jpg)
 
+[![Build Status](https://travis-ci.org/upb-lea/gym-electric-motor.svg?branch=master)](https://travis-ci.org/upb-lea/gym-electric-motor)
+
 __The gym-electric-motor (GEM) package is a software toolbox for the
 simulation of
 different electric motors.__ 
