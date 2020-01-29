@@ -1,0 +1,20 @@
+language: python
+
+install:
+  - pip install -r requirements.txt
+  - pip install .
+
+script: 
+  - pytest
+  - cd docs
+  - make html
+  - touch _build/html/.nojekyll
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $TRAVIS_TOKEN  # shared with travis-ci.org dashboard
+  keep-history: true
+  on:
+    branch: master
+  local_dir: docs/_build/html/
