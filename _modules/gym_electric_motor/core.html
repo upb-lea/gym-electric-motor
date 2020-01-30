@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.core &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.core</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.core</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">On the core level the electric motor environment and the interface to its submodules are defined. By using these</span>
+<span class="sd">interfaces further reference generators, reward functions, visualizations or physical models can be implemented.</span>
+
+<span class="sd">Each ElectricMotorEnvironment contains the four following modules:</span>
+
+<span class="sd">* PhysicalSystem</span>
+<span class="sd">    - Specification and simulation of the physical model. Furthermore, specifies limits and nominal values\</span>
+<span class="sd">    for all of its ``state_variables``.</span>
+<span class="sd">* ReferenceGenerator</span>
+<span class="sd">    - Calculation of reference trajectories for one or more states of the physical systems ``state_variables``.</span>
+<span class="sd">* RewardFunction</span>
+<span class="sd">    - Calculation of the reward based on the physical systems state and the reference.\</span>
+<span class="sd">     Furthermore, observation of the physical systems limits.</span>
+<span class="sd">* ElectricMotorVisualization</span>
+<span class="sd">    - Visualization of the PhysicalSystems state, reference and reward for the user.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Box</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">set_state_array</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">instantiate</span>
+
+
+<div class="viewcode-block" id="ElectricMotorEnvironment"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotorEnvironment</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description:</span>
+<span class="sd">        The main class connecting all modules of the gym-electric-motor environments.</span>
+
+<span class="sd">    Modules:</span>
+
+<span class="sd">        Physical System:</span>
+<span class="sd">            Containing the physical structure and simulation of the drive system as well as information about the</span>
+<span class="sd">            technical limits and nominal values. Needs to be a subclass of *PhysicalSystem*</span>
+
+<span class="sd">        Reference Generator:</span>
+<span class="sd">            Generation of the reference for the motor to follow. Needs to be a subclass of *ReferenceGenerator*</span>
+
+<span class="sd">        Reward Function:</span>
+<span class="sd">            Calculation of the reward based on the state of the physical system and the generated reference</span>
+<span class="sd">            and observation if the motor state is within the limits. Needs to be a subclass of *RewardFunction*.</span>
+
+<span class="sd">        Visualization:</span>
+<span class="sd">            Visualization of the motors states. Needs to be a subclass of *ElectricMotorVisualization*</span>
+
+<span class="sd">    State Variables:</span>
+<span class="sd">        Each environment has got a list of state variables that are defined by the physical system.</span>
+<span class="sd">        These define the names and order for all further state arrays in the modules. These states are announced to the</span>
+<span class="sd">        other modules by announcing the physical system to them, which contains the property ``state_names``.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ``[&#39;omega&#39;, &#39;torque&#39;,&#39;i&#39;, &#39;u&#39;, &#39;u_sup&#39;]``</span>
+
+<span class="sd">    Observation:</span>
+<span class="sd">        Type: Tuple(State_Space, Reference_Space)</span>
+<span class="sd">            The observation is always a tuple of the State Space of the Physical System and the Reference Space of the</span>
+<span class="sd">            Reference Generator. In all current Physical Systems and Reference Generators these Spaces are normalized,</span>
+<span class="sd">            continuous, multidimensional boxes in [-1, 1] or [0, 1].</span>
+
+<span class="sd">    Actions:</span>
+<span class="sd">        Type: Discrete() / Box()</span>
+<span class="sd">            The action space of the environments are the action spaces of the physical systems. In all current physical</span>
+<span class="sd">            systems the action spaces are specified by its PowerElectronicConverter and either a continuous,</span>
+<span class="sd">            multidimensional box or discrete.</span>
+
+<span class="sd">    Reward:</span>
+<span class="sd">        The reward and the reward range are specified by the RewardFunction. In general the reward is higher the closer</span>
+<span class="sd">        the motor state follows the reference trajectories.</span>
+
+<span class="sd">    Starting State:</span>
+<span class="sd">        The physical system and the reference generator define the starting state.</span>
+
+<span class="sd">    Episode Termination:</span>
+<span class="sd">        Episode terminations can be initiated by the reference generator, or the reward function.</span>
+<span class="sd">        A reference generator might terminate an episode, if the reference has ended.</span>
+<span class="sd">        The reward function can terminate an episode, if a physical limit of the motor has been violated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             PhysicalSystem: The Physical System of the Environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">reference_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             ReferenceGenerator: The ReferenceGenerator of the Environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span>
+
+    <span class="nd">@reference_generator</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">reference_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setting of a new reference generator for the environment. Afterwards, a reset is required.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reference_generator(ReferenceGenerator): The new reference generator of the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span> <span class="o">=</span> <span class="n">reference_generator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">reward_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             RewardFunction: The RewardFunction of the environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span>
+
+    <span class="nd">@reward_function</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">reward_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setting of a new reward function for the environment. Afterwards, a reset is required.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reward_function(RewardFunction): The new reward function of the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span> <span class="o">=</span> <span class="n">reward_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setting and initialization of all environments&#39; modules.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            physical_system(PhysicalSystem): The physical system of this environment.</span>
+<span class="sd">            reference_generator(ReferenceGenerator): The reference generator of this environment.</span>
+<span class="sd">            reward_function(RewardFunction): The reward function of this environment.</span>
+<span class="sd">            visualization(ElectricMotorVisualization): The visualization of this environment.</span>
+<span class="sd">            state_filter(list(str)): Selection of states that are shown in the observation.</span>
+<span class="sd">            **kwargs: Arguments to be passed to the modules.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">RewardFunction</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">visualization</span> <span class="o">=</span> <span class="n">visualization</span> <span class="ow">or</span> <span class="n">ElectricMotorVisualization</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">ElectricMotorVisualization</span><span class="p">,</span> <span class="n">visualization</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Announcement of the Modules among each other</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Initialization of properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Initialization of the state filter and the spaces</span>
+        <span class="n">state_filter</span> <span class="o">=</span> <span class="n">state_filter</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">state_var</span> <span class="ow">in</span> <span class="n">state_filter</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">state_var</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">states_low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">]</span>
+        <span class="n">states_high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">]</span>
+        <span class="n">state_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">states_low</span><span class="p">,</span> <span class="n">states_high</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">((</span>
+            <span class="n">state_space</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">reference_space</span>
+        <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">action_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">reward_range</span>
+
+<div class="viewcode-block" id="ElectricMotorEnvironment.reset"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset of the environment and all its modules to an initial state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             The initial observation consisting of the initial state and initial reference.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span> <span class="n">next_ref</span><span class="p">,</span> <span class="n">trajectories</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">trajectories</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">],</span> <span class="n">next_ref</span></div>
+
+<div class="viewcode-block" id="ElectricMotorEnvironment.render"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the visualization of the motor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ElectricMotorEnvironment.step"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform one simulation step of the environment with an action of the action space.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: Action to play on the environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            observation(Tuple(ndarray(float),ndarray(float)): Tuple of the new state and the next reference.</span>
+<span class="sd">            reward(float): Amount of reward received for the last step.</span>
+<span class="sd">            done(bool): Flag, indicating if a reset is required before new steps can be taken.</span>
+<span class="sd">            {}: An empty dictionary for consistency with the OpenAi Gym interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;A reset is required before the environment can perform further steps&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">reward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+
+        <span class="n">ref_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">],</span> <span class="n">ref_next</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span><span class="p">,</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="ElectricMotorEnvironment.close"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when the environment is deleted. Closes all its modules.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="ElectricMotorVisualization"><a class="viewcode-back" href="../../parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotorVisualization</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for all visualizations in the gym-electric-motor toolbox and an empty dummy visualization, if no</span>
+<span class="sd">    visualization is required.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ElectricMotorVisualization.set_modules"><a class="viewcode-back" href="../../parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            physical_system(PhysicalSystem):</span>
+<span class="sd">                This function is called from the environment in its initialization.</span>
+<span class="sd">                Settings that require the knowledge of the physical system (like setting of state variables) have to be</span>
+<span class="sd">                done in this function.</span>
+<span class="sd">            reference_generator(ReferenceGenerator):</span>
+<span class="sd">                This function is called from the environment in its initialization.</span>
+<span class="sd">                Settings that require the knowledge of the reference generator (like setting of referenced variables)</span>
+<span class="sd">                have to be done in this function.</span>
+<span class="sd">            reward_function(RewardFunction):</span>
+<span class="sd">                This function is called from the environment in its initialization.</span>
+<span class="sd">                Settings that require the knowledge of the reward function (like setting of reward ranges) have</span>
+<span class="sd">                to be done in this function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ElectricMotorVisualization.reset"><a class="viewcode-back" href="../../parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when the environment is reset to clear or save plots etc.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reference_trajectories(dict(list/ndarray(float))): If references are known in advance by the reference</span>
+<span class="sd">            generator, they are passed here to the visualization as a dictionary of the state_name to a</span>
+<span class="sd">            list of future reference points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ElectricMotorVisualization.step"><a class="viewcode-back" href="../../parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called by the environment every cycle and passes the current, normalized state array,</span>
+<span class="sd">        the normalized references in the same shape as the state array and the received reward.</span>
+<span class="sd">        For non-referenced states the value in the reference array can be ignored.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ```state_variables = [&#39;omega&#39;, &#39;torque&#39;, &#39;i&#39;, &#39;u&#39;, &#39;u_sup&#39;]```</span>
+<span class="sd">            ```state = [0.65, 0.32, 0.2, 1.0, 1.0]```</span>
+<span class="sd">            ```reference = [0.7, 0.0, 0.0, 0.0, 0.0]```</span>
+<span class="sd">            Only the first reference value is important here, because all others are not referenced.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(ndarray(float)): The state of the physical system.</span>
+<span class="sd">            reference(ndarray(float)): The reference array of the reference generator.</span>
+<span class="sd">            reward(float): The reward from the reward function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ElectricMotorVisualization.close"><a class="viewcode-back" href="../../parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when the environment is deleted to close or save figures, logs etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="ReferenceGenerator"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">ReferenceGenerator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The abstract base class for reference generators in the gym electric motor environments.</span>
+
+<span class="sd">    reference_space:</span>
+<span class="sd">        Space from the OpenAI Gym Toolbox to define the space of the reference observations.</span>
+
+<span class="sd">    The reference generator is called twice per step.</span>
+
+<span class="sd">    Call of get_reference():</span>
+<span class="sd">        Once, to get the reference array. The reference array has got the same shape as the state array and contains</span>
+<span class="sd">        the current reference values for referenced state variables and a default value (e.g zero) at all other entries.</span>
+<span class="sd">        This reference array is used to calculate the rewards.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ``reference_array=np.array([0.8, 0.0, 0.0, 0.0])`` \n</span>
+<span class="sd">            ``state_variables=[&#39;omega&#39;, &#39;torque&#39;, &#39;i&#39;, &#39;u&#39;, &#39;u_sup&#39;]`` \n</span>
+<span class="sd">            This would be the corresponding reference array for an environment with the upper state array with an omega</span>
+<span class="sd">            reference.</span>
+
+<span class="sd">    Call of get_reference_observation():</span>
+<span class="sd">        Another time to get the reference observation. The reference observation needs to be in the defined reference</span>
+<span class="sd">        space. For example, it can contain future reference values of the next n steps (of the referenced states only).</span>
+<span class="sd">        It can have in general any shape and content. The returned object of this method is the reference that is</span>
+<span class="sd">        shown to the agent.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ``reference_observation = np.array([0.8, 0.6, 0.4])`` \n</span>
+<span class="sd">            This array could model a reference observation for an omega controlled environment that shows the agent not</span>
+<span class="sd">            only the reference for the next time step t+1 but also t+3 and t+3.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: The gym.space the references are in.</span>
+    <span class="n">reference_space</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_physical_system</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_referenced_states</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">referenced_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span>
+
+<div class="viewcode-block" id="ReferenceGenerator.set_modules"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Announcement of the PhysicalSystem to the ReferenceGenerator.</span>
+
+<span class="sd">        In subclasses, store all important information from the physical system to the ReferenceGenerator here.</span>
+<span class="sd">        The environment announces the physical system to the ReferenceGenerator during its initialization.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            physical_system(PhysicalSystem): The physical system of the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">physical_system</span></div>
+
+<div class="viewcode-block" id="ReferenceGenerator.get_reference"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the reference array of the current time step.</span>
+
+<span class="sd">        The reference array needs to be in the same shape as the state variables. For referenced states the reference</span>
+<span class="sd">        value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(ndarray(float)): Current state array of the environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             ndarray(float)): Current reference array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="ReferenceGenerator.get_reference_observation"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference_observation">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the reference observation for the next time step. This observation needs to fit in the reference space.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(ndarray(float)): Current state array of the environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            value in reference_space: Observation for the next reference time step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="ReferenceGenerator.reset"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset of references for a new episode.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            initial_state(ndarray(float)): The initial state array of the environment.</span>
+<span class="sd">            initial_reference(ndarray(float)): If not None: A desired initial reference array.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            reference_array(ndarray(float)): The current reference array of time step 0.</span>
+
+<span class="sd">            reference_observation(value in reference_space): The reference observation for the next time step. \\</span>
+
+<span class="sd">            trajectories(dict(list(float)): If available, \</span>
+<span class="sd">                generated trajectories for the Visualization can be passed here. Otherwise return None. \</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reference</span><span class="p">(</span><span class="n">initial_state</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reference_observation</span><span class="p">(</span><span class="n">initial_state</span><span class="p">),</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ReferenceGenerator.close"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called by the environment, when the environment is deleted to close files, store logs...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="RewardFunction"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction">[docs]</a><span class="k">class</span> <span class="nc">RewardFunction</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The abstract base class for reward functions in the gym electric motor environments.</span>
+
+<span class="sd">    The reward function is called once per step and returns reward for the current time step.</span>
+<span class="sd">    Furthermore, the reward function includes the limit observer. If limits have been violated and the episode ended</span>
+<span class="sd">    a different reward for violating the limits is returned.</span>
+
+<span class="sd">    reward_range:</span>
+<span class="sd">        Tuple(float, float): Defining lowest and highest possible rewards for non limit-violating steps.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Tuple(int,int): Lower and upper possible reward (excluding limit violation reward)</span>
+    <span class="n">reward_range</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            observed_states(list/tuple(str)): Names of the observed states. [&#39;all&#39;] for the observation of every state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">observed_states</span> <span class="o">=</span> <span class="n">observed_states</span> <span class="ow">or</span> <span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">observed_states</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call of the reward calculation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: State array of the environment.</span>
+<span class="sd">            reference: Reference array of the environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The reward for the state, reference pair</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RewardFunction.set_modules"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setting of the physical system, to set state arrays fitting to the environments states</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            physical_system(PhysicalSystem): The physical system of the environment</span>
+<span class="sd">            reference_generator(ReferenceGenerator): The reference generator of the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">physical_system</span>
+        <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span> <span class="o">=</span> <span class="n">reference_generator</span></div>
+
+<div class="viewcode-block" id="RewardFunction.reward"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward">[docs]</a>    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reward calculation. If limits have been violated the limit violation reward will be returned. Otherwise,</span>
+<span class="sd">        the standard reward will be returned.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(ndarray(float)): Environments state array.</span>
+<span class="sd">            reference(ndarray(float)): Environments reference array.</span>
+<span class="sd">            action(element of action space): The previously taken action.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Reward for this state, reference pair.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_limit_violation</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="p">),</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_violation_reward</span><span class="p">(</span><span class="n">state</span><span class="p">),</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="RewardFunction.reset"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is called by the environment when reset.</span>
+<span class="sd">        Inner states of the reward function can be reset here, if necessary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            initial_state(ndarray(float)): Initial state array of the Environment</span>
+<span class="sd">            initial_reference(ndarray(float)): Initial reference array of the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="RewardFunction.close"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called, when the environment is closed to store logs, close files etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">_check_limit_violation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check for all observed states, if limits have been violated (i.e. any (absolute) state value is greater than</span>
+<span class="sd">        the limit defined by the physical system).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(ndarray(float)): State array of the environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True, if any observed limit has been violated, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">])</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_limit_violation_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called, when limits have been violated to return a special reward for this case.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(ndarray(float)): Current state array of the environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The limit violation reward.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Standard reward function. Called, when no limits have been violated to calculate the reward based on the state</span>
+<span class="sd">        and the reference.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(ndarray(float)): State array of the environment.</span>
+<span class="sd">            reference(ndarray(float): Reference array of the environment.</span>
+<span class="sd">            action(element of action space): The previously taken action.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Standard reward.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="PhysicalSystem"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem">[docs]</a><span class="k">class</span> <span class="nc">PhysicalSystem</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Physical System module encapsulates the physical model of the system as well as the simulation from one step to</span>
+<span class="sd">    the next.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">k</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             int: The current systems time step k.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tau</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             float: The systems time constant tau.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">state_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             ndarray(str): Array containing the names of the systems states.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">state_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict(int): Dictionary mapping the state names to its positions in the state arrays</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_positions</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            gym.Space: An OpenAI Gym Space that describes the possible actions on the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             gym.Space: An OpenAI Gym Space that describes the possible states of the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             ndarray(float): An array containing the maximum allowed physical values for each state variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nominal_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             ndarray(float): An array containing the nominal values for each state variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_space</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_names</span><span class="p">,</span> <span class="n">tau</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            action_space(gym.Space): The set of allowed actions on the system.</span>
+<span class="sd">            state_space(gym.Space): The set of possible systems states.</span>
+<span class="sd">            state_names(ndarray(str)): The names of the systems states</span>
+<span class="sd">            tau(float): The systems simulation time interval.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span> <span class="o">=</span> <span class="n">action_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="o">=</span> <span class="n">state_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span> <span class="o">=</span> <span class="n">state_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_positions</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
+
+<div class="viewcode-block" id="PhysicalSystem.reset"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the physical system to an initial state before a new episode starts.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             element of state_space: The initial systems state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="PhysicalSystem.simulate"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulation of the Physical System for one time step with the input action.</span>
+<span class="sd">        This method is called in the environment in every step to update the systems state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action(element of action_space): The action to play on the system for the next time step.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            element of state_space: The systems state after the action was applied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="PhysicalSystem.close"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called, when the environment is closed.</span>
+<span class="sd">        Close the System and all of its submodules by closing files, saving logs etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
