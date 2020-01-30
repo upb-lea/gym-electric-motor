@@ -80,7 +80,7 @@ Like every gym environment, the basic user interface consists of four main funct
 * `env.render()`    
     Update the visualization of the motor states.
 
-### Gem Make Call
+### GEM Make Call
 The make function takes the environment-ids and several constructor arguments.
 Every environment also works without further parameters with default values.
 These default parameters can be looked up in the API-documentation of every GEM-environment.
@@ -233,11 +233,15 @@ Furthermore, the angular velocity is the mechanical one and not the electrical:
 ![](docs/plots/omegame.svg)
 
 
-### Running Unittests with Pytest
-To run the unittests ''pytest'' is required.
+### Running Unit Tests with Pytest
+To run the unit tests ''pytest'' is required.
 All tests can be found in the ''tests'' folder.
 Execute pytest in the project's root folder:
 ```
 >>> pytest
+```
+or with test coverage:
+```
+>>> pytest --cov=./
 ```
 All tests shall pass.
