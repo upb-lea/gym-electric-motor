@@ -6,7 +6,7 @@ install:
   - pip install sphinx m2r sphinx_rtd_theme
 
 script: 
-  - pytest
+  - pytest --cov=./
   - cd docs
   - make html
   - touch _build/html/.nojekyll
