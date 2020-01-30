@@ -16,6 +16,7 @@ deploy:
   skip_cleanup: true
   github_token: $TRAVIS_TOKEN  # shared with travis-ci.org dashboard
   keep-history: true
+  target_branch: master
   on:
     branch: master
   local_dir: docs/_build/html/
