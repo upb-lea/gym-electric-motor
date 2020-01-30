@@ -93,7 +93,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#getting-started">Getting started</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#gem-make-call">Gem Make Call</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gem-make-call">GEM Make Call</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#reset">Reset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#step">Step</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#render">Render</a></li>
@@ -104,7 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#converter">Converter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#load">Load</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#notes-about-the-parameters">Notes about the Parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#running-unittests-with-pytest">Running Unittests with Pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-unit-tests-with-pytest">Running Unit Tests with Pytest</a></li>
 </ul>
 </li>
 </ul>
@@ -283,7 +283,7 @@ Call this function iteratively until termination is reached.</p>
 </div>
 </div>
 <div class="section" id="gem-make-call">
-<h3>Gem Make Call<a class="headerlink" href="#gem-make-call" title="Permalink to this headline">¶</a></h3>
+<h3>GEM Make Call<a class="headerlink" href="#gem-make-call" title="Permalink to this headline">¶</a></h3>
 <p>The make function takes the environment-ids and several constructor arguments.
 Every environment also works without further parameters with default values.
 These default parameters can be looked up in the API-documentation of every GEM-environment.
@@ -480,12 +480,16 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
 <p>Furthermore, the angular velocity is the mechanical one and not the electrical:</p>
 <a class="reference external image-reference" href="docs/plots/omegame.svg"><img alt="" src="../_images/omegame.svg" /></a>
 </div>
-<div class="section" id="running-unittests-with-pytest">
-<h3>Running Unittests with Pytest<a class="headerlink" href="#running-unittests-with-pytest" title="Permalink to this headline">¶</a></h3>
-<p>To run the unittests ‘’pytest’’ is required.
+<div class="section" id="running-unit-tests-with-pytest">
+<h3>Running Unit Tests with Pytest<a class="headerlink" href="#running-unit-tests-with-pytest" title="Permalink to this headline">¶</a></h3>
+<p>To run the unit tests ‘’pytest’’ is required.
 All tests can be found in the ‘’tests’’ folder.
 Execute pytest in the project’s root folder:</p>
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; pytest
+</pre></div>
+</div>
+<p>or with test coverage:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; pytest --cov=./
 </pre></div>
 </div>
 <p>All tests shall pass.</p>
