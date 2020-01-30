@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Discrete Synchronous Reluctance Motor Environment &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reference Generators" href="../reference_generators/reference_generator.html" />
+    <link rel="prev" title="Continuous Synchronous Reluctance Motor Environment" href="synrm_cont.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="environment.html">Environments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dc_extex_cont.html">Continuous DC Externally Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_extex_disc.html">Discrete DC Externally Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_permex_cont.html">Continuous DC Permanently Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_permex_disc.html">Discrete DC Permanently Excited Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_series_cont.html">Continuous DC Series Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_series_disc.html">Discrete DC Series Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_shunt_cont.html">Continuous DC Shunt Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_shunt_disc.html">Discrete DC Shunt Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmsm_cont.html">Continuous Permanent Magnet Synchronous Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmsm_disc.html">Discrete Permanent Magnet Synchronous Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="synrm_cont.html">Continuous Synchronous Reluctance Motor Environment</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Discrete Synchronous Reluctance Motor Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="environment.html">Environments</a> &raquo;</li>
+        
+      <li>Discrete Synchronous Reluctance Motor Environment</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/parts/environments/synrm_disc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="discrete-synchronous-reluctance-motor-environment">
+<h1>Discrete Synchronous Reluctance Motor Environment<a class="headerlink" href="#discrete-synchronous-reluctance-motor-environment" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.envs.DiscSynchronousReluctanceMotorEnvironment">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.envs.</code><code class="descname">DiscSynchronousReluctanceMotorEnvironment</code><span class="sig-paren">(</span><em>tau=1e-05</em>, <em>converter='Disc-B6C'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/envs/gym_synrm/syn_reluctance_motor_env.html#DiscSynchronousReluctanceMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.DiscSynchronousReluctanceMotorEnvironment" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Description:</dt>
+<dd>Environment to simulate a discretely controlled Synchronous Reluctance Motor (SynRM).</dd>
+<dt>Key:</dt>
+<dd><cite>emotor-synrm-disc-v1</cite></dd>
+</dl>
+<p>Default Modules:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Physical System:</dt>
+<dd><dl class="first last docutils">
+<dt>SCMLSystem/DcMotorSystem with:</dt>
+<dd><div class="first last line-block">
+<div class="line">IdealVoltageSupply</div>
+<div class="line">DiscB6BridgeConverter</div>
+<div class="line">SynchronousReluctanceMotor</div>
+<div class="line">PolynomialStaticLoad</div>
+<div class="line">GaussianWhiteNoiseGenerator</div>
+<div class="line">EulerSolver</div>
+<div class="line">tau=1e-5</div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt>Reference Generator:</dt>
+<dd><dl class="first last docutils">
+<dt>WienerProcessReferenceGenerator</dt>
+<dd>Reference Quantity. ‘omega’</dd>
+</dl>
+</dd>
+<dt>Reward Function:</dt>
+<dd>WeightedSumOfErrors(reward_weights= {‘omega’: 1 })</dd>
+<dt>Visualization:</dt>
+<dd>ElectricMotorVisualization (Dummy for no Visualization)</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>State Variables:</dt>
+<dd><code class="docutils literal notranslate"><span class="pre">['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i_a',</span> <span class="pre">'i_b',</span> <span class="pre">'i_c',</span> <span class="pre">'u_a',</span> <span class="pre">'u_b',</span> <span class="pre">'u_c',</span> <span class="pre">'epsilon',</span> <span class="pre">'u_sup']</span></code></dd>
+<dt>Observation Space:</dt>
+<dd>Type: Tuple(State_Space, Reference_Space)</dd>
+<dt>State Space:</dt>
+<dd>Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])</dd>
+<dt>Reference Space:</dt>
+<dd>Box(low=[-1], high=[1])</dd>
+<dt>Action Space:</dt>
+<dd>Type: Discrete(8)</dd>
+<dt>Reward:</dt>
+<dd><div class="first last math notranslate nohighlight">
+\[reward = (\omega - \omega^*) / (2 * \omega_{lim})\]</div>
+</dd>
+<dt>Starting State:</dt>
+<dd>Zeros on all state variables.</dd>
+<dt>Episode Termination:</dt>
+<dd>Current limits (i_a ,i_b, i_c) are observed and the reference generation is continuous.
+Therefore, an episode ends only, when current limits have been violated.</dd>
+<dt>Limit Violation Reward:</dt>
+<dd><div class="first last math notranslate nohighlight">
+\[limit~violation~reward = -1 / (1- \gamma ) = -10 (Default: \gamma = 0.9)\]</div>
+</dd>
+</dl>
+<p>u_sup and u_nominal must be the same</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../reference_generators/reference_generator.html" class="btn btn-neutral float-right" title="Reference Generators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="synrm_cont.html" class="btn btn-neutral float-left" title="Continuous Synchronous Reluctance Motor Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

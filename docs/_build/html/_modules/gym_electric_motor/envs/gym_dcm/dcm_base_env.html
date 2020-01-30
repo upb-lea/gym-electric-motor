@@ -1,0 +1,1018 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.envs.gym_dcm.dcm_base_env &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.envs.gym_dcm.dcm_base_env</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.envs.gym_dcm.dcm_base_env</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="k">import</span> <span class="n">ode</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">dcmotor_model</span><span class="p">,</span> <span class="n">converter_models</span><span class="p">,</span> <span class="n">load_models</span>
+<span class="kn">from</span> <span class="nn">..dashboard</span> <span class="k">import</span> <span class="n">MotorDashboard</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">EulerSolver</span>
+
+
+<div class="viewcode-block" id="_DCMBaseEnv"><a class="viewcode-back" href="../../../../parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv">[docs]</a><span class="k">class</span> <span class="nc">_DCMBaseEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            **Description:**</span>
+<span class="sd">                An abstract environment for common functions of the DC motors</span>
+
+<span class="sd">            **Observation:**</span>
+<span class="sd">                Specified by the concrete motor. It is always a concatenation of the state variables, voltages, torque</span>
+<span class="sd">                and next reference values.</span>
+
+<span class="sd">            **Actions:**</span>
+<span class="sd">                Depending on the converter type the action space may be discrete or continuous</span>
+
+<span class="sd">                Type: Discrete(2 / 3 / 4)</span>
+
+<span class="sd">                Num	Action: Depend on the converter</span>
+
+<span class="sd">                    1Q Converter: (only positive voltage and positive current)</span>
+<span class="sd">                        - 0: transistor block</span>
+<span class="sd">                        - 1: positive DC-link voltage applied</span>
+
+<span class="sd">                    2Q Converter: (only positive voltage and both current directions)</span>
+<span class="sd">                        - 0: both transistors blocking</span>
+<span class="sd">                        - 1: positive DC-link voltage applied</span>
+<span class="sd">                        - 2: 0V applied</span>
+
+<span class="sd">                    4Q Converter (both voltage and current directions)</span>
+<span class="sd">                        - 0:	short circuit with upper transistors, 0V applied</span>
+<span class="sd">                        - 1:	positive DC-link voltage</span>
+<span class="sd">                        - 2:    negative DC-link voltage</span>
+<span class="sd">                        - 3:    short circuit with lower transistors, 0V applied</span>
+
+<span class="sd">                Type: Box()</span>
+<span class="sd">                    Defines the duty cycle for the transistors.\n</span>
+<span class="sd">                    [0,  1]: 1Q and 2Q\n</span>
+<span class="sd">                    [-1, 1]: 4Q</span>
+
+<span class="sd">                    For an externally excited motor it is a two dimensional box from [-1, 1] or [0, 1]</span>
+
+<span class="sd">            **Reward:**</span>
+<span class="sd">                The reward is the cumulative squared error (se) or the cumulative absolute error (ae) between the</span>
+<span class="sd">                current value and the current reference of the state variables. Both are also available in a shifted</span>
+<span class="sd">                form with an added on such that the reward is positive. More details are given below.</span>
+<span class="sd">                The variables are normalised by their maximal values and weighted by the reward_weights.</span>
+
+<span class="sd">            **Starting State:**</span>
+<span class="sd">                All observations are assigned a random value.</span>
+
+<span class="sd">            **Episode Termination**:</span>
+<span class="sd">                An episode terminates, when all the steps in the reference have been simulated</span>
+<span class="sd">                or a limit has been violated.</span>
+
+<span class="sd">            **Attributes:**</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+<span class="sd">                | **Name**                   |  **Description**                                         |</span>
+<span class="sd">                +============================+==========================================================+</span>
+<span class="sd">                | **state_vars**             | Names of all the quantities that can be observed         |</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+<span class="sd">                | **state_var_positions**    | Inverse dict of the state vars. Mapping of key to index. |</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+<span class="sd">                | **limits**                 | Maximum allowed values of the state variables            |</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+<span class="sd">                | **reward_weights**         | Ratio of the weight of the state variable for the reward |</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+<span class="sd">                | **on_dashboard**           | Flag indicating if the state var is shown on dashboard   |</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+<span class="sd">                | **noise_levels**           | Percentage of the noise power to the signal power        |</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+<span class="sd">                | **zero_refs**              | State variables that get a fixed zero reference          |</span>
+<span class="sd">                +----------------------------+----------------------------------------------------------+</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">MOTOR_IDX</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># region Properties</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tau</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            the step size of the environment Default: 1e-5 for discrete / 1e-4 for continuous action space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">episode_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The length of the current episode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span>
+
+    <span class="nd">@episode_length</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">episode_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episode_length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the length of the episode in the environment. Must be larger than the prediction horizon.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">episode_length</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">k</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">             The current step in the running episode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">limit_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_observer</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">safety_margin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">prediction_horizon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">motor_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            motor parameter with calculated limits</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;safety_margin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;episode_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;prediction_horizon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;limits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">params</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span>
+
+    <span class="c1"># endregion</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_type</span><span class="p">,</span> <span class="n">state_vars</span><span class="p">,</span> <span class="n">zero_refs</span><span class="p">,</span> <span class="n">converter_type</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">episode_length</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">load_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">motor_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reward_weight</span><span class="o">=</span><span class="p">((</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),),</span> <span class="n">on_dashboard</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;omega&#39;</span><span class="p">,),</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">,</span>
+                 <span class="n">nsteps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prediction_horizon</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise_levels</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">reward_fct</span><span class="o">=</span><span class="s1">&#39;swsae&#39;</span><span class="p">,</span>
+                 <span class="n">limit_observer</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">safety_margin</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dead_time</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Basic setting of all the common motor parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            motor_type: Can be &#39;dc-series&#39;, &#39;dc-shunt&#39;, &#39;dc-extex&#39; or &#39;dc-permex&#39;. Set by the child classes.</span>
+<span class="sd">            state_vars: State variables of the DC motor. Set by the child classes.</span>
+<span class="sd">            zero_refs: State variables that get zero references. (E.g. to punish high control power)</span>
+<span class="sd">            motor_parameter: A dict of motor parameters that differ from the default ones. \n</span>
+<span class="sd">                            For details look into the dc_motor model.</span>
+<span class="sd">            load_parameter: A dict of load parameters that differ from the default ones. \n</span>
+<span class="sd">                            For details look into the load model.</span>
+<span class="sd">            converter_type: The specific converter type.&#39;{disc/cont}-{1Q/2Q/4Q}&#39;. For details look into converter</span>
+<span class="sd">            tau: The step size or sampling time of the environment.</span>
+<span class="sd">            episode_length: The episode length of the environment</span>
+<span class="sd">            reward_weight: Iterable of key/value pairs that specifies how the rewards in the environment</span>
+<span class="sd">                          are weighted.</span>
+<span class="sd">                          E.g. ::</span>
+<span class="sd">                            ((&#39;omega&#39;, 0.9),(&#39;u&#39;, 0.1))</span>
+<span class="sd">            on_dashboard: Iterable that specifies the variables on the dashboard.</span>
+<span class="sd">                            E.g.::</span>
+<span class="sd">                                [&#39;omega&#39;,&#39;u&#39;]</span>
+<span class="sd">            integrator: Select which integrator to choose from &#39;euler&#39;, &#39;dopri5&#39;</span>
+<span class="sd">            nsteps: Maximum allowed number of steps for the integrator.</span>
+<span class="sd">            prediction_horizon: The length of future reference points that are shown to the agents</span>
+<span class="sd">            interlocking_time: interlocking time of the converter</span>
+<span class="sd">            noise_levels: Noise levels of the state variables in percentage of the signal power.</span>
+<span class="sd">            reward_fct: Select the reward function between: (Each one normalised to [0,1] or [-1,0]) \n</span>
+<span class="sd">                &#39;swae&#39;: Absolute Error between references and state variables [-1,0] \n</span>
+<span class="sd">                &#39;swse&#39;: Squared Error between references and state  variables [-1,0]\n</span>
+<span class="sd">                &#39;swsae&#39;: Shifted absolute error / 1 + swae [0,1] \n</span>
+<span class="sd">                &#39;swsse&#39;: Shifted squared error  / 1 + swse [0,1]  \n</span>
+
+<span class="sd">            limit_observer: Select the limit observing function. \n</span>
+<span class="sd">                &#39;off&#39;: No limits are observed. Episode goes on. \n</span>
+<span class="sd">                &#39;no_punish&#39;: Limits are observed, no punishment term for violation. This function should be used with</span>
+<span class="sd">                shifted reward functions. \n</span>
+<span class="sd">                &#39;const_punish&#39;: Limits are observed. Punishment in the form of -1 / (1-gamma) to punish the agent with</span>
+<span class="sd">                the maximum negative reward for the further steps. This function should be used with non shifted reward</span>
+<span class="sd">                functions.</span>
+<span class="sd">            safety_margin: Ratio between maximal and nominal power of the motor parameters.</span>
+<span class="sd">            gamma: Parameter for the punishment of a limit violation. Should equal agents gamma parameter.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span> <span class="o">=</span> <span class="n">gamma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span> <span class="o">=</span> <span class="n">safety_margin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_functions</span><span class="p">(</span><span class="n">reward_fct</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limit_observer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_observers</span><span class="p">(</span><span class="n">limit_observer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="n">episode_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">state_vars</span><span class="p">)</span>
+
+        <span class="c1">#: dict(int): Inverse state vars. Dictionary to map state names to positions in the state arrays</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_var_positions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state_vars</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_var_positions</span><span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">prediction_horizon</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zero_refs</span> <span class="o">=</span> <span class="n">zero_refs</span>
+
+        <span class="c1">#: array(bool): True, if the state variable on the index is a zero_reference. For fast access</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zero_ref_flags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zero_refs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_model</span> <span class="o">=</span> <span class="n">load_models</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="n">load_parameter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span> <span class="o">=</span> <span class="n">dcmotor_model</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">motor_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_model</span><span class="o">.</span><span class="n">load</span><span class="p">,</span> <span class="n">motor_parameter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span> <span class="o">=</span> <span class="n">converter_models</span><span class="o">.</span><span class="n">Converter</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">converter_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="p">,</span> <span class="n">dead_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dashboard</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_vars</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">),</span> <span class="n">episode_length</span> <span class="o">+</span> <span class="n">prediction_horizon</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">on_dashboard</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span> <span class="o">*=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">on_dashboard</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span> <span class="o">*=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span> <span class="o">*=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">on_dashboard</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_var_positions</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">reward_weight</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_var_positions</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_vars</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zero_refs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reference_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">integrators</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;euler&#39;</span><span class="p">,</span> <span class="s1">&#39;dopri5&#39;</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">integrator</span> <span class="ow">in</span> <span class="n">integrators</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;Integrator was </span><span class="si">{integrator}</span><span class="s1">, but has to be in </span><span class="si">{integrators}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">integrator</span> <span class="o">==</span> <span class="s1">&#39;euler&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">EulerSolver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_system_eq</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">ode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_system_eq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_jac</span><span class="p">)</span><span class="o">.</span><span class="n">set_integrator</span><span class="p">(</span><span class="n">integrator</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="n">nsteps</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integrate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">integrate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">action_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_limits</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_observation_space</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_vars</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">noise_levels</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">tuple</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">state_var</span><span class="p">,</span> <span class="n">noise_level</span> <span class="ow">in</span> <span class="n">noise_levels</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_noise_levels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_var_positions</span><span class="p">[</span><span class="n">state_var</span><span class="p">]]</span> <span class="o">=</span> <span class="n">noise_level</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_noise_levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">))</span> <span class="o">*</span> <span class="n">noise_levels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resetDashboard</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="_DCMBaseEnv.seed"><a class="viewcode-back" href="../../../../parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Seed the random generators in the environment</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seed: The value to seed the random number generator with</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_set_observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Child classes need to write their concrete observation space into self.observation_space here</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_set_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Child classes need to write their concrete limits of the state variables into self._limits here</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_step_integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The integration is done for one time period. The converter considers the dead time and interlocking time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: switching state of the converter that should be applied</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="_DCMBaseEnv.step"><a class="viewcode-back" href="../../../../parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clips the action to its limits and performs one step of the environment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: The action from the action space that will be performed on the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple(array(float), float, bool, dict):</span>
+<span class="sd">                **observation:**    The observation from the environment \n</span>
+<span class="sd">                **reward:**         The reward for the taken action \n</span>
+<span class="sd">                **bool:**           Flag if the episode has ended \n</span>
+<span class="sd">                **info:**           An always empty dictionary \n</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">last_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_step_integrate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="n">rew</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">done</span><span class="p">,</span> <span class="n">punish</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_observer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="n">observation_references</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># normalize the observation</span>
+        <span class="n">observation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">],</span> <span class="n">observation_references</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">done</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Check if period is finished</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rew</span> <span class="o">=</span> <span class="n">punish</span>
+        <span class="k">return</span> <span class="n">observation</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="p">{}</span></div>
+
+    <span class="k">def</span> <span class="nf">_set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        call self.system.set_initial_value(initial_state, 0.0) to reset the state to initial.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">MOTOR_IDX</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="_DCMBaseEnv.reset"><a class="viewcode-back" href="../../../../parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the environment.</span>
+
+<span class="sd">        All state variables will be set to a random value in [-nominal value, nominal value].</span>
+<span class="sd">        New references will be generated.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The initial observation for the episode</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Set new state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_initial_state</span><span class="p">()</span>
+        <span class="c1"># New References</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_references</span><span class="p">()</span>
+        <span class="c1"># Reset Integrator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_initial_value</span><span class="p">()</span>
+        <span class="c1"># Reset Dashboard Flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resetDashboard</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Generate new gaussian noise for the state variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_noise_levels</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">))</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># Calculate initial observation</span>
+        <span class="n">observation_references</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">observation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">,</span> <span class="n">observation_references</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="n">observation</span></div>
+
+<div class="viewcode-block" id="_DCMBaseEnv.render"><a class="viewcode-back" href="../../../../parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call this function once a cycle to update the visualization with the current values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dashboard</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># First Call: No dashboard was initialised before</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dashboard</span> <span class="o">=</span> <span class="n">MotorDashboard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)][</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">]</span>
+                                             <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">],</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)][</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">]</span>
+                                             <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">],</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resetDashboard</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_resetDashboard</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dashboard</span><span class="o">.</span><span class="n">reset</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dashboard</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_dashboard</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">)</span>  <span class="c1"># Update the plot in the dashboard</span></div>
+
+<div class="viewcode-block" id="_DCMBaseEnv.close"><a class="viewcode-back" href="../../../../parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When the environment is closed the dashboard will also be closed.</span>
+<span class="sd">        This function does not need to be called explicitly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dashboard</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dashboard</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_system_eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">noise</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The differential equation of the whole system consisting of the converter, load and motor.</span>
+
+<span class="sd">        This function is called by the integrator.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t: Current time of the system</span>
+<span class="sd">            state: The current state as a numpy array.</span>
+<span class="sd">            u_in: Applied input voltage</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The solution of the system. The first derivatives of all the state variables of the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">t_load</span><span class="p">,</span> <span class="n">u_in</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_system_jac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The Jacobian matrix of the systems equation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t: Current time of the system.</span>
+<span class="sd">            state: Current state</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The solution of the Jacobian matrix for the current state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">load_jac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_model</span><span class="o">.</span><span class="n">jac</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">jac</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">load_jac</span><span class="p">)</span>
+
+    <span class="c1"># region Reference Generation</span>
+
+    <span class="k">def</span> <span class="nf">_reference_sin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set sinus references for the state variables with a random amplitude, offset and phase shift</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bandwidth: bandwidth of the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">amplitude</span><span class="p">)</span> <span class="o">+</span> <span class="n">amplitude</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">amplitude</span><span class="p">)</span>
+        <span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_time_interval_reference</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>  <span class="c1"># specify range for period time</span>
+        <span class="n">t_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span><span class="p">)</span> <span class="o">+</span> <span class="n">t_min</span>
+        <span class="n">phase_shift</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">t_s</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">+</span> <span class="n">phase_shift</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+
+    <span class="k">def</span> <span class="nf">_reference_rect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set rect references for the state variables with a random amplitude, offset and phase shift</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bandwidth: bandwidth of the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">amplitude</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">amplitude</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">amplitude</span><span class="p">)</span>
+
+        <span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_time_interval_reference</span><span class="p">(</span><span class="s1">&#39;rect&#39;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>
+        <span class="c1"># specify range for period time</span>
+        <span class="n">t_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span><span class="p">)</span> <span class="o">+</span> <span class="n">t_min</span>
+        <span class="c1"># time period on amplitude + offset value</span>
+        <span class="n">t_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="n">t_s</span>
+        <span class="c1"># time period on offset value</span>
+        <span class="n">t_off</span> <span class="o">=</span> <span class="n">t_s</span> <span class="o">-</span> <span class="n">t_on</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">)</span>
+        <span class="n">reference</span><span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">%</span> <span class="p">(</span><span class="n">t_on</span> <span class="o">+</span> <span class="n">t_off</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t_off</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span>
+        <span class="n">reference</span> <span class="o">+=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">reference</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+
+    <span class="k">def</span> <span class="nf">_reference_tri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set triangular reference with random amplitude, offset, times for rise and fall for all state variables</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bandwidth: bandwidth of the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_time_interval_reference</span><span class="p">(</span><span class="s1">&#39;tri&#39;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>  <span class="c1"># specify range for period time</span>
+        <span class="n">t_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_max</span><span class="o">-</span><span class="n">t_min</span><span class="p">)</span> <span class="o">+</span> <span class="n">t_min</span>
+        <span class="n">t_rise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="n">t_s</span>
+        <span class="n">t_fall</span> <span class="o">=</span> <span class="n">t_s</span> <span class="o">-</span> <span class="n">t_rise</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">amplitude</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">amplitude</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">amplitude</span><span class="p">)</span>
+
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">)):</span>
+            <span class="c1"># use a triangular function</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span> <span class="o">%</span> <span class="n">t_s</span> <span class="o">&lt;=</span> <span class="n">t_rise</span><span class="p">:</span>
+                <span class="n">reference</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">t</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span> <span class="o">%</span> <span class="n">t_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">t_rise</span> <span class="o">*</span> <span class="n">amplitude</span> <span class="o">+</span> <span class="n">offset</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">reference</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">t</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span> <span class="o">%</span> <span class="n">t_s</span> <span class="o">-</span> <span class="n">t_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">t_fall</span> <span class="o">*</span> <span class="n">amplitude</span> <span class="o">+</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">reference</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+
+    <span class="k">def</span> <span class="nf">_reference_sawtooth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sawtooth signal generator with random time period and amplitude</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bandwidth: bandwidth of the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_time_interval_reference</span><span class="p">(</span><span class="s1">&#39;sawtooth&#39;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>  <span class="c1"># specify range for period time</span>
+        <span class="n">t_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span><span class="p">)</span> <span class="o">+</span> <span class="n">t_min</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">amplitude</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">*=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span> <span class="o">%</span> <span class="n">t_s</span> <span class="o">*</span> <span class="n">amplitude</span> <span class="o">/</span> <span class="n">t_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+
+    <span class="k">def</span> <span class="nf">_generate_references</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select which reference to generate. The shaped references (rect, sin, triangular, sawtooth) are equally probable</span>
+<span class="sd">        with 12,5% and a random reference is generated with a probability of 50%</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bandwidth: bandwidth of the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mf">0.125</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_rect</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mf">0.25</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_sin</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mf">0.375</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_tri</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_sawtooth</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_generate_random_references</span><span class="p">()</span>
+        <span class="c1"># Set the supply voltage.</span>
+        <span class="c1"># In this step an additive noise to the supply voltage can be implemented in the future.</span>
+        <span class="n">u_sup</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">u_sup</span> \
+                <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_var_positions</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_var_positions</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">u_sup</span>
+        <span class="c1"># Reset all zero references to zero.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_zero_ref_flags</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zero_refs</span><span class="p">),</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_generate_random_references</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Each subclass needs to define its own random reference generation here.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_generate_random_control_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">maximum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that is called by the random reference generation in the motors to generate a random control sequence.</span>
+
+<span class="sd">        A random control sequence is applied onto the system and generates the reference trajectories.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bw: Bandwidth for the control sequence</span>
+<span class="sd">            maximum: Maximum value for the control sequence</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A random control sequence that is following the bandwidth and power constraints at most.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ref_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span>
+        <span class="n">rands</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">ref_len</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">rands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">rands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">bw_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span>
+        <span class="n">bw</span> <span class="o">*=</span> <span class="n">bw_noise</span>
+        <span class="n">delta_w</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">ref_len</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span>
+        <span class="n">u</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bw</span> <span class="o">/</span> <span class="n">delta_w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">bw</span> <span class="o">/</span> <span class="n">delta_w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+            <span class="n">u</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">sigma</span><span class="p">)]</span> <span class="o">*=</span> <span class="n">sigma</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">*=</span> <span class="n">sigma</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)]</span>
+
+        <span class="n">fourier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">u</span><span class="p">))))</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">fourier</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+
+        <span class="n">power_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">maximum</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">u</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">ref_len</span><span class="p">)</span> <span class="o">*</span> <span class="n">power_noise</span>
+        <span class="n">leakage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
+        <span class="n">voltage_offset</span> <span class="o">=</span> <span class="n">maximum</span> <span class="o">*</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                                    <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">u</span> <span class="o">+=</span> <span class="n">voltage_offset</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">leakage</span><span class="p">)</span> <span class="o">*</span> <span class="n">maximum</span><span class="p">,</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">leakage</span><span class="p">)</span> <span class="o">*</span> <span class="n">maximum</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u</span><span class="p">[:</span><span class="n">ref_len</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_set_time_interval_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns the minimum and maximum time period specified by the bandwidth of the motor,</span>
+<span class="sd">        episode length and individual modifications for each shape</span>
+<span class="sd">        At least on time period of a shape should fit in an episode, but not to fast that the motor can not follow the</span>
+<span class="sd">        reference properly.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            shape: shape of the reference</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Minimal and maximal time period</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximal_bandwidth</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>  <span class="c1"># Bandwidth of reference limited</span>
+        <span class="n">t_episode</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span>
+        <span class="n">t_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">bw</span><span class="p">,</span> <span class="n">t_episode</span><span class="p">)</span>
+        <span class="n">t_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">bw</span><span class="p">,</span> <span class="n">t_episode</span><span class="p">)</span>
+        <span class="c1"># In this part individual modifications can be made for each shape</span>
+        <span class="c1"># Modify the values to get useful references. Some testing necessary to find practical values.</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;sin&#39;</span><span class="p">:</span>
+            <span class="n">t_min</span> <span class="o">=</span> <span class="n">t_min</span>
+            <span class="n">t_max</span> <span class="o">=</span> <span class="n">t_max</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;rect&#39;</span><span class="p">:</span>
+            <span class="n">t_min</span> <span class="o">=</span> <span class="n">t_min</span>
+            <span class="n">t_max</span> <span class="o">=</span> <span class="n">t_max</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;tri&#39;</span><span class="p">:</span>
+            <span class="n">t_min</span> <span class="o">=</span> <span class="n">t_min</span>
+            <span class="n">t_max</span> <span class="o">=</span> <span class="n">t_max</span> <span class="o">/</span> <span class="mi">5</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;sawtooth&#39;</span><span class="p">:</span>
+            <span class="n">t_min</span> <span class="o">=</span> <span class="n">t_min</span>
+            <span class="n">t_max</span> <span class="o">=</span> <span class="n">t_max</span> <span class="o">/</span> <span class="mi">5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t_min</span> <span class="o">=</span> <span class="n">t_min</span>
+            <span class="n">t_max</span> <span class="o">=</span> <span class="n">t_max</span><span class="o">/</span><span class="mi">5</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">)</span>  <span class="c1"># make sure that the order is correct</span>
+
+    <span class="k">def</span> <span class="nf">_maximal_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the maximal allowed bandwidth, considering a user defined limit and the technical limit.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bandwidth: Maximal user defined value for the bandwidth</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Maximal bandwidth for the reference</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">(),</span> <span class="n">bandwidth</span><span class="p">)</span>
+
+    <span class="c1"># endregion</span>
+
+    <span class="k">def</span> <span class="nf">_set_initial_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defined in each motor itself. Sets the initial environment state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="c1"># region Reward Functions</span>
+
+    <span class="k">def</span> <span class="nf">_reward_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selector for the concrete reward function selected by the key string</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The selected reward function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="c1"># (Reward Function, Reward Range)</span>
+            <span class="s1">&#39;swae&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_absolute_error</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+            <span class="s1">&#39;swse&#39;</span><span class="p">:</span>  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_squared_error</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+            <span class="s1">&#39;swsae&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shifted_absolute_error</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+            <span class="s1">&#39;swsse&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shifted_squared_error</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+        <span class="p">}[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_absolute_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The weighted, absolute error between the reference and state variables normalised to [-1,0]</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: the current state of the environment</span>
+<span class="sd">            reference: the current reference values of the observation variables</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The reward value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">state</span> <span class="o">-</span> <span class="n">reference</span><span class="p">)</span>
+                 <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)]</span>
+                    <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)])</span>
+                 <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_squared_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The weighted, squared absolute error between the reference and state variables normalised to [-1,0]</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: the current state of the environment</span>
+<span class="sd">            reference: the current reference values of the observation variables</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The reward value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">*</span>
+                 <span class="p">((</span><span class="n">state</span> <span class="o">-</span> <span class="n">reference</span><span class="p">)</span>
+                     <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)]</span>
+                        <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)])</span>
+                  <span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                 <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_shifted_squared_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The weighted, squared error between the reference and state variables normalised to [0,1]</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: the current state of the environment</span>
+<span class="sd">            reference: the current reference values of the observation variables</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The reward value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_squared_error</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_shifted_absolute_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The weighted, absolute error between the reference and state variables normalised to [0,1]</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: the current state of the environment</span>
+<span class="sd">            reference: the current reference values of the observation variables</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The reward value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_absolute_error</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region Limit Observers</span>
+
+    <span class="k">def</span> <span class="nf">_limit_observers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selector for the concrete limit observer by the key string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The selected limit observer function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;off&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_observation</span><span class="p">,</span>
+            <span class="s1">&#39;no_punish&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_punish</span><span class="p">,</span>
+            <span class="s1">&#39;const_punish&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_const_punish</span><span class="p">,</span>
+        <span class="p">}[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_no_punish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        No reward punishment, only break the episode when limits are violated. Recommended for positive rewards.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: Current state of the environment</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of a flag if the episode should be terminated and the punishment for the reward</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits_violated</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span> <span class="nf">_const_punish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Punishment, if constraints are violated and termination of the episode.</span>
+
+<span class="sd">        The punishment equals -1 / (1 - self.gamma), which is equivalent to the by gamma discounted reward a learner</span>
+<span class="sd">        would receive, if it receives always the minimum reward after the limit violation.</span>
+
+<span class="sd">        This punishment is recommended, when taking a negative reward function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: Current state of the environment</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of a flag if the episode should be terminated and the punishment for the reward</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits_violated</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Terminate the episode if constraints are violated</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_limits_violated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check, if any limit is violated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: Current state of the environment</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True, if any limit is violated, false otherwise.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_no_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        No limit violations are observed. No punishment and the episode continues even after limit violations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: Current state of the motor</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of a flag if the episode should be terminated (here always false)</span>
+<span class="sd">            and the punishment for the reward (here always 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="c1"># endregion</span>
+
+<div class="viewcode-block" id="_DCMBaseEnv.get_motor_param"><a class="viewcode-back" href="../../../../parts/dc_base_environment.html#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.get_motor_param">[docs]</a>    <span class="k">def</span> <span class="nf">get_motor_param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            This function returns all motor parameters, sampling time, safety margin and converter limits</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;converter_voltage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">voltages</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;converter_current&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="o">.</span><span class="n">currents</span>
+        <span class="k">return</span> <span class="n">params</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

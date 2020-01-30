@@ -1,0 +1,18 @@
+# sphinx
+docs/_build/*
+!docs/_build/html/
+docs/_static/*
+docs/_modules/*
+!.gitkeep
+
+# IDE 
+.idea/
+__pycache__
+*.pyc
+
+# setuptools
+*egg-info*
+
+# miscellaneous
+envs/gym_dcm/__pycache__/
+examples/logs/

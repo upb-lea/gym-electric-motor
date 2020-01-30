@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DC Motor Base Environment &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>DC Motor Base Environment</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/parts/dc_base_environment.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dc-motor-base-environment">
+<h1>DC Motor Base Environment<a class="headerlink" href="#dc-motor-base-environment" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.envs.gym_dcm.dcm_base_env.</code><code class="descname">_DCMBaseEnv</code><span class="sig-paren">(</span><em>motor_type</em>, <em>state_vars</em>, <em>zero_refs</em>, <em>converter_type</em>, <em>tau</em>, <em>episode_length=10000</em>, <em>load_parameter=None</em>, <em>motor_parameter=None</em>, <em>reward_weight=(('omega'</em>, <em>1.0)</em>, <em>)</em>, <em>on_dashboard=('omega'</em>, <em>)</em>, <em>integrator='euler'</em>, <em>nsteps=1</em>, <em>prediction_horizon=0</em>, <em>interlocking_time=0.0</em>, <em>noise_levels=0.0</em>, <em>reward_fct='swsae'</em>, <em>limit_observer='off'</em>, <em>safety_margin=1.3</em>, <em>gamma=0.9</em>, <em>dead_time=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/gym_dcm/dcm_base_env.html#_DCMBaseEnv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description:</strong></dt>
+<dd>An abstract environment for common functions of the DC motors</dd>
+<dt><strong>Observation:</strong></dt>
+<dd>Specified by the concrete motor. It is always a concatenation of the state variables, voltages, torque
+and next reference values.</dd>
+<dt><strong>Actions:</strong></dt>
+<dd><p class="first">Depending on the converter type the action space may be discrete or continuous</p>
+<p>Type: Discrete(2 / 3 / 4)</p>
+<p>Num     Action: Depend on the converter</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>1Q Converter: (only positive voltage and positive current)</dt>
+<dd><ul class="first last simple">
+<li>0: transistor block</li>
+<li>1: positive DC-link voltage applied</li>
+</ul>
+</dd>
+<dt>2Q Converter: (only positive voltage and both current directions)</dt>
+<dd><ul class="first last simple">
+<li>0: both transistors blocking</li>
+<li>1: positive DC-link voltage applied</li>
+<li>2: 0V applied</li>
+</ul>
+</dd>
+<dt>4Q Converter (both voltage and current directions)</dt>
+<dd><ul class="first last simple">
+<li>0:    short circuit with upper transistors, 0V applied</li>
+<li>1:    positive DC-link voltage</li>
+<li>2:    negative DC-link voltage</li>
+<li>3:    short circuit with lower transistors, 0V applied</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="last docutils">
+<dt>Type: Box()</dt>
+<dd><p class="first">Defines the duty cycle for the transistors.</p>
+<p>[0,  1]: 1Q and 2Q</p>
+<p>[-1, 1]: 4Q</p>
+<p class="last">For an externally excited motor it is a two dimensional box from [-1, 1] or [0, 1]</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Reward:</strong></dt>
+<dd>The reward is the cumulative squared error (se) or the cumulative absolute error (ae) between the
+current value and the current reference of the state variables. Both are also available in a shifted
+form with an added on such that the reward is positive. More details are given below.
+The variables are normalised by their maximal values and weighted by the reward_weights.</dd>
+<dt><strong>Starting State:</strong></dt>
+<dd>All observations are assigned a random value.</dd>
+<dt><strong>Episode Termination</strong>:</dt>
+<dd>An episode terminates, when all the steps in the reference have been simulated
+or a limit has been violated.</dd>
+<dt><strong>Attributes:</strong></dt>
+<dd><table border="1" class="first last docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><strong>Name</strong></th>
+<th class="head"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>state_vars</strong></td>
+<td>Names of all the quantities that can be observed</td>
+</tr>
+<tr class="row-odd"><td><strong>state_var_positions</strong></td>
+<td>Inverse dict of the state vars. Mapping of key to index.</td>
+</tr>
+<tr class="row-even"><td><strong>limits</strong></td>
+<td>Maximum allowed values of the state variables</td>
+</tr>
+<tr class="row-odd"><td><strong>reward_weights</strong></td>
+<td>Ratio of the weight of the state variable for the reward</td>
+</tr>
+<tr class="row-even"><td><strong>on_dashboard</strong></td>
+<td>Flag indicating if the state var is shown on dashboard</td>
+</tr>
+<tr class="row-odd"><td><strong>noise_levels</strong></td>
+<td>Percentage of the noise power to the signal power</td>
+</tr>
+<tr class="row-even"><td><strong>zero_refs</strong></td>
+<td>State variables that get a fixed zero reference</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<p>Basic setting of all the common motor parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>motor_type</strong> – Can be ‘dc-series’, ‘dc-shunt’, ‘dc-extex’ or ‘dc-permex’. Set by the child classes.</li>
+<li><strong>state_vars</strong> – State variables of the DC motor. Set by the child classes.</li>
+<li><strong>zero_refs</strong> – State variables that get zero references. (E.g. to punish high control power)</li>
+<li><strong>motor_parameter</strong> – <p>A dict of motor parameters that differ from the default ones.</p>
+<p>For details look into the dc_motor model.</p>
+</li>
+<li><strong>load_parameter</strong> – <p>A dict of load parameters that differ from the default ones.</p>
+<p>For details look into the load model.</p>
+</li>
+<li><strong>converter_type</strong> – The specific converter type.’{disc/cont}-{1Q/2Q/4Q}’. For details look into converter</li>
+<li><strong>tau</strong> – The step size or sampling time of the environment.</li>
+<li><strong>episode_length</strong> – The episode length of the environment</li>
+<li><strong>reward_weight</strong> – <p>Iterable of key/value pairs that specifies how the rewards in the environment
+are weighted.
+E.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),(</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><strong>on_dashboard</strong> – <p>Iterable that specifies the variables on the dashboard.
+E.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><strong>integrator</strong> – Select which integrator to choose from ‘euler’, ‘dopri5’</li>
+<li><strong>nsteps</strong> – Maximum allowed number of steps for the integrator.</li>
+<li><strong>prediction_horizon</strong> – The length of future reference points that are shown to the agents</li>
+<li><strong>interlocking_time</strong> – interlocking time of the converter</li>
+<li><strong>noise_levels</strong> – Noise levels of the state variables in percentage of the signal power.</li>
+<li><strong>reward_fct</strong> – <p>Select the reward function between: (Each one normalised to [0,1] or [-1,0])</p>
+<p>’swae’: Absolute Error between references and state variables [-1,0]</p>
+<p>’swse’: Squared Error between references and state  variables [-1,0]</p>
+<p>’swsae’: Shifted absolute error / 1 + swae [0,1]</p>
+<p>’swsse’: Shifted squared error  / 1 + swse [0,1]</p>
+</li>
+<li><strong>limit_observer</strong> – <p>Select the limit observing function.</p>
+<p>’off’: No limits are observed. Episode goes on.</p>
+<p>’no_punish’: Limits are observed, no punishment term for violation. This function should be used with
+shifted reward functions.</p>
+<p>’const_punish’: Limits are observed. Punishment in the form of -1 / (1-gamma) to punish the agent with
+the maximum negative reward for the further steps. This function should be used with non shifted reward
+functions.</p>
+</li>
+<li><strong>safety_margin</strong> – Ratio between maximal and nominal power of the motor parameters.</li>
+<li><strong>gamma</strong> – Parameter for the punishment of a limit violation. Should equal agents gamma parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/gym_dcm/dcm_base_env.html#_DCMBaseEnv.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>When the environment is closed the dashboard will also be closed.
+This function does not need to be called explicitly.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.episode_length">
+<code class="descname">episode_length</code><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.episode_length" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Returns</em> – The length of the current episode</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.get_motor_param">
+<code class="descname">get_motor_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/gym_dcm/dcm_base_env.html#_DCMBaseEnv.get_motor_param"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.get_motor_param" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">This function returns all motor parameters, sampling time, safety margin and converter limits</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.k">
+<code class="descname">k</code><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.k" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Returns</em> – The current step in the running episode</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.motor_parameter">
+<code class="descname">motor_parameter</code><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.motor_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Returns</em> – motor parameter with calculated limits</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>mode='human'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/gym_dcm/dcm_base_env.html#_DCMBaseEnv.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this function once a cycle to update the visualization with the current values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/gym_dcm/dcm_base_env.html#_DCMBaseEnv.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the environment.</p>
+<p>All state variables will be set to a random value in [-nominal value, nominal value].
+New references will be generated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The initial observation for the episode</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.seed">
+<code class="descname">seed</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/gym_dcm/dcm_base_env.html#_DCMBaseEnv.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Seed the random generators in the environment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>seed</strong> – The value to seed the random number generator with</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/envs/gym_dcm/dcm_base_env.html#_DCMBaseEnv.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clips the action to its limits and performs one step of the environment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> – The action from the action space that will be performed on the motor</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>observation:</strong>    The observation from the environment<p><strong>reward:</strong>         The reward for the taken action</p>
+<p><strong>bool:</strong>           Flag if the episode has ended</p>
+<p><strong>info:</strong>           An always empty dictionary</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tuple(array(float), float, bool, dict)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.tau">
+<code class="descname">tau</code><a class="headerlink" href="#gym_electric_motor.envs.gym_dcm.dcm_base_env._DCMBaseEnv.tau" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Returns* – the step size of the environment Default* – 1e-5 for discrete / 1e-4 for continuous action space</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

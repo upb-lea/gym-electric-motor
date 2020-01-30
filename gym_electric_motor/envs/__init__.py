@@ -1,0 +1,19 @@
+# Version 1
+from .gym_dcm.dc_permex_motor_env import ContDcPermanentlyExcitedMotorEnvironment
+from .gym_dcm.dc_permex_motor_env import DiscDcPermanentlyExcitedMotorEnvironment
+
+from .gym_dcm.dc_extex_motor_env import ContDcExternallyExcitedMotorEnvironment
+from .gym_dcm.dc_extex_motor_env import DiscDcExternallyExcitedMotorEnvironment
+
+from .gym_dcm.dc_series_motor_env import ContDcSeriesMotorEnvironment
+from .gym_dcm.dc_series_motor_env import DiscDcSeriesMotorEnvironment
+
+from .gym_dcm.dc_shunt_motor_env import ContDcShuntMotorEnvironment
+from .gym_dcm.dc_shunt_motor_env import DiscDcShuntMotorEnvironment
+
+from .gym_pmsm.perm_mag_syn_motor_env import ContPermanentMagnetSynchronousMotorEnvironment
+from .gym_pmsm.perm_mag_syn_motor_env import DiscPermanentMagnetSynchronousMotorEnvironment
+
+from gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env import ContSynchronousReluctanceMotorEnvironment
+from gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env import DiscSynchronousReluctanceMotorEnvironment
+

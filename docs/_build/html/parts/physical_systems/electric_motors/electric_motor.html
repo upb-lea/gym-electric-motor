@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Electric Motors &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Permanently Excited DC Motor" href="permex.html" />
+    <link rel="prev" title="Gaussian White Noise Generator" href="../noise_generators/gaussian_white_noise.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../physical_system.html">Physical Systems</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../scml_system.html">Supply Converter Motor Load System (SCML)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../converters/converter.html">Power Electronic Converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mechanical_loads/mechanical_load.html">Mechanical Loads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../noise_generators/noise_generator.html">Noise Generators</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Electric Motors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="permex.html">Permanently Excited DC Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extex.html">Externally Excited DC Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="series.html">DC Series Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shunt.html">DC Shunt Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pmsm.html">Permanent Magnet Synchronous Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="synrm.html">Synchronous Reluctance Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dc_base.html">Base DC Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="synchronous_base.html">Synchronous Base Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../voltage_supplies/voltage_supply.html">Voltage Supplies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ode_solvers/ode_solver.html">ODE-Solvers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../physical_system.html">Physical Systems</a> &raquo;</li>
+        
+          <li><a href="../scml_system.html">Supply Converter Motor Load System (SCML)</a> &raquo;</li>
+        
+      <li>Electric Motors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/parts/physical_systems/electric_motors/electric_motor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="electric-motors">
+<h1>Electric Motors<a class="headerlink" href="#electric-motors" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Available Electric Motors:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="permex.html">Permanently Excited DC Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extex.html">Externally Excited DC Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="series.html">DC Series Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shunt.html">DC Shunt Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pmsm.html">Permanent Magnet Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synrm.html">Synchronous Reluctance Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dc_base.html">Base DC Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synchronous_base.html">Synchronous Base Motor</a></li>
+</ul>
+</div>
+<div class="section" id="electric-motor-base-class">
+<h2>Electric Motor Base Class<a class="headerlink" href="#electric-motor-base-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="descname">ElectricMotor</code><span class="sig-paren">(</span><em>motor_parameter=None</em>, <em>nominal_values=None</em>, <em>limit_values=None</em>, <em>**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for all technical electrical motor models.</p>
+<p>A motor consists of the ode-state. These are the dynamic quantities of its ODE.
+For example:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>ODE-State of a DC-shunt motor: `` [i_a, i_e ] ``</dt>
+<dd><ul class="first last simple">
+<li>i_a: Anchor circuit current</li>
+<li>i_e: Exciting circuit current</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p>Each electric motor can be parametrized by a dictionary of motor parameters, the nominal state dictionary
+and the limit dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>motor_parameter</strong> – Motor parameter dictionary. Contents specified for each motor.</li>
+<li><strong>nominal_values</strong> – Nominal values for the motor quantities.</li>
+<li><strong>limit_values</strong> – Limits for the motor quantities.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS">
+<code class="descname">CURRENTS</code><em class="property"> = []</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>CURRENTS(list(str))</em> – List of the motor currents names</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX">
+<code class="descname">CURRENTS_IDX</code><em class="property"> = []</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>CURRENTS_IDX(list(int))</em> – Indices for accessing all motor currents.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES">
+<code class="descname">VOLTAGES</code><em class="property"> = []</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>VOLTAGES(list(str))</em> – List of the motor input voltages names</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">
+<code class="descname">electrical_ode</code><span class="sig-paren">(</span><em>currents</em>, <em>u_in</em>, <em>omega</em>, <em>*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.electrical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>currents</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</li>
+<li><strong>u_in</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The motors input voltages.</li>
+<li><strong>omega</strong> (<em>float</em>) – Angular velocity of the motor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Derivatives of the motors ODE-system for the given inputs.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">ndarray(float)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">
+<code class="descname">i_in</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.i_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – ODE state of the motor</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of all currents flowing into the motor.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list(float)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.limits">
+<code class="descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Readonly motors limit state array. Entries are set to the maximum physical possible values
+in case of unspecified limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Limits of the motor.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict(float)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.motor_parameter">
+<code class="descname">motor_parameter</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.motor_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Returns* – dict(float)* – The motors parameter dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.nominal_values">
+<code class="descname">nominal_values</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.nominal_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Readonly motors nominal values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Current nominal values of the motor.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict(float)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the motors state to a new initial state. (Default 0)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The initial motors state.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray(float)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.torque">
+<code class="descname">torque</code><span class="sig-paren">(</span><em>currents</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.torque"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.torque" title="Permalink to this definition">¶</a></dt>
+<dd><p>Torque equation of the motor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>currents</strong> (<em>numpy.ndarray</em><em>(</em><em>float</em><em>)</em>) – Motor currents to calculate the Torque.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Motor torque for the given state.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="permex.html" class="btn btn-neutral float-right" title="Permanently Excited DC Motor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../noise_generators/gaussian_white_noise.html" class="btn btn-neutral float-left" title="Gaussian White Noise Generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

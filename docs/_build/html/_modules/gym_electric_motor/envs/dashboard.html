@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.envs.dashboard &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.envs.dashboard</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.envs.dashboard</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="MotorDashboard"><a class="viewcode-back" href="../../../parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard">[docs]</a><span class="k">class</span> <span class="nc">MotorDashboard</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visualization of the variables of the motor in graphs. This can be the angular velocity omega, torque</span>
+<span class="sd">    phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.</span>
+
+<span class="sd">    In the table are all variables given that can be shown for a specific motor.</span>
+
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |variable| extex | shunt | permex |series | PMSM  |</span>
+<span class="sd">    +========+=======+=======+========+=======+=======+</span>
+<span class="sd">    |omega   | x     | x     | x      | x     | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |torque  | x     | x     | x      | x     | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |u_sup   | x     | x     | x      | x     | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |i       |       |       | x      | x     |       |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |i_e     | x     | x     |        |       |       |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |u       |       | x     | x      | x     |       |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |u_e     | x     |       |        |       |       |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |u_a     | x     |       |        |       | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |u_b     |       |       |        |       | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |u_c     |       |       |        |       | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |i_a     | x     | x     |        |       | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |i_b     |       |       |        |       | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |i_c     |       |       |        |       | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+<span class="sd">    |epsilon |       |       |        |       | x     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">episode_length</span><span class="p">,</span> <span class="n">safety_margin</span><span class="p">,</span> <span class="n">with_ref</span><span class="p">,</span> <span class="n">update_cycle</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor of the dashboard.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            variables: Names of the variables that shall be shown on the dashboard</span>
+<span class="sd">            tau: system time constant</span>
+<span class="sd">            low: Array of lowest possible values for the variables in the same order as the variables</span>
+<span class="sd">            high: Array of highest possible values for the variables in the same order as the variables</span>
+<span class="sd">            episode_length: episode length of the system</span>
+<span class="sd">            safety_margin: Ratio between maximal and nominal power of the motor parameters.</span>
+<span class="sd">            with_ref: Array of Booleans indicating if the variables have a reference that has to be plotted</span>
+<span class="sd">            update_cycle: Number of steps after which the dashboard shall be updated.</span>
+<span class="sd">                          | Updating every cycle leads to a very low speed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate window and graphs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">=</span> <span class="n">update_cycle</span> <span class="ow">or</span> <span class="n">episode_length</span> <span class="o">//</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>  <span class="c1"># Adjust distance between subplots</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_DashboardVariable</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">episode_length</span><span class="p">,</span> <span class="n">safety_margin</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span><span class="p">)</span>
+                                       <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">with_ref</span><span class="p">)])</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_DashboardVariable</span><span class="p">(</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axes</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">episode_length</span><span class="p">,</span> <span class="n">safety_margin</span><span class="p">,</span>
+                                                          <span class="n">tau</span><span class="p">,</span> <span class="n">with_ref</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="n">episode_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span>
+
+<div class="viewcode-block" id="MotorDashboard.reset"><a class="viewcode-back" href="../../../parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to call when a new episode has started</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            references: the references for the new episode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MotorDashboard.step"><a class="viewcode-back" href="../../../parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to call in every step of the environment</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: current state to plot</span>
+<span class="sd">            k: current step of the environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">dashVar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">:</span>
+                <span class="n">dashVar</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MotorDashboard.close"><a class="viewcode-back" href="../../../parts/dashboard.html#gym_electric_motor.envs.dashboard.MotorDashboard.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call this function when the environment is closed to close all windows.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">_DashboardVariable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class to manage a single axis for a state variable on the dashboard with trajectory (and reference)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">min_limit</span><span class="p">,</span> <span class="n">max_limit</span><span class="p">,</span> <span class="n">episode_length</span><span class="p">,</span> <span class="n">safety_margin</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">with_ref</span><span class="p">,</span> <span class="n">update_cycle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the state variable</span>
+<span class="sd">            ax: the axis generated by the Dashboard</span>
+<span class="sd">            min_limit: minimal possible value for the variable</span>
+<span class="sd">            max_limit: maximal possible value for the variable</span>
+<span class="sd">            episode_length: Episode length of the environment</span>
+<span class="sd">            safety_margin: Ratio between maximal and nominal power of the motor parameters.</span>
+<span class="sd">            tau: Time constant of the environment</span>
+<span class="sd">            with_ref: Flag, indicating if the variable has got a reference</span>
+<span class="sd">            update_cycle: updating cycle of the dashboard</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_with_ref</span> <span class="o">=</span> <span class="n">with_ref</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">=</span> <span class="n">max_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span> <span class="o">=</span> <span class="n">min_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">=</span> <span class="n">episode_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span> <span class="o">=</span> <span class="n">safety_margin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span> <span class="o">=</span> <span class="n">update_cycle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">update_cycle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_point</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\omega$/(1/s)&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$T$/Nm&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i$/A&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;i_A&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_A$/A&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;i_E&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_E$/A&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;i_e&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_e$/A&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u_A&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39; $u_A$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u_E&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_E$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_e$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u_sup&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{{sup}}$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u_a&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_a$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u_b&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_b$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;u_c&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_c$/V&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;i_a&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_a$/A&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;i_b&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_b$/A&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;i_c&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_c$/A&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$/rad&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">episode_length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the axis when a new episode has started</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ref: Reference to display for the state variable</span>
+<span class="sd">            episode_length: new episode length if it has changed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">episode_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">=</span> <span class="n">episode_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span> <span class="o">-</span> <span class="mf">0.1</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;t/s&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Error&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">draw_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_ref</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="p">))</span>
+            <span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">draw_artist</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_nominal_values</span><span class="p">()</span>  <span class="c1"># show nominal values on dashboard</span>
+        <span class="k">if</span> <span class="s1">&#39;u&#39;</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">)</span>
+                             <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">)</span>
+                             <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_limits</span><span class="p">()</span>  <span class="c1"># show limits on dashboard</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to call every cycle in the render function of the environment</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: the new data point to store</span>
+<span class="sd">            k: the current step of the environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Store the points in an array and plot them only when the update cycle is reached or the episode ends</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update function for the dashboard. Plots all the points</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            k: Current step of the environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">draw_artist</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_nominal_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots a dotted line at the nominal values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">],</span>
+                     <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span><span class="p">,</span>
+                     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots a dashed read line at minimal and maximal values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">],</span>
+                     <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+                     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

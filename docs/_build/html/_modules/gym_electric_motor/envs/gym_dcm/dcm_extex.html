@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.envs.gym_dcm.dcm_extex &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.envs.gym_dcm.dcm_extex</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.envs.gym_dcm.dcm_extex</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">gym</span> <span class="k">import</span> <span class="n">spaces</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">converter_models</span>
+<span class="kn">from</span> <span class="nn">.dcm_base_env</span> <span class="k">import</span> <span class="n">_DCMBaseEnv</span>
+<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="k">import</span> <span class="n">Box</span>
+
+<span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">TORQUE_IDX</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">I_A_IDX</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">I_E_IDX</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">U_A_IDX</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">U_E_IDX</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">U_SUP_IDX</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">MOTOR_IDX</span> <span class="o">=</span> <span class="p">[</span><span class="n">OMEGA_IDX</span><span class="p">,</span> <span class="n">I_A_IDX</span><span class="p">,</span> <span class="n">I_E_IDX</span><span class="p">]</span>
+<span class="n">VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="n">U_A_IDX</span><span class="p">,</span> <span class="n">U_E_IDX</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="_DCMExtEx"><a class="viewcode-back" href="../../../../parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex._DCMExtEx">[docs]</a><span class="k">class</span> <span class="nc">_DCMExtEx</span><span class="p">(</span><span class="n">_DCMBaseEnv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        **Description:**</span>
+<span class="sd">            Environment for a DC externally excited Motor.</span>
+<span class="sd">        **Observation:**</span>
+
+<span class="sd">            Type: Dict(Box,Box,Box,Box,Box,Box)</span>
+
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |Name   |Observation        |</span>
+<span class="sd">            +=======+===================+</span>
+<span class="sd">            |omega  |Angular Velocity   |</span>
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |torque |Electrical Torque  |</span>
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |i_a    |Armature Current   |</span>
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |i_e    |Excitation Current |</span>
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |u_a    |Armature Voltage   |</span>
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |u_e    |Excitation Voltage |</span>
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |u_sup  |Supply Voltage     |</span>
+<span class="sd">            +-------+-------------------+</span>
+<span class="sd">            |References                 |</span>
+<span class="sd">            +---------------------------+</span>
+
+<span class="sd">            References in the same order as the state variables</span>
+
+<span class="sd">        **Action Space:**</span>
+<span class="sd">            Depends on the converter and if a continuous or discrete action should be used. It is the applied voltage.</span>
+
+<span class="sd">        **Reward:**</span>
+<span class="sd">            See DCM Base Environment</span>
+
+<span class="sd">        **Starting State:**</span>
+<span class="sd">            Random initial state, that fulfills some plausibility constraints</span>
+
+<span class="sd">        **Episode Termination:**</span>
+<span class="sd">            An episode terminates, when all the steps in the reference have been simulated or limits are violated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_step_integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">converter_type</span><span class="p">,</span> <span class="n">zero_refs</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;DcExtEx&#39;</span><span class="p">,</span> <span class="n">state_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="s1">&#39;torque&#39;</span><span class="p">,</span> <span class="s1">&#39;i_a&#39;</span><span class="p">,</span> <span class="s1">&#39;i_e&#39;</span><span class="p">,</span> <span class="s1">&#39;u_a&#39;</span><span class="p">,</span> <span class="s1">&#39;u_e&#39;</span><span class="p">,</span><span class="s1">&#39;u_sup&#39;</span><span class="p">],</span>
+                         <span class="n">zero_refs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">zero_refs</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="s1">&#39;u_a&#39;</span><span class="p">,</span> <span class="s1">&#39;u_e&#39;</span><span class="p">),</span>
+                         <span class="n">converter_type</span><span class="o">=</span><span class="n">converter_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span> <span class="o">=</span> <span class="p">(</span><span class="n">converter_models</span><span class="o">.</span><span class="n">Converter</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">converter_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">)</span>
+
+        <span class="c1"># normalised values for the voltages and currents</span>
+
+        <span class="n">u_a_min</span><span class="p">,</span> <span class="n">u_a_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">voltages</span>
+        <span class="n">i_a_min</span><span class="p">,</span> <span class="n">i_a_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">currents</span>
+        <span class="n">u_e_min</span><span class="p">,</span> <span class="n">u_e_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">voltages</span>
+        <span class="n">i_e_min</span><span class="p">,</span> <span class="n">i_e_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">currents</span>
+
+        <span class="c1"># Set up the observation space</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">u_a_min</span><span class="p">,</span> <span class="n">u_e_min</span><span class="p">),</span>  <span class="c1"># omega</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">i_a_min</span><span class="p">,</span> <span class="n">i_e_min</span><span class="p">),</span>  <span class="c1"># torque</span>
+            <span class="n">i_a_min</span><span class="p">,</span>                <span class="c1"># i_a</span>
+            <span class="n">i_e_min</span><span class="p">,</span>                <span class="c1"># i_e</span>
+            <span class="n">u_a_min</span><span class="p">,</span>                <span class="c1"># u_a</span>
+            <span class="n">u_e_min</span><span class="p">,</span>                <span class="c1"># u_e</span>
+            <span class="mf">0.0</span>                     <span class="c1"># u_sup</span>
+        <span class="p">])</span>
+
+        <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">u_a_max</span><span class="p">,</span> <span class="n">u_e_max</span><span class="p">),</span>  <span class="c1"># omega</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">i_a_max</span><span class="p">,</span> <span class="n">i_e_max</span><span class="p">),</span>  <span class="c1"># torque</span>
+            <span class="n">i_a_max</span><span class="p">,</span>                <span class="c1"># i_a</span>
+            <span class="n">i_e_max</span><span class="p">,</span>                <span class="c1"># i_e</span>
+            <span class="n">u_a_max</span><span class="p">,</span>                <span class="c1"># u_a</span>
+            <span class="n">u_e_max</span><span class="p">,</span>                <span class="c1"># u_e</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">u_a_max</span><span class="p">,</span> <span class="n">u_e_max</span><span class="p">)</span>   <span class="c1"># u_sup</span>
+        <span class="p">])</span>
+
+        <span class="c1"># Set the observation space for the references. Its ranges are equal to the range of the matching state var.</span>
+        <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zero_refs</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">mul_min</span><span class="p">,</span> <span class="n">mul_max</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">u_a_min</span><span class="p">,</span> <span class="n">u_e_min</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">u_a_max</span><span class="p">,</span> <span class="n">u_e_max</span><span class="p">)),</span>
+                <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">i_a_min</span><span class="p">,</span> <span class="n">i_e_min</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">i_a_max</span><span class="p">,</span> <span class="n">i_e_max</span><span class="p">)),</span>
+                <span class="s1">&#39;i_a&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">i_a_min</span><span class="p">,</span> <span class="n">i_a_max</span><span class="p">),</span>
+                <span class="s1">&#39;i_e&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">i_e_min</span><span class="p">,</span> <span class="n">i_e_max</span><span class="p">),</span>
+                <span class="s1">&#39;u_a&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">u_a_min</span><span class="p">,</span> <span class="n">u_a_max</span><span class="p">),</span>
+                <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">u_e_min</span><span class="p">,</span> <span class="n">u_e_max</span><span class="p">)</span>
+            <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_vars</span><span class="p">[</span><span class="n">ref</span><span class="p">]]</span>
+            <span class="n">low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">low</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mul_min</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="o">+</span><span class="mi">1</span><span class="p">)))))</span>
+            <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">high</span><span class="p">,</span> <span class="n">mul_max</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span><span class="o">+</span><span class="mi">1</span><span class="p">))))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sum up all upper limits in an array in the same order as the states</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;omega_N&#39;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;torque_N&#39;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;i_a_N&#39;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;i_e_N&#39;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;u_a_N&#39;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;u_e_N&#39;</span><span class="p">],</span>
+            <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;u_a_N&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;u_e_N&#39;</span><span class="p">])</span>
+        <span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>  <span class="c1"># enlarge nominal values to maximum values</span>
+
+    <span class="k">def</span> <span class="nf">_set_observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the initial value for the integration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_system_eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">noise</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The differential equation of the system.</span>
+
+<span class="sd">        This function is called by the integrator.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t: Current time of the system</span>
+<span class="sd">            state: The current state as a numpy array.</span>
+<span class="sd">            u_in: input voltage</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The solution of the system. The first derivatives of all the state variables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">t_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">OMEGA_IDX</span><span class="p">])</span>  <span class="c1"># ~1e-5s</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">t_load</span><span class="p">,</span> <span class="n">u_in</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span>  <span class="c1"># 2e-4</span>
+
+    <span class="k">def</span> <span class="nf">_generate_random_references</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function generates a random references. First a random input sequence is build. Afterwards the system is</span>
+<span class="sd">        fed with this input sequence and the resulting trajectories for all quantities are clipped to the limits and</span>
+<span class="sd">        used as references. For all quantities, that should not have a reference, it is set to zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">motor_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span>
+        <span class="n">u_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_random_control_sequence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">motor_params</span><span class="p">[</span><span class="s1">&#39;u_a_N&#39;</span><span class="p">])</span>
+        <span class="n">u_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_random_control_sequence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span> <span class="n">motor_params</span><span class="p">[</span><span class="s1">&#39;u_e_N&#39;</span><span class="p">])</span>
+        <span class="n">i_a</span><span class="p">,</span> <span class="n">i_e</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">u_a</span><span class="p">)))</span>
+        <span class="n">u_sup</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u_a</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">u_sup</span>
+        <span class="n">clip_low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+        <span class="n">clip_high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">triangular</span><span class="p">(</span><span class="n">clip_low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">],</span> <span class="n">clip_high</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">u_a</span><span class="p">)):</span>
+            <span class="n">state</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">OMEGA_IDX</span><span class="p">]),</span> <span class="p">(</span><span class="n">u_a</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">u_e</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>\
+                     <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">clip_low</span><span class="p">,</span> <span class="n">clip_high</span><span class="p">)</span>
+            <span class="n">omega</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">i_a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">i_e</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+            <span class="n">torque</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">omega</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">i_a</span><span class="p">,</span> <span class="n">i_e</span><span class="p">,</span> <span class="n">u_a</span><span class="p">,</span> <span class="n">u_e</span><span class="p">,</span> <span class="n">u_sup</span><span class="p">],</span> <span class="n">subok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">/</span> <span class="n">lim</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lim</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_generate_random_control_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">maximum</span><span class="p">):</span>
+        <span class="n">ref_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prediction_horizon</span>
+        <span class="n">rands</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">ref_len</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">rands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">rands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">bw_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+        <span class="n">bw</span> <span class="o">*=</span> <span class="n">bw_noise</span>
+        <span class="n">delta_w</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">ref_len</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span>
+        <span class="n">u</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bw</span> <span class="o">/</span> <span class="n">delta_w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">bw</span> <span class="o">/</span> <span class="n">delta_w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+            <span class="n">u</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">sigma</span><span class="p">)]</span> <span class="o">*=</span> <span class="n">sigma</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">*=</span> <span class="n">sigma</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)]</span>
+
+        <span class="n">fourier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">u</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">u</span><span class="p">))))</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">fourier</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+
+        <span class="n">power_noise</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">maximum</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">u</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">ref_len</span><span class="p">)</span> <span class="o">*</span> <span class="n">power_noise</span>
+        <span class="n">leakage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">maximum</span> <span class="o">-</span> <span class="n">leakage</span> <span class="o">*</span> <span class="n">maximum</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">maximum</span> <span class="o">+</span> <span class="n">leakage</span> <span class="o">*</span> <span class="n">maximum</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u</span><span class="p">[:</span><span class="n">ref_len</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_maximal_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">max_band</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Computes the maximal allowed bandwidth, considering a user defined limit and the technical limit.</span>
+<span class="sd">         First choose the minimal bandwidth of the externally excited motor</span>
+
+<span class="sd">         Args:</span>
+<span class="sd">            max_band: Maximal user defined value for the bandwidth</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Maximal bandwidth for the reference</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">()),</span> <span class="n">max_band</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_initial_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find random an initial state, that is plausible.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="n">OMEGA_IDX</span><span class="p">])</span>
+                 <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="n">OMEGA_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">OMEGA_IDX</span><span class="p">]</span>\
+                 <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+        <span class="n">i_e</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="n">I_E_IDX</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="n">I_E_IDX</span><span class="p">])</span>
+               <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="n">I_E_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">I_E_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span>
+        <span class="n">i_a_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">i_a_max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">))</span>
+        <span class="n">i_a</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="n">I_A_IDX</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="n">I_A_IDX</span><span class="p">])</span> <span class="o">*</span>
+               <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="n">I_A_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="n">i_a_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[[</span><span class="n">OMEGA_IDX</span><span class="p">,</span> <span class="n">I_A_IDX</span><span class="p">,</span> <span class="n">I_E_IDX</span><span class="p">]]</span> <span class="o">=</span> <span class="n">omega</span><span class="p">,</span> <span class="n">i_a</span><span class="p">,</span> <span class="n">i_e</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">TORQUE_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety_margin</span><span class="p">)</span>
+
+<div class="viewcode-block" id="_DCMExtEx.get_motor_param"><a class="viewcode-back" href="../../../../parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex._DCMExtEx.get_motor_param">[docs]</a>    <span class="k">def</span> <span class="nf">get_motor_param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns all motor parameters, sampling time, safety margin and converter limits</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            All parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;safety_margin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_margin</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;converter_voltage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">voltages</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;converter_current&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">currents</span>
+        <span class="k">return</span> <span class="n">params</span></div></div>
+
+
+<div class="viewcode-block" id="DCMExtExDisc"><a class="viewcode-back" href="../../../../parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex.DCMExtExDisc">[docs]</a><span class="k">class</span> <span class="nc">DCMExtExDisc</span><span class="p">(</span><span class="n">_DCMExtEx</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">converter_type</span><span class="o">=</span><span class="s1">&#39;4Q&#39;</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter_type</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;disc-</span><span class="si">{converter_type}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_step_integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The integration is done for one time period. The converter considers the dead time and interlocking time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: switching state of the converter that should be applied</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">]</span>
+        <span class="n">i_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">i_in</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="n">u_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i_in</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span><span class="p">[</span><span class="n">VOLTAGES</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">])</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">interlocking_time</span><span class="p">)</span>\
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">MOTOR_IDX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">]</span>
+
+        <span class="c1"># input voltage after switching</span>
+        <span class="n">i_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">i_in</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="n">u_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i_in</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span><span class="p">[</span><span class="n">VOLTAGES</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">])</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">interlocking_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">TORQUE_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">VOLTAGES</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_in</span>
+
+    <span class="k">def</span> <span class="nf">get_motor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">motor_parameter</span></div>
+
+
+<div class="viewcode-block" id="DCMExtExCont"><a class="viewcode-back" href="../../../../parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex.DCMExtExCont">[docs]</a><span class="k">class</span> <span class="nc">DCMExtExCont</span><span class="p">(</span><span class="n">_DCMExtEx</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">converter_type</span><span class="o">=</span><span class="s1">&#39;4Q&#39;</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter_type</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;cont-</span><span class="si">{converter_type}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="DCMExtExCont.step"><a class="viewcode-back" href="../../../../parts/dc_extex_environment.html#gym_electric_motor.envs.gym_dcm.dcm_extex.DCMExtExCont.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clips the action to its limits and uses the base step function</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">              action: desired switching state of the converter that should be applied</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">              Tuple(array(float), float, bool, dict):</span>
+<span class="sd">                  **observation:**    The observation from the environment \n</span>
+<span class="sd">                  **reward:**         The reward for the taken action \n</span>
+<span class="sd">                  **bool:**           Flag if the episode has ended \n</span>
+<span class="sd">                  **info:**           An always empty dictionary \n</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">high</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_step_integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The integration is done for one time period. The converter considers the dead time and interlocking time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: switching state of the converter that should be applied</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">]</span>
+        <span class="n">i_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">i_in</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+        <span class="n">u_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">converter_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i_in</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span><span class="p">)])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">U_SUP_IDX</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span><span class="p">[</span><span class="n">VOLTAGES</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">])</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">MOTOR_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">TORQUE_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_model</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="n">VOLTAGES</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_in</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

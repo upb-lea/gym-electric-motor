@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.physical_systems.physical_systems &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.physical_systems.physical_systems</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.physical_systems.physical_systems</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="k">import</span> <span class="n">Box</span>
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="k">import</span> <span class="n">PhysicalSystem</span>
+<span class="kn">from</span> <span class="nn">..physical_systems</span> <span class="k">import</span> <span class="n">electric_motors</span> <span class="k">as</span> <span class="n">em</span><span class="p">,</span> <span class="n">mechanical_loads</span> <span class="k">as</span> <span class="n">ml</span><span class="p">,</span> <span class="n">converters</span> <span class="k">as</span> <span class="n">cv</span><span class="p">,</span> \
+    <span class="n">voltage_supplies</span> <span class="k">as</span> <span class="n">vs</span><span class="p">,</span> <span class="n">noise_generators</span> <span class="k">as</span> <span class="n">ng</span><span class="p">,</span> <span class="n">solvers</span> <span class="k">as</span> <span class="n">sv</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">instantiate</span><span class="p">,</span> <span class="n">set_state_array</span>
+
+
+<div class="viewcode-block" id="SCMLSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem">[docs]</a><span class="k">class</span> <span class="nc">SCMLSystem</span><span class="p">(</span><span class="n">PhysicalSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of a technical setting consisting of these</span>
+<span class="sd">    components as well as a noise generator and a solver for the electrical ODE of the motor and mechanical ODE of the</span>
+<span class="sd">    load.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">TORQUE_IDX</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">CURRENTS_IDX</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">VOLTAGES_IDX</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">U_SUP_IDX</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nominal_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">supply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The voltage supply instance in the physical system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">converter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The power electronic converter instance in the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">electrical_motor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The electrical motor instance of the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mechanical_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The mechanical load instance in the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">converter</span><span class="p">,</span>
+                 <span class="n">motor</span><span class="p">,</span>
+                 <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">supply</span><span class="o">=</span><span class="s1">&#39;IdealVoltageSupply&#39;</span><span class="p">,</span>
+                 <span class="n">ode_solver</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">,</span> <span class="n">solver_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">noise_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            converter(PowerElectronicConverter): Converter for the physical system</span>
+<span class="sd">            motor(ElectricMotor): Motor of the system</span>
+<span class="sd">            load(MechanicalLoad): Mechanical Load of the System</span>
+<span class="sd">            supply(VoltageSupply): Voltage Supply</span>
+<span class="sd">            ode_solver(OdeSolver): Ode Solver to use in this setting</span>
+<span class="sd">            solver_kwargs(dict): Special keyword arguments to be passed to the solver</span>
+<span class="sd">            noise_generator(NoiseGenerator):  Noise generator</span>
+<span class="sd">            tau(float): discrete time step of the system</span>
+<span class="sd">            kwargs(dict): Further arguments to pass to the modules while instantiation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">ElectricMotor</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">load</span> <span class="o">=</span> <span class="n">load</span> <span class="ow">or</span> <span class="n">ml</span><span class="o">.</span><span class="n">PolynomialStaticLoad</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">ml</span><span class="o">.</span><span class="n">MechanicalLoad</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;u_sup&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">u_sup</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">vs</span><span class="o">.</span><span class="n">VoltageSupply</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="n">u_sup</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span> <span class="o">=</span> <span class="n">noise_generator</span> <span class="ow">or</span> <span class="n">ng</span><span class="o">.</span><span class="n">GaussianWhiteNoiseGenerator</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">state_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_state_names</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">set_state_names</span><span class="p">(</span><span class="n">state_names</span><span class="p">)</span>
+        <span class="n">solver_kwargs</span> <span class="o">=</span> <span class="n">solver_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">sv</span><span class="o">.</span><span class="n">OdeSolver</span><span class="p">,</span> <span class="n">ode_solver</span><span class="p">,</span> <span class="o">**</span><span class="n">solver_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">set_j_rotor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;j_rotor&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_indices</span><span class="p">()</span>
+        <span class="n">state_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_state_space</span><span class="p">(</span><span class="n">state_names</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">action_space</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_names</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_limits</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_nominal_state</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">set_signal_power_level</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set the physical limits from the modules.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">):</span>
+            <span class="n">motor_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="n">mechanical_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">motor_lim</span><span class="p">,</span> <span class="n">mechanical_lim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_positions</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">supply</span><span class="o">.</span><span class="n">u_nominal</span>
+
+    <span class="k">def</span> <span class="nf">_set_nominal_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to set the nominal values from the modules.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">):</span>
+            <span class="n">motor_nom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">nominal_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="n">mechanical_nom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">nominal_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">motor_nom</span><span class="p">,</span> <span class="n">mechanical_nom</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_positions</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">supply</span><span class="o">.</span><span class="n">u_nominal</span>
+
+    <span class="k">def</span> <span class="nf">_build_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to build the normalized state space (i.e. the maximum and minimum possible values for each state variable</span>
+<span class="sd">        normalized by the limits).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state_names(list(str)): list of the names of each state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_build_state_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setting of the state names in the physical system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setting of indices to faster access the arrays during integration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_ode_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">OMEGA_IDX</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">state_names</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">CURRENTS</span><span class="p">)</span>
+        <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span>
+
+<div class="viewcode-block" id="SCMLSystem.simulate"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">transformed_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_transformation</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">i_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backward_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">i_in</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">]),</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">switching_times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">transformed_action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
+        <span class="n">i_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">i_sup</span><span class="p">(</span><span class="n">i_in</span><span class="p">)</span>
+        <span class="n">u_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">switching_times</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">u_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">u_in</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="o">*</span> <span class="n">u_sup</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">u_in</span><span class="p">]</span>
+            <span class="n">u_transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_transform</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="n">u_transformed</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">i_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backward_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">i_in</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">]),</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">u_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">u_in</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="o">*</span> <span class="n">u_sup</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">u_in</span><span class="p">]</span>
+        <span class="n">u_transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_transform</span><span class="p">(</span><span class="n">u_in</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="n">u_transformed</span><span class="p">)</span>
+        <span class="n">ode_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">])</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">noise</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_state</span><span class="p">(</span><span class="n">ode_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_sup</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+
+    <span class="k">def</span> <span class="nf">_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Systems differential equation system.</span>
+
+<span class="sd">        It is a concatenation of the motors electrical ode system and the mechanical ode system.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t(float): Current systems time</span>
+<span class="sd">            state(ndarray(float)): Current systems ODE-State</span>
+<span class="sd">            u_in(list(float)): Input voltages from the converter</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ndarray(float): The derivatives of the ODE-State. Based on this, the Ode Solver calculates the next state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">motor_derivative</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">electrical_ode</span><span class="p">(</span>
+            <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">],</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_omega_ode_idx</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">])</span>
+        <span class="n">load_derivative</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">mechanical_ode</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">],</span> <span class="n">torque</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">load_derivative</span><span class="p">,</span> <span class="n">motor_derivative</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SCMLSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset all the systems modules to an initial state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             The new state of the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">motor_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">load_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">load_state</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">))</span>
+        <span class="n">u_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">supply</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">u_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">u_in</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="o">*</span> <span class="n">u_sup</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">u_in</span><span class="p">]</span>
+        <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">motor_state</span><span class="p">)</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_state</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_sup</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+
+    <span class="k">def</span> <span class="nf">_forward_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation to transform from the physical systems state to the ode-state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">quantities</span>
+
+    <span class="k">def</span> <span class="nf">_backward_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation to transform from the ode-state to the systems-state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">quantities</span>
+
+    <span class="k">def</span> <span class="nf">_build_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_sup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Based on the ode-state and the further input quantities the new systems state is built.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_action_transformation</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Placeholder for the option to use different representations for the synchronous motor in the future.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">action</span></div>
+
+
+<div class="viewcode-block" id="DcMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">DcMotorSystem</span><span class="p">(</span><span class="n">SCMLSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SCML-System that can be used for all DC Motors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_set_indices</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanical_load</span><span class="o">.</span><span class="n">OMEGA_IDX</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TORQUE_IDX</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanical_load</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span>
+        <span class="n">currents_lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TORQUE_IDX</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">currents_upper</span> <span class="o">=</span> <span class="n">currents_lower</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">CURRENTS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS_IDX</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">currents_lower</span><span class="p">,</span> <span class="n">currents_upper</span><span class="p">))</span>
+        <span class="n">voltages_lower</span> <span class="o">=</span> <span class="n">currents_upper</span>
+        <span class="n">voltages_upper</span> <span class="o">=</span> <span class="n">voltages_lower</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">VOLTAGES</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VOLTAGES_IDX</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">voltages_lower</span><span class="p">,</span> <span class="n">voltages_upper</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span> <span class="o">=</span> <span class="n">voltages_upper</span>
+
+    <span class="k">def</span> <span class="nf">_build_state_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">state_names</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;torque&#39;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">CURRENTS</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">VOLTAGES</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_build_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">get_state_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">currents</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">voltages</span><span class="p">)</span>
+        <span class="n">low_mechanical</span><span class="p">,</span> <span class="n">high_mechanical</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">get_state_space</span><span class="p">((</span><span class="n">low</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">],</span> <span class="n">high</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]))</span>
+        <span class="n">low</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">low_mechanical</span><span class="p">)</span>
+        <span class="n">high</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">high_mechanical</span><span class="p">)</span>
+        <span class="n">high</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">supply_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">u_nominal</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">supply_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">supply_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">low</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">supply_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">u_nominal</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">low</span><span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">state_names</span><span class="p">)</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span><span class="n">high</span><span class="p">,</span> <span class="n">state_names</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_build_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_sup</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">state</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">state_names</span><span class="p">)]</span> <span class="o">=</span> <span class="n">motor_state</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">state_names</span><span class="p">)]</span>
+        <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TORQUE_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">torque</span>
+        <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">motor_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">CURRENTS_IDX</span><span class="p">]</span>
+        <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">VOLTAGES_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_in</span>
+        <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_sup</span>
+        <span class="k">return</span> <span class="n">state</span></div>
+
+
+<div class="viewcode-block" id="SynchronousMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMotorSystem</span><span class="p">(</span><span class="n">SCMLSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SCML-System that can be used with all Synchronous Motors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_build_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_build_state_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">state_names</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;torque&#39;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;i_a&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;i_b&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;i_c&#39;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;u_a&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;u_b&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;u_c&#39;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;epsilon&#39;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;u_sup&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_set_indices</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span> <span class="o">+=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanical_load</span><span class="o">.</span><span class="n">OMEGA_IDX</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TORQUE_IDX</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanical_load</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span>
+        <span class="n">currents_lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TORQUE_IDX</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">currents_upper</span> <span class="o">=</span> <span class="n">currents_lower</span> <span class="o">+</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS_IDX</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">currents_lower</span><span class="p">,</span> <span class="n">currents_upper</span><span class="p">))</span>
+        <span class="n">voltages_lower</span> <span class="o">=</span> <span class="n">currents_upper</span>
+        <span class="n">voltages_upper</span> <span class="o">=</span> <span class="n">voltages_lower</span> <span class="o">+</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VOLTAGES_IDX</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">voltages_lower</span><span class="p">,</span> <span class="n">voltages_upper</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">EPSILON_IDX</span> <span class="o">=</span> <span class="n">voltages_upper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSILON_IDX</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_epsilon_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_forward_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">motor_quantity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">q_inv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">t_23</span><span class="p">(</span><span class="n">quantities</span><span class="p">),</span> <span class="n">motor_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_epsilon_idx</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">motor_quantity</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_backward_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">t_32</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">q</span><span class="p">(</span><span class="n">quantities</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">motor_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_epsilon_idx</span><span class="p">])</span>
+        <span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_build_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_sup</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">mechanical_state</span> <span class="o">=</span> <span class="n">motor_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">]</span>
+        <span class="n">currents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_backward_transform</span><span class="p">(</span><span class="n">motor_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">],</span> <span class="n">motor_state</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">motor_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_epsilon_idx</span><span class="p">]</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">epsilon</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+            <span class="n">epsilon</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">mechanical_state</span><span class="p">)</span>
+            <span class="o">+</span> <span class="p">[</span><span class="n">torque</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">currents</span>
+            <span class="o">+</span> <span class="n">u_in</span>
+            <span class="o">+</span> <span class="p">[</span><span class="n">epsilon</span><span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span><span class="n">u_sup</span><span class="p">]</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

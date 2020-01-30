@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Supply Converter Motor Load System (SCML) &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'2019',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Power Electronic Converters" href="converters/converter.html" />
+    <link rel="prev" title="Physical Systems" href="physical_system.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="physical_system.html">Physical Systems</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Supply Converter Motor Load System (SCML)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="converters/converter.html">Power Electronic Converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mechanical_loads/mechanical_load.html">Mechanical Loads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="noise_generators/noise_generator.html">Noise Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="electric_motors/electric_motor.html">Electric Motors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voltage_supplies/voltage_supply.html">Voltage Supplies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ode_solvers/ode_solver.html">ODE-Solvers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="physical_system.html">Physical Systems</a> &raquo;</li>
+        
+      <li>Supply Converter Motor Load System (SCML)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/parts/physical_systems/scml_system.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="supply-converter-motor-load-system-scml">
+<h1>Supply Converter Motor Load System (SCML)<a class="headerlink" href="#supply-converter-motor-load-system-scml" title="Permalink to this headline">¶</a></h1>
+<p>The technical structure of the SCML-Systems in the GEM-toolbox can bee seen in the figure below.</p>
+<div class="figure">
+<img alt="../../_images/SCML_Setting.svg" src="../../_images/SCML_Setting.svg" /></div>
+<p>The system consists of a Voltage Supply, a Power Electronic Converter, an Electrical Motor and the Mechanical Load.
+Additionally, each SCML-System has got an ODE-Solver for the simulation.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Subcomponents of the SCML:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="converters/converter.html">Power Electronic Converters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mechanical_loads/mechanical_load.html">Mechanical Loads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_generators/noise_generator.html">Noise Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="electric_motors/electric_motor.html">Electric Motors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voltage_supplies/voltage_supply.html">Voltage Supplies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ode_solvers/ode_solver.html">ODE-Solvers</a></li>
+</ul>
+</div>
+<p>The abstract SCML-System defines the overall structure. From this, the DcMotorSystem and the SynchronousMotorSystem
+derive. They only implement private methods. Therefore, the interface to the user stays the same in all cases.</p>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="descname">SCMLSystem</code><span class="sig-paren">(</span><em>converter</em>, <em>motor</em>, <em>load=None</em>, <em>supply='IdealVoltageSupply'</em>, <em>ode_solver='euler'</em>, <em>solver_kwargs=None</em>, <em>noise_generator=None</em>, <em>tau=0.0001</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of a technical setting consisting of these
+components as well as a noise generator and a solver for the electrical ODE of the motor and mechanical ODE of the
+load.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>converter</strong> (<a class="reference internal" href="converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="gym_electric_motor.physical_systems.converters.PowerElectronicConverter"><em>PowerElectronicConverter</em></a>) – Converter for the physical system</li>
+<li><strong>motor</strong> (<a class="reference internal" href="electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="gym_electric_motor.physical_systems.electric_motors.ElectricMotor"><em>ElectricMotor</em></a>) – Motor of the system</li>
+<li><strong>load</strong> (<a class="reference internal" href="mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><em>MechanicalLoad</em></a>) – Mechanical Load of the System</li>
+<li><strong>supply</strong> (<a class="reference internal" href="voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><em>VoltageSupply</em></a>) – Voltage Supply</li>
+<li><strong>ode_solver</strong> (<a class="reference internal" href="ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><em>OdeSolver</em></a>) – Ode Solver to use in this setting</li>
+<li><strong>solver_kwargs</strong> (<em>dict</em>) – Special keyword arguments to be passed to the solver</li>
+<li><strong>noise_generator</strong> (<a class="reference internal" href="noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator" title="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator"><em>NoiseGenerator</em></a>) – Noise generator</li>
+<li><strong>tau</strong> (<em>float</em>) – discrete time step of the system</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Further arguments to pass to the modules while instantiation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter">
+<code class="descname">converter</code><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The power electronic converter instance in the system</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor">
+<code class="descname">electrical_motor</code><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The electrical motor instance of the system</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits">
+<code class="descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Returns* – ndarray(float)* – An array containing the maximum allowed physical values for each state variable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load">
+<code class="descname">mechanical_load</code><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mechanical load instance in the system</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state">
+<code class="descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id3"><span class="problematic" id="id4">**</span></a>Returns* – ndarray(float)* – An array containing the nominal values for each state variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><em>*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset all the systems modules to an initial state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The new state of the system.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate">
+<code class="descname">simulate</code><span class="sig-paren">(</span><em>action</em>, <em>*_</em>, <em>**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation of the Physical System for one time step with the input action.
+This method is called in the environment in every step to update the systems state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> (<em>element of action_space</em>) – The action to play on the system for the next time step.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The systems state after the action was applied.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">element of state_space</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply">
+<code class="descname">supply</code><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply" title="Permalink to this definition">¶</a></dt>
+<dd><p>The voltage supply instance in the physical system</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="dc-motor-system">
+<h2>Dc Motor System<a class="headerlink" href="#dc-motor-system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="descname">DcMotorSystem</code><span class="sig-paren">(</span><em>converter</em>, <em>motor</em>, <em>load=None</em>, <em>supply='IdealVoltageSupply'</em>, <em>ode_solver='euler'</em>, <em>solver_kwargs=None</em>, <em>noise_generator=None</em>, <em>tau=0.0001</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DcMotorSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>SCML-System that can be used for all DC Motors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>converter</strong> (<a class="reference internal" href="converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="gym_electric_motor.physical_systems.converters.PowerElectronicConverter"><em>PowerElectronicConverter</em></a>) – Converter for the physical system</li>
+<li><strong>motor</strong> (<a class="reference internal" href="electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="gym_electric_motor.physical_systems.electric_motors.ElectricMotor"><em>ElectricMotor</em></a>) – Motor of the system</li>
+<li><strong>load</strong> (<a class="reference internal" href="mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><em>MechanicalLoad</em></a>) – Mechanical Load of the System</li>
+<li><strong>supply</strong> (<a class="reference internal" href="voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><em>VoltageSupply</em></a>) – Voltage Supply</li>
+<li><strong>ode_solver</strong> (<a class="reference internal" href="ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><em>OdeSolver</em></a>) – Ode Solver to use in this setting</li>
+<li><strong>solver_kwargs</strong> (<em>dict</em>) – Special keyword arguments to be passed to the solver</li>
+<li><strong>noise_generator</strong> (<a class="reference internal" href="noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator" title="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator"><em>NoiseGenerator</em></a>) – Noise generator</li>
+<li><strong>tau</strong> (<em>float</em>) – discrete time step of the system</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Further arguments to pass to the modules while instantiation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="synchronous-motor-system">
+<h2>Synchronous Motor System<a class="headerlink" href="#synchronous-motor-system" title="Permalink to this headline">¶</a></h2>
+<p>The Synchronous Motor System is an SCML-System that was internally</p>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">
+<em class="property">class </em><code class="descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="descname">SynchronousMotorSystem</code><span class="sig-paren">(</span><em>converter</em>, <em>motor</em>, <em>load=None</em>, <em>supply='IdealVoltageSupply'</em>, <em>ode_solver='euler'</em>, <em>solver_kwargs=None</em>, <em>noise_generator=None</em>, <em>tau=0.0001</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>SCML-System that can be used with all Synchronous Motors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>converter</strong> (<a class="reference internal" href="converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="gym_electric_motor.physical_systems.converters.PowerElectronicConverter"><em>PowerElectronicConverter</em></a>) – Converter for the physical system</li>
+<li><strong>motor</strong> (<a class="reference internal" href="electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="gym_electric_motor.physical_systems.electric_motors.ElectricMotor"><em>ElectricMotor</em></a>) – Motor of the system</li>
+<li><strong>load</strong> (<a class="reference internal" href="mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><em>MechanicalLoad</em></a>) – Mechanical Load of the System</li>
+<li><strong>supply</strong> (<a class="reference internal" href="voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><em>VoltageSupply</em></a>) – Voltage Supply</li>
+<li><strong>ode_solver</strong> (<a class="reference internal" href="ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><em>OdeSolver</em></a>) – Ode Solver to use in this setting</li>
+<li><strong>solver_kwargs</strong> (<em>dict</em>) – Special keyword arguments to be passed to the solver</li>
+<li><strong>noise_generator</strong> (<a class="reference internal" href="noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator" title="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator"><em>NoiseGenerator</em></a>) – Noise generator</li>
+<li><strong>tau</strong> (<em>float</em>) – discrete time step of the system</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – Further arguments to pass to the modules while instantiation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="converters/converter.html" class="btn btn-neutral float-right" title="Power Electronic Converters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="physical_system.html" class="btn btn-neutral float-left" title="Physical Systems" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
