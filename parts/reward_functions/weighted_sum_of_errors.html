@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Weighted Sum of Errors &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Shifted Weighted Sum of Errors" href="shifted_weighted_sum_of_errors.html" />
+    <link rel="prev" title="Reward Functions" href="reward_function.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="reward_function.html">Reward Functions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Weighted Sum of Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shifted_weighted_sum_of_errors.html">Shifted Weighted Sum of Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="reward_function.html">Reward Functions</a> &raquo;</li>
+        
+      <li>Weighted Sum of Errors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/parts/reward_functions/weighted_sum_of_errors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="weighted-sum-of-errors">
+<h1>Weighted Sum of Errors<a class="headerlink" href="#weighted-sum-of-errors" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reward_functions.weighted_sum_of_errors.</code><code class="sig-name descname">WeightedSumOfErrors</code><span class="sig-paren">(</span><em class="sig-param">reward_weights=None</em>, <em class="sig-param">normed=False</em>, <em class="sig-param">observed_states=None</em>, <em class="sig-param">gamma=0.9</em>, <em class="sig-param">reward_power=1</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reward Function that calculates the reward as the weighted sum of errors with a certain power.</p>
+<div class="line-block">
+<div class="line">state_length[i] = 1 for states with positive values only.</div>
+<div class="line">state_length[i] = 2 for states with positive and negative values.</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reward_weights</strong> (<em>dict/list/ndarray</em><em>(</em><em>float</em><em>)</em>) – Dict mapping state names to reward_weights, 0 otherwise.
+Or an array with the reward_weights on the position of the state_names.</p></li>
+<li><p><strong>normed</strong> (<em>bool</em>) – If True, the reward weights will be normalized to 1.</p></li>
+<li><p><strong>observed_states</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of state names of which the limit are observed. Default: no observation.</p></li>
+<li><p><strong>gamma</strong> (<em>float</em>) – Discount factor for the reward punishment. Should equal agents’ discount factor gamma.</p></li>
+<li><p><strong>reward_power</strong> (<em>dict/list</em><em>(</em><em>float</em><em>)</em><em>/float</em>) – Reward power for each of the systems states.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called, when the environment is closed to store logs, close files etc.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called by the environment when reset.
+Inner states of the reward function can be reset here, if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Initial state array of the Environment</p></li>
+<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Initial reference array of the environment.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward">
+<code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">action=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reward calculation. If limits have been violated the limit violation reward will be returned. Otherwise,
+the standard reward will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Environments state array.</p></li>
+<li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Environments reference array.</p></li>
+<li><p><strong>action</strong> (<em>element of action space</em>) – The previously taken action.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reward for this state, reference pair.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setting of the physical system, to set state arrays fitting to the environments states</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment</p></li>
+<li><p><strong>reference_generator</strong> (<a class="reference internal" href="../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a>) – The reference generator of the environment.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="shifted_weighted_sum_of_errors.html" class="btn btn-neutral float-right" title="Shifted Weighted Sum of Errors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="reward_function.html" class="btn btn-neutral float-left" title="Reward Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

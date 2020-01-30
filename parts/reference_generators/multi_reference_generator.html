@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Multi Reference Generator &mdash; gym-electric-motor 2019 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reward Functions" href="../reward_functions/reward_function.html" />
+    <link rel="prev" title="Zero Reference Generator" href="zero_reference_generator.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="reference_generator.html">Reference Generators</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subepisoded_reference_generator.html">Subepisoded Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiener_process_reference_generator.html">Wiener Process Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinusoidal_reference_generator.html">Sinusoidal Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_reference_generator.html">Step Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triangular_reference_generator.html">Triangular Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sawtooth_reference_generator.html">Sawtooth Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zero_reference_generator.html">Zero Reference Generator</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Multi Reference Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="reference_generator.html">Reference Generators</a> &raquo;</li>
+        
+      <li>Multi Reference Generator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/parts/reference_generators/multi_reference_generator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="multi-reference-generator">
+<h1>Multi Reference Generator<a class="headerlink" href="#multi-reference-generator" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.reference_generators.MultiReferenceGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">MultiReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">sub_generators</em>, <em class="sig-param">sub_args=None</em>, <em class="sig-param">p=None</em>, <em class="sig-param">super_episode_length=(100</em>, <em class="sig-param">10000)</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/multi_reference_generator.html#MultiReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.MultiReferenceGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sub_generators</strong> (<em>list</em><em>(</em><em>str/class/object</em><em>)</em>) – List of keys, classes or objects to instantiate the sub_generators</p></li>
+<li><p><strong>sub_args</strong> (<em>dict/list</em><em>(</em><em>dict</em><em>)</em><em>/None</em>) – (Optional) Arguments to pass to the sub_converters. If not passed all kwargs
+will be passed to each sub_generator.</p></li>
+<li><p><strong>p</strong> (<em>list</em><em>(</em><em>float</em><em>)</em><em>/None</em>) – (Optional) Probabilities for each sub_generator. If None a uniform
+probability for each sub_converter is used.</p></li>
+<li><p><strong>super_episode_length</strong> (<em>Tuple</em><em>(</em><em>int</em><em>, </em><em>int</em>) – Minimum and maximum number of time steps a sub_generator is used.</p></li>
+<li><p><strong>kwargs</strong> – All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.MultiReferenceGenerator.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.MultiReferenceGenerator.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the environment, when the environment is deleted to close files, store logs…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference">
+<code class="sig-name descname">get_reference</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/multi_reference_generator.html#MultiReferenceGenerator.get_reference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the reference array of the current time step.</p>
+<p>The reference array needs to be in the same shape as the state variables. For referenced states the reference
+value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Current reference array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference_observation">
+<code class="sig-name descname">get_reference_observation</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">*_</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/multi_reference_generator.html#MultiReferenceGenerator.get_reference_observation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference_observation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the reference observation for the next time step. This observation needs to fit in the reference space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Observation for the next reference time step.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>value in reference_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.MultiReferenceGenerator.referenced_states">
+<em class="property">property </em><code class="sig-name descname">referenced_states</code><a class="headerlink" href="#gym_electric_motor.reference_generators.MultiReferenceGenerator.referenced_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.MultiReferenceGenerator.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/multi_reference_generator.html#MultiReferenceGenerator.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.MultiReferenceGenerator.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset of references for a new episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The initial state array of the environment.</p></li>
+<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – If not None: A desired initial reference array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>The current reference array of time step 0.</p>
+<p>reference_observation(value in reference_space): The reference observation for the next time step. </p>
+<p>trajectories(dict(list(float)): If available,                 generated trajectories for the Visualization can be passed here. Otherwise return None.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>reference_array(ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.MultiReferenceGenerator.set_modules">
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/multi_reference_generator.html#MultiReferenceGenerator.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.MultiReferenceGenerator.set_modules" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../reward_functions/reward_function.html" class="btn btn-neutral float-right" title="Reward Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="zero_reference_generator.html" class="btn btn-neutral float-left" title="Zero Reference Generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Arne Traue, Gerrit Book
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
