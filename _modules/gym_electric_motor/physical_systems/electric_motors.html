@@ -359,7 +359,7 @@
 
 <div class="viewcode-block" id="DcMotor.torque"><a class="viewcode-back" href="../../../parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.torque">[docs]</a>    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_A_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_A_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="DcMotor.i_in"><a class="viewcode-back" href="../../../parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
@@ -707,10 +707,6 @@
     <span class="p">}</span>
     <span class="n">_default_nominal_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
     <span class="n">_default_limits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nominal_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="c1"># Docstring of superclass</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">motor_parameter</span><span class="p">,</span> <span class="n">nominal_values</span><span class="p">,</span> <span class="n">limit_values</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DcPermanentlyExcitedMotor.torque"><a class="viewcode-back" href="../../../parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.torque">[docs]</a>    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
@@ -1094,7 +1090,7 @@
 <span class="sd">        The differential equation of the Synchronous Motor.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            state: The current state of the motor. [omega, i_sq, i_sd, epsilon]</span>
+<span class="sd">            state: The current state of the motor. [i_sq, i_sd, epsilon]</span>
 <span class="sd">            omega: The mechanical load</span>
 <span class="sd">            u_qd: The input voltages [u_sq, u_sd]</span>
 

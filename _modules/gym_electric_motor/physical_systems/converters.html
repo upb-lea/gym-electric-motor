@@ -399,6 +399,7 @@
 
 <div class="viewcode-block" id="DiscTwoQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
+        <span class="c1"># Converter switches slightly (tau / 1000 seconds) before interlocking time due to inaccuracy of the solvers.</span>
         <span class="k">if</span> <span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_switching_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_pattern</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -470,10 +471,6 @@
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span>
-
-    <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
-        <span class="c1"># Not used here</span>
-        <span class="k">pass</span>
 
 <div class="viewcode-block" id="DiscFourQuadrantConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
@@ -566,9 +563,9 @@
         <span class="c1"># Docstring in base class</span>
         <span class="n">interlocking_current</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="p">(</span>
-                       <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                       <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">interlocking_current</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-               <span class="p">)</span> <span class="o">*</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">interlocking_current</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="ContFourQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">ContFourQuadrantConverter</span><span class="p">(</span><span class="n">ContDynamicallyAveragedConverter</span><span class="p">):</span>
@@ -619,6 +616,7 @@
 
 <div class="viewcode-block" id="ContFourQuadrantConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">times</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_action</span><span class="p">([</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">t</span><span class="p">)</span>
         <span class="n">times</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_action</span><span class="p">([</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">t</span><span class="p">)</span>
@@ -634,7 +632,7 @@
 <span class="sd">    Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Double-Disc&#39;</span>
+<span class="sd">        &#39;Disc-Double&#39;</span>
 
 <span class="sd">    Actions:</span>
 <span class="sd">        | The actions are built from the two sub converter actions.</span>
@@ -876,7 +874,7 @@
 <span class="sd">        &#39;Cont-B6C&#39;</span>
 
 <span class="sd">    Actions:</span>
-<span class="sd">        The Duty Cycle for each half brigde in the range of (-1,1)</span>
+<span class="sd">        The Duty Cycle for each half bridge in the range of (-1,1)</span>
 
 <span class="sd">    Action Space:</span>
 <span class="sd">        Box(-1, 1, shape=(3,))</span>

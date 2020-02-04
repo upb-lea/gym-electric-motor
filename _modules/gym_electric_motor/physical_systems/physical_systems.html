@@ -211,14 +211,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">converter</span><span class="p">,</span>
-                 <span class="n">motor</span><span class="p">,</span>
-                 <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">supply</span><span class="o">=</span><span class="s1">&#39;IdealVoltageSupply&#39;</span><span class="p">,</span>
-                 <span class="n">ode_solver</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">,</span> <span class="n">solver_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">noise_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">supply</span><span class="o">=</span><span class="s1">&#39;IdealVoltageSupply&#39;</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="s1">&#39;euler&#39;</span><span class="p">,</span> <span class="n">solver_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">noise_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            converter(PowerElectronicConverter): Converter for the physical system</span>
@@ -240,7 +236,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">u_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">vs</span><span class="o">.</span><span class="n">VoltageSupply</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="n">u_sup</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span> <span class="o">=</span> <span class="n">noise_generator</span> <span class="ow">or</span> <span class="n">ng</span><span class="o">.</span><span class="n">GaussianWhiteNoiseGenerator</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">noise_generator</span> <span class="o">=</span> <span class="n">noise_generator</span> <span class="ow">or</span> <span class="n">ng</span><span class="o">.</span><span class="n">GaussianWhiteNoiseGenerator</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span> <span class="o">=</span> <span class="n">instantiate</span><span class="p">(</span><span class="n">ng</span><span class="o">.</span><span class="n">NoiseGenerator</span><span class="p">,</span> <span class="n">noise_generator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">state_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_state_names</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">set_state_names</span><span class="p">(</span><span class="n">state_names</span><span class="p">)</span>
         <span class="n">solver_kwargs</span> <span class="o">=</span> <span class="n">solver_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>

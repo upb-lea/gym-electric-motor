@@ -168,11 +168,11 @@
 <span class="sd">            motor(ElectricMotor): Electric Motor used in the PhysicalSystem</span>
 <span class="sd">            reward_function(RewardFunction): Reward Function for the environment</span>
 <span class="sd">            reference_generator(ReferenceGenerator): Reference Generator for the environment</span>
-<span class="sd">            kwargs(dict): Further kwargs tot pass to the superclass and the submodules</span>
+<span class="sd">            kwargs(dict): Further kwargs to pass to the superclass and the submodules</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">physical_system</span> <span class="o">=</span> <span class="n">DcMotorSystem</span><span class="p">(</span><span class="n">motor</span><span class="o">=</span><span class="n">motor</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">reference_generator</span> <span class="o">=</span> <span class="n">reference_generator</span> <span class="ow">or</span> <span class="n">WienerProcessReferenceGenerator</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">reward_function</span> <span class="o">=</span> <span class="n">reward_function</span> <span class="ow">or</span> <span class="n">WeightedSumOfErrors</span>
+        <span class="n">reward_function</span> <span class="o">=</span> <span class="n">reward_function</span> <span class="ow">or</span> <span class="n">WeightedSumOfErrors</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="o">=</span><span class="n">reward_function</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>

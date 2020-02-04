@@ -183,38 +183,24 @@
 <span class="sd">        id (str): The official environment ID</span>
 <span class="sd">        entry_point (Optional[str]): The Python entrypoint of the environment class (e.g. module.name:Class)</span>
 <span class="sd">        reward_threshold (Optional[int]): The reward threshold before the task is considered solved</span>
-<span class="sd">        kwargs (dict): The kwargs to pass to the environment class</span>
 <span class="sd">        nondeterministic (bool): Whether this environment is non-deterministic even after seeding</span>
-<span class="sd">        tags (dict[str:any]): A set of arbitrary key-value tags on this environment, including simple property=True tags</span>
 <span class="sd">        max_episode_steps (Optional[int]): The maximum number of steps that an episode can consist of</span>
+<span class="sd">        kwargs (dict): The kwargs to pass to the environment class</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        id (str): The official environment ID</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reward_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nondeterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reward_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nondeterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
-        <span class="c1"># Evaluation parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reward_threshold</span> <span class="o">=</span> <span class="n">reward_threshold</span>
-        <span class="c1"># Environment properties</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nondeterministic</span> <span class="o">=</span> <span class="n">nondeterministic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span> <span class="o">=</span> <span class="n">entry_point</span>
-
-        <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">tags</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
-
-        <span class="n">tags</span><span class="p">[</span><span class="s1">&#39;wrapper_config.TimeLimit.max_episode_steps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_episode_steps</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_threshold</span> <span class="o">=</span> <span class="n">reward_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nondeterministic</span> <span class="o">=</span> <span class="n">nondeterministic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">=</span> <span class="n">max_episode_steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">kwargs</span>
 
-        <span class="c1"># We may make some of these other parameters public if they&#39;re</span>
-        <span class="c1"># useful.</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Attempted to register malformed environment ID: </span><span class="si">{}</span><span class="s1">. (Currently all IDs must be of the form </span><span class="si">{}</span><span class="s1">.)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">pattern</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_env_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>            
 
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Instantiates an instance of the environment with appropriate kwargs&quot;&quot;&quot;</span>
@@ -261,7 +247,7 @@
         <span class="c1"># compatibility code to be invoked.</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_reset&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_step&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_gym_disable_underscore_compat&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">patch_deprecated_methods</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">spec</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vnc&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">gym.wrappers.time_limit</span> <span class="kn">import</span> <span class="n">TimeLimit</span>
             <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>

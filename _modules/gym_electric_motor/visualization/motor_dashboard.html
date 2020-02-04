@@ -203,7 +203,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_period</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span> <span class="n">visu_period</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plotted_variables</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">,),</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_period</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span> <span class="n">visu_period</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plotted_variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">              Constructor of the dashboard.</span>
 
@@ -233,6 +233,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># If available use the Qt5 Backend and the update function to update the plot (faster)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -243,10 +244,7 @@
 
 <div class="viewcode-block" id="MotorDashboard.set_modules"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">physical_system</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_physical_system_data</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_order_plotted_variables</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span> <span class="o">=</span> <span class="n">reference_generator</span><span class="o">.</span><span class="n">referenced_states</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_up_plots</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span> <span class="o">=</span> <span class="n">reference_generator</span><span class="o">.</span><span class="n">referenced_states</span></div>
 
 <div class="viewcode-block" id="MotorDashboard.reset"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -256,6 +254,8 @@
 <span class="sd">            reference_trajectories: the references for the new episode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="k">if</span> <span class="n">reference_trajectories</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">:</span>
                 <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -278,6 +278,14 @@
 <span class="sd">            reference: current reference in this step</span>
 <span class="sd">            reward: current reward in this step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_physical_system_data</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_order_plotted_variables</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_up_plots</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
         <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span>
         <span class="n">state_denorm</span> <span class="o">=</span> <span class="n">state</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
         <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -318,7 +326,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">labels</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="s1">&#39;$\omega/(rad/s)$&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\omega/(rad/s)$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="s1">&#39;$T/Nm$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="s1">&#39;$i/A$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;i_a&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{a}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
@@ -331,7 +339,7 @@
                 <span class="s1">&#39;u_c&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{c}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{e}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u_sup&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sup}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="s1">&#39;$\epsilon/rad$&#39;</span>
+                <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon/rad$&#39;</span>
             <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span>
 
