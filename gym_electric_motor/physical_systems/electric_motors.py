@@ -203,7 +203,7 @@ class DcMotor(ElectricMotor):
 
     def torque(self, currents):
         # Docstring of superclass
-        return self.motor_parameter['l_e_prime'] * currents[self.I_A_IDX] * currents[self.I_E_IDX]
+        return self._motor_parameter['l_e_prime'] * currents[self.I_A_IDX] * currents[self.I_E_IDX]
 
     def i_in(self, currents):
         # Docstring of superclass
@@ -551,10 +551,6 @@ class DcPermanentlyExcitedMotor(DcMotor):
     }
     _default_nominal_values = dict(omega=22, torque=0.0, i=16, u=400)
     _default_limits = dict(omega=50, torque=0.0, i=25, u=400)
-
-    def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, **__):
-        # Docstring of superclass
-        super().__init__(motor_parameter, nominal_values, limit_values)
 
     def torque(self, state):
         # Docstring of superclass
@@ -938,7 +934,7 @@ class SynchronousMotor(ElectricMotor):
         The differential equation of the Synchronous Motor.
 
         Args:
-            state: The current state of the motor. [omega, i_sq, i_sd, epsilon]
+            state: The current state of the motor. [i_sq, i_sd, epsilon]
             omega: The mechanical load
             u_qd: The input voltages [u_sq, u_sd]
 

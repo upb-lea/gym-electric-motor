@@ -55,14 +55,10 @@ class SCMLSystem(PhysicalSystem):
         """
         return self._mechanical_load
 
-    def __init__(self,
-                 converter,
-                 motor,
-                 load=None,
-                 supply='IdealVoltageSupply',
-                 ode_solver='euler', solver_kwargs=None,
-                 noise_generator=None,
-                 tau=1e-4, **kwargs):
+    def __init__(
+        self, converter, motor, load=None, supply='IdealVoltageSupply', ode_solver='euler', solver_kwargs=None,
+        noise_generator=None, tau=1e-4, **kwargs
+    ):
         """
         Args:
             converter(PowerElectronicConverter): Converter for the physical system
@@ -84,7 +80,8 @@ class SCMLSystem(PhysicalSystem):
         else:
             u_sup = self._electrical_motor.limits['u']
         self._supply = instantiate(vs.VoltageSupply, supply, u_nominal=u_sup, tau=tau, **kwargs)
-        self._noise_generator = noise_generator or ng.GaussianWhiteNoiseGenerator(tau=tau, **kwargs)
+        noise_generator = noise_generator or ng.GaussianWhiteNoiseGenerator(tau=tau, **kwargs)
+        self._noise_generator = instantiate(ng.NoiseGenerator, noise_generator, **kwargs)
         state_names = self._build_state_names()
         self._noise_generator.set_state_names(state_names)
         solver_kwargs = solver_kwargs or {}

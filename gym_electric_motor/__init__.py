@@ -13,6 +13,7 @@ import gym_electric_motor.reference_generators
 import gym_electric_motor.reward_functions
 import gym_electric_motor.visualization
 import gym_electric_motor.physical_systems
+import gym_electric_motor.envs
 from gym.envs.registration import register
 
 # Add all superclasses of the modules to the registry.

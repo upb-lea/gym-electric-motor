@@ -27,7 +27,7 @@ class StepReferenceGenerator(SubepisodedReferenceGenerator):
 
     def set_modules(self, physical_system):
         super().set_modules(physical_system)
-        self._amplitude_range = np.clip(self._amplitude_range, 0, (self._limit_margin[1] - self._limit_margin[0])/2)
+        self._amplitude_range = np.clip(self._amplitude_range, 0, (self._limit_margin[1] - self._limit_margin[0]) / 2)
         self._offset_range = np.clip(self._offset_range, self._limit_margin[0], self._limit_margin[1])
 
     def _reset_reference(self):
@@ -40,7 +40,7 @@ class StepReferenceGenerator(SubepisodedReferenceGenerator):
         )
         self._offset = self._get_current_value(offset_range)
         high_low_ratio = np.random.triangular(0, 0.5, 1)
-        t = np.linspace(0, self._current_episode_length * self._physical_system.tau, self._current_episode_length)
+        t = np.linspace(0, (self._current_episode_length - 1) * self._physical_system.tau, self._current_episode_length)
         x = t % self._frequency
         x -= high_low_ratio * self._frequency
         x = np.sign(x)

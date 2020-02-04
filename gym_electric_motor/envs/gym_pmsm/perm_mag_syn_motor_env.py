@@ -16,7 +16,7 @@ class PermanentMagnetSynchronousMotorEnvironment(ElectricMotorEnvironment):
         """
         physical_system = SynchronousMotorSystem(motor=motor, **kwargs)
         reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)
-        reward_function = reward_function or WeightedSumOfErrors({'omega': 1}, **kwargs)
+        reward_function = reward_function or WeightedSumOfErrors(**kwargs)
         super().__init__(
             physical_system, reference_generator=reference_generator, reward_function=reward_function, **kwargs
         )

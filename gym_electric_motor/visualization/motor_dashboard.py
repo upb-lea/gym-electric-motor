@@ -47,7 +47,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
     """
 
-    def __init__(self, update_period=5e-2, visu_period=5, plotted_variables=('all',), **_):
+    def __init__(self, update_period=5e-2, visu_period=5, plotted_variables=['all'], **_):
         """
               Constructor of the dashboard.
 
@@ -77,6 +77,7 @@ class MotorDashboard(ElectricMotorVisualization):
         self._labels = None
         self._plotted_state_index = []
         self._k = 0
+        self.initialized = False
 
         # If available use the Qt5 Backend and the update function to update the plot (faster)
         try:
@@ -87,10 +88,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
     def set_modules(self, physical_system, reference_generator, _):
         self._physical_system = physical_system
-        self._update_physical_system_data()
-        self._order_plotted_variables()
         self._referenced_states = reference_generator.referenced_states
-        self._set_up_plots()
 
     def reset(self, reference_trajectories=None, *_, **__):
         """
@@ -100,6 +98,8 @@ class MotorDashboard(ElectricMotorVisualization):
             reference_trajectories: the references for the new episode
         """
         self._k = 0
+        if not self.initialized:
+            return
         if reference_trajectories is None:
             for var in self.dash_vars:
                 var.reset()
@@ -122,6 +122,14 @@ class MotorDashboard(ElectricMotorVisualization):
             reference: current reference in this step
             reward: current reward in this step
         """
+        if not self.initialized:
+            self.initialized = True
+            self._update_physical_system_data()
+            self._order_plotted_variables()
+            self._set_up_plots()
+            for var in self.dash_vars:
+                var.reset()
+            plt.pause(0.05)
         k = self._k
         state_denorm = state * self._limits
         if reference is not None:
@@ -162,7 +170,7 @@ class MotorDashboard(ElectricMotorVisualization):
             self._labels = self._physical_system.labels
         except AttributeError:
             self._labels = {
-                'omega': '$\omega/(rad/s)$',
+                'omega': r'$\omega/(rad/s)$',
                 'torque': '$T/Nm$',
                 'i': '$i/A$',
                 'i_a': '$i_{a}/A$',
@@ -175,7 +183,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 'u_c': '$u_{c}/V$',
                 'u_e': '$u_{e}/V$',
                 'u_sup': '$u_{sup}/V$',
-                'epsilon': '$\epsilon/rad$'
+                'epsilon': r'$\epsilon/rad$'
             }
         self._state_space = self._physical_system.state_space
 

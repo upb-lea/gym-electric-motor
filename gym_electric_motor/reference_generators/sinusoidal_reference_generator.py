@@ -28,7 +28,7 @@ class SinusoidalReferenceGenerator(SubepisodedReferenceGenerator):
 
     def set_modules(self, physical_system):
         super().set_modules(physical_system)
-        self._amplitude_range = np.clip(self._amplitude_range, 0, (self._limit_margin[1] - self._limit_margin[0])/2)
+        self._amplitude_range = np.clip(self._amplitude_range, 0, (self._limit_margin[1] - self._limit_margin[0]) / 2)
         self._offset_range = np.clip(self._offset_range, self._limit_margin[0], self._limit_margin[1])
 
     def _reset_reference(self):
@@ -40,7 +40,7 @@ class SinusoidalReferenceGenerator(SubepisodedReferenceGenerator):
             self._limit_margin[1] - self._amplitude
         )
         self._offset = self._get_current_value(offset_range)
-        t = np.linspace(0, self._current_episode_length * self._physical_system.tau, self._current_episode_length)
+        t = np.linspace(0, (self._current_episode_length - 1) * self._physical_system.tau, self._current_episode_length)
         phase = np.random.rand() * 2 * np.pi
         self._reference = self._amplitude * np.sin(2 * np.pi * self._frequency * t + phase) + self._offset
         self._reference = np.clip(self._reference, self._limit_margin[0], self._limit_margin[1])

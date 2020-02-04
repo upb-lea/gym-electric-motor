@@ -12,11 +12,11 @@ class DcShuntMotorEnvironment(ElectricMotorEnvironment):
             motor(ElectricMotor): Electric Motor used in the PhysicalSystem
             reward_function(RewardFunction): Reward Function for the environment
             reference_generator(ReferenceGenerator): Reference Generator for the environment
-            kwargs(dict): Further kwargs tot pass to the superclass and the submodules
+            kwargs(dict): Further kwargs to pass to the superclass and the submodules
         """
         physical_system = DcMotorSystem(motor=motor, **kwargs)
         reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)
-        reward_function = reward_function or WeightedSumOfErrors({'omega': 1}, **kwargs)
+        reward_function = reward_function or WeightedSumOfErrors(**kwargs)
         super().__init__(
             physical_system, reference_generator=reference_generator, reward_function=reward_function, **kwargs
         )

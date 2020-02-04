@@ -1,6 +1,5 @@
 # sphinx
 docs/_build/*
-!docs/_build/html/
 docs/_static/*
 docs/_modules/*
 !.gitkeep
@@ -14,5 +13,11 @@ __pycache__
 *egg-info*
 
 # miscellaneous
+ddpg_DcSeries-Cont-v0_weights_actor\.h5f
+ddpg_DcSeries-Cont-v0_weights_critic\.h5f
+
+
 envs/gym_dcm/__pycache__/
+
+
 examples/logs/

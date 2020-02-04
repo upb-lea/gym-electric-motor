@@ -12,7 +12,7 @@ class DcPermanentlyExcitedMotorEnvironment(ElectricMotorEnvironment):
             motor(ElectricMotor): Electric Motor used in the PhysicalSystem
             reward_function(RewardFunction): Reward Function for the environment
             reference_generator(ReferenceGenerator): Reference Generator for the environment
-            kwargs(dict): Further kwargs tot pass to the superclass and the submodules
+            kwargs(dict): Further kwargs to pass to the superclass and the submodules
         """
         physical_system = DcMotorSystem(motor=motor, **kwargs)
         reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)

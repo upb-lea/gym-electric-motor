@@ -5,6 +5,9 @@ class ConsolePrinter(ElectricMotorVisualization):
 
     _limits = None
 
+    def __init__(self, **kwargs):
+        pass
+
     def reset(self, reference_trajectories=None, *_, **__):
         pass
 

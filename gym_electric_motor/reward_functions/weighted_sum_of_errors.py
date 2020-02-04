@@ -41,10 +41,18 @@ class WeightedSumOfErrors(RewardFunction):
         self._n = set_state_array(self._n, self._physical_system.state_names)
         referenced_states = reference_generator.referenced_states
         if self._reward_weights is None:
-            reward_weights = dict.fromkeys(
-                np.array(physical_system.state_names)[referenced_states],
-                1/len(np.array(physical_system.state_names)[referenced_states])
-            )
+            # If there are any referenced states reward weights are equally distributed over them
+            if np.any(referenced_states):
+                reward_weights = dict.fromkeys(
+                    np.array(physical_system.state_names)[referenced_states],
+                    1 / len(np.array(physical_system.state_names)[referenced_states])
+                )
+            # If no referenced states and no reward weights passed, uniform reward over all states
+            else:
+                reward_weights = dict.fromkeys(
+                    np.array(physical_system.state_names),
+                    1 / len(np.array(physical_system.state_names))
+                )
         else:
             reward_weights = self._reward_weights
         self._reward_weights = set_state_array(reward_weights, self._physical_system.state_names)
@@ -61,7 +69,7 @@ class WeightedSumOfErrors(RewardFunction):
         return self.reward_range[0] / (1 - self._gamma)
 
     def _reward(self, state, reference, *_):
-        return -np.sum(self._reward_weights * (abs(state - reference) / self._state_length)**self._n)
+        return -np.sum(self._reward_weights * (abs(state - reference) / self._state_length) ** self._n)
 
 
 class ShiftedWeightedSumOfErrors(WeightedSumOfErrors):
@@ -75,7 +83,6 @@ class ShiftedWeightedSumOfErrors(WeightedSumOfErrors):
 
     | state_length[i] = 1 for states with positive values only.
     | state_length[i] = 2 for states with positive and negative values.
-
     """
 
     def _reward(self, state, reference, *_):

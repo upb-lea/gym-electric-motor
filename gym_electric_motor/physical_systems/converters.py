@@ -243,6 +243,7 @@ class DiscTwoQuadrantConverter(DiscConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
+        # Converter switches slightly (tau / 1000 seconds) before interlocking time due to inaccuracy of the solvers.
         if t - self._tau / 1000 > self._action_start_time + self._interlocking_time:
             self._switching_state = self._switching_pattern[-1]
         else:
@@ -314,10 +315,6 @@ class DiscFourQuadrantConverter(DiscConverter):
         # Docstring in base class
         super().__init__(**kwargs)
         self._subconverters = [DiscTwoQuadrantConverter(**kwargs), DiscTwoQuadrantConverter(**kwargs)]
-
-    def _convert(self, *_):
-        # Not used here
-        pass
 
     def reset(self):
         # Docstring in base class
@@ -410,9 +407,9 @@ class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
         # Docstring in base class
         interlocking_current = 1 if i_out[0] < 0 else 0
         return (
-                       self._current_action[0]
-                       + self._interlocking_time / self._tau * (interlocking_current - self._current_action[0])
-               ) * i_out[0]
+            self._current_action[0]
+            + self._interlocking_time / self._tau * (interlocking_current - self._current_action[0])
+        ) * i_out[0]
 
 
 class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
@@ -463,6 +460,7 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
+        super().set_action(action, t)
         times = []
         times += self._subconverters[0].set_action([0.5 * (action[0] + 1)], t)
         times += self._subconverters[1].set_action([-0.5 * (action[0] - 1)], t)
@@ -478,7 +476,7 @@ class DiscDoubleConverter(DiscConverter):
     Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.
 
     Key:
-        'Double-Disc'
+        'Disc-Double'
 
     Actions:
         | The actions are built from the two sub converter actions.
@@ -720,7 +718,7 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
         'Cont-B6C'
 
     Actions:
-        The Duty Cycle for each half brigde in the range of (-1,1)
+        The Duty Cycle for each half bridge in the range of (-1,1)
 
     Action Space:
         Box(-1, 1, shape=(3,))

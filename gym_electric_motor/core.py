@@ -528,7 +528,6 @@ class PhysicalSystem:
     The Physical System module encapsulates the physical model of the system as well as the simulation from one step to
     the next.
     """
-    _k = 0
 
     @property
     def k(self):
@@ -608,6 +607,7 @@ class PhysicalSystem:
         self._state_names = state_names
         self._state_positions = {key: index for index, key in enumerate(self._state_names)}
         self._tau = tau
+        self._k = 0
 
     def reset(self, initial_state=None):
         """

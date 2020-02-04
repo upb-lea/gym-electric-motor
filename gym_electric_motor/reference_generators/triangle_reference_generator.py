@@ -40,7 +40,7 @@ class TriangularReferenceGenerator(SubepisodedReferenceGenerator):
         offset_range = np.clip(self._offset_range, -self._limit_margin[1] + self._amplitude,  self._limit_margin[1] - self._amplitude)
         self._offset = self._get_current_value(offset_range)
 
-        t = np.linspace(0, self._current_episode_length * self._physical_system.tau, self._current_episode_length)
+        t = np.linspace(0, (self._current_episode_length - 1) * self._physical_system.tau, self._current_episode_length)
         phase = np.random.rand() * 2 * np.pi  # note: in the scipy implementation of sawtooth() 1 time-period
         # corresponds to a phase of 2pi
         ref_width = np.random.rand()  # a random value between 0,1 that creates asymmetry in the triangular reference
