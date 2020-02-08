@@ -18,5 +18,6 @@ setuptools.setup(
                                    'tensorflow<=1.14']},
       author='Arne Traue, Gerrit Book, Praneeth Balakrishna',
       long_description=long_description,
+      long_description_content_type="text/markdown",
       url="https://github.com/upb-lea/gym-electric-motor",
       )
