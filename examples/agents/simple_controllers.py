@@ -1,4 +1,6 @@
 from gym.spaces import Discrete, Box
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('..')))
 from gym_electric_motor.physical_systems.electric_motors import DcShuntMotor, DcExternallyExcitedMotor, \
     DcPermanentlyExcitedMotor, DcSeriesMotor
 from gym_electric_motor.physical_systems import SynchronousMotorSystem

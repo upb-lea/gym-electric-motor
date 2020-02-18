@@ -2,8 +2,10 @@
 >>> cd examples
 >>> python pi_series_omega_control.py
 """
-from examples.agents.simple_controllers import Controller
+from agents.simple_controllers import Controller
 import time
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('..')))
 import gym_electric_motor as gem
 from gym_electric_motor.reference_generators import *
 from gym_electric_motor.visualization import MotorDashboard
