@@ -230,7 +230,7 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
 
 Furthermore, the angular velocity is the mechanical one and not the electrical: 
 
-<img src="docs/plots/omegame.svg" width="200">
+<img src="docs/plots/omegame.svg" width="150">
 
 
 ### Running Unit Tests with Pytest
