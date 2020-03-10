@@ -67,20 +67,12 @@ class DiscDcSeriesMotorEnvironment(DcSeriesMotorEnvironment):
     Action Space:
         Type: Discrete(2)
 
-    Reward:
-        .. math::
-            reward = (\omega - \omega^*) / (2 * \omega_{lim})
-
     Starting State:
         Zeros on all state variables.
 
     Episode Termination:
-        Current limit (i) is observed and the reference generation is continuous.
-        Therefore, an episode ends only, when current limits have been violated.
-
-    Limit Violation Reward:
-        .. math::
-            limit~violation~reward = -1 / (1- \gamma ) = -10 (Default: \gamma = 0.9)
+        Termination if current limits are violated. The terminal reward -10 is used as reward.
+        (Have a look at the reward functions.)
     """
     def __init__(self, tau=1e-5, converter='Disc-1QC', **kwargs):
         # Docstring in Base Class
@@ -132,20 +124,12 @@ class ContDcSeriesMotorEnvironment(DcSeriesMotorEnvironment):
     Action Space:
         Type: Box(low=[0], high=[1])
 
-    Reward:
-        .. math::
-            reward = (\omega - \omega^*) / (2 * \omega_{lim})
-
     Starting State:
         Zeros on all state variables.
 
     Episode Termination:
-        Current limit (i) is observed and the reference generation is continuous.
-        Therefore, an episode ends only, when current limits have been violated.
-
-    Limit Violation Reward:
-        .. math::
-            limit~violation~reward = -1 / (1- \gamma ) = -10 (Default: \gamma = 0.9)
+        Termination if current limits are violated. The terminal reward -10 is used as reward.
+        (Have a look at the reward functions.)
     """
     def __init__(self, tau=1e-4, converter='Cont-1QC', **kwargs):
         # Docstring in Base Class

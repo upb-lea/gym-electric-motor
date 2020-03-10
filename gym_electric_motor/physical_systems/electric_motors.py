@@ -669,6 +669,7 @@ class SynchronousMotor(ElectricMotor):
         i_sd     Current in direct axis
         i_sq     Current in quadrature axis
         omega    Mechanical angular Velocity
+        epsilon  Electrical rotational angle
         torque   Motor generated torque
         u_a      Voltage in phase a
         u_b      Voltage in phase b
@@ -961,11 +962,11 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
-        r_s                    Ohm         0.3256        Stator resistance
-        l_q                    H           7.3e-3        Quadrature axis inductance
-        l_d                    H           73.2e-3       Direct axis inductance
+        r_s                    Ohm         0.78          Stator resistance
+        l_q                    H           6.3e-3        Quadrature axis inductance
+        l_d                    H           1.2           Direct axis inductance
         p                      1           2             Pole pair number
-        j_rotor                kg/m^2      2.45e-3       Moment of inertia of the rotor
+        j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
 
         =============== ====== =============================================
@@ -1005,6 +1006,7 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         i_sd     Current in direct axis
         i_sq     Current in quadrature axis
         omega    Mechanical angular Velocity
+        epsilon  Electrical rotational angle
         torque   Motor generated torque
         u_a      Voltage in phase a
         u_b      Voltage in phase b
@@ -1065,12 +1067,11 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
-        r_s                    Ohm         10.9e-3       Stator resistance
-        l_q                    H           113e-3        Quadrature axis inductance
-        l_d                    H           79e-3         Direct axis inductance
-        psi_p                  Vs          0.165         Permanent magnet flux linkage
+        r_s                    Ohm         0.78          Stator resistance
+        l_q                    H           6.3e-3        Quadrature axis inductance
+        l_d                    H           1.2           Direct axis inductance
         p                      1           2             Pole pair number
-        j_rotor                kg/m^2      2.45e-3       Moment of inertia of the rotor
+        j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
 
         =============== ====== =============================================
@@ -1111,6 +1112,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         i_sq     Current in quadrature axis
         omega    Mechanical angular Velocity
         torque   Motor generated torque
+        epsilon  Electrical rotational angle
         u_a      Voltage in phase a
         u_b      Voltage in phase b
         u_c      Voltage in phase c
@@ -1139,7 +1141,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         'l_d': 79e-3,
         'l_q': 113e-3,
         'j_rotor': 2.45e-3,
-        'r_s': 10.9e-3,
+        'r_s': 4.9,
         'psi_p': 0.165,
     }
 

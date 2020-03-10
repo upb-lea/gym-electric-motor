@@ -139,13 +139,14 @@ class DummyReferenceGenerator(ReferenceGenerator):
     reference_space = Box(0, 1, shape=(1,))
     _reset_counter = 0
 
-    def __init__(self, **kwargs):
+    def __init__(self, reference_observation=np.array([1]), **kwargs):
+        self.kwargs = kwargs
         self.closed = False
         self.physical_system = None
         self.get_reference_state = None
         self.get_reference_obs_state = None
         self.trajectory = np.sin(np.linspace(0, 50, 100))
-        self.reference_observation = np.array([1])
+        self.reference_observation = reference_observation
         self.reference_array = None
         self.kwargs = kwargs
 
@@ -226,10 +227,10 @@ class DummyPhysicalSystem(PhysicalSystem):
         """
         return self._nominal_values
 
-    def __init__(self, state_length=1, **kwargs):
+    def __init__(self, state_length=1, state_names='dummy_state', **kwargs):
         super().__init__(
             Box(-1, 1, shape=(1,)), Box(-1, 1, shape=(state_length,)),
-            [f'dummy_state_{i}' for i in range(state_length)], 1
+            [f'{state_names}_{i}' for i in range(state_length)], 1
         )
         self._limits = np.array([10 * (i + 1) for i in range(state_length)])
         self._nominal_values = np.array([(i + 1) for i in range(state_length)])
@@ -326,6 +327,7 @@ class DummyConverter(PowerElectronicConverter):
         self.last_i_out = None
         self.t = None
         self.kwargs = kwargs
+        self.u_in = None
 
     def i_sup(self, i_out):
         self.last_i_out = i_out
@@ -347,26 +349,29 @@ class DummyConverter(PowerElectronicConverter):
         self.i_out = i_out
         self.t = t
         self.convert_counter += 1
-        return [self.action] if type(self.action_space) is Discrete else self.action
+        self.u_in = [self.action] if type(self.action_space) is Discrete else self.action
+        return self.u_in
 
 
 class DummyElectricMotor(ElectricMotor):
 
     # defined test values
     _default_motor_parameter = permex_motor_parameter['motor_parameter']
-    _default_limits = dict(omega=16, torque=26, u=15, i=26, i_0=26, i_1=21,)
+    _default_limits = dict(omega=16, torque=26, u=15, i=26, i_0=26, i_1=21, u_0=15)
     _default_nominal_values = dict(omega=14, torque=20, u=15, i=22, i_0=22, i_1=20)
 
     CURRENTS_IDX = [0, 1]
     CURRENTS = ['i_0', 'i_1']
-    VOLTAGES = ['u_0', 'u_1']
+    VOLTAGES = ['u_0']
 
     def __init__(self, tau=1e-5, **kwargs):
         self.kwargs = kwargs
         self.reset_counter = 0
+        self.u_in = None
         super().__init__(tau=tau, **kwargs)
 
     def electrical_ode(self, state, u_in, omega, *_):
+        self.u_in = u_in
         return state - u_in
 
     def reset(self):

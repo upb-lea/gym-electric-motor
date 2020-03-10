@@ -12,7 +12,7 @@ class StepReferenceGenerator(SubepisodedReferenceGenerator):
     _frequency = 0
     _offset = 0
 
-    def __init__(self, amplitude_range=(0, 1), frequency_range=(1, 10), offset_range=(-1, 1), *_, **kwargs):
+    def __init__(self, amplitude_range=None, frequency_range=(1, 10), offset_range=None, *_, **kwargs):
         """
         Args:
             amplitude_range(tuple(float,float)): Lower and upper limit for the amplitude.
@@ -21,9 +21,9 @@ class StepReferenceGenerator(SubepisodedReferenceGenerator):
             kwargs(dict): Arguments passed to the superclass SubepisodedReferenceGenerator .
         """
         super().__init__(**kwargs)
-        self._amplitude_range = amplitude_range
+        self._amplitude_range = amplitude_range or (0, np.inf)
         self._frequency_range = frequency_range
-        self._offset_range = offset_range
+        self._offset_range = offset_range or (-np.inf, np.inf)
 
     def set_modules(self, physical_system):
         super().set_modules(physical_system)

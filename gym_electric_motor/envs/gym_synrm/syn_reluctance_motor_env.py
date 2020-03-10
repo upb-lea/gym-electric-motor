@@ -67,20 +67,12 @@ class DiscSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
     Action Space:
         Type: Discrete(8)
 
-    Reward:
-        .. math::
-            reward = (\omega - \omega^*) / (2 * \omega_{lim})
-
     Starting State:
         Zeros on all state variables.
 
     Episode Termination:
-        Current limits (i_a ,i_b, i_c) are observed and the reference generation is continuous.
-        Therefore, an episode ends only, when current limits have been violated.
-
-    Limit Violation Reward:
-        .. math::
-            limit~violation~reward = -1 / (1- \gamma ) = -10 (Default: \gamma = 0.9)
+        Termination if current limits are violated. The terminal reward -10 is used as reward.
+        (Have a look at the reward functions.)
 
     u_sup and u_nominal must be the same
     """
@@ -133,20 +125,12 @@ class ContSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
     Action Space:
         Type: Discrete(8)
 
-    Reward:
-        .. math::
-            reward = (\omega - \omega^*) / (2 * \omega_{lim})
-
     Starting State:
         Zeros on all state variables.
 
     Episode Termination:
-        Current limits (i_a ,i_b, i_c) are observed and the reference generation is continuous.
-        Therefore, an episode ends only, when current limits have been violated.
-
-    Limit Violation Reward:
-        .. math::
-            limit~violation~reward = -1 / (1- \gamma ) = -10 (Default: \gamma = 0.9)
+        Termination if current limits are violated. The terminal reward -10 is used as reward.
+        (Have a look at the reward functions.)
 
     u_sup and u_nominal must be the same
     """

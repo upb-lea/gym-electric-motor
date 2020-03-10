@@ -44,6 +44,9 @@ class ElectricMotorEnvironment(gym.core.Env):
         Visualization:
             Visualization of the motors states. Needs to be a subclass of *ElectricMotorVisualization*
 
+        Limits:
+            Returns a list of limits of all states in the observation (called in state_filter) in the same order.
+
     State Variables:
         Each environment has got a list of state variables that are defined by the physical system.
         These define the names and order for all further state arrays in the modules. These states are announced to the
@@ -122,6 +125,27 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reward_function = reward_function
         self._reset_required = True
 
+    @property
+    def limits(self):
+        """
+        Returns a list of limits of all states in the observation (called in state_filter) in the same order
+        """
+        return self._physical_system.limits[self.state_filter]
+
+    @property
+    def state_names(self):
+        """
+        Returns a list of state names of all states in the observation (called in state_filter) in the same order
+        """
+        return self._physical_system.state_names[self.state_filter]
+
+    @property
+    def nominal_state(self):
+        """
+        Returns a list of nominal values of all states in the observation (called in state_filter) in the same order
+        """
+        return self._physical_system.nominal_state[self.state_filter]
+
     def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None,
                  **kwargs):
         """
@@ -154,11 +178,11 @@ class ElectricMotorEnvironment(gym.core.Env):
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
-        self._state_filter = []
+        self.state_filter = []
         for state_var in state_filter:
-            self._state_filter.append(np.where(np.array(self._physical_system.state_names) == state_var)[0][0])
-        states_low = self._physical_system.state_space.low[self._state_filter]
-        states_high = self._physical_system.state_space.high[self._state_filter]
+            self.state_filter.append(np.where(np.array(self._physical_system.state_names) == state_var)[0][0])
+        states_low = self._physical_system.state_space.low[self.state_filter]
+        states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high)
         self.observation_space = gym.spaces.Tuple((
             state_space,
@@ -180,13 +204,13 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._visualization.reset(trajectories)
         self._reward_function.reset(self._state, self._reference)
         self._reward = 0.0
-        return self._state[self._state_filter], next_ref
+        return self._state[self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
         Update the visualization of the motor.
         """
-        self._visualization.step(self._state, self._reference, self._reward)
+        self._visualization.step(self._state, self._reference, self._reward, self._reset_required)
 
     def step(self, action):
         """
@@ -208,7 +232,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reward, self._reset_required = self._reward_function.reward(self._state, self._reference, action)
 
         ref_next = self.reference_generator.get_reference_observation(self._state)
-        return (self._state[self._state_filter], ref_next), self._reward, self._reset_required, {}
+        return (self._state[self.state_filter], ref_next), self._reward, self._reset_required, {}
 
     def close(self):
         """
@@ -406,15 +430,18 @@ class RewardFunction:
     #: Tuple(int,int): Lower and upper possible reward (excluding limit violation reward)
     reward_range = (-np.inf, np.inf)
 
-    def __init__(self, observed_states=None, **__):
+    def __init__(self, observed_states='currents', **__):
         """
         Args:
-            observed_states(list/tuple(str)): Names of the observed states. ['all'] for the observation of every state.
+            observed_states(str/iterable(str)): Names of the observed states. 'all' for the observation of every state.
+                'currents' for all currents and 'voltages' for all voltages. Combinations of 'currents' and
+                'voltages' with other states are possible. Choose None for not observing states.
         """
         self._physical_system = None
         observed_states = observed_states or ()
+        if type(observed_states) is str:
+            observed_states = [observed_states]
         self._observed_states = dict.fromkeys(observed_states, 1)
-
         self._reference_generator = None
         self._limits = None
 
@@ -440,8 +467,22 @@ class RewardFunction:
             reference_generator(ReferenceGenerator): The reference generator of the environment.
         """
         self._physical_system = physical_system
-        if 'all' in self._observed_states.keys():
+        if 'all' in self._observed_states.keys():  # key 'all' observes all states
             self._observed_states = dict.fromkeys(physical_system.state_names, 1)
+
+        if 'currents' in self._observed_states.keys():  # key 'current' observes all currents
+            self._observed_states.pop('currents')
+            for state in physical_system.state_names:
+                if state[0:2] == 'i_':
+                    if state not in self._observed_states.keys():
+                        self._observed_states[state] = 1
+
+        if 'voltages' in self._observed_states.keys():  # key 'voltages' observes all voltages, also the supply voltage
+            self._observed_states.pop('voltages')
+            for state in physical_system.state_names:
+                if state[0:2] == 'u_':
+                    if state not in self._observed_states.keys():
+                        self._observed_states[state] = 1
 
         self._observed_states = set_state_array(self._observed_states, physical_system.state_names).astype(bool)
         self._limits = physical_system.limits / abs(physical_system.limits)

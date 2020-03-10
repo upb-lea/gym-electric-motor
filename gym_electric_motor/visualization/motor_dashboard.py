@@ -13,41 +13,53 @@ class MotorDashboard(ElectricMotorVisualization):
 
     In the table are all variables given that can be shown for a specific motor.
 
-    +--------+-------+-------+--------+-------+--------------+
-    |variable| extex | shunt | permex |series | PMSM / SynRM |
-    +========+=======+=======+========+=======+==============+
-    |omega   | x     | x     | x      | x     | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |torque  | x     | x     | x      | x     | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |u_sup   | x     | x     | x      | x     | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |i       |       |       | x      | x     |              |
-    +--------+-------+-------+--------+-------+--------------+
-    |i_e     | x     | x     |        |       |              |
-    +--------+-------+-------+--------+-------+--------------+
-    |u       |       | x     | x      | x     |              |
-    +--------+-------+-------+--------+-------+--------------+
-    |u_e     | x     |       |        |       |              |
-    +--------+-------+-------+--------+-------+--------------+
-    |u_a     | x     |       |        |       | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |u_b     |       |       |        |       | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |u_c     |       |       |        |       | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |i_a     | x     | x     |        |       | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |i_b     |       |       |        |       | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |i_c     |       |       |        |       | x            |
-    +--------+-------+-------+--------+-------+--------------+
-    |epsilon |       |       |        |       | x            |
-    +--------+-------+-------+--------+-------+--------------+
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |variable| extex | shunt | permex |series | PMSM, | Description                                |
+    |        |       |       |        |       | SynRM |                                            |
+    +========+=======+=======+========+=======+=======+============================================+
+    |omega   | x     | x     | x      | x     | x     | mechanical angular velocity                |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |torque  | x     | x     | x      | x     | x     | Motor generated torque                     |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u_sup   | x     | x     | x      | x     | x     | supply voltage of the converter            |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |i       |       |       | x      | x     |       | current in permex and series motors        |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |i_e     | x     | x     |        |       |       | current in excitation circuit              |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u       |       | x     | x      | x     |       | voltage at shunt, permex and series motors |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u_e     | x     |       |        |       |       | voltage at the excitation circuit          |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u_a     | x     |       |        |       | x     | armature voltage or voltage of phase a     |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u_b     |       |       |        |       | x     | voltage of phase b                         |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u_c     |       |       |        |       | x     | voltage of phase c                         |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u_d     |       |       |        |       | x     | d-axis voltage                             |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |u_q     |       |       |        |       | x     | q-axis voltage                             |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |i_a     | x     | x     |        |       | x     | armature current or current in phase a     |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |i_b     |       |       |        |       | x     | current in phase a                         |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |i_c     |       |       |        |       | x     | current in phase b                         |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |i_d     |       |       |        |       | x     | d-axis current                             |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |i_q     |       |       |        |       | x     | q-axis current                             |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+    |epsilon |       |       |        |       | x     | electrical rotational angle                |
+    +--------+-------+-------+--------+-------+-------+--------------------------------------------+
+
+
+    Remark: In the current MotorDashboard version an overlap can occur in the visualization at short episodes.
 
     """
 
-    def __init__(self, update_period=5e-2, visu_period=5, plotted_variables=['all'], **_):
+    def __init__(self, update_period=5e-2, visu_period=5, plotted_variables='all', **_):
         """
               Constructor of the dashboard.
 
@@ -113,7 +125,7 @@ class MotorDashboard(ElectricMotorVisualization):
                     var.reset()
         plt.pause(0.05)
 
-    def step(self, state, reference=None, reward=None, *_, **__):
+    def step(self, state, reference=None, reward=None, done=False, *_, **__):
         """
         Function to call in every step of the environment
 
@@ -121,6 +133,7 @@ class MotorDashboard(ElectricMotorVisualization):
             state: current state to plot
             reference: current reference in this step
             reward: current reward in this step
+            done: Flag, if the episode has terminated
         """
         if not self.initialized:
             self.initialized = True
@@ -144,7 +157,7 @@ class MotorDashboard(ElectricMotorVisualization):
             for var, data in zip(self.dash_vars, state_denorm[self._plotted_state_index]):
                 var.step(data, k)
 
-        if (k + 1) % self._update_cycle == 0 or k == self._episode_length - 1:
+        if (k + 1) % self._update_cycle == 0 or k == self._episode_length - 1 or done:
             for dashVar in self.dash_vars:
                 dashVar.scatter(k)
                 self._update_figure()
@@ -177,10 +190,14 @@ class MotorDashboard(ElectricMotorVisualization):
                 'i_e': '$i_{e}/A$',
                 'i_b': '$i_{b}/A$',
                 'i_c': '$i_{c}/A$',
+                'i_sq': '$i_{sq}/A$',
+                'i_sd': '$i_{sd}/A$',
                 'u': '$u/V$',
                 'u_a': '$u_{a}/V$',
                 'u_b': '$u_{b}/V$',
                 'u_c': '$u_{c}/V$',
+                'u_sq': '$u_{sq}/V$',
+                'u_sd': '$u_{sd}/V$',
                 'u_e': '$u_{e}/V$',
                 'u_sup': '$u_{sup}/V$',
                 'epsilon': r'$\epsilon/rad$'
@@ -267,10 +284,10 @@ class MotorDashboard(ElectricMotorVisualization):
             The value [True] is the shortcut for plotting all variables.
         """
         self._plotted_state_index = []
-        if self._plotted_variables == ['all']:
+        if self._plotted_variables == 'all':
             self._plotted_variables = list(self._physical_system.state_names)
             self._plotted_state_index = list(range(len(self._plotted_variables)))
-        elif self._plotted_variables == ['none']:
+        elif self._plotted_variables == 'none':
             self._plotted_variables = []
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
         else:

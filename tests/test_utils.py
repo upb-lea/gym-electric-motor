@@ -70,18 +70,25 @@ def test_instantiate(monkeypatch):
 
 @pytest.mark.parametrize("state_names", [['a', 'b', 'c', 'd']])
 @pytest.mark.parametrize("state_dict, state_array, target", [
-    (dict(a=5, b=12, c=10, e=12), [0, 0, 0, 0], [5, 12, 10, 0]),
+    # Set all Values Test and test for uppercase states
+    (dict(A=5, b=12, c=10, d=12), [0, 0, 0, 0], [5, 12, 10, 12]),
+    # Set only subset of values -> Rest stays as it is in the state array
     (dict(a=5, b=12, c=10), [0, 1, 2, 5], [5, 12, 10, 5]),
-    (dict(a=5, b=12, c=10, e=12), np.array([0, 0, 0, 0]), np.array([5, 12, 10, 0]))
 ])
 def test_state_dict_to_state_array(state_dict, state_array, state_names, target):
     utils.state_dict_to_state_array(state_dict, state_array, state_names)
     assert np.all(state_array == target)
 
 
+def test_state_dict_to_state_array_assertion_error():
+    # Test if the AssertionError is raised when invalid states are passed
+    with pytest.raises(AssertionError):
+        utils.state_dict_to_state_array({'invalid_name': 0, 'valid_name': 1}, np.zeros(3), ['valid_name', 'a', 'b'])
+
+
 @pytest.mark.parametrize("state_names", [['a', 'b', 'c', 'd']])
 @pytest.mark.parametrize("input_values, target", [
-    (dict(a=5, b=12, c=10, e=12), [5, 12, 10, 0]),
+    (dict(a=5, b=12, c=10, d=12), [5, 12, 10, 12]),
     (np.array([1, 2, 3, 4]), np.array([1, 2, 3, 4])),
     ([1, 2, 3, 4], [1, 2, 3, 4]),
     (5, [5, 5, 5, 5])

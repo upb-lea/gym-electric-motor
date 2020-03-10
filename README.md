@@ -39,7 +39,7 @@ A whitepaper for this framework is available under [arxiv.org/abs/1910.09434
 }
 ```
 
-## Installing
+### Installing
 
 - Install gym-electric-motor from PyPI (recommended):
 
@@ -57,10 +57,10 @@ python setup.py install
 # or alternatively
 pip install -e .
 ```
-## Authors
+### Authors
 Arne Traue, Gerrit Book
 
-## Getting started
+### Getting started
 Like every gym environment, the basic user interface consists of four main functions.
 * `import gym_electric_motor as gem`  
     Import of the package. 
@@ -186,7 +186,10 @@ All visualizations are optional and recommended to be disabled for increased spe
 
 - Training and testing of a [Keras-rl](https://github.com/keras-rl/keras-rl) DDPG-Agent as a speed controller on a dc series motor [(jump to source)](examples/ddpg_series_omega_control.py).
  
-## Motor Models
+### Physical System Models
+The following electrical motor , converter and mechanical load models are included. More detailed descriptions can be found in the corresponding classes.
+ 
+##### Motor Models
 The following motor models are included:
 
 Four DC motors:
@@ -201,7 +204,7 @@ Two three phase motors:
 - PMSM (permanent magnet synchronous motor)
 - SynRM (synchronous reluctance motor)
 
-### Converter
+##### Converter
 Following converters are included:
 
 - 1 quadrant converter (1QC)
@@ -218,9 +221,16 @@ Furthermore, they can be controlled with a discrete action space or a continuous
 Discrete actions are the direct switching states of the transistors.
 Continuous actions are the duty cycles for a pulse width modulation on the transistors. 
 
-### Load
+##### Load
 The load model consists of a quadratic load function, with user defined coefficients. 
 Furthermore the moment of inertia of the load attached to the motor can be specified.
+
+### Notes about the states and value ranges
+The included states for each motor are summarized and briefly described in the [Motor Dashboard](visualizations/motor_dashboard.html).
+Every state that can be plotted can also be used in the state filter or as observed state.
+The actions are basically understood as the desired duty cycles. The actual applied voltage can be taken from the observations.
+The observations are normalized to their physical limits that can be accessed with `env.limits`.
+Therefore, all values are typically in a range of [0, 1] or [-1, 1] without limit violation.
 
 ### Notes about the Parameters
 All nominal values of voltages and currents are DC values in the case of a DC motor and peak phase values for the PMSM.
@@ -230,7 +240,7 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
 
 Furthermore, the angular velocity is the mechanical one and not the electrical: 
 
-<img src="docs/plots/omegame.svg" width="150">
+![](docs/plots/omegame.svg)
 
 
 ### Running Unit Tests with Pytest

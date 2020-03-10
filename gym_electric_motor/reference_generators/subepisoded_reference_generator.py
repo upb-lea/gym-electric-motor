@@ -29,7 +29,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator):
         super().__init__()
         self._limit_margin = limit_margin
         self._reference_value = 0.0
-        self._reference_state = reference_state
+        self._reference_state = reference_state.lower()
         self._episode_len_range = episode_lengths
         self._current_episode_length = int(self._get_current_value(episode_lengths))
         self._k = 0
@@ -42,18 +42,20 @@ class SubepisodedReferenceGenerator(ReferenceGenerator):
         rs = self._referenced_states
         ps = physical_system
         if self._limit_margin is None:
-            upper_margin = (ps.nominal_state[rs] / ps.limits[rs])[0]
-            lower_margin = -upper_margin if ps.state_space.low[rs] == -1 else 0
-            self._limit_margin = lower_margin, upper_margin
+            upper_margin = (ps.nominal_state[rs] / ps.limits[rs])[0] * ps.state_space.high[rs]
+            lower_margin = (ps.nominal_state[rs] / ps.limits[rs])[0] * ps.state_space.low[rs]
+            self._limit_margin = lower_margin[0], upper_margin[0]
         elif type(self._limit_margin) in [float, int]:
-            upper_margin = self._limit_margin
-            lower_margin = -upper_margin if ps.state_space.low[rs] == -1 else 0
-            self._limit_margin = lower_margin, upper_margin
+            upper_margin = self._limit_margin * ps.state_space.high[rs]
+            lower_margin = self._limit_margin * ps.state_space.low[rs]
+            self._limit_margin = lower_margin[0], upper_margin[0]
         elif type(self._limit_margin) is tuple:
-            lower_margin, upper_margin = self._limit_margin
+            lower_margin = self._limit_margin[0] * ps.state_space.low[rs]
+            upper_margin = self._limit_margin[1] * ps.state_space.high[rs]
+            self._limit_margin = lower_margin[0], upper_margin[0]
         else:
             raise Exception('Unknown type for the limit margin.')
-        self.reference_space = Box(lower_margin, upper_margin, shape=(1,))
+        self.reference_space = Box(lower_margin[0], upper_margin[0], shape=(1,))
 
     def reset(self, initial_state=None, initial_reference=None):
         """

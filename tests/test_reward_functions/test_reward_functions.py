@@ -69,13 +69,14 @@ def test_initialization_weighted_sum_of_errors(normed, reward_power, motor_type,
     reward_weights_list = list(reward_weights_dict.values())
     reward_weights_array = np.array(reward_weights_list)
     # initialize the reward function with different types of reward weights
-    reward_fct_default = WeightedSumOfErrors()
-    reward_fct_initial_dict = WeightedSumOfErrors(reward_weights_dict)
-    reward_fct_initial_list = WeightedSumOfErrors(reward_weights_list)
-    reward_fct_initial_array = WeightedSumOfErrors(reward_weights_array)
-    reward_fct_make = make_module(RewardFunction, 'WSE', reward_weights=reward_weights_dict)
+    reward_fct_default = WeightedSumOfErrors(observed_states=None)
+    reward_fct_initial_dict = WeightedSumOfErrors(reward_weights_dict, observed_states=None)
+    reward_fct_initial_list = WeightedSumOfErrors(reward_weights_list, observed_states=None)
+    reward_fct_initial_array = WeightedSumOfErrors(reward_weights_array, observed_states=None)
+    reward_fct_make = make_module(RewardFunction, 'WSE', reward_weights=reward_weights_dict, observed_states=None)
     # initialize a reward function where all parameters are set
-    reward_fct_test = WeightedSumOfErrors(reward_weights_dict, normed, observed_states, gamma, reward_power)
+    reward_fct_test = WeightedSumOfErrors(reward_weights_dict, normed, gamma, reward_power,
+                                          observed_states=observed_states)
     reward_fcts = [reward_fct_default,
                    reward_fct_initial_dict,
                    reward_fct_initial_list,
@@ -175,7 +176,7 @@ def test_limit_violation_check(motor_type, converter_type, environment_state, ob
     [observed_states_indices.append(physical_system.state_names.index(state_variable))
      for state_variable in observed_states]
     # initialize the reward function
-    reward_fct = WeightedSumOfErrors(reward_weights_dict, normed, observed_states, gamma, reward_power)
+    reward_fct = WeightedSumOfErrors(reward_weights_dict, normed, gamma, reward_power, observed_states=observed_states)
     reward_fct.set_modules(physical_system, reference_generator)
     # get limits for limit violation testing
     lower_limits = physical_system.state_space.low # * physical_system.limits
@@ -217,8 +218,9 @@ def test_shifted_weighted_sum_of_errors(normed, reward_power, motor_type, conver
     observed_states = physical_system.state_names
     reward_weights_dict = test_motor_parameter[motor_type]['reward_weights']
     # setup reward functions
-    reward_fct_default = ShiftedWeightedSumOfErrors()
-    reward_fct_1 = ShiftedWeightedSumOfErrors(reward_weights_dict, normed, observed_states, gamma, reward_power)
+    reward_fct_default = ShiftedWeightedSumOfErrors(observed_states=None)
+    reward_fct_1 = ShiftedWeightedSumOfErrors(reward_weights_dict, normed, gamma, reward_power,
+                                              observed_states=observed_states)
     reward_fct_2 = ShiftedWeightedSumOfErrors(reward_weights=reward_weights_dict, normed=normed,
                                               observed_states=observed_states, gamma=gamma, reward_power=reward_power)
     reward_fct_3 = make_module(RewardFunction, 'SWSE', observed_states=observed_states,

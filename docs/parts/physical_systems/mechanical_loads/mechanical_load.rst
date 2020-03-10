@@ -6,6 +6,7 @@ Mechanical Loads
     :caption: Available Mechanical Loads:
 
     polystatic
+    const_speed_load
 
 MechanicalLoad Base Class
 *************************************
