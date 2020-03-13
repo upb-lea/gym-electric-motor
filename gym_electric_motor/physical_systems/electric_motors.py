@@ -1169,3 +1169,482 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         return 1.5 * mp['p'] * (
                 mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]
         ) * currents[self.I_SQ_IDX]
+
+class InductionMotor(ElectricMotor):
+    """
+        The InductionMotor and its subclasses implement the technical system of a Three Phase induction motor.
+
+        This includes the system equations, the motor parameters of the equivalent circuit diagram,
+        as well as limits and bandwidth.
+
+        =====================  ==========  ============= ===========================================
+        Motor Parameter        Unit        Default Value Description
+        =====================  ==========  ============= ===========================================
+        r_s                    Ohm         2.9338        Stator resistance
+        r_r                    Ohm         1.355         Rotor resistance
+        l_m                    H           143.75e-3     Main inductance
+        l_sigs                 H           5.87e-3       Stator-side stray inductance
+        l_sigr                 H           5.87e-3       Rotor-side stray inductance
+        p                      1           2             Pole pair number
+        j_rotor                kg/m^2      0.0011        Moment of inertia of the rotor
+        =====================  ==========  ============= ===========================================
+
+        =============== ====== =============================================
+        Motor Currents  Unit   Description
+        =============== ====== =============================================
+        i_sq            A      Quadrature axis current
+        i_sd            A      Direct axis current
+        i_sa            A      Current through branch a
+        i_sb            A      Current through branch b
+        i_sc            A      Current through branch c
+        i_salpha        A      Current in alpha axis
+        i_sbeta         A      Current in beta axis
+        =============== ====== =============================================
+        =============== ====== =============================================
+        Motor Voltages  Unit   Description
+        =============== ====== =============================================
+        u_sq            A      Quadrature axis voltage
+        u_sd            A      Direct axis voltage
+        u_sa            A      Voltage through branch a
+        u_sb            A      Voltage through branch b
+        u_sc            A      Voltage through branch c
+        u_salpha        A      Voltage in alpha axis
+        u_sbeta         A      Voltage in beta axis
+        =============== ====== =============================================
+
+        ======== ===========================================================
+        Limits / Nominal Value Dictionary Entries:
+        -------- -----------------------------------------------------------
+        Entry    Description
+        ======== ===========================================================
+        i        General current limit / nominal value
+        i_sa      Current in phase a
+        i_sb      Current in phase b
+        i_sc      Current in phase c
+        i_salpha  Current in alpha axis
+        i_sbeta   Current in beta axis
+        i_sd     Current in direct axis
+        i_sq     Current in quadrature axis
+        omega    Mechanical angular Velocity
+        torque   Motor generated torque
+        u_sa      Voltage in phase a
+        u_sb      Voltage in phase b
+        u_sc      Voltage in phase c
+        u_salpha  Voltage in alpha axis
+        u_sbeta   Voltage in beta axis
+        u_sd     Voltage in direct axis
+        u_sq     Voltage in quadrature axis
+        ======== ===========================================================
+
+
+        Note:
+            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).
+            Typically the rms value for the line voltage (:math:`U_L`) is given.
+            :math:`\hat{u}_S=\sqrt{2/3}~U_L`
+
+            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).
+            Typically the rms value for the phase current (:math:`I_S`) is given.
+            :math:`\hat{i}_S = \sqrt{2}~I_S`
+
+            If not specified, nominal values are equal to their corresponding limit values.
+            Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
+            the general limits/nominal values (e.g. i)
+        """
+    I_SALPHA_IDX = 0
+    I_SBETA_IDX = 1
+    PSI_RALPHA_IDX = 2
+    PSI_RBETA_IDX = 3
+    EPSILON_IDX = 4
+    CURRENTS_IDX = [0, 1]
+    FLUX_IDX = [2, 3]
+    CURRENTS = ['i_salpha', 'i_sbeta']
+    FLUXES = ['psi_ralpha', 'psi_rbeta']
+    VOLTAGES = ['u_salpha', 'u_sbeta']
+
+    # transformation matrix from abc to alpha-beta representation
+    _t23 = 2 / 3 * np.array([
+        [1, -0.5, -0.5],
+        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]
+    ])
+
+    # transformation matrix from alpha-beta to abc representation
+    _t32 = np.array([
+        [1, 0],
+        [-0.5, 0.5 * np.sqrt(3)],
+        [-0.5, -0.5 * np.sqrt(3)]
+    ])
+
+    _model_constants = None
+
+    @property
+    def motor_parameter(self):
+        # Docstring of superclass
+        return self._motor_parameter
+
+    @staticmethod
+    def t_23(quantities):
+        """
+        Transformation from abc representation to alpha-beta representation
+
+        Args:
+            quantities: The properties in the abc representation like ''[u_a, u_b, u_c]''
+
+        Returns:
+            The converted quantities in the alpha-beta representation like ''[u_alpha, u_beta]''
+        """
+        return np.matmul(InductionMotor._t23, quantities)
+
+    @staticmethod
+    def t_32(quantities):
+        """
+        Transformation from alpha-beta representation to abc representation
+
+        Args:
+            quantities: The properties in the alpha-beta representation like ``[u_alpha, u_beta]``
+
+        Returns:
+            The converted quantities in the abc representation like ``[u_a, u_b, u_c]``
+        """
+        return np.matmul(InductionMotor._t32, quantities)
+
+    @staticmethod
+    def q(quantities, epsilon):
+        """
+        Transformation of the dq-representation into alpha-beta using the electrical angle
+
+        Args:
+            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
+            epsilon: Current electrical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
+        """
+        cos = math.cos(epsilon)
+        sin = math.sin(epsilon)
+        return cos * quantities[0] - sin * quantities[1], sin * quantities[0] + cos * quantities[1]
+
+    @staticmethod
+    def q_inv(quantities, epsilon):
+        """
+        Transformation of the alpha-beta-representation into dq using the electrical angle
+
+        Args:
+            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
+            epsilon: Current electrical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
+
+        Note:
+            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
+            So this method calls q(quantities, -epsilon).
+        """
+        return InductionMotor.q(quantities, -epsilon)
+
+    def q_me(self, quantities, epsilon):
+        """
+        Transformation of the dq-representation into alpha-beta using the mechanical angle
+
+        Args:
+            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
+            epsilon: Current mechanical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
+        """
+        return self.q(quantities, epsilon * self._motor_parameter['p'])
+
+    def q_inv_me(self, quantities, epsilon):
+        """
+        Transformation of the alpha-beta-representation into dq using the mechanical angle
+
+        Args:
+            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
+            epsilon: Current mechanical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
+
+        Note:
+            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
+            So this method calls q(quantities, -epsilon).
+        """
+        return self.q_me(quantities, -epsilon)
+
+    def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, **__):
+        # Docstring of superclass
+        nominal_values = nominal_values or {}
+        limit_values = limit_values or {}
+        super().__init__(motor_parameter, nominal_values, limit_values)
+        self._update_model()
+        self._update_limits()
+
+    def reset(self):
+        # Docstring of superclass
+        return np.zeros(len(self.CURRENTS) + len(self.FLUXES) + 1)
+
+    def torque(self, state):
+        # Docstring of superclass
+        raise NotImplementedError
+
+    def _update_model(self):
+        """
+        Set motor parameters into a matrix for faster computation
+        """
+        raise NotImplementedError
+
+    def _torque_limit(self):
+        """
+        Returns:
+             Maximal possible torque for the given limits in self._limits
+        """
+        raise NotImplementedError
+
+    def _update_limits(self):
+        """
+        Calculate for all the missing maximal and nominal values the physical maximal possible values.
+        """
+        mp = self._motor_parameter
+        if self._limits.get('u_sa', 0) == 0:
+            self._limits['u_sa'] = .5 * self._limits['u']
+        if self._limits.get('u_sb', 0) == 0:
+            self._limits['u_sb'] = .5 * self._limits['u']
+        if self._limits.get('u_sc', 0) == 0:
+            self._limits['u_sc'] = .5 * self._limits['u']
+        if self._limits.get('u_salpha', 0) == 0:
+            self._limits['u_salpha'] = .5 * self._limits['u']
+        if self._limits.get('u_sbeta', 0) == 0:
+            self._limits['u_sbeta'] = 0.5 * self._limits['u']
+        if self._limits.get('u_sd', 0) == 0:
+            self._limits['u_sd'] = .5 * self._limits['u']
+        if self._limits.get('u_sq', 0) == 0:
+            self._limits['u_sq'] = .5 * self._limits['u']
+
+        if self._limits.get('i_salpha', 0) == 0:
+            self._limits['i_salpha'] = self._limits.get('i', None) or self._limits[
+                'u_salpha'] / mp['r_s']
+        if self._limits.get('i_sbeta', 0) == 0:
+            self._limits['i_sbeta'] = self._limits.get('i', None) or self._limits['u_beta'] / \
+                                     mp['r_s']
+        if self._limits.get('i_sa', 0) == 0:
+            self._limits['i_sa'] = self._limits.get('i', None) or self._limits['u_sa'] / mp['r_s']
+        if self._limits.get('i_sb', 0) == 0:
+            self._limits['i_sb'] = self._limits.get('i', None) or self._limits['u_sb'] / mp['r_s']
+        if self._limits.get('i_sc', 0) == 0:
+            self._limits['i_sc'] = self._limits.get('i', None) or self._limits['u_sc'] / mp['r_s']
+        if self._limits.get('i_sd', 0) == 0:
+            self._limits['i_sd'] = self._limits.get('i', None) or self._limits['u_sd'] / mp['r_s']
+        if self._limits.get('i_sq', 0.0) == 0:
+            self._limits['i_sq'] = self._limits.get('i', None) or self._limits['u_sq'] / mp['r_s']
+
+        if self._limits['torque'] == 0:
+            self._limits['torque'] = self._torque_limit()
+
+        if self._limits['omega'] == 0:
+            self._limits['omega'] = self._default_limits['omega']
+
+        if 'u' not in self._nominal_values.keys():
+            self._nominal_values.update({'u': self._limits['u']})
+        if 'i' not in self._nominal_values.keys():
+            self._nominal_values.update({'i': self._limits['i']})
+
+        if self._nominal_values.get('u_sa', 0) == 0:
+            self._nominal_values['u_sa'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sa', 0) == 0:
+            if self._nominal_values.get('u_sb', 0) == 0:
+                self._nominal_values['u_sb'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sc', 0) == 0:
+            self._nominal_values['u_sc'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_salpha', 0) == 0:
+            self._nominal_values['u_salpha'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sbeta', 0) == 0:
+            self._nominal_values['u_sbeta'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sd', 0) == 0:
+            self._nominal_values['u_sd'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sq', 0) == 0:
+            self._nominal_values['u_sq'] = .5 * self._nominal_values['u']
+
+        if self._nominal_values.get('i_salpha', 0) == 0:
+            self._nominal_values['i_salpha'] = self._nominal_values.get('i', None) \
+                                              or self._nominal_values['u_salpha'] / mp['r_s']
+        if self._nominal_values.get('i_sbeta', 0) == 0:
+            self._nominal_values['i_sbeta'] = self._nominal_values.get('i', None) \
+                                             or self._nominal_values['u_sbeta'] / mp['r_s']
+        if self._nominal_values.get('i_sa', 0) == 0:
+            self._nominal_values['i_sa'] = self._nominal_values.get('i', None) or self._nominal_values['u_sa'] / mp['r_s']
+        if self._nominal_values.get('i_sb', 0) == 0:
+            self._nominal_values['i_sb'] = self._nominal_values.get('i', None) or self._nominal_values['u_sb'] / mp['r_s']
+        if self._nominal_values.get('i_sc', 0) == 0:
+            self._nominal_values['i_sc'] = self._nominal_values.get('i', None) \
+                                          or self._nominal_values['u_sc'] / mp['r_s']
+        if self._nominal_values.get('i_sd', 0) == 0:
+            self._nominal_values['i_sd'] = self._nominal_values.get('i', None) \
+                                           or self._nominal_values['u_sd'] / mp['r_s']
+        if self._nominal_values.get('i_sq', 0.0) == 0:
+            self._nominal_values['i_sq'] = self._nominal_values.get('i', None) \
+                                           or self._nominal_values['u_sq'] / mp['r_s']
+
+        for entry in self._limits.keys():
+            if self._nominal_values.get(entry, 0) == 0:
+                self._nominal_values[entry] = self._limits[entry]
+
+    def electrical_ode(self, state, u_alphabeta, omega, *_):
+        """
+        The differential equation of the Induction Motor.
+
+        Args:
+            state: The current state of the motor. [i_sq, i_sd, epsilon]
+            omega: The mechanical load
+            u_alphabeta: The input voltages [u_salpha, u_sbeta]
+
+        Returns:
+            The derivatives of the state vector d/dt([i_sq, i_sd, epsilon])
+        """
+        return np.matmul(self._model_constants, np.array([
+            omega,
+            state[self.I_SBETA_IDX],
+            state[self.I_SALPHA_IDX],
+            u_alphabeta[1],
+            u_alphabeta[0],
+            state[self.PSI_RALPHA_IDX],
+            state[self.PSI_RBETA_IDX],
+            omega * state[self.PSI_RALPHA_IDX],
+            omega * state[self.PSI_RBETA_IDX],
+        ]))
+
+    def i_in(self, state):
+        # Docstring of superclass
+        return state[self.CURRENTS_IDX]
+
+
+class SquirrelCageInductionMotor(InductionMotor):
+    """
+        The InductionMotor and its subclasses implement the technical system of a Three Phase induction motor.
+
+        This includes the system equations, the motor parameters of the equivalent circuit diagram,
+        as well as limits and bandwidth.
+
+        =====================  ==========  ============= ===========================================
+        Motor Parameter        Unit        Default Value Description
+        =====================  ==========  ============= ===========================================
+        r_s                    Ohm         2.9338        Stator resistance
+        r_r                    Ohm         1.355         Rotor resistance
+        l_m                    H           143.75e-3     Main inductance
+        l_ssig                 H           5.87e-3       Stator-side stray inductance
+        l_rsig                 H           5.87e-3       Rotor-side stray inductance
+        p                      1           2             Pole pair number
+        j_rotor                kg/m^2      0.0011        Moment of inertia of the rotor
+        =====================  ==========  ============= ===========================================
+
+        =============== ====== =============================================
+        Motor Currents  Unit   Description
+        =============== ====== =============================================
+        i_sq            A      Quadrature axis current
+        i_sd            A      Direct axis current
+        i_sa            A      Current through branch a
+        i_sb            A      Current through branch b
+        i_sc            A      Current through branch c
+        i_salpha        A      Current in alpha axis
+        i_sbeta         A      Current in beta axis
+        =============== ====== =============================================
+        =============== ====== =============================================
+        Rotor flux      Unit   Description
+        =============== ====== =============================================
+        psi_rq          Vs     Quadrature axis of the rotor oriented flux
+        psi_rd          Vs     Direct axis of the rotor oriented flux
+        psi_ra          Vs     Rotor oriented flux in branch a
+        psi_rb          Vs     Rotor oriented flux in branch b
+        psi_rc          Vs     Rotor oriented flux in branch c
+        psi_ralpha      Vs     Rotor oriented flux in alpha direction
+        psi_rbeta       Vs     Rotor oriented flux in beta direction
+        =============== ====== =============================================
+        =============== ====== =============================================
+        Motor Voltages  Unit   Description
+        =============== ====== =============================================
+        u_sq            A      Quadrature axis voltage
+        u_sd            A      Direct axis voltage
+        u_sa            A      Stator voltage through branch a
+        u_sb            A      Stator voltage through branch b
+        u_sc            A      Stator voltage through branch c
+        u_salpha        A      Stator voltage in alpha axis
+        u_sbeta         A      Stator voltage in beta axis
+        =============== ====== =============================================
+
+        ======== ===========================================================
+        Limits / Nominal Value Dictionary Entries:
+        -------- -----------------------------------------------------------
+        Entry    Description
+        ======== ===========================================================
+        i        General current limit / nominal value
+        i_sa      Current in phase a
+        i_sb      Current in phase b
+        i_sc      Current in phase c
+        i_salpha  Current in alpha axis
+        i_sbeta   Current in beta axis
+        i_sd     Current in direct axis
+        i_sq     Current in quadrature axis
+        omega    Mechanical angular Velocity
+        torque   Motor generated torque
+        u_sa      Voltage in phase a
+        u_sb      Voltage in phase b
+        u_sc      Voltage in phase c
+        u_salpha  Voltage in alpha axis
+        u_sbeta   Voltage in beta axis
+        u_sd     Voltage in direct axis
+        u_sq     Voltage in quadrature axis
+        ======== ===========================================================
+
+
+        Note:
+            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).
+            Typically the rms value for the line voltage (:math:`U_L`) is given.
+            :math:`\hat{u}_S=\sqrt{2/3}~U_L`
+
+            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).
+            Typically the rms value for the phase current (:math:`I_S`) is given.
+            :math:`\hat{i}_S = \sqrt{2}~I_S`
+
+            If not specified, nominal values are equal to their corresponding limit values.
+            Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
+            the general limits/nominal values (e.g. i)
+        """
+    _default_motor_parameter = {
+        'p': 2,
+        'l_m': 143.75e-3,
+        'l_ssig': 5.87e-3,
+        'l_rsig': 5.87e-3,
+        'j_rotor': 1.1e-3,
+        'r_s': 2.9338,
+        'r_r': 1.355,
+    }
+
+    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=330)
+    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=330)
+
+    def _update_model(self):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        l_s = mp['l_m']+mp['l_ssig']
+        l_r = mp['l_m']+mp['l_rsig']
+        sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
+        tau_r = l_r / mp['r_r']
+        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
+
+        self._model_constants = np.array([
+            # omega,  i_beta,          i_alpha,         u_beta,          u_alpha,         psi_ralpha,                              psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta
+            [0,       0,               -1/tau_sig,      0,               1/(sigma * l_s), mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2),  0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s)],  # i_ralpha_dot
+            [0,       -1/tau_sig,      0,               1/(sigma*l_s),   0,               0,                                       mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0],                                   # i_rbeta_dot
+            [0,       0,               mp['l_m']/tau_r, 0,               0,               -1/tau_r,                                0,                                      0,                                   -mp['p']],                            # psi_ralpha_dot
+            [0,       mp['l_m']/tau_r, 0,               0,               0,               0,                                       -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
+            [mp['p'], 0,               0,               0,               0,               0,                                       0,                                      0,                                   0],                                   # epsilon_dot
+        ])
+
+    def _torque_limit(self):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_rsig']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
+
+    def torque(self, currents): # currents==states ?
+        # Docstring of superclass
+        mp = self._motor_parameter
+        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m']+mp['l_rsig']) * (currents[self.PSI_RALPHA_IDX]*currents[self.I_SBETA_IDX]-currents[self.PSI_RBETA_IDX]*currents[self.I_SALPHA_IDX])

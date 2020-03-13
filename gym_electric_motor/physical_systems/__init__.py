@@ -1,10 +1,10 @@
-from .physical_systems import DcMotorSystem, SynchronousMotorSystem
+from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem
 from .converters import PowerElectronicConverter, DiscOneQuadrantConverter, DiscTwoQuadrantConverter, \
     DiscFourQuadrantConverter, DiscDoubleConverter, DiscB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContDoubleConverter, ContB6BridgeConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
-    PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor
+    PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor
 
 from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad
 
@@ -28,6 +28,7 @@ register_superclass(VoltageSupply)
 
 register_class(DcMotorSystem, PhysicalSystem, 'DcMotorSystem')
 register_class(SynchronousMotorSystem, PhysicalSystem, 'SyncMotorSystem')
+register_class(SquirrelCageInductionMotorSystem, PhysicalSystem, 'SyncMotorSystem')
 
 register_class(DiscOneQuadrantConverter, PowerElectronicConverter, 'Disc-1QC')
 register_class(ContOneQuadrantConverter, PowerElectronicConverter, 'Cont-1QC')
@@ -55,6 +56,7 @@ register_class(DcExternallyExcitedMotor, ElectricMotor, 'DcExtEx')
 register_class(DcShuntMotor, ElectricMotor, 'DcShunt')
 register_class(PermanentMagnetSynchronousMotor, ElectricMotor, 'PMSM')
 register_class(SynchronousReluctanceMotor, ElectricMotor, 'SynRM')
+register_class(SquirrelCageInductionMotor, ElectricMotor, 'SCIM')
 
 register_class(IdealVoltageSupply, VoltageSupply, 'IdealVoltageSupply')
 

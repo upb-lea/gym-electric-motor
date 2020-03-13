@@ -1,0 +1,2 @@
+from .squirrel_cage_induc_motor_env import ContSquirrelCageInductionMotorEnvironment
+from .squirrel_cage_induc_motor_env import DiscSquirrelCageInductionMotorEnvironment

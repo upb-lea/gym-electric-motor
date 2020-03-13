@@ -362,3 +362,71 @@ class SynchronousMotorSystem(SCMLSystem):
             + [epsilon]
             + [u_sup]
         )
+
+class SquirrelCageInductionMotorSystem(SCMLSystem):
+    """
+    SCML-System that can be used with all Synchronous Motors
+    """
+    def _build_state_space(self, state_names):
+        # Docstring of superclass
+        low = -1 * np.ones_like(state_names, dtype=float)
+        low[self.U_SUP_IDX] = 0.0
+        high = np.ones_like(state_names, dtype=float)
+        return Box(low, high)
+
+    def _build_state_names(self):
+        # Docstring of superclass
+        return (
+            self._mechanical_load.state_names
+            + ['torque']
+            + ['i_sa'] + ['i_sb'] + ['i_sc']
+            + ['u_sa'] + ['u_sb'] + ['u_sc']
+            + ['epsilon']
+            + ['u_sup']
+        )
+
+    def _set_indices(self):
+        # Docstring of superclass
+        super()._set_indices()
+        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1] + [self._motor_ode_idx[-1] + 2]
+        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
+        self._ode_currents_idx = self._motor_ode_idx[:-3]
+
+        self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
+        self.TORQUE_IDX = len(self.mechanical_load.state_names)
+        currents_lower = self.TORQUE_IDX + 1
+        currents_upper = currents_lower + 3
+        self.CURRENTS_IDX = list(range(currents_lower, currents_upper))
+        voltages_lower = currents_upper
+        voltages_upper = voltages_lower + 3
+        self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
+        self.EPSILON_IDX = voltages_upper
+        self.U_SUP_IDX = self.EPSILON_IDX + 1
+        self._ode_epsilon_idx = self._motor_ode_idx[-1]
+
+    def _forward_transform(self, quantities, motor_state):
+        # Docstring of superclass
+        #induction motor is modelled in alphabeta
+        motor_quantity = self._electrical_motor.t_23(quantities)
+        return motor_quantity[::-1]
+
+    def _backward_transform(self, quantities, motor_state):
+        # Docstring of superclass
+        return list(self._electrical_motor.t_32(quantities[::-1]))
+
+    def _build_state(self, motor_state, torque, u_in, u_sup):
+        # Docstring of superclass
+        mechanical_state = motor_state[self._load_ode_idx]
+        currents = list(self._backward_transform(motor_state[self._ode_currents_idx], motor_state))
+        epsilon = motor_state[self._ode_epsilon_idx] % (2 * np.pi)
+        if epsilon > np.pi:
+            epsilon -= 2 * np.pi
+
+        return np.array(
+            list(mechanical_state)
+            + [torque]
+            + currents
+            + u_in
+            + [epsilon]
+            + [u_sup]
+        )

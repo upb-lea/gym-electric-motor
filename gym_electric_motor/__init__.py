@@ -56,3 +56,8 @@ register(id='emotor-synrm-cont-v1',
          entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
 register(id='emotor-synrm-disc-v1',
          entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
+
+register(id='emotor-scim-cont-v1',
+         entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
+register(id='emotor-scim-disc-v1',
+         entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
