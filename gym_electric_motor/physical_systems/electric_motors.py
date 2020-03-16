@@ -982,13 +982,13 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            A      Quadrature axis voltage
-        u_sd            A      Direct axis voltage
-        u_a             A      Voltage through branch a
-        u_b             A      Voltage through branch b
-        u_c             A      Voltage through branch c
-        u_alpha         A      Voltage in alpha axis
-        u_beta          A      Voltage in beta axis
+        u_sq            V      Quadrature axis voltage
+        u_sd            V      Direct axis voltage
+        u_a             V      Voltage through branch a
+        u_b             V      Voltage through branch b
+        u_c             V      Voltage through branch c
+        u_alpha         V      Voltage in alpha axis
+        u_beta          V      Voltage in beta axis
         =============== ====== =============================================
 
         ======== ===========================================================
@@ -1087,13 +1087,13 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            A      Quadrature axis voltage
-        u_sd            A      Direct axis voltage
-        u_a             A      Voltage through branch a
-        u_b             A      Voltage through branch b
-        u_c             A      Voltage through branch c
-        u_alpha         A      Voltage in alpha axis
-        u_beta          A      Voltage in beta axis
+        u_sq            V      Quadrature axis voltage
+        u_sd            V      Direct axis voltage
+        u_a             V      Voltage through branch a
+        u_b             V      Voltage through branch b
+        u_c             V      Voltage through branch c
+        u_alpha         V      Voltage in alpha axis
+        u_beta          V      Voltage in beta axis
         =============== ====== =============================================
 
         ======== ===========================================================
@@ -1203,13 +1203,13 @@ class InductionMotor(ElectricMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            A      Quadrature axis voltage
-        u_sd            A      Direct axis voltage
-        u_sa            A      Voltage through branch a
-        u_sb            A      Voltage through branch b
-        u_sc            A      Voltage through branch c
-        u_salpha        A      Voltage in alpha axis
-        u_sbeta         A      Voltage in beta axis
+        u_sq            V      Quadrature axis voltage
+        u_sd            V      Direct axis voltage
+        u_sa            V      Voltage through branch a
+        u_sb            V      Voltage through branch b
+        u_sc            V      Voltage through branch c
+        u_salpha        V      Voltage in alpha axis
+        u_sbeta         V      Voltage in beta axis
         =============== ====== =============================================
 
         ======== ===========================================================
@@ -1501,6 +1501,7 @@ class InductionMotor(ElectricMotor):
             The derivatives of the state vector d/dt([i_sq, i_sd, epsilon])
         """
         return np.matmul(self._model_constants, np.array([
+            # omega, i_beta, i_alpha, u_beta, u_alpha, psi_ralpha, psi_rbeta, omega*psi_ralpha,  omega*psi_rbeta
             omega,
             state[self.I_SBETA_IDX],
             state[self.I_SALPHA_IDX],
@@ -1561,13 +1562,13 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            A      Quadrature axis voltage
-        u_sd            A      Direct axis voltage
-        u_sa            A      Stator voltage through branch a
-        u_sb            A      Stator voltage through branch b
-        u_sc            A      Stator voltage through branch c
-        u_salpha        A      Stator voltage in alpha axis
-        u_sbeta         A      Stator voltage in beta axis
+        u_sq            V      Quadrature axis voltage
+        u_sd            V      Direct axis voltage
+        u_sa            V      Stator voltage through branch a
+        u_sb            V      Stator voltage through branch b
+        u_sc            V      Stator voltage through branch c
+        u_salpha        V      Stator voltage in alpha axis
+        u_sbeta         V      Stator voltage in beta axis
         =============== ====== =============================================
 
         ======== ===========================================================
@@ -1618,8 +1619,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         'r_r': 1.355,
     }
 
-    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=330)
-    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=330)
+    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=560)
+    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=560)
 
     def _update_model(self):
         # Docstring of superclass
@@ -1631,12 +1632,12 @@ class SquirrelCageInductionMotor(InductionMotor):
         tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
 
         self._model_constants = np.array([
-            # omega,  i_beta,          i_alpha,         u_beta,          u_alpha,         psi_ralpha,                              psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta
-            [0,       0,               -1/tau_sig,      0,               1/(sigma * l_s), mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2),  0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s)],  # i_ralpha_dot
-            [0,       -1/tau_sig,      0,               1/(sigma*l_s),   0,               0,                                       mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0],                                   # i_rbeta_dot
-            [0,       0,               mp['l_m']/tau_r, 0,               0,               -1/tau_r,                                0,                                      0,                                   -mp['p']],                            # psi_ralpha_dot
-            [0,       mp['l_m']/tau_r, 0,               0,               0,               0,                                       -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
-            [mp['p'], 0,               0,               0,               0,               0,                                       0,                                      0,                                   0],                                   # epsilon_dot
+            # omega,  i_beta,          i_alpha,         u_beta,          u_alpha,         psi_ralpha,                               psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta
+            [0,       0,               -1/tau_sig,      0,               1/(sigma * l_s), mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2), 0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s)],  # i_ralpha_dot
+            [0,       -1/tau_sig,      0,               1/(sigma*l_s),   0,               0,                                        mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0],                                   # i_rbeta_dot
+            [0,       0,               mp['l_m']/tau_r, 0,               0,               -1/tau_r,                                 0,                                      0,                                   -mp['p']],                            # psi_ralpha_dot
+            [0,       mp['l_m']/tau_r, 0,               0,               0,               0,                                        -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
+            [mp['p'], 0,               0,               0,               0,               0,                                        0,                                      0,                                   0],                                   # epsilon_dot
         ])
 
     def _torque_limit(self):
@@ -1647,4 +1648,4 @@ class SquirrelCageInductionMotor(InductionMotor):
     def torque(self, currents): # currents==states ?
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m']+mp['l_rsig']) * (currents[self.PSI_RALPHA_IDX]*currents[self.I_SBETA_IDX]-currents[self.PSI_RBETA_IDX]*currents[self.I_SALPHA_IDX])
+        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (currents[self.PSI_RALPHA_IDX] * currents[self.I_SBETA_IDX] - currents[self.PSI_RBETA_IDX] * currents[self.I_SALPHA_IDX])
