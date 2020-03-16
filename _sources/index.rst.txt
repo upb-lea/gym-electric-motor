@@ -44,6 +44,7 @@ documentation specifies the basic interfaces inside a physical system.
     parts/reward_functions/reward_function
     parts/physical_systems/physical_system
     parts/visualizations/visualization
+    parts/core
     parts/utils
 
 Indices and tables

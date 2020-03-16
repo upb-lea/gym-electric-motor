@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gym_electric_motor.reference_generators.multi_reference_generator &mdash; gym-electric-motor 2019 documentation</title>
+  <title>gym_electric_motor.reference_generators.switched_reference_generator &mdash; gym-electric-motor 2019 documentation</title>
   
 
   
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -138,7 +139,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>gym_electric_motor.reference_generators.multi_reference_generator</li>
+      <li>gym_electric_motor.reference_generators.switched_reference_generator</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -153,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for gym_electric_motor.reference_generators.multi_reference_generator</h1><div class="highlight"><pre>
+  <h1>Source code for gym_electric_motor.reference_generators.switched_reference_generator</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Box</span>
 
@@ -161,7 +162,7 @@
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">instantiate</span>
 
 
-<div class="viewcode-block" id="MultiReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">MultiReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">):</span>
+<div class="viewcode-block" id="SwitchedReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">SwitchedReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -198,7 +199,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_super_episode_length</span> <span class="o">=</span> <span class="n">super_episode_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_ref_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-<div class="viewcode-block" id="MultiReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="SwitchedReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            physical_system(PhysicalSystem): The physical system of the environment.</span>
@@ -216,15 +217,15 @@
             <span class="k">assert</span> <span class="n">sub_generator</span><span class="o">.</span><span class="n">reference_space</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> \
                 <span class="s1">&#39;Reference Generators have differently shaped reference spaces&#39;</span></div>
 
-<div class="viewcode-block" id="MultiReferenceGenerator.reset"><a class="viewcode-back" href="../../../parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SwitchedReferenceGenerator.reset"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset_reference</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_ref_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">initial_reference</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MultiReferenceGenerator.get_reference"><a class="viewcode-back" href="../../../parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SwitchedReferenceGenerator.get_reference"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_ref_generator</span><span class="o">.</span><span class="n">get_reference</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span></div>
 
-<div class="viewcode-block" id="MultiReferenceGenerator.get_reference_observation"><a class="viewcode-back" href="../../../parts/reference_generators/multi_reference_generator.html#gym_electric_motor.reference_generators.MultiReferenceGenerator.get_reference_observation">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SwitchedReferenceGenerator.get_reference_observation"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference_observation">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_reset_reference</span><span class="p">()</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_ref_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">)</span>

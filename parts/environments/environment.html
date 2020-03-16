@@ -106,6 +106,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 </ul>
 
@@ -298,6 +299,8 @@ and observation if the motor state is within the limits. Needs to be a subclass 
 </dd>
 <dt>Visualization:</dt><dd><p>Visualization of the motors states. Needs to be a subclass of <em>ElectricMotorVisualization</em></p>
 </dd>
+<dt>Limits:</dt><dd><p>Returns a list of limits of all states in the observation (called in state_filter) in the same order.</p>
+</dd>
 </dl>
 </div></blockquote>
 <dl>
@@ -353,6 +356,18 @@ The reward function can terminate an episode, if a physical limit of the motor h
 </dd></dl>
 
 <dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorEnvironment.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of limits of all states in the observation (called in state_filter) in the same order</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorEnvironment.nominal_state">
+<em class="property">property </em><code class="sig-name descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.nominal_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of nominal values of all states in the observation (called in state_filter) in the same order</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment.physical_system">
 <em class="property">property </em><code class="sig-name descname">physical_system</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.physical_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
@@ -388,6 +403,12 @@ ReferenceGenerator: The ReferenceGenerator of the Environment</p>
 <em class="property">property </em><code class="sig-name descname">reward_function</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reward_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 RewardFunction: The RewardFunction of the environment</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorEnvironment.state_names">
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.state_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of state names of all states in the observation (called in state_filter) in the same order</p>
 </dd></dl>
 
 <dl class="method">

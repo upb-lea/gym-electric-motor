@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -200,6 +201,9 @@
 <span class="sd">        Visualization:</span>
 <span class="sd">            Visualization of the motors states. Needs to be a subclass of *ElectricMotorVisualization*</span>
 
+<span class="sd">        Limits:</span>
+<span class="sd">            Returns a list of limits of all states in the observation (called in state_filter) in the same order.</span>
+
 <span class="sd">    State Variables:</span>
 <span class="sd">        Each environment has got a list of state variables that are defined by the physical system.</span>
 <span class="sd">        These define the names and order for all further state arrays in the modules. These states are announced to the</span>
@@ -278,6 +282,27 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span> <span class="o">=</span> <span class="n">reward_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span> <span class="o">=</span> <span class="kc">True</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of limits of all states in the observation (called in state_filter) in the same order</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">state_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of state names of all states in the observation (called in state_filter) in the same order</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nominal_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of nominal values of all states in the observation (called in state_filter) in the same order</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">nominal_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="p">]</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -310,11 +335,11 @@
 
         <span class="c1"># Initialization of the state filter and the spaces</span>
         <span class="n">state_filter</span> <span class="o">=</span> <span class="n">state_filter</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">state_var</span> <span class="ow">in</span> <span class="n">state_filter</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">state_var</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">states_low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">]</span>
-        <span class="n">states_high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">state_var</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">states_low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="p">]</span>
+        <span class="n">states_high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="p">]</span>
         <span class="n">state_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">states_low</span><span class="p">,</span> <span class="n">states_high</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Tuple</span><span class="p">((</span>
             <span class="n">state_space</span><span class="p">,</span>
@@ -336,13 +361,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">trajectories</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">],</span> <span class="n">next_ref</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="p">],</span> <span class="n">next_ref</span></div>
 
 <div class="viewcode-block" id="ElectricMotorEnvironment.render"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the visualization of the motor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visualization</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ElectricMotorEnvironment.step"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -364,7 +389,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">reward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
 
         <span class="n">ref_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_filter</span><span class="p">],</span> <span class="n">ref_next</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span><span class="p">,</span> <span class="p">{}</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_filter</span><span class="p">],</span> <span class="n">ref_next</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_required</span><span class="p">,</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="ElectricMotorEnvironment.close"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -562,15 +587,18 @@
     <span class="c1">#: Tuple(int,int): Lower and upper possible reward (excluding limit violation reward)</span>
     <span class="n">reward_range</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed_states</span><span class="o">=</span><span class="s1">&#39;currents&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            observed_states(list/tuple(str)): Names of the observed states. [&#39;all&#39;] for the observation of every state.</span>
+<span class="sd">            observed_states(str/iterable(str)): Names of the observed states. &#39;all&#39; for the observation of every state.</span>
+<span class="sd">                &#39;currents&#39; for all currents and &#39;voltages&#39; for all voltages. Combinations of &#39;currents&#39; and</span>
+<span class="sd">                &#39;voltages&#39; with other states are possible. Choose None for not observing states.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">observed_states</span> <span class="o">=</span> <span class="n">observed_states</span> <span class="ow">or</span> <span class="p">()</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">observed_states</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">observed_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">observed_states</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">observed_states</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -596,8 +624,22 @@
 <span class="sd">            reference_generator(ReferenceGenerator): The reference generator of the environment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">physical_system</span>
-        <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># key &#39;all&#39; observes all states</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;currents&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># key &#39;current&#39; observes all currents</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;currents&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;i_&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="s1">&#39;voltages&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># key &#39;voltages&#39; observes all voltages, also the supply voltage</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;voltages&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;u_&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>

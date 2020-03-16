@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -165,31 +166,37 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reward Function that calculates the reward as the weighted sum of errors with a certain power.</span>
 
-<span class="sd">    .. math:</span>
-<span class="sd">        `reward = - reward_weights * (abs(state - reference)/ state_length) ** reward_power `</span>
-<span class="sd">    .. math:</span>
-<span class="sd">        ` limit\_violation\_reward = -1 / (1 - \gamma)`</span>
+<span class="sd">    .. math::</span>
+<span class="sd">        reward = - reward\_weights * (abs(state - reference)/ state\_length)^{reward\_power}</span>
+
+<span class="sd">    The reward can be normalized to the range [0, -1].</span>
+
+<span class="sd">    If states are observed for limit violation (current observation is defualt setting), an additional terminal reward</span>
+<span class="sd">    is added if limits are violated. This value depends on the factor gamma as follows</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        limit\_violation\_reward = -1 / (1 - \gamma).</span>
 
 <span class="sd">    | state_length[i] = 1 for states with positive values only.</span>
 <span class="sd">    | state_length[i] = 2 for states with positive and negative values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">observed_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">reward_power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normed_reward_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">reward_power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.</span>
 <span class="sd">                Or an array with the reward_weights on the position of the state_names.</span>
-<span class="sd">            normed(bool): If True, the reward weights will be normalized to 1.</span>
-<span class="sd">            observed_states(list(str)): List of state names of which the limit are observed. Default: no observation.</span>
+<span class="sd">            normed_reward_weights(bool): If True, the reward weights will be normalized to 1.</span>
 <span class="sd">            gamma(float): Discount factor for the reward punishment. Should equal agents&#39; discount factor gamma.</span>
 <span class="sd">            reward_power(dict/list(float)/float): Reward power for each of the systems states.</span>
+<span class="sd">            kwargs: Further arguments to pass to the superclass RewardFunction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n</span> <span class="o">=</span> <span class="n">reward_power</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">=</span> <span class="n">reward_weights</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_length</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_normed</span> <span class="o">=</span> <span class="n">normed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normed</span> <span class="o">=</span> <span class="n">normed_reward_weights</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span> <span class="o">=</span> <span class="n">gamma</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">observed_states</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="WeightedSumOfErrors.set_modules"><a class="viewcode-back" href="../../../parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">)</span>
@@ -233,9 +240,12 @@
 <span class="sd">    Weighted Sum of Errors shifted by the maximum negative reward to obtain rewards in the positive range.</span>
 
 <span class="sd">    .. math::</span>
-<span class="sd">        reward = max\_reward - reward\_weights * (abs(state - reference)/ state\_length) ** reward\_power</span>
+<span class="sd">        reward = max\_reward - reward\_weights * (abs(state - reference)/ state\_length)^{reward\_power}</span>
 <span class="sd">    .. math::</span>
-<span class="sd">        limit~violation~reward = 0`</span>
+<span class="sd">        limit\_violation\_reward = 0</span>
+
+<span class="sd">    The reward is always positive due to the shift and the lowest reward is 0. The reward function is the same as the</span>
+<span class="sd">    &#39;&#39;Weighted Sum of Errors&#39;&#39; apart from the shift and the limit_violation_reward.</span>
 
 <span class="sd">    | state_length[i] = 1 for states with positive values only.</span>
 <span class="sd">    | state_length[i] = 2 for states with positive and negative values.</span>
@@ -243,9 +253,6 @@
 
     <span class="k">def</span> <span class="nf">_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_reward</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_limit_violation_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="ShiftedWeightedSumOfErrors.set_modules"><a class="viewcode-back" href="../../../parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">)</span>

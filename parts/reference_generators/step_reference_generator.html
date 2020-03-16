@@ -95,13 +95,16 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Step Reference Generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="triangular_reference_generator.html">Triangular Reference Generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sawtooth_reference_generator.html">Sawtooth Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="const_reference_generator.html">Constant Reference Generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="zero_reference_generator.html">Zero Reference Generator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="multi_reference_generator.html">Multi Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiple_ref_generator.html">Multiple Reference Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switched_reference_generator.html">Switched Reference Generator</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 </ul>
 
@@ -173,7 +176,7 @@
 <h1>Step Reference Generator<a class="headerlink" href="#step-reference-generator" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="gym_electric_motor.reference_generators.StepReferenceGenerator">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">StepReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">amplitude_range=(0</em>, <em class="sig-param">1)</em>, <em class="sig-param">frequency_range=(1</em>, <em class="sig-param">10)</em>, <em class="sig-param">offset_range=(-1</em>, <em class="sig-param">1)</em>, <em class="sig-param">*_</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/step_reference_generator.html#StepReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.StepReferenceGenerator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">StepReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">amplitude_range=None</em>, <em class="sig-param">frequency_range=(1</em>, <em class="sig-param">10)</em>, <em class="sig-param">offset_range=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/step_reference_generator.html#StepReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.StepReferenceGenerator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reference Generator that generates a step function with a random amplitude, frequency, phase and offset.
 The reference is generated for a certain length and then new parameters are drawn uniformly from a selectable range.</p>
 <dl class="field-list simple">

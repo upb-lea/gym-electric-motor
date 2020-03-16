@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Weighted Sum of Errors" href="weighted_sum_of_errors.html" />
-    <link rel="prev" title="Multi Reference Generator" href="../reference_generators/multi_reference_generator.html" /> 
+    <link rel="prev" title="Switched Reference Generator" href="../reference_generators/switched_reference_generator.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -96,6 +96,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 </ul>
 
@@ -174,7 +175,7 @@
 <h2>Reward Function Base Class<a class="headerlink" href="#reward-function-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.core.RewardFunction">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">RewardFunction</code><span class="sig-paren">(</span><em class="sig-param">observed_states=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">RewardFunction</code><span class="sig-paren">(</span><em class="sig-param">observed_states='currents'</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>The abstract base class for reward functions in the gym electric motor environments.</p>
 <p>The reward function is called once per step and returns reward for the current time step.
 Furthermore, the reward function includes the limit observer. If limits have been violated and the episode ended
@@ -185,7 +186,9 @@ a different reward for violating the limits is returned.</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>observed_states</strong> (<em>list/tuple</em><em>(</em><em>str</em><em>)</em>) – Names of the observed states. [‘all’] for the observation of every state.</p>
+<dd class="field-odd"><p><strong>observed_states</strong> (<em>str/iterable</em><em>(</em><em>str</em><em>)</em>) – Names of the observed states. ‘all’ for the observation of every state.
+‘currents’ for all currents and ‘voltages’ for all voltages. Combinations of ‘currents’ and
+‘voltages’ with other states are possible. Choose None for not observing states.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -272,7 +275,7 @@ the standard reward will be returned.</p>
         <a href="weighted_sum_of_errors.html" class="btn btn-neutral float-right" title="Weighted Sum of Errors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../reference_generators/multi_reference_generator.html" class="btn btn-neutral float-left" title="Multi Reference Generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../reference_generators/switched_reference_generator.html" class="btn btn-neutral float-left" title="Switched Reference Generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

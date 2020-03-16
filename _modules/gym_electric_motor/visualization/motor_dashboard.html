@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -169,41 +170,53 @@
 
 <span class="sd">    In the table are all variables given that can be shown for a specific motor.</span>
 
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |variable| extex | shunt | permex |series | PMSM / SynRM |</span>
-<span class="sd">    +========+=======+=======+========+=======+==============+</span>
-<span class="sd">    |omega   | x     | x     | x      | x     | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |torque  | x     | x     | x      | x     | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |u_sup   | x     | x     | x      | x     | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |i       |       |       | x      | x     |              |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |i_e     | x     | x     |        |       |              |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |u       |       | x     | x      | x     |              |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |u_e     | x     |       |        |       |              |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |u_a     | x     |       |        |       | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |u_b     |       |       |        |       | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |u_c     |       |       |        |       | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |i_a     | x     | x     |        |       | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |i_b     |       |       |        |       | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |i_c     |       |       |        |       | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
-<span class="sd">    |epsilon |       |       |        |       | x            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+--------------+</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |variable| extex | shunt | permex |series | PMSM, | Description                                |</span>
+<span class="sd">    |        |       |       |        |       | SynRM |                                            |</span>
+<span class="sd">    +========+=======+=======+========+=======+=======+============================================+</span>
+<span class="sd">    |omega   | x     | x     | x      | x     | x     | mechanical angular velocity                |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |torque  | x     | x     | x      | x     | x     | Motor generated torque                     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u_sup   | x     | x     | x      | x     | x     | supply voltage of the converter            |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |i       |       |       | x      | x     |       | current in permex and series motors        |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |i_e     | x     | x     |        |       |       | current in excitation circuit              |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u       |       | x     | x      | x     |       | voltage at shunt, permex and series motors |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u_e     | x     |       |        |       |       | voltage at the excitation circuit          |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u_a     | x     |       |        |       | x     | armature voltage or voltage of phase a     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u_b     |       |       |        |       | x     | voltage of phase b                         |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u_c     |       |       |        |       | x     | voltage of phase c                         |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u_d     |       |       |        |       | x     | d-axis voltage                             |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |u_q     |       |       |        |       | x     | q-axis voltage                             |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |i_a     | x     | x     |        |       | x     | armature current or current in phase a     |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |i_b     |       |       |        |       | x     | current in phase a                         |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |i_c     |       |       |        |       | x     | current in phase b                         |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |i_d     |       |       |        |       | x     | d-axis current                             |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |i_q     |       |       |        |       | x     | q-axis current                             |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+<span class="sd">    |epsilon |       |       |        |       | x     | electrical rotational angle                |</span>
+<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
+
+
+<span class="sd">    Remark: In the current MotorDashboard version an overlap can occur in the visualization at short episodes.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_period</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span> <span class="n">visu_period</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plotted_variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_period</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span> <span class="n">visu_period</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plotted_variables</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">              Constructor of the dashboard.</span>
 
@@ -269,7 +282,7 @@
                     <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MotorDashboard.step"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="MotorDashboard.step"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">done</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to call in every step of the environment</span>
 
@@ -277,6 +290,7 @@
 <span class="sd">            state: current state to plot</span>
 <span class="sd">            reference: current reference in this step</span>
 <span class="sd">            reward: current reward in this step</span>
+<span class="sd">            done: Flag, if the episode has terminated</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
@@ -300,7 +314,7 @@
             <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">,</span> <span class="n">state_denorm</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">]):</span>
                 <span class="n">var</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">done</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">dashVar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">:</span>
                 <span class="n">dashVar</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span><span class="p">()</span>
@@ -333,10 +347,14 @@
                 <span class="s1">&#39;i_e&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{e}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;i_b&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{b}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;i_c&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{c}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;i_sq&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{sq}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;i_sd&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{sd}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="s1">&#39;$u/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u_a&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{a}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u_b&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{b}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u_c&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{c}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;u_sq&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sq}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;u_sd&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sd}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{e}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;u_sup&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sup}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon/rad$&#39;</span>
@@ -423,10 +441,10 @@
 <span class="sd">            The value [True] is the shortcut for plotting all variables.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="p">)))</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No valid variables for visualization&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

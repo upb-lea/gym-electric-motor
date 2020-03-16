@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -295,6 +296,36 @@
 <div class="viewcode-block" id="PolynomialStaticLoad.mechanical_ode"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">torque</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static_load</span><span class="p">(</span><span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="ConstantSpeedLoad"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad">[docs]</a><span class="k">class</span> <span class="nc">ConstantSpeedLoad</span><span class="p">(</span><span class="n">MechanicalLoad</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Constant speed mechanical load system which will always set the speed to a predefined value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">omega_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Constant value for omega in rad/s.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_omega</span>
+
+<div class="viewcode-block" id="ConstantSpeedLoad.reset"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="c1"># Docstring from superclass</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_omega</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega_fixed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            omega_fixed(float)): Fix value for the speed in rad/s.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_omega</span> <span class="o">=</span> <span class="n">omega_fixed</span>
+
+<div class="viewcode-block" id="ConstantSpeedLoad.mechanical_ode"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span></div></div>
 </pre></div>
 
            </div>

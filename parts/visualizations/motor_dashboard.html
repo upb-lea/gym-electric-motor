@@ -96,6 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="console_printer.html">Console Printer</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 </ul>
 
@@ -167,18 +168,19 @@
 <h1>Motor Dashboard<a class="headerlink" href="#motor-dashboard" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard.</code><code class="sig-name descname">MotorDashboard</code><span class="sig-paren">(</span><em class="sig-param">update_period=0.05, visu_period=5, plotted_variables=['all'], **_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard.</code><code class="sig-name descname">MotorDashboard</code><span class="sig-paren">(</span><em class="sig-param">update_period=0.05</em>, <em class="sig-param">visu_period=5</em>, <em class="sig-param">plotted_variables='all'</em>, <em class="sig-param">**_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visualization of the variables of the motor in graphs. This can be the angular velocity omega, torque
 phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.</p>
 <p>In the table are all variables given that can be shown for a specific motor.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 16%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 16%" />
-<col style="width: 14%" />
-<col style="width: 27%" />
+<col style="width: 9%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 9%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>variable</p></th>
@@ -186,7 +188,9 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <th class="head"><p>shunt</p></th>
 <th class="head"><p>permex</p></th>
 <th class="head"><p>series</p></th>
-<th class="head"><p>PMSM / SynRM</p></th>
+<th class="head"><p>PMSM,
+SynRM</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
 <tbody>
@@ -196,6 +200,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td><p>x</p></td>
 <td><p>x</p></td>
 <td><p>x</p></td>
+<td><p>mechanical angular velocity</p></td>
 </tr>
 <tr class="row-odd"><td><p>torque</p></td>
 <td><p>x</p></td>
@@ -203,6 +208,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td><p>x</p></td>
 <td><p>x</p></td>
 <td><p>x</p></td>
+<td><p>Motor generated torque</p></td>
 </tr>
 <tr class="row-even"><td><p>u_sup</p></td>
 <td><p>x</p></td>
@@ -210,6 +216,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td><p>x</p></td>
 <td><p>x</p></td>
 <td><p>x</p></td>
+<td><p>supply voltage of the converter</p></td>
 </tr>
 <tr class="row-odd"><td><p>i</p></td>
 <td></td>
@@ -217,6 +224,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td><p>x</p></td>
 <td><p>x</p></td>
 <td></td>
+<td><p>current in permex and series motors</p></td>
 </tr>
 <tr class="row-even"><td><p>i_e</p></td>
 <td><p>x</p></td>
@@ -224,6 +232,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td></td>
+<td><p>current in excitation circuit</p></td>
 </tr>
 <tr class="row-odd"><td><p>u</p></td>
 <td></td>
@@ -231,6 +240,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td><p>x</p></td>
 <td><p>x</p></td>
 <td></td>
+<td><p>voltage at shunt, permex and series motors</p></td>
 </tr>
 <tr class="row-even"><td><p>u_e</p></td>
 <td><p>x</p></td>
@@ -238,6 +248,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td></td>
+<td><p>voltage at the excitation circuit</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_a</p></td>
 <td><p>x</p></td>
@@ -245,6 +256,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td><p>x</p></td>
+<td><p>armature voltage or voltage of phase a</p></td>
 </tr>
 <tr class="row-even"><td><p>u_b</p></td>
 <td></td>
@@ -252,6 +264,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td><p>x</p></td>
+<td><p>voltage of phase b</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_c</p></td>
 <td></td>
@@ -259,6 +272,23 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td><p>x</p></td>
+<td><p>voltage of phase c</p></td>
+</tr>
+<tr class="row-even"><td><p>u_d</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>x</p></td>
+<td><p>d-axis voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_q</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>x</p></td>
+<td><p>q-axis voltage</p></td>
 </tr>
 <tr class="row-even"><td><p>i_a</p></td>
 <td><p>x</p></td>
@@ -266,6 +296,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td><p>x</p></td>
+<td><p>armature current or current in phase a</p></td>
 </tr>
 <tr class="row-odd"><td><p>i_b</p></td>
 <td></td>
@@ -273,6 +304,7 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td><p>x</p></td>
+<td><p>current in phase a</p></td>
 </tr>
 <tr class="row-even"><td><p>i_c</p></td>
 <td></td>
@@ -280,6 +312,23 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td><p>x</p></td>
+<td><p>current in phase b</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_d</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>x</p></td>
+<td><p>d-axis current</p></td>
+</tr>
+<tr class="row-even"><td><p>i_q</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>x</p></td>
+<td><p>q-axis current</p></td>
 </tr>
 <tr class="row-odd"><td><p>epsilon</p></td>
 <td></td>
@@ -287,9 +336,11 @@ phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.<
 <td></td>
 <td></td>
 <td><p>x</p></td>
+<td><p>electrical rotational angle</p></td>
 </tr>
 </tbody>
 </table>
+<p>Remark: In the current MotorDashboard version an overlap can occur in the visualization at short episodes.</p>
 <p>Constructor of the dashboard.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -343,7 +394,7 @@ to be done in this function.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference=None</em>, <em class="sig-param">reward=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference=None</em>, <em class="sig-param">reward=None</em>, <em class="sig-param">done=False</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to call in every step of the environment</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -351,6 +402,7 @@ to be done in this function.</p>
 <li><p><strong>state</strong> – current state to plot</p></li>
 <li><p><strong>reference</strong> – current reference in this step</p></li>
 <li><p><strong>reward</strong> – current reward in this step</p></li>
+<li><p><strong>done</strong> – Flag, if the episode has terminated</p></li>
 </ul>
 </dd>
 </dl>

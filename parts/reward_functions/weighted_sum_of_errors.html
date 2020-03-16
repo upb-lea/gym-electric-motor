@@ -96,6 +96,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 </ul>
 
@@ -167,8 +168,15 @@
 <h1>Weighted Sum of Errors<a class="headerlink" href="#weighted-sum-of-errors" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reward_functions.weighted_sum_of_errors.</code><code class="sig-name descname">WeightedSumOfErrors</code><span class="sig-paren">(</span><em class="sig-param">reward_weights=None</em>, <em class="sig-param">normed=False</em>, <em class="sig-param">observed_states=None</em>, <em class="sig-param">gamma=0.9</em>, <em class="sig-param">reward_power=1</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reward_functions.weighted_sum_of_errors.</code><code class="sig-name descname">WeightedSumOfErrors</code><span class="sig-paren">(</span><em class="sig-param">reward_weights=None</em>, <em class="sig-param">normed_reward_weights=False</em>, <em class="sig-param">gamma=0.9</em>, <em class="sig-param">reward_power=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reward Function that calculates the reward as the weighted sum of errors with a certain power.</p>
+<div class="math notranslate nohighlight">
+\[reward = - reward\_weights * (abs(state - reference)/ state\_length)^{reward\_power}\]</div>
+<p>The reward can be normalized to the range [0, -1].</p>
+<p>If states are observed for limit violation (current observation is defualt setting), an additional terminal reward
+is added if limits are violated. This value depends on the factor gamma as follows</p>
+<div class="math notranslate nohighlight">
+\[limit\_violation\_reward = -1 / (1 - \gamma).\]</div>
 <div class="line-block">
 <div class="line">state_length[i] = 1 for states with positive values only.</div>
 <div class="line">state_length[i] = 2 for states with positive and negative values.</div>
@@ -178,10 +186,10 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reward_weights</strong> (<em>dict/list/ndarray</em><em>(</em><em>float</em><em>)</em>) – Dict mapping state names to reward_weights, 0 otherwise.
 Or an array with the reward_weights on the position of the state_names.</p></li>
-<li><p><strong>normed</strong> (<em>bool</em>) – If True, the reward weights will be normalized to 1.</p></li>
-<li><p><strong>observed_states</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of state names of which the limit are observed. Default: no observation.</p></li>
+<li><p><strong>normed_reward_weights</strong> (<em>bool</em>) – If True, the reward weights will be normalized to 1.</p></li>
 <li><p><strong>gamma</strong> (<em>float</em>) – Discount factor for the reward punishment. Should equal agents’ discount factor gamma.</p></li>
 <li><p><strong>reward_power</strong> (<em>dict/list</em><em>(</em><em>float</em><em>)</em><em>/float</em>) – Reward power for each of the systems states.</p></li>
+<li><p><strong>kwargs</strong> – Further arguments to pass to the superclass RewardFunction</p></li>
 </ul>
 </dd>
 </dl>

@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 </ul>
 
@@ -825,6 +826,7 @@
 <span class="sd">        i_sd     Current in direct axis</span>
 <span class="sd">        i_sq     Current in quadrature axis</span>
 <span class="sd">        omega    Mechanical angular Velocity</span>
+<span class="sd">        epsilon  Electrical rotational angle</span>
 <span class="sd">        torque   Motor generated torque</span>
 <span class="sd">        u_a      Voltage in phase a</span>
 <span class="sd">        u_b      Voltage in phase b</span>
@@ -1117,11 +1119,11 @@
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
 <span class="sd">        Motor Parameter        Unit        Default Value Description</span>
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        r_s                    Ohm         0.3256        Stator resistance</span>
-<span class="sd">        l_q                    H           7.3e-3        Quadrature axis inductance</span>
-<span class="sd">        l_d                    H           73.2e-3       Direct axis inductance</span>
+<span class="sd">        r_s                    Ohm         0.78          Stator resistance</span>
+<span class="sd">        l_q                    H           6.3e-3        Quadrature axis inductance</span>
+<span class="sd">        l_d                    H           1.2           Direct axis inductance</span>
 <span class="sd">        p                      1           2             Pole pair number</span>
-<span class="sd">        j_rotor                kg/m^2      2.45e-3       Moment of inertia of the rotor</span>
+<span class="sd">        j_rotor                kg/m^2      0.017         Moment of inertia of the rotor</span>
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
 
 <span class="sd">        =============== ====== =============================================</span>
@@ -1161,6 +1163,7 @@
 <span class="sd">        i_sd     Current in direct axis</span>
 <span class="sd">        i_sq     Current in quadrature axis</span>
 <span class="sd">        omega    Mechanical angular Velocity</span>
+<span class="sd">        epsilon  Electrical rotational angle</span>
 <span class="sd">        torque   Motor generated torque</span>
 <span class="sd">        u_a      Voltage in phase a</span>
 <span class="sd">        u_b      Voltage in phase b</span>
@@ -1221,12 +1224,11 @@
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
 <span class="sd">        Motor Parameter        Unit        Default Value Description</span>
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        r_s                    Ohm         10.9e-3       Stator resistance</span>
-<span class="sd">        l_q                    H           113e-3        Quadrature axis inductance</span>
-<span class="sd">        l_d                    H           79e-3         Direct axis inductance</span>
-<span class="sd">        psi_p                  Vs          0.165         Permanent magnet flux linkage</span>
+<span class="sd">        r_s                    Ohm         0.78          Stator resistance</span>
+<span class="sd">        l_q                    H           6.3e-3        Quadrature axis inductance</span>
+<span class="sd">        l_d                    H           1.2           Direct axis inductance</span>
 <span class="sd">        p                      1           2             Pole pair number</span>
-<span class="sd">        j_rotor                kg/m^2      2.45e-3       Moment of inertia of the rotor</span>
+<span class="sd">        j_rotor                kg/m^2      0.017         Moment of inertia of the rotor</span>
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
 
 <span class="sd">        =============== ====== =============================================</span>
@@ -1267,6 +1269,7 @@
 <span class="sd">        i_sq     Current in quadrature axis</span>
 <span class="sd">        omega    Mechanical angular Velocity</span>
 <span class="sd">        torque   Motor generated torque</span>
+<span class="sd">        epsilon  Electrical rotational angle</span>
 <span class="sd">        u_a      Voltage in phase a</span>
 <span class="sd">        u_b      Voltage in phase b</span>
 <span class="sd">        u_c      Voltage in phase c</span>
@@ -1295,7 +1298,7 @@
         <span class="s1">&#39;l_d&#39;</span><span class="p">:</span> <span class="mf">79e-3</span><span class="p">,</span>
         <span class="s1">&#39;l_q&#39;</span><span class="p">:</span> <span class="mf">113e-3</span><span class="p">,</span>
         <span class="s1">&#39;j_rotor&#39;</span><span class="p">:</span> <span class="mf">2.45e-3</span><span class="p">,</span>
-        <span class="s1">&#39;r_s&#39;</span><span class="p">:</span> <span class="mf">10.9e-3</span><span class="p">,</span>
+        <span class="s1">&#39;r_s&#39;</span><span class="p">:</span> <span class="mf">4.9</span><span class="p">,</span>
         <span class="s1">&#39;psi_p&#39;</span><span class="p">:</span> <span class="mf">0.165</span><span class="p">,</span>
     <span class="p">}</span>
 

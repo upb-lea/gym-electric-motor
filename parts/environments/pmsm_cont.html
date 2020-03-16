@@ -106,6 +106,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 </ul>
 
@@ -211,7 +212,7 @@
 </dd>
 </dl>
 </div></blockquote>
-<dl>
+<dl class="simple">
 <dt>State Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i_a',</span> <span class="pre">'i_b',</span> <span class="pre">'i_c',</span> <span class="pre">'u_a',</span> <span class="pre">'u_b',</span> <span class="pre">'u_c',</span> <span class="pre">'epsilon',</span> <span class="pre">'u_sup']</span></code></p>
 </dd>
 <dt>Observation Space:</dt><dd><p>Type: Tuple(State_Space, Reference_Space)</p>
@@ -222,16 +223,10 @@
 </dd>
 <dt>Action Space:</dt><dd><p>Type: Box(low=[-1, -1, -1], high=[1, 1, 1])</p>
 </dd>
-<dt>Reward:</dt><dd><div class="math notranslate nohighlight">
-\[reward = (\omega - \omega^*) / (2 * \omega_{lim})\]</div>
-</dd>
 <dt>Starting State:</dt><dd><p>Zeros on all state variables.</p>
 </dd>
-<dt>Episode Termination:</dt><dd><p>Current limits (i_a ,i_b, i_c) are observed and the reference generation is continuous.
-Therefore, an episode ends only, when current limits have been violated.</p>
-</dd>
-<dt>Limit Violation Reward:</dt><dd><div class="math notranslate nohighlight">
-\[limit~violation~reward = -1 / (1- \gamma ) = -10 (Default: \gamma = 0.9)\]</div>
+<dt>Episode Termination:</dt><dd><p>Termination if current limits are violated. The terminal reward -10 is used as reward.
+(Have a look at the reward functions.)</p>
 </dd>
 </dl>
 <p>u_sup and u_nominal must be the same</p>
