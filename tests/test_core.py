@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization,\
+from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization, \
     mock_instantiate, instantiate_dict
 from gym.spaces import Tuple, Box
 import gym_electric_motor
@@ -12,7 +12,6 @@ import gym_electric_motor as gem
 
 
 class TestElectricMotorEnvironment:
-
     test_class = ElectricMotorEnvironment
     key = ''
 
@@ -40,12 +39,12 @@ class TestElectricMotorEnvironment:
         [
             (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, None, {}),
             (
-                DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
-                ConsolePrinter, {'a': 1, 'b': 2}
+                    DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
+                    ConsolePrinter, {'a': 1, 'b': 2}
             ),
             (
-                DummyPhysicalSystem(10), DummyReferenceGenerator(),
-                DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], None, {}
+                    DummyPhysicalSystem(10), DummyReferenceGenerator(),
+                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], None, {}
             ),
         ]
     )
@@ -78,7 +77,7 @@ class TestElectricMotorEnvironment:
         if state_filter is None:
             assert Tuple(
                 (instantiate_dict[PhysicalSystem]['instance'].state_space,
-                 instantiate_dict[ReferenceGenerator]['instance'].reference_space))\
+                 instantiate_dict[ReferenceGenerator]['instance'].reference_space)) \
                    == env.observation_space, 'Wrong observation space'
         else:
             state_idxs = np.isin(physical_system.state_names, state_filter)
@@ -105,7 +104,7 @@ class TestElectricMotorEnvironment:
         rf.last_state = rf.last_reference = ps.state = rg.get_reference_state = vs.reference_trajectory = None
 
         state, ref = env.reset()
-        assert (state, ref in env.observation_space), 'Returned values not in observation space'
+        assert (state, ref) in env.observation_space, 'Returned values not in observation space'
         assert np.all(np.all(state == ps.state)), 'Returned state is not the physical systems state'
         assert np.all(ref == rg.reference_observation), 'Returned reference is not the reference generators reference'
         assert np.all(state == rg.get_reference_state), 'Incorrect state passed to the reference generator'
@@ -124,10 +123,10 @@ class TestElectricMotorEnvironment:
             env.step(action), 'Environment goes through the step without previous reset'
         env.reset()
         (state, reference), reward, done, _ = env.step(action)
-        assert np.all(state == ps.state[env._state_filter]), 'Returned state and Physical Systems state are not equal'
+        assert np.all(state == ps.state[env.state_filter]), 'Returned state and Physical Systems state are not equal'
         assert rg.get_reference_state == ps.state,\
             'State passed to the Reference Generator not equal to Physical System state'
-        assert rg.get_reference_obs_state == ps.state,\
+        assert rg.get_reference_obs_state == ps.state, \
             'State passed to the Reference Generator not equal to Physical System state'
         assert ps.action == action, 'Action passed to Physical System not equal to selected action'
         assert reward == -1 if set_done else 1
@@ -173,6 +172,24 @@ class TestElectricMotorEnvironment:
         # No Exception raised
         env.step(env.action_space.sample())
 
+    @pytest.mark.parametrize("number_states, state_filter, expected_result",
+                             ((1, ['dummy_state_0'], [10]),
+                              (3, ['dummy_state_0', 'dummy_state_1', 'dummy_state_2'], [10, 20, 30]),
+                              (3, ['dummy_state_1'], [20])))
+    def test_limits(self, number_states, state_filter, expected_result):
+        ps = DummyPhysicalSystem(state_length=number_states)
+        rg = DummyReferenceGenerator()
+        rf = DummyRewardFunction()
+        vs = DummyVisualization()
+        env = self.test_class(
+            physical_system=ps,
+            reference_generator=rg,
+            reward_function=rf,
+            visualization=vs,
+            state_filter=state_filter
+        )
+        assert all(env.limits == expected_result)
+
 
 class TestRewardFunction:
 
@@ -190,20 +207,43 @@ class TestRewardFunction:
 
     @pytest.mark.parametrize("observed_states", (['dummy_state_0'], ['dummy_state_0', 'dummy_state_1']))
     def test_initialization(self, observed_states):
-        _ = RewardFunction(observed_states)
+        RewardFunction(observed_states)
 
-    @pytest.mark.parametrize("reward_function, physical_system, reference_generator", (
-            (RewardFunction(['dummy_state_0']), DummyPhysicalSystem(), DummyReferenceGenerator()),
-            (RewardFunction(['dummy_state_0', 'dummy_state_2']), DummyPhysicalSystem(3), DummyReferenceGenerator()),
-            (RewardFunction(['all']), DummyPhysicalSystem(3), DummyReferenceGenerator()),
-    ))
-    def test_set_modules(self, monkeypatch, reward_function, physical_system, reference_generator):
-        observed_states = list(reward_function._observed_states.keys())
+    @pytest.mark.parametrize("reward_function, physical_system, reference_generator, expected_observed_states", (
+            (RewardFunction('dummy_state_0'), DummyPhysicalSystem(), DummyReferenceGenerator(), ['dummy_state_0']),
+            (RewardFunction(['dummy_state_0', 'dummy_state_2']), DummyPhysicalSystem(3), DummyReferenceGenerator(),
+             ['dummy_state_0', 'dummy_state_2']),
+            (RewardFunction('all'), DummyPhysicalSystem(3), DummyReferenceGenerator(),
+             ['dummy_state_0', 'dummy_state_1', 'dummy_state_2']),
+            (RewardFunction('currents'), DummyPhysicalSystem(3, 'i'), DummyReferenceGenerator(),
+             ['i_0', 'i_1', 'i_2']),
+            (RewardFunction(['voltages']), DummyPhysicalSystem(3, 'u'), DummyReferenceGenerator(),
+             ['u_0', 'u_1', 'u_2'])
+        )
+    )
+    def test_set_modules(self, monkeypatch, reward_function, physical_system, reference_generator,
+                         expected_observed_states):
         reward_function.set_modules(physical_system, reference_generator)
-        if 'all' in observed_states:
-            observed_states = physical_system.state_names
-        assert np.all(reward_function._observed_states == np.isin(physical_system.state_names, observed_states))
-        assert np.all(reward_function._limits == physical_system.limits / abs(physical_system.limits))
+        assert np.all(
+            reward_function._observed_states == np.isin(physical_system.state_names, expected_observed_states))
+
+    @pytest.mark.parametrize("reward_function, physical_system, reference_generator, expected_observed_states", (
+            (RewardFunction(['currents', 'voltages']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
+             ['i_a', 'i_e', 'u_a']),
+            (RewardFunction(['currents', 'omega']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
+             ['omega', 'i_a', 'i_e']),
+            (RewardFunction(['omega', 'voltages']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
+             ['omega', 'u_a']),
+            (RewardFunction(['currents', 'omega', 'voltages']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
+             ['omega', 'i_a', 'i_e', 'u_a']),
+    ))
+    def test_set_modules_combined_observed_states(self, monkeypatch, reward_function, physical_system,
+                                                  reference_generator, expected_observed_states):
+        physical_states = ['i_a', 'i_e', 'u_a', 'omega', 'torque']
+        physical_system._state_names = physical_states
+        reward_function.set_modules(physical_system, reference_generator)
+        assert np.all(
+            reward_function._observed_states == np.isin(physical_system.state_names, expected_observed_states))
 
     @pytest.mark.parametrize(
         "physical_system, reference_generator", ((DummyPhysicalSystem(3), DummyReferenceGenerator()),)

@@ -139,3 +139,33 @@ class PolynomialStaticLoad(MechanicalLoad):
     def mechanical_ode(self, t, mechanical_state, torque):
         # Docstring of superclass
         return np.array([(torque - self._static_load(mechanical_state[self.OMEGA_IDX])) / self._j_total])
+
+
+class ConstantSpeedLoad(MechanicalLoad):
+    """
+       Constant speed mechanical load system which will always set the speed to a predefined value.
+    """
+
+    @property
+    def omega_fixed(self):
+        """
+        Returns:
+            float: Constant value for omega in rad/s.
+        """
+        return self._omega
+
+    def reset(self, *_, **__):
+        # Docstring from superclass
+        return np.array([self._omega])
+
+    def __init__(self, omega_fixed=0, **__):
+        """
+        Args:
+            omega_fixed(float)): Fix value for the speed in rad/s.
+        """
+        super().__init__()
+        self._omega = omega_fixed
+
+    def mechanical_ode(self, *_, **__):
+        # Docstring of superclass
+        return np.array([0])

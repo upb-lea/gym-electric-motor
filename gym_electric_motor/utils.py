@@ -14,6 +14,8 @@ def state_dict_to_state_array(state_dict, state_array, state_names):
         state_array(iterable): Array into which the state_dict entries shall be passed
         state_names(list/ndarray(str)): List of the state names.
     """
+    state_dict = dict((key.lower(), v) for key, v in state_dict.items())
+    assert all(key in state_names for key in state_dict.keys()), f'A state name in {state_dict.keys()} is invalid.'
     for ind, key in enumerate(state_names):
         try:
             state_array[ind] = state_dict[key]

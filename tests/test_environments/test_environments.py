@@ -58,7 +58,10 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
     nominal_values = test_motor_parameter[motor_type]['nominal_values']  # dict
     limit_values = test_motor_parameter[motor_type]['limit_values']  # dict
     u_sup = motor_parameter['u_sup']
-    observed_states = ['omega', 'i']
+    if motor_type in ['DcExtEx', 'DcShunt']:
+        observed_states = ['omega', 'i_a']
+    else:
+        observed_states = ['omega', 'i']
     reward_weights = test_motor_parameter[motor_type]['reward_weights']
     # setup converter parameter
     kwargs = {}
@@ -104,7 +107,8 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
                         supply=voltage_supply,
                         reference_generator=reference_generator,
                         reward_function=reward_function,
-                        state_filter=state_filter)
+                        state_filter=state_filter,
+                        observed_states=None)
     # test the different initializations
     envs = [env_default, env_1, env_2]
     for index, env in enumerate(envs):
@@ -114,8 +118,14 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
             action = action_space.sample()
             obs, reward, done, _ = env.step(action)
             reward_range = env.reward_function.reward_range
-            assert reward_range[0] <= reward <= reward_range[1], "Reward out of range " + str([reward_range[0], reward,
-                                                                                               reward_range[1], index])
+            if not done:
+                assert reward_range[0] <= reward <= reward_range[1], "Reward out of range " + str([reward_range[0],
+                                                                                                  reward,
+                                                                                                  reward_range[1],
+                                                                                                  index])
+            else:
+                assert reward == env.reward_function._limit_violation_reward(None)
+                break
             env.render()
         env.close()
 
@@ -152,7 +162,10 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
     nominal_values = test_motor_parameter[motor_type]['nominal_values']  # dict
     limit_values = test_motor_parameter[motor_type]['limit_values']  # dict
     u_sup = motor_parameter['u_sup']
-    observed_states = ['omega', 'i']
+    if motor_type in ['DcExtEx', 'DcShunt']:
+        observed_states = ['omega', 'i_a']
+    else:
+        observed_states = ['omega', 'i']
     reward_weights = test_motor_parameter[motor_type]['reward_weights']
     # setup converter parameter
     kwargs = {}
@@ -208,8 +221,14 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
             action = action_space.sample()
             obs, reward, done, _ = env.step(action)
             reward_range = env.reward_function.reward_range
-            assert reward_range[0] <= reward <= reward_range[1], "Reward out of range " + str([reward_range[0], reward,
-                                                                                               reward_range[1], index])
+            if not done:
+                assert reward_range[0] <= reward <= reward_range[1], "Reward out of range " + str([reward_range[0],
+                                                                                                   reward,
+                                                                                                   reward_range[1],
+                                                                                                   index])
+            else:
+                reward == env.reward_function._limit_violation_reward(None)
+                break
             env.render()
         env.close()
 
@@ -301,6 +320,10 @@ def test_synchronous_environments(reward_function_type, reference_generator_type
                         assert reward == -1 / (1 - 0.9)
                     else:
                         assert reward == 0
+                    env.reset()
+            else:
+                if done:
+                    assert reward == -1/(1-0.9)
                     env.reset()
             env.render()
 

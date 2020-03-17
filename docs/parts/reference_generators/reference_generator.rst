@@ -11,8 +11,10 @@ Reference Generators
     step_reference_generator
     triangular_reference_generator
     sawtooth_reference_generator
+    const_reference_generator
     zero_reference_generator
-    multi_reference_generator
+    multiple_ref_generator
+    switched_reference_generator
 
 
 Reference Generator Base Class

@@ -25,7 +25,8 @@ class TestSCMLSystem:
         monkeypatch.setattr(
             self.class_to_test,
             '_build_state_names',
-            lambda _: DummyLoad.state_names + ['torque'] + DummyElectricMotor.CURRENTS + ['u_sup']
+            lambda _:
+            DummyLoad.state_names + ['torque'] + DummyElectricMotor.CURRENTS + DummyElectricMotor.VOLTAGES + ['u_sup']
         )
         monkeypatch.setattr(ps, 'instantiate', mock_instantiate)
         monkeypatch.setattr(
@@ -36,7 +37,6 @@ class TestSCMLSystem:
                 high=np.zeros_like(state_names, dtype=float)
             )
         )
-        monkeypatch.setattr(self.class_to_test, '_build_state', self.mock_build_state)
         return self.class_to_test(
             converter=DummyConverter(),
             motor=DummyElectricMotor(),
@@ -118,7 +118,7 @@ class TestSCMLSystem:
         scml_system._k = 33
         initial_state = scml_system.reset()
         assert all(
-            initial_state == (np.array([0, 0, 0, 0, 0, 560]) + scml_system._noise_generator.reset())
+            initial_state == (np.array([0, 0, 0, 0, 0, 0, 560]) + scml_system._noise_generator.reset())
             / scml_system.limits
         )
         assert scml_system._t == 0
@@ -153,8 +153,9 @@ class TestSCMLSystem:
         solver_state_el = scml_system._ode_solver.y[len(DummyLoad.state_names):]
         torque = [scml_system.electrical_motor.torque(solver_state_el)]
         u_sup = [scml_system.supply.u_nominal]
+        u_in = [u * u_sup[0] for u in scml_system.converter.u_in]
         desired_next_state = (
-            np.concatenate((solver_state_me, torque, solver_state_el, u_sup))
+            np.concatenate((solver_state_me, torque, solver_state_el, u_in, u_sup))
             + scml_system._noise_generator.noise()
         ) / scml_system.limits
         assert all(desired_next_state == next_state)

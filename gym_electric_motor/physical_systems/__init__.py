@@ -6,7 +6,7 @@ from .converters import PowerElectronicConverter, DiscOneQuadrantConverter, Disc
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor
 
-from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad
+from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ConstantSpeedLoad
 
 from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSolver, ScipyOdeSolver
 
@@ -42,6 +42,7 @@ register_class(DiscB6BridgeConverter, PowerElectronicConverter, 'Disc-B6C')
 register_class(ContB6BridgeConverter, PowerElectronicConverter, 'Cont-B6C')
 
 register_class(PolynomialStaticLoad, MechanicalLoad, 'PolyStaticLoad')
+register_class(ConstantSpeedLoad, MechanicalLoad, 'ConstSpeedLoad')
 
 register_class(GaussianWhiteNoiseGenerator, NoiseGenerator, 'GWN')
 

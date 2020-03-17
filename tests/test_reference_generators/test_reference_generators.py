@@ -1,9 +1,10 @@
-import gym_electric_motor.envs
-from gym_electric_motor.utils import make_module
 from numpy.random import seed
 import numpy.random as rd
 import pytest
-from gym_electric_motor.reference_generators.multi_reference_generator import MultiReferenceGenerator
+import gym_electric_motor as gem
+from tests.test_core import TestReferenceGenerator
+from gym_electric_motor.reference_generators import ConstReferenceGenerator, MultipleReferenceGenerator
+from gym_electric_motor.reference_generators.switched_reference_generator import SwitchedReferenceGenerator
 from gym_electric_motor.reference_generators.sawtooth_reference_generator import SawtoothReferenceGenerator
 from gym_electric_motor.reference_generators.sinusoidal_reference_generator import SinusoidalReferenceGenerator
 from gym_electric_motor.reference_generators.step_reference_generator import StepReferenceGenerator
@@ -11,7 +12,7 @@ from gym_electric_motor.reference_generators.triangle_reference_generator import
 from gym_electric_motor.reference_generators.wiener_process_reference_generator import WienerProcessReferenceGenerator
 from gym_electric_motor.reference_generators.subepisoded_reference_generator import SubepisodedReferenceGenerator
 from gym_electric_motor.reference_generators.zero_reference_generator import ZeroReferenceGenerator
-import gym_electric_motor.reference_generators.multi_reference_generator as mrg
+import gym_electric_motor.reference_generators.switched_reference_generator as swrg
 import gym_electric_motor.reference_generators.subepisoded_reference_generator as srg
 import gym_electric_motor.reference_generators.sawtooth_reference_generator as sawrg
 import gym_electric_motor.reference_generators.wiener_process_reference_generator as wrg
@@ -20,590 +21,12 @@ from ..testing_utils import *
 import numpy as np
 
 
-# region first version
-
-# region expected references
-g_wiener_process_expect_1 = [0.1315388322520193, 0.14048739807899743, 0.1, 0.1, 0.1522230086844815, 0.1, 0.1,
-                             0.14003241950101647, 0.11262368138853361, 0.1]
-g_wiener_process_expect_2 = [-0.002791821788105553, 0.0061567440388726035, -0.04147647719565641, -0.05977342370533539,
-                             -0.0075504150208539, -0.08428875061861613, -0.09785215886257594, -0.05781973936155946,
-                             -0.08522847747404232, -0.10669674258476337]
-g_wiener_process_expect_3 = [0.03153883225201929, 0.04048739807899745, 0.0, 0.0, 0.052223008684481494, 0.0, 0.0,
-                             0.04003241950101648, 0.012623681388533623, 0.0]
-
-g_step_expect_1 = [0.175, 0.175, 0.175, 0.175, 0.175, 0.175, 0.175, 0.175, 0.175, 0.175]
-g_step_expect_2 = [-0.3, -0.3, -0.3, -0.3, -0.3, -0.3, -0.3, -0.3, -0.3, -0.3]
-g_step_expect_3 = [0.14999999999999994, 0.14999999999999994, 0.14999999999999994, 0.14999999999999994,
-                   0.14999999999999994, 0.14999999999999994, 0.14999999999999994, 0.14999999999999994,
-                   0.14999999999999994, 0.14999999999999994]
-
-g_sinus_expect_1 = [0.1892341087797782, 0.16826374935675312, 0.15165796462287975, 0.14105516621316472,
-                    0.13750148043578975, 0.1413475321012121, 0.15221385008545588, 0.1690283078916173,
-                    0.19013190513233447, 0.21344245299125145]
-g_sinus_expect_2 = [-0.09306356488088728, -0.1769450025729876, -0.24336814150848105, -0.2857793351473412,
-                    -0.2999940782568411, -0.2846098715951517, -0.24114459965817656, -0.1738867684335309,
-                    -0.08947237947066215, 0.0037698119650057403]
-g_sinus_expect_3 = [0.17846821755955633, 0.13652749871350617, 0.10331592924575946, 0.08211033242632937,
-                    0.07500296087157943, 0.08269506420242412, 0.1044277001709117, 0.13805661578323453,
-                    0.1802638102646689, 0.22688490598250285]
-
-g_sinus_epis_expect_1 = [0.1892341087797782, 0.16826374935675312, 0.15165796462287975, 0.14105516621316472,
-                         0.13750148043578975, 0.1413475321012121, 0.15221385008545588, 0.1690283078916173,
-                         0.19013190513233447, 0.21344245299125145]
-g_sinus_epis_expect_3 = [0.17846821755955633, 0.13652749871350617, 0.10331592924575946, 0.08211033242632937,
-                         0.07500296087157943, 0.08269506420242412, 0.1044277001709117, 0.13805661578323453,
-                         0.1802638102646689, 0.22688490598250285]
-g_sinus_epis_expect_2 = [-0.09306356488088728, -0.1769450025729876, -0.24336814150848105, -0.2857793351473412,
-                         -0.2999940782568411, -0.2846098715951517, -0.24114459965817656, -0.1738867684335309,
-                         -0.08947237947066215, 0.0037698119650057403]
-
-g_multi_expected_3 = [0.0, 0.054972090373755, 0.06782529748676631, 0.07801118572791686, 0.0763820523476228,
-                      0.0699246508609987,
-                      0.13251714416762556, 0.08131037995987651, 0.04608373206022021, 0.03193441412870947]
-g_multi_expected_2 = [-0.05368087336940529, 0.0012912170043497123, 0.014144424117361032, 0.02433031235851158,
-                      0.02270117897821752, 0.016243777491593423, 0.07883627079822027, 0.027629506590471226,
-                      -0.007597141309185075, -0.021746459240695817]
-g_multi_expected_1 = [0.1, 0.154972090373755, 0.16782529748676633, 0.17801118572791688, 0.17638205234762283,
-                      0.16992465086099873, 0.2325171441676256, 0.18131037995987653, 0.14608373206022024,
-                      0.1319344141287095]
-
-g_sawtooth_expected_1 = [0.22003000000000003, 0.22756000000000004, 0.23509000000000002, 0.24262000000000003, 0.25015,
-                         0.25768, 0.26521000000000006, 0.27274000000000004, 0.28027, 0.1378]
-
-g_sawtooth_expected_2 = [0.03012000000000001, 0.06024000000000002, 0.09035999999999997, 0.12048000000000005,
-                         0.15059999999999993, 0.18072000000000002, 0.21084000000000003, 0.24096000000000004,
-                         0.27108000000000004, -0.2988]
-
-g_sawtooth_expected_3 = [0.24006, 0.25512, 0.27018, 0.28524, 0.30029999999999996, 0.31536, 0.33042, 0.34548,
-                         0.36053999999999997, 0.07559999999999997]
-
-g_sawtooth_epis_expected_3 = [0.24006, 0.25512, 0.27018, 0.28524, 0.30029999999999996, 0.31536, 0.33042, 0.34548,
-                              0.36053999999999997, 0.07559999999999997]
-
-g_sawtooth_epis_expected_1 = [0.22003000000000003, 0.22756000000000004, 0.23509000000000002, 0.24262000000000003,
-                              0.25015, 0.25768, 0.26521000000000006, 0.27274000000000004, 0.28027, 0.1378]
-
-g_sawtooth_epis_expected_2 = [0.03012000000000001, 0.06024000000000002, 0.09035999999999997, 0.12048000000000005,
-                              0.15059999999999993, 0.18072000000000002, 0.21084000000000003, 0.24096000000000004,
-                              0.27108000000000004, -0.2988]
-
-g_triangle_expect_1 = [0.27244, 0.25738000000000005, 0.24232000000000004, 0.22726000000000002, 0.21220000000000003,
-                       0.19714000000000004, 0.18208000000000002, 0.16702, 0.15195999999999998, 0.1381]
-g_triangle_expect_2 = [0.23975999999999992, 0.17951999999999999, 0.11928, 0.059039999999999954, -0.0011999999999999253,
-                       -0.061439999999999974, -0.12168000000000004, -0.18192000000000008, -0.24216000000000013, -0.2976]
-g_triangle_expect_3 = [0.34487999999999996, 0.31476, 0.28464, 0.25451999999999997, 0.22440000000000002,
-                       0.19427999999999998, 0.16415999999999997, 0.13403999999999994, 0.10391999999999992,
-                       0.07619999999999999]
-
-g_triangle_epis_expect_1 = [0.27244, 0.25738000000000005, 0.24232000000000004, 0.22726000000000002, 0.21220000000000003,
-                            0.19714000000000004, 0.18208000000000002, 0.16702, 0.15195999999999998, 0.1381]
-g_triangle_epis_expect_2 = [0.23975999999999992, 0.17951999999999999, 0.11928, 0.059039999999999954,
-                            -0.0011999999999999253, -0.061439999999999974, -0.12168000000000004, -0.18192000000000008,
-                            -0.24216000000000013, -0.2976]
-g_triangle_epis_expect_3 = [0.34487999999999996, 0.31476, 0.28464, 0.25451999999999997, 0.22440000000000002,
-                            0.19427999999999998, 0.16415999999999997, 0.13403999999999994, 0.10391999999999992,
-                            0.07619999999999999]
-
-
-# endregion
-
-# region used functions
-
-
-def setup_sub_generator(generator, **kwargs):
-    return make_module(ReferenceGenerator, generator, **kwargs)
-
-
-def set_limit_margins(limit_margin):
-    """
-    set the limit margins for testing
-    :param limit_margin: limit margin value used for the initialization
-    :return:
-    """
-    if type(limit_margin) is tuple:
-        limit_margin_low = limit_margin[0]
-        limit_margin_high = limit_margin[1]
-    else:
-        limit_margin_high = limit_margin
-        limit_margin_low = -limit_margin
-    return limit_margin_low, limit_margin_high
-
-
-def reset_testing(reference_generator, length_state):
-    """
-    tests the reset function
-    :param reference_generator: instantiated reference generator
-    :param length_state: number of states of the physical system
-    :return:
-    """
-    ref, obs, temp = reference_generator.reset()
-    assert temp is None
-    assert obs.size == 1
-    assert all(ref == np.zeros(length_state))
-
-
-def get_reference_testing(reference_generator, index, limit_margin_low, limit_margin_high,
-                          expected_reference=None):
-    """
-    tests the get_reference and get_reference_observation function
-    :param reference_generator: instantiated reference generator
-    :param index: index of referenced state
-    :param limit_margin_low: lower limit margin
-    :param limit_margin_high: upper limit margin
-    :param expected_reference: list of expected reference
-    :return:
-    """
-    list_ref = []
-    for k in range(10):
-        # test get reference observation and set next reference
-        assert len(reference_generator.get_reference_observation(None)) == 1
-        ref = reference_generator.get_reference(None)
-        for ind, state in enumerate(reference_generator.referenced_states):
-            if ind is not index:
-                assert ref[ind] == 0, "Error in this state: " + str(state)
-            else:
-                assert limit_margin_low <= ref[ind] <= limit_margin_high
-        list_ref.append(ref[index])
-    assert list_ref == expected_reference, " Reference is not equal the expected one"
-
-
-def state_space_testing(reference_generator, physical_system, limit_margin_low, limit_margin_high, state_names, index):
-    """
-    tests the state space of the instantiated reference generators
-    :param reference_generator: instantiated reference generator
-    :param physical_system: instantiated physical system
-    :param limit_margin_low: lower limit margin
-    :param limit_margin_high: upper limit margin
-    :param state_names: state names of physical system (dict)
-    :param index: index of referenced state
-    :return:
-    """
-    for i in range(len(reference_generator.referenced_states)):
-        if i == index:
-            assert reference_generator.referenced_states[i], "Error state: " + str(state_names[i])
-        else:
-            assert not reference_generator.referenced_states[i], "Error state: " + str(state_names[i])
-    # test the state space
-    low = physical_system.state_space.low[index]
-    high = physical_system.state_space.high[index]
-    test_reference_space = Box(low, high, (1,))
-    ref_space = reference_generator.reference_space
-    assert ref_space.shape == test_reference_space.shape
-    assert all(ref_space.low == max(test_reference_space.low, limit_margin_low))
-    assert all(ref_space.high == min(limit_margin_high, test_reference_space.high))
-
-
-def default_initialization_testing(reference_generator, physical_system):
-    reference_generator.set_modules(physical_system)
-    reference_generator.reset()
-    reference_generator.get_reference_observation()
-    reference_generator.get_reference()
-    reference_generator.close()
-
-
-def monkey_rand_function():
-    return 0.5
-
-
-def monkey_rand_triangular(min, mean, max):
-    return 0.3
-
-
-# endregion
-
-
-def test_zero_reference_generator():
-    reference_generator = ZeroReferenceGenerator()
-    physical_system = setup_physical_system('DcPermEx', 'Disc-1QC')
-    length_state = len(physical_system.state_names)
-    reference_generator.set_modules(physical_system)
-    # test reset function
-    ref, obs, temp = reference_generator.reset()
-    assert temp is None
-    assert obs.size == 0
-    assert all(ref == np.zeros(length_state))
-    # check referenced states
-    ref_state = np.zeros(length_state)
-    ref_state[:] = False
-    assert all(reference_generator.referenced_states == ref_state)
-    # test get reference function
-    assert all(np.zeros(length_state) == reference_generator.get_reference(np.zeros_like(physical_system.state_names)))
-    # test get reference observation function
-    assert reference_generator.get_reference_observation(np.ones(length_state)).size == 0
-    reference_generator.close()
-
-
-@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcSeries', 'DcExtEx', 'DcShunt'])
-@pytest.mark.parametrize("conv", ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
-@pytest.mark.parametrize("limit_margin", [0.3, (0.1, 0.4), ])
-@pytest.mark.parametrize("episode_length", [10, (5, 20)])
-def test_wiener_process_reference_generator(monkeypatch, motor_type, conv, limit_margin, episode_length):
-    monkeypatch.setattr(rd, "rand", monkey_rand_function)
-    # setup physical system
-    physical_system = setup_physical_system(motor_type, conv)
-    state_names = physical_system.state_names
-    length_state = len(state_names)
-    sigma_range = (1e-3, 1e0)
-    # set parameter
-    limit_margin_low, limit_margin_high = set_limit_margins(limit_margin)
-    reference_generator = WienerProcessReferenceGenerator()
-    default_initialization_testing(reference_generator, physical_system)
-    # initialize Wiener Process Reference Generator
-    for index, reference_state in enumerate(state_names):
-        seed(123)
-        reference_generator = WienerProcessReferenceGenerator(sigma_range=sigma_range,
-                                                              reference_state=reference_state,
-                                                              episode_lengths=episode_length,
-                                                              limit_margin=limit_margin)
-        # set the physical system
-        reference_generator.set_modules(physical_system)
-        assert reference_generator._episode_len_range == episode_length, "Wrong episode length"
-        # test reset function
-        reset_testing(reference_generator, length_state)
-        # test if referenced state is correct
-        state_space_testing(reference_generator, physical_system, limit_margin_low, limit_margin_high, state_names,
-                            index)
-        # test the reference generator
-        if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-            expected_reference = g_wiener_process_expect_2
-        elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-            expected_reference = g_wiener_process_expect_3
-        else:
-            expected_reference = g_wiener_process_expect_1
-
-        get_reference_testing(reference_generator, index, limit_margin_low,
-                              limit_margin_high, expected_reference)
-        reference_generator.close()
-
-
-@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcSeries', 'DcExtEx', 'DcShunt'])
-@pytest.mark.parametrize("conv", ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
-@pytest.mark.parametrize("limit_margin", [0.6, (0.1, 0.4), ])
-@pytest.mark.parametrize("episode_length", [10, (5, 20)])
-def test_step_reference_generator(motor_type, conv, limit_margin, episode_length, monkeypatch):
-    monkeypatch.setattr(rd, "rand", monkey_rand_function)
-    monkeypatch.setattr(rd, "triangular", monkey_rand_triangular)
-    # setup physical system
-    physical_system = setup_physical_system(motor_type, conv)
-    state_names = physical_system.state_names
-    length_state = len(state_names)
-
-    # amplitude_range=(0, 1), frequency_range=(1, 10), offset_range=(-1, 1)
-    amplitude_range = (-1, 2)
-    frequency_range = (2, 9)
-    offset_range = (-0.8, 0.7)
-    reference_generator = StepReferenceGenerator()
-    default_initialization_testing(reference_generator, physical_system)
-    # general reference parameter
-    seed(123)
-    for reference_state in state_names:
-        index = state_names.index(reference_state)
-        limit_range = 0.5
-        limit_margin_low, limit_margin_high = set_limit_margins(limit_margin)
-        reference_generator = StepReferenceGenerator(amplitude_range=amplitude_range,
-                                                     frequncy_range=frequency_range,
-                                                     offset_range=offset_range,
-                                                     episode_lengths=episode_length,
-                                                     limit_range=limit_range,
-                                                     reference_state=reference_state,
-                                                     limit_margin=limit_margin
-                                                     )
-        # set the physical system
-        reference_generator.set_modules(physical_system)
-        # test reset function
-        reset_testing(reference_generator, length_state)
-        assert reference_generator._episode_len_range == episode_length, "Wrong episode length"
-        # test if referenced state is correct
-        state_space_testing(reference_generator, physical_system, limit_margin_low, limit_margin_high, state_names,
-                            index)
-        # test the reference generator
-        if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-            expected_reference = g_step_expect_2
-        elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-            expected_reference = g_step_expect_3
-        else:
-            expected_reference = g_step_expect_1
-        get_reference_testing(reference_generator, index, limit_margin_low, limit_margin_high,
-                              expected_reference)
-    reference_generator.close()
-
-
-@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcSeries', 'DcExtEx', 'DcShunt'])
-@pytest.mark.parametrize("conv", ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
-@pytest.mark.parametrize("limit_margin", [0.6, (0.1, 0.4), ])
-@pytest.mark.parametrize("episode_length", [20, (15, 20)])
-def test_sinusoidal_reference_generator(motor_type, conv, limit_margin, episode_length, monkeypatch):
-    monkeypatch.setattr(rd, "rand", monkey_rand_function)
-    # setup physical system
-    physical_system = setup_physical_system(motor_type, conv)
-    state_names = physical_system.state_names
-    length_state = len(state_names)
-
-    reference_generator = SinusoidalReferenceGenerator()
-    default_initialization_testing(reference_generator, physical_system)
-    amplitude_range = (-1, 2)
-    frequency_range = (2, 500)
-    offset_range = (-0.8, 0.7)
-    # general reference parameter
-    seed(123)
-    for reference_state in state_names:
-        index = state_names.index(reference_state)
-        limit_margin_low, limit_margin_high = set_limit_margins(limit_margin)
-        reference_generator = SinusoidalReferenceGenerator(amplitude_range=amplitude_range,
-                                                           frequency_range=frequency_range,
-                                                           offset_range=offset_range,
-                                                           reference_state=reference_state,
-                                                           episode_lengths=episode_length,
-                                                           limit_margin=limit_margin)
-        # set the physical system
-        reference_generator.set_modules(physical_system)
-        assert reference_generator._episode_len_range == episode_length, "Wrong episode length"
-        # test reset function
-        reset_testing(reference_generator, length_state)
-        # test if referenced state is correct
-        state_space_testing(reference_generator, physical_system, limit_margin_low, limit_margin_high, state_names,
-                            index)
-        # test the reference generator
-        if type(episode_length) is int:
-            if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-                expected_reference = g_sinus_expect_2
-            elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-                expected_reference = g_sinus_expect_3
-            else:
-                expected_reference = g_sinus_expect_1
-        else:
-            if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-                expected_reference = g_sinus_epis_expect_2
-            elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-                expected_reference = g_sinus_epis_expect_3
-            else:
-                expected_reference = g_sinus_epis_expect_1
-        get_reference_testing(reference_generator, index, limit_margin_low,
-                              limit_margin_high, expected_reference)
-    reference_generator.close()
-
-
-@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcSeries', 'DcExtEx', 'DcShunt'])
-@pytest.mark.parametrize("conv", ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
-@pytest.mark.parametrize("limit_margin", [0.6, (0.1, 0.4), ])
-@pytest.mark.parametrize("episode_length", [10, (5, 20)])
-def test_multi_reference_generator(motor_type, conv, limit_margin, episode_length, monkeypatch):
-    monkeypatch.setattr(rd, "rand", monkey_rand_function)
-    monkeypatch.setattr(rd, "triangular", monkey_rand_triangular)
-    # setup physical system
-    physical_system = setup_physical_system(motor_type, conv)
-    state_names = physical_system.state_names
-    length_state = len(state_names)
-    #
-    # SinusoidalReferenceGenerator  SinusReference
-    # StepReferenceGenerator  StepReference
-    # WienerProcessReferenceGenerator  WienerProcessReference
-
-    amplitude_range = (-1, 1)
-    frequency_range = (2, 9)
-    offset_range = (-0.8, 0.7)
-    probabilities = [0.2, 0.5, 0.3]
-    sigma_range = (1e-3, 1e0)
-    super_episode_length = 35
-    limit_margin_low, limit_margin_high = set_limit_margins(limit_margin)
-    for reference_state in state_names:
-        index = state_names.index(reference_state)
-        sub_generators_string = ['SinusReference', 'StepReference', 'WienerProcessReference']
-        sub_generators_class = [SinusoidalReferenceGenerator, StepReferenceGenerator, WienerProcessReferenceGenerator]
-        sinus_generator = setup_sub_generator('SinusReference',
-                                              amplitude_range=amplitude_range,
-                                              offset_range=offset_range,
-                                              episode_lengths=episode_length,
-                                              frequency_range=frequency_range,
-                                              limit_margin=limit_margin,
-                                              reference_state=reference_state)
-        step_generator = setup_sub_generator('StepReference', amplitude_range=amplitude_range,
-                                             offset_range=offset_range,
-                                             episode_lengths=episode_length,
-                                             frequency_range=frequency_range,
-                                             limit_margin=limit_margin,
-                                             reference_state=reference_state)
-        wiener_generator = setup_sub_generator('WienerProcessReference',
-                                               sigma_range=sigma_range,
-                                               amplitude_range=amplitude_range,
-                                               offset_range=offset_range,
-                                               episode_lengths=episode_length,
-                                               frequency_range=frequency_range,
-                                               limit_margin=limit_margin,
-                                               reference_state=reference_state)
-        sub_generators_instance = [sinus_generator, step_generator, wiener_generator]
-
-        for sub_generators in [sub_generators_string, sub_generators_class, sub_generators_instance]:
-            seed(123)
-            reference_generator = MultiReferenceGenerator(sub_generators=sub_generators,
-                                                          probabilities=probabilities,
-                                                          super_episode_length=super_episode_length,
-                                                          reference_state=reference_state,
-                                                          episode_lengths=episode_length,
-                                                          limit_margin=limit_margin,
-                                                          amplitude_range=amplitude_range,
-                                                          frequency_range=frequency_range,
-                                                          offset_range=offset_range,
-                                                          sigma_range=sigma_range
-                                                          )
-            for ref_generator in reference_generator._sub_generators:
-                assert limit_margin == ref_generator._limit_margin
-                assert ref_generator._episode_len_range == episode_length, "Wrong episode length"
-                if type(ref_generator) == SinusoidalReferenceGenerator:
-                    assert ref_generator._amplitude_range == amplitude_range
-                    assert ref_generator._offset_range == offset_range
-                    assert ref_generator._frequency_range == frequency_range
-
-                elif type(ref_generator) == StepReferenceGenerator:
-                    assert ref_generator._amplitude_range == amplitude_range
-                    assert ref_generator._offset_range == offset_range
-                    assert ref_generator._frequency_range == frequency_range
-                elif type(ref_generator) == WienerProcessReferenceGenerator:
-                    assert ref_generator._sigma_range == sigma_range
-                else:
-                    print("No valid reference generator")
-
-            # set the physical system
-            reference_generator.set_modules(physical_system)
-            # test reset function
-            reset_testing(reference_generator, length_state)
-            # test if referenced state is correct
-            state_space_testing(reference_generator, physical_system, limit_margin_low, limit_margin_high, state_names,
-                                index)
-            # test the reference generator
-            if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-                expected_reference = g_multi_expected_2
-            elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-                expected_reference = g_multi_expected_3
-            else:
-                expected_reference = g_multi_expected_1
-            get_reference_testing(reference_generator, index, limit_margin_low,
-                                  limit_margin_high, expected_reference)
-            reference_generator.close()
-
-
-@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcSeries', 'DcExtEx', 'DcShunt'])
-@pytest.mark.parametrize("conv", ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
-@pytest.mark.parametrize("limit_margin", [0.6, (0.1, 0.4), ])
-@pytest.mark.parametrize("episode_length", [20, (15, 20)])
-def test_sawtooth_reference_generator(motor_type, conv, limit_margin, episode_length, monkeypatch):
-    monkeypatch.setattr(rd, "rand", monkey_rand_function)
-    # setup physical system
-    physical_system = setup_physical_system(motor_type, conv)
-    state_names = physical_system.state_names
-    length_state = len(state_names)
-
-    reference_generator = SawtoothReferenceGenerator()
-    default_initialization_testing(reference_generator, physical_system)
-    amplitude_range = (-1, 2)
-    frequency_range = (2, 500)
-    offset_range = (-0.8, 0.7)
-    seed(123)
-    # general reference parameter
-    for reference_state in state_names:
-        index = state_names.index(reference_state)
-        limit_margin_low, limit_margin_high = set_limit_margins(limit_margin)
-        reference_generator = SawtoothReferenceGenerator(amplitude_range=amplitude_range,
-                                                         frequency_range=frequency_range,
-                                                         offset_range=offset_range,
-                                                         reference_state=reference_state,
-                                                         episode_lengths=episode_length,
-                                                         limit_margin=limit_margin)
-        # set the physical system
-        reference_generator.set_modules(physical_system)
-        assert reference_generator._episode_len_range == episode_length, "Wrong episode length"
-        # test reset function
-        reset_testing(reference_generator, length_state)
-        # test if referenced state is correct
-        state_space_testing(reference_generator, physical_system, limit_margin_low, limit_margin_high, state_names,
-                            index)
-        # test the reference generator
-
-        if type(episode_length) is int:
-            if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-                expected_reference = g_sawtooth_expected_2
-            elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-                expected_reference = g_sawtooth_expected_3
-            else:
-                expected_reference = g_sawtooth_expected_1
-        else:
-            if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-                expected_reference = g_sawtooth_epis_expected_2
-            elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-                expected_reference = g_sawtooth_epis_expected_3
-            else:
-                expected_reference = g_sawtooth_epis_expected_1
-
-        get_reference_testing(reference_generator, index, limit_margin_low,
-                              limit_margin_high, expected_reference)
-    reference_generator.close()
-
-
-@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcSeries', 'DcExtEx', 'DcShunt'])
-@pytest.mark.parametrize("conv", ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
-@pytest.mark.parametrize("limit_margin", [0.6, (0.1, 0.4), ])
-@pytest.mark.parametrize("episode_length", [20, (15, 20)])
-def test_triangular_reference_generator(motor_type, conv, limit_margin, episode_length, monkeypatch):
-    monkeypatch.setattr(rd, "rand", monkey_rand_function)
-    # setup physical system
-    physical_system = setup_physical_system(motor_type, conv)
-    state_names = physical_system.state_names
-    length_state = len(state_names)
-
-    reference_generator = TriangularReferenceGenerator()
-    default_initialization_testing(reference_generator, physical_system)
-    amplitude_range = (-1, 2)
-    frequency_range = (2, 500)
-    offset_range = (-0.8, 0.7)
-    seed(123)
-    # general reference parameter
-    for reference_state in state_names:
-        index = state_names.index(reference_state)
-        limit_margin_low, limit_margin_high = set_limit_margins(limit_margin)
-        reference_generator = TriangularReferenceGenerator(amplitude_range=amplitude_range,
-                                                           frequency_range=frequency_range,
-                                                           offset_range=offset_range,
-                                                           reference_state=reference_state,
-                                                           episode_lengths=episode_length,
-                                                           limit_margin=limit_margin)
-        # set the physical system
-        reference_generator.set_modules(physical_system)
-        assert reference_generator._episode_len_range == episode_length, "Wrong episode length"
-        # test reset function
-        reset_testing(reference_generator, length_state)
-        # test if referenced state is correct
-        state_space_testing(reference_generator, physical_system, limit_margin_low, limit_margin_high, state_names,
-                            index)
-        # test the reference generator
-        if type(episode_length) is int:
-            if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-                expected_reference = g_triangle_expect_2
-            elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-                expected_reference = g_triangle_expect_3
-            else:
-                expected_reference = g_triangle_expect_1
-        else:
-            if type(limit_margin) in [float, int] and physical_system.state_space.low[index] == -1:
-                expected_reference = g_triangle_epis_expect_2
-            elif type(limit_margin) in [float, int] and physical_system.state_space.low[index] == 0:
-                expected_reference = g_triangle_epis_expect_3
-            else:
-                expected_reference = g_triangle_epis_expect_1
-
-        get_reference_testing(reference_generator, index, limit_margin_low,
-                              limit_margin_high, expected_reference)
-    reference_generator.close()
-
-
-# endregion
-
-
 # region second version
 
 
-class TestMultiReferenceGenerator:
+class TestSwitchedReferenceGenerator:
     """
-    class for testing the multi reference generator
+    class for testing the switched reference generator
     """
     _reference_generator = []
     _physical_system = None
@@ -732,25 +155,25 @@ class TestMultiReferenceGenerator:
                              [((200, 500), (200, 500)), (100, (100, 101)), (500, (500, 501))])
     def test_init(self, monkeypatch, setup, sub_generator, sub_args, p, super_episode_length, expected_sel):
         """
-        test function for the initialization of a multi reference generator with different combinations of reference
+        test function for the initialization of a switched reference generator with different combinations of reference
         generators
         :param monkeypatch:
         :param setup: fixture to reset the counters and _reference_generators
         :param sub_generator: list of sub generators
         :param sub_args: additional arguments for sub generators
         :param p: probabilities for the sub generators
-        :param super_episode_length: range of teh episode length of the multi reference generator
-        :param expected_sel: expected multi reference generator episode length
+        :param super_episode_length: range of teh episode length of the switched reference generator
+        :param expected_sel: expected switched reference generator episode length
         :return:
         """
         # setup test scenario
         monkeypatch.setattr(ReferenceGenerator, '__init__', self.monkey_super_init)
-        monkeypatch.setattr(mrg, 'instantiate', self.monkey_instantiate)
+        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
         self._sub_generator = sub_generator
         self._kwargs = sub_args
         # call function to test
-        test_object = MultiReferenceGenerator(sub_generator, sub_args=sub_args, p=p,
-                                              super_episode_length=super_episode_length)
+        test_object = SwitchedReferenceGenerator(sub_generator, sub_args=sub_args, p=p,
+                                                 super_episode_length=super_episode_length)
         # verify the expected results
         assert len(test_object._sub_generators) == len(sub_generator), 'unexpected number of sub generators'
         assert test_object._current_episode_length == 0, 'The current episode length is not 0.'
@@ -774,8 +197,8 @@ class TestMultiReferenceGenerator:
         monkeypatch.setattr(DummyReferenceGenerator, 'set_modules', self.monkey_dummy_set_modules)
         monkeypatch.setattr(DummyReferenceGenerator, '_referenced_states', reference_states)
         self._sub_generator = sub_generator
-        monkeypatch.setattr(mrg, 'instantiate', self.monkey_instantiate)
-        test_object = MultiReferenceGenerator(sub_generator)
+        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
+        test_object = SwitchedReferenceGenerator(sub_generator)
         self._physical_system = DummyPhysicalSystem()
         # call function to test
         test_object.set_modules(self._physical_system)
@@ -798,11 +221,11 @@ class TestMultiReferenceGenerator:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(MultiReferenceGenerator, '_reset_reference', self.monkey_reset_reference)
+        monkeypatch.setattr(SwitchedReferenceGenerator, '_reset_reference', self.monkey_reset_reference)
         sub_generator = ['SinusReference', 'WienerProcessReference']
         self._sub_generator = sub_generator
-        monkeypatch.setattr(mrg, 'instantiate', self.monkey_instantiate)
-        test_object = MultiReferenceGenerator(sub_generator)
+        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
+        test_object = SwitchedReferenceGenerator(sub_generator)
         monkeypatch.setattr(test_object._sub_generators[0], 'reset', self.monkey_dummy_reset)
         self._initial_state = initial_state
         self._initial_reference = initial_reference
@@ -824,8 +247,8 @@ class TestMultiReferenceGenerator:
         # setup test scenario
         sub_generator = ['SinusReference', 'WienerProcessReference']
         self._sub_generator = sub_generator
-        monkeypatch.setattr(mrg, 'instantiate', self.monkey_instantiate)
-        test_object = MultiReferenceGenerator(sub_generator)
+        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
+        test_object = SwitchedReferenceGenerator(sub_generator)
         monkeypatch.setattr(DummyReferenceGenerator, 'get_reference', self.monkey_dummy_get_reference)
         # call function to test
         reference = test_object.get_reference(self._initial_state, **self._kwargs)
@@ -846,8 +269,8 @@ class TestMultiReferenceGenerator:
         # setup test scenario
         sub_generator = ['SinusReference', 'WienerProcessReference']
         self._sub_generator = sub_generator
-        monkeypatch.setattr(mrg, 'instantiate', self.monkey_instantiate)
-        test_object = MultiReferenceGenerator(sub_generator)
+        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
+        test_object = SwitchedReferenceGenerator(sub_generator)
         monkeypatch.setattr(test_object, '_k', k)
         monkeypatch.setattr(test_object, '_current_episode_length', current_episode_length)
         monkeypatch.setattr(test_object, '_reset_reference', self.monkey_reset_reference)
@@ -868,11 +291,11 @@ class TestMultiReferenceGenerator:
         super_episode_length = (1, 10)
         dummy_random = DummyRandom(exp_values=sub_reference_generators, exp_probabilities=probabilities,
                                    exp_low=super_episode_length[0], exp_high=super_episode_length[1])
-        monkeypatch.setattr(mrg.np.random, 'randint', dummy_random.monkey_random_randint)
-        monkeypatch.setattr(mrg.np.random, 'choice', dummy_random.monkey_random_choice)
-        test_object = MultiReferenceGenerator(sub_generators=sub_reference_generators,
-                                              super_episode_length=super_episode_length,
-                                              p=probabilities)
+        monkeypatch.setattr(swrg.np.random, 'randint', dummy_random.monkey_random_randint)
+        monkeypatch.setattr(swrg.np.random, 'choice', dummy_random.monkey_random_choice)
+        test_object = SwitchedReferenceGenerator(sub_generators=sub_reference_generators,
+                                                 super_episode_length=super_episode_length,
+                                                 p=probabilities)
         test_object._reset_reference()
         assert test_object._k == 0
         assert test_object._current_episode_length == 7
@@ -1178,7 +601,7 @@ class TestSubepisodedReferenceGenerator:
         assert test_object._k == 0, 'current reference step is not 0'
 
     @pytest.mark.parametrize("limit_margin, expected_low, expected_high",
-                             [(None, 0, 2 / 7), (0.3, 0.0, 0.3), ((-0.1, 0.8), -0.1, 0.8)])
+                             [(None, 0, 2 / 7), (0.3, 0.0, 0.3), ((-0.1, 0.8), 0, 0.8)])
     def test_set_modules(self, monkeypatch, limit_margin, expected_low, expected_high):
         """
         test set_modules()
@@ -1279,6 +702,117 @@ class TestSubepisodedReferenceGenerator:
         val = SubepisodedReferenceGenerator._get_current_value(value_range)
         # verify expected results
         assert abs(val - expected_value) < 1E-6, 'unexpected value from get_current_value().'
+
+
+class TestConstReferenceGenerator(TestReferenceGenerator):
+
+    key = 'ConstReference'
+    class_to_test = ConstReferenceGenerator
+
+    @pytest.fixture
+    def physical_system(self):
+        return DummyPhysicalSystem(state_length=2)
+
+    @pytest.fixture
+    def reference_generator(self, physical_system):
+        rg = ConstReferenceGenerator(reference_state=physical_system.state_names[1], reference_value=1)
+        rg.set_modules(physical_system)
+        return rg
+
+    @pytest.mark.parametrize('reference_value, reference_state', [(0.8, 'abc')])
+    def test_initialization(self, reference_value, reference_state):
+        rg = ConstReferenceGenerator(reference_value=reference_value, reference_state=reference_state)
+        assert rg.reference_space == Box(np.array([reference_value]), np.array([reference_value]))
+        assert rg._reference_value == reference_value
+        assert rg._reference_state == reference_state
+
+    def test_set_modules(self, physical_system):
+        rg = ConstReferenceGenerator(reference_state=physical_system.state_names[1])
+        rg.set_modules(physical_system)
+        assert all(rg._referenced_states == np.array([False, True]))
+
+    def test_get_reference(self, reference_generator):
+        assert all(reference_generator.get_reference() == np.array([0, 1]))
+
+    def test_get_reference_observation(self, reference_generator):
+        assert all(reference_generator.get_reference_observation() == np.array([1]))
+
+    def test_registered(self):
+        if self.key != '':
+            rg = gem.utils.instantiate(ReferenceGenerator, self.key)
+            assert type(rg) == self.class_to_test
+
+
+class TestMultipleReferenceGenerator(TestReferenceGenerator):
+
+    key = 'MultipleReference'
+    class_to_test = MultipleReferenceGenerator
+
+    @pytest.fixture
+    def reference_generator(self):
+        physical_system = DummyPhysicalSystem(state_length=3)
+        sub_generator_1 = DummyReferenceGenerator(np.array([False, False, True]))
+        sub_generator_2 = DummyReferenceGenerator(np.array([False, True, False]))
+        rg = self.class_to_test([sub_generator_1, sub_generator_2])
+        sub_generator_1._referenced_states = np.array([False, False, True])
+        sub_generator_2._referenced_states = np.array([False, True, False])
+        rg.set_modules(physical_system)
+        sub_generator_1.reference_array = np.array([0, 0, 1])
+        sub_generator_2.reference_array = np.array([0, 1, 0])
+        sub_generator_1.reference_observation = np.array([-1])
+        sub_generator_2.reference_observation = np.array([1])
+        return rg
+
+    def test_initialization(self):
+        # Test with no sub_args
+        kwargs = {'dummy_arg': 'test'}
+        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], **kwargs)
+        assert all([sg.kwargs == kwargs for sg in rg._sub_generators])
+
+        # Test single sub_args
+        kwargs = {'dummy_arg': 'test'}
+        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], sub_args=kwargs)
+        assert all([sg.kwargs == kwargs for sg in rg._sub_generators])
+
+        # Test fitting list of kwargs
+        sub_args = [{'dummy_arg_0': 'test'}, {'dummy_arg_1': 'test1'}]
+        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], sub_args=sub_args)
+        assert all([sg.kwargs == sub_arg for sg, sub_arg in zip(rg._sub_generators, sub_args)])
+
+        # Test non fitting list of subargs for failing assertion
+        sub_args = [{'dummy_arg_0': 'test'}, {'dummy_arg_1': 'test1'}, {'dummy_arg_2': 'must_fail'}]
+        with pytest.raises(AssertionError):
+            self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], sub_args=sub_args)
+
+    def test_set_modules(self):
+        physical_system = DummyPhysicalSystem(state_length=3)
+        sub_generator_1 = DummyReferenceGenerator(np.array([False, False, True]))
+        sub_generator_2 = DummyReferenceGenerator(np.array([False, True, False]))
+        rg = self.class_to_test([sub_generator_1, sub_generator_2])
+        sub_generator_1._referenced_states = np.array([False, False, True])
+        sub_generator_2._referenced_states = np.array([False, True, False])
+        rg.set_modules(physical_system)
+        assert sub_generator_1.physical_system == physical_system
+        assert sub_generator_2.physical_system == physical_system
+        assert all(rg.reference_space.low == np.array([0, 0]))
+        assert all(rg.reference_space.high == np.array([1, 1]))
+        assert all(rg.referenced_states == np.array([0, 1, 1]))
+
+    def test_reset(self, reference_generator):
+        ref, ref_obs, _ = reference_generator.reset()
+        assert all(ref == np.array([0, 1, 1]))
+        assert all(ref_obs == np.array([-1, 1]))
+
+    def test_get_reference(self, reference_generator):
+        assert all(reference_generator.get_reference(0) == np.array([0, 1, 1]))
+
+    def test_reference_observation(self,reference_generator):
+        assert all(reference_generator.get_reference_observation(0) == np.array([-1, 1]))
+
+    def test_registered(self):
+        if self.key != '':
+            rg = gem.utils.instantiate(ReferenceGenerator, self.key, sub_generators=[DummyReferenceGenerator])
+            assert type(rg) == self.class_to_test
 
 # endregion
 

@@ -1,5 +1,6 @@
 import pytest
-from gym_electric_motor.physical_systems.mechanical_loads import PolynomialStaticLoad, MechanicalLoad
+import gym_electric_motor as gem
+from gym_electric_motor.physical_systems import PolynomialStaticLoad, MechanicalLoad, ConstantSpeedLoad
 import numpy as np
 import math
 
@@ -151,3 +152,28 @@ def test_PolynomialStaticLoad_MechanicalOde(concretePolynomialLoad, omega, expec
     output_val = op.mechanical_ode(test_t, test_mechanical_state, test_torque)
     # output_val = concretePolynomialLoad.mechanical_ode(test_t, test_mechanical_state, test_torque)
     assert math.isclose(expected_result, output_val, abs_tol=1E-6)
+
+
+class TestConstSpeedLoad:
+
+    key = 'ConstSpeedLoad'
+    class_to_test = ConstantSpeedLoad
+
+    @pytest.fixture
+    def const_speed_load(self):
+        return ConstantSpeedLoad(100)
+
+    def test_initialization(self):
+        load = ConstantSpeedLoad(omega_fixed=1000)
+        assert load.omega_fixed == 1000
+
+    def test_mechanical_ode(self, const_speed_load):
+        assert all(const_speed_load.mechanical_ode() == np.array([0]))
+
+    def test_reset(self, const_speed_load):
+        assert all(const_speed_load.reset() == np.array([const_speed_load.omega_fixed]))
+
+    def test_registered(self):
+        if self.key != '':
+            load = gem.utils.instantiate(MechanicalLoad, self.key)
+            assert type(load) == self.class_to_test
