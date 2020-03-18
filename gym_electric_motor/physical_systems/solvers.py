@@ -231,7 +231,7 @@ class ScipySolveIvpSolver(OdeSolver):
 
     def integrate(self, t):
         # Docstring of superclass
-        result = solve_ivp(self._fct, [self._t, t], self._y, t_eval=[t], jac=self._j_fct, **self._solver_kwargs)
+        result = solve_ivp(self._fct, [self._t, t], self._y, t_eval=[t], **self._solver_kwargs)
         self._t = t
         self._y = result.y.T[-1]
         return self._y
@@ -252,7 +252,7 @@ class ScipyOdeIntSolver(OdeSolver):
     def __init__(self, **kwargs):
         """
         Args:
-            kwargs(dict): Arguments to pass to the solver. See the solve_ivp description for further information.
+            kwargs(dict): Arguments to pass to the solver. See the scipy description for further information.
         """
         self._solver_args = kwargs
 

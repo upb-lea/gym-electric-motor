@@ -66,7 +66,7 @@ if __name__ == '__main__':
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
         control_space='dq',
         # Pass a string (with extra parameters)
-        ode_solver='euler', solver_kwargs={},
+        ode_solver='scipy.solve_ivp', solver_kwargs={},
         # Pass an instance
         reference_generator=rg,
         plotted_variables=['i_sq', 'i_sd', 'u_sq', 'u_sd'],
@@ -80,8 +80,11 @@ if __name__ == '__main__':
         nominal_values=nominal_values,
         state_filter=['i_sq', 'i_sd', 'epsilon']
     )
-    # Keras-rl DDPG-agent accepts flat observations only
+
+    # Due to the dead time in the system, the
     env = AppendLastActionWrapper(env)
+
+    # Keras-rl DDPG-agent accepts flat observations only
     env = FlattenObservation(env)
     nb_actions = env.action_space.shape[0]
 
@@ -130,13 +133,6 @@ if __name__ == '__main__':
         size=2
     )
 
-    gauss_random_process = GaussianWhiteNoiseProcess(
-        sigma=0.1,
-        sigma_min=0.05,
-        n_steps_annealing=85000,
-        size=2
-    )
-
     # Create the agent
     agent = DDPGAgent(
         nb_actions=nb_actions,
@@ -150,7 +146,7 @@ if __name__ == '__main__':
         target_model_update=1000,
         gamma=0.9,
         batch_size=128,
-        memory_interval=1
+        memory_interval=2
     )
     agent.compile([Adam(lr=3e-5), Adam(lr=3e-3)])
 

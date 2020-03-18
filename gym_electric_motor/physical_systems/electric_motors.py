@@ -16,6 +16,9 @@ class ElectricMotor:
         and the limit dictionary.
     """
 
+    #: Parameter indicating if the class is implementing the optional jacobian function
+    HAS_JACOBIAN = False
+
     #: CURRENTS_IDX(list(int)): Indices for accessing all motor currents.
     CURRENTS_IDX = []
 
@@ -76,12 +79,12 @@ class ElectricMotor:
         self._nominal_values = self._default_nominal_values.copy()
         self._nominal_values.update(nominal_values)
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         """
         Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.
 
         Args:
-            currents(ndarray(float)): The motors state.
+            state(ndarray(float)): The motors state.
             u_in(list(float)): The motors input voltages.
             omega(float): Angular velocity of the motor
 
@@ -89,6 +92,26 @@ class ElectricMotor:
              ndarray(float): Derivatives of the motors ODE-system for the given inputs.
         """
         raise NotImplementedError
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        """
+        Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.
+
+        Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+        be set to True. Otherwise, the jacobian will not be called.
+
+        Args:
+            state(ndarray(float)): The motors state.
+            u_in(list(float)): The motors input voltages.
+            omega(float): Angular velocity of the motor
+
+        Returns:
+             Tuple(ndarray, ndarray, ndarray):
+                [0]: Derivatives of all electrical motor states over all electrical motor states (states x states)
+                [1]: Derivatives of all electrical motor states over omega (1 x states)
+                [2]: Derivative of Torque over all motor states (states x 1)
+        """
+        pass
 
     def torque(self, currents):
         """
@@ -209,12 +232,12 @@ class DcMotor(ElectricMotor):
         # Docstring of superclass
         return list(currents)
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
         return np.matmul(self._model_constants, np.array([
-            currents[self.I_A_IDX],
-            currents[self.I_E_IDX],
-            omega * currents[self.I_E_IDX],
+            state[self.I_A_IDX],
+            state[self.I_E_IDX],
+            omega * state[self.I_E_IDX],
             u_in[0],
             u_in[1],
         ]))
@@ -333,9 +356,9 @@ class DcShuntMotor(DcMotor):
         # Docstring of superclass
         return [state[self.I_A_IDX] + state[self.I_E_IDX]]
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
-        return super().electrical_ode(currents, (u_in[0], u_in[0]), omega)
+        return super().electrical_ode(state, (u_in[0], u_in[0]), omega)
 
     def get_state_space(self, input_currents, input_voltages):
         """
@@ -432,6 +455,7 @@ class DcSeriesMotor(DcMotor):
         u        Circuit Voltage
         ======== ===========================================================
     """
+    HAS_JACOBIAN = True
     I_IDX = 0
     CURRENTS_IDX = [0]
     CURRENTS = ['i']
@@ -455,13 +479,13 @@ class DcSeriesMotor(DcMotor):
         # Docstring of superclass
         return super().torque([currents[self.I_IDX], currents[self.I_IDX]])
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
         return np.matmul(
             self._model_constants,
             np.array([
-                currents[self.I_IDX],
-                omega * currents[self.I_IDX],
+                state[self.I_IDX],
+                omega * state[self.I_IDX],
                 u_in[0]
             ])
         )
@@ -505,6 +529,14 @@ class DcSeriesMotor(DcMotor):
             'u': 1,
         }
         return low, high
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([[-(mp['r_a'] + mp['r_e'] + mp['l_e_prime'] * omega) / (mp['l_a'] + mp['l_e'])]]),
+            np.array([-mp['l_e_prime'] * state[self.I_IDX] / (mp['l_a'] + mp['l_e'])]),
+            np.array([2 * mp['l_e_prime'] * state[self.I_IDX]])
+        )
 
 
 class DcPermanentlyExcitedMotor(DcMotor):

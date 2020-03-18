@@ -87,7 +87,9 @@ class SCMLSystem(PhysicalSystem):
         self._noise_generator.set_state_names(state_names)
         solver_kwargs = solver_kwargs or {}
         self._ode_solver = instantiate(sv.OdeSolver, ode_solver, **solver_kwargs)
-        self._ode_solver.set_system_equation(self._system_equation)
+        jac = self._system_jacobian if self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN \
+            else None
+        self._ode_solver.set_system_equation(self._system_equation, jac)
         self._mechanical_load.set_j_rotor(self._electrical_motor.motor_parameter['j_rotor'])
         self._t = 0
         self._set_indices()
@@ -167,11 +169,13 @@ class SCMLSystem(PhysicalSystem):
             u_in = self._converter.convert(i_in, self._ode_solver.t)
             u_in = [u * u_sup for u in u_in]
             self._ode_solver.set_f_params(u_in)
+            self._ode_solver.set_j_params(u_in)
             ode_state = self._ode_solver.integrate(t)
             i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         self._ode_solver.set_f_params(u_in)
+        self._ode_solver.set_j_params(u_in)
         ode_state = self._ode_solver.integrate(self._t + self._tau)
         self._t = self._ode_solver.t
         self._k += 1
@@ -206,6 +210,21 @@ class SCMLSystem(PhysicalSystem):
         torque = self._electrical_motor.torque(state[self._motor_ode_idx])
         load_derivative = self._mechanical_load.mechanical_ode(t, state[self._load_ode_idx], torque)
         return np.concatenate((load_derivative, motor_derivative))
+
+    def _system_jacobian(self, t, state, u_in, **__):
+        motor_jac, el_state_over_omega, torque_over_el_state = self._electrical_motor.electrical_jacobian(
+            state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+        )
+        torque = self._electrical_motor.torque(state[self._motor_ode_idx])
+        load_jac, load_over_torque = self._mechanical_load.mechanical_jacobian(
+            t, state[self._load_ode_idx], torque
+        )
+        system_jac = np.zeros((state.shape[0], state.shape[0]))
+        system_jac[:load_jac.shape[0], :load_jac.shape[1]] = load_jac
+        system_jac[-motor_jac.shape[0]:, -motor_jac.shape[1]:] = motor_jac
+        system_jac[-motor_jac.shape[0]:, self._omega_ode_idx] = el_state_over_omega
+        system_jac[:-motor_jac.shape[1], load_jac.shape[0]:] = np.matmul(torque_over_el_state.T, load_over_torque)
+        return system_jac
 
     def reset(self, *_):
         """
