@@ -10,13 +10,11 @@ class OdeSolver:
     _t = 0
     #: Current system state y
     _y = None
-    #: Function parameters that are passed to the system equation additionally to t and y
+    #: Function parameters that are passed to the system equation and the system jacobian additionally to t and y
     _f_params = None
-    #: Function parameters that are passed to the systems jacobian function additionally to t and y
-    _j_params = None
     #: System equation in the form: _system_equation(t, y, *f_params)
     _system_equation = None
-    #: System jacobian in the form _system_jacobian(t,y, *j_params)
+    #: System jacobian in the form _system_jacobian(t,y, *f_params)
     _system_jacobian = None
 
     @property
@@ -76,15 +74,6 @@ class OdeSolver:
             args(list): Additional arguments for the next function calls.
         """
         self._f_params = args
-
-    def set_j_params(self, *args):
-        """
-        Set further arguments for the systems jacobian call like input quantities.
-
-        Args:
-            args(list): Additional arguments for the next jacobian calls.
-        """
-        self._j_params = args
 
 
 class EulerSolver(OdeSolver):
@@ -186,12 +175,8 @@ class ScipyOdeSolver(OdeSolver):
 
     def set_f_params(self, *args):
         # Docstring of superclass
-        super().set_f_params()
+        super().set_f_params(*args)
         self._ode.set_f_params(*args)
-
-    def set_j_params(self, *args):
-        # Docstring of superclass
-        super().set_j_params(*args)
         self._ode.set_jac_params(*args)
 
     def integrate(self, t):
@@ -206,32 +191,24 @@ class ScipySolveIvpSolver(OdeSolver):
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html
     """
 
-    #: System equation with set function parameters
-    _fct = None
-    #: System jacobian with set jacobian parameters
-    _j_fct = None
-
     def __init__(self, **kwargs):
         # Docstring of superclass
         self._solver_kwargs = kwargs
 
     def set_system_equation(self, system_equation, jac=None):
         # Docstring of superclass
+        method = self._solver_kwargs.get('method', None)
         super().set_system_equation(system_equation, jac)
-        self.set_f_params()
-        self.set_j_params()
 
-    def set_f_params(self, *args):
-        # Docstring of superclass
-        self._fct = lambda t, y: self._system_equation(t, y, *args)
-
-    def set_j_params(self, *args):
-        if self._system_jacobian is not None:
-            self._j_fct = lambda t, y: self._system_jacobian(t, y, *args)
+        # Only Radau BDF and LSODA support the jacobian.
+        if method in ['Radau', 'BDF', 'LSODA']:
+            self._solver_kwargs['jac'] = self._system_jacobian
 
     def integrate(self, t):
         # Docstring of superclass
-        result = solve_ivp(self._fct, [self._t, t], self._y, t_eval=[t], **self._solver_kwargs)
+        result = solve_ivp(
+            self._system_equation, [self._t, t], self._y, t_eval=[t], args=self._f_params, **self._solver_kwargs
+        )
         self._t = t
         self._y = result.y.T[-1]
         return self._y
@@ -244,11 +221,6 @@ class ScipyOdeIntSolver(OdeSolver):
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html
     """
 
-    #: System equation with set function parameters
-    _fct = None
-    #: System jacobian with set jacobian parameters
-    _j_fct = None
-
     def __init__(self, **kwargs):
         """
         Args:
@@ -256,20 +228,9 @@ class ScipyOdeIntSolver(OdeSolver):
         """
         self._solver_args = kwargs
 
-    def set_system_equation(self, system_equation, jac=None):
-        # Docstring of superclass
-        super().set_system_equation(system_equation, jac)
-        self.set_f_params()
-        self.set_j_params()
-
-    def set_j_params(self, *args):
-        # Docstring of superclass
-        if self._system_jacobian is not None:
-            self._j_fct = lambda y, t: self._system_jacobian(t, y, *args)
-
     def integrate(self, t):
         # Docstring of superclass
-        result = odeint(self._system_equation, self._y, [self._t, t], args=self._f_params, Dfun=self._j_fct,
+        result = odeint(self._system_equation, self._y, [self._t, t], args=self._f_params, Dfun=self._system_jacobian,
                         tfirst=True, **self._solver_args)
         self._t = t
         self._y = result[-1]

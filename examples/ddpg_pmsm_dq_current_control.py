@@ -172,5 +172,3 @@ if __name__ == '__main__':
         nb_max_episode_steps=10000
     )
 
-    agent.save_weights('SavedWeightsConstWrap.h5', True)
-

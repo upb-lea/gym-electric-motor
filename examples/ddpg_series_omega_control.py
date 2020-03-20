@@ -32,7 +32,7 @@ if __name__ == '__main__':
         reward_power=0.5,
         observed_states=None,
         # Pass a string (with extra parameters)
-        ode_solver='scipy.ode', solver_kwargs=dict(integrator='vode'),
+        ode_solver='scipy.solve_ivp', solver_kwargs=dict(method='BDF'),
         # Pass an instance
         reference_generator=WienerProcessReferenceGenerator(reference_state='omega', sigma_range=(5e-3, 1e-2))
     )
@@ -106,6 +106,7 @@ if __name__ == '__main__':
         action_repetition=1,
         verbose=2,
         nb_max_start_steps=0,
+        nb_max_episode_steps=10000,
         log_interval=10000,
         callbacks=[]
     )

@@ -21,7 +21,7 @@ if __name__ == '__main__':
         load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
 
         # Pass a string (with extra parameters)
-        ode_solver='euler', solver_kwargs={},
+        ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
         # Pass a Class with extra parameters
         reference_generator=rg.SwitchedReferenceGenerator(
             sub_generators=[

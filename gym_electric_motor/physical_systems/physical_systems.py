@@ -169,13 +169,11 @@ class SCMLSystem(PhysicalSystem):
             u_in = self._converter.convert(i_in, self._ode_solver.t)
             u_in = [u * u_sup for u in u_in]
             self._ode_solver.set_f_params(u_in)
-            self._ode_solver.set_j_params(u_in)
             ode_state = self._ode_solver.integrate(t)
             i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         self._ode_solver.set_f_params(u_in)
-        self._ode_solver.set_j_params(u_in)
         ode_state = self._ode_solver.integrate(self._t + self._tau)
         self._t = self._ode_solver.t
         self._k += 1
