@@ -22,7 +22,15 @@ from gym.spaces import Box, Tuple
 
 
 class AppendLastActionWrapper(Wrapper):
+    """
+    The following environment considers the dead time in the real-world motor control systems.
+    The real-world system changes its state, while the agent calculates the next action based on a previoulsly measured
+    observation. Therefore, for the agents it seems as if the applied action effects the state one step delayed.
+    (with a dead time of one time-step)
 
+    For complete observability of the system at each time-step we append the last played action of the agent to the
+    observation, because this action will be the one that is active in the next step.
+    """
     def __init__(self, environment):
         super().__init__(environment)
         self.observation_space = Tuple((Box(
@@ -45,10 +53,13 @@ if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
 
     window_length = 1
+
+    # Changing i_q reference and constant 0 i_d reference.
     q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
     d_generator = ConstReferenceGenerator('i_sd', 0)
     rg = MultipleReferenceGenerator([d_generator, q_generator])
 
+    # Change of the default motor parameters.
     motor_parameter = dict(
         r_s=15e-3, l_d=0.37e-3, l_q=1.2e-3, psi_p=65.6e-3, p=3, j_rotor=0.06
     )
@@ -58,6 +69,7 @@ if __name__ == '__main__':
         u=450
     )
     nominal_values = {key: 0.7 * limit for key, limit in limit_values.items()}
+
     # Create the environment
     env = gem.make(
         'emotor-pmsm-cont-v1',
@@ -150,7 +162,7 @@ if __name__ == '__main__':
     )
     agent.compile([Adam(lr=3e-5), Adam(lr=3e-3)])
 
-    # Start training for 1.5M simulation steps
+    # Start training for 75000 simulation steps
     agent.fit(
         env,
         nb_steps=75000,

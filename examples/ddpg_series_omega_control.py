@@ -21,6 +21,7 @@ if __name__ == '__main__':
 
     tf.compat.v1.disable_eager_execution()
     # Create the environment
+    # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning results.
     env = gem.make(
         'emotor-dc-series-cont-v1',
         # Pass a class with extra parameters
