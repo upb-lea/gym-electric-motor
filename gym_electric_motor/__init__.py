@@ -61,3 +61,8 @@ register(id='emotor-scim-cont-v1',
          entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
 register(id='emotor-scim-disc-v1',
          entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
+
+register(id='emotor-dfim-cont-v1',
+         entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
+register(id='emotor-dfim-disc-v1',
+         entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')

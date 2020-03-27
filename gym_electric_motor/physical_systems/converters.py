@@ -780,3 +780,74 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
     def i_sup(self, i_out):
         # Docstring in base class
         return sum([subconverter.i_sup([i_out_]) for subconverter, i_out_ in zip(self._subconverters, i_out)])
+
+class ContDoubleB6BridgeConverter(ContDynamicallyAveragedConverter):
+    """
+    Two independent continuous B6 bridge converters for the supply of doubly fed induction motors.
+
+    Key:
+        'Cont-Double-B6C'
+
+    Actions:
+        The Duty Cycle for each half bridge in the range of (-1,1)
+
+    Action Space:
+        Box(-1, 1, shape=(6,))
+
+    Output Voltages and Currents:
+        | voltages: (-1,1)
+        | currents: (-1,1)
+
+    Output Voltage Space:
+        Box(-0.5, 0.5, shape=(6,))
+    """
+
+    action_space = Box(-1, 1, shape=(6,))
+    # Only positive voltages can be applied
+    voltages = (-1, 1)
+    # Positive and negative currents are possible
+    currents = (-1, 1)
+
+    _reset_action = [0, 0, 0, 0, 0, 0]
+
+    def __init__(self, tau=1e-4, **kwargs):
+        # Docstring in base class
+        super().__init__(tau=tau, **kwargs)
+        self._subconverters = [
+            ContB6BridgeConverter(tau=tau, **kwargs),
+            ContB6BridgeConverter(tau=tau, **kwargs),
+        ]
+
+    def reset(self):
+        # Docstring in base class
+        return [
+            self._subconverters[0].reset()[:],
+            self._subconverters[1].reset()[:]
+        ]
+
+    def convert(self, i_out, t):
+        # Docstring in base class
+        u_out = [
+            self._subconverters[0].convert(i_out[0], t),
+            self._subconverters[1].convert(i_out[1], t)
+        ]
+        return u_out
+
+    def set_action(self, action, t):
+        # Docstring in base class
+        stator_action = action[0:3]
+        rotor_action = action[3:6]
+        times = []
+        times += self._subconverters[0].set_action(stator_action, t)
+        times += self._subconverters[1].set_action(rotor_action, t)
+        return sorted(list(set(times)))
+
+    def _convert(self, i_in, t):
+        # Not used
+        pass
+
+    def i_sup(self, i_out):
+        # Docstring in base class
+        return sum([subconverter.i_sup([i_out_]) for subconverter, i_out_ in zip(self._subconverters, i_out)])
+#
+#    #self._subconverters[0].i_sup([i_out[0]]) + self._subconverters[1].i_sup([i_out[1]])

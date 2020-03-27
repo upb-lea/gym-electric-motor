@@ -1,10 +1,12 @@
 from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem
 from .converters import PowerElectronicConverter, DiscOneQuadrantConverter, DiscTwoQuadrantConverter, \
     DiscFourQuadrantConverter, DiscDoubleConverter, DiscB6BridgeConverter, ContOneQuadrantConverter, \
-    ContTwoQuadrantConverter, ContFourQuadrantConverter, ContDoubleConverter, ContB6BridgeConverter
+    ContTwoQuadrantConverter, ContFourQuadrantConverter, ContDoubleConverter, ContB6BridgeConverter, \
+    ContDoubleB6BridgeConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
-    PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor
+    PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
+    DoublyFedInductionMotor
 
 from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ConstantSpeedLoad
 
@@ -40,6 +42,7 @@ register_class(DiscDoubleConverter, PowerElectronicConverter, 'Disc-Double')
 register_class(ContDoubleConverter, PowerElectronicConverter, 'Cont-Double')
 register_class(DiscB6BridgeConverter, PowerElectronicConverter, 'Disc-B6C')
 register_class(ContB6BridgeConverter, PowerElectronicConverter, 'Cont-B6C')
+register_class(ContDoubleB6BridgeConverter, PowerElectronicConverter, 'Cont-Double-B6C')
 
 register_class(PolynomialStaticLoad, MechanicalLoad, 'PolyStaticLoad')
 register_class(ConstantSpeedLoad, MechanicalLoad, 'ConstSpeedLoad')
@@ -58,6 +61,7 @@ register_class(DcShuntMotor, ElectricMotor, 'DcShunt')
 register_class(PermanentMagnetSynchronousMotor, ElectricMotor, 'PMSM')
 register_class(SynchronousReluctanceMotor, ElectricMotor, 'SynRM')
 register_class(SquirrelCageInductionMotor, ElectricMotor, 'SCIM')
+register_class(DoublyFedInductionMotor, ElectricMotor, 'DFIM')
 
 register_class(IdealVoltageSupply, VoltageSupply, 'IdealVoltageSupply')
 

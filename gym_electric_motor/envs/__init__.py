@@ -19,3 +19,5 @@ from gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env import DiscSynch
 
 from .gym_im.squirrel_cage_induc_motor_env import ContSquirrelCageInductionMotorEnvironment
 from .gym_im.squirrel_cage_induc_motor_env import DiscSquirrelCageInductionMotorEnvironment
+
+from .gym_im.doubly_fed_induc_motor import ContDoublyFedInductionMotorEnvironment

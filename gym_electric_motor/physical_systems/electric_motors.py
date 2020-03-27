@@ -1036,9 +1036,7 @@ class SynchronousReluctanceMotor(SynchronousMotor):
     _default_nominal_values = {
         'i': 54, 'torque': 0, 'omega': 523.0, 'epsilon': np.pi, 'u': 600
     }
-    _default_limits = {
-        'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi, 'u': 600
-    }
+    _default_limits = {'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi, 'u': 600}
 
     def _update_model(self):
         # Docstring of superclass
@@ -1261,7 +1259,7 @@ class InductionMotor(ElectricMotor):
     FLUX_IDX = [2, 3]
     CURRENTS = ['i_salpha', 'i_sbeta']
     FLUXES = ['psi_ralpha', 'psi_rbeta']
-    VOLTAGES = ['u_salpha', 'u_sbeta']
+    STATOR_VOLTAGES = ['u_salpha', 'u_sbeta']
 
     # transformation matrix from abc to alpha-beta representation
     _t23 = 2 / 3 * np.array([
@@ -1522,11 +1520,6 @@ class InductionMotor(ElectricMotor):
 
 class SquirrelCageInductionMotor(InductionMotor):
     """
-        The InductionMotor and its subclasses implement the technical system of a Three Phase induction motor.
-
-        This includes the system equations, the motor parameters of the equivalent circuit diagram,
-        as well as limits and bandwidth.
-
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
@@ -1640,6 +1633,322 @@ class SquirrelCageInductionMotor(InductionMotor):
             [0,       0,               mp['l_m']/tau_r, 0,               0,               -1/tau_r,                                 0,                                      0,                                   -mp['p']],                            # psi_ralpha_dot
             [0,       mp['l_m']/tau_r, 0,               0,               0,               0,                                        -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
             [mp['p'], 0,               0,               0,               0,               0,                                        0,                                      0,                                   0],                                   # epsilon_dot
+        ])
+
+    def _torque_limit(self):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_rsig']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
+
+    def torque(self, currents): # currents==states ?
+        # Docstring of superclass
+        mp = self._motor_parameter
+        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (currents[self.PSI_RALPHA_IDX] * currents[self.I_SBETA_IDX] - currents[self.PSI_RBETA_IDX] * currents[self.I_SALPHA_IDX])
+
+class DoublyFedInductionMotor(InductionMotor):
+    """
+        =====================  ==========  ============= ===========================================
+        Motor Parameter        Unit        Default Value Description
+        =====================  ==========  ============= ===========================================
+        r_s                    Ohm         12e-3        Stator resistance
+        r_r                    Ohm         21e-3         Rotor resistance
+        l_m                    H           13.5e-3        Main inductance
+        l_ssig                 H           0.2e-3        Stator-side stray inductance
+        l_rsig                 H           0.1e-3        Rotor-side stray inductance
+        p                      1           2             Pole pair number
+        j_rotor                kg/m^2      1e3        Moment of inertia of the rotor
+        =====================  ==========  ============= ===========================================
+
+        =============== ====== =============================================
+        Motor Currents  Unit   Description
+        =============== ====== =============================================
+        i_sq            A      Quadrature axis current
+        i_sd            A      Direct axis current
+        i_sa            A      Current through branch a
+        i_sb            A      Current through branch b
+        i_sc            A      Current through branch c
+        i_salpha        A      Current in alpha axis
+        i_sbeta         A      Current in beta axis
+        =============== ====== =============================================
+        =============== ====== =============================================
+        Rotor flux      Unit   Description
+        =============== ====== =============================================
+        psi_rq          Vs     Quadrature axis of the rotor oriented flux
+        psi_rd          Vs     Direct axis of the rotor oriented flux
+        psi_ra          Vs     Rotor oriented flux in branch a
+        psi_rb          Vs     Rotor oriented flux in branch b
+        psi_rc          Vs     Rotor oriented flux in branch c
+        psi_ralpha      Vs     Rotor oriented flux in alpha direction
+        psi_rbeta       Vs     Rotor oriented flux in beta direction
+        =============== ====== =============================================
+        =============== ====== =============================================
+        Motor Voltages  Unit   Description
+        =============== ====== =============================================
+        u_sq            V      Quadrature axis voltage
+        u_sd            V      Direct axis voltage
+        u_sa            V      Stator voltage through branch a
+        u_sb            V      Stator voltage through branch b
+        u_sc            V      Stator voltage through branch c
+        u_salpha        V      Stator voltage in alpha axis
+        u_sbeta         V      Stator voltage in beta axis
+        u_ralpha        V      Rotor voltage in alpha axis
+        u_rbeta         V      Rotor voltage in beta axis
+        =============== ====== =============================================
+
+        ======== ===========================================================
+        Limits / Nominal Value Dictionary Entries:
+        -------- -----------------------------------------------------------
+        Entry    Description
+        ======== ===========================================================
+        i         General current limit / nominal value
+        i_sa      Current in phase a
+        i_sb      Current in phase b
+        i_sc      Current in phase c
+        i_salpha  Current in alpha axis
+        i_sbeta   Current in beta axis
+        i_sd      Current in direct axis
+        i_sq      Current in quadrature axis
+        omega     Mechanical angular Velocity
+        torque    Motor generated torque
+        u_sa      Voltage in phase a
+        u_sb      Voltage in phase b
+        u_sc      Voltage in phase c
+        u_salpha  Voltage in alpha axis
+        u_sbeta   Voltage in beta axis
+        u_sd      Voltage in direct axis
+        u_sq      Voltage in quadrature axis
+        u_ralpha  Rotor voltage in alpha axis
+        u_rbeta   Rotor voltage in beta axis
+        ======== ===========================================================
+
+
+        Note:
+            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).
+            Typically the rms value for the line voltage (:math:`U_L`) is given.
+            :math:`\hat{u}_S=\sqrt{2/3}~U_L`
+
+            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).
+            Typically the rms value for the phase current (:math:`I_S`) is given.
+            :math:`\hat{i}_S = \sqrt{2}~I_S`
+
+            If not specified, nominal values are equal to their corresponding limit values.
+            Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
+            the general limits/nominal values (e.g. i)
+        """
+    STATOR_VOLTAGES = ['u_ralpha', 'u_rbeta']
+
+    _default_motor_parameter = {
+        'p': 2,
+        'l_m': 13.5e-3,
+        'l_ssig': 0.2e-3,
+        'l_rsig': 0.1e-3,
+        'j_rotor': 1e3,
+        'r_s': 12e-3,
+        'r_r': 21e-3,
+    }
+
+    _default_limits = dict(omega=160, torque=0.0, i=1900, epsilon=math.pi, u=1200)
+    _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900, epsilon=math.pi, u=1200)
+
+    def electrical_ode(self, state, u_sr_alphabeta, omega, *_):
+        """
+        The differential equation of the Induction Motor.
+
+        Args:
+            state: The current state of the motor. [i_sq, i_sd, epsilon]
+            omega: The mechanical load
+            u_alphabeta: The input voltages [u_salpha, u_sbeta]
+
+        Returns:
+            The derivatives of the state vector d/dt([i_sq, i_sd, epsilon])
+        """
+        return np.matmul(self._model_constants, np.array([
+            # omega,  i_beta, i_alpha, u_sbeta, u_salpha, u_rbeta, u_ralpha, psi_ralpha, psi_rbeta, omega * psi_ralpha, omega * psi_rbeta
+            omega,
+            state[self.I_SBETA_IDX],
+            state[self.I_SALPHA_IDX],
+            u_sr_alphabeta[0, 1],
+            u_sr_alphabeta[0, 0],
+            u_sr_alphabeta[1, 1],
+            u_sr_alphabeta[1, 0],
+            state[self.PSI_RALPHA_IDX],
+            state[self.PSI_RBETA_IDX],
+            omega * state[self.PSI_RALPHA_IDX],
+            omega * state[self.PSI_RBETA_IDX],
+        ]))
+
+    def _update_limits(self):
+        """
+        Calculate for all the missing maximal and nominal values the physical maximal possible values.
+        """
+        mp = self._motor_parameter
+        if self._limits.get('u_sa', 0) == 0:
+            self._limits['u_sa'] = .5 * self._limits['u']
+        if self._limits.get('u_sb', 0) == 0:
+            self._limits['u_sb'] = .5 * self._limits['u']
+        if self._limits.get('u_sc', 0) == 0:
+            self._limits['u_sc'] = .5 * self._limits['u']
+        if self._limits.get('u_salpha', 0) == 0:
+            self._limits['u_salpha'] = .5 * self._limits['u']
+        if self._limits.get('u_sbeta', 0) == 0:
+            self._limits['u_sbeta'] = 0.5 * self._limits['u']
+        if self._limits.get('u_sd', 0) == 0:
+            self._limits['u_sd'] = .5 * self._limits['u']
+        if self._limits.get('u_sq', 0) == 0:
+            self._limits['u_sq'] = .5 * self._limits['u']
+
+        if self._limits.get('u_ra', 0) == 0:
+            self._limits['u_ra'] = .5 * self._limits['u']
+        if self._limits.get('u_rb', 0) == 0:
+            self._limits['u_rb'] = .5 * self._limits['u']
+        if self._limits.get('u_rc', 0) == 0:
+            self._limits['u_rc'] = .5 * self._limits['u']
+        if self._limits.get('u_ralpha', 0) == 0:
+            self._limits['u_ralpha'] = .5 * self._limits['u']
+        if self._limits.get('u_rbeta', 0) == 0:
+            self._limits['u_rbeta'] = 0.5 * self._limits['u']
+        if self._limits.get('u_rd', 0) == 0:
+            self._limits['u_rd'] = .5 * self._limits['u']
+        if self._limits.get('u_rq', 0) == 0:
+            self._limits['u_rq'] = .5 * self._limits['u']
+
+        if self._limits.get('i_salpha', 0) == 0:
+            self._limits['i_salpha'] = self._limits.get('i', None) or self._limits[
+                'u_salpha'] / mp['r_s']
+        if self._limits.get('i_sbeta', 0) == 0:
+            self._limits['i_sbeta'] = self._limits.get('i', None) or self._limits['u_sbeta'] / \
+                                     mp['r_s']
+        if self._limits.get('i_sa', 0) == 0:
+            self._limits['i_sa'] = self._limits.get('i', None) or self._limits['u_sa'] / mp['r_s']
+        if self._limits.get('i_sb', 0) == 0:
+            self._limits['i_sb'] = self._limits.get('i', None) or self._limits['u_sb'] / mp['r_s']
+        if self._limits.get('i_sc', 0) == 0:
+            self._limits['i_sc'] = self._limits.get('i', None) or self._limits['u_sc'] / mp['r_s']
+        if self._limits.get('i_sd', 0) == 0:
+            self._limits['i_sd'] = self._limits.get('i', None) or self._limits['u_sd'] / mp['r_s']
+        if self._limits.get('i_sq', 0.0) == 0:
+            self._limits['i_sq'] = self._limits.get('i', None) or self._limits['u_sq'] / mp['r_s']
+
+        if self._limits.get('i_ralpha', 0) == 0:
+            self._limits['i_ralpha'] = self._limits.get('i', None) or self._limits[
+                'u_ralpha'] / mp['r_r']
+        if self._limits.get('i_rbeta', 0) == 0:
+            self._limits['i_rbeta'] = self._limits.get('i', None) or self._limits['u_rbeta'] / \
+                                     mp['r_r']
+        if self._limits.get('i_ra', 0) == 0:
+            self._limits['i_ra'] = self._limits.get('i', None) or self._limits['u_ra'] / mp['r_r']
+        if self._limits.get('i_rb', 0) == 0:
+            self._limits['i_rb'] = self._limits.get('i', None) or self._limits['u_rb'] / mp['r_r']
+        if self._limits.get('i_rc', 0) == 0:
+            self._limits['i_rc'] = self._limits.get('i', None) or self._limits['u_rc'] / mp['r_r']
+        if self._limits.get('i_rd', 0) == 0:
+            self._limits['i_rd'] = self._limits.get('i', None) or self._limits['u_rd'] / mp['r_r']
+        if self._limits.get('i_rq', 0.0) == 0:
+            self._limits['i_rq'] = self._limits.get('i', None) or self._limits['u_rq'] / mp['r_r']
+
+        if self._limits['torque'] == 0:
+            self._limits['torque'] = self._torque_limit()
+
+        if self._limits['omega'] == 0:
+            self._limits['omega'] = self._default_limits['omega']
+
+        if 'u' not in self._nominal_values.keys():
+            self._nominal_values.update({'u': self._limits['u']})
+        if 'i' not in self._nominal_values.keys():
+            self._nominal_values.update({'i': self._limits['i']})
+
+        if self._nominal_values.get('u_sa', 0) == 0:
+            self._nominal_values['u_sa'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sa', 0) == 0:
+            if self._nominal_values.get('u_sb', 0) == 0:
+                self._nominal_values['u_sb'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sc', 0) == 0:
+            self._nominal_values['u_sc'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_salpha', 0) == 0:
+            self._nominal_values['u_salpha'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sbeta', 0) == 0:
+            self._nominal_values['u_sbeta'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sd', 0) == 0:
+            self._nominal_values['u_sd'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_sq', 0) == 0:
+            self._nominal_values['u_sq'] = .5 * self._nominal_values['u']
+
+        if self._nominal_values.get('u_ra', 0) == 0:
+            self._nominal_values['u_ra'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_ra', 0) == 0:
+            if self._nominal_values.get('u_rb', 0) == 0:
+                self._nominal_values['u_rb'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_rc', 0) == 0:
+            self._nominal_values['u_rc'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_ralpha', 0) == 0:
+            self._nominal_values['u_ralpha'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_rbeta', 0) == 0:
+            self._nominal_values['u_rbeta'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_rd', 0) == 0:
+            self._nominal_values['u_rd'] = .5 * self._nominal_values['u']
+        if self._nominal_values.get('u_rq', 0) == 0:
+            self._nominal_values['u_rq'] = .5 * self._nominal_values['u']
+
+        if self._nominal_values.get('i_salpha', 0) == 0:
+            self._nominal_values['i_salpha'] = self._nominal_values.get('i', None) \
+                                              or self._nominal_values['u_salpha'] / mp['r_s']
+        if self._nominal_values.get('i_sbeta', 0) == 0:
+            self._nominal_values['i_sbeta'] = self._nominal_values.get('i', None) \
+                                             or self._nominal_values['u_sbeta'] / mp['r_s']
+        if self._nominal_values.get('i_sa', 0) == 0:
+            self._nominal_values['i_sa'] = self._nominal_values.get('i', None) or self._nominal_values['u_sa'] / mp['r_s']
+        if self._nominal_values.get('i_sb', 0) == 0:
+            self._nominal_values['i_sb'] = self._nominal_values.get('i', None) or self._nominal_values['u_sb'] / mp['r_s']
+        if self._nominal_values.get('i_sc', 0) == 0:
+            self._nominal_values['i_sc'] = self._nominal_values.get('i', None) \
+                                          or self._nominal_values['u_sc'] / mp['r_s']
+        if self._nominal_values.get('i_sd', 0) == 0:
+            self._nominal_values['i_sd'] = self._nominal_values.get('i', None) \
+                                           or self._nominal_values['u_sd'] / mp['r_s']
+        if self._nominal_values.get('i_sq', 0.0) == 0:
+            self._nominal_values['i_sq'] = self._nominal_values.get('i', None) \
+                                           or self._nominal_values['u_sq'] / mp['r_s']
+
+        if self._nominal_values.get('i_ralpha', 0) == 0:
+            self._nominal_values['i_ralpha'] = self._nominal_values.get('i', None) \
+                                              or self._nominal_values['u_ralpha'] / mp['r_r']
+        if self._nominal_values.get('i_rbeta', 0) == 0:
+            self._nominal_values['i_rbeta'] = self._nominal_values.get('i', None) \
+                                             or self._nominal_values['u_rbeta'] / mp['r_r']
+        if self._nominal_values.get('i_ra', 0) == 0:
+            self._nominal_values['i_ra'] = self._nominal_values.get('i', None) or self._nominal_values['u_ra'] / mp['r_r']
+        if self._nominal_values.get('i_rb', 0) == 0:
+            self._nominal_values['i_rb'] = self._nominal_values.get('i', None) or self._nominal_values['u_rb'] / mp['r_r']
+        if self._nominal_values.get('i_rc', 0) == 0:
+            self._nominal_values['i_rc'] = self._nominal_values.get('i', None) \
+                                          or self._nominal_values['u_rc'] / mp['r_r']
+        if self._nominal_values.get('i_rd', 0) == 0:
+            self._nominal_values['i_rd'] = self._nominal_values.get('i', None) \
+                                           or self._nominal_values['u_rd'] / mp['r_r']
+        if self._nominal_values.get('i_rq', 0.0) == 0:
+            self._nominal_values['i_rq'] = self._nominal_values.get('i', None) \
+                                           or self._nominal_values['u_rq'] / mp['r_r']
+
+        for entry in self._limits.keys():
+            if self._nominal_values.get(entry, 0) == 0:
+                self._nominal_values[entry] = self._limits[entry]
+
+    def _update_model(self):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        l_s = mp['l_m']+mp['l_ssig']
+        l_r = mp['l_m']+mp['l_rsig']
+        sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
+        tau_r = l_r / mp['r_r']
+        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
+
+        self._model_constants = np.array([
+            # omega,  i_beta,          i_alpha,         u_sbeta,         u_salpha,        u_rbeta,                         u_ralpha,                                 psi_ralpha,                               psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta
+            [0,       0,               -1/tau_sig,      0,               1/(sigma * l_s), 0,                               -mp['l_m']/ (sigma * l_r * l_s),          mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2), 0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s)],  # i_ralpha_dot
+            [0,       -1/tau_sig,      0,               1/(sigma*l_s),   0,               -mp['l_m']/ (sigma * l_r * l_s), 0,                                        0,                                        mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0],                                   # i_rbeta_dot
+            [0,       0,               mp['l_m']/tau_r, 0,               0,               0,                               1,                                        -1/tau_r,                                 0,                                      0,                                   -mp['p']],                            # psi_ralpha_dot
+            [0,       mp['l_m']/tau_r, 0,               0,               0,               1,                               0,                                        0,                                        -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
+            [mp['p'], 0,               0,               0,               0,               0,                               0,                                        0,                                        0,                                      0,                                   0],                                   # epsilon_dot
         ])
 
     def _torque_limit(self):
