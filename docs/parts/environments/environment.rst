@@ -7,23 +7,23 @@ Furthermore, a short introduction into the Interface of the environments is give
 ========================================================= ==============================
 Environment                                                   environment-id
 ========================================================= ==============================
-Continuous Dc Series Motor Environment                    ``'emotor-dc-series-cont-v1'``
-Discrete Dc Series Motor Environment                      ``'emotor-dc-series-disc-v1'``
+Continuous Dc Series Motor Environment                    ``'DcSeriesCont-v1'``
+Discrete Dc Series Motor Environment                      ``'DcSeriesDisc-v1'``
 
-Continuous Dc Shunt Motor Environment                     ``'emotor-dc-shunt-cont-v1'``
-Discrete Dc Shunt Motor Environment                       ``'emotor-dc-shunt-disc-v1'``
+Continuous Dc Shunt Motor Environment                     ``'DcShuntCont-v1'``
+Discrete Dc Shunt Motor Environment                       ``'DcShuntDisc-v1'``
 
-Continuous Dc Permanently Excited Motor Environment       ``'emotor-dc-permex-cont-v1'``
-Discrete Dc Permanently Excited Motor Environment         ``'emotor-dc-permex-disc-v1'``
+Continuous Dc Permanently Excited Motor Environment       ``'DcPermExCont-v1'``
+Discrete Dc Permanently Excited Motor Environment         ``'DcPermExDisc-v1'``
 
-Continuous Dc Externally Excited Motor Environment        ``'emotor-dc-extex-cont-v1'``
-Discrete Dc Externally Excited Motor Environment          ``'emotor-dc-extex-disc-v1'``
+Continuous Dc Externally Excited Motor Environment        ``'DcExtExCont-v1'``
+Discrete Dc Externally Excited Motor Environment          ``'DcExtExDisc-v1'``
 
-Continuous Permanent Magnet Synchronous Motor Environment ``'emotor-pmsm-cont-v1'``
-Discrete Permanent Magnet Synchronous Motor Environment   ``'emotor-pmsm-disc-v1'``
+Continuous Permanent Magnet Synchronous Motor Environment ``'PMSMCont-v1'``
+Discrete Permanent Magnet Synchronous Motor Environment   ``'PMSMDisc-v1'``
 
-Continuous Synchronous Reluctance Motor Environment       ``'emotor-symrm-cont-v1'``
-Discrete Synchronous Reluctance Motor Environment         ``'emotor-synrm-disc-v1'``
+Continuous Synchronous Reluctance Motor Environment       ``'SynRMCont-v1'``
+Discrete Synchronous Reluctance Motor Environment         ``'SynRMDisc-v1'``
 ========================================================= ==============================
 
 .. toctree::

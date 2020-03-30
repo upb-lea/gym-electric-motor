@@ -143,13 +143,14 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
-    def __init__(self, load_parameter=(), **__):
+    def __init__(self, load_parameter=(), limits=None, **__):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.
         """
         self._load_parameter.update(load_parameter)
         super().__init__(j_load=self._load_parameter['j_load'])
+        self._limits.update(limits or {})
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']
         self._c = self._load_parameter['c']
@@ -205,3 +206,24 @@ class ConstantSpeedLoad(MechanicalLoad):
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
         return np.array([0]), np.array([0])
+
+
+class PositionalPolyStaticLoad(PolynomialStaticLoad):
+
+    def __init__(self, load_parameter=None, limits=None):
+        load_parameter = load_parameter or {}
+        limits = limits or {}
+        limits.setdefault('position', 1)
+        load_parameter.set_default('gear_ratio', 1)
+        load_parameter.set_default('meter_per_revolution', 0.05)
+        super().__init__(load_parameter, limits)
+        self._state_names = ['omega', 'position']
+
+    def get_state_space(self, omega_range):
+        lower, upper = super().get_state_space(omega_range)
+        lower['position'] = 0
+        upper['position'] = self._limits['position']
+
+
+
+

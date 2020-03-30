@@ -1,6 +1,6 @@
 import numpy as np
 from gym.spaces import Box
-
+import warnings
 from ..core import PhysicalSystem
 from ..physical_systems import electric_motors as em, mechanical_loads as ml, converters as cv, \
     voltage_supplies as vs, noise_generators as ng, solvers as sv
@@ -57,7 +57,7 @@ class SCMLSystem(PhysicalSystem):
 
     def __init__(
         self, converter, motor, load=None, supply='IdealVoltageSupply', ode_solver='euler', solver_kwargs=None,
-        noise_generator=None, tau=1e-4, **kwargs
+        noise_generator=None, tau=1e-4, calc_jacobian=None, **kwargs
     ):
         """
         Args:
@@ -69,6 +69,8 @@ class SCMLSystem(PhysicalSystem):
             solver_kwargs(dict): Special keyword arguments to be passed to the solver
             noise_generator(NoiseGenerator):  Noise generator
             tau(float): discrete time step of the system
+            calc_jacobian(bool): If True, the jacobian matrices will be taken into account for the ode-solvers.
+                Default: The jacobians are used, if available
             kwargs(dict): Further arguments to pass to the modules while instantiation
         """
         self._converter = instantiate(cv.PowerElectronicConverter, converter, tau=tau, **kwargs)
@@ -87,8 +89,15 @@ class SCMLSystem(PhysicalSystem):
         self._noise_generator.set_state_names(state_names)
         solver_kwargs = solver_kwargs or {}
         self._ode_solver = instantiate(sv.OdeSolver, ode_solver, **solver_kwargs)
-        jac = self._system_jacobian if self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN \
-            else None
+        if calc_jacobian is None:
+            calc_jacobian = self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN
+        if calc_jacobian and self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN:
+            jac = self._system_jacobian
+        else:
+            jac = None
+        if calc_jacobian and jac is None:
+            warnings.warn('Jacobian Matrix is not provided for either the Motor or the Load Model')
+
         self._ode_solver.set_system_equation(self._system_equation, jac)
         self._mechanical_load.set_j_rotor(self._electrical_motor.motor_parameter['j_rotor'])
         self._t = 0

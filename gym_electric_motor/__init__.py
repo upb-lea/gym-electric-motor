@@ -21,17 +21,34 @@ from gym.envs.registration import register
 
 envs_path = 'gym_electric_motor.envs:'
 
-"""register(id='emotor-asm-cont-v0',
-         entry_point=envs_path+'ASMContinuousControlEnv')
-register(id='emotor-asm-disc-v0',
-         entry_point=envs_path+'ASMContinuousControlEnv')"""
-
-register(id='emotor-pmsm-cont-v0',
-         entry_point=envs_path+'PmsmCont')
-register(id='emotor-pmsm-disc-v0',
-         entry_point=envs_path+'PmsmDisc')
-
 # Version 1
+register(id='DcPermExCont-v1',
+         entry_point=envs_path+'ContDcPermanentlyExcitedMotorEnvironment')
+register(id='DcPermExDisc-v1',
+         entry_point=envs_path+'DiscDcPermanentlyExcitedMotorEnvironment')
+register(id='DcExtExCont-v1',
+         entry_point=envs_path+'ContDcExternallyExcitedMotorEnvironment')
+register(id='DcExtExDisc-v1',
+         entry_point=envs_path+'DiscDcExternallyExcitedMotorEnvironment')
+register(id='DcSeriesCont-v1',
+         entry_point=envs_path+'ContDcSeriesMotorEnvironment')
+register(id='DcSeriesDisc-v1',
+         entry_point=envs_path+'DiscDcSeriesMotorEnvironment')
+register(id='DcShuntCont-v1',
+         entry_point=envs_path+'ContDcShuntMotorEnvironment')
+register(id='DcShuntDisc-v1',
+         entry_point=envs_path+'DiscDcShuntMotorEnvironment')
+register(id='PMSMCont-v1',
+         entry_point=envs_path+'ContPermanentMagnetSynchronousMotorEnvironment')
+register(id='PMSMDisc-v1',
+         entry_point=envs_path+'DiscPermanentMagnetSynchronousMotorEnvironment')
+register(id='SynRmCont-v1',
+         entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
+register(id='SynRmDisc-v1',
+         entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
+
+# Old Ids
+
 register(id='emotor-dc-permex-cont-v1',
          entry_point=envs_path+'ContDcPermanentlyExcitedMotorEnvironment')
 register(id='emotor-dc-permex-disc-v1',

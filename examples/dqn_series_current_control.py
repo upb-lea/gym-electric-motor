@@ -18,7 +18,7 @@ from gym_electric_motor.reference_generators import WienerProcessReferenceGenera
 
 
 if __name__ == '__main__':
-    
+
     # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning results.
     env = gem.make(
         'emotor-dc-series-disc-v1',
