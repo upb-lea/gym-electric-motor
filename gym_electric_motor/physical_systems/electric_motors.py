@@ -107,9 +107,9 @@ class ElectricMotor:
 
         Returns:
              Tuple(ndarray, ndarray, ndarray):
-                [0]: Derivatives of all electrical motor states over all electrical motor states (states x states)
-                [1]: Derivatives of all electrical motor states over omega (1 x states)
-                [2]: Derivative of Torque over all motor states (states x 1)
+                [0]: Derivatives of all electrical motor states over all electrical motor states shape:(states x states)
+                [1]: Derivatives of all electrical motor states over omega shape:(states,)
+                [2]: Derivative of Torque over all motor states shape:(states,)
         """
         pass
 
@@ -346,7 +346,7 @@ class DcShuntMotor(DcMotor):
         u        Voltage
         ======== ===========================================================
     """
-
+    HAS_JACOBIAN = True
     VOLTAGES = ['u']
 
     _default_nominal_values = {'omega': 368, 'torque': 0.0, 'i_a': 50, 'i_e': 1.2, 'u': 420}
@@ -359,6 +359,17 @@ class DcShuntMotor(DcMotor):
     def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
         return super().electrical_ode(state, (u_in[0], u_in[0]), omega)
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_a'] / mp['l_a'], -mp['l_e_prime'] / mp['l_a'] * omega],
+                [0, -mp['r_e'] / mp['l_e']]
+            ]),
+            np.array([-mp['l_e_prime'] * state[self.I_E_IDX] / mp['l_a'], 0]),
+            np.array([mp['l_e_prime'] * state[self.I_E_IDX], mp['l_e_prime'] * state[self.I_A_IDX]])
+        )
 
     def get_state_space(self, input_currents, input_voltages):
         """
@@ -577,6 +588,7 @@ class DcPermanentlyExcitedMotor(DcMotor):
     CURRENTS_IDX = [0]
     CURRENTS = ['i']
     VOLTAGES = ['u']
+    HAS_JACOBIAN = True
 
     _default_motor_parameter = {
         'r_a': 25.0, 'l_a': 3.438e-2, 'psi_e': 18, 'j_rotor': 0.017
@@ -603,6 +615,14 @@ class DcPermanentlyExcitedMotor(DcMotor):
     def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
         return np.matmul(self._model_constants, np.array([omega, state[self.I_IDX], u_in[0]]))
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([[-mp['r_a'] / mp['l_a']]]),
+            np.array([-mp['psi_e'] / mp['l_a']]),
+            np.array([mp['psi_e']])
+        )
 
     def _update_limits(self):
         # Docstring of superclass
@@ -643,7 +663,18 @@ class DcPermanentlyExcitedMotor(DcMotor):
 
 class DcExternallyExcitedMotor(DcMotor):
     # Equals DC Base Motor
-    pass
+    HAS_JACOBIAN = True
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_a'] / mp['l_a'], -mp['l_e_prime'] / mp['l_a'] * omega],
+                [0, -mp['r_e'] / mp['l_e']]
+            ]),
+            np.array([-mp['l_e_prime'] * state[self.I_E_IDX] / mp['l_a'], 0]),
+            np.array([mp['l_e_prime'] * state[self.I_E_IDX], mp['l_e_prime'] * state[self.I_A_IDX]])
+        )
 
 
 class SynchronousMotor(ElectricMotor):
@@ -1064,6 +1095,7 @@ class SynchronousReluctanceMotor(SynchronousMotor):
             the general limits/nominal values (e.g. i)
 
     """
+    HAS_JACOBIAN = True
     _default_motor_parameter = {'p': 2, 'l_d': 73.2e-3, 'l_q': 7.3e-3, 'j_rotor': 2.45e-3, 'r_s': 0.3256}
     _default_nominal_values = {
         'i': 54, 'torque': 0, 'omega': 523.0, 'epsilon': np.pi, 'u': 600
@@ -1092,6 +1124,26 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         # Docstring of superclass
         mp = self._motor_parameter
         return 1.5 * mp['p'] * ((mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_s'] / mp['l_q'], -mp['l_d']/mp['l_q']*omega, 0],
+                [mp['l_q'] / mp['l_d']*omega, - mp['r_s'] / mp['l_d'], 0],
+                [0, 0, 0]
+            ]),
+            np.array([
+                -mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX],
+                mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                1
+            ]),
+            np.array([
+                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX],
+                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                0
+            ])
+        )
 
 
 class PermanentMagnetSynchronousMotor(SynchronousMotor):
@@ -1176,7 +1228,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         'r_s': 4.9,
         'psi_p': 0.165,
     }
-
+    HAS_JACOBIAN = True
     _default_limits = dict(omega=80, torque=0.0, i=20, epsilon=math.pi, u=600)
     _default_nominal_values = dict(omega=75, torque=0.0, i=12, epsilon=math.pi, u=600)
 
@@ -1203,3 +1255,23 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         return 1.5 * mp['p'] * (
                 mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]
         ) * currents[self.I_SQ_IDX]
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_s'] / mp['l_q'], -mp['l_d']/mp['l_q']*omega, 0],
+                [mp['l_q'] / mp['l_d']*omega, -mp['r_s']/mp['l_d'], 0],
+                [0, 0, 0]
+            ]),
+            np.array([
+                -mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['psi_p'] / mp['l_q'],
+                mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                1
+            ]),
+            np.array([
+                mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
+                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                0
+            ])
+        )

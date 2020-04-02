@@ -42,9 +42,9 @@ register(id='PMSMCont-v1',
          entry_point=envs_path+'ContPermanentMagnetSynchronousMotorEnvironment')
 register(id='PMSMDisc-v1',
          entry_point=envs_path+'DiscPermanentMagnetSynchronousMotorEnvironment')
-register(id='SynRmCont-v1',
+register(id='SynRMCont-v1',
          entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
-register(id='SynRmDisc-v1',
+register(id='SynRMDisc-v1',
          entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
 
 # Old Ids

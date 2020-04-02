@@ -103,8 +103,8 @@ class MechanicalLoad:
 
         Returns:
             Tuple(ndarray, ndarray):
-                [0]: Derivatives of the mechanical_state-odes over the mechanical_states (states x states)
-                [1]: Derivatives of the mechanical_state-odes over the torque
+                [0]: Derivatives of the mechanical_state-odes over the mechanical_states shape:(states x states)
+                [1]: Derivatives of the mechanical_state-odes over the torque shape:(states,)
         """
         pass
 

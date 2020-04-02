@@ -229,8 +229,10 @@ class SCMLSystem(PhysicalSystem):
         system_jac = np.zeros((state.shape[0], state.shape[0]))
         system_jac[:load_jac.shape[0], :load_jac.shape[1]] = load_jac
         system_jac[-motor_jac.shape[0]:, -motor_jac.shape[1]:] = motor_jac
-        system_jac[-motor_jac.shape[0]:, self._omega_ode_idx] = el_state_over_omega
-        system_jac[:-motor_jac.shape[1], load_jac.shape[0]:] = np.matmul(torque_over_el_state.T, load_over_torque)
+        system_jac[-motor_jac.shape[0]:, [self._omega_ode_idx]] = el_state_over_omega.reshape((-1, 1))
+        system_jac[:load_jac.shape[0], load_jac.shape[1]:] = np.matmul(
+            load_over_torque.reshape(-1, 1), torque_over_el_state.reshape(1, -1)
+        )
         return system_jac
 
     def reset(self, *_):
