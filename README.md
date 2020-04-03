@@ -232,6 +232,8 @@ The actions are basically understood as the desired duty cycles. The actual appl
 The observations are normalized to their physical limits that can be accessed with `env.limits`.
 Therefore, all values are typically in a range of [0, 1] or [-1, 1] without limit violation.
 
+
+
 ### Notes about the Parameters
 All nominal values of voltages and currents are DC values in the case of a DC motor and peak phase values for the PMSM.
 Therefore, data sheet values for line voltage and phase currents of a PMSM has to be transformed with:
@@ -241,6 +243,9 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
 Furthermore, the angular velocity is the mechanical one and not the electrical: 
 
 ![](docs/plots/omegame.svg)
+
+The mechanical one is needed for speed controller.
+The included angle is the electrical one due to its usage in the rotational transformation for three phase motors.
 
 
 ### Running Unit Tests with Pytest
