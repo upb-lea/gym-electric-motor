@@ -466,7 +466,7 @@ class TestFurtherReferenceGenerator:
         (SawtoothReferenceGenerator, np.array([-0.2, -0.1, 0.0, 0.1, 0.2, 0.3, -0.4, -0.3, -0.2, -0.1]), 1 / 8),
         (SinusoidalReferenceGenerator,
          np.array([0.4,  0.2828427, 0.0, -0.2828427, -0.4, -0.2828427, 0.0, 0.2828427, 0.4, 0.2828427]), 1 / 8),
-        (StepReferenceGenerator, np.array([-0.4, -0.4, -0.4, 0.4, 0.4, 0.4, -0.4, -0.4, -0.4, 0.4]), 6),
+        (StepReferenceGenerator, np.array([0.4, -0.4, -0.4, -0.4, 0.4, 0.4, 0.4, -0.4, -0.4, -0.4]), 1/6),
         (TriangularReferenceGenerator, np.array([0.4, 0.2666667, 0.133333, 0.0, -0.133333, -0.2666667, -0.4, 0.0, 0.4,
                                                  0.2666667]), 1 / 8)])
     def test_reset_reference(self, monkeypatch, reference_class, expected_reference, frequency_range):
