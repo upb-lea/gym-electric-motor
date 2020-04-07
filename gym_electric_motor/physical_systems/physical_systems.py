@@ -308,6 +308,8 @@ class SynchronousMotorSystem(SCMLSystem):
         super().__init__(**kwargs)
         self.control_space = control_space
         if control_space == 'dq':
+            assert type(self._converter.action_space) == Box, \
+                'dq-control space is only available for Continuous Controlled Converters'
             self._action_space = Box(-1, 1, shape=(2,))
 
     def _build_state_space(self, state_names):
