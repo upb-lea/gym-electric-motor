@@ -169,6 +169,7 @@ class SCMLSystem(PhysicalSystem):
             self._ode_solver.set_f_params(u_in)
             ode_state = self._ode_solver.integrate(t)
             i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
+
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         self._ode_solver.set_f_params(u_in)
@@ -897,7 +898,7 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
             i_sabc = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
             i_rdef = self.alphabeta_to_abc_space(self.calculate_rotor_current(ode_state))
 
-        u_in = self._converter.convert(np.array([i_sabc, i_rdef]), self._ode_solver.t)
+        u_in = self._converter.convert(np.array([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
         u_sabc = u_in[0]
         u_rdef = u_in[1]
         u_sabc = [u * u_sup for u in u_sabc]

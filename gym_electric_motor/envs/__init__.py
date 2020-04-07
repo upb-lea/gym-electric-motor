@@ -21,3 +21,4 @@ from .gym_im.squirrel_cage_induc_motor_env import ContSquirrelCageInductionMotor
 from .gym_im.squirrel_cage_induc_motor_env import DiscSquirrelCageInductionMotorEnvironment
 
 from .gym_im.doubly_fed_induc_motor import ContDoublyFedInductionMotorEnvironment
+from .gym_im.doubly_fed_induc_motor import DiscDoublyFedInductionMotorEnvironment

@@ -84,7 +84,7 @@ class DiscDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
 
     u_sup and u_nominal must be the same
     """
-    def __init__(self, tau=1e-5, converter='Disc-B6C', **kwargs):
+    def __init__(self, tau=1e-5, converter='Disc-Double-B6C', **kwargs):
         super().__init__(tau=tau, converter=converter, **kwargs)
 
 
