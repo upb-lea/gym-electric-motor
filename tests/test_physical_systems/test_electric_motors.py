@@ -997,10 +997,9 @@ class TestDcPermanentlyExcitedMotor:
 
 # region Three Phase Motors
 
-
-class TestSynchronousMotor:
+class TestThreePhaseMotor:
     """
-    class for testing SynchronousMotor
+        class for testing ThreePhaseMotor
     """
     # transformation from abc to dq
     _forward_quantities_abc = np.array([60, 45, 150])
@@ -1024,18 +1023,9 @@ class TestSynchronousMotor:
 
     # defined test values
     _motor_parameter = pmsm_motor_parameter['motor_parameter']
-    _p = _motor_parameter['p']  # pole pair number for testing
-    _nominal_values = pmsm_motor_parameter['nominal_values']
-    _limit_values = pmsm_motor_parameter['limit_values']
-    _CURRENTS = ['i_a', 'i_b', 'i_c']
-    _CURRENTS_IDX = [2, 3, 5]
-    _number_states = 4
 
     # counter
     _monkey_q_counter = 0
-    _monkey_update_model_counter = 0
-    _monkey_update_limits_counter = 0
-    _monkey_super_init_counter = 0
 
     def monkey_q(self, quantities, epsilon):
         """
@@ -1048,6 +1038,116 @@ class TestSynchronousMotor:
         assert epsilon == self._expected_epsilon, 'unexpected angle epsilon. It must be the electrical one.'
         assert all(quantities == self._expected_quantities), 'unexpected quantities. Alpha and beta are needed.'
         return self._expected_result
+
+    def test_t_23(self):
+        """
+        test t_23()
+        :return:
+        """
+        assert sum(
+            abs(ThreePhaseMotor.t_23(self._forward_quantities_abc) - self._forward_quantities_alpha_beta)) < 1E-6, \
+            'unexpected calculation from abc to alpha-beta'
+
+    def test_t_32(self):
+        """
+        test t_32()
+        :return:
+        """
+        assert sum(
+            abs(ThreePhaseMotor.t_32(self._backward_quantities_alpha_beta) - self._backward_quantities_abc)) < 1E-6, \
+            'unexpected calculation from alpha-beta to abc'
+
+    def test_q(self):
+        """
+        test q()
+        :return:
+        """
+        assert sum(abs(ThreePhaseMotor.q(self._forward_quantities_alpha_beta,
+                                          self._forward_epsilon) - self._forward_quantities_dq)) < 1E-6, \
+            'unexpected calculation from alpha-beta to dq'
+
+    def test_q_inv(self, monkeypatch):
+        """
+        test q_inv()
+        :param monkeypatch:
+        :return:
+        """
+        # test if the resulting value is correct
+        assert sum(abs(ThreePhaseMotor.q_inv(self._backward_quantities_dq,
+                                              self._backward_epsilon) - self._backward_quantities_alpha_beta)) < 1E-6, \
+            'unexpected calculation from dq to alpha-beta'
+        # test if the internal function is called correctly
+        monkeypatch.setattr(ThreePhaseMotor, "q", self.monkey_q)
+        # setup test scenario
+        self._expected_epsilon = -self._backward_epsilon
+        self._expected_quantities = self._backward_quantities_dq
+        self._expected_result = self._backward_quantities_alpha_beta
+        # call function to test
+        ThreePhaseMotor.q_inv(self._backward_quantities_dq, self._backward_epsilon)
+        # verify the expected results
+        assert self._monkey_q_counter == 1, "q function was not called correctly"
+
+    def test_q_me(self, monkeypatch):
+        """
+        test q_me()
+        :param monkeypatch:
+        :return:
+        """
+        # setup test scenario
+        test_object = ThreePhaseMotor(motor_parameter=self._motor_parameter)
+        # call function to test and verify the expected results
+        assert sum(abs(test_object.q_me(self._forward_quantities_alpha_beta,
+                                        self._forward_epsilon_me) - self._forward_quantities_dq)) < 1E-6, \
+            'unexpected result from alpha-beta to dq. Mechanical angle needed.'
+        # setup test scenario
+        monkeypatch.setattr(ThreePhaseMotor, 'q', self.monkey_q)
+        self._expected_epsilon = self._forward_epsilon
+        self._expected_quantities = self._forward_quantities_alpha_beta
+        self._expected_result = self._forward_quantities_dq
+        # call function to test
+        test_object.q_me(self._forward_quantities_alpha_beta, self._forward_epsilon_me)
+        # verify the expected results
+        assert self._monkey_q_counter == 1, "q function was not called correctly"
+
+    def test_q_inv_me(self, monkeypatch):
+        """
+        test q_inv_me()
+        :param monkeypatch:
+        :return:
+        """
+        # setup test scenario
+        test_object = ThreePhaseMotor(motor_parameter=self._motor_parameter)
+        # call function to test verify the expected results
+        assert sum(abs(test_object.q_inv_me(self._forward_quantities_dq,
+                                            self._forward_epsilon_me) - self._forward_quantities_alpha_beta)) < 1E-6, \
+            'unexpected result from dq to alpha-beta. Mechanical angle needed.'
+        # setup test scenario
+        monkeypatch.setattr(ThreePhaseMotor, 'q', self.monkey_q)
+        self._expected_epsilon = -self._forward_epsilon
+        self._expected_quantities = self._forward_quantities_dq
+        self._expected_result = self._forward_quantities_alpha_beta
+        # call function to test
+        test_object.q_inv_me(self._forward_quantities_dq, self._forward_epsilon_me)
+        # verify the expected results
+        assert self._monkey_q_counter == 1, "q function was not called correctly"
+
+class TestSynchronousMotor:
+    """
+    class for testing SynchronousMotor
+    """
+    # defined test values
+    _motor_parameter = pmsm_motor_parameter['motor_parameter']
+    _p = _motor_parameter['p']  # pole pair number for testing
+    _nominal_values = pmsm_motor_parameter['nominal_values']
+    _limit_values = pmsm_motor_parameter['limit_values']
+    _CURRENTS = ['i_a', 'i_b', 'i_c']
+    _CURRENTS_IDX = [2, 3, 5]
+    _number_states = 4
+
+    # counter
+    _monkey_update_model_counter = 0
+    _monkey_update_limits_counter = 0
+    _monkey_super_init_counter = 0
 
     def monkey_update_model(self):
         """
@@ -1075,102 +1175,6 @@ class TestSynchronousMotor:
         assert self._expected_parameter['motor_parameter'] == motor_parameter, 'unexpected motor parameter passed'
         assert self._expected_parameter['nominal_values'] == nominal_values, 'unexpected nominal values passed'
         assert self._expected_parameter['limit_values'] == limit_values, 'unexpected limit values passed'
-
-    def test_t_23(self):
-        """
-        test t_23()
-        :return:
-        """
-        assert sum(
-            abs(SynchronousMotor.t_23(self._forward_quantities_abc) - self._forward_quantities_alpha_beta)) < 1E-6, \
-            'unexpected calculation from abc to alpha-beta'
-
-    def test_t_32(self):
-        """
-        test t_32()
-        :return:
-        """
-        assert sum(
-            abs(SynchronousMotor.t_32(self._backward_quantities_alpha_beta) - self._backward_quantities_abc)) < 1E-6, \
-            'unexpected calculation from alpha-beta to abc'
-
-    def test_q(self):
-        """
-        test q()
-        :return:
-        """
-        assert sum(abs(SynchronousMotor.q(self._forward_quantities_alpha_beta,
-                                          self._forward_epsilon) - self._forward_quantities_dq)) < 1E-6, \
-            'unexpected calculation from alpha-beta to dq'
-
-    def test_q_inv(self, monkeypatch):
-        """
-        test q_inv()
-        :param monkeypatch:
-        :return:
-        """
-        # test if the resulting value is correct
-        assert sum(abs(SynchronousMotor.q_inv(self._backward_quantities_dq,
-                                              self._backward_epsilon) - self._backward_quantities_alpha_beta)) < 1E-6, \
-            'unexpected calculation from dq to alpha-beta'
-        # test if the internal function is called correctly
-        monkeypatch.setattr(SynchronousMotor, "q", self.monkey_q)
-        # setup test scenario
-        self._expected_epsilon = -self._backward_epsilon
-        self._expected_quantities = self._backward_quantities_dq
-        self._expected_result = self._backward_quantities_alpha_beta
-        # call function to test
-        SynchronousMotor.q_inv(self._backward_quantities_dq, self._backward_epsilon)
-        # verify the expected results
-        assert self._monkey_q_counter == 1, "q function was not called correctly"
-
-    def test_q_me(self, monkeypatch):
-        """
-        test q_me()
-        :param monkeypatch:
-        :return:
-        """
-        # setup test scenario
-        monkeypatch.setattr(SynchronousMotor, "_update_model", self.monkey_update_model)
-        monkeypatch.setattr(SynchronousMotor, "_update_limits", self.monkey_update_limits)
-        test_object = SynchronousMotor(motor_parameter=self._motor_parameter)
-        # call function to test and verify the expected results
-        assert sum(abs(test_object.q_me(self._forward_quantities_alpha_beta,
-                                        self._forward_epsilon_me) - self._forward_quantities_dq)) < 1E-6, \
-            'unexpected result from alpha-beta to dq. Mechanical angle needed.'
-        # setup test scenario
-        monkeypatch.setattr(SynchronousMotor, 'q', self.monkey_q)
-        self._expected_epsilon = self._forward_epsilon
-        self._expected_quantities = self._forward_quantities_alpha_beta
-        self._expected_result = self._forward_quantities_dq
-        # call function to test
-        test_object.q_me(self._forward_quantities_alpha_beta, self._forward_epsilon_me)
-        # verify the expected results
-        assert self._monkey_q_counter == 1, "q function was not called correctly"
-
-    def test_q_inv_me(self, monkeypatch):
-        """
-        test q_inv_me()
-        :param monkeypatch:
-        :return:
-        """
-        # setup test scenario
-        monkeypatch.setattr(SynchronousMotor, "_update_model", self.monkey_update_model)
-        monkeypatch.setattr(SynchronousMotor, "_update_limits", self.monkey_update_limits)
-        test_object = SynchronousMotor(motor_parameter=self._motor_parameter)
-        # call function to test verify the expected results
-        assert sum(abs(test_object.q_inv_me(self._forward_quantities_dq,
-                                            self._forward_epsilon_me) - self._forward_quantities_alpha_beta)) < 1E-6, \
-            'unexpected result from dq to alpha-beta. Mechanical angle needed.'
-        # setup test scenario
-        monkeypatch.setattr(SynchronousMotor, 'q', self.monkey_q)
-        self._expected_epsilon = -self._forward_epsilon
-        self._expected_quantities = self._forward_quantities_dq
-        self._expected_result = self._forward_quantities_alpha_beta
-        # call function to test
-        test_object.q_inv_me(self._forward_quantities_dq, self._forward_epsilon_me)
-        # verify the expected results
-        assert self._monkey_q_counter == 1, "q function was not called correctly"
 
     @pytest.mark.parametrize("motor_parameter", [_motor_parameter, None])
     @pytest.mark.parametrize("nominal_values, expected_nv", [(None, {}), (_nominal_values, _nominal_values)])
