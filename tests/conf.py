@@ -49,6 +49,12 @@ synrm_motor_parameter = {
     'limit_values': {'i': 75, 'torque': 75, 'omega': 550.0, 'epsilon': np.pi, 'u': 450},
     'reward_weights': dict(omega=1, torque=0, i_a=0, i_b=0, i_c=0, u_a=0, u_b=0, u_c=0, epsilon=0, u_sup=0)}
 
+squirrel_cage_induc_motor_parameter = {
+    'motor_parameter': {'p': 2, 'l_m': 143.75e-3, 'l_sigs': 5.87e-3, 'l_sigr':5.87e-3, 'j_rotor': 0.0011, 'r_s': 2.9338, 'r_r': 1.355, 'u_sup': u_sup},
+    'nominal_values': {'i': 3.9, 'torque': 4.7, 'omega': 314.16, 'epsilon': np.pi, 'u': 330},
+    'limit_values': {'i': 75, 'torque': 75, 'omega': 550.0, 'epsilon': np.pi, 'u': 450},
+    'reward_weights': dict(omega=1, torque=0, i_a=0, i_b=0, i_c=0, u_a=0, u_b=0, u_c=0, epsilon=0, u_sup=0)}
+
 load_parameter = {'j_load': 0.2, 'state_names': ['omega'], 'j_rot_load': 0.25, 'omega_range': (0, 1),
                   'parameter': dict(a=0.12, b=0.13, c=0.4, j_load=0.2)}
 

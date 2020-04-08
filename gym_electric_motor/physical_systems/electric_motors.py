@@ -613,8 +613,106 @@ class DcExternallyExcitedMotor(DcMotor):
     # Equals DC Base Motor
     pass
 
+class ThreePhaseMotor(ElectricMotor):
+    """
+            The ThreePhaseMotor and its subclasses implement the technical system of Three Phase Motors.
 
-class SynchronousMotor(ElectricMotor):
+            This includes the system equations, the motor parameters of the equivalent circuit diagram,
+            as well as limits and bandwidth.
+    """
+    @staticmethod
+    def t_23(quantities):
+        """
+        Transformation from abc representation to alpha-beta representation
+
+        Args:
+            quantities: The properties in the abc representation like ''[u_a, u_b, u_c]''
+
+        Returns:
+            The converted quantities in the alpha-beta representation like ''[u_alpha, u_beta]''
+        """
+        return np.matmul(SynchronousMotor._t23, quantities)
+
+    @staticmethod
+    def t_32(quantities):
+        """
+        Transformation from alpha-beta representation to abc representation
+
+        Args:
+            quantities: The properties in the alpha-beta representation like ``[u_alpha, u_beta]``
+
+        Returns:
+            The converted quantities in the abc representation like ``[u_a, u_b, u_c]``
+        """
+        return np.matmul(SynchronousMotor._t32, quantities)
+
+    @staticmethod
+    def q(quantities, epsilon):
+        """
+        Transformation of the dq-representation into alpha-beta using the electrical angle
+
+        Args:
+            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
+            epsilon: Current electrical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
+        """
+        cos = math.cos(epsilon)
+        sin = math.sin(epsilon)
+        return cos * quantities[0] - sin * quantities[1], sin * quantities[0] + cos * quantities[1]
+
+    @staticmethod
+    def q_inv(quantities, epsilon):
+        """
+        Transformation of the alpha-beta-representation into dq using the electrical angle
+
+        Args:
+            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
+            epsilon: Current electrical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
+
+        Note:
+            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
+            So this method calls q(quantities, -epsilon).
+        """
+        return SynchronousMotor.q(quantities, -epsilon)
+
+    def q_me(self, quantities, epsilon):
+        """
+        Transformation of the dq-representation into alpha-beta using the mechanical angle
+
+        Args:
+            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
+            epsilon: Current mechanical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
+        """
+        return self.q(quantities, epsilon * self._motor_parameter['p'])
+
+    def q_inv_me(self, quantities, epsilon):
+        """
+        Transformation of the alpha-beta-representation into dq using the mechanical angle
+
+        Args:
+            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
+            epsilon: Current mechanical angle of the motor
+
+        Returns:
+            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
+
+        Note:
+            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
+            So this method calls q(quantities, -epsilon).
+        """
+        return self.q_me(quantities, -epsilon)
+
+
+
+class SynchronousMotor(ThreePhaseMotor):
     """
         The SynchronousMotor and its subclasses implement the technical system of a Three Phase Synchronous motor.
 
@@ -720,96 +818,6 @@ class SynchronousMotor(ElectricMotor):
     def motor_parameter(self):
         # Docstring of superclass
         return self._motor_parameter
-
-    @staticmethod
-    def t_23(quantities):
-        """
-        Transformation from abc representation to alpha-beta representation
-
-        Args:
-            quantities: The properties in the abc representation like ''[u_a, u_b, u_c]''
-
-        Returns:
-            The converted quantities in the alpha-beta representation like ''[u_alpha, u_beta]''
-        """
-        return np.matmul(SynchronousMotor._t23, quantities)
-
-    @staticmethod
-    def t_32(quantities):
-        """
-        Transformation from alpha-beta representation to abc representation
-
-        Args:
-            quantities: The properties in the alpha-beta representation like ``[u_alpha, u_beta]``
-
-        Returns:
-            The converted quantities in the abc representation like ``[u_a, u_b, u_c]``
-        """
-        return np.matmul(SynchronousMotor._t32, quantities)
-
-    @staticmethod
-    def q(quantities, epsilon):
-        """
-        Transformation of the dq-representation into alpha-beta using the electrical angle
-
-        Args:
-            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
-            epsilon: Current electrical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
-        """
-        cos = math.cos(epsilon)
-        sin = math.sin(epsilon)
-        return cos * quantities[0] - sin * quantities[1], sin * quantities[0] + cos * quantities[1]
-
-    @staticmethod
-    def q_inv(quantities, epsilon):
-        """
-        Transformation of the alpha-beta-representation into dq using the electrical angle
-
-        Args:
-            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
-            epsilon: Current electrical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
-
-        Note:
-            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
-            So this method calls q(quantities, -epsilon).
-        """
-        return SynchronousMotor.q(quantities, -epsilon)
-
-    def q_me(self, quantities, epsilon):
-        """
-        Transformation of the dq-representation into alpha-beta using the mechanical angle
-
-        Args:
-            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
-            epsilon: Current mechanical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
-        """
-        return self.q(quantities, epsilon * self._motor_parameter['p'])
-
-    def q_inv_me(self, quantities, epsilon):
-        """
-        Transformation of the alpha-beta-representation into dq using the mechanical angle
-
-        Args:
-            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
-            epsilon: Current mechanical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
-
-        Note:
-            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
-            So this method calls q(quantities, -epsilon).
-        """
-        return self.q_me(quantities, -epsilon)
 
     def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, **__):
         # Docstring of superclass
@@ -1170,7 +1178,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
                 mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]
         ) * currents[self.I_SQ_IDX]
 
-class InductionMotor(ElectricMotor):
+class InductionMotor(ThreePhaseMotor):
     """
         The InductionMotor and its subclasses implement the technical system of a Three Phase induction motor.
 
@@ -1280,96 +1288,6 @@ class InductionMotor(ElectricMotor):
     def motor_parameter(self):
         # Docstring of superclass
         return self._motor_parameter
-
-    @staticmethod
-    def t_23(quantities):
-        """
-        Transformation from abc representation to alpha-beta representation
-
-        Args:
-            quantities: The properties in the abc representation like ''[u_a, u_b, u_c]''
-
-        Returns:
-            The converted quantities in the alpha-beta representation like ''[u_alpha, u_beta]''
-        """
-        return np.matmul(InductionMotor._t23, quantities)
-
-    @staticmethod
-    def t_32(quantities):
-        """
-        Transformation from alpha-beta representation to abc representation
-
-        Args:
-            quantities: The properties in the alpha-beta representation like ``[u_alpha, u_beta]``
-
-        Returns:
-            The converted quantities in the abc representation like ``[u_a, u_b, u_c]``
-        """
-        return np.matmul(InductionMotor._t32, quantities)
-
-    @staticmethod
-    def q(quantities, epsilon):
-        """
-        Transformation of the dq-representation into alpha-beta using the electrical angle
-
-        Args:
-            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
-            epsilon: Current electrical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
-        """
-        cos = math.cos(epsilon)
-        sin = math.sin(epsilon)
-        return cos * quantities[0] - sin * quantities[1], sin * quantities[0] + cos * quantities[1]
-
-    @staticmethod
-    def q_inv(quantities, epsilon):
-        """
-        Transformation of the alpha-beta-representation into dq using the electrical angle
-
-        Args:
-            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
-            epsilon: Current electrical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
-
-        Note:
-            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
-            So this method calls q(quantities, -epsilon).
-        """
-        return InductionMotor.q(quantities, -epsilon)
-
-    def q_me(self, quantities, epsilon):
-        """
-        Transformation of the dq-representation into alpha-beta using the mechanical angle
-
-        Args:
-            quantities: Array of two quantities in dq-representation. Example [i_d, i_q]
-            epsilon: Current mechanical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
-        """
-        return self.q(quantities, epsilon * self._motor_parameter['p'])
-
-    def q_inv_me(self, quantities, epsilon):
-        """
-        Transformation of the alpha-beta-representation into dq using the mechanical angle
-
-        Args:
-            quantities: Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]
-            epsilon: Current mechanical angle of the motor
-
-        Returns:
-            Array of the two quantities converted to dq-representation. Example [u_d, u_q]
-
-        Note:
-            The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
-            So this method calls q(quantities, -epsilon).
-        """
-        return self.q_me(quantities, -epsilon)
 
     def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, **__):
         # Docstring of superclass
@@ -1517,6 +1435,16 @@ class InductionMotor(ElectricMotor):
         # Docstring of superclass
         return state[self.CURRENTS_IDX]
 
+    def _torque_limit(self):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_rsig']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
+
+    def torque(self, states):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] - states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
+
 
 class SquirrelCageInductionMotor(InductionMotor):
     """
@@ -1635,15 +1563,6 @@ class SquirrelCageInductionMotor(InductionMotor):
             [mp['p'], 0,               0,               0,               0,               0,                                        0,                                      0,                                   0],                                   # epsilon_dot
         ])
 
-    def _torque_limit(self):
-        # Docstring of superclass
-        mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_rsig']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
-
-    def torque(self, currents): # currents==states ?
-        # Docstring of superclass
-        mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (currents[self.PSI_RALPHA_IDX] * currents[self.I_SBETA_IDX] - currents[self.PSI_RBETA_IDX] * currents[self.I_SALPHA_IDX])
 
 class DoublyFedInductionMotor(InductionMotor):
     """
@@ -1782,20 +1701,6 @@ class DoublyFedInductionMotor(InductionMotor):
         Calculate for all the missing maximal and nominal values the physical maximal possible values.
         """
         mp = self._motor_parameter
-        if self._limits.get('u_sa', 0) == 0:
-            self._limits['u_sa'] = .5 * self._limits['u']
-        if self._limits.get('u_sb', 0) == 0:
-            self._limits['u_sb'] = .5 * self._limits['u']
-        if self._limits.get('u_sc', 0) == 0:
-            self._limits['u_sc'] = .5 * self._limits['u']
-        if self._limits.get('u_salpha', 0) == 0:
-            self._limits['u_salpha'] = .5 * self._limits['u']
-        if self._limits.get('u_sbeta', 0) == 0:
-            self._limits['u_sbeta'] = 0.5 * self._limits['u']
-        if self._limits.get('u_sd', 0) == 0:
-            self._limits['u_sd'] = .5 * self._limits['u']
-        if self._limits.get('u_sq', 0) == 0:
-            self._limits['u_sq'] = .5 * self._limits['u']
 
         if self._limits.get('u_ra', 0) == 0:
             self._limits['u_ra'] = .5 * self._limits['u']
@@ -1811,23 +1716,6 @@ class DoublyFedInductionMotor(InductionMotor):
             self._limits['u_rd'] = .5 * self._limits['u']
         if self._limits.get('u_rq', 0) == 0:
             self._limits['u_rq'] = .5 * self._limits['u']
-
-        if self._limits.get('i_salpha', 0) == 0:
-            self._limits['i_salpha'] = self._limits.get('i', None) or self._limits[
-                'u_salpha'] / mp['r_s']
-        if self._limits.get('i_sbeta', 0) == 0:
-            self._limits['i_sbeta'] = self._limits.get('i', None) or self._limits['u_sbeta'] / \
-                                     mp['r_s']
-        if self._limits.get('i_sa', 0) == 0:
-            self._limits['i_sa'] = self._limits.get('i', None) or self._limits['u_sa'] / mp['r_s']
-        if self._limits.get('i_sb', 0) == 0:
-            self._limits['i_sb'] = self._limits.get('i', None) or self._limits['u_sb'] / mp['r_s']
-        if self._limits.get('i_sc', 0) == 0:
-            self._limits['i_sc'] = self._limits.get('i', None) or self._limits['u_sc'] / mp['r_s']
-        if self._limits.get('i_sd', 0) == 0:
-            self._limits['i_sd'] = self._limits.get('i', None) or self._limits['u_sd'] / mp['r_s']
-        if self._limits.get('i_sq', 0.0) == 0:
-            self._limits['i_sq'] = self._limits.get('i', None) or self._limits['u_sq'] / mp['r_s']
 
         if self._limits.get('i_ralpha', 0) == 0:
             self._limits['i_ralpha'] = self._limits.get('i', None) or self._limits[
@@ -1846,33 +1734,6 @@ class DoublyFedInductionMotor(InductionMotor):
         if self._limits.get('i_rq', 0.0) == 0:
             self._limits['i_rq'] = self._limits.get('i', None) or self._limits['u_rq'] / mp['r_r']
 
-        if self._limits['torque'] == 0:
-            self._limits['torque'] = self._torque_limit()
-
-        if self._limits['omega'] == 0:
-            self._limits['omega'] = self._default_limits['omega']
-
-        if 'u' not in self._nominal_values.keys():
-            self._nominal_values.update({'u': self._limits['u']})
-        if 'i' not in self._nominal_values.keys():
-            self._nominal_values.update({'i': self._limits['i']})
-
-        if self._nominal_values.get('u_sa', 0) == 0:
-            self._nominal_values['u_sa'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sa', 0) == 0:
-            if self._nominal_values.get('u_sb', 0) == 0:
-                self._nominal_values['u_sb'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sc', 0) == 0:
-            self._nominal_values['u_sc'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_salpha', 0) == 0:
-            self._nominal_values['u_salpha'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sbeta', 0) == 0:
-            self._nominal_values['u_sbeta'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sd', 0) == 0:
-            self._nominal_values['u_sd'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sq', 0) == 0:
-            self._nominal_values['u_sq'] = .5 * self._nominal_values['u']
-
         if self._nominal_values.get('u_ra', 0) == 0:
             self._nominal_values['u_ra'] = .5 * self._nominal_values['u']
         if self._nominal_values.get('u_ra', 0) == 0:
@@ -1888,26 +1749,6 @@ class DoublyFedInductionMotor(InductionMotor):
             self._nominal_values['u_rd'] = .5 * self._nominal_values['u']
         if self._nominal_values.get('u_rq', 0) == 0:
             self._nominal_values['u_rq'] = .5 * self._nominal_values['u']
-
-        if self._nominal_values.get('i_salpha', 0) == 0:
-            self._nominal_values['i_salpha'] = self._nominal_values.get('i', None) \
-                                              or self._nominal_values['u_salpha'] / mp['r_s']
-        if self._nominal_values.get('i_sbeta', 0) == 0:
-            self._nominal_values['i_sbeta'] = self._nominal_values.get('i', None) \
-                                             or self._nominal_values['u_sbeta'] / mp['r_s']
-        if self._nominal_values.get('i_sa', 0) == 0:
-            self._nominal_values['i_sa'] = self._nominal_values.get('i', None) or self._nominal_values['u_sa'] / mp['r_s']
-        if self._nominal_values.get('i_sb', 0) == 0:
-            self._nominal_values['i_sb'] = self._nominal_values.get('i', None) or self._nominal_values['u_sb'] / mp['r_s']
-        if self._nominal_values.get('i_sc', 0) == 0:
-            self._nominal_values['i_sc'] = self._nominal_values.get('i', None) \
-                                          or self._nominal_values['u_sc'] / mp['r_s']
-        if self._nominal_values.get('i_sd', 0) == 0:
-            self._nominal_values['i_sd'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_sd'] / mp['r_s']
-        if self._nominal_values.get('i_sq', 0.0) == 0:
-            self._nominal_values['i_sq'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_sq'] / mp['r_s']
 
         if self._nominal_values.get('i_ralpha', 0) == 0:
             self._nominal_values['i_ralpha'] = self._nominal_values.get('i', None) \
@@ -1929,9 +1770,7 @@ class DoublyFedInductionMotor(InductionMotor):
             self._nominal_values['i_rq'] = self._nominal_values.get('i', None) \
                                            or self._nominal_values['u_rq'] / mp['r_r']
 
-        for entry in self._limits.keys():
-            if self._nominal_values.get(entry, 0) == 0:
-                self._nominal_values[entry] = self._limits[entry]
+        super()._update_limits()
 
     def _update_model(self):
         # Docstring of superclass
@@ -1950,13 +1789,3 @@ class DoublyFedInductionMotor(InductionMotor):
             [0,       mp['l_m']/tau_r, 0,               0,               0,               1,                               0,                                        0,                                        -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
             [mp['p'], 0,               0,               0,               0,               0,                               0,                                        0,                                        0,                                      0,                                   0],                                   # epsilon_dot
         ])
-
-    def _torque_limit(self):
-        # Docstring of superclass
-        mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_rsig']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
-
-    def torque(self, currents): # currents==states ?
-        # Docstring of superclass
-        mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (currents[self.PSI_RALPHA_IDX] * currents[self.I_SBETA_IDX] - currents[self.PSI_RBETA_IDX] * currents[self.I_SALPHA_IDX])
