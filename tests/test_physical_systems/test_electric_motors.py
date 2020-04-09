@@ -1338,6 +1338,166 @@ class TestPermanentMagnetSynchronousMotor:
         ])
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6
 
+class TestInductionMotor:
+    """
+    class for testing InductionMotor
+    """
+    # defined test values
+    _motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
+    _p = _motor_parameter['p']  # pole pair number for testing
+    _nominal_values = squirrel_cage_induc_motor_parameter['nominal_values']
+    _limit_values = squirrel_cage_induc_motor_parameter['limit_values']
+    _CURRENTS = ['i_salpha', 'i_sbeta']
+    _CURRENTS_IDX = [2, 3, 5]
+    _number_states = 5
+
+    # counter
+    _monkey_update_model_counter = 0
+    _monkey_update_limits_counter = 0
+    _monkey_super_init_counter = 0
+
+    def monkey_update_model(self):
+        """
+        mock function for _update_model()
+        :return:
+        """
+        self._monkey_update_model_counter += 1
+
+    def monkey_update_limits(self):
+        """
+        mock function for _update_limits()
+        :return:
+        """
+        self._monkey_update_limits_counter += 1
+
+    def monkey_super_init(self, motor_parameter=None, nominal_values=None, limit_values=None):
+        """
+        mock function for super().__init__()
+        :param motor_parameter:
+        :param nominal_values:
+        :param limit_values:
+        :return:
+        """
+        self._monkey_super_init_counter += 1
+        assert self._expected_parameter['motor_parameter'] == motor_parameter, 'unexpected motor parameter passed'
+        assert self._expected_parameter['nominal_values'] == nominal_values, 'unexpected nominal values passed'
+        assert self._expected_parameter['limit_values'] == limit_values, 'unexpected limit values passed'
+
+    @pytest.mark.parametrize("motor_parameter", [_motor_parameter, None])
+    @pytest.mark.parametrize("nominal_values, expected_nv", [(None, {}), (_nominal_values, _nominal_values)])
+    @pytest.mark.parametrize("limit_values, expected_lv", [(None, {}), (_limit_values, _limit_values)])
+    def test_init(self, monkeypatch, motor_parameter, nominal_values, limit_values, expected_nv, expected_lv):
+        """
+        test initialization of SynchronousMotor
+        :param monkeypatch:
+        :param setup: fixture that is called before the function
+        :param motor_parameter: possible motor parameters
+        :param nominal_values: possible nominal values
+        :param limit_values: possible limit values
+        :param expected_nv: expected nominal values
+        :param expected_lv: expected limit values
+        :return:
+        """
+        # setup test scenario
+        monkeypatch.setattr(InductionMotor, "_update_model", self.monkey_update_model)
+        monkeypatch.setattr(InductionMotor, "_update_limits", self.monkey_update_limits)
+        monkeypatch.setattr(ElectricMotor, '__init__', self.monkey_super_init)
+        self._expected_parameter = dict(motor_parameter=motor_parameter, nominal_values=expected_nv,
+                                        limit_values=expected_lv)
+        # call function to test
+        test_object = InductionMotor(motor_parameter, nominal_values, limit_values)
+        # verify the expected results
+        assert self._monkey_update_limits_counter == 1, 'update_limits() is not called once'
+        assert self._monkey_super_init_counter == 1, 'super().__init__() is not called once'
+        assert self._monkey_update_model_counter == 1, 'update_model() is not called once'
+
+    def test_reset(self, monkeypatch):
+        """
+        test reset()
+        :param monkeypatch:
+        :return:
+        """
+        # setup test scenario
+        monkeypatch.setattr(InductionMotor, '__init__', self.monkey_update_model)
+        monkeypatch.setattr(InductionMotor, 'CURRENTS', self._CURRENTS)
+        test_object = InductionMotor()
+        # call function to test
+        result = test_object.reset()
+        # verify the expected results
+        assert all(result == np.zeros(self._number_states)), 'unexpected state after reset()'
+
+    def test_electrical_ode(self, monkeypatch):
+        """
+        test electrical_ode()
+        :param monkeypatch:
+        :return:
+        """
+        # setup test scenario
+        monkeypatch.setattr(InductionMotor, '__init__', self.monkey_update_model)
+        # use the identity matrix. Therefore, only the states and their multiplications are returned
+        monkeypatch.setattr(InductionMotor, '_model_constants', np.identity(11))
+        test_object = InductionMotor()
+        state = np.array([25, 36, -15, 28])
+        u_alphabeta = np.array([[-400, 325], [140, -222]])
+        omega = 42
+        expected_result = np.array([42, 25, 36, -15, 28, 42 * -15, 42 * 28, -400, 325, 140, -222])
+        # call function to test
+        result = test_object.electrical_ode(state, u_alphabeta, omega)
+        # verify the expected results
+        assert all(result == expected_result), 'unexpected result of the electrical_ode()'
+
+    def test_i_in(self, monkeypatch):
+        """
+        test i_in()
+        :param monkeypatch:
+        :return:
+        """
+        # setup test scenario
+        monkeypatch.setattr(InductionMotor, '__init__', self.monkey_update_model)
+        monkeypatch.setattr(InductionMotor, 'CURRENTS_IDX', self._CURRENTS_IDX)
+        test_object = InductionMotor()
+        state = np.array([25, 10, 24, 36, 25, 50, 12])
+        expected_result = np.array([24, 36, 50])
+        # call function to test
+        result = test_object.i_in(state)
+        # verify the expected results
+        assert all(result == expected_result), 'unexpected currents in the motor'
+
+    def test_torque(self, monkeypatch):
+        """
+        test torque()
+        :param monkeypatch:
+        :return:
+        """
+        # setup test scenario
+        _motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
+        test_object = InductionMotor()
+        monkeypatch.setattr(test_object, '_motor_parameter', _motor_parameter)
+        currents_fluxes = np.array([15, 10, 0.8, -0.2])
+        # call function to test
+        torque = test_object.torque(currents_fluxes)
+        # verify the expected results
+        expected_torque = 31.862069
+        assert abs(torque - expected_torque) < 1E-6, 'unexpected torque calculated'
+
+    def test_update_model(self):
+        """
+        test _update_model()
+        :return:
+        """
+        # setup test scenario
+        test_object = InductionMotor()
+        test_object._motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
+        # call function to test
+        test_object._update_model()
+        # verify results
+        expected_constants = np.array([
+            [-3*0.171/125E-3, -5 / 125E-3, 0, 1 / 125E-3, 0, 0, -3 * 84 / 125],
+            [0, 0, -5 / 84E-3, 0, 1 / 84E-3, 125E-3 * 3 / 84E-3, 0],
+            [3, 0, 0, 0, 0, 0, 0]
+        ])
+        assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6
+
 # endregion
 
 # endregion

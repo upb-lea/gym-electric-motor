@@ -1269,6 +1269,19 @@ class InductionMotor(ThreePhaseMotor):
     FLUXES = ['psi_ralpha', 'psi_rbeta']
     STATOR_VOLTAGES = ['u_salpha', 'u_sbeta']
 
+    _default_motor_parameter = {
+        'p': 2,
+        'l_m': 143.75e-3,
+        'l_ssig': 5.87e-3,
+        'l_rsig': 5.87e-3,
+        'j_rotor': 1.1e-3,
+        'r_s': 2.9338,
+        'r_r': 1.355,
+    }
+
+    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=560)
+    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=560)
+
     # transformation matrix from abc to alpha-beta representation
     _t23 = 2 / 3 * np.array([
         [1, -0.5, -0.5],
@@ -1300,23 +1313,6 @@ class InductionMotor(ThreePhaseMotor):
     def reset(self):
         # Docstring of superclass
         return np.zeros(len(self.CURRENTS) + len(self.FLUXES) + 1)
-
-    def torque(self, state):
-        # Docstring of superclass
-        raise NotImplementedError
-
-    def _update_model(self):
-        """
-        Set motor parameters into a matrix for faster computation
-        """
-        raise NotImplementedError
-
-    def _torque_limit(self):
-        """
-        Returns:
-             Maximal possible torque for the given limits in self._limits
-        """
-        raise NotImplementedError
 
     def _update_limits(self):
         """
@@ -1406,29 +1402,31 @@ class InductionMotor(ThreePhaseMotor):
             if self._nominal_values.get(entry, 0) == 0:
                 self._nominal_values[entry] = self._limits[entry]
 
-    def electrical_ode(self, state, u_alphabeta, omega, *_):
+    def electrical_ode(self, state, u_sr_alphabeta, omega, *_):
         """
         The differential equation of the Induction Motor.
 
         Args:
-            state: The current state of the motor. [i_sq, i_sd, epsilon]
+            state: The current state of the motor. [i_salpha, i_sbeta, psi_ralpha, psi_rbeta, epsilon]
             omega: The mechanical load
-            u_alphabeta: The input voltages [u_salpha, u_sbeta]
+            u_sr_alphabeta: The input voltages [u_salpha, u_sbeta, u_ralpha, u_rbeta]
 
         Returns:
-            The derivatives of the state vector d/dt([i_sq, i_sd, epsilon])
+            The derivatives of the state vector d/dt( [i_salpha, i_sbeta, psi_ralpha, psi_rbeta, epsilon])
         """
         return np.matmul(self._model_constants, np.array([
-            # omega, i_beta, i_alpha, u_beta, u_alpha, psi_ralpha, psi_rbeta, omega*psi_ralpha,  omega*psi_rbeta
+            # omega, i_alpha, i_beta, psi_ralpha, psi_rbeta, omega * psi_ralpha, omega * psi_rbeta, u_salpha, u_sbeta, u_ralpha, u_rbeta,
             omega,
-            state[self.I_SBETA_IDX],
             state[self.I_SALPHA_IDX],
-            u_alphabeta[1],
-            u_alphabeta[0],
+            state[self.I_SBETA_IDX],
             state[self.PSI_RALPHA_IDX],
             state[self.PSI_RBETA_IDX],
             omega * state[self.PSI_RALPHA_IDX],
             omega * state[self.PSI_RBETA_IDX],
+            u_sr_alphabeta[0, 0],
+            u_sr_alphabeta[0, 1],
+            u_sr_alphabeta[1, 0],
+            u_sr_alphabeta[1, 1],
         ]))
 
     def i_in(self, state):
@@ -1444,6 +1442,24 @@ class InductionMotor(ThreePhaseMotor):
         # Docstring of superclass
         mp = self._motor_parameter
         return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] - states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
+
+    def _update_model(self):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        l_s = mp['l_m']+mp['l_ssig']
+        l_r = mp['l_m']+mp['l_rsig']
+        sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
+        tau_r = l_r / mp['r_r']
+        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
+
+        self._model_constants = np.array([
+            # omega,  i_alpha,         i_beta,          psi_ralpha,                               psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta,                  u_salpha,        u_sbeta,       u_ralpha,                        u_rbeta,
+            [0,       -1/tau_sig,      0,               mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2), 0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s), 1/(sigma * l_s), 0,             -mp['l_m']/ (sigma * l_r * l_s), 0,                               ],  # i_ralpha_dot
+            [0,       0,               -1/tau_sig,      0,                                        mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0,                                  0,               1/(sigma*l_s),  0,                              -mp['l_m']/ (sigma * l_r * l_s), ],  # i_rbeta_dot
+            [0,       mp['l_m']/tau_r, 0,               -1/tau_r,                                 0,                                      0,                                   -mp['p'],                           0,               0,              1,                              0,                               ],  # psi_ralpha_dot
+            [0,       0,               mp['l_m']/tau_r, 0,                                        -1/tau_r,                               mp['p'],                             0,                                  0,               0,              0,                              1,                               ],  # psi_rbeta_dot
+            [mp['p'], 0,               0,               0,                                        0,                                      0,                                   0,                                  0,               0,               0,                             0,                               ],  # epsilon_dot
+        ])
 
 
 class SquirrelCageInductionMotor(InductionMotor):
@@ -1545,23 +1561,15 @@ class SquirrelCageInductionMotor(InductionMotor):
     _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=560)
     _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=560)
 
-    def _update_model(self):
-        # Docstring of superclass
-        mp = self._motor_parameter
-        l_s = mp['l_m']+mp['l_ssig']
-        l_r = mp['l_m']+mp['l_rsig']
-        sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
-        tau_r = l_r / mp['r_r']
-        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
+    def electrical_ode(self, state, u_salphabeta, omega, *_):
+        """
+        The differential equation of the SCIM.
+        Sets u_ralpha = u_rbeta = 0 before calling the respective super function.
+        """
+        u_ralphabeta = np.array([0, 0])
+        u_sr_aphabeta = np.array([u_salphabeta, u_ralphabeta])
 
-        self._model_constants = np.array([
-            # omega,  i_beta,          i_alpha,         u_beta,          u_alpha,         psi_ralpha,                               psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta
-            [0,       0,               -1/tau_sig,      0,               1/(sigma * l_s), mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2), 0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s)],  # i_ralpha_dot
-            [0,       -1/tau_sig,      0,               1/(sigma*l_s),   0,               0,                                        mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0],                                   # i_rbeta_dot
-            [0,       0,               mp['l_m']/tau_r, 0,               0,               -1/tau_r,                                 0,                                      0,                                   -mp['p']],                            # psi_ralpha_dot
-            [0,       mp['l_m']/tau_r, 0,               0,               0,               0,                                        -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
-            [mp['p'], 0,               0,               0,               0,               0,                                        0,                                      0,                                   0],                                   # epsilon_dot
-        ])
+        return super().electrical_ode(state, u_sr_aphabeta, omega, _)
 
 
 class DoublyFedInductionMotor(InductionMotor):
@@ -1669,33 +1677,6 @@ class DoublyFedInductionMotor(InductionMotor):
     _default_limits = dict(omega=160, torque=0.0, i=1900, epsilon=math.pi, u=1200)
     _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900, epsilon=math.pi, u=1200)
 
-    def electrical_ode(self, state, u_sr_alphabeta, omega, *_):
-        """
-        The differential equation of the Induction Motor.
-
-        Args:
-            state: The current state of the motor. [i_sq, i_sd, epsilon]
-            omega: The mechanical load
-            u_alphabeta: The input voltages [u_salpha, u_sbeta]
-
-        Returns:
-            The derivatives of the state vector d/dt([i_sq, i_sd, epsilon])
-        """
-        return np.matmul(self._model_constants, np.array([
-            # omega,  i_beta, i_alpha, u_sbeta, u_salpha, u_rbeta, u_ralpha, psi_ralpha, psi_rbeta, omega * psi_ralpha, omega * psi_rbeta
-            omega,
-            state[self.I_SBETA_IDX],
-            state[self.I_SALPHA_IDX],
-            u_sr_alphabeta[0, 1],
-            u_sr_alphabeta[0, 0],
-            u_sr_alphabeta[1, 1],
-            u_sr_alphabeta[1, 0],
-            state[self.PSI_RALPHA_IDX],
-            state[self.PSI_RBETA_IDX],
-            omega * state[self.PSI_RALPHA_IDX],
-            omega * state[self.PSI_RBETA_IDX],
-        ]))
-
     def _update_limits(self):
         """
         Calculate for all the missing maximal and nominal values the physical maximal possible values.
@@ -1771,21 +1752,3 @@ class DoublyFedInductionMotor(InductionMotor):
                                            or self._nominal_values['u_rq'] / mp['r_r']
 
         super()._update_limits()
-
-    def _update_model(self):
-        # Docstring of superclass
-        mp = self._motor_parameter
-        l_s = mp['l_m']+mp['l_ssig']
-        l_r = mp['l_m']+mp['l_rsig']
-        sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
-        tau_r = l_r / mp['r_r']
-        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
-
-        self._model_constants = np.array([
-            # omega,  i_beta,          i_alpha,         u_sbeta,         u_salpha,        u_rbeta,                         u_ralpha,                                 psi_ralpha,                               psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta
-            [0,       0,               -1/tau_sig,      0,               1/(sigma * l_s), 0,                               -mp['l_m']/ (sigma * l_r * l_s),          mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2), 0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s)],  # i_ralpha_dot
-            [0,       -1/tau_sig,      0,               1/(sigma*l_s),   0,               -mp['l_m']/ (sigma * l_r * l_s), 0,                                        0,                                        mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0],                                   # i_rbeta_dot
-            [0,       0,               mp['l_m']/tau_r, 0,               0,               0,                               1,                                        -1/tau_r,                                 0,                                      0,                                   -mp['p']],                            # psi_ralpha_dot
-            [0,       mp['l_m']/tau_r, 0,               0,               0,               1,                               0,                                        0,                                        -1/tau_r,                               mp['p'],                             0],                                   # psi_rbeta_dot
-            [mp['p'], 0,               0,               0,               0,               0,                               0,                                        0,                                        0,                                      0,                                   0],                                   # epsilon_dot
-        ])
