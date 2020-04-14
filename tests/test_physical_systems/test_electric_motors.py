@@ -1388,7 +1388,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize("limit_values, expected_lv", [(None, {}), (_limit_values, _limit_values)])
     def test_init(self, monkeypatch, motor_parameter, nominal_values, limit_values, expected_nv, expected_lv):
         """
-        test initialization of SynchronousMotor
+        test initialization of InductionMotor
         :param monkeypatch:
         :param setup: fixture that is called before the function
         :param motor_parameter: possible motor parameters
@@ -1491,13 +1491,123 @@ class TestInductionMotor:
         # call function to test
         test_object._update_model()
         # verify results
+        l_s = 145E-3
+        l_r = 145E-3
+        tau_r = l_r / 1.5
+        sigma = (l_s * l_r - 140e-3 ** 2) / (l_s * l_r)
+        tau_sig = sigma * l_s / (3 + 1.5 * (140e-3 ** 2) / (l_r ** 2))
+
+        assert abs(l_s - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_ssig'])) < 1E-6, 'unexpected stator inductance'
+        assert abs(l_r - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_rsig'])) < 1E-6, 'unexpected rotor inductance'
+        assert abs(sigma - ((l_s * l_r - test_object._motor_parameter['l_m'] ** 2) / (l_s * l_r))) < 1E-6, 'unexpected leakage coefficient'
+        assert abs(tau_r - (l_r / test_object._motor_parameter['r_r'])) < 1E-6, 'unexpected rotor time constant'
+        assert abs(tau_sig - (sigma * l_s / (test_object._motor_parameter['r_s'] + test_object._motor_parameter['r_r'] * (test_object._motor_parameter['l_m'] ** 2) / (l_r ** 2)))) < 1E-6, 'unexpected leakage time constant'
+
         expected_constants = np.array([
-            [-3*0.171/125E-3, -5 / 125E-3, 0, 1 / 125E-3, 0, 0, -3 * 84 / 125],
-            [0, 0, -5 / 84E-3, 0, 1 / 84E-3, 125E-3 * 3 / 84E-3, 0],
-            [3, 0, 0, 0, 0, 0, 0]
+            [0, -1 / tau_sig, 0, 140E-3 * 1.5 / (sigma * l_s * l_r ** 2), 0, 0, 140E-3 * 2 / (sigma * l_r * l_s), 1 / (sigma * l_s), 0, -140E-3 / (sigma * l_r * l_s), 0, ],  # i_ralpha_dot
+            [0, 0, -1 / tau_sig, 0, 140E-3 * 1.5 / (sigma * l_s * l_r ** 2), -140E-3 * 2 / (sigma * l_r * l_s), 0, 0, 1 / (sigma * l_s), 0, -140E-3 / (sigma * l_r * l_s), ],  # i_rbeta_dot
+            [0, 140E-3 / tau_r, 0, -1 / tau_r, 0, 0, -2, 0, 0, 1, 0, ],  # psi_ralpha_dot
+            [0, 0, 140E-3 / tau_r, 0, -1 / tau_r, 2, 0, 0, 0, 0, 1, ],  # psi_rbeta_dot
+            [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ],  # epsilon_dot
         ])
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6
 
+
+class TestSquirrelCageInductionMotor:
+    """
+    class for testing SquirrelCageInductionMotor
+    """
+
+    _monkey_super_electrical_ode_counter = 0
+    _monkey_passed_voltage = []
+
+    def monkey_init(self):
+        """
+        mock function for __init__()
+        :return:
+        """
+        pass
+
+    def monkey_super_electrical_ode(self, state, u_sr_alphabeta, omega, *_):
+        """
+        mock function for _update_model()
+        :param state: electrical state of the system
+        :param u_sr_alphabeta: input voltage of the system
+        :param omega: meachnical velocity
+        :return:
+        """
+        self._monkey_passed_voltage = u_sr_alphabeta
+        self._monkey_super_electrical_ode_counter += 1
+
+
+    def test_electrical_ode(self, monkeypatch):
+        """
+        test electrical_ode()
+        :param monkeypatch:
+        :return:
+        """
+        # setup test scenario
+        monkeypatch.setattr(InductionMotor, '__init__', self.monkey_init)
+        # use the identity matrix. Therefore, only the states and their multiplications are returned
+        monkeypatch.setattr(InductionMotor, '_model_constants', np.identity(11))
+        monkeypatch.setattr(InductionMotor, 'electrical_ode', self.monkey_super_electrical_ode)
+        test_object = SquirrelCageInductionMotor()
+        state = np.array([25, 36, -15, 28])
+        u_salphabeta = np.array([-400, 325])
+        omega = 42
+        # call function to test
+        test_object.electrical_ode(state, u_salphabeta, omega)
+        expected_voltage = np.array([[-400, 325], [0, 0]])
+        # verify the expected results
+        assert np.all(self._monkey_passed_voltage == expected_voltage), 'unexpected voltage passed to super().electrical_ode()'
+        assert self._monkey_super_electrical_ode_counter == 1, 'super().electrical_ode() is not called once'
+
+
+class TestDoublyFedInductionMotor:
+    """
+    class for testing DoublyFedInductionMotor
+    """
+
+    _motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
+    _nominal_values = squirrel_cage_induc_motor_parameter['nominal_values']
+    _limit_values = squirrel_cage_induc_motor_parameter['limit_values']
+
+    _monkey_super_update_limits_counter = 0
+
+    def monkey_init(self):
+        """
+        mock function for super().__init__()
+        :return:
+        """
+        pass
+
+    def monkey_super_update_limits(self):
+        """
+        mock function for super()._update_limits()
+        :return:
+        """
+        self._monkey_super_update_limits_counter += 1
+
+    def test_update_limits(self, monkeypatch):
+        """
+        test update limits of DFIM
+        :param monkeypatch:
+        :return:
+        """
+        # call function to test
+        monkeypatch.setattr(DoublyFedInductionMotor, '__init__', self.monkey_init)
+        monkeypatch.setattr(InductionMotor, '_update_limits', self.monkey_super_update_limits)
+        test_object = DoublyFedInductionMotor()
+        test_object._motor_parameter = self._motor_parameter
+        test_object._limits = self._limit_values
+        test_object._nominal_values = self._nominal_values
+        # verify the expected results
+        test_object._update_limits()
+        assert self._monkey_super_update_limits_counter == 1, 'super().update_limits() is not called once'
+        assert test_object._limits['u_rbeta'] == 0.5 * self._limit_values['u']
+        assert test_object._nominal_values['i_ralpha'] == (test_object._nominal_values.get('i', None) or test_object._nominal_values['u_ralpha'] / test_object._motor_parameter['r_r'])
+
 # endregion
 
 # endregion
+
