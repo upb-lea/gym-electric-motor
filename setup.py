@@ -12,7 +12,7 @@ setuptools.setup(
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
-      extra_requires={'examples': ['keras>=2.2.4',
+      extras_require={'examples': ['keras>=2.2.4',
                                    'keras_rl>=0.4.2',
                                    'rl>=3.0',
                                    'tensorflow<=1.14']},
