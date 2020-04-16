@@ -1343,10 +1343,10 @@ class TestInductionMotor:
     class for testing InductionMotor
     """
     # defined test values
-    _motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
+    _motor_parameter = sci_motor_parameter['motor_parameter']
     _p = _motor_parameter['p']  # pole pair number for testing
-    _nominal_values = squirrel_cage_induc_motor_parameter['nominal_values']
-    _limit_values = squirrel_cage_induc_motor_parameter['limit_values']
+    _nominal_values = sci_motor_parameter['nominal_values']
+    _limit_values = sci_motor_parameter['limit_values']
     _CURRENTS = ['i_salpha', 'i_sbeta']
     _CURRENTS_IDX = [2, 3, 5]
     _number_states = 5
@@ -1470,7 +1470,7 @@ class TestInductionMotor:
         :return:
         """
         # setup test scenario
-        _motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
+        _motor_parameter = sci_motor_parameter['motor_parameter']
         test_object = InductionMotor()
         monkeypatch.setattr(test_object, '_motor_parameter', _motor_parameter)
         currents_fluxes = np.array([15, 10, 0.8, -0.2])
@@ -1487,7 +1487,7 @@ class TestInductionMotor:
         """
         # setup test scenario
         test_object = InductionMotor()
-        test_object._motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
+        test_object._motor_parameter = sci_motor_parameter['motor_parameter']
         # call function to test
         test_object._update_model()
         # verify results
@@ -1568,9 +1568,9 @@ class TestDoublyFedInductionMotor:
     class for testing DoublyFedInductionMotor
     """
 
-    _motor_parameter = squirrel_cage_induc_motor_parameter['motor_parameter']
-    _nominal_values = squirrel_cage_induc_motor_parameter['nominal_values']
-    _limit_values = squirrel_cage_induc_motor_parameter['limit_values']
+    _motor_parameter = sci_motor_parameter['motor_parameter']
+    _nominal_values = sci_motor_parameter['nominal_values']
+    _limit_values = sci_motor_parameter['limit_values']
 
     _monkey_super_update_limits_counter = 0
 

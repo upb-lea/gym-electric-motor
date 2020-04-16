@@ -1,6 +1,7 @@
 from gym_electric_motor.envs.gym_dcm import *
 from gym_electric_motor.envs.gym_pmsm import *
 from gym_electric_motor.envs.gym_synrm import *
+from gym_electric_motor.envs.gym_im import *
 from gym_electric_motor.envs.gym_dcm.dc_extex_motor_env import *
 import gym_electric_motor.envs.gym_dcm.dc_extex_motor_env as extexenv
 import gym_electric_motor.envs.gym_dcm.dc_permex_motor_env as permexenv
@@ -8,6 +9,7 @@ import gym_electric_motor.envs.gym_dcm.dc_series_motor_env as seriesenv
 import gym_electric_motor.envs.gym_dcm.dc_shunt_motor_env as shuntenv
 import gym_electric_motor.envs.gym_pmsm.perm_mag_syn_motor_env as pmsmenv
 import gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env as synrmenv
+import gym_electric_motor.envs.gym_im.squirrel_cage_induc_motor_env as scimenv
 
 
 from ..testing_utils import *
@@ -240,7 +242,9 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
                          [('PMSM', ContPermanentMagnetSynchronousMotorEnvironment, 'Cont'),
                           ('SynRM', ContSynchronousReluctanceMotorEnvironment, 'Cont'),
                           ('PMSM', DiscPermanentMagnetSynchronousMotorEnvironment, 'Disc'),
-                          ('SynRM', DiscSynchronousReluctanceMotorEnvironment, 'Disc')])
+                          ('SynRM', DiscSynchronousReluctanceMotorEnvironment, 'Disc'),
+                          # add SCIM
+                          ])
 def test_synchronous_environments(reward_function_type, reference_generator_type, tau_test, motor_type, motor_class,
                                   time_type, turn_off_windows):
     converter_type = time_type + '-B6C'

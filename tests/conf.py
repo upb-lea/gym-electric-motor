@@ -49,7 +49,7 @@ synrm_motor_parameter = {
     'limit_values': {'i': 75, 'torque': 75, 'omega': 550.0, 'epsilon': np.pi, 'u': 450},
     'reward_weights': dict(omega=1, torque=0, i_a=0, i_b=0, i_c=0, u_a=0, u_b=0, u_c=0, epsilon=0, u_sup=0)}
 
-squirrel_cage_induc_motor_parameter = {
+sci_motor_parameter = {
     'motor_parameter': {'p': 2, 'l_m': 140e-3, 'l_ssig': 5e-3, 'l_rsig': 5e-3, 'j_rotor': 0.001, 'r_s': 3, 'r_r': 1.5, 'u_sup': u_sup},
     'nominal_values': {'i': 3.9, 'torque': 4.7, 'omega': 314., 'epsilon': np.pi, 'u': 560},
     'limit_values': {'i': 5.5, 'torque': 6, 'omega': 350.0, 'epsilon': np.pi, 'u': 560},
@@ -65,7 +65,8 @@ test_motor_parameter = {'DcSeries': series_motor_parameter,
                         'DcPermEx': permex_motor_parameter,
                         'DcExtEx': extex_motor_parameter,
                         'PMSM': pmsm_motor_parameter,
-                        'SynRM': synrm_motor_parameter}
+                        'SynRM': synrm_motor_parameter,
+                        'SCIM': sci_motor_parameter}
 
 
 # endregion
