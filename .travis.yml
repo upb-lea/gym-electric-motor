@@ -3,7 +3,8 @@ language: python
 install:
   - pip install -r requirements.txt --prefer-binary
   - pip install .
-  - pip install sphinx recommonmark sphinx_rtd_theme
+  - pip install sphinx sphinx_rtd_theme
+  - pip install m2r @ git+https://github.com/crossnox/m2r@dev#egg=m2r
 
 dist: bionic
 services:
