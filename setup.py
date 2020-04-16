@@ -12,11 +12,10 @@ setuptools.setup(
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
-      extras_require={'examples': ['keras>=2.2.4',
-                                   'keras_rl>=0.4.2',
-                                   'rl>=3.0',
-                                   'tensorflow<=1.14']},
-      author='Arne Traue, Gerrit Book, Praneeth Balakrishna',
+      extras_require={'examples': 
+                      ['keras_rl2>=1.0.3']
+                     },
+      author='Arne Traue, Gerrit Book, Praneeth Balakrishna, Max Schenke, Wilhelm Kirchgässner, Oliver Wallscheid',
       long_description=long_description,
       long_description_content_type="text/markdown",
       url="https://github.com/upb-lea/gym-electric-motor",
