@@ -359,7 +359,8 @@ class DummyElectricMotor(ElectricMotor):
     _default_motor_parameter = permex_motor_parameter['motor_parameter']
     _default_limits = dict(omega=16, torque=26, u=15, i=26, i_0=26, i_1=21, u_0=15)
     _default_nominal_values = dict(omega=14, torque=20, u=15, i=22, i_0=22, i_1=20)
-
+    HAS_JACOBIAN = True
+    electrical_jac_return = None
     CURRENTS_IDX = [0, 1]
     CURRENTS = ['i_0', 'i_1']
     VOLTAGES = ['u_0']
@@ -383,6 +384,9 @@ class DummyElectricMotor(ElectricMotor):
 
     def i_in(self, state):
         return [np.sum(state)]
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        return self.electrical_jac_return
 
 
 class PowerElectronicConverterWrapper(cv.PowerElectronicConverter):
@@ -488,7 +492,9 @@ class DummyLoad(MechanicalLoad):
     mechanical_state = None
     t = None
     mechanical_ode_return = None
+    mechanical_jac_return = None
     omega_range = None
+    HAS_JACOBIAN = True
 
     def __init__(self, tau=1e-4, **kwargs):
         self.kwargs = kwargs
@@ -504,6 +510,12 @@ class DummyLoad(MechanicalLoad):
         self.t = t
         self.mechanical_ode_return = np.array([torque, -torque])
         return self.mechanical_ode_return
+
+    def mechanical_jacobian(self, t, mechanical_state, torque):
+        self.mechanical_state = mechanical_state
+        self.t = t
+        self.mechanical_ode_return = np.array([torque, -torque])
+        return self.mechanical_jac_return
 
     def get_state_space(self, omega_range):
         self.omega_range = omega_range

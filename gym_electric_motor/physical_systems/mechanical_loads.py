@@ -168,8 +168,9 @@ class PolynomialStaticLoad(MechanicalLoad):
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
-        return np.array([[-(self._b + 2 * self._c * mechanical_state[self.OMEGA_IDX])/self._j_total]]), \
-               np.array([1/self._j_total])
+        sign = 1 if mechanical_state[self.OMEGA_IDX] > 0 else -1 if mechanical_state[self.OMEGA_IDX] < 0 else 0
+        return np.array([[(-self._b * sign - 2 * self._c * mechanical_state[self.OMEGA_IDX])/self._j_total]]), \
+            np.array([1/self._j_total])
 
 
 class ConstantSpeedLoad(MechanicalLoad):
