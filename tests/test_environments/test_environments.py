@@ -10,6 +10,9 @@ import gym_electric_motor.envs.gym_dcm.dc_shunt_motor_env as shuntenv
 import gym_electric_motor.envs.gym_pmsm.perm_mag_syn_motor_env as pmsmenv
 import gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env as synrmenv
 import gym_electric_motor.envs.gym_im.squirrel_cage_induc_motor_env as scimenv
+import gym_electric_motor.envs.gym_im.doubly_fed_induc_motor_env as dfimenv
+
+import time
 
 
 from ..testing_utils import *
@@ -240,14 +243,20 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
 @pytest.mark.parametrize("tau_test", [1E-5, 1E-4, 1E-3])
 @pytest.mark.parametrize("motor_type, motor_class, time_type",
                          [('PMSM', ContPermanentMagnetSynchronousMotorEnvironment, 'Cont'),
-                          ('SynRM', ContSynchronousReluctanceMotorEnvironment, 'Cont'),
                           ('PMSM', DiscPermanentMagnetSynchronousMotorEnvironment, 'Disc'),
+                          ('SynRM', ContSynchronousReluctanceMotorEnvironment, 'Cont'),
                           ('SynRM', DiscSynchronousReluctanceMotorEnvironment, 'Disc'),
-                          # add SCIM
+                          ('SCIM', ContSquirrelCageInductionMotorEnvironment, 'Cont'),
+                          ('SCIM', DiscSquirrelCageInductionMotorEnvironment, 'Disc'),
+                          ('DFIM', ContDoublyFedInductionMotorEnvironment, 'Cont'),
+                          ('DFIM', DiscDoublyFedInductionMotorEnvironment, 'Disc'),
                           ])
-def test_synchronous_environments(reward_function_type, reference_generator_type, tau_test, motor_type, motor_class,
+def test_threephase_environments(reward_function_type, reference_generator_type, tau_test, motor_type, motor_class,
                                   time_type, turn_off_windows):
-    converter_type = time_type + '-B6C'
+    if motor_type == "DFIM":
+        converter_type = time_type + '-Double-B6C'
+    else:
+        converter_type = time_type + '-B6C'
     # setup the parameter
     conv_parameter = converter_parameter.copy()
     conv_parameter.update({'tau': tau_test})
@@ -260,8 +269,8 @@ def test_synchronous_environments(reward_function_type, reference_generator_type
     u_sup = motor_parameter['u_sup']
     observed_states = ['all']
     reward_weights = test_motor_parameter[motor_type]['reward_weights']
-    # different initializations
-    env_default = motor_class()
+    # different initializations, using euler solver to accelerate testing
+    env_default = motor_class(ode_solver='euler')
     env_1 = motor_class(tau=tau,
                         converter=converter_type,
                         reward_function=reward_function_type,
@@ -294,6 +303,7 @@ def test_synchronous_environments(reward_function_type, reference_generator_type
                         load=load, solver=solver,
                         supply=voltage_supply,
                         reference_generator=reference_generator,
+                        ode_solver='euler',
                         reward_function=reward_function)
     # test the different initializations
     envs = [env_default, env_1, env_2]
@@ -304,11 +314,7 @@ def test_synchronous_environments(reward_function_type, reference_generator_type
         observation_space = env.observation_space
         reward_range = env.reward_function.reward_range
         for k in range(25):
-            if time_type == 'Cont':
-                action = np.array(
-                    [np.sin(k * tau / 2E-2), np.sin(k * tau / 2E-2 + np.pi / 3), np.sin(k * tau / 2E-2 - np.pi / 3)])
-            else:
-                action = randint(action_space.n)
+            action = action_space.sample()
             obs, reward, done, _ = env.step(action)
             if env is not env_default:  # limits are not observed in the default case
                 if not done:
@@ -330,9 +336,7 @@ def test_synchronous_environments(reward_function_type, reference_generator_type
                     assert reward == -1/(1-0.9)
                     env.reset()
             env.render()
-
         env.close()
-
 
 # endregion
 
@@ -429,7 +433,11 @@ class TestEnvironments:
                               ('PMSM', pmsmenv.PermanentMagnetSynchronousMotorEnvironment, pmsmenv,
                                "SynchronousMotorSystem"),
                               ('SynRM', synrmenv.SynchronousReluctanceMotorEnvironment, synrmenv,
-                               "SynchronousMotorSystem")
+                               "SynchronousMotorSystem"),
+                              ('SCIM', scimenv.SquirrelCageInductionMotorEnvironment, scimenv,
+                              "SquirrelCageInductionMotorSystem"),
+                              ('DFIM', dfimenv.DoublyFedInductionMotorEnvironment, dfimenv,
+                              "DoublyFedInductionMotorSystem"),
                               ])
     def test_dc_environments(self, monkeypatch, motor, motor_class, motor_file, motor_system, reward_function,
                              reward_init_counter, reference_generator, reference_init_counter):

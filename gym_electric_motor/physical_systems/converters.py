@@ -1,5 +1,5 @@
 import numpy as np
-from gym.spaces import Discrete, Box
+from gym.spaces import Discrete, Box, MultiDiscrete
 
 from ..utils import instantiate
 
@@ -500,7 +500,7 @@ class DiscDoubleConverter(DiscConverter):
             instantiate(PowerElectronicConverter, subconverters[0], **kwargs),
             instantiate(PowerElectronicConverter, subconverters[1], **kwargs)
         ]
-        self.action_space = Discrete(self._subconverters[0].action_space.n * self._subconverters[1].action_space.n)
+        self.action_space = MultiDiscrete([self._subconverters[0].action_space.n, self._subconverters[1].action_space.n]) # Discrete(self._subconverters[0].action_space.n * self._subconverters[1].action_space.n)
         super().__init__(**kwargs)
         self.currents = [
             [subconverter.currents[0] for subconverter in self._subconverters],
@@ -528,10 +528,8 @@ class DiscDoubleConverter(DiscConverter):
     def set_action(self, action, t):
         # Docstring in base class
         times = []
-        for subconverter in self._subconverters:
-            sub_action = action % subconverter.action_space.n
+        for subconverter, sub_action in zip(self._subconverters, action):
             times += subconverter.set_action(sub_action, t)
-            action = action // subconverter.action_space.n
         return sorted(list(set(times)))
 
     def i_sup(self, i_out):
@@ -874,7 +872,7 @@ class DiscDoubleB6BridgeConverter(DiscConverter):
         Box(-0.5, 0.5, shape=(6,))
     """
 
-    action_space = Box(-1, 1, shape=(6,))
+    action_space = MultiDiscrete([8, 8])
     # Only positive voltages can be applied
     voltages = (-1, 1)
     # Positive and negative currents are possible

@@ -53,7 +53,7 @@ sci_motor_parameter = {
     'motor_parameter': {'p': 2, 'l_m': 140e-3, 'l_ssig': 5e-3, 'l_rsig': 5e-3, 'j_rotor': 0.001, 'r_s': 3, 'r_r': 1.5, 'u_sup': u_sup},
     'nominal_values': {'i': 3.9, 'torque': 4.7, 'omega': 314., 'epsilon': np.pi, 'u': 560},
     'limit_values': {'i': 5.5, 'torque': 6, 'omega': 350.0, 'epsilon': np.pi, 'u': 560},
-    'reward_weights': dict(omega=1, torque=0, i_a=0, i_b=0, i_c=0, u_a=0, u_b=0, u_c=0, epsilon=0, u_sup=0)}
+    'reward_weights': dict(omega=1, torque=0, i_sa=0, i_sb=0, i_sc=0, u_sa=0, u_sb=0, u_sc=0, epsilon=0, u_sup=0)}
 
 load_parameter = {'j_load': 0.2, 'state_names': ['omega'], 'j_rot_load': 0.25, 'omega_range': (0, 1),
                   'parameter': dict(a=0.12, b=0.13, c=0.4, j_load=0.2)}
@@ -66,7 +66,8 @@ test_motor_parameter = {'DcSeries': series_motor_parameter,
                         'DcExtEx': extex_motor_parameter,
                         'PMSM': pmsm_motor_parameter,
                         'SynRM': synrm_motor_parameter,
-                        'SCIM': sci_motor_parameter}
+                        'SCIM': sci_motor_parameter,
+                        'DFIM': sci_motor_parameter,}
 
 
 # endregion

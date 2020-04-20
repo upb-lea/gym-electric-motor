@@ -56,8 +56,12 @@ def setup_physical_system(motor_type, converter_type, three_phase=False):
     solver = ScipySolveIvpSolver(method='RK45')
     # combine all modules to a physical system
     if three_phase:
-        physical_system = SynchronousMotorSystem(converter=converter, motor=motor, ode_solver=solver,
-                                                 supply=voltage_supply, load=load, tau=tau)
+        if motor_type == "SCIM":
+            physical_system = SquirrelCageInductionMotorSystem(converter=converter, motor=motor, ode_solver=solver,
+                                                                supply=voltage_supply, load=load, tau=tau)
+        else:
+            physical_system = SynchronousMotorSystem(converter=converter, motor=motor, ode_solver=solver,
+                                                    supply=voltage_supply, load=load, tau=tau)
     else:
         physical_system = DcMotorSystem(converter=converter, motor=motor, ode_solver=solver,
                                         supply=voltage_supply, load=load, tau=tau)

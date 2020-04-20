@@ -273,16 +273,14 @@ def test_discrete_double_power_electronic_converter(tau, interlocking_time, dead
                                                  interlocking_time=interlocking_time, dead_time=dead_time)
             comparable_converter_2 = make_module(cv.PowerElectronicConverter, conv_2, tau=tau,
                                                  interlocking_time=interlocking_time, dead_time=dead_time)
-            action_space_n = converter.action_space.n
+            action_space_n = converter.action_space.nvec
             assert converter.reset() == [0.0, 0.0]  # test if reset returns 0.0
-            actions = [randint(0, action_space_n) for _ in range(100)]
+            actions = [[np.random.randint(0, upper_bound) for upper_bound in action_space_n] for _ in range(100)]
             times = np.arange(100) * tau
-            action_space_1_n = comparable_converter_1.action_space.n
-            action_space_2_n = comparable_converter_2.action_space.n
             for action, t in zip(actions, times):
                 time_steps = converter.set_action(action, t)
-                time_steps_1 = comparable_converter_1.set_action(action % action_space_1_n, t)
-                time_steps_2 = comparable_converter_2.set_action((action // action_space_1_n) % action_space_2_n, t)
+                time_steps_1 = comparable_converter_1.set_action(action[0], t)
+                time_steps_2 = comparable_converter_2.set_action(action[1], t)
                 for time_step in time_steps_1 + time_steps_2:
                     assert time_step in time_steps
                 for time_step in time_steps:
@@ -1001,7 +999,7 @@ class TestDiscDoubleConverter(TestDiscConverter):
     def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
         super().test_initialization(tau, dead_time, interlocking_time, kwargs)
         conv = self.class_to_test(tau=tau, dead_time=dead_time, interlocking_time=interlocking_time, **kwargs)
-        assert conv.action_space.n == np.prod([subconv.action_space.n for subconv in conv._subconverters])
+        assert np.all(conv.action_space.nvec == [subconv.action_space.n for subconv in conv._subconverters])
         for sc in conv._subconverters:
             assert sc._interlocking_time == interlocking_time
             assert sc._dead_time == dead_time
@@ -1018,12 +1016,12 @@ class TestDiscDoubleConverter(TestDiscConverter):
         assert np.all([subconv.reset_counter == 1 for subconv in converter._subconverters])
 
     def test_set_action(self, monkeypatch, converter, **_):
-        for action in range(converter.action_space.n):
-            t = action * converter._tau
-            converter.set_action(action, t)
+        for action in np.ndindex(tuple(converter.action_space.nvec)): #range(converter.action_space.n):
             sc0 = converter._subconverters[0]
             sc1 = converter._subconverters[1]
-            assert sc0.action + sc0.action_space.n * sc1.action == action
+            t = (action[0] * sc1.action_space.n + action[1]) * converter._tau
+            converter.set_action(action, t)
+            assert np.all((sc0.action,  sc1.action) == action)
             assert sc0.action_set_time == t
             assert sc1.action_set_time == t
 
