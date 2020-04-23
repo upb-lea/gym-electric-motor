@@ -26,12 +26,12 @@ if __name__ == '__main__':
         'emotor-dc-series-cont-v1',
         # Pass a class with extra parameters
         visualization=MotorDashboard, visu_period=1,
-        motor_parameter=dict(r_a=45e-3, r_e=45e-3, l_a=.37e-2, l_e_prime=1.2e-3, l_e=1.2e-3, j_rotor=0.01),
+        motor_parameter=dict(r_a=2.5, r_e=4.5, l_a=9.7e-3, l_e_prime=9.2e-3, l_e=9.2e-3, j_rotor=0.001),
         # Take standard class and pass parameters (Load)
-        load_parameter=dict(a=0, b=.0, c=0.15, j_load=.05),
+        load_parameter=dict(a=0, b=.0, c=0.01, j_load=.001),
         reward_weights={'omega': 1000},
         reward_power=0.5,
-        observed_states=None,
+        observed_states=None,  # Constraint violation monitoring is disabled for presentation purpose
         # Pass a string (with extra parameters)
         ode_solver='scipy.solve_ivp', solver_kwargs=dict(method='BDF'),
         # Pass an instance
@@ -105,7 +105,7 @@ if __name__ == '__main__':
         nb_steps=1500000,
         visualize=True,
         action_repetition=1,
-        verbose=2,
+        verbose=1,
         nb_max_start_steps=0,
         nb_max_episode_steps=10000,
         log_interval=10000,
