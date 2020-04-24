@@ -167,13 +167,11 @@
     <span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="c1">#: Current system state y</span>
     <span class="n">_y</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1">#: Function parameters that are passed to the system equation additionally to t and y</span>
+    <span class="c1">#: Function parameters that are passed to the system equation and the system jacobian additionally to t and y</span>
     <span class="n">_f_params</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1">#: Function parameters that are passed to the systems jacobian function additionally to t and y</span>
-    <span class="n">_j_params</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1">#: System equation in the form: _system_equation(t, y, *f_params)</span>
     <span class="n">_system_equation</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1">#: System jacobian in the form _system_jacobian(t,y, *j_params)</span>
+    <span class="c1">#: System jacobian in the form _system_jacobian(t,y, *f_params)</span>
     <span class="n">_system_jacobian</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
@@ -232,16 +230,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            args(list): Additional arguments for the next function calls.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span> <span class="o">=</span> <span class="n">args</span></div>
-
-<div class="viewcode-block" id="OdeSolver.set_j_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_j_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_j_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set further arguments for the systems jacobian call like input quantities.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            args(list): Additional arguments for the next jacobian calls.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_j_params</span> <span class="o">=</span> <span class="n">args</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span> <span class="o">=</span> <span class="n">args</span></div></div>
 
 
 <div class="viewcode-block" id="EulerSolver"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver">[docs]</a><span class="k">class</span> <span class="nc">EulerSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
@@ -343,12 +332,8 @@
 
 <div class="viewcode-block" id="ScipyOdeSolver.set_f_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_f_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ScipyOdeSolver.set_j_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_j_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_j_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="c1"># Docstring of superclass</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_j_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span><span class="o">.</span><span class="n">set_jac_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScipyOdeSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -363,32 +348,24 @@
 <span class="sd">    https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#: System equation with set function parameters</span>
-    <span class="n">_fct</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1">#: System jacobian with set jacobian parameters</span>
-    <span class="n">_j_fct</span> <span class="o">=</span> <span class="kc">None</span>
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
 <div class="viewcode-block" id="ScipySolveIvpSolver.set_system_equation"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_system_equation</span><span class="p">(</span><span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_j_params</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ScipySolveIvpSolver.set_f_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_f_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="c1"># Docstring of superclass</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fct</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ScipySolveIvpSolver.set_j_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_j_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_j_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_j_fct</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+        <span class="c1"># Only Radau BDF and LSODA support the jacobian.</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Radau&#39;</span><span class="p">,</span> <span class="s1">&#39;BDF&#39;</span><span class="p">,</span> <span class="s1">&#39;LSODA&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span><span class="p">[</span><span class="s1">&#39;jac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span></div>
 
 <div class="viewcode-block" id="ScipySolveIvpSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fct</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">jac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_j_fct</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span></div></div>
@@ -401,32 +378,16 @@
 <span class="sd">    https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#: System equation with set function parameters</span>
-    <span class="n">_fct</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1">#: System jacobian with set jacobian parameters</span>
-    <span class="n">_j_fct</span> <span class="o">=</span> <span class="kc">None</span>
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            kwargs(dict): Arguments to pass to the solver. See the solve_ivp description for further information.</span>
+<span class="sd">            kwargs(dict): Arguments to pass to the solver. See the scipy description for further information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver_args</span> <span class="o">=</span> <span class="n">kwargs</span>
 
-<div class="viewcode-block" id="ScipyOdeIntSolver.set_system_equation"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># Docstring of superclass</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_system_equation</span><span class="p">(</span><span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_j_params</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="ScipyOdeIntSolver.set_j_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_j_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_j_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="c1"># Docstring of superclass</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_j_fct</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="ScipyOdeIntSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_j_fct</span><span class="p">,</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span><span class="p">,</span>
                         <span class="n">tfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_solver_args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>

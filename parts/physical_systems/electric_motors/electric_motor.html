@@ -249,6 +249,12 @@ and the limit dictionary.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.HAS_JACOBIAN">
+<code class="sig-name descname">HAS_JACOBIAN</code><em class="property"> = False</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.HAS_JACOBIAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter indicating if the class is implementing the optional jacobian function</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES">
 <code class="sig-name descname">VOLTAGES</code><em class="property"> = []</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of the motor input voltages names</p>
@@ -260,13 +266,38 @@ and the limit dictionary.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian">
+<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</p></li>
+<li><p><strong>u_in</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The motors input voltages.</p></li>
+<li><p><strong>omega</strong> (<em>float</em>) – Angular velocity of the motor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of all electrical motor states over all electrical motor states shape:(states x states)
+[1]: Derivatives of all electrical motor states over omega shape:(states,)
+[2]: Derivative of Torque over all motor states shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">
-<code class="sig-name descname">electrical_ode</code><span class="sig-paren">(</span><em class="sig-param">currents</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.electrical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">electrical_ode</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.electrical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>currents</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</p></li>
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</p></li>
 <li><p><strong>u_in</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The motors input voltages.</p></li>
 <li><p><strong>omega</strong> (<em>float</em>) – Angular velocity of the motor</p></li>
 </ul>

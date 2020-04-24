@@ -193,7 +193,7 @@ Additionally, each SCML-System has got an ODE-Solver for the simulation.</p>
 derive. They only implement private methods. Therefore, the interface to the user stays the same in all cases.</p>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">SCMLSystem</code><span class="sig-paren">(</span><em class="sig-param">converter</em>, <em class="sig-param">motor</em>, <em class="sig-param">load=None</em>, <em class="sig-param">supply='IdealVoltageSupply'</em>, <em class="sig-param">ode_solver='euler'</em>, <em class="sig-param">solver_kwargs=None</em>, <em class="sig-param">noise_generator=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">SCMLSystem</code><span class="sig-paren">(</span><em class="sig-param">converter</em>, <em class="sig-param">motor</em>, <em class="sig-param">load=None</em>, <em class="sig-param">supply='IdealVoltageSupply'</em>, <em class="sig-param">ode_solver='euler'</em>, <em class="sig-param">solver_kwargs=None</em>, <em class="sig-param">noise_generator=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">calc_jacobian=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of a technical setting consisting of these
 components as well as a noise generator and a solver for the electrical ODE of the motor and mechanical ODE of the
 load.</p>
@@ -208,6 +208,8 @@ load.</p>
 <li><p><strong>solver_kwargs</strong> (<em>dict</em>) – Special keyword arguments to be passed to the solver</p></li>
 <li><p><strong>noise_generator</strong> (<a class="reference internal" href="noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator" title="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator"><em>NoiseGenerator</em></a>) – Noise generator</p></li>
 <li><p><strong>tau</strong> (<em>float</em>) – discrete time step of the system</p></li>
+<li><p><strong>calc_jacobian</strong> (<em>bool</em>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
+Default: The jacobians are used, if available</p></li>
 <li><p><strong>kwargs</strong> (<em>dict</em>) – Further arguments to pass to the modules while instantiation</p></li>
 </ul>
 </dd>
@@ -285,7 +287,7 @@ This method is called in the environment in every step to update the systems sta
 <h2>Dc Motor System<a class="headerlink" href="#dc-motor-system" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">DcMotorSystem</code><span class="sig-paren">(</span><em class="sig-param">converter</em>, <em class="sig-param">motor</em>, <em class="sig-param">load=None</em>, <em class="sig-param">supply='IdealVoltageSupply'</em>, <em class="sig-param">ode_solver='euler'</em>, <em class="sig-param">solver_kwargs=None</em>, <em class="sig-param">noise_generator=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DcMotorSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">DcMotorSystem</code><span class="sig-paren">(</span><em class="sig-param">converter</em>, <em class="sig-param">motor</em>, <em class="sig-param">load=None</em>, <em class="sig-param">supply='IdealVoltageSupply'</em>, <em class="sig-param">ode_solver='euler'</em>, <em class="sig-param">solver_kwargs=None</em>, <em class="sig-param">noise_generator=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">calc_jacobian=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DcMotorSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>SCML-System that can be used for all DC Motors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -298,6 +300,8 @@ This method is called in the environment in every step to update the systems sta
 <li><p><strong>solver_kwargs</strong> (<em>dict</em>) – Special keyword arguments to be passed to the solver</p></li>
 <li><p><strong>noise_generator</strong> (<a class="reference internal" href="noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator" title="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator"><em>NoiseGenerator</em></a>) – Noise generator</p></li>
 <li><p><strong>tau</strong> (<em>float</em>) – discrete time step of the system</p></li>
+<li><p><strong>calc_jacobian</strong> (<em>bool</em>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
+Default: The jacobians are used, if available</p></li>
 <li><p><strong>kwargs</strong> (<em>dict</em>) – Further arguments to pass to the modules while instantiation</p></li>
 </ul>
 </dd>

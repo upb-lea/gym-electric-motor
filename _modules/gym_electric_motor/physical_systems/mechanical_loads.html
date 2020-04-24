@@ -202,6 +202,9 @@
 
     <span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="mi">0</span>
 
+    <span class="c1">#: Parameter indicating if the class is implementing the optional jacobian function</span>
+    <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">False</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">j_load</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -243,6 +246,25 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+<div class="viewcode-block" id="MechanicalLoad.mechanical_jacobian"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.mechanical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculation of the jacobians of the mechanical-ODE for each of the mechanical state.</span>
+
+<span class="sd">        Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also</span>
+<span class="sd">        be set to True. Otherwise, the jacobian will not be called.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            t(float): Current time of the system.</span>
+<span class="sd">            mechanical_state(ndarray(float)): Current state of the mechanical system.</span>
+<span class="sd">            torque(float): Generated input torque by the electrical motor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple(ndarray, ndarray):</span>
+<span class="sd">                [0]: Derivatives of the mechanical_state-odes over the mechanical_states shape:(states x states)</span>
+<span class="sd">                [1]: Derivatives of the mechanical_state-odes over the torque shape:(states,)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
 <div class="viewcode-block" id="MechanicalLoad.get_state_space"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.get_state_space">[docs]</a>    <span class="k">def</span> <span class="nf">get_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega_range</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -265,7 +287,10 @@
 <span class="sd">        | j_load: Moment of inertia of the mechanical system.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_load_parameter</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">j_load</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">_load_parameter</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">j_load</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1">#: Parameter indicating if the class is implementing the optional jacobian function</span>
+    <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">load_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -275,13 +300,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_parameter</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_parameter</span><span class="o">=</span><span class="p">(),</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            load_parameter(dict(float)): Parameter dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">load_parameter</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">j_load</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;j_load&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">limits</span> <span class="ow">or</span> <span class="p">{})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
@@ -295,13 +321,21 @@
 
 <div class="viewcode-block" id="PolynomialStaticLoad.mechanical_ode"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">torque</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static_load</span><span class="p">(</span><span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">torque</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static_load</span><span class="p">(</span><span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PolynomialStaticLoad.mechanical_jacobian"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">*</span> <span class="n">sign</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">*</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">])</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">]]),</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div></div>
 
 
 <div class="viewcode-block" id="ConstantSpeedLoad"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad">[docs]</a><span class="k">class</span> <span class="nc">ConstantSpeedLoad</span><span class="p">(</span><span class="n">MechanicalLoad</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Constant speed mechanical load system which will always set the speed to a predefined value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">omega_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -325,7 +359,32 @@
 
 <div class="viewcode-block" id="ConstantSpeedLoad.mechanical_ode"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ConstantSpeedLoad.mechanical_jacobian"><a class="viewcode-back" href="../../../parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">PositionalPolyStaticLoad</span><span class="p">(</span><span class="n">PolynomialStaticLoad</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">load_parameter</span> <span class="o">=</span> <span class="n">load_parameter</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="n">limits</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">limits</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">load_parameter</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="s1">&#39;gear_ratio&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">load_parameter</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="s1">&#39;meter_per_revolution&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">load_parameter</span><span class="p">,</span> <span class="n">limits</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega_range</span><span class="p">):</span>
+        <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_state_space</span><span class="p">(</span><span class="n">omega_range</span><span class="p">)</span>
+        <span class="n">lower</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">upper</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span>
+
+
+
+
 </pre></div>
 
            </div>

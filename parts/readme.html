@@ -84,32 +84,32 @@
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Readme File</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#gym-electric-motor-gem">Gym Electric Motor (GEM)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#physical-structure-of-the-environment-s-components">Physical Structure of the Environment’s Components</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#control-flow-of-a-step-cycle-of-the-environment">Control Flow of a Step Cycle of the Environment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#citation">Citation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#installing">Installing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#getting-started">Getting started</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem-make-call">GEM Make Call</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#environment-ids">Environment Ids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#physical-structure-of-the-environment-s-components">Physical Structure of the Environment’s Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#control-flow-of-a-step-cycle-of-the-environment">Control Flow of a Step Cycle of the Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citation">Citation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gem-make-call">GEM Make Call</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#environment-ids">Environment Ids</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#make-keyword-arguments">Make Keyword-Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#reset">Reset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#step">Step</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#render">Render</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#physical-system-models">Physical System Models</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#motor-models">Motor Models</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#converter">Converter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#load">Load</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#notes-about-the-states-and-value-ranges">Notes about the states and value ranges</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#notes-about-the-parameters">Notes about the Parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#running-unit-tests-with-pytest">Running Unit Tests with Pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reset">Reset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step">Step</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#render">Render</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#physical-system-models">Physical System Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motor-models">Motor Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#converter">Converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load">Load</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#notes-about-the-states-and-value-ranges">Notes about the states and value ranges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes-about-the-parameters">Notes about the Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-unit-tests-with-pytest">Running Unit Tests with Pytest</a></li>
 </ul>
 </li>
 </ul>
@@ -188,9 +188,7 @@
             
   <div class="section" id="readme-file">
 <h1>Readme File<a class="headerlink" href="#readme-file" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="gym-electric-motor-gem">
-<h2>Gym Electric Motor (GEM)<a class="headerlink" href="#gym-electric-motor-gem" title="Permalink to this headline">¶</a></h2>
-<a class="reference external image-reference" href="docs/plots/project_banner.jpg"><img alt="" src="../_images/project_banner.jpg" /></a>
+<a class="reference external image-reference" href="docs/plots/Motor_Logo.png"><img alt="" src="parts/docs/plots/Motor_Logo.png" /></a>
 <a class="reference external image-reference" href="https://travis-ci.org/upb-lea/gym-electric-motor"><img alt="Build Status" src="https://travis-ci.org/upb-lea/gym-electric-motor.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/upb-lea/gym-electric-motor"><img alt="codecov" src="https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg" /></a>
 <a class="reference external image-reference" href="https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a>
@@ -207,15 +205,15 @@ Beside electrical motors, also converters and load models are implemented. The c
 switching commands (discrete mode).
 The figure shows the basic scheme of the converter, motor and load.</p>
 <div class="section" id="physical-structure-of-the-environment-s-components">
-<h3>Physical Structure of the Environment’s Components<a class="headerlink" href="#physical-structure-of-the-environment-s-components" title="Permalink to this headline">¶</a></h3>
+<h2>Physical Structure of the Environment’s Components<a class="headerlink" href="#physical-structure-of-the-environment-s-components" title="Permalink to this headline">¶</a></h2>
 <a class="reference external image-reference" href="docs/plots/SCML_Setting.svg"><img alt="" src="../_images/SCML_Setting1.svg" /></a>
 </div>
 <div class="section" id="control-flow-of-a-step-cycle-of-the-environment">
-<h3>Control Flow of a Step Cycle of the Environment<a class="headerlink" href="#control-flow-of-a-step-cycle-of-the-environment" title="Permalink to this headline">¶</a></h3>
+<h2>Control Flow of a Step Cycle of the Environment<a class="headerlink" href="#control-flow-of-a-step-cycle-of-the-environment" title="Permalink to this headline">¶</a></h2>
 <a class="reference external image-reference" href="docs/plots/CycleScheme.svg"><img alt="" src="../_images/CycleScheme.svg" /></a>
 </div>
 <div class="section" id="citation">
-<h3>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h3>
+<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h2>
 <p>A whitepaper for this framework is available under <a class="reference external" href="https://arxiv.org/abs/1910.09434">arxiv.org/abs/1910.09434</a>. Please use the following BibTeX entry for citing us:</p>
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>@misc{traue2019reinforcement,
     title={Towards a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},
@@ -229,7 +227,7 @@ The figure shows the basic scheme of the converter, motor and load.</p>
 </div>
 </div>
 <div class="section" id="installing">
-<h3>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h3>
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Install gym-electric-motor from PyPI (recommended):</p></li>
 </ul>
@@ -249,11 +247,11 @@ pip install -e .
 </div>
 </div>
 <div class="section" id="authors">
-<h3>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h3>
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
 <p>Arne Traue, Gerrit Book</p>
 </div>
 <div class="section" id="getting-started">
-<h3>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h3>
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p>Like every gym environment, the basic user interface consists of four main functions.</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -287,14 +285,14 @@ Call this function iteratively until termination is reached.</p>
 </ul>
 </div>
 <div class="section" id="gem-make-call">
-<h3>GEM Make Call<a class="headerlink" href="#gem-make-call" title="Permalink to this headline">¶</a></h3>
+<h2>GEM Make Call<a class="headerlink" href="#gem-make-call" title="Permalink to this headline">¶</a></h2>
 <p>The make function takes the environment-ids and several constructor arguments.
 Every environment also works without further parameters with default values.
 These default parameters can be looked up in the API-documentation of every GEM-environment.
 With the environment-id you select a certain motor type and action type (continuous or discrete) and with the further
 constructor arguments you can parametrize the environment to your control problem.</p>
 <div class="section" id="environment-ids">
-<h4>Environment Ids<a class="headerlink" href="#environment-ids" title="Permalink to this headline">¶</a></h4>
+<h3>Environment Ids<a class="headerlink" href="#environment-ids" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Externally excited DC motor with continuous actions.</p>
@@ -358,7 +356,7 @@ constructor arguments you can parametrize the environment to your control proble
 </li>
 </ul>
 <div class="section" id="make-keyword-arguments">
-<h5>Make Keyword-Arguments<a class="headerlink" href="#make-keyword-arguments" title="Permalink to this headline">¶</a></h5>
+<h4>Make Keyword-Arguments<a class="headerlink" href="#make-keyword-arguments" title="Permalink to this headline">¶</a></h4>
 <p>Using the keyword arguments in the <code class="docutils literal notranslate"><span class="pre">gem.make(id,</span> <span class="pre">**kwargs)</span></code> function you can select different function modules for the
 environment and parametrize these modules.
 The main level modules of each GEM-environment consists of four function modules:</p>
@@ -419,13 +417,13 @@ the make keyword-arguments in the same way.</p>
 </div>
 </div>
 <div class="section" id="reset">
-<h3>Reset<a class="headerlink" href="#reset" title="Permalink to this headline">¶</a></h3>
+<h2>Reset<a class="headerlink" href="#reset" title="Permalink to this headline">¶</a></h2>
 <p>The reset function determines new references, new initial values and resets the visualization.
 Call this function before a new episode begins.
 The parameters of the motor, converter and load will be those during instantiation.</p>
 </div>
 <div class="section" id="step">
-<h3>Step<a class="headerlink" href="#step" title="Permalink to this headline">¶</a></h3>
+<h2>Step<a class="headerlink" href="#step" title="Permalink to this headline">¶</a></h2>
 <p>This function performs one action on the environment for one time step.
 It simulates the motor and needs to be called in every time step. It takes the action as parameter only.
 First the input voltage to the motor from the converter is determined and afterwards an integrator is used to compute
@@ -434,24 +432,24 @@ Eventually, the reward is evaluated and returned together with the next observat
 Several reward functions are available.</p>
 </div>
 <div class="section" id="render">
-<h3>Render<a class="headerlink" href="#render" title="Permalink to this headline">¶</a></h3>
+<h2>Render<a class="headerlink" href="#render" title="Permalink to this headline">¶</a></h2>
 <p>The visualization contains graphs of the motor quantities ‘speed, voltages, currents, torque’ for one episode.
 What should be shown is to be specified in the configuration-parameter.
 The quantities that should be displayed can be specified in the constructor-parameters.
 All visualizations are optional and recommended to be disabled for increased speed of training.</p>
 </div>
 <div class="section" id="examples">
-<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Conventional PI controller as speed controller on a dc series motor <a class="reference external" href="examples/pi_series_omega_control.py">(jump to source)</a>.</p></li>
 <li><p>Training and testing of a <a class="reference external" href="https://github.com/keras-rl/keras-rl">Keras-rl</a> DDPG-Agent as a speed controller on a dc series motor <a class="reference external" href="examples/ddpg_series_omega_control.py">(jump to source)</a>.</p></li>
 </ul>
 </div>
 <div class="section" id="physical-system-models">
-<h3>Physical System Models<a class="headerlink" href="#physical-system-models" title="Permalink to this headline">¶</a></h3>
+<h2>Physical System Models<a class="headerlink" href="#physical-system-models" title="Permalink to this headline">¶</a></h2>
 <p>The following electrical motor , converter and mechanical load models are included. More detailed descriptions can be found in the corresponding classes.</p>
 <div class="section" id="motor-models">
-<h4>Motor Models<a class="headerlink" href="#motor-models" title="Permalink to this headline">¶</a></h4>
+<h3>Motor Models<a class="headerlink" href="#motor-models" title="Permalink to this headline">¶</a></h3>
 <p>The following motor models are included:</p>
 <p>Four DC motors:</p>
 <ul class="simple">
@@ -467,7 +465,7 @@ All visualizations are optional and recommended to be disabled for increased spe
 </ul>
 </div>
 <div class="section" id="converter">
-<h4>Converter<a class="headerlink" href="#converter" title="Permalink to this headline">¶</a></h4>
+<h3>Converter<a class="headerlink" href="#converter" title="Permalink to this headline">¶</a></h3>
 <p>Following converters are included:</p>
 <ul class="simple">
 <li><p>1 quadrant converter (1QC)</p></li>
@@ -481,13 +479,13 @@ Furthermore, they can be controlled with a discrete action space or a continuous
 Continuous actions are the duty cycles for a pulse width modulation on the transistors.</p>
 </div>
 <div class="section" id="load">
-<h4>Load<a class="headerlink" href="#load" title="Permalink to this headline">¶</a></h4>
+<h3>Load<a class="headerlink" href="#load" title="Permalink to this headline">¶</a></h3>
 <p>The load model consists of a quadratic load function, with user defined coefficients.
 Furthermore the moment of inertia of the load attached to the motor can be specified.</p>
 </div>
 </div>
 <div class="section" id="notes-about-the-states-and-value-ranges">
-<h3>Notes about the states and value ranges<a class="headerlink" href="#notes-about-the-states-and-value-ranges" title="Permalink to this headline">¶</a></h3>
+<h2>Notes about the states and value ranges<a class="headerlink" href="#notes-about-the-states-and-value-ranges" title="Permalink to this headline">¶</a></h2>
 <p>The included states for each motor are summarized and briefly described in the <a class="reference external" href="visualizations/motor_dashboard.html">Motor Dashboard</a>.
 Every state that can be plotted can also be used in the state filter or as observed state.
 The actions are basically understood as the desired duty cycles. The actual applied voltage can be taken from the observations.
@@ -495,15 +493,17 @@ The observations are normalized to their physical limits that can be accessed wi
 Therefore, all values are typically in a range of [0, 1] or [-1, 1] without limit violation.</p>
 </div>
 <div class="section" id="notes-about-the-parameters">
-<h3>Notes about the Parameters<a class="headerlink" href="#notes-about-the-parameters" title="Permalink to this headline">¶</a></h3>
+<h2>Notes about the Parameters<a class="headerlink" href="#notes-about-the-parameters" title="Permalink to this headline">¶</a></h2>
 <p>All nominal values of voltages and currents are DC values in the case of a DC motor and peak phase values for the PMSM.
 Therefore, data sheet values for line voltage and phase currents of a PMSM has to be transformed with:</p>
 <a class="reference external image-reference" href="docs/plots/voltagetransformation.svg"><img alt="" src="../_images/voltagetransformation.svg" /></a>
 <p>Furthermore, the angular velocity is the mechanical one and not the electrical:</p>
 <a class="reference external image-reference" href="docs/plots/omegame.svg"><img alt="" src="../_images/omegame.svg" /></a>
+<p>The mechanical one is needed for speed controller.
+The included angle is the electrical one due to its usage in the rotational transformation for three phase motors.</p>
 </div>
 <div class="section" id="running-unit-tests-with-pytest">
-<h3>Running Unit Tests with Pytest<a class="headerlink" href="#running-unit-tests-with-pytest" title="Permalink to this headline">¶</a></h3>
+<h2>Running Unit Tests with Pytest<a class="headerlink" href="#running-unit-tests-with-pytest" title="Permalink to this headline">¶</a></h2>
 <p>To run the unit tests ‘’pytest’’ is required.
 All tests can be found in the ‘’tests’’ folder.
 Execute pytest in the project’s root folder:</p>
@@ -515,7 +515,6 @@ Execute pytest in the project’s root folder:</p>
 </pre></div>
 </div>
 <p>All tests shall pass.</p>
-</div>
 </div>
 </div>
 

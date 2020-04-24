@@ -195,7 +195,7 @@
 <h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">PolynomialStaticLoad</code><span class="sig-paren">(</span><em class="sig-param">load_parameter=()</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#PolynomialStaticLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">PolynomialStaticLoad</code><span class="sig-paren">(</span><em class="sig-param">load_parameter=()</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#PolynomialStaticLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.</p>
 <dl>
 <dt>Parameter dictionary entries:</dt><dd><div class="line-block">
@@ -211,6 +211,12 @@
 <dd class="field-odd"><p><strong>load_parameter</strong> (<em>dict</em><em>(</em><em>float</em><em>)</em>) – Parameter dictionary.</p>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.HAS_JACOBIAN">
+<code class="sig-name descname">HAS_JACOBIAN</code><em class="property"> = True</em><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.HAS_JACOBIAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter indicating if the class is implementing the optional jacobian function</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.get_state_space">
 <code class="sig-name descname">get_state_space</code><span class="sig-paren">(</span><em class="sig-param">omega_range</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.get_state_space" title="Permalink to this definition">¶</a></dt>
@@ -246,6 +252,30 @@ dict(float): Mapping of the motor states to their limit values.</p>
 <em class="property">property </em><code class="sig-name descname">load_parameter</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.load_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 dict(float): Parameter dictionary of the load.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_jacobian">
+<code class="sig-name descname">mechanical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#PolynomialStaticLoad.mechanical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the jacobians of the mechanical-ODE for each of the mechanical state.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>mechanical_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state of the mechanical system.</p></li>
+<li><p><strong>torque</strong> (<em>float</em>) – Generated input torque by the electrical motor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of the mechanical_state-odes over the mechanical_states shape:(states x states)
+[1]: Derivatives of the mechanical_state-odes over the torque shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
