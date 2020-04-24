@@ -58,7 +58,12 @@ python setup.py install
 pip install -e .
 ```
 ### Authors
-Arne Traue, Gerrit Book
+* Praneeth Balakrishna
+* Gerrit Book
+* Wilhelm Kirchgässner
+* Maximilian Schenke
+* Arne Traue
+* Oliver Wallscheid
 
 ### Getting started
 Like every gym environment, the basic user interface consists of four main functions.
