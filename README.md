@@ -1,5 +1,4 @@
-# Gym Electric Motor (GEM)
-![](docs/plots/project_banner.jpg)
+![](docs/plots/Motor_Logo.png)
 
 [![Build Status](https://travis-ci.org/upb-lea/gym-electric-motor.svg?branch=master)](https://travis-ci.org/upb-lea/gym-electric-motor)
 [![codecov](https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg)](https://codecov.io/gh/upb-lea/gym-electric-motor)
