@@ -16,7 +16,7 @@ setuptools.setup(
                                    'keras_rl>=0.4.2',
                                    'rl>=3.0',
                                    'tensorflow<=1.14']},
-      author='Arne Traue, Gerrit Book, Praneeth Balakrishna',
+      author='Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid',
       long_description=long_description,
       long_description_content_type="text/markdown",
       url="https://github.com/upb-lea/gym-electric-motor",

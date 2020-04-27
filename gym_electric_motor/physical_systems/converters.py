@@ -16,10 +16,10 @@ class PowerElectronicConverter:
         | E.g. (0, 1) - Only positive currents / (-1, 1) Positive and negative currents
     """
 
-    #: Minimum and Maximum possible output voltage of the converter
-    voltages = (None, None)
-    #: Minimum and Maximum possible output current of the converter
-    currents = (None, None)
+    #: gym.Space that defines Minimum, Maximum and Dimension of possible output voltage of the converter
+    voltages = None
+    #: gym.Space that defines Minimum, Maximum and Dimension of possible output current of the converter
+    currents = None
     #: gym.Space that defines the set of all possible actions for the converter
     action_space = None
     #: Default action that is taken after a reset.
@@ -129,7 +129,7 @@ class ContDynamicallyAveragedConverter(PowerElectronicConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return [min(max(self._convert(i_out, t) - self._interlock(i_out, t), self.voltages[0]), self.voltages[1])]
+        return [min(max(self._convert(i_out, t) - self._interlock(i_out, t), self.voltages.low[0]), self.voltages.high[0])]
 
     def _convert(self, i_in, t):
         """
@@ -196,15 +196,12 @@ class DiscOneQuadrantConverter(DiscConverter):
         Discrete(2)
 
     Output Voltages and Currents:
-        | voltages: (0, 1)
-        | currents: (0, 1)
-
-    Output Voltage Space:
-        Box(0, 1, shape=(1,))
+        | voltages: Box(0, 1, shape=(1,))
+        | currents: Box(0, 1, shape=(1,))
     """
 
-    voltages = (0, 1)
-    currents = (0, 1)
+    voltages = Box(0, 1, shape=(1,))
+    currents = Box(0, 1, shape=(1,))
     action_space = Discrete(2)
 
     def convert(self, i_out, t):
@@ -230,15 +227,12 @@ class DiscTwoQuadrantConverter(DiscConverter):
         Discrete(3)
 
     Output Voltages and Currents:
-        | voltages: (0, 1)
-        | currents: (-1, 1)
-
-    Output Voltage Space:
-        Box(0, 1, shape=(1,))
+        | voltages: Box(0, 1, shape=(1,))
+        | currents: Box(-1, 1, shape=(1,))
     """
 
-    voltages = (0, 1)
-    currents = (-1, 1)
+    voltages = Box(0, 1, shape=(1,))
+    currents = Box(-1, 1, shape=(1,))
     action_space = Discrete(3)
 
     def convert(self, i_out, t):
@@ -301,14 +295,11 @@ class DiscFourQuadrantConverter(DiscConverter):
         Discrete(4)
 
     Output Voltages and Currents:
-        | voltages: (-1, 1)
-        | currents: (-1, 1)
-
-    Output Voltage Space:
-        Box(-1, 1, shape=(1,))
+        | Box(-1, 1, shape=(1,))
+        | Box(-1, 1, shape=(1,))
     """
-    voltages = (-1, 1)
-    currents = (-1, 1)
+    voltages = Box(-1, 1, shape=(1,))
+    currents = Box(-1, 1, shape=(1,))
     action_space = Discrete(4)
 
     def __init__(self, **kwargs):
@@ -352,15 +343,12 @@ class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
         Box([0,1])
 
     Output Voltages and Currents:
-        | voltages: (0, 1)
-        | currents: (0, 1)
-
-    Output Voltage Space:
-        Box(0, 1, shape=(1,))
+        | voltages: Box(0, 1, shape=(1,))
+        | currents: Box(0, 1, shape=(1,))
     """
+    voltages = Box(0, 1, shape=(1,))
+    currents = Box(0, 1, shape=(1,))
     action_space = Box(0, 1, shape=(1,))
-    voltages = (0, 1)
-    currents = (0, 1)
 
     def _convert(self, i_in, *_):
         # Docstring in base class
@@ -388,16 +376,13 @@ class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
         Box([0,1])
 
     Output Voltages and Currents:
-        | voltages: (0, 1)
-        | currents: (-1, 1)
-
-    Output Voltage Space:
-        Box(0, 1, shape=(1,))
-
+        | voltages: Box(0, 1, shape=(1,))
+        | currents: Box(-1, 1, shape=(1,))
     """
+    voltages = Box(0, 1, shape=(1,))
+    currents = Box(-1, 1, shape=(1,))
     action_space = Box(0, 1, shape=(1,))
-    voltages = (0, 1)
-    currents = (-1, 1)
+
 
     def _convert(self, *_):
         # Docstring in base class
@@ -426,18 +411,15 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
         | Duty Cycle Transistor T4: 0.5 * (Action + 1)
 
     Action Space:
-        Box([-1,1])
+        Box(-1, 1, shape=(1,))
 
     Output Voltages and Currents:
-        | voltages: (-1,1)
-        | currents: (-1,1)
-
-    Output Voltage Space:
-        Box(-1, 1, shape=(1,))
+        | voltages: Box(-1, 1, shape=(1,))
+        | currents: Box(-1, 1, shape=(1,))
     """
+    voltages = Box(-1, 1, shape=(1,))
+    currents = Box(-1, 1, shape=(1,))
     action_space = Box(-1, 1, shape=(1,))
-    voltages = (-1, 1)
-    currents = (-1, 1)
 
     def __init__(self, **kwargs):
         # Docstring in base class
@@ -471,23 +453,23 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
         return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[0]])
 
 
-class DiscDoubleConverter(DiscConverter):
+class DiscMultiConverter(DiscConverter):
     """
-    Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.
+    Converter that allows to include an arbitrary number of independent discrete subconverters.
+    Subconverters must be 'elementary' and can not be MultiConverters.
 
     Key:
-        'Disc-Double'
+        'Disc-Multi'
 
     Actions:
-        | The actions are built from the two sub converter actions.
-        | Action of Subconverter 0: Action % subconverters[0].action_space.n
-        | Action of Subconverter 1: Action // subconverters[0].action_space.n
+        Concatenation of the subconverters' action spaces
 
     Action Space:
-        Discrete(subconverter[0].action_space.n * subconverter[1].action_space.n)
+        MultiDiscrete([subconverter[0].action_space.n , subconverter[1].action_space.n, ...])
 
     Output Voltage Space:
-        Output Voltage Space of Subconverter 0 x Output Voltage Space of Subconverter 1
+        Box([subconverter[0].voltages.low, subconverter[1].voltages.low, ...],
+            [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])
     """
 
     def __init__(self, subconverters, **kwargs):
@@ -496,26 +478,30 @@ class DiscDoubleConverter(DiscConverter):
             subconverters(list(str/class/object): Subconverters to instantiate .
             kwargs(dict): Parameters to pass to the Subconverters and the superclass
         """
-        self._subconverters = [
-            instantiate(PowerElectronicConverter, subconverters[0], **kwargs),
-            instantiate(PowerElectronicConverter, subconverters[1], **kwargs)
-        ]
-        self.action_space = MultiDiscrete([self._subconverters[0].action_space.n, self._subconverters[1].action_space.n]) # Discrete(self._subconverters[0].action_space.n * self._subconverters[1].action_space.n)
         super().__init__(**kwargs)
-        self.currents = [
-            [subconverter.currents[0] for subconverter in self._subconverters],
-            [subconverter.currents[1] for subconverter in self._subconverters]
-        ]
-        self.voltages = [
-            [subconverter.voltages[0] for subconverter in self._subconverters],
-            [subconverter.voltages[1] for subconverter in self._subconverters]
-        ]
+        self._subconverters = [instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters]
+
+        self.subsignal_current_space_dims = np.array([(np.squeeze(subconverter.currents.shape) or 1) for subconverter in self._subconverters])
+        self.subsignal_voltage_space_dims = np.array([(np.squeeze(subconverter.voltages.shape) or 1) for subconverter in self._subconverters])
+
+        self.action_space = MultiDiscrete([subconverter.action_space.n for subconverter in self._subconverters])
+
+        currents_low = np.concatenate([subconverter.currents.low for subconverter in self._subconverters])
+        currents_high = np.concatenate([subconverter.currents.high for subconverter in self._subconverters])
+        self.currents = Box(currents_low, currents_high)
+
+        voltages_low = np.concatenate([subconverter.voltages.low for subconverter in self._subconverters])
+        voltages_high = np.concatenate([subconverter.voltages.high for subconverter in self._subconverters])
+        self.voltages = Box(voltages_low, voltages_high)
 
     def convert(self, i_out, t):
         # Docstring in base class
         u_in = []
-        for subconverter, i in zip(self._subconverters, i_out):
-            u_in += subconverter.convert([i], t)
+        subsignal_idx_low = 0
+        for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_voltage_space_dims):
+            subsignal_idx_high = subsignal_idx_low + subsignal_space_size
+            u_in += subconverter.convert(i_out[subsignal_idx_low:subsignal_idx_high], t)
+            subsignal_idx_low = subsignal_idx_high
         return u_in
 
     def reset(self):
@@ -534,24 +520,33 @@ class DiscDoubleConverter(DiscConverter):
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return self._subconverters[0].i_sup([i_out[0]]) + self._subconverters[1].i_sup([i_out[1]])
+        i_sup = 0
+        subsignal_idx_low = 0
+        for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_current_space_dims):
+            subsignal_idx_high = subsignal_idx_low + subsignal_space_size
+            i_sup += subconverter.i_sup(i_out[subsignal_idx_low:subsignal_idx_high])
+            subsignal_idx_low = subsignal_idx_high
+        return i_sup
 
 
-class ContDoubleConverter(ContDynamicallyAveragedConverter):
+class ContMultiConverter(ContDynamicallyAveragedConverter):
     """
-    Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.
+    Converter that allows to include an arbitrary number of independent continuous subconverters.
+    Subconverters must be 'elementary' and can not be MultiConverters.
 
     Key:
-        'Cont-Double'
+        'Cont-Multi'
 
     Actions:
         Concatenation of the subconverters' action spaces
 
     Action Space:
-        Action Space of Subconverter 0 x Action Space of Subconverter 1
+        Box([subconverter[0].action_space.low, subconverter[1].action_space.low, ...],
+            [subconverter[0].action_space.high, subconverter[1].action_space.high, ...])
 
     Output Voltage Space:
-        Output Voltage Space of Subconverter 0 x Output Voltage Space of Subconverter 1
+        Box([subconverter[0].voltages.low, subconverter[1].voltages.low, ...],
+            [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])
     """
 
     def __init__(self, subconverters, **kwargs):
@@ -561,23 +556,22 @@ class ContDoubleConverter(ContDynamicallyAveragedConverter):
             kwargs(dict): Parameters to pass to the Subconverters
         """
         super().__init__(**kwargs)
-        self._subconverters = [
-            instantiate(PowerElectronicConverter, subconverters[0], **kwargs),
-            instantiate(PowerElectronicConverter, subconverters[1], **kwargs)
-        ]
-        assert len(self._subconverters[0].action_space.shape) == 1
-        assert len(self._subconverters[1].action_space.shape) == 1
-        low = np.concatenate((self._subconverters[0].action_space.low, self._subconverters[1].action_space.low))
-        high = np.concatenate((self._subconverters[0].action_space.high, self._subconverters[1].action_space.high))
-        self.action_space = Box(low, high)
-        self.currents = [
-            [subconverter.currents[0] for subconverter in self._subconverters],
-            [subconverter.currents[1] for subconverter in self._subconverters]
-        ]
-        self.voltages = [
-            [subconverter.voltages[0] for subconverter in self._subconverters],
-            [subconverter.voltages[1] for subconverter in self._subconverters]
-        ]
+        self._subconverters = [instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters]
+
+        self.subsignal_current_space_dims = np.array([(np.squeeze(subconverter.currents.shape) or 1) for subconverter in self._subconverters])
+        self.subsignal_voltage_space_dims = np.array([(np.squeeze(subconverter.voltages.shape) or 1) for subconverter in self._subconverters])
+
+        action_space_low = np.concatenate([subconverter.action_space.low for subconverter in self._subconverters])
+        action_space_high = np.concatenate([subconverter.action_space.high for subconverter in self._subconverters])
+        self.action_space = Box(action_space_low, action_space_high)
+
+        currents_low = np.concatenate([subconverter.currents.low for subconverter in self._subconverters])
+        currents_high = np.concatenate([subconverter.currents.high for subconverter in self._subconverters])
+        self.currents = Box(currents_low, currents_high)
+
+        voltages_low = np.concatenate([subconverter.voltages.low for subconverter in self._subconverters])
+        voltages_high = np.concatenate([subconverter.voltages.high for subconverter in self._subconverters])
+        self.voltages = Box(voltages_low, voltages_high)
 
     def set_action(self, action, t):
         # Docstring in base class
@@ -599,8 +593,11 @@ class ContDoubleConverter(ContDynamicallyAveragedConverter):
     def convert(self, i_out, t):
         # Docstring in base class
         u_in = []
-        for subconverter, i in zip(self._subconverters, i_out):
-            u_in += subconverter.convert([i], t)
+        subsignal_idx_low = 0
+        for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_voltage_space_dims):
+            subsignal_idx_high = subsignal_idx_low + subsignal_space_size
+            u_in += subconverter.convert(i_out[subsignal_idx_low:subsignal_idx_high], t)
+            subsignal_idx_low = subsignal_idx_high
         return u_in
 
     def _convert(self, i_in, t):
@@ -609,7 +606,14 @@ class ContDoubleConverter(ContDynamicallyAveragedConverter):
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return self._subconverters[0].i_sup([i_out[0]]) + self._subconverters[1].i_sup([i_out[1]])
+        i_sup = 0
+        subsignal_idx_low = 0
+        for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_current_space_dims):
+            subsignal_idx_high = subsignal_idx_low + subsignal_space_size
+            i_sup += subconverter.i_sup(i_out[subsignal_idx_low:subsignal_idx_high])
+            subsignal_idx_low = subsignal_idx_high
+
+        return i_sup
 
 
 class DiscB6BridgeConverter(DiscConverter):
@@ -644,8 +648,8 @@ class DiscB6BridgeConverter(DiscConverter):
         Discrete(8)
 
     Output Voltages and Currents:
-        | voltages: (-1,1)
-        | currents: (-1,1)
+        | voltages: Box(-1,1, shape=(3,))
+        | currents: Box(-1,1, shape=(3,))
 
     Output Voltage Space:
         Box(-0.5, 0.5, shape=(3,))
@@ -653,9 +657,9 @@ class DiscB6BridgeConverter(DiscConverter):
 
     action_space = Discrete(8)
     # Only positive voltages can be applied
-    voltages = (-1, 1)
+    voltages = Box(-1, 1, shape=(3,))
     # positive and negative currents are possible
-    currents = (-1, 1)
+    currents = Box(-1, 1, shape=(3,))
     _reset_action = 0
     _subactions = [
         [2, 2, 2],
@@ -722,8 +726,8 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
         Box(-1, 1, shape=(3,))
 
     Output Voltages and Currents:
-        | voltages: (-1,1)
-        | currents: (-1,1)
+        | voltages: Box(-1,1, shape=(3,))
+        | currents: Box(-1,1, shape=(3,))
 
     Output Voltage Space:
         Box(-0.5, 0.5, shape=(3,))
@@ -731,9 +735,9 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
 
     action_space = Box(-1, 1, shape=(3,))
     # Only positive voltages can be applied
-    voltages = (-1, 1)
+    voltages = Box(-1, 1, shape=(3,))
     # Positive and negative currents are possible
-    currents = (-1, 1)
+    currents = Box(-1, 1, shape=(3,))
 
     _reset_action = [0, 0, 0]
 
@@ -769,147 +773,6 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
         times += self._subconverters[0].set_action([0.5 * (action[0] + 1)], t)
         times += self._subconverters[1].set_action([0.5 * (action[1] + 1)], t)
         times += self._subconverters[2].set_action([0.5 * (action[2] + 1)], t)
-        return sorted(list(set(times)))
-
-    def _convert(self, i_in, t):
-        # Not used
-        pass
-
-    def i_sup(self, i_out):
-        # Docstring in base class
-        return sum([subconverter.i_sup([i_out_]) for subconverter, i_out_ in zip(self._subconverters, i_out)])
-
-
-class ContDoubleB6BridgeConverter(ContDynamicallyAveragedConverter):
-    # Delete this class as soon as ContDoubleConverter is working with the DFIM
-
-    """
-    Two independent continuous B6 bridge converters for the supply of doubly fed induction motors.
-
-    Key:
-        'Cont-Double-B6C'
-
-    Actions:
-        The Duty Cycle for each half bridge in the range of (-1,1)
-
-    Action Space:
-        Box(-1, 1, shape=(6,))
-
-    Output Voltages and Currents:
-        | voltages: (-1,1)
-        | currents: (-1,1)
-
-    Output Voltage Space:
-        Box(-0.5, 0.5, shape=(6,))
-    """
-
-    action_space = Box(-1, 1, shape=(6,))
-    # Only positive voltages can be applied
-    voltages = (-1, 1)
-    # Positive and negative currents are possible
-    currents = (-1, 1)
-
-    _reset_action = [0, 0, 0, 0, 0, 0]
-
-    def __init__(self, tau=1e-4, **kwargs):
-        # Docstring in base class
-        super().__init__(tau=tau, **kwargs)
-        self._subconverters = [
-            ContB6BridgeConverter(tau=tau, **kwargs),
-            ContB6BridgeConverter(tau=tau, **kwargs),
-        ]
-
-    def reset(self):
-        # Docstring in base class
-        return [
-            self._subconverters[0].reset()[:],
-            self._subconverters[1].reset()[:]
-        ]
-
-    def convert(self, i_out, t):
-        # Docstring in base class
-        u_out = [
-            self._subconverters[0].convert(i_out[0], t),
-            self._subconverters[1].convert(i_out[1], t)
-        ]
-        return u_out
-
-    def set_action(self, action, t):
-        # Docstring in base class
-        stator_action = action[0:3]
-        rotor_action = action[3:6]
-        times = []
-        times += self._subconverters[0].set_action(stator_action, t)
-        times += self._subconverters[1].set_action(rotor_action, t)
-        return sorted(list(set(times)))
-
-    def _convert(self, i_in, t):
-        # Not used
-        pass
-
-    def i_sup(self, i_out):
-        # Docstring in base class
-        return sum([subconverter.i_sup([i_out_]) for subconverter, i_out_ in zip(self._subconverters, i_out)])
-
-
-class DiscDoubleB6BridgeConverter(DiscConverter):
-    # Delete this class as soon as DiscDoubleConverter is working with the DFIM
-
-    """
-    Two independent continuous B6 bridge converters for the supply of doubly fed induction motors.
-
-    Key:
-        'Disc-Double-B6C'
-
-    Action Space:
-        Discrete(8) x Discrete(8)
-
-    Output Voltages and Currents:
-        | voltages: (-1,1)
-        | currents: (-1,1)
-
-    Output Voltage Space:
-        Box(-0.5, 0.5, shape=(6,))
-    """
-
-    action_space = MultiDiscrete([8, 8])
-    # Only positive voltages can be applied
-    voltages = (-1, 1)
-    # Positive and negative currents are possible
-    currents = (-1, 1)
-
-    _reset_action = [0, 0]
-
-    def __init__(self, tau=1e-4, **kwargs):
-        # Docstring in base class
-        super().__init__(tau=tau, **kwargs)
-        self._subconverters = [
-            DiscB6BridgeConverter(tau=tau, **kwargs),
-            DiscB6BridgeConverter(tau=tau, **kwargs),
-        ]
-
-    def reset(self):
-        # Docstring in base class
-        return [
-            self._subconverters[0].reset()[:],
-            self._subconverters[1].reset()[:]
-        ]
-
-    def convert(self, i_out, t):
-        # Docstring in base class
-        u_out = [
-            self._subconverters[0].convert(i_out[0], t),
-            self._subconverters[1].convert(i_out[1], t)
-        ]
-        return u_out
-
-    def set_action(self, action, t):
-        # Docstring in base class
-        stator_action = action[0]
-        rotor_action = action[1]
-        times = []
-        times += self._subconverters[0].set_action(stator_action, t)
-        times += self._subconverters[1].set_action(rotor_action, t)
         return sorted(list(set(times)))
 
     def _convert(self, i_in, t):

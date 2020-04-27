@@ -75,7 +75,7 @@ class DiscDcExternallyExcitedMotorEnvironment(DcExternallyExcitedMotorEnvironmen
         (Have a look at the reward functions.)
     """
 
-    def __init__(self, tau=1e-5, converter='Disc-Double', subconverters=('Disc-4QC', 'Disc-1QC'), **kwargs):
+    def __init__(self, tau=1e-5, converter='Disc-Multi', subconverters=('Disc-4QC', 'Disc-1QC'), **kwargs):
         # Docstring in Base Class
         super().__init__(tau=tau, converter=converter, subconverters=subconverters, **kwargs)
 
@@ -134,6 +134,6 @@ class ContDcExternallyExcitedMotorEnvironment(DcExternallyExcitedMotorEnvironmen
 
     """
 
-    def __init__(self, tau=1e-4, converter='Cont-Double', subconverters=('Cont-4QC', 'Cont-1QC'), **kwargs):
+    def __init__(self, tau=1e-4, converter='Cont-Multi', subconverters=('Cont-4QC', 'Cont-1QC'), **kwargs):
         # Docstring in Base Class
         super().__init__(tau=tau, converter=converter, subconverters=subconverters, **kwargs)

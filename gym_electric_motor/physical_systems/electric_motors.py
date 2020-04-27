@@ -262,16 +262,15 @@ class DcMotor(ElectricMotor):
         """
         a_converter = 0
         e_converter = 1
-        lower_limit = 0
         low = {
-            'omega': -1 if input_voltages[a_converter][lower_limit] == -1
-            or input_voltages[e_converter][lower_limit] == -1 else 0,
-            'torque': -1 if input_currents[a_converter][lower_limit] == -1
-            or input_currents[e_converter][lower_limit] == -1 else 0,
-            'i_a': -1 if input_currents[a_converter][lower_limit] == -1 else 0,
-            'i_e': -1 if input_currents[e_converter][lower_limit] == -1 else 0,
-            'u_a': -1 if input_voltages[a_converter][lower_limit] == -1 else 0,
-            'u_e': -1 if input_voltages[e_converter][lower_limit] == -1 else 0,
+            'omega': -1 if input_voltages.low[a_converter] == -1
+            or input_voltages.low[e_converter] == -1 else 0,
+            'torque': -1 if input_currents.low[a_converter] == -1
+            or input_currents.low[e_converter] == -1 else 0,
+            'i_a': -1 if input_currents.low[a_converter] == -1 else 0,
+            'i_e': -1 if input_currents.low[e_converter] == -1 else 0,
+            'u_a': -1 if input_voltages.low[a_converter] == -1 else 0,
+            'u_e': -1 if input_voltages.low[e_converter] == -1 else 0,
         }
         high = {
             'omega': 1,
@@ -286,7 +285,7 @@ class DcMotor(ElectricMotor):
 
 class DcShuntMotor(DcMotor):
     """
-        The DcShuntMotor is a DC Motor with parallel armature and exciting circuit connected to one input voltage.
+        The DcShuntMotor is a DC motor with parallel armature and exciting circuit connected to one input voltage.
 
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
@@ -352,10 +351,10 @@ class DcShuntMotor(DcMotor):
 
         low = {
             'omega': 0,
-            'torque': -1 if input_currents[lower_limit] == -1 else 0,
-            'i_a': -1 if input_currents[lower_limit] == -1 else 0,
-            'i_e': -1 if input_currents[lower_limit] == -1 else 0,
-            'u': -1 if input_voltages[lower_limit] == -1 else 0,
+            'torque': -1 if input_currents.low[0] == -1 else 0,
+            'i_a': -1 if input_currents.low[0] == -1 else 0,
+            'i_e': -1 if input_currents.low[0] == -1 else 0,
+            'u': -1 if input_voltages.low[0] == -1 else 0,
         }
         high = {
             'omega': 1,
@@ -495,8 +494,8 @@ class DcSeriesMotor(DcMotor):
         low = {
             'omega': 0,
             'torque': 0,
-            'i': -1 if input_currents[lower_limit] == -1 else 0,
-            'u': -1 if input_voltages[lower_limit] == -1 else 0,
+            'i': -1 if input_currents.low[0] == -1 else 0,
+            'u': -1 if input_voltages.low[0] == -1 else 0,
         }
         high = {
             'omega': 1,
@@ -595,10 +594,10 @@ class DcPermanentlyExcitedMotor(DcMotor):
         # Docstring of superclass
         lower_limit = 0
         low = {
-            'omega': -1 if input_voltages[lower_limit] == -1 else 0,
-            'torque': -1 if input_currents[lower_limit] == -1 else 0,
-            'i': -1 if input_currents[lower_limit] == -1 else 0,
-            'u': -1 if input_voltages[lower_limit] == -1 else 0,
+            'omega': -1 if input_voltages.low[0] == -1 else 0,
+            'torque': -1 if input_currents.low[0] == -1 else 0,
+            'i': -1 if input_currents.low[0] == -1 else 0,
+            'u': -1 if input_voltages.low[0] == -1 else 0,
         }
         high = {
             'omega': 1,
@@ -714,7 +713,7 @@ class ThreePhaseMotor(ElectricMotor):
 
 class SynchronousMotor(ThreePhaseMotor):
     """
-        The SynchronousMotor and its subclasses implement the technical system of a Three Phase Synchronous motor.
+        The SynchronousMotor and its subclasses implement the technical system of a three phase synchronous motor.
 
         This includes the system equations, the motor parameters of the equivalent circuit diagram,
         as well as limits and bandwidth.
@@ -1180,7 +1179,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
 
 class InductionMotor(ThreePhaseMotor):
     """
-        The InductionMotor and its subclasses implement the technical system of a Three Phase induction motor.
+        The InductionMotor and its subclasses implement the technical system of a three phase induction motor.
 
         This includes the system equations, the motor parameters of the equivalent circuit diagram,
         as well as limits and bandwidth.
@@ -1481,11 +1480,11 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
-        i_sa            A      Current through branch a
-        i_sb            A      Current through branch b
-        i_sc            A      Current through branch c
-        i_salpha        A      Current in alpha axis
-        i_sbeta         A      Current in beta axis
+        i_sa            A      Stator current through branch a
+        i_sb            A      Stator current through branch b
+        i_sc            A      Stator current through branch c
+        i_salpha        A      Stator current in alpha direction
+        i_sbeta         A      Stator current in beta direction
         =============== ====== =============================================
         =============== ====== =============================================
         Rotor flux      Unit   Description

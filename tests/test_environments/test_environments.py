@@ -71,7 +71,7 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
     # setup converter parameter
     kwargs = {}
     if motor_type == 'DcExtEx':
-        converter_types = 'Cont-Double'
+        converter_types = 'Cont-Multi'
         kwargs.update({'subconverters': [converter_type, converter_type]})
     else:
         converter_types = converter_type
@@ -175,7 +175,7 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
     # setup converter parameter
     kwargs = {}
     if motor_type == 'DcExtEx':
-        converter_types = 'Disc-Double'
+        converter_types = 'Disc-Multi'
         kwargs.update({'subconverters': [converter_type, converter_type]})
     else:
         converter_types = converter_type
@@ -253,8 +253,10 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
                           ])
 def test_threephase_environments(reward_function_type, reference_generator_type, tau_test, motor_type, motor_class,
                                   time_type, turn_off_windows):
+    kwargs = {}
     if motor_type == "DFIM":
-        converter_type = time_type + '-Double-B6C'
+        converter_type = time_type + '-Multi'
+        kwargs.update({'subconverters': [time_type + '-B6C', time_type + '-B6C']})
     else:
         converter_type = time_type + '-B6C'
     # setup the parameter
@@ -290,12 +292,12 @@ def test_threephase_environments(reward_function_type, reference_generator_type,
                         observed_states=observed_states,
                         plotted_variables=['omega'])
 
-    _physical_system = setup_physical_system(motor_type, converter_type, True)
+    _physical_system = setup_physical_system(motor_type, converter_type, three_phase=True, **kwargs)
     reference_generator = make_module(ReferenceGenerator, reference_generator_type,
                                       reference_state='omega')
     reward_function = make_module(RewardFunction, reward_function_type, observed_states=observed_states,
                                   reward_weights=reward_weights)
-    converter = setup_dc_converter(converter_type, motor_type)  # not used so far
+    converter = setup_dc_converter(converter_type, motor_type, **kwargs)  # not used so far
     voltage_supply = IdealVoltageSupply(u_sup)
     load = PolynomialStaticLoad(load_parameter['parameter'])
     solver = EulerSolver()

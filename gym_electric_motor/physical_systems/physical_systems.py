@@ -434,7 +434,7 @@ class SynchronousMotorSystem(SCMLSystem):
 
 class SquirrelCageInductionMotorSystem(SCMLSystem):
     """
-    SCML-System that can be used with all Synchronous Motors
+    SCML-System for the Squirrel Cage Induction Motor
     """
     def __init__(self, control_space='abc', ode_solver='scipy.ode', **kwargs):
         """
@@ -670,7 +670,7 @@ class SquirrelCageInductionMotorSystem(SCMLSystem):
 
 class DoublyFedInductionMotorSystem(SCMLSystem):
     """
-    SCML-System that can be used with the Doubly Fed Induction Motor
+    SCML-System for the Doubly Fed Induction Motor
     """
     def __init__(self, control_space='abc', ode_solver='scipy.ode', **kwargs):
         """
@@ -872,16 +872,14 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
         i_sabc = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
         i_rdef = self.alphabeta_to_abc_space(self.calculate_rotor_current(ode_state))
         switching_times = self._converter.set_action(action, self._t)
-        i_s_sup = self._converter.i_sup(i_sabc)
-        i_r_sup = self._converter.i_sup(i_rdef)
-        i_sup = i_s_sup + i_r_sup
 
+        i_sup = self._converter.i_sup(np.concatenate((i_sabc, i_rdef)))
         u_sup = self._supply.get_voltage(self._t, i_sup)
 
         for t in switching_times[:-1]:
-            u_in = self._converter.convert([i_sabc, i_rdef], self._ode_solver.t)
-            u_sabc = u_in[0]
-            u_rdef = u_in[1]
+            u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
+            u_sabc = u_in[0:3]
+            u_rdef = u_in[3:6]
             u_sabc = [u * u_sup for u in u_sabc]
             u_rdef = [u * u_sup for u in u_rdef]
             u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
@@ -898,9 +896,10 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
             i_sabc = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
             i_rdef = self.alphabeta_to_abc_space(self.calculate_rotor_current(ode_state))
 
-        u_in = self._converter.convert(np.array([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
-        u_sabc = u_in[0]
-        u_rdef = u_in[1]
+        u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
+        u_in = [u * u_sup for u in u_in]
+        u_sabc = u_in[0:3]
+        u_rdef = u_in[3:6]
         u_sabc = [u * u_sup for u in u_sabc]
         u_rdef = [u * u_sup for u in u_rdef]
         u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
@@ -955,17 +954,15 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
         if eps_field > np.pi:
             eps_field -= 2 * np.pi
 
-        u_sr_abc = self.converter.reset()
-        u_sabc = u_sr_abc[0]
-        u_rdef = u_sr_abc[1]
-        u_sabc = [u * u_sup for u in u_sabc]
-        u_rdef = [u * u_sup for u in u_rdef]
+        u_sr_abcdef = self.converter.reset()
+        u_sr_abcdef = [u * u_sup for u in u_sr_abcdef]
+        u_sabc = u_sr_abcdef[0:3]
+        u_rdef = u_sr_abcdef[3:6]
         u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
         u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
 
         i_sqd = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_field)
         i_sabc = self.dq_to_abc_space(i_sqd, eps_field)
-
 
         i_rqd = self.alphabeta_to_dq_space(self.calculate_rotor_current(ode_state), eps_field-eps_el)
         i_rdef = self.dq_to_abc_space(i_rqd, eps_field-eps_el)

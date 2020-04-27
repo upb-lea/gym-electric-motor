@@ -1,8 +1,7 @@
 from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem
 from .converters import PowerElectronicConverter, DiscOneQuadrantConverter, DiscTwoQuadrantConverter, \
-    DiscFourQuadrantConverter, DiscDoubleConverter, DiscB6BridgeConverter, ContOneQuadrantConverter, \
-    ContTwoQuadrantConverter, ContFourQuadrantConverter, ContDoubleConverter, ContB6BridgeConverter, \
-    ContDoubleB6BridgeConverter, DiscDoubleB6BridgeConverter
+    DiscFourQuadrantConverter, DiscMultiConverter, DiscB6BridgeConverter, ContOneQuadrantConverter, \
+    ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
@@ -38,12 +37,10 @@ register_class(DiscTwoQuadrantConverter, PowerElectronicConverter, 'Disc-2QC')
 register_class(ContTwoQuadrantConverter, PowerElectronicConverter, 'Cont-2QC')
 register_class(DiscFourQuadrantConverter, PowerElectronicConverter, 'Disc-4QC')
 register_class(ContFourQuadrantConverter, PowerElectronicConverter, 'Cont-4QC')
-register_class(DiscDoubleConverter, PowerElectronicConverter, 'Disc-Double')
-register_class(ContDoubleConverter, PowerElectronicConverter, 'Cont-Double')
+register_class(DiscMultiConverter, PowerElectronicConverter, 'Disc-Multi')
+register_class(ContMultiConverter, PowerElectronicConverter, 'Cont-Multi')
 register_class(DiscB6BridgeConverter, PowerElectronicConverter, 'Disc-B6C')
 register_class(ContB6BridgeConverter, PowerElectronicConverter, 'Cont-B6C')
-register_class(ContDoubleB6BridgeConverter, PowerElectronicConverter, 'Cont-Double-B6C')
-register_class(DiscDoubleB6BridgeConverter, PowerElectronicConverter, 'Disc-Double-B6C')
 
 register_class(PolynomialStaticLoad, MechanicalLoad, 'PolyStaticLoad')
 register_class(ConstantSpeedLoad, MechanicalLoad, 'ConstSpeedLoad')

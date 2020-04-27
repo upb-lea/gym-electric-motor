@@ -80,27 +80,30 @@ def test_dc_series_motor():
 
 def series_motor_state_space_testing(motor_1, motor_2):
     # u,i>0
-    state_space = ({'omega': 0, 'torque': 0, 'i': 0, 'u': 0}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([0, 1], [0, 1]) == motor_2.get_state_space([0, 1], [0, 1])
-    assert motor_1.get_state_space([0, 1], [0, 1]) == state_space
+    state_space = ({'omega': 0, 'torque': 0, 'i': 0, 'u': 0},
+                   {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
+    box01 = Box(0, 1, shape=(1,))
+    box_11 = Box(-1, 1, shape=(1,))
+    assert motor_1.get_state_space(box01, box01) == motor_2.get_state_space(box01, box01)
+    assert motor_1.get_state_space(box01, box01) == state_space
 
     # u>0
     state_space = (
         {'omega': 0, 'torque': 0, 'i': -1, 'u': 0}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([-1, 1], [0, 1]) == motor_2.get_state_space([-1, 1], [0, 1])
-    assert motor_1.get_state_space([-1, 1], [0, 1]) == state_space
+    assert motor_1.get_state_space(box_11, box01) == motor_2.get_state_space(box_11, box01)
+    assert motor_1.get_state_space(box_11, box01) == state_space
 
     # i>0
     state_space = (
         {'omega': 0, 'torque': 0, 'i': 0, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([0, 1], [-1, 1]) == motor_2.get_state_space([0, 1], [-1, 1])
-    assert motor_1.get_state_space([0, 1], [-1, 1]) == state_space
+    assert motor_1.get_state_space(box01, box_11) == motor_2.get_state_space(box01, box_11)
+    assert motor_1.get_state_space(box01, box_11) == state_space
 
     # u,i>&<0
     state_space = (
         {'omega': 0, 'torque': 0, 'i': -1, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([-1, 1], [-1, 1]) == motor_2.get_state_space([-1, 1], [-1, 1])
-    assert motor_1.get_state_space([-1, 1], [-1, 1]) == state_space
+    assert motor_1.get_state_space(box_11, box_11) == motor_2.get_state_space(box_11, box_11)
+    assert motor_1.get_state_space(box_11, box_11) == state_space
 
 
 def series_motor_electrical_ode_testing(motor_1):
@@ -157,27 +160,29 @@ def shunt_motor_state_space_testing(motor_1, motor_2):
     # u,i>0
     state_space = ({'omega': 0, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u': 0},
                    {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
-    assert motor_1.get_state_space([0, 1], [0, 1]) == motor_2.get_state_space([0, 1], [0, 1])
-    assert motor_1.get_state_space([0, 1], [0, 1]) == state_space
+    box01 = Box(0, 1, shape=(1,))
+    box_11 = Box(-1, 1, shape=(1,))
+    assert motor_1.get_state_space(box01, box01) == motor_2.get_state_space(box01, box01)
+    assert motor_1.get_state_space(box01, box01) == state_space
 
     # u>0
     state_space = (
         {'omega': 0, 'torque': -1, 'i_a': -1, 'i_e': -1, 'u': 0}, {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
-    assert motor_1.get_state_space([-1, 1], [0, 1]) == motor_2.get_state_space([-1, 1], [0, 1])
-    assert motor_1.get_state_space([-1, 1], [0, 1]) == state_space
+    assert motor_1.get_state_space(box_11, box01) == motor_2.get_state_space(box_11, box01)
+    assert motor_1.get_state_space(box_11, box01) == state_space
 
     # i>0
     state_space = (
         {'omega': 0, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u': -1}, {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
-    assert motor_1.get_state_space([0, 1], [-1, 1]) == motor_2.get_state_space([0, 1], [-1, 1])
-    assert motor_1.get_state_space([0, 1], [-1, 1]) == state_space
+    assert motor_1.get_state_space(box01, box_11) == motor_2.get_state_space(box01, box_11)
+    assert motor_1.get_state_space(box01, box_11) == state_space
 
     # u,i>&<0
     state_space = (
         {'omega': 0, 'torque': -1, 'i_a': -1, 'i_e': -1, 'u': -1},
         {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
-    assert motor_1.get_state_space([-1, 1], [-1, 1]) == motor_2.get_state_space([-1, 1], [-1, 1])
-    assert motor_1.get_state_space([-1, 1], [-1, 1]) == state_space
+    assert motor_1.get_state_space(box_11, box_11) == motor_2.get_state_space(box_11, box_11)
+    assert motor_1.get_state_space(box_11, box_11) == state_space
 
 
 def shunt_motor_electrical_ode_testing(motor_1):
@@ -232,27 +237,30 @@ def test_dc_permex_motor():
 
 def permex_motor_state_space_testing(motor_1, motor_2):
     # u,i>0
-    state_space = ({'omega': 0, 'torque': 0, 'i': 0, 'u': 0}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([0, 1], [0, 1]) == motor_2.get_state_space([0, 1], [0, 1])
-    assert motor_1.get_state_space([0, 1], [0, 1]) == state_space
+    state_space = ({'omega': 0, 'torque': 0, 'i': 0, 'u': 0},
+                   {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
+    box01 = Box(0, 1, shape=(1,))
+    box_11 = Box(-1, 1, shape=(1,))
+    assert motor_1.get_state_space(box01, box01) == motor_2.get_state_space(box01, box01)
+    assert motor_1.get_state_space(box01, box01) == state_space
 
     # u>0
     state_space = (
         {'omega': 0, 'torque': -1, 'i': -1, 'u': 0}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([-1, 1], [0, 1]) == motor_2.get_state_space([-1, 1], [0, 1])
-    assert motor_1.get_state_space([-1, 1], [0, 1]) == state_space
+    assert motor_1.get_state_space(box_11, box01) == motor_2.get_state_space(box_11, box01)
+    assert motor_1.get_state_space(box_11, box01) == state_space
 
     # i>0
     state_space = (
         {'omega': -1, 'torque': 0, 'i': 0, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([0, 1], [-1, 1]) == motor_2.get_state_space([0, 1], [-1, 1])
-    assert motor_1.get_state_space([0, 1], [-1, 1]) == state_space
+    assert motor_1.get_state_space(box01, box_11) == motor_2.get_state_space(box01, box_11)
+    assert motor_1.get_state_space(box01, box_11) == state_space
 
     # u,i>&<0
     state_space = (
         {'omega': -1, 'torque': -1, 'i': -1, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
-    assert motor_1.get_state_space([-1, 1], [-1, 1]) == motor_2.get_state_space([-1, 1], [-1, 1])
-    assert motor_1.get_state_space([-1, 1], [-1, 1]) == state_space
+    assert motor_1.get_state_space(box_11, box_11) == motor_2.get_state_space(box_11, box_11)
+    assert motor_1.get_state_space(box_11, box_11) == state_space
 
 
 def permex_motor_electrical_ode_testing(motor_1):
@@ -303,8 +311,8 @@ def extex_motor_state_space_testing(motor_1, motor_2):
     state_space = ({'omega': 0, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u_a': 0, 'u_e': 0}, {'omega': 1, 'torque': 1,
                                                                                        'i_a': 1, 'i_e': 1,
                                                                                        'u_a': 1, 'u_e': 1})
-    voltage_limits = [[0, 1], [0, 1]]
-    current_limits = [[0, 1], [0, 1]]
+    voltage_limits = Box(np.array([0, 1]), np.array([0, 1])) # Box(np.array([0, 0]), np.array([1, 1])) # [[0, 1], [0, 1]]
+    current_limits = Box(np.array([0, 0]), np.array([1, 1])) # [[0, 1], [0, 1]]
     assert motor_1.get_state_space(current_limits, voltage_limits) == motor_2.get_state_space(current_limits,
                                                                                               voltage_limits)
     assert motor_1.get_state_space(current_limits, voltage_limits) == state_space
@@ -660,8 +668,8 @@ class TestDcMotor:
         result_high = dict(omega=1, torque=1, i_a=1, i_e=1, u_a=1, u_e=1)
         result_low = dict(omega=test_case[4], torque=test_case[5], i_a=test_case[6], i_e=test_case[7], u_a=test_case[8],
                           u_e=test_case[9])
-        input_currents = ((i_1_min, 1), (i_2_min, 1))
-        input_voltages = ((u_1_min, 1), (u_2_min, 1))
+        input_currents = Box(np.array([i_1_min, i_2_min]), np.array([1, 1]))
+        input_voltages = Box(np.array([u_1_min, u_2_min]), np.array([1, 1]))
         test_object = DcMotor()
         # call function to test
         low, high = test_object.get_state_space(input_currents, input_voltages)
@@ -772,8 +780,8 @@ class TestDcShuntMotor:
         result_low = dict(omega=omega, torque=torque, i_a=i_a_min, i_e=i_e_min, u=u_min)
         result_high = dict(omega=1, torque=1, i_a=1, i_e=1, u=1)
         test_object = DcShuntMotor()
-        converter_currents = (i_converter_min, 1)
-        converter_voltages = (u_converter_min, 1)
+        converter_currents = Box(i_converter_min, 1, shape=(1,))
+        converter_voltages = Box(u_converter_min, 1, shape=(1,))
         # call function to test
         low, high = test_object.get_state_space(converter_currents, converter_voltages)
         # verify the expected results
@@ -875,8 +883,8 @@ class TestDcSeriesMotor:
         expected_low = dict(omega=omega, torque=torque, i=i, u=u)
         expected_high = dict(omega=1, torque=1, i=1, u=1)
 
-        converter_currents = (i_converter_min, 1)
-        converter_voltages = (u_converter_min, 1)
+        converter_currents = Box(i_converter_min, 1, shape=(1,))
+        converter_voltages = Box(u_converter_min, 1, shape=(1,))
         test_object = DcSeriesMotor()
         # call function to test
         low, high = test_object.get_state_space(converter_currents, converter_voltages)
@@ -969,8 +977,8 @@ class TestDcPermanentlyExcitedMotor:
         expected_low = dict(omega=omega, torque=torque, i=i, u=u)
         expected_high = dict(omega=1, torque=1, i=1, u=1)
 
-        converter_currents = (i_converter_min, 1)
-        converter_voltages = (u_converter_min, 1)
+        converter_currents = Box(i_converter_min, 1, shape=(1,))
+        converter_voltages = Box(u_converter_min, 1, shape=(1,))
         test_object = DcPermanentlyExcitedMotor()
         # call function to test
         low, high = test_object.get_state_space(converter_currents, converter_voltages)

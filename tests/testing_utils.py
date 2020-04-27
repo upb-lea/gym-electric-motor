@@ -16,7 +16,7 @@ from gym_electric_motor.utils import instantiate
 # region first version
 
 
-def setup_physical_system(motor_type, converter_type, three_phase=False):
+def setup_physical_system(motor_type, converter_type, subconverters=None, three_phase=False):
     """
     Function to set up a physical system with test parameters
     :param motor_type: motor name (string)
@@ -37,16 +37,18 @@ def setup_physical_system(motor_type, converter_type, three_phase=False):
     # setup converter
     if motor_type == 'DcExtEx':
         if 'Disc' in converter_type:
-            double_converter = 'Disc-Double'
+            double_converter = 'Disc-Multi'
         else:
-            double_converter = 'Cont-Double'
+            double_converter = 'Cont-Multi'
         converter = make_module(PowerElectronicConverter, double_converter,
                                 subconverters=[converter_type, converter_type],
                                 tau=converter_parameter['tau'],
                                 dead_time=converter_parameter['dead_time'],
                                 interlocking_time=converter_parameter['interlocking_time'])
     else:
-        converter = make_module(PowerElectronicConverter, converter_type, tau=converter_parameter['tau'],
+        converter = make_module(PowerElectronicConverter, converter_type,
+                                subconverters=subconverters,
+                                tau=converter_parameter['tau'],
                                 dead_time=converter_parameter['dead_time'],
                                 interlocking_time=converter_parameter['interlocking_time'])
     # setup motor
@@ -59,6 +61,9 @@ def setup_physical_system(motor_type, converter_type, three_phase=False):
         if motor_type == "SCIM":
             physical_system = SquirrelCageInductionMotorSystem(converter=converter, motor=motor, ode_solver=solver,
                                                                 supply=voltage_supply, load=load, tau=tau)
+        elif motor_type == "DFIM":
+            physical_system = DoublyFedInductionMotor(converter=converter, motor=motor, ode_solver=solver,
+                                                               supply=voltage_supply, load=load, tau=tau)
         else:
             physical_system = SynchronousMotorSystem(converter=converter, motor=motor, ode_solver=solver,
                                                     supply=voltage_supply, load=load, tau=tau)
@@ -89,7 +94,7 @@ def setup_reward_function(reward_function_type, physical_system, reference_gener
     return reward_function
 
 
-def setup_dc_converter(conv, motor_type):
+def setup_dc_converter(conv, motor_type, subconverters=None):
     """
     This function initializes the converter.
     It differentiates between single and double converter and can be used for discrete and continuous converters.
@@ -100,9 +105,9 @@ def setup_dc_converter(conv, motor_type):
     if motor_type == 'DcExtEx':
         # setup double converter
         if 'Disc' in conv:
-            double_converter = 'Disc-Double'
+            double_converter = 'Disc-Multi'
         else:
-            double_converter = 'Cont-Double'
+            double_converter = 'Cont-Multi'
         converter = make_module(PowerElectronicConverter, double_converter,
                                 interlocking_time=converter_parameter['interlocking_time'],
                                 dead_time=converter_parameter['dead_time'],
@@ -117,6 +122,7 @@ def setup_dc_converter(conv, motor_type):
     else:
         # setup single converter
         converter = make_module(PowerElectronicConverter, conv,
+                                subconverters=subconverters,
                                 tau=converter_parameter['tau'],
                                 dead_time=converter_parameter['dead_time'],
                                 interlocking_time=converter_parameter['interlocking_time'])
@@ -315,13 +321,15 @@ class DummyVoltageSupply(VoltageSupply):
 
 class DummyConverter(PowerElectronicConverter):
 
-    voltages = (0, 1)
-    currents = (-1, 1)
+    voltages = Box(0, 1, shape=(1,))
+    currents = Box(-1, 1, shape=(1,))
     action_space = Discrete(4)
 
-    def __init__(self, tau=2E-4, dead_time=False, interlocking_time=0, action_space=None, **kwargs):
+    def __init__(self, tau=2E-4, dead_time=False, interlocking_time=0, action_space=None, voltages=None, currents=None, **kwargs):
         super().__init__(tau, dead_time, interlocking_time)
         self.action_space = action_space or self.action_space
+        self.voltages = voltages or self.voltages
+        self.currents = currents or self.currents
         self.reset_counter = 0
         self.convert_counter = 0
         self.switching_times = [tau]
@@ -347,7 +355,7 @@ class DummyConverter(PowerElectronicConverter):
 
     def reset(self):
         self.reset_counter += 1
-        return [0.0]
+        return [0.0] * self.voltages.shape[0]
 
     def convert(self, i_out, t):
         self.i_out = i_out

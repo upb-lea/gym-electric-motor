@@ -53,19 +53,21 @@ class DiscDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'u_sa', 'u_sb', 'u_sc', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd', 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',``
+        ``'i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd', 'u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd', 'epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+        Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0],
+        high=[1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1])
 
     Reference Space:
         Box(low=[-1], high=[1])
 
     Action Space:
-        Type: Discrete(8)
+        Type: MultiDiscrete([8, 8])
 
     Reward:
         .. math::
@@ -84,8 +86,8 @@ class DiscDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
 
     u_sup and u_nominal must be the same
     """
-    def __init__(self, tau=1e-5, converter='Disc-Double-B6C', **kwargs):
-        super().__init__(tau=tau, converter=converter, **kwargs)
+    def __init__(self, tau=1e-5, converter='Disc-Multi', subconverters=('Disc-B6C', 'Disc-B6C'), **kwargs):
+        super().__init__(tau=tau, converter=converter, subconverters=subconverters, **kwargs)
 
 
 class ContDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment):
@@ -119,19 +121,21 @@ class ContDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'u_sa', 'u_sb', 'u_sc', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd', 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',``
+        ``'i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd', 'u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd', 'epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+        Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0],
+        high=[1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1])
 
     Reference Space:
         Box(low=[-1], high=[1])
 
     Action Space:
-        Type: Box(low=[-1, -1, -1], high=[1, 1, 1])
+        Type: Box(low=[-1, -1, -1, -1, -1, -1], high=[1, 1, 1, 1, 1, 1])
 
     Reward:
         .. math::
@@ -150,5 +154,5 @@ class ContDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
 
     u_sup and u_nominal must be the same
     """
-    def __init__(self, tau=1e-4, converter='Cont-Double-B6C', **kwargs):
-        super().__init__(tau=tau, converter=converter, **kwargs)
+    def __init__(self, tau=1e-4, converter='Cont-Multi', subconverters=('Cont-B6C', 'Cont-B6C'), **kwargs):
+        super().__init__(tau=tau, converter=converter, subconverters=subconverters, **kwargs)
