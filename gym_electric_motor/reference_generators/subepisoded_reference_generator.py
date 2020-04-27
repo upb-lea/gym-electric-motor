@@ -7,7 +7,7 @@ from ..utils import set_state_array
 
 class SubepisodedReferenceGenerator(ReferenceGenerator):
     """
-    Base Class for Reference Generators, which change its parameters in certain ranges after a random number of
+    Base Class for Reference Generators, which change their parameters in certain ranges after a random number of
     time steps and can pre-calculate their references in these "sub episodes".
     """
 
