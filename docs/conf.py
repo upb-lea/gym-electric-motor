@@ -19,13 +19,13 @@ sys.setrecursionlimit(1500)
 # -- Project information -----------------------------------------------------
 
 project = 'gym-electric-motor'
-copyright = '2019, Arne Traue, Gerrit Book'
-author = 'Arne Traue, Gerrit Book'
+copyright = '2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid'
+author = 'Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid'
 
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '2019'
+release = '2020'
 
 
 # -- General configuration ---------------------------------------------------

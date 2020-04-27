@@ -34,7 +34,15 @@ Dc Motor System
 
 Synchronous Motor System
 ************************
-The Synchronous Motor System is an SCML-System that was internally
-
 .. autoclass:: gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem
+   :members:
+
+Squirrel Cage Induction Motor System
+************************
+.. autoclass:: gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem
+   :members:
+
+Doubly Fed Induction Motor System
+************************
+.. autoclass:: gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem
    :members:

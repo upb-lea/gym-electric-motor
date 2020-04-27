@@ -1,4 +1,4 @@
-Synchronous Base Motor
+Base Synchronous Motor
 ############################
 
 

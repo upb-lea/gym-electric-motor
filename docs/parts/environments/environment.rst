@@ -24,6 +24,12 @@ Discrete Permanent Magnet Synchronous Motor Environment   ``'emotor-pmsm-disc-v1
 
 Continuous Synchronous Reluctance Motor Environment       ``'emotor-symrm-cont-v1'``
 Discrete Synchronous Reluctance Motor Environment         ``'emotor-synrm-disc-v1'``
+
+Continuous Squirrel Cage Induction Motor Environment      ``'emotor-scim-cont-v1'``
+Discrete Squirrel Cage Induction Motor Environment        ``'emotor-scim-disc-v1'``
+
+Continuous Doubly Fed Induction Motor Environment         ``'emotor-dfim-cont-v1'``
+Discrete Doubly Fed Induction Motor Environment           ``'emotor-dfim-disc-v1'``
 ========================================================= ==============================
 
 .. toctree::
@@ -42,6 +48,10 @@ Discrete Synchronous Reluctance Motor Environment         ``'emotor-synrm-disc-v
    pmsm_disc
    synrm_cont
    synrm_disc
+   scim_cont
+   scim_disc
+   dfim_cont
+   dfim_disc
 
 
 Electric Motor Base Environment
