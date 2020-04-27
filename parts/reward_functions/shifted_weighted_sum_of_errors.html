@@ -216,8 +216,7 @@ Inner states of the reward function can be reset here, if necessary.</p>
 <dl class="method">
 <dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reward">
 <code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">action=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reward calculation. If limits have been violated the limit violation reward will be returned. Otherwise,
-the standard reward will be returned.</p>
+<dd><p>Reward calculation. If limits have been violated the reward is calculated with a separate function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

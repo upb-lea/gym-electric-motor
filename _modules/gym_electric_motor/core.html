@@ -464,34 +464,32 @@
 
 <div class="viewcode-block" id="ReferenceGenerator"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">ReferenceGenerator</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The abstract base class for reference generators in the gym electric motor environments.</span>
+<span class="sd">    The abstract base class for reference generators in gym electric motor environments.</span>
 
 <span class="sd">    reference_space:</span>
-<span class="sd">        Space from the OpenAI Gym Toolbox to define the space of the reference observations.</span>
+<span class="sd">        Space of reference observations as defined in the OpenAI Gym Toolbox.</span>
 
 <span class="sd">    The reference generator is called twice per step.</span>
 
 <span class="sd">    Call of get_reference():</span>
-<span class="sd">        Once, to get the reference array. The reference array has got the same shape as the state array and contains</span>
-<span class="sd">        the current reference values for referenced state variables and a default value (e.g zero) at all other entries.</span>
-<span class="sd">        This reference array is used to calculate the rewards.</span>
+<span class="sd">        Returns the reference array which has the same shape as the state array and contains</span>
+<span class="sd">        values for currently referenced state variables and a default value (e.g zero) for non-referenced variables.</span>
+<span class="sd">        This reference array is used to calculate rewards.</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            ``reference_array=np.array([0.8, 0.0, 0.0, 0.0])`` \n</span>
 <span class="sd">            ``state_variables=[&#39;omega&#39;, &#39;torque&#39;, &#39;i&#39;, &#39;u&#39;, &#39;u_sup&#39;]`` \n</span>
-<span class="sd">            This would be the corresponding reference array for an environment with the upper state array with an omega</span>
-<span class="sd">            reference.</span>
+<span class="sd">            Here, the state consists of five quantities but only ``&#39;omega&#39;`` is referenced during control.</span>
 
 <span class="sd">    Call of get_reference_observation():</span>
-<span class="sd">        Another time to get the reference observation. The reference observation needs to be in the defined reference</span>
-<span class="sd">        space. For example, it can contain future reference values of the next n steps (of the referenced states only).</span>
-<span class="sd">        It can have in general any shape and content. The returned object of this method is the reference that is</span>
-<span class="sd">        shown to the agent.</span>
+<span class="sd">        Returns the reference observation, which is shown to the agent.</span>
+<span class="sd">        Any shape and content is generally valid, however, values must be within the declared reference space.        </span>
+<span class="sd">        For example, the reference observation may contain future reference values of the next ``n`` steps.</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            ``reference_observation = np.array([0.8, 0.6, 0.4])`` \n</span>
-<span class="sd">            This array could model a reference observation for an omega controlled environment that shows the agent not</span>
-<span class="sd">            only the reference for the next time step t+1 but also t+3 and t+3.</span>
+<span class="sd">            This reference observation may be valid for an omega-controlled environment that shows the agent not</span>
+<span class="sd">            only the reference for the next time step omega_(t+1)=0.8 but also omega_(t+2)=0.6 and omega_(t+3)=0.4.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -556,7 +554,7 @@
 <span class="sd">            initial_reference(ndarray(float)): If not None: A desired initial reference array.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            reference_array(ndarray(float)): The current reference array of time step 0.</span>
+<span class="sd">            reference_array(ndarray(float)): The reference array at time step 0.</span>
 
 <span class="sd">            reference_observation(value in reference_space): The reference observation for the next time step. \\</span>
 
@@ -567,14 +565,14 @@
 
 <div class="viewcode-block" id="ReferenceGenerator.close"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Called by the environment, when the environment is deleted to close files, store logs...</span>
+<span class="sd">        Called by the environment, when the environment is deleted to close files, store logs, etc.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 
 
 <div class="viewcode-block" id="RewardFunction"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction">[docs]</a><span class="k">class</span> <span class="nc">RewardFunction</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The abstract base class for reward functions in the gym electric motor environments.</span>
+<span class="sd">    The abstract base class for reward functions in gym electric motor environments.</span>
 
 <span class="sd">    The reward function is called once per step and returns reward for the current time step.</span>
 <span class="sd">    Furthermore, the reward function includes the limit observer. If limits have been violated and the episode ended</span>
@@ -647,8 +645,7 @@
 
 <div class="viewcode-block" id="RewardFunction.reward"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward">[docs]</a>    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reward calculation. If limits have been violated the limit violation reward will be returned. Otherwise,</span>
-<span class="sd">        the standard reward will be returned.</span>
+<span class="sd">        Reward calculation. If limits have been violated the reward is calculated with a separate function.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            state(ndarray(float)): Environments state array.</span>

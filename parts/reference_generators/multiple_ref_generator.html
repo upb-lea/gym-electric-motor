@@ -192,7 +192,7 @@ will be passed to each sub_generator.</p></li>
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.MultipleReferenceGenerator.close">
 <code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.MultipleReferenceGenerator.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called by the environment, when the environment is deleted to close files, store logs…</p>
+<dd><p>Called by the environment, when the environment is deleted to close files, store logs, etc.</p>
 </dd></dl>
 
 <dl class="method">
@@ -250,7 +250,7 @@ ndarray(bool): Boolean-Array with the length of the state_variables indicating w
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>The current reference array of time step 0.</p>
+<dd class="field-even"><p><p>The reference array at time step 0.</p>
 <p>reference_observation(value in reference_space): The reference observation for the next time step. </p>
 <p>trajectories(dict(list(float)): If available,                 generated trajectories for the Visualization can be passed here. Otherwise return None.</p>
 </p>
