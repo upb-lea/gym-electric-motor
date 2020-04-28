@@ -1,10 +1,6 @@
 # Gym Electric Motor (GEM)
 
-<p align="center">
-
 ![](docs/plots/Motor_Logo.png)
-
-</p>
 
 [![Build Status](https://travis-ci.org/upb-lea/gym-electric-motor.svg?branch=master)](https://travis-ci.org/upb-lea/gym-electric-motor)
 [![codecov](https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg)](https://codecov.io/gh/upb-lea/gym-electric-motor)
@@ -99,42 +95,60 @@ constructor arguments you can parametrize the environment to your control proble
 
 ##### Environment Ids
 
-* `'emotor-dc-extex-cont-v1'`     
-    Externally excited DC motor with continuous actions.
- 
-* `'emotor-dc-extex-disc-v1'`   
-    Externally excited DC motor with discrete actions.
+* DC Motors
 
-* `'emotor-dc-permex-cont-v1'`    
-    Permanently excited DC motor with continuous actions.
-
-* `'emotor-dc-permex-disc-v1'`    
-    Permanently excited DC motor with discrete actions.
-
-* `'emotor-dc-shunt-cont-v1'`    
-    DC shunt motor with continuous actions.
-
-* `'emotor-dc-shunt-disc-v1'`    
-    DC shunt motor with discrete actions.
-
-* `'emotor-dc-series-cont-v1'`    
-    DC series motor with continuous actions.
-
-* `'emotor-dc-series-disc-v1'`  
-    DC series motor with discrete actions.
+    * `'emotor-dc-extex-cont-v1'`     
+        Externally excited DC motor with continuous actions.
+     
+    * `'emotor-dc-extex-disc-v1'`   
+        Externally excited DC motor with discrete actions.
     
-* `'emotor-pmsm-cont-v1'`:  
-    Permanent magnet synchronous motor with continuous actions.
-
-* `'emotor-pmsm-disc-v1'`:  
-    Permanent magnet synchronous motor with discrete actions.
+    * `'emotor-dc-permex-cont-v1'`    
+        Permanently excited DC motor with continuous actions.
     
-* `'emotor-synrm-cont-v1'`:  
-    Synchronous reluctance motor with continuous actions.
+    * `'emotor-dc-permex-disc-v1'`    
+        Permanently excited DC motor with discrete actions.
+    
+    * `'emotor-dc-shunt-cont-v1'`    
+        DC shunt motor with continuous actions.
+    
+    * `'emotor-dc-shunt-disc-v1'`    
+        DC shunt motor with discrete actions.
+    
+    * `'emotor-dc-series-cont-v1'`    
+        DC series motor with continuous actions.
+    
+    * `'emotor-dc-series-disc-v1'`  
+        DC series motor with discrete actions.
+        
+* Synchronous Motors
+    
+    * `'emotor-pmsm-cont-v1'`:  
+        Permanent magnet synchronous motor with continuous actions.
+    
+    * `'emotor-pmsm-disc-v1'`:  
+        Permanent magnet synchronous motor with discrete actions.
+        
+    * `'emotor-synrm-cont-v1'`:  
+        Synchronous reluctance motor with continuous actions.
+    
+    * `'emotor-synrm-disc-v1'`:  
+        Synchronous reluctance motor with discrete actions.
+        
+* Induction Motors
 
-* `'emotor-synrm-disc-v1'`:  
-    Synchronous reluctance motor with discrete actions.
-
+    * `'emotor-scim-cont-v1'`:  
+        Squirrel cage induction motor with continuous actions.
+        
+    * `'emotor-scim-disc-v1'`:  
+        Squirrel cage induction motor with discrete actions.
+        
+    * `'emotor-dfim-cont-v1'`:  
+        Doubly fed induction motor with continuous actions.
+        
+    * `'emotor-dfim-disc-v1'`:  
+        Doubly fed induction motor with discrete actions.
+        
 #### Make Keyword-Arguments
 Using the keyword arguments in the `gem.make(id, **kwargs)` function you can select different function modules for the 
 environment and parametrize these modules. 
@@ -213,6 +227,10 @@ Two three phase motors:
 
 - PMSM (permanent magnet synchronous motor)
 - SynRM (synchronous reluctance motor)
+
+Two variants of the induction motor:
+- SCIM (squirrel cage induction motor)
+- DFIM (doubly fed induction motor)
 
 ##### Converter
 Following converters are included:
