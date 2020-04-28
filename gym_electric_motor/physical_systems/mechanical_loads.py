@@ -45,6 +45,9 @@ class MechanicalLoad:
 
     OMEGA_IDX = 0
 
+    #: Parameter indicating if the class is implementing the optional jacobian function
+    HAS_JACOBIAN = False
+
     def __init__(self, state_names=None, j_load=0.0, **__):
         """
         Args:
@@ -86,6 +89,25 @@ class MechanicalLoad:
         """
         raise NotImplementedError
 
+    def mechanical_jacobian(self, t, mechanical_state, torque):
+        """
+        Calculation of the jacobians of the mechanical-ODE for each of the mechanical state.
+
+        Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+        be set to True. Otherwise, the jacobian will not be called.
+
+        Args:
+            t(float): Current time of the system.
+            mechanical_state(ndarray(float)): Current state of the mechanical system.
+            torque(float): Generated input torque by the electrical motor.
+
+        Returns:
+            Tuple(ndarray, ndarray):
+                [0]: Derivatives of the mechanical_state-odes over the mechanical_states shape:(states x states)
+                [1]: Derivatives of the mechanical_state-odes over the torque shape:(states,)
+        """
+        pass
+
     def get_state_space(self, omega_range):
         """
         Args:
@@ -108,7 +130,10 @@ class PolynomialStaticLoad(MechanicalLoad):
         | j_load: Moment of inertia of the mechanical system.
     """
 
-    _load_parameter = dict(a=0.01, b=0.05, c=0.1, j_load=0.1)
+    _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=0)
+
+    #: Parameter indicating if the class is implementing the optional jacobian function
+    HAS_JACOBIAN = True
 
     @property
     def load_parameter(self):
@@ -118,13 +143,14 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
-    def __init__(self, load_parameter=(), **__):
+    def __init__(self, load_parameter=(), limits=None, **__):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.
         """
         self._load_parameter.update(load_parameter)
         super().__init__(j_load=self._load_parameter['j_load'])
+        self._limits.update(limits or {})
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']
         self._c = self._load_parameter['c']
@@ -140,11 +166,19 @@ class PolynomialStaticLoad(MechanicalLoad):
         # Docstring of superclass
         return np.array([(torque - self._static_load(mechanical_state[self.OMEGA_IDX])) / self._j_total])
 
+    def mechanical_jacobian(self, t, mechanical_state, torque):
+        # Docstring of superclass
+        sign = 1 if mechanical_state[self.OMEGA_IDX] > 0 else -1 if mechanical_state[self.OMEGA_IDX] < 0 else 0
+        return np.array([[(-self._b * sign - 2 * self._c * mechanical_state[self.OMEGA_IDX])/self._j_total]]), \
+            np.array([1/self._j_total])
+
 
 class ConstantSpeedLoad(MechanicalLoad):
     """
        Constant speed mechanical load system which will always set the speed to a predefined value.
     """
+
+    HAS_JACOBIAN = True
 
     @property
     def omega_fixed(self):
@@ -169,3 +203,28 @@ class ConstantSpeedLoad(MechanicalLoad):
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
         return np.array([0])
+
+    def mechanical_jacobian(self, t, mechanical_state, torque):
+        # Docstring of superclass
+        return np.array([0]), np.array([0])
+
+
+class PositionalPolyStaticLoad(PolynomialStaticLoad):
+
+    def __init__(self, load_parameter=None, limits=None):
+        load_parameter = load_parameter or {}
+        limits = limits or {}
+        limits.setdefault('position', 1)
+        load_parameter.set_default('gear_ratio', 1)
+        load_parameter.set_default('meter_per_revolution', 0.05)
+        super().__init__(load_parameter, limits)
+        self._state_names = ['omega', 'position']
+
+    def get_state_space(self, omega_range):
+        lower, upper = super().get_state_space(omega_range)
+        lower['position'] = 0
+        upper['position'] = self._limits['position']
+
+
+
+

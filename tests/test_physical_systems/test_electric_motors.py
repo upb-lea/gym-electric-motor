@@ -521,13 +521,14 @@ class TestElectricMotor:
 
 class TestDcMotor:
     # defined test values
+    class_to_test = DcMotor
     _motor_parameter = test_motor_parameter['DcExtEx']['motor_parameter']
     _nominal_values = test_motor_parameter['DcExtEx']['nominal_values']
     _limits = test_motor_parameter['DcExtEx']['limit_values']
     s_motor_parameter = test_motor_parameter['DcExtEx']['motor_parameter']
-    defult_motor_parameter = DcMotor._default_motor_parameter
-    default_nominal_values = DcMotor._default_nominal_values
-    default_limits = DcMotor._default_limits
+    default_motor_parameter = class_to_test._default_motor_parameter
+    default_nominal_values = class_to_test._default_nominal_values
+    default_limits = class_to_test._default_limits
     _currents = np.array([15, 37])
 
     # counter
@@ -599,8 +600,8 @@ class TestDcMotor:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(DcMotor, "_update_model", self._monkey_update_model)
-        monkeypatch.setattr(DcMotor, "_update_limits", self._monkey_update_limits)
+        monkeypatch.setattr(self.class_to_test, "_update_model", self._monkey_update_model)
+        monkeypatch.setattr(self.class_to_test, "_update_limits", self._monkey_update_limits)
         monkeypatch.setattr(ElectricMotor, "__init__", self._monkey_super_init)
 
         self._motor_parameter = motor_parameter
@@ -608,7 +609,7 @@ class TestDcMotor:
         self._limits = limits
 
         # call function to test
-        test_object = DcMotor(motor_parameter, nominal_values, limits)
+        test_object = self.class_to_test(motor_parameter, nominal_values, limits)
 
         # verify the expected results
         assert test_object._model_constants is None
@@ -623,7 +624,7 @@ class TestDcMotor:
         :return:
         """
         # setup test scenario
-        test_object = DcMotor()
+        test_object = self.class_to_test()
         monkeypatch.setattr(test_object, "_motor_parameter", self._motor_parameter)
         # call function to test
         torque = test_object.torque(self._currents)
@@ -636,7 +637,7 @@ class TestDcMotor:
         :return:
         """
         # setup test scenario
-        test_object = DcMotor()
+        test_object = self.class_to_test()
         # call function to test
         i_in = test_object.i_in(self._currents)
         # verify the expected results
@@ -645,7 +646,7 @@ class TestDcMotor:
     def test_electrical_ode(self):
         # test electrical_ode()
         # setup test scenario
-        test_object = DcMotor(motor_parameter=self.s_motor_parameter)
+        test_object = self.class_to_test(motor_parameter=self.s_motor_parameter)
         u_in = np.array([10, 15])
         omega = 38
         # call function to test
@@ -668,9 +669,11 @@ class TestDcMotor:
         result_high = dict(omega=1, torque=1, i_a=1, i_e=1, u_a=1, u_e=1)
         result_low = dict(omega=test_case[4], torque=test_case[5], i_a=test_case[6], i_e=test_case[7], u_a=test_case[8],
                           u_e=test_case[9])
+
         input_currents = Box(np.array([i_1_min, i_2_min]), np.array([1, 1]))
         input_voltages = Box(np.array([u_1_min, u_2_min]), np.array([1, 1]))
-        test_object = DcMotor()
+        test_object = self.class_to_test()
+
         # call function to test
         low, high = test_object.get_state_space(input_currents, input_voltages)
         # verify the expected results
@@ -683,7 +686,7 @@ class TestDcMotor:
         :return:
         """
         # setup test scenario
-        test_object = DcMotor()
+        test_object = self.class_to_test()
         test_object._motor_parameter = extex_motor_parameter['motor_parameter']
         # call function to test
         test_object._update_model()
@@ -697,6 +700,7 @@ class TestDcShuntMotor:
     """
     class for testing DcShuntMotor
     """
+    class_to_test = DcShuntMotor
     # defined test values
     _currents = np.array([15, 37])
     u_in = [10]
@@ -788,6 +792,54 @@ class TestDcShuntMotor:
         assert low == result_low, 'unexpected lower state space'
         assert high == result_high, 'unexpected upper state space'
 
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1]), [0], 0, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([[-5, 0], [0, -1]])),
+            (np.array([5, 7]), [4], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([[-5, 0.1], [0, -1]])),
+            (np.array([5, 7]), [4], 2, dict(r_a=0, l_a=2, l_e_prime=0.1, r_e=2, l_e=0.5),
+             np.array([[0, -0.1], [0, -4]])),
+        ]
+    )
+    def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
+        # Test first return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        el_jac, _, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_jac == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 2]), [0], 0, dict(r_a=10, l_a=0.5, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([-0.4, 0])),
+            (np.array([5, 0]), [4], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([0, 0])),
+            (np.array([-2, -2]), [8], 2, dict(r_a=0, l_a=0.2, l_e_prime=2, r_e=2, l_e=0.5),
+             np.array([20, 0])),
+        ]
+    )
+    def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, el_over_omega, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_over_omega == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1]), [0], 0, dict(r_a=10, l_a=0.5, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([0.1, 0])),
+            (np.array([5, 0]), [4], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([0, 0.5])),
+            (np.array([-2, -2]), [8], 2, dict(r_a=0, l_a=0.2, l_e_prime=2, r_e=2, l_e=0.5),
+             np.array([-4, -4])),
+        ]
+    )
+    def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(torque_over_el == result)
+
 
 class TestDcSeriesMotor:
     """
@@ -800,7 +852,7 @@ class TestDcSeriesMotor:
     _torque = 150
     _state = np.array([_current])
     _motor_parameter = test_motor_parameter['DcSeries']['motor_parameter']
-
+    class_to_test = DcSeriesMotor
     # counter
     monkey_super_torque_counter = 0
 
@@ -907,6 +959,54 @@ class TestDcSeriesMotor:
             [-(3.78 + 35), -0.95, 1]) / (6.3e-3 + 160e-3)
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6, 'unexpected model constants'
 
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result', [
+            (np.array([1]), [0], 60, dict(r_a=10, l_a=3.5, l_e_prime=0.1, r_e=2, l_e=2.5),
+             np.array([[-3]])),
+            (np.array([7]), [4], -30, dict(r_a=10, l_a=3.5, l_e_prime=0.1, r_e=2, l_e=2.5),
+             np.array([[-1.5]])),
+            (np.array([5]), [8], 0, dict(r_a=10, l_a=3.5, l_e_prime=0.1, r_e=2, l_e=2.5),
+             np.array([[-2]])),
+        ]
+    )
+    def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
+        # Test first return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        el_jac, _, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_jac == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result', [
+            (np.array([2]), [0], 0, dict(r_a=10, l_a=1.5, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([-0.1])),
+            (np.array([0]), [4], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([0])),
+            (np.array([-3]), [8], 2, dict(r_a=0, l_a=4, l_e_prime=2, r_e=2, l_e=8),
+             np.array([0.5])),
+        ]
+    )
+    def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, el_over_omega, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_over_omega == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result', [
+            (np.array([10]), [2], 0, dict(r_a=10, l_a=0.5, l_e_prime=0.2, r_e=0.5, l_e=0.5),
+             np.array([4])),
+            (np.array([-30]), [8], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([-6])),
+            (np.array([0]), [4], 3, dict(r_a=0, l_a=0.2, l_e_prime=2, r_e=2, l_e=0.5),
+             np.array([0])),
+        ]
+    )
+    def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(torque_over_el == result)
+
 
 class TestDcPermanentlyExcitedMotor:
     """
@@ -918,7 +1018,7 @@ class TestDcPermanentlyExcitedMotor:
     _u_in = 10
     _omega = 38
     _state = np.array([_current])
-
+    class_to_test = DcPermanentlyExcitedMotor
     # test cases for get_state_space test
     _test_cases = np.array([[0, 0, 0, 0, 0, 0],
                             [-1, 0, -1, 0, 0, -1],
@@ -999,6 +1099,109 @@ class TestDcPermanentlyExcitedMotor:
         # verify results
         expected_constants = np.array([-160e-3, -3.78, 1]) / 6.3e-3
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6, 'unexpected model constants'
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result', [
+            (np.array([1]), [0], 60, dict(r_a=10, l_a=0.5, psi_e=0.2, r_e=0.5, l_e=0.5),
+             np.array([[-20]])),
+            (np.array([7]), [4], -30, dict(r_a=0, l_a=0.5, psi_e=0.2, r_e=0.5, l_e=0.5),
+             np.array([[0]])),
+            (np.array([5]), [8], 0, dict(r_a=30, l_a=0.5, psi_e=0.2, r_e=0.5, l_e=0.5),
+             np.array([[-60]])),
+        ]
+    )
+    def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
+        # Test first return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        el_jac, _, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_jac == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result', [
+            (np.array([2]), [0], 0, dict(r_a=10, l_a=2, psi_e=0.2, r_e=0.5, l_e=0.5),
+             np.array([-0.1])),
+            (np.array([0]), [4], -2, dict(r_a=10, l_a=4.5, psi_e=0, r_e=0.5, l_e=0.5),
+             np.array([0])),
+            (np.array([-3]), [8], 2, dict(r_a=10, l_a=0.5, psi_e=5, r_e=0.5, l_e=0.5),
+             np.array([-10])),
+        ]
+    )
+    def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, el_over_omega, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_over_omega == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result', [
+            (np.array([10]), [2], 0, dict(r_a=10, l_a=0.5, psi_e=0.2, r_e=0.5, l_e=0.5),
+             np.array([0.2])),
+            (np.array([-30]), [8], -2, dict(r_a=10, l_a=0.5, psi_e=0.0, r_e=0.5, l_e=0.5),
+             np.array([0])),
+            (np.array([0]), [4], 3, dict(r_a=10, l_a=0.5, psi_e=30, r_e=0.5, l_e=0.5),
+             np.array([30])),
+        ]
+    )
+    def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(torque_over_el == result)
+
+
+class TestDcExternallyExcitedMotor(TestDcMotor):
+    class_to_test = DcExternallyExcitedMotor
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1]), [0, 2], 0, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([[-5, 0], [0, -1]])),
+            (np.array([5, 7]), [4, 8], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([[-5, 0.1], [0, -1]])),
+            (np.array([5, 7]), [4, 8], 2, dict(r_a=0, l_a=2, l_e_prime=0.1, r_e=2, l_e=0.5),
+             np.array([[0, -0.1], [0, -4]])),
+        ]
+    )
+    def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
+        # Test first return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        el_jac, _, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_jac == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 2]), [0, 2], 0, dict(r_a=10, l_a=0.5, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([-0.4, 0])),
+            (np.array([5, 0]), [4, 8], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([0, 0])),
+            (np.array([-2, -2]), [4, 8], 2, dict(r_a=0, l_a=0.2, l_e_prime=2, r_e=2, l_e=0.5),
+             np.array([20, 0])),
+        ]
+    )
+    def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, el_over_omega, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_over_omega == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1]), [0, 2], 0, dict(r_a=10, l_a=0.5, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([0.1, 0])),
+            (np.array([5, 0]), [4, 8], -2, dict(r_a=10, l_a=2, l_e_prime=0.1, r_e=0.5, l_e=0.5),
+             np.array([0, 0.5])),
+            (np.array([-2, -2]), [4, 8], 2, dict(r_a=0, l_a=0.2, l_e_prime=2, r_e=2, l_e=0.5),
+             np.array([-4, -4])),
+        ]
+    )
+    def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(torque_over_el == result)
+
+
+
 
 
 # endregion
@@ -1269,6 +1472,7 @@ class TestSynchronousReluctanceMotor:
     """
     class for testing SynchronousReluctanceMotor
     """
+    class_to_test = SynchronousReluctanceMotor
 
     def test_torque(self, monkeypatch):
         """
@@ -1305,11 +1509,70 @@ class TestSynchronousReluctanceMotor:
         ])
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6, 'unexpected model constants'
 
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1, 2]), [0, 2], 0,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([[-2.5, 0, 0], [0, -0.5, 0], [0, 0, 0]])),
+            (np.array([5, 7, -3]), [4, 8], -2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2),
+             np.array([[-1, 10, 0], [-0.4, -0.2, 0], [0, 0, 0]])),
+            (np.array([5, 7, -2]), [4, 8], 2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([[-2.5, -10, 0], [0.4, -0.5, 0], [0, 0, 0]])),
+        ]
+    )
+    def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
+        # Test first return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        el_jac, _, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_jac == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 2, 0]), [0, 2], 0,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([-10, 0, 1])),
+            (np.array([5, 0, 2]), [4, 8], -2,
+             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([0, 2, 1])),
+            (np.array([-2, 2, 9]), [4, 8], 2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([-10, -0.4, 1])),
+        ]
+    )
+    def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, el_over_omega, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_over_omega == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 2, 0]), [0, 2], 0,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([32, 0, 0])),
+            (np.array([5, 0, 2]), [4, 8], -2,
+             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([0, 30, 0])),
+            (np.array([-2, 2, 9]), [4, 8], 2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([32, -32, 0])),
+        ]
+    )
+    def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(torque_over_el == result)
+
+
 
 class TestPermanentMagnetSynchronousMotor:
     """
     class for testing PermanentMagnetSynchronousMotor
     """
+    class_to_test = PermanentMagnetSynchronousMotor
 
     def test_torque(self, monkeypatch):
         """
@@ -1345,6 +1608,64 @@ class TestPermanentMagnetSynchronousMotor:
             [3, 0, 0, 0, 0, 0, 0]
         ])
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1, 2]), [0, 2], 0,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165),
+             np.array([[-2.5, 0, 0], [0, -0.5, 0], [0, 0, 0]])),
+            (np.array([5, 7, -3]), [4, 8], -2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2, psi_p=0.165),
+             np.array([[-1, 10, 0], [-0.4, -0.2, 0], [0, 0, 0]])),
+            (np.array([5, 7, -2]), [4, 8], 2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165),
+             np.array([[-2.5, -10, 0], [0.4, -0.5, 0], [0, 0, 0]])),
+        ]
+    )
+    def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
+        # Test first return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        el_jac, _, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_jac == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 2, 0]), [0, 2], 0,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
+             np.array([-10, 0, 1])),
+            (np.array([5, 0, 2]), [4, 8], -2,
+             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
+             np.array([-5, 2, 1])),
+            (np.array([-2, 2, 9]), [4, 8], 2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
+             np.array([-15, -0.4, 1])),
+        ]
+    )
+    def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, el_over_omega, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_over_omega == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 2, 0]), [0, 2], 0,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
+             np.array([32, 0, 0])),
+            (np.array([5, 0, 2]), [4, 8], -2,
+             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
+             np.array([20, 30, 0])),
+            (np.array([-2, 2, 9]), [4, 8], 2,
+             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
+             np.array([52, -32, 0])),
+        ]
+    )
+    def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(torque_over_el == result)
+
 
 class TestInductionMotor:
     """

@@ -21,18 +21,19 @@ if __name__ == '__main__':
 
     tf.compat.v1.disable_eager_execution()
     # Create the environment
+    # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning results.
     env = gem.make(
         'emotor-dc-series-cont-v1',
         # Pass a class with extra parameters
         visualization=MotorDashboard, visu_period=1,
-        motor_parameter=dict(r_a=1e-1, r_e=1e-1),
+        motor_parameter=dict(r_a=2.5, r_e=4.5, l_a=9.7e-3, l_e_prime=9.2e-3, l_e=9.2e-3, j_rotor=0.001),
         # Take standard class and pass parameters (Load)
-        load_parameter=dict(a=0, b=.0, c=0.05, j_load=.05),
+        load_parameter=dict(a=0, b=.0, c=0.01, j_load=.001),
         reward_weights={'omega': 1000},
         reward_power=0.5,
-        observed_states=None,
+        observed_states=None,  # Constraint violation monitoring is disabled for presentation purpose
         # Pass a string (with extra parameters)
-        ode_solver='euler', solver_kwargs={},
+        ode_solver='scipy.solve_ivp', solver_kwargs=dict(method='BDF'),
         # Pass an instance
         reference_generator=WienerProcessReferenceGenerator(reference_state='omega', sigma_range=(5e-3, 1e-2))
     )
@@ -69,7 +70,7 @@ if __name__ == '__main__':
 
     # Create a replay memory
     memory = SequentialMemory(
-        limit=50000,
+        limit=10000,
         window_length=window_length
     )
 
@@ -77,9 +78,7 @@ if __name__ == '__main__':
     random_process = OrnsteinUhlenbeckProcess(
         theta=0.5,
         mu=0.0,
-        sigma=0.2,
-        sigma_min=0.02,
-        n_steps_annealing=150000
+        sigma=0.2
     )
 
     # Create the agent
@@ -90,14 +89,14 @@ if __name__ == '__main__':
         critic_action_input=action_input,
         memory=memory,
         random_process=random_process,
-        nb_steps_warmup_actor=1024,
+        nb_steps_warmup_actor=2048,
         nb_steps_warmup_critic=1024,
         target_model_update=1000,
-        gamma=0.9,
+        gamma=0.95,
         batch_size=128,
-        memory_interval=2
+        memory_interval=1
     )
-    agent.compile((Adam(lr=1e-5), Adam(lr=1e-3)), metrics=['mae'])
+    agent.compile((Adam(lr=1e-6), Adam(lr=1e-4)), metrics=['mae'])
 
     # Start training for 7.5M simulation steps (1.5M training steps with actions repeated 5 times)
 
@@ -106,8 +105,9 @@ if __name__ == '__main__':
         nb_steps=1500000,
         visualize=True,
         action_repetition=1,
-        verbose=2,
+        verbose=1,
         nb_max_start_steps=0,
+        nb_max_episode_steps=10000,
         log_interval=10000,
         callbacks=[]
     )

@@ -383,7 +383,7 @@ class TestEnvironments:
         else:
             assert reference_generator == self._reference_generator, 'Reference generator is not the expected instance'
 
-        assert self.kwargs == kwargs, 'Unexpected additional arguments. Keep in mind None and {}.'
+        assert self.kwargs == kwargs, 'Unexpected additional arguments.'
 
     def monkey_motor_system(self, motor=None, **kwargs):
         """
@@ -465,7 +465,9 @@ class TestEnvironments:
         monkeypatch.setattr(motor_file, "WienerProcessReferenceGenerator", self.monkey_wiener_process)
         monkeypatch.setattr(motor_file, "WeightedSumOfErrors", self.monkey_weighted_sum_of_errors)
         reward_weights = dict(torque=1)
-        self.kwargs.update({'reward_weights': reward_weights})
+        self.kwargs.update(
+            {'reward_weights': reward_weights, 'load_parameter': dict(a=0.01, b=0.05, c=0.1, j_load=0.1)}
+        )
         # call function to test
         test_object = motor_class(reward_function=self._reward_function,
                                   reference_generator=reference_generator,

@@ -1,6 +1,6 @@
 import numpy as np
 from gym.spaces import Box
-
+import warnings
 from ..core import PhysicalSystem
 from ..physical_systems import electric_motors as em, mechanical_loads as ml, converters as cv, \
     voltage_supplies as vs, noise_generators as ng, solvers as sv
@@ -57,7 +57,7 @@ class SCMLSystem(PhysicalSystem):
 
     def __init__(
         self, converter, motor, load=None, supply='IdealVoltageSupply', ode_solver='euler', solver_kwargs=None,
-        noise_generator=None, tau=1e-4, **kwargs
+        noise_generator=None, tau=1e-4, calc_jacobian=None, **kwargs
     ):
         """
         Args:
@@ -69,6 +69,8 @@ class SCMLSystem(PhysicalSystem):
             solver_kwargs(dict): Special keyword arguments to be passed to the solver
             noise_generator(NoiseGenerator):  Noise generator
             tau(float): discrete time step of the system
+            calc_jacobian(bool): If True, the jacobian matrices will be taken into account for the ode-solvers.
+                Default: The jacobians are used, if available
             kwargs(dict): Further arguments to pass to the modules while instantiation
         """
         self._converter = instantiate(cv.PowerElectronicConverter, converter, tau=tau, **kwargs)
@@ -87,7 +89,16 @@ class SCMLSystem(PhysicalSystem):
         self._noise_generator.set_state_names(state_names)
         solver_kwargs = solver_kwargs or {}
         self._ode_solver = instantiate(sv.OdeSolver, ode_solver, **solver_kwargs)
-        self._ode_solver.set_system_equation(self._system_equation)
+        if calc_jacobian is None:
+            calc_jacobian = self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN
+        if calc_jacobian and self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN:
+            jac = self._system_jacobian
+        else:
+            jac = None
+        if calc_jacobian and jac is None:
+            warnings.warn('Jacobian Matrix is not provided for either the Motor or the Load Model')
+
+        self._ode_solver.set_system_equation(self._system_equation, jac)
         self._mechanical_load.set_j_rotor(self._electrical_motor.motor_parameter['j_rotor'])
         self._t = 0
         self._set_indices()
@@ -208,6 +219,23 @@ class SCMLSystem(PhysicalSystem):
         load_derivative = self._mechanical_load.mechanical_ode(t, state[self._load_ode_idx], torque)
         return np.concatenate((load_derivative, motor_derivative))
 
+    def _system_jacobian(self, t, state, u_in, **__):
+        motor_jac, el_state_over_omega, torque_over_el_state = self._electrical_motor.electrical_jacobian(
+            state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+        )
+        torque = self._electrical_motor.torque(state[self._motor_ode_idx])
+        load_jac, load_over_torque = self._mechanical_load.mechanical_jacobian(
+            t, state[self._load_ode_idx], torque
+        )
+        system_jac = np.zeros((state.shape[0], state.shape[0]))
+        system_jac[:load_jac.shape[0], :load_jac.shape[1]] = load_jac
+        system_jac[-motor_jac.shape[0]:, -motor_jac.shape[1]:] = motor_jac
+        system_jac[-motor_jac.shape[0]:, [self._omega_ode_idx]] = el_state_over_omega.reshape((-1, 1))
+        system_jac[:load_jac.shape[0], load_jac.shape[1]:] = np.matmul(
+            load_over_torque.reshape(-1, 1), torque_over_el_state.reshape(1, -1)
+        )
+        return system_jac
+
     def reset(self, *_):
         """
         Reset all the systems modules to an initial state.
@@ -281,6 +309,8 @@ class SynchronousMotorSystem(SCMLSystem):
         super().__init__(**kwargs)
         self.control_space = control_space
         if control_space == 'dq':
+            assert type(self._converter.action_space) == Box, \
+                'dq-control space is only available for Continuous Controlled Converters'
             self._action_space = Box(-1, 1, shape=(2,))
 
     def _build_state_space(self, state_names):

@@ -8,14 +8,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='gym_electric_motor',
-      version='0.0.4',
+      version='0.1.0',
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
-      extra_requires={'examples': ['keras>=2.2.4',
-                                   'keras_rl>=0.4.2',
-                                   'rl>=3.0',
-                                   'tensorflow<=1.14']},
+      extras_require={'examples': 
+                      ['keras_rl2>=1.0.3']
+                     },
       author='Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid',
       long_description=long_description,
       long_description_content_type="text/markdown",

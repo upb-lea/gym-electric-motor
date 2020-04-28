@@ -10,7 +10,7 @@ services:
   - xvfb
 
 script: 
-  - pytest --cov=./
+  - pytest --cov=gym_electric_motor tests/
   - cd docs
   - make html
   - touch _build/html/.nojekyll

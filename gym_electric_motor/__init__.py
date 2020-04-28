@@ -21,17 +21,42 @@ from gym.envs.registration import register
 
 envs_path = 'gym_electric_motor.envs:'
 
-"""register(id='emotor-asm-cont-v0',
-         entry_point=envs_path+'ASMContinuousControlEnv')
-register(id='emotor-asm-disc-v0',
-         entry_point=envs_path+'ASMContinuousControlEnv')"""
-
-register(id='emotor-pmsm-cont-v0',
-         entry_point=envs_path+'PmsmCont')
-register(id='emotor-pmsm-disc-v0',
-         entry_point=envs_path+'PmsmDisc')
-
 # Version 1
+register(id='DcPermExCont-v1',
+         entry_point=envs_path+'ContDcPermanentlyExcitedMotorEnvironment')
+register(id='DcPermExDisc-v1',
+         entry_point=envs_path+'DiscDcPermanentlyExcitedMotorEnvironment')
+register(id='DcExtExCont-v1',
+         entry_point=envs_path+'ContDcExternallyExcitedMotorEnvironment')
+register(id='DcExtExDisc-v1',
+         entry_point=envs_path+'DiscDcExternallyExcitedMotorEnvironment')
+register(id='DcSeriesCont-v1',
+         entry_point=envs_path+'ContDcSeriesMotorEnvironment')
+register(id='DcSeriesDisc-v1',
+         entry_point=envs_path+'DiscDcSeriesMotorEnvironment')
+register(id='DcShuntCont-v1',
+         entry_point=envs_path+'ContDcShuntMotorEnvironment')
+register(id='DcShuntDisc-v1',
+         entry_point=envs_path+'DiscDcShuntMotorEnvironment')
+register(id='PMSMCont-v1',
+         entry_point=envs_path+'ContPermanentMagnetSynchronousMotorEnvironment')
+register(id='PMSMDisc-v1',
+         entry_point=envs_path+'DiscPermanentMagnetSynchronousMotorEnvironment')
+register(id='SynRMCont-v1',
+         entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
+register(id='SynRMDisc-v1',
+         entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
+register(id='SCIMCont-v1',
+         entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
+register(id='SCIMDisc-v1',
+         entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
+register(id='DFIMCont-v1',
+         entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
+register(id='DFIMDisc-v1',
+         entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
+
+# Old Ids
+
 register(id='emotor-dc-permex-cont-v1',
          entry_point=envs_path+'ContDcPermanentlyExcitedMotorEnvironment')
 register(id='emotor-dc-permex-disc-v1',
@@ -55,14 +80,13 @@ register(id='emotor-pmsm-disc-v1',
 register(id='emotor-synrm-cont-v1',
          entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
 register(id='emotor-synrm-disc-v1',
-         entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
-
+        entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
 register(id='emotor-scim-cont-v1',
          entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
 register(id='emotor-scim-disc-v1',
          entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
-
 register(id='emotor-dfim-cont-v1',
          entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
 register(id='emotor-dfim-disc-v1',
          entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
+

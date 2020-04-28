@@ -154,7 +154,17 @@ def test_PolynomialStaticLoad_MechanicalOde(concretePolynomialLoad, omega, expec
     assert math.isclose(expected_result, output_val, abs_tol=1E-6)
 
 
-class TestConstSpeedLoad:
+class TestMechanicalLoad:
+    key = ''
+    class_to_test = MechanicalLoad
+
+    def test_registered(self):
+        if self.key != '':
+            load = gem.utils.instantiate(MechanicalLoad, self.key)
+            assert type(load) == self.class_to_test
+
+
+class TestConstSpeedLoad(TestMechanicalLoad):
 
     key = 'ConstSpeedLoad'
     class_to_test = ConstantSpeedLoad
@@ -173,7 +183,42 @@ class TestConstSpeedLoad:
     def test_reset(self, const_speed_load):
         assert all(const_speed_load.reset() == np.array([const_speed_load.omega_fixed]))
 
-    def test_registered(self):
-        if self.key != '':
-            load = gem.utils.instantiate(MechanicalLoad, self.key)
-            assert type(load) == self.class_to_test
+    @pytest.mark.parametrize('omega, omega_fixed, expected', [
+        (-0.5, 1000, (0, 0)),
+        (0, 0, (0, 0)),
+        (2, -523, (0, 0)),
+        (2, 0.2, (0, 0))
+    ]
+    )
+    def test_jacobian(self, omega, omega_fixed, expected):
+        test_object = self.class_to_test(omega_fixed)
+
+        # 2 Runs to test independence on time and torque
+        result0 = test_object.mechanical_jacobian(0.456, np.array([omega]), 0.385)
+        result1 = test_object.mechanical_jacobian(5.345, np.array([omega]), -0.654)
+
+        assert result0[0] == result1[0] == expected[0]
+        assert result0[1] == result1[1] == expected[1]
+
+
+class TestPolyStaticLoad(TestMechanicalLoad):
+
+    class_to_test = PolynomialStaticLoad
+    key = 'PolyStaticLoad'
+
+    @pytest.mark.parametrize('omega, load_parameter, expected', [
+        (-0.5, dict(a=12, b=1, c=0, j_load=1), (1, 1)),
+        (0, dict(j_load=0.5), (0, 2)),
+        (2, dict(a=20, b=0, c=2, j_load=0.25), (-32, 4)),
+        (2, dict(a=20, b=0.125, c=2, j_load=0.25), (-32.5, 4))
+    ]
+    )
+    def test_jacobian(self, omega, load_parameter, expected):
+        test_object = self.class_to_test(load_parameter)
+
+        # 2 Runs to test independence on time and torque
+        result0 = test_object.mechanical_jacobian(0.456, np.array([omega]), 0.385)
+        result1 = test_object.mechanical_jacobian(5.345, np.array([omega]), -0.654)
+
+        assert result0[0] == result1[0] == expected[0]
+        assert result0[1] == result1[1] == expected[1]

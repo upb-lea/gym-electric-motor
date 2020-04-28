@@ -22,7 +22,15 @@ from gym.spaces import Box, Tuple
 
 
 class AppendLastActionWrapper(Wrapper):
+    """
+    The following environment considers the dead time in the real-world motor control systems.
+    The real-world system changes its state, while the agent calculates the next action based on a previoulsly measured
+    observation. Therefore, for the agents it seems as if the applied action effects the state one step delayed.
+    (with a dead time of one time-step)
 
+    For complete observability of the system at each time-step we append the last played action of the agent to the
+    observation, because this action will be the one that is active in the next step.
+    """
     def __init__(self, environment):
         super().__init__(environment)
         self.observation_space = Tuple((Box(
@@ -45,10 +53,13 @@ if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
 
     window_length = 1
+
+    # Changing i_q reference and constant 0 i_d reference.
     q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
     d_generator = ConstReferenceGenerator('i_sd', 0)
     rg = MultipleReferenceGenerator([d_generator, q_generator])
 
+    # Change of the default motor parameters.
     motor_parameter = dict(
         r_s=15e-3, l_d=0.37e-3, l_q=1.2e-3, psi_p=65.6e-3, p=3, j_rotor=0.06
     )
@@ -58,6 +69,7 @@ if __name__ == '__main__':
         u=450
     )
     nominal_values = {key: 0.7 * limit for key, limit in limit_values.items()}
+
     # Create the environment
     env = gem.make(
         'emotor-pmsm-cont-v1',
@@ -66,7 +78,7 @@ if __name__ == '__main__':
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
         control_space='dq',
         # Pass a string (with extra parameters)
-        ode_solver='euler', solver_kwargs={},
+        ode_solver='scipy.solve_ivp', solver_kwargs={},
         # Pass an instance
         reference_generator=rg,
         plotted_variables=['i_sq', 'i_sd', 'u_sq', 'u_sd'],
@@ -80,8 +92,11 @@ if __name__ == '__main__':
         nominal_values=nominal_values,
         state_filter=['i_sq', 'i_sd', 'epsilon']
     )
-    # Keras-rl DDPG-agent accepts flat observations only
+
+    # Due to the dead time in the system, the
     env = AppendLastActionWrapper(env)
+
+    # Keras-rl DDPG-agent accepts flat observations only
     env = FlattenObservation(env)
     nb_actions = env.action_space.shape[0]
 
@@ -130,13 +145,6 @@ if __name__ == '__main__':
         size=2
     )
 
-    gauss_random_process = GaussianWhiteNoiseProcess(
-        sigma=0.1,
-        sigma_min=0.05,
-        n_steps_annealing=85000,
-        size=2
-    )
-
     # Create the agent
     agent = DDPGAgent(
         nb_actions=nb_actions,
@@ -150,11 +158,11 @@ if __name__ == '__main__':
         target_model_update=1000,
         gamma=0.9,
         batch_size=128,
-        memory_interval=1
+        memory_interval=2
     )
     agent.compile([Adam(lr=3e-5), Adam(lr=3e-3)])
 
-    # Start training for 1.5M simulation steps
+    # Start training for 75000 simulation steps
     agent.fit(
         env,
         nb_steps=75000,
@@ -175,6 +183,4 @@ if __name__ == '__main__':
         visualize=True,
         nb_max_episode_steps=10000
     )
-
-    agent.save_weights('SavedWeightsConstWrap.h5', True)
 

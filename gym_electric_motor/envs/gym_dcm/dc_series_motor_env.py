@@ -14,6 +14,7 @@ class DcSeriesMotorEnvironment(ElectricMotorEnvironment):
             reference_generator(ReferenceGenerator): Reference Generator for the environment
             kwargs(dict): Further kwargs to pass to the superclass and the submodules
         """
+        kwargs['load_parameter'] = kwargs.get('load_parameter', dict(a=0.01, b=0.05, c=0.1, j_load=0.1))
         physical_system = DcMotorSystem(motor=motor, **kwargs)
         reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)
         reward_function = reward_function or WeightedSumOfErrors(**kwargs)

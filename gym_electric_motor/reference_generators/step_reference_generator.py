@@ -41,8 +41,8 @@ class StepReferenceGenerator(SubepisodedReferenceGenerator):
         self._offset = self._get_current_value(offset_range)
         high_low_ratio = np.random.triangular(0, 0.5, 1)
         t = np.linspace(0, (self._current_episode_length - 1) * self._physical_system.tau, self._current_episode_length)
-        x = t % self._frequency
-        x -= high_low_ratio * self._frequency
+        x = self._frequency * (t % (1/self._frequency))
+        x -= high_low_ratio
         x = np.sign(x)
         phase = np.random.rand()
         steps_per_period = 1 / self._frequency / self._physical_system.tau

@@ -47,11 +47,7 @@ def test_scipy_ivp(integrator):
     :return:
     """
     solver = ScipySolveIvpSolver(method=integrator)
-    if integrator == 'RK45' or integrator == 'RK23':
-        with pytest.warns(Warning):
-            integration_testing(solver)
-    else:
-        integration_testing(solver)
+    integration_testing(solver)
 
 
 def test_scipyodeint():
@@ -75,8 +71,7 @@ def integration_testing(solver):
     u = 0.0
     system_equation = lambda t, state, u: system(t, state, u)
     system_jacobian = lambda t, state, u: jacobian(t, state, u)
-    solver.set_system_equation(system_equation)
-    solver.set_j_params(system_jacobian)
+    solver.set_system_equation(system_equation, system_jacobian)
     solver.set_initial_value(g_initial_value, g_initial_time)
     assert g_initial_time == solver.t
     for steps in time_step:
@@ -107,8 +102,7 @@ def test_compare_solver():
     # set the system equation and jacobian
     system_equation = lambda t, state, u: system(t, state, u)
     system_jacobian = lambda t, state, u: jacobian(t, state, u)
-    [solve.set_system_equation(system_equation) for solve in solver]
-    [solve.set_j_params(system_jacobian) for solve in solver]
+    [solve.set_system_equation(system_equation, system_jacobian) for solve in solver]
     # set initial values of the solver
     [solve.set_initial_value(g_initial_value, g_initial_time) for solve in solver]
     # integrate for given steps
@@ -165,9 +159,9 @@ class TestOdeSolver:
         assert test_object._system_jacobian == jacobian_, 'jacobian is not passed correctly'
 
     @pytest.mark.parametrize('args', [[], ['nsteps', 5], 42])
-    def test_set_f_j_params(self, args):
+    def test_set_f_params(self, args):
         """
-        test set_f_params() and set_j_params()
+        test set_f_params()
         :param args: arguments that should be tested
         :return:
         """
@@ -175,10 +169,8 @@ class TestOdeSolver:
         test_object = OdeSolver()
         # call function to test
         test_object.set_f_params(args)
-        test_object.set_j_params(args)
         # verify the expected results
         assert test_object._f_params[0] == args, 'arguments are not passed correctly for the system'
-        assert test_object._j_params[0] == args, 'arguments are not passed correctly for the jacobian'
 
 
 class TestEulerSolver:
@@ -243,7 +235,6 @@ class TestEulerSolver:
         u = 2
         test_object.set_initial_value(self._state, self._t)
         test_object.set_f_params(u)
-        test_object.set_j_params(u)
         # call function to test
         state = test_object.integrate(self._t + tau)
         # verify the expected results
@@ -354,21 +345,6 @@ class TestScipyOdeSolver:
         # verify the expected results
         assert test_object._ode._set_f_params_counter == 1, 'set_f_params() is not called once'
 
-    def test_set_j_params(self, monkeypatch):
-        """
-        test set_j_params()
-        :param monkeypatch:
-        :return:
-        """
-        # setup test scenario
-        monkeypatch.setattr(pss, 'ode', DummyScipyOdeSolver)
-        test_object = ScipyOdeSolver(integrator=self._integrator, **self._kwargs)
-        test_object.set_system_equation(system, jacobian)
-        # call function to test
-        test_object.set_j_params(self._args)
-        # verify the expected results
-        assert test_object._ode._set_jac_params_counter == 1, 'set_jac_params() is not called once'
-
     def test_integrate(self, monkeypatch):
         """
         test integrate()
@@ -381,7 +357,6 @@ class TestScipyOdeSolver:
         test_object.set_system_equation(system, jacobian)
         test_object.set_initial_value(self._initial_state, self._initial_time)
         test_object.set_f_params(self._args)
-        test_object.set_j_params(self._args)
         # call function to test
         result = test_object.integrate(self._tau + self._initial_time)
         # verify the expected results
@@ -400,7 +375,6 @@ class TestScipySolveIvpSolver:
 
     # counter
     _monkey_set_f_params_counter = 0
-    _monkey_set_j_params_counter = 0
     _monkey_super_set_system_equation_counter = 0
 
     def monkey_super_set_system_equation(self, system_equation, jac):
@@ -419,14 +393,7 @@ class TestScipySolveIvpSolver:
         """
         self._monkey_set_f_params_counter += 1
 
-    def monkey_set_j_params(self):
-        """
-        mock function for set_j_params()
-        :return:
-        """
-        self._monkey_set_j_params_counter += 1
-
-    def monkey_solve_ivp(self, function, time, state, t_eval, jac, **kwargs):
+    def monkey_solve_ivp(self, function, time, state, t_eval, **kwargs):
         """
         mock function for solve_ivp()
         all arguments are similar to that function
@@ -471,13 +438,9 @@ class TestScipySolveIvpSolver:
         # setup test scenario
         monkeypatch.setattr(OdeSolver, 'set_system_equation', self.monkey_super_set_system_equation)
         monkeypatch.setattr(ScipySolveIvpSolver, 'set_f_params', self.monkey_set_f_params)
-        monkeypatch.setattr(ScipySolveIvpSolver, 'set_j_params', self.monkey_set_j_params)
         test_object = ScipySolveIvpSolver()
         # call function to test
         test_object.set_system_equation(system, jacobian)
-        # verify the expected results
-        assert self._monkey_set_f_params_counter == 1, 'set_f_params() is not called once'
-        assert self._monkey_set_j_params_counter == 1, 'set_j_params() is not called once'
 
     def test_set_f_params(self):
         """
@@ -494,29 +457,7 @@ class TestScipySolveIvpSolver:
         # call function to test
         test_object.set_f_params(args)
         # verify the expected results
-        assert sum(abs(test_object._fct(_tau, _state) - _expected_result)) < 1E-6,\
-            'unexpected result after set_f_params()'
-
-    def test_set_j_params(self):
-        """
-        test set_j_params()
-        :return:
-        """
-        # setup test scenario
-        _expected_result = np.array([6, 25.8])
-        test_object = ScipySolveIvpSolver()
-        test_object.set_system_equation(system)
-        # call function to test
-        test_object.set_j_params(self.args)
-        # verify the expected results
-        assert test_object._j_fct is None
-
-        # setup test scenario
-        test_object.set_system_equation(system, jacobian)
-        # call function to test
-        test_object.set_j_params(self.args)
-        # verify the expected results
-        assert sum(sum(abs(test_object._j_fct(self._tau, self._state) - np.array([[-3, -3], [-36.6, 7.8]])))) < 1E-6, \
+        assert sum(abs(test_object._system_equation(_tau, _state, args) - _expected_result)) < 1E-6,\
             'unexpected result after set_f_params()'
 
     def test_integrate(self, monkeypatch):
@@ -530,7 +471,6 @@ class TestScipySolveIvpSolver:
         test_object = ScipySolveIvpSolver()
         test_object.set_system_equation(system, jacobian)
         test_object.set_initial_value(self._state, 0.0)
-        test_object.set_j_params(self.args)
         test_object.set_f_params(self.args)
         # call function to test
         result = test_object.integrate(self._tau)
@@ -549,7 +489,6 @@ class TestScipyOdeIntSolver:
 
     # counter
     _monkey_set_f_params_counter = 0
-    _monkey_set_j_params_counter = 0
     _monkey_super_set_system_equation_counter = 0
 
     def monkey_super_set_system_equation(self, system_equation, jac):
@@ -569,13 +508,6 @@ class TestScipyOdeIntSolver:
         :return:
         """
         self._monkey_set_f_params_counter += 1
-
-    def monkey_set_j_params(self):
-        """
-        mock function for set_j_params()
-        :return:
-        """
-        self._monkey_set_j_params_counter += 1
 
     def monkey_ode_int(self, function, y, time, args, Dfun, tfirst, **kwargs):
         """
@@ -617,35 +549,9 @@ class TestScipyOdeIntSolver:
         # setup test scenario
         monkeypatch.setattr(OdeSolver, 'set_system_equation', self.monkey_super_set_system_equation)
         monkeypatch.setattr(ScipyOdeIntSolver, 'set_f_params', self.monkey_set_f_params)
-        monkeypatch.setattr(ScipyOdeIntSolver, 'set_j_params', self.monkey_set_j_params)
         test_object = ScipyOdeIntSolver()
         # call function to test
         test_object.set_system_equation(system, jacobian)
-        # verify the expected results
-        assert self._monkey_set_f_params_counter == 1, 'set_f_params() not called once'
-        assert self._monkey_set_j_params_counter == 1, 'set_j_params() not called once'
-
-    def test_set_j_params(self):
-        """
-        test set_j_params()
-        :return:
-        """
-        # setup test scenario
-        _expected_result = np.array([6, 25.8])
-        test_object = ScipyOdeIntSolver()
-        test_object.set_system_equation(system)
-        # call function to test
-        test_object.set_j_params(self.args)
-        # verify the expected results
-        assert test_object._j_fct is None
-
-        # setup test scenario
-        test_object.set_system_equation(system, jacobian)
-        # call function to test
-        test_object.set_j_params(self.args)
-        # verify the expected results
-        assert sum(sum(abs(test_object._j_fct(self._state, self._tau) - np.array([[-3, -3], [-36.6, 7.8]])))) < 1E-6, \
-            'unexpected result after set_j_params'
 
     def test_integrate(self, monkeypatch):
         """
@@ -658,7 +564,6 @@ class TestScipyOdeIntSolver:
         test_object = ScipyOdeIntSolver()
         test_object.set_system_equation(system, jacobian)
         test_object.set_initial_value(self._state, 0.0)
-        test_object.set_j_params(self.args)
         test_object.set_f_params(self.args)
         # call function to test
         result = test_object.integrate(self._tau)

@@ -1,9 +1,8 @@
-# Gym Electric Motor (GEM)
-
 ![](docs/plots/Motor_Logo.png)
 
 [![Build Status](https://travis-ci.org/upb-lea/gym-electric-motor.svg?branch=master)](https://travis-ci.org/upb-lea/gym-electric-motor)
 [![codecov](https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg)](https://codecov.io/gh/upb-lea/gym-electric-motor)
+[![PyPI version shields.io](https://img.shields.io/pypi/v/gym-electric-motor.svg)](https://pypi.python.org/pypi/gym-electric-motor/)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE)
 
 __The gym-electric-motor (GEM) package is a software toolbox for the
@@ -229,6 +228,7 @@ Two three phase motors:
 - SynRM (synchronous reluctance motor)
 
 Two variants of the induction motor:
+
 - SCIM (squirrel cage induction motor)
 - DFIM (doubly fed induction motor)
 
@@ -260,6 +260,8 @@ The actions are basically understood as the desired duty cycles. The actual appl
 The observations are normalized to their physical limits that can be accessed with `env.limits`.
 Therefore, all values are typically in a range of [0, 1] or [-1, 1] without limit violation.
 
+
+
 ### Notes about the Parameters
 All nominal values of voltages and currents are DC values in the case of a DC motor and peak phase values for the PMSM.
 Therefore, data sheet values for line voltage and phase currents of a PMSM has to be transformed with:
@@ -269,6 +271,9 @@ Therefore, data sheet values for line voltage and phase currents of a PMSM has t
 Furthermore, the angular velocity is the mechanical one and not the electrical: 
 
 ![](docs/plots/omegame.svg)
+
+The mechanical one is needed for speed controller.
+The included angle is the electrical one due to its usage in the rotational transformation for three phase motors.
 
 
 ### Running Unit Tests with Pytest

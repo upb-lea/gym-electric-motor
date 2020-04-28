@@ -16,6 +16,9 @@ class ElectricMotor:
         and the limit dictionary.
     """
 
+    #: Parameter indicating if the class is implementing the optional jacobian function
+    HAS_JACOBIAN = False
+
     #: CURRENTS_IDX(list(int)): Indices for accessing all motor currents.
     CURRENTS_IDX = []
 
@@ -76,12 +79,12 @@ class ElectricMotor:
         self._nominal_values = self._default_nominal_values.copy()
         self._nominal_values.update(nominal_values)
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         """
         Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.
 
         Args:
-            currents(ndarray(float)): The motors state.
+            state(ndarray(float)): The motors state.
             u_in(list(float)): The motors input voltages.
             omega(float): Angular velocity of the motor
 
@@ -89,6 +92,26 @@ class ElectricMotor:
              ndarray(float): Derivatives of the motors ODE-system for the given inputs.
         """
         raise NotImplementedError
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        """
+        Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.
+
+        Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+        be set to True. Otherwise, the jacobian will not be called.
+
+        Args:
+            state(ndarray(float)): The motors state.
+            u_in(list(float)): The motors input voltages.
+            omega(float): Angular velocity of the motor
+
+        Returns:
+             Tuple(ndarray, ndarray, ndarray):
+                [0]: Derivatives of all electrical motor states over all electrical motor states shape:(states x states)
+                [1]: Derivatives of all electrical motor states over omega shape:(states,)
+                [2]: Derivative of Torque over all motor states shape:(states,)
+        """
+        pass
 
     def torque(self, currents):
         """
@@ -198,8 +221,8 @@ class DcMotor(ElectricMotor):
             [-mp['r_a'], 0, -mp['l_e_prime'], 1, 0],
             [0, -mp['r_e'], 0, 0, 1]
         ])
-        self._model_constants[self.I_A_IDX] /= mp['l_a']
-        self._model_constants[self.I_E_IDX] /= mp['l_e']
+        self._model_constants[self.I_A_IDX] = self._model_constants[self.I_A_IDX] / mp['l_a']
+        self._model_constants[self.I_E_IDX] = self._model_constants[self.I_E_IDX] / mp['l_e']
 
     def torque(self, currents):
         # Docstring of superclass
@@ -209,12 +232,12 @@ class DcMotor(ElectricMotor):
         # Docstring of superclass
         return list(currents)
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
         return np.matmul(self._model_constants, np.array([
-            currents[self.I_A_IDX],
-            currents[self.I_E_IDX],
-            omega * currents[self.I_E_IDX],
+            state[self.I_A_IDX],
+            state[self.I_E_IDX],
+            omega * state[self.I_E_IDX],
             u_in[0],
             u_in[1],
         ]))
@@ -322,7 +345,7 @@ class DcShuntMotor(DcMotor):
         u        Voltage
         ======== ===========================================================
     """
-
+    HAS_JACOBIAN = True
     VOLTAGES = ['u']
 
     _default_nominal_values = {'omega': 368, 'torque': 0.0, 'i_a': 50, 'i_e': 1.2, 'u': 420}
@@ -332,9 +355,20 @@ class DcShuntMotor(DcMotor):
         # Docstring of superclass
         return [state[self.I_A_IDX] + state[self.I_E_IDX]]
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
-        return super().electrical_ode(currents, (u_in[0], u_in[0]), omega)
+        return super().electrical_ode(state, (u_in[0], u_in[0]), omega)
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_a'] / mp['l_a'], -mp['l_e_prime'] / mp['l_a'] * omega],
+                [0, -mp['r_e'] / mp['l_e']]
+            ]),
+            np.array([-mp['l_e_prime'] * state[self.I_E_IDX] / mp['l_a'], 0]),
+            np.array([mp['l_e_prime'] * state[self.I_E_IDX], mp['l_e_prime'] * state[self.I_A_IDX]])
+        )
 
     def get_state_space(self, input_currents, input_voltages):
         """
@@ -431,6 +465,7 @@ class DcSeriesMotor(DcMotor):
         u        Circuit Voltage
         ======== ===========================================================
     """
+    HAS_JACOBIAN = True
     I_IDX = 0
     CURRENTS_IDX = [0]
     CURRENTS = ['i']
@@ -448,19 +483,19 @@ class DcSeriesMotor(DcMotor):
         self._model_constants = np.array([
             [-mp['r_a'] - mp['r_e'], -mp['l_e_prime'], 1]
         ])
-        self._model_constants[self.I_IDX] /= (mp['l_a'] + mp['l_e'])
+        self._model_constants[self.I_IDX] = self._model_constants[self.I_IDX] / (mp['l_a'] + mp['l_e'])
 
     def torque(self, currents):
         # Docstring of superclass
         return super().torque([currents[self.I_IDX], currents[self.I_IDX]])
 
-    def electrical_ode(self, currents, u_in, omega, *_):
+    def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
         return np.matmul(
             self._model_constants,
             np.array([
-                currents[self.I_IDX],
-                omega * currents[self.I_IDX],
+                state[self.I_IDX],
+                omega * state[self.I_IDX],
                 u_in[0]
             ])
         )
@@ -505,6 +540,14 @@ class DcSeriesMotor(DcMotor):
         }
         return low, high
 
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([[-(mp['r_a'] + mp['r_e'] + mp['l_e_prime'] * omega) / (mp['l_a'] + mp['l_e'])]]),
+            np.array([-mp['l_e_prime'] * state[self.I_IDX] / (mp['l_a'] + mp['l_e'])]),
+            np.array([2 * mp['l_e_prime'] * state[self.I_IDX]])
+        )
+
 
 class DcPermanentlyExcitedMotor(DcMotor):
     """
@@ -544,6 +587,7 @@ class DcPermanentlyExcitedMotor(DcMotor):
     CURRENTS_IDX = [0]
     CURRENTS = ['i']
     VOLTAGES = ['u']
+    HAS_JACOBIAN = True
 
     _default_motor_parameter = {
         'r_a': 25.0, 'l_a': 3.438e-2, 'psi_e': 18, 'j_rotor': 0.017
@@ -570,6 +614,14 @@ class DcPermanentlyExcitedMotor(DcMotor):
     def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
         return np.matmul(self._model_constants, np.array([omega, state[self.I_IDX], u_in[0]]))
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([[-mp['r_a'] / mp['l_a']]]),
+            np.array([-mp['psi_e'] / mp['l_a']]),
+            np.array([mp['psi_e']])
+        )
 
     def _update_limits(self):
         # Docstring of superclass
@@ -610,7 +662,18 @@ class DcPermanentlyExcitedMotor(DcMotor):
 
 class DcExternallyExcitedMotor(DcMotor):
     # Equals DC Base Motor
-    pass
+    HAS_JACOBIAN = True
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_a'] / mp['l_a'], -mp['l_e_prime'] / mp['l_a'] * omega],
+                [0, -mp['r_e'] / mp['l_e']]
+            ]),
+            np.array([-mp['l_e_prime'] * state[self.I_E_IDX] / mp['l_a'], 0]),
+            np.array([mp['l_e_prime'] * state[self.I_E_IDX], mp['l_e_prime'] * state[self.I_A_IDX]])
+        )
 
 class ThreePhaseMotor(ElectricMotor):
     """
@@ -619,6 +682,19 @@ class ThreePhaseMotor(ElectricMotor):
             This includes the system equations, the motor parameters of the equivalent circuit diagram,
             as well as limits and bandwidth.
     """
+    # transformation matrix from abc to alpha-beta representation
+    _t23 = 2 / 3 * np.array([
+        [1, -0.5, -0.5],
+        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]
+    ])
+
+    # transformation matrix from alpha-beta to abc representation
+    _t32 = np.array([
+        [1, 0],
+        [-0.5, 0.5 * np.sqrt(3)],
+        [-0.5, -0.5 * np.sqrt(3)]
+    ])
+
     @staticmethod
     def t_23(quantities):
         """
@@ -630,7 +706,7 @@ class ThreePhaseMotor(ElectricMotor):
         Returns:
             The converted quantities in the alpha-beta representation like ''[u_alpha, u_beta]''
         """
-        return np.matmul(SynchronousMotor._t23, quantities)
+        return np.matmul(ThreePhaseMotor._t23, quantities)
 
     @staticmethod
     def t_32(quantities):
@@ -643,7 +719,7 @@ class ThreePhaseMotor(ElectricMotor):
         Returns:
             The converted quantities in the abc representation like ``[u_a, u_b, u_c]``
         """
-        return np.matmul(SynchronousMotor._t32, quantities)
+        return np.matmul(ThreePhaseMotor._t32, quantities)
 
     @staticmethod
     def q(quantities, epsilon):
@@ -708,7 +784,6 @@ class ThreePhaseMotor(ElectricMotor):
             So this method calls q(quantities, -epsilon).
         """
         return self.q_me(quantities, -epsilon)
-
 
 
 class SynchronousMotor(ThreePhaseMotor):
@@ -797,19 +872,6 @@ class SynchronousMotor(ThreePhaseMotor):
     CURRENTS_IDX = [0, 1]
     CURRENTS = ['i_sq', 'i_sd']
     VOLTAGES = ['u_sq', 'u_sd']
-
-    # transformation matrix from abc to alpha-beta representation
-    _t23 = 2 / 3 * np.array([
-        [1, -0.5, -0.5],
-        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]
-    ])
-
-    # transformation matrix from alpha-beta to abc representation
-    _t32 = np.array([
-        [1, 0],
-        [-0.5, 0.5 * np.sqrt(3)],
-        [-0.5, -0.5 * np.sqrt(3)]
-    ])
 
     _model_constants = None
 
@@ -1039,6 +1101,7 @@ class SynchronousReluctanceMotor(SynchronousMotor):
             the general limits/nominal values (e.g. i)
 
     """
+    HAS_JACOBIAN = True
     _default_motor_parameter = {'p': 2, 'l_d': 73.2e-3, 'l_q': 7.3e-3, 'j_rotor': 2.45e-3, 'r_s': 0.3256}
     _default_nominal_values = {
         'i': 54, 'torque': 0, 'omega': 523.0, 'epsilon': np.pi, 'u': 600
@@ -1054,8 +1117,8 @@ class SynchronousReluctanceMotor(SynchronousMotor):
             [0, 0, -mp['r_s'], 0, 1, mp['l_q'] * mp['p'], 0],
             [mp['p'], 0, 0, 0, 0, 0, 0]
         ])
-        self._model_constants[self.I_SQ_IDX] /= mp['l_q']
-        self._model_constants[self.I_SD_IDX] /= mp['l_d']
+        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
+        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
 
     def _torque_limit(self):
         # Docstring of superclass
@@ -1065,6 +1128,26 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         # Docstring of superclass
         mp = self._motor_parameter
         return 1.5 * mp['p'] * ((mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_s'] / mp['l_q'], -mp['l_d']/mp['l_q']*omega, 0],
+                [mp['l_q'] / mp['l_d']*omega, - mp['r_s'] / mp['l_d'], 0],
+                [0, 0, 0]
+            ]),
+            np.array([
+                -mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX],
+                mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                1
+            ]),
+            np.array([
+                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX],
+                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                0
+            ])
+        )
 
 
 class PermanentMagnetSynchronousMotor(SynchronousMotor):
@@ -1149,7 +1232,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         'r_s': 4.9,
         'psi_p': 0.165,
     }
-
+    HAS_JACOBIAN = True
     _default_limits = dict(omega=80, torque=0.0, i=20, epsilon=math.pi, u=600)
     _default_nominal_values = dict(omega=75, torque=0.0, i=12, epsilon=math.pi, u=600)
 
@@ -1163,8 +1246,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
             [mp['p'], 0, 0, 0, 0, 0, 0]
         ])
 
-        self._model_constants[self.I_SQ_IDX] /= mp['l_q']
-        self._model_constants[self.I_SD_IDX] /= mp['l_d']
+        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
+        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
 
     def _torque_limit(self):
         # Docstring of superclass
@@ -1176,6 +1259,26 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         return 1.5 * mp['p'] * (
                 mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]
         ) * currents[self.I_SQ_IDX]
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        return (
+            np.array([
+                [-mp['r_s'] / mp['l_q'], -mp['l_d']/mp['l_q']*omega, 0],
+                [mp['l_q'] / mp['l_d']*omega, -mp['r_s']/mp['l_d'], 0],
+                [0, 0, 0]
+            ]),
+            np.array([
+                -mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['psi_p'] / mp['l_q'],
+                mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                1
+            ]),
+            np.array([
+                mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
+                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                0
+            ])
+        )
 
 class InductionMotor(ThreePhaseMotor):
     """
@@ -1280,20 +1383,6 @@ class InductionMotor(ThreePhaseMotor):
 
     _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=560)
     _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=560)
-
-    # transformation matrix from abc to alpha-beta representation
-    _t23 = 2 / 3 * np.array([
-        [1, -0.5, -0.5],
-        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]
-    ])
-
-    # transformation matrix from alpha-beta to abc representation
-    _t32 = np.array([
-        [1, 0],
-        [-0.5, 0.5 * np.sqrt(3)],
-        [-0.5, -0.5 * np.sqrt(3)]
-    ])
-
     _model_constants = None
 
     @property

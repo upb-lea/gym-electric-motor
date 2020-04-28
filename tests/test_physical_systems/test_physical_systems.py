@@ -162,3 +162,19 @@ class TestSCMLSystem:
         assert scml_system.converter.action == action
         assert scml_system.converter.action_set_time == 0
         assert scml_system.converter.last_i_out == scml_system.electrical_motor.i_in(ode_state[2:])
+
+    def test_system_jacobian(self, scml_system):
+        el_jac = np.arange(4).reshape(2, 2)
+        el_over_omega = np.arange(4, 6)
+        torque_over_el = np.arange(6, 8)
+        scml_system.electrical_motor.electrical_jac_return = (el_jac, el_over_omega, torque_over_el)
+        me_jac = np.arange(8, 12).reshape(2, 2)
+        me_over_torque = np.arange(12, 14)
+        scml_system.mechanical_load.mechanical_jac_return = me_jac, me_over_torque
+        sys_jac = scml_system._system_jacobian(0, np.array([0, 1, 2, 3]), [0, -1])
+        assert np.all(sys_jac[-2:, -2:] == el_jac)
+        assert np.all(sys_jac[:2, :2] == me_jac)
+        assert np.all(sys_jac[2:, 0] == el_over_omega)
+        assert np.all(sys_jac[2:, 1] == np.zeros(2))
+        assert np.all(sys_jac[:-2, 2:] == np.array([[72, 84], [78, 91]]))
+
