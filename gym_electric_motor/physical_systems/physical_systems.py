@@ -405,6 +405,7 @@ class SynchronousMotorSystem(SCMLSystem):
             ode_state = self._ode_solver.integrate(t)
             eps = ode_state[self._ode_epsilon_idx]
             i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
+
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         u_qd = self.abc_to_dq_space(u_in, eps)
@@ -930,8 +931,6 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
         u_in = [u * u_sup for u in u_in]
         u_sabc = u_in[0:3]
         u_rdef = u_in[3:6]
-        u_sabc = [u * u_sup for u in u_sabc]
-        u_rdef = [u * u_sup for u in u_rdef]
         u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
         u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
         u_salphabeta = self.abc_to_alphabeta_space(u_sabc)

@@ -1240,10 +1240,10 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         # Docstring of superclass
         mp = self._motor_parameter
         self._model_constants = np.array([
-            # omega,                 i_q,        i_d,     u_q, u_d, omega * i_q,        omega * i_d
-            [-mp['psi_p'] * mp['p'], -mp['r_s'], 0, 1, 0, 0, -mp['l_d'] * mp['p']],
-            [0, 0, -mp['r_s'], 0, 1, mp['l_q'] * mp['p'], 0],
-            [mp['p'], 0, 0, 0, 0, 0, 0]
+            # omega,                 i_q,        i_d,        u_q, u_d, omega * i_q,         omega * i_d
+            [-mp['psi_p'] * mp['p'], -mp['r_s'], 0,          1,   0,   0,                   -mp['l_d'] * mp['p']],
+            [0,                      0,          -mp['r_s'], 0,   1,   mp['l_q'] * mp['p'], 0],
+            [mp['p'],                0,          0,          0,   0,   0,                   0]
         ])
 
         self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
@@ -1256,24 +1256,22 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     def torque(self, currents):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * (
-                mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]
-        ) * currents[self.I_SQ_IDX]
+        return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX])*currents[self.I_SQ_IDX]
 
     def electrical_jacobian(self, state, u_in, omega, *_):
         mp = self._motor_parameter
         return (
-            np.array([
+            np.array([ # dx'/dx
                 [-mp['r_s'] / mp['l_q'], -mp['l_d']/mp['l_q']*omega, 0],
                 [mp['l_q'] / mp['l_d']*omega, -mp['r_s']/mp['l_d'], 0],
                 [0, 0, 0]
             ]),
-            np.array([
+            np.array([ # dx'/dw
                 -mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['psi_p'] / mp['l_q'],
                 mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
                 1
             ]),
-            np.array([
+            np.array([ # dT/dx
                 mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
                 mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
                 0
@@ -1365,12 +1363,14 @@ class InductionMotor(ThreePhaseMotor):
     PSI_RALPHA_IDX = 2
     PSI_RBETA_IDX = 3
     EPSILON_IDX = 4
+
     CURRENTS_IDX = [0, 1]
     FLUX_IDX = [2, 3]
     CURRENTS = ['i_salpha', 'i_sbeta']
     FLUXES = ['psi_ralpha', 'psi_rbeta']
     STATOR_VOLTAGES = ['u_salpha', 'u_sbeta']
 
+    HAS_JACOBIAN = True
     _default_motor_parameter = {
         'p': 2,
         'l_m': 143.75e-3,
@@ -1546,8 +1546,41 @@ class InductionMotor(ThreePhaseMotor):
             [0,       0,               -1/tau_sig,      0,                                        mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0,                                  0,               1/(sigma*l_s),  0,                              -mp['l_m']/ (sigma * l_r * l_s), ],  # i_rbeta_dot
             [0,       mp['l_m']/tau_r, 0,               -1/tau_r,                                 0,                                      0,                                   -mp['p'],                           0,               0,              1,                              0,                               ],  # psi_ralpha_dot
             [0,       0,               mp['l_m']/tau_r, 0,                                        -1/tau_r,                               mp['p'],                             0,                                  0,               0,              0,                              1,                               ],  # psi_rbeta_dot
-            [mp['p'], 0,               0,               0,                                        0,                                      0,                                   0,                                  0,               0,               0,                             0,                               ],  # epsilon_dot
+            [mp['p'], 0,               0,               0,                                        0,                                      0,                                   0,                                  0,               0,              0,                              0,                               ],  # epsilon_dot
         ])
+
+    def electrical_jacobian(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        l_s = mp['l_m'] + mp['l_ssig']
+        l_r = mp['l_m'] + mp['l_rsig']
+        sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
+        tau_r = l_r / mp['r_r']
+        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m'] ** 2) / (l_r ** 2))
+
+        return (
+            np.array([ # dx'/dx
+                # i_alpha         i_beta      psi_alpha                                         psi_beta                                   epsilon
+                [-1/tau_sig,        0,                 mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),    omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), 0],
+                [0,                 - 1 / tau_sig,     - omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),  0],
+                [mp['l_m'] / tau_r, 0,                 - 1 / tau_r,                                 - omega * mp['p'],                         0],
+                [0,                  mp['l_m'] / tau_r, omega * mp['p'],                             - 1 / tau_r,                              0],
+                [0,                 0,                 0,                                           0,                                         0]
+            ]),
+            np.array([ # dx'/dw
+                mp['l_m'] * mp['p'] / (sigma*l_r*l_s) * state[self.PSI_RBETA_IDX],
+                - mp['l_m'] * mp['p'] / (sigma*l_r*l_s) * state[self.PSI_RALPHA_IDX],
+                - mp['p'] * state[self.PSI_RBETA_IDX],
+                mp['p'] * state[self.PSI_RALPHA_IDX],
+                mp['p']
+            ]),
+            np.array([ # dT/dx
+                - state[self.PSI_RBETA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                state[self.PSI_RALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                state[self.I_SBETA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                - state[self.I_SALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                0
+            ])
+        )
 
 
 class SquirrelCageInductionMotor(InductionMotor):

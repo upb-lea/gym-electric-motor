@@ -1,4 +1,4 @@
-from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem
+from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem
 from .converters import PowerElectronicConverter, DiscOneQuadrantConverter, DiscTwoQuadrantConverter, \
     DiscFourQuadrantConverter, DiscMultiConverter, DiscB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter
@@ -29,7 +29,8 @@ register_superclass(VoltageSupply)
 
 register_class(DcMotorSystem, PhysicalSystem, 'DcMotorSystem')
 register_class(SynchronousMotorSystem, PhysicalSystem, 'SyncMotorSystem')
-register_class(SquirrelCageInductionMotorSystem, PhysicalSystem, 'SyncMotorSystem')
+register_class(SquirrelCageInductionMotorSystem, PhysicalSystem, 'SquirrelCageInductionMotorSystem')
+register_class(DoublyFedInductionMotorSystem, PhysicalSystem, 'DoublyFedInductionMotorSystem')
 
 register_class(DiscOneQuadrantConverter, PowerElectronicConverter, 'Disc-1QC')
 register_class(ContOneQuadrantConverter, PowerElectronicConverter, 'Cont-1QC')
