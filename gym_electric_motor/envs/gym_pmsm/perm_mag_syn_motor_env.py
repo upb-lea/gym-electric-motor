@@ -28,7 +28,7 @@ class DiscPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
         Environment to simulate a discretely controlled Permanent Magnet Synchronous Motor (PMSM).
 
     Key:
-        `emotor-pmsm-disc-v1`
+        `PMSMDisc-v1`
 
     Default Modules:
 
@@ -88,7 +88,7 @@ class ContPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
         Environment to simulate a continuously controlled Permanent Magnet Synchronous Motor (PMSM).
 
     Key:
-        `emotor-pmsm-cont-v1`
+        `PMSMCont-v1`
 
     Default Modules:
 

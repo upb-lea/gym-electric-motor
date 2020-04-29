@@ -28,7 +28,7 @@ class DiscSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
         Environment to simulate a discretely controlled Synchronous Reluctance Motor (SynRM).
 
     Key:
-        `emotor-synrm-disc-v1`
+        `SynRMDisc-v1`
 
     Default Modules:
 
@@ -87,7 +87,7 @@ class ContSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
         Environment to simulate a continuously controlled Synchronous Reluctance Motor (SynRM).
 
     Key:
-        `emotor-synrm-cont-v1`
+        `SynRMCont-v1`
 
     Default Modules:
 

@@ -28,7 +28,7 @@ class DiscDcExternallyExcitedMotorEnvironment(DcExternallyExcitedMotorEnvironmen
         Environment to simulate a discretely controlled externally excited DC Motor
 
     Key:
-        `emotor-dc-extex-disc-v1`
+        `DcExtExDisc-v1`
 
     Default Modules:
 
@@ -86,7 +86,7 @@ class ContDcExternallyExcitedMotorEnvironment(DcExternallyExcitedMotorEnvironmen
         Environment to simulate a continuously controlled externally excited DC Motor
 
     Key:
-        `emotor-dc-extex-cont-v1`
+        `DcExtExCont-v1`
 
     Default Modules:
 

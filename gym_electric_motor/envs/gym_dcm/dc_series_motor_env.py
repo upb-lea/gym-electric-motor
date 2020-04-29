@@ -29,7 +29,7 @@ class DiscDcSeriesMotorEnvironment(DcSeriesMotorEnvironment):
         Environment to simulate a discretely controlled DC Series Motor.
 
     Key:
-        `emotor-dc-series-disc-v1`
+        `DcSeriesDisc-v1`
 
     Default Modules:
 
@@ -86,7 +86,7 @@ class ContDcSeriesMotorEnvironment(DcSeriesMotorEnvironment):
         Environment to simulate a continuously controlled DC Series Motor.
 
     Key:
-        `emotor-dc-series-cont-v1`
+        `DcSeriesCont-v1`
 
     Default Modules:
 

@@ -28,7 +28,7 @@ class DiscSquirrelCageInductionMotorEnvironment(SquirrelCageInductionMotorEnviro
         Environment to simulate a discretely controlled Squirrel-Cage Induction Motor (SCIM).
 
     Key:
-        `emotor-scim-disc-v1`
+        `SCIMDisc-v1`
 
     Default Modules:
 
@@ -95,7 +95,7 @@ class ContSquirrelCageInductionMotorEnvironment(SquirrelCageInductionMotorEnviro
         Environment to simulate a continuously controlled Squirrel-Cage Induction Motor (SCIM).
 
     Key:
-        `emotor-scim-cont-v1`
+        `SCIMCont-v1`
 
     Default Modules:
 

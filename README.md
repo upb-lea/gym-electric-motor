@@ -96,56 +96,56 @@ constructor arguments you can parametrize the environment to your control proble
 
 * DC Motors
 
-    * `'emotor-dc-extex-cont-v1'`     
+    * `'DcExtExCont-v1'`     
         Externally excited DC motor with continuous actions.
      
-    * `'emotor-dc-extex-disc-v1'`   
+    * `'DcExtExDisc-v1'`   
         Externally excited DC motor with discrete actions.
     
-    * `'emotor-dc-permex-cont-v1'`    
+    * `'DcPermExCont-v1'`    
         Permanently excited DC motor with continuous actions.
     
-    * `'emotor-dc-permex-disc-v1'`    
+    * `'DcPermexDisc-v1'`    
         Permanently excited DC motor with discrete actions.
     
-    * `'emotor-dc-shunt-cont-v1'`    
+    * `'DcShuntCont-v1'`    
         DC shunt motor with continuous actions.
     
-    * `'emotor-dc-shunt-disc-v1'`    
+    * `'DcShuntDisc-v1'`    
         DC shunt motor with discrete actions.
     
-    * `'emotor-dc-series-cont-v1'`    
+    * `'DcSeriesCont-v1'`    
         DC series motor with continuous actions.
     
-    * `'emotor-dc-series-disc-v1'`  
+    * `'DcSeriesDisc-v1'`  
         DC series motor with discrete actions.
         
 * Synchronous Motors
     
-    * `'emotor-pmsm-cont-v1'`:  
+    * `'PMSMCont-v1'`:  
         Permanent magnet synchronous motor with continuous actions.
     
-    * `'emotor-pmsm-disc-v1'`:  
+    * `'PMSMDisc-v1'`:  
         Permanent magnet synchronous motor with discrete actions.
         
-    * `'emotor-synrm-cont-v1'`:  
+    * `'SynRMCont-v1'`:  
         Synchronous reluctance motor with continuous actions.
     
-    * `'emotor-synrm-disc-v1'`:  
+    * `'SynRMDisc-v1'`:  
         Synchronous reluctance motor with discrete actions.
         
 * Induction Motors
 
-    * `'emotor-scim-cont-v1'`:  
+    * `'SCIMCont-v1'`:  
         Squirrel cage induction motor with continuous actions.
         
-    * `'emotor-scim-disc-v1'`:  
+    * `'SCIMDisc-v1'`:  
         Squirrel cage induction motor with discrete actions.
         
-    * `'emotor-dfim-cont-v1'`:  
+    * `'DFIMCont-v1'`:  
         Doubly fed induction motor with continuous actions.
         
-    * `'emotor-dfim-disc-v1'`:  
+    * `'DFIMDisc-v1'`:  
         Doubly fed induction motor with discrete actions.
         
 #### Make Keyword-Arguments
