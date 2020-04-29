@@ -1134,13 +1134,13 @@ class SynchronousReluctanceMotor(SynchronousMotor):
                 [0, 0, 0]
             ]),
             np.array([
-                -mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX],
-                mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
-                1
+                - mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX],
+                mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                mp['p']
             ]),
             np.array([
-                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX],
-                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX],
+                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
                 0
             ])
         )
@@ -1265,13 +1265,13 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
                 [0, 0, 0]
             ]),
             np.array([
-                -mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['psi_p'] / mp['l_q'],
-                mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
-                1
+                -mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['p'] * mp['psi_p'] / mp['l_q'],
+                mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                mp['p']
             ]),
             np.array([
-                mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
-                mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
+                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
                 0
             ])
         )
