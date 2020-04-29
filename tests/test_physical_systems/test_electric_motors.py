@@ -1532,13 +1532,13 @@ class TestSynchronousReluctanceMotor:
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 2, 0]), [0, 2], 0,
              dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([-10, 0, 1])),
+             np.array([-20, 0, 2])),
             (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
+             dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
              np.array([0, 2, 1])),
             (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([-10, -0.4, 1])),
+             dict(p=4, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
+             np.array([-40, -1.6, 4])),
         ]
     )
     def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
@@ -1551,13 +1551,13 @@ class TestSynchronousReluctanceMotor:
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 2, 0]), [0, 2], 0,
              dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([32, 0, 0])),
+             np.array([48, 0, 0])),
             (np.array([5, 0, 2]), [4, 8], -2,
              dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([0, 30, 0])),
+             np.array([0, 45, 0])),
             (np.array([-2, 2, 9]), [4, 8], 2,
              dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([32, -32, 0])),
+             np.array([48, -48, 0])),
         ]
     )
     def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
@@ -1565,7 +1565,6 @@ class TestSynchronousReluctanceMotor:
         motor = self.class_to_test(motor_parameter=motor_parameter)
         _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
         assert np.all(torque_over_el == result)
-
 
 
 class TestPermanentMagnetSynchronousMotor:
@@ -1632,13 +1631,13 @@ class TestPermanentMagnetSynchronousMotor:
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 2, 0]), [0, 2], 0,
              dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
-             np.array([-10, 0, 1])),
+             np.array([-20, 0, 2])),
             (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
+             dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
              np.array([-5, 2, 1])),
             (np.array([-2, 2, 9]), [4, 8], 2,
              dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([-15, -0.4, 1])),
+             np.array([-30, -0.8, 2])),
         ]
     )
     def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
@@ -1651,13 +1650,13 @@ class TestPermanentMagnetSynchronousMotor:
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 2, 0]), [0, 2], 0,
              dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
-             np.array([32, 0, 0])),
+             np.array([48, 0, 0])),
             (np.array([5, 0, 2]), [4, 8], -2,
              dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([20, 30, 0])),
+             np.array([30, 45, 0])),
             (np.array([-2, 2, 9]), [4, 8], 2,
              dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([52, -32, 0])),
+             np.array([78, -48, 0])),
         ]
     )
     def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
