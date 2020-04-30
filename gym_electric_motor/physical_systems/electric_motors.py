@@ -144,6 +144,27 @@ class ElectricMotor:
         """
         raise NotImplementedError
 
+    def _set_limits(self, voltages_l, currents_l, resistance, voltage_limit, voltage_nominal):
+        """
+        Calculate maximal and nominal values for voltages and currents
+
+        Args:
+            voltages_l(list(string)): keys of the voltages whose limits are set
+            currents_l(list(string)): keys of the currents whose limits are set
+            resistance(float): value of resistance on which the voltage is applied
+            voltage_limit(float): physical limit of the voltage
+            voltage_nominal(float): nominal value of the voltage
+        """
+
+        for u, i in zip(voltages_l, currents_l):
+            if self._limits.get(u, 0) == 0:
+                self._limits[u] = voltage_limit
+            if self._nominal_values.get(u, 0) == 0:
+                self._nominal_values[u] = voltage_nominal
+            if self._limits.get(i, 0) == 0:
+                self._limits[i] = self._limits.get('i', None) or self._limits[u] / resistance
+            if self._nominal_values.get(i, 0) == 0:
+                self._nominal_values[i] = self._nominal_values.get('i', None) or self._nominal_values[u] / resistance
 
 class DcMotor(ElectricMotor):
     """
@@ -244,7 +265,7 @@ class DcMotor(ElectricMotor):
 
     def _update_limits(self):
         """
-        Calculate for all the missing maximal and nominal values the physical maximal possible values.
+
         """
         if self._limits.get('u_a', 0) == 0:
             self._limits['u_a'] = self._default_limits['u']
@@ -913,87 +934,26 @@ class SynchronousMotor(ThreePhaseMotor):
         """
         Calculate for all the missing maximal and nominal values the physical maximal possible values.
         """
-        mp = self._motor_parameter
-        if self._limits.get('u_a', 0) == 0:
-            self._limits['u_a'] = .5 * self._limits['u']
-        if self._limits.get('u_b', 0) == 0:
-            self._limits['u_b'] = .5 * self._limits['u']
-        if self._limits.get('u_c', 0) == 0:
-            self._limits['u_c'] = .5 * self._limits['u']
-        if self._limits.get('u_alpha', 0) == 0:
-            self._limits['u_alpha'] = .5 * self._limits['u']
-        if self._limits.get('u_beta', 0) == 0:
-            self._limits['u_beta'] = 0.5 * self._limits['u']
-        if self._limits.get('u_sd', 0) == 0:
-            self._limits['u_sd'] = .5 * self._limits['u']
-        if self._limits.get('u_sq', 0) == 0:
-            self._limits['u_sq'] = .5 * self._limits['u']
-
-        if self._limits.get('i_alpha', 0) == 0:
-            self._limits['i_alpha'] = self._limits.get('i', None) or self._limits[
-                'u_alpha'] / mp['r_s']
-        if self._limits.get('i_beta', 0) == 0:
-            self._limits['i_beta'] = self._limits.get('i', None) or self._limits['u_beta'] / \
-                                     mp['r_s']
-        if self._limits.get('i_a', 0) == 0:
-            self._limits['i_a'] = self._limits.get('i', None) or self._limits['u_a'] / mp['r_s']
-        if self._limits.get('i_b', 0) == 0:
-            self._limits['i_b'] = self._limits.get('i', None) or self._limits['u_b'] / mp['r_s']
-        if self._limits.get('i_c', 0) == 0:
-            self._limits['i_c'] = self._limits.get('i', None) or self._limits['u_c'] / mp['r_s']
-        if self._limits.get('i_sd', 0) == 0:
-            self._limits['i_sd'] = self._limits.get('i', None) or self._limits['u_sd'] / mp[
-                'r_s']
-        if self._limits.get('i_sq', 0.0) == 0:
-            self._limits['i_sq'] = self._limits.get('i', None) or self._limits['u_sq'] / mp[
-                'r_s']
-
-        if self._limits['torque'] == 0:
-            self._limits['torque'] = self._torque_limit()
-
-        if self._limits['omega'] == 0:
-            self._limits['omega'] = self._default_limits['omega']
+        voltages_l = ['u_a', 'u_b', 'u_c', 'u_alpha', 'u_beta', 'u_sd', 'u_sq']
+        currents_l = ['i_a', 'i_b', 'i_c', 'i_alpha', 'i_beta', 'i_sd', 'i_sq']
+        resistance = self._motor_parameter['r_s']
 
         if 'u' not in self._nominal_values.keys():
             self._nominal_values.update({'u': self._limits['u']})
         if 'i' not in self._nominal_values.keys():
             self._nominal_values.update({'i': self._limits['i']})
 
-        if self._nominal_values.get('u_a', 0) == 0:
-            self._nominal_values['u_a'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_a', 0) == 0:
-            if self._nominal_values.get('u_b', 0) == 0:
-                self._nominal_values['u_b'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_c', 0) == 0:
-            self._nominal_values['u_c'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_alpha', 0) == 0:
-            self._nominal_values['u_alpha'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_beta', 0) == 0:
-            self._nominal_values['u_beta'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sd', 0) == 0:
-            self._nominal_values['u_sd'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sq', 0) == 0:
-            self._nominal_values['u_sq'] = .5 * self._nominal_values['u']
+        voltage_limit = 0.5 * self._limits['u']
+        voltage_nominal = 0.5 * self._nominal_values['u']
 
-        if self._nominal_values.get('i_alpha', 0) == 0:
-            self._nominal_values['i_alpha'] = self._nominal_values.get('i', None) \
-                                              or self._nominal_values['u_alpha'] / mp['r_s']
-        if self._nominal_values.get('i_beta', 0) == 0:
-            self._nominal_values['i_beta'] = self._nominal_values.get('i', None) \
-                                             or self._nominal_values['u_beta'] / mp['r_s']
-        if self._nominal_values.get('i_a', 0) == 0:
-            self._nominal_values['i_a'] = self._nominal_values.get('i', None) or self._nominal_values['u_a'] / mp['r_s']
-        if self._nominal_values.get('i_b', 0) == 0:
-            self._nominal_values['i_b'] = self._nominal_values.get('i', None) or self._nominal_values['u_b'] / mp['r_s']
-        if self._nominal_values.get('i_c', 0) == 0:
-            self._nominal_values['i_c'] = self._nominal_values.get('i', None) \
-                                          or self._nominal_values['u_c'] / mp['r_s']
-        if self._nominal_values.get('i_sd', 0) == 0:
-            self._nominal_values['i_sd'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_sd'] / mp['r_s']
-        if self._nominal_values.get('i_sq', 0.0) == 0:
-            self._nominal_values['i_sq'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_sq'] / mp['r_s']
+        self._set_limits(voltages_l=voltages_l, currents_l=currents_l, resistance=resistance,
+                         voltage_limit=voltage_limit, voltage_nominal=voltage_nominal)
+
+        if self._limits['torque'] == 0:
+            self._limits['torque'] = self._torque_limit()
+
+        if self._limits['omega'] == 0:
+            self._limits['omega'] = self._default_limits['omega']
 
         for entry in self._limits.keys():
             if self._nominal_values.get(entry, 0) == 0:
@@ -1258,7 +1218,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         mp = self._motor_parameter
         return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX])*currents[self.I_SQ_IDX]
 
-    def electrical_jacobian(self, state, u_in, omega, *_):
+    def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
         return (
             np.array([ # dx'/dx
@@ -1344,7 +1304,6 @@ class InductionMotor(ThreePhaseMotor):
         u_sq     Voltage in quadrature axis
         ======== ===========================================================
 
-
         Note:
             The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).
             Typically the rms value for the line voltage (:math:`U_L`) is given.
@@ -1406,38 +1365,21 @@ class InductionMotor(ThreePhaseMotor):
         """
         Calculate for all the missing maximal and nominal values the physical maximal possible values.
         """
-        mp = self._motor_parameter
-        if self._limits.get('u_sa', 0) == 0:
-            self._limits['u_sa'] = .5 * self._limits['u']
-        if self._limits.get('u_sb', 0) == 0:
-            self._limits['u_sb'] = .5 * self._limits['u']
-        if self._limits.get('u_sc', 0) == 0:
-            self._limits['u_sc'] = .5 * self._limits['u']
-        if self._limits.get('u_salpha', 0) == 0:
-            self._limits['u_salpha'] = .5 * self._limits['u']
-        if self._limits.get('u_sbeta', 0) == 0:
-            self._limits['u_sbeta'] = 0.5 * self._limits['u']
-        if self._limits.get('u_sd', 0) == 0:
-            self._limits['u_sd'] = .5 * self._limits['u']
-        if self._limits.get('u_sq', 0) == 0:
-            self._limits['u_sq'] = .5 * self._limits['u']
 
-        if self._limits.get('i_salpha', 0) == 0:
-            self._limits['i_salpha'] = self._limits.get('i', None) or self._limits[
-                'u_salpha'] / mp['r_s']
-        if self._limits.get('i_sbeta', 0) == 0:
-            self._limits['i_sbeta'] = self._limits.get('i', None) or self._limits['u_beta'] / \
-                                     mp['r_s']
-        if self._limits.get('i_sa', 0) == 0:
-            self._limits['i_sa'] = self._limits.get('i', None) or self._limits['u_sa'] / mp['r_s']
-        if self._limits.get('i_sb', 0) == 0:
-            self._limits['i_sb'] = self._limits.get('i', None) or self._limits['u_sb'] / mp['r_s']
-        if self._limits.get('i_sc', 0) == 0:
-            self._limits['i_sc'] = self._limits.get('i', None) or self._limits['u_sc'] / mp['r_s']
-        if self._limits.get('i_sd', 0) == 0:
-            self._limits['i_sd'] = self._limits.get('i', None) or self._limits['u_sd'] / mp['r_s']
-        if self._limits.get('i_sq', 0.0) == 0:
-            self._limits['i_sq'] = self._limits.get('i', None) or self._limits['u_sq'] / mp['r_s']
+        voltages_l = ['u_sa', 'u_sb', 'u_sc', 'u_salpha', 'u_sbeta', 'u_sd', 'u_sq']
+        currents_l = ['i_sa', 'i_sb', 'i_sc', 'i_salpha', 'i_sbeta', 'i_sd', 'i_sq']
+        resistance = self._motor_parameter['r_s']
+
+        if 'u' not in self._nominal_values.keys():
+            self._nominal_values.update({'u': self._limits['u']})
+        if 'i' not in self._nominal_values.keys():
+            self._nominal_values.update({'i': self._limits['i']})
+
+        voltage_limit = 0.5 * self._limits['u']
+        voltage_nominal = 0.5 * self._nominal_values['u']
+
+        self._set_limits(voltages_l=voltages_l, currents_l=currents_l, resistance=resistance,
+                         voltage_limit=voltage_limit, voltage_nominal=voltage_nominal)
 
         if self._limits['torque'] == 0:
             self._limits['torque'] = self._torque_limit()
@@ -1445,52 +1387,11 @@ class InductionMotor(ThreePhaseMotor):
         if self._limits['omega'] == 0:
             self._limits['omega'] = self._default_limits['omega']
 
-        if 'u' not in self._nominal_values.keys():
-            self._nominal_values.update({'u': self._limits['u']})
-        if 'i' not in self._nominal_values.keys():
-            self._nominal_values.update({'i': self._limits['i']})
-
-        if self._nominal_values.get('u_sa', 0) == 0:
-            self._nominal_values['u_sa'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sa', 0) == 0:
-            if self._nominal_values.get('u_sb', 0) == 0:
-                self._nominal_values['u_sb'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sc', 0) == 0:
-            self._nominal_values['u_sc'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_salpha', 0) == 0:
-            self._nominal_values['u_salpha'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sbeta', 0) == 0:
-            self._nominal_values['u_sbeta'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sd', 0) == 0:
-            self._nominal_values['u_sd'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_sq', 0) == 0:
-            self._nominal_values['u_sq'] = .5 * self._nominal_values['u']
-
-        if self._nominal_values.get('i_salpha', 0) == 0:
-            self._nominal_values['i_salpha'] = self._nominal_values.get('i', None) \
-                                              or self._nominal_values['u_salpha'] / mp['r_s']
-        if self._nominal_values.get('i_sbeta', 0) == 0:
-            self._nominal_values['i_sbeta'] = self._nominal_values.get('i', None) \
-                                             or self._nominal_values['u_sbeta'] / mp['r_s']
-        if self._nominal_values.get('i_sa', 0) == 0:
-            self._nominal_values['i_sa'] = self._nominal_values.get('i', None) or self._nominal_values['u_sa'] / mp['r_s']
-        if self._nominal_values.get('i_sb', 0) == 0:
-            self._nominal_values['i_sb'] = self._nominal_values.get('i', None) or self._nominal_values['u_sb'] / mp['r_s']
-        if self._nominal_values.get('i_sc', 0) == 0:
-            self._nominal_values['i_sc'] = self._nominal_values.get('i', None) \
-                                          or self._nominal_values['u_sc'] / mp['r_s']
-        if self._nominal_values.get('i_sd', 0) == 0:
-            self._nominal_values['i_sd'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_sd'] / mp['r_s']
-        if self._nominal_values.get('i_sq', 0.0) == 0:
-            self._nominal_values['i_sq'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_sq'] / mp['r_s']
-
         for entry in self._limits.keys():
             if self._nominal_values.get(entry, 0) == 0:
                 self._nominal_values[entry] = self._limits[entry]
 
-    def electrical_ode(self, state, u_sr_alphabeta, omega, *_):
+    def electrical_ode(self, state, u_sr_alphabeta, omega, *args):
         """
         The differential equation of the Induction Motor.
 
@@ -1549,7 +1450,7 @@ class InductionMotor(ThreePhaseMotor):
             [mp['p'], 0,               0,               0,                                        0,                                      0,                                   0,                                  0,               0,              0,                              0,                               ],  # epsilon_dot
         ])
 
-    def electrical_jacobian(self, state, u_in, omega, *_):
+    def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
         l_s = mp['l_m'] + mp['l_ssig']
         l_r = mp['l_m'] + mp['l_rsig']
@@ -1559,12 +1460,12 @@ class InductionMotor(ThreePhaseMotor):
 
         return (
             np.array([ # dx'/dx
-                # i_alpha         i_beta      psi_alpha                                         psi_beta                                   epsilon
-                [-1/tau_sig,        0,                 mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),    omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), 0],
-                [0,                 - 1 / tau_sig,     - omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),  0],
-                [mp['l_m'] / tau_r, 0,                 - 1 / tau_r,                                 - omega * mp['p'],                         0],
-                [0,                  mp['l_m'] / tau_r, omega * mp['p'],                             - 1 / tau_r,                              0],
-                [0,                 0,                 0,                                           0,                                         0]
+                # i_alpha          i_beta               psi_alpha                                    psi_beta                                   epsilon
+                [-1/tau_sig,        0,                  mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),    omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), 0],
+                [0,                 - 1 / tau_sig,      - omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),  0],
+                [mp['l_m'] / tau_r, 0,                  - 1 / tau_r,                                 - omega * mp['p'],                         0],
+                [0,                  mp['l_m'] / tau_r, omega * mp['p'],                             - 1 / tau_r,                               0],
+                [0,                 0,                  0,                                           0,                                         0]
             ]),
             np.array([ # dx'/dw
                 mp['l_m'] * mp['p'] / (sigma*l_r*l_s) * state[self.PSI_RBETA_IDX],
@@ -1682,15 +1583,15 @@ class SquirrelCageInductionMotor(InductionMotor):
     _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=560)
     _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=560)
 
-    def electrical_ode(self, state, u_salphabeta, omega, *_):
+    def electrical_ode(self, state, u_salphabeta, omega, *args):
         """
         The differential equation of the SCIM.
         Sets u_ralpha = u_rbeta = 0 before calling the respective super function.
         """
-        u_ralphabeta = np.array([0, 0])
+        u_ralphabeta = np.zeros_like(u_salphabeta)
         u_sr_aphabeta = np.array([u_salphabeta, u_ralphabeta])
 
-        return super().electrical_ode(state, u_sr_aphabeta, omega, _)
+        return super().electrical_ode(state, u_sr_aphabeta, omega, *args)
 
 
 class DoublyFedInductionMotor(InductionMotor):
@@ -1783,7 +1684,7 @@ class DoublyFedInductionMotor(InductionMotor):
             Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
             the general limits/nominal values (e.g. i)
         """
-    STATOR_VOLTAGES = ['u_ralpha', 'u_rbeta']
+    ROTOR_VOLTAGES = ['u_ralpha', 'u_rbeta']
 
     _default_motor_parameter = {
         'p': 2,
@@ -1802,74 +1703,19 @@ class DoublyFedInductionMotor(InductionMotor):
         """
         Calculate for all the missing maximal and nominal values the physical maximal possible values.
         """
-        mp = self._motor_parameter
+        voltages_l = ['u_ra', 'u_rb', 'u_rc', 'u_ralpha', 'u_rbeta', 'u_rd', 'u_rq']
+        currents_l = ['i_ra', 'i_rb', 'i_rc', 'i_ralpha', 'i_rbeta', 'i_rd', 'i_rq']
+        resistance = self._motor_parameter['r_r']
 
-        if self._limits.get('u_ra', 0) == 0:
-            self._limits['u_ra'] = .5 * self._limits['u']
-        if self._limits.get('u_rb', 0) == 0:
-            self._limits['u_rb'] = .5 * self._limits['u']
-        if self._limits.get('u_rc', 0) == 0:
-            self._limits['u_rc'] = .5 * self._limits['u']
-        if self._limits.get('u_ralpha', 0) == 0:
-            self._limits['u_ralpha'] = .5 * self._limits['u']
-        if self._limits.get('u_rbeta', 0) == 0:
-            self._limits['u_rbeta'] = 0.5 * self._limits['u']
-        if self._limits.get('u_rd', 0) == 0:
-            self._limits['u_rd'] = .5 * self._limits['u']
-        if self._limits.get('u_rq', 0) == 0:
-            self._limits['u_rq'] = .5 * self._limits['u']
+        if 'u' not in self._nominal_values.keys():
+            self._nominal_values.update({'u': self._limits['u']})
+        if 'i' not in self._nominal_values.keys():
+            self._nominal_values.update({'i': self._limits['i']})
 
-        if self._limits.get('i_ralpha', 0) == 0:
-            self._limits['i_ralpha'] = self._limits.get('i', None) or self._limits[
-                'u_ralpha'] / mp['r_r']
-        if self._limits.get('i_rbeta', 0) == 0:
-            self._limits['i_rbeta'] = self._limits.get('i', None) or self._limits['u_rbeta'] / \
-                                     mp['r_r']
-        if self._limits.get('i_ra', 0) == 0:
-            self._limits['i_ra'] = self._limits.get('i', None) or self._limits['u_ra'] / mp['r_r']
-        if self._limits.get('i_rb', 0) == 0:
-            self._limits['i_rb'] = self._limits.get('i', None) or self._limits['u_rb'] / mp['r_r']
-        if self._limits.get('i_rc', 0) == 0:
-            self._limits['i_rc'] = self._limits.get('i', None) or self._limits['u_rc'] / mp['r_r']
-        if self._limits.get('i_rd', 0) == 0:
-            self._limits['i_rd'] = self._limits.get('i', None) or self._limits['u_rd'] / mp['r_r']
-        if self._limits.get('i_rq', 0.0) == 0:
-            self._limits['i_rq'] = self._limits.get('i', None) or self._limits['u_rq'] / mp['r_r']
+        voltage_limit = 0.5 * self._limits['u']
+        voltage_nominal = 0.5 * self._nominal_values['u']
 
-        if self._nominal_values.get('u_ra', 0) == 0:
-            self._nominal_values['u_ra'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_ra', 0) == 0:
-            if self._nominal_values.get('u_rb', 0) == 0:
-                self._nominal_values['u_rb'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_rc', 0) == 0:
-            self._nominal_values['u_rc'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_ralpha', 0) == 0:
-            self._nominal_values['u_ralpha'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_rbeta', 0) == 0:
-            self._nominal_values['u_rbeta'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_rd', 0) == 0:
-            self._nominal_values['u_rd'] = .5 * self._nominal_values['u']
-        if self._nominal_values.get('u_rq', 0) == 0:
-            self._nominal_values['u_rq'] = .5 * self._nominal_values['u']
-
-        if self._nominal_values.get('i_ralpha', 0) == 0:
-            self._nominal_values['i_ralpha'] = self._nominal_values.get('i', None) \
-                                              or self._nominal_values['u_ralpha'] / mp['r_r']
-        if self._nominal_values.get('i_rbeta', 0) == 0:
-            self._nominal_values['i_rbeta'] = self._nominal_values.get('i', None) \
-                                             or self._nominal_values['u_rbeta'] / mp['r_r']
-        if self._nominal_values.get('i_ra', 0) == 0:
-            self._nominal_values['i_ra'] = self._nominal_values.get('i', None) or self._nominal_values['u_ra'] / mp['r_r']
-        if self._nominal_values.get('i_rb', 0) == 0:
-            self._nominal_values['i_rb'] = self._nominal_values.get('i', None) or self._nominal_values['u_rb'] / mp['r_r']
-        if self._nominal_values.get('i_rc', 0) == 0:
-            self._nominal_values['i_rc'] = self._nominal_values.get('i', None) \
-                                          or self._nominal_values['u_rc'] / mp['r_r']
-        if self._nominal_values.get('i_rd', 0) == 0:
-            self._nominal_values['i_rd'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_rd'] / mp['r_r']
-        if self._nominal_values.get('i_rq', 0.0) == 0:
-            self._nominal_values['i_rq'] = self._nominal_values.get('i', None) \
-                                           or self._nominal_values['u_rq'] / mp['r_r']
+        self._set_limits(voltages_l=voltages_l, currents_l=currents_l, resistance=resistance,
+                         voltage_limit=voltage_limit, voltage_nominal=voltage_nominal)
 
         super()._update_limits()

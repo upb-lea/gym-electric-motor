@@ -46,10 +46,12 @@ class TestSCMLSystem:
             noise_generator=DummyNoise()
         )
 
-    @pytest.mark.parametrize("tau, solver_kwargs, kwargs", (
+    @pytest.mark.parametrize(
+        "tau, solver_kwargs, kwargs", [
             (1e-3, {'a': 0.1, 'b': 0.2}, {'c': 0.3}),
             (1e-3, {'a': 0.1, 'bcd': '2'}, {'e': 0.4})
-    ))
+        ]
+    )
     def test_initialization(self, monkeypatch, tau, solver_kwargs, kwargs):
         instantiate_dict.clear()
         monkeypatch.setattr(ps, 'instantiate', mock_instantiate)
@@ -177,4 +179,3 @@ class TestSCMLSystem:
         assert np.all(sys_jac[2:, 0] == el_over_omega)
         assert np.all(sys_jac[2:, 1] == np.zeros(2))
         assert np.all(sys_jac[:-2, 2:] == np.array([[72, 84], [78, 91]]))
-

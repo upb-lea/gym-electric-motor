@@ -481,17 +481,40 @@ class DiscMultiConverter(DiscConverter):
         super().__init__(**kwargs)
         self._subconverters = [instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters]
 
-        self.subsignal_current_space_dims = np.array([(np.squeeze(subconverter.currents.shape) or 1) for subconverter in self._subconverters])
-        self.subsignal_voltage_space_dims = np.array([(np.squeeze(subconverter.voltages.shape) or 1) for subconverter in self._subconverters])
+        self.subsignal_current_space_dims = []
+        self.subsignal_voltage_space_dims = []
+        self.action_space = []
+        currents_low = []
+        currents_high = []
+        voltages_low = []
+        voltages_high = []
 
-        self.action_space = MultiDiscrete([subconverter.action_space.n for subconverter in self._subconverters])
+        # get the limits and space dims from each subconverter
+        for subconverter in self._subconverters:
+            self.subsignal_current_space_dims.append(np.squeeze(subconverter.currents.shape) or 1)
+            self.subsignal_voltage_space_dims.append(np.squeeze(subconverter.voltages.shape) or 1)
 
-        currents_low = np.concatenate([subconverter.currents.low for subconverter in self._subconverters])
-        currents_high = np.concatenate([subconverter.currents.high for subconverter in self._subconverters])
+            self.action_space.append(subconverter.action_space.n)
+
+            currents_low.append(subconverter.currents.low)
+            currents_high.append(subconverter.currents.high)
+
+            voltages_low.append(subconverter.voltages.low)
+            voltages_high.append(subconverter.voltages.high)
+
+        # convert to 1D list
+        self.subsignal_current_space_dims = np.array(self.subsignal_current_space_dims)
+        self.subsignal_voltage_space_dims = np.array(self.subsignal_voltage_space_dims)
+
+        currents_low = np.concatenate(currents_low)
+        currents_high = np.concatenate(currents_high)
+
+        voltages_low = np.concatenate(voltages_low)
+        voltages_high = np.concatenate(voltages_high)
+
+        # put limits into gym_space format
+        self.action_space = MultiDiscrete(self.action_space)
         self.currents = Box(currents_low, currents_high)
-
-        voltages_low = np.concatenate([subconverter.voltages.low for subconverter in self._subconverters])
-        voltages_high = np.concatenate([subconverter.voltages.high for subconverter in self._subconverters])
         self.voltages = Box(voltages_low, voltages_high)
 
     def convert(self, i_out, t):
@@ -558,19 +581,45 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         super().__init__(**kwargs)
         self._subconverters = [instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters]
 
-        self.subsignal_current_space_dims = np.array([(np.squeeze(subconverter.currents.shape) or 1) for subconverter in self._subconverters])
-        self.subsignal_voltage_space_dims = np.array([(np.squeeze(subconverter.voltages.shape) or 1) for subconverter in self._subconverters])
+        self.subsignal_current_space_dims = []
+        self.subsignal_voltage_space_dims = []
+        action_space_low = []
+        action_space_high = []
+        currents_low = []
+        currents_high = []
+        voltages_low = []
+        voltages_high = []
 
-        action_space_low = np.concatenate([subconverter.action_space.low for subconverter in self._subconverters])
-        action_space_high = np.concatenate([subconverter.action_space.high for subconverter in self._subconverters])
+        # get the limits and space dims from each subconverter
+        for subconverter in self._subconverters:
+            self.subsignal_current_space_dims.append(np.squeeze(subconverter.currents.shape) or 1)
+            self.subsignal_voltage_space_dims.append(np.squeeze(subconverter.voltages.shape) or 1)
+
+            action_space_low.append(subconverter.action_space.low)
+            action_space_high.append(subconverter.action_space.high)
+
+            currents_low.append(subconverter.currents.low)
+            currents_high.append(subconverter.currents.high)
+
+            voltages_low.append(subconverter.voltages.low)
+            voltages_high.append(subconverter.voltages.high)
+
+        # convert to 1D list
+        self.subsignal_current_space_dims = np.array(self.subsignal_current_space_dims)
+        self.subsignal_voltage_space_dims = np.array(self.subsignal_voltage_space_dims)
+
+        action_space_low = np.concatenate(action_space_low)
+        action_space_high = np.concatenate(action_space_high)
+
+        currents_low = np.concatenate(currents_low)
+        currents_high = np.concatenate(currents_high)
+
+        voltages_low = np.concatenate(voltages_low)
+        voltages_high = np.concatenate(voltages_high)
+
+        # put limits into gym_space format
         self.action_space = Box(action_space_low, action_space_high)
-
-        currents_low = np.concatenate([subconverter.currents.low for subconverter in self._subconverters])
-        currents_high = np.concatenate([subconverter.currents.high for subconverter in self._subconverters])
         self.currents = Box(currents_low, currents_high)
-
-        voltages_low = np.concatenate([subconverter.voltages.low for subconverter in self._subconverters])
-        voltages_high = np.concatenate([subconverter.voltages.high for subconverter in self._subconverters])
         self.voltages = Box(voltages_low, voltages_high)
 
     def set_action(self, action, t):

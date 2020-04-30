@@ -25,7 +25,7 @@ class DoublyFedInductionMotorEnvironment(ElectricMotorEnvironment):
 class DiscDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment):
     """
     Description:
-        Environment to simulate a discretely controlled Squirrel-Cage Induction Motor (SCIM).
+        Environment to simulate a discretely controlled Doubly-Fed Induction Motor (SCIM).
 
     Key:
         `DFIMDisc-v1`
@@ -93,7 +93,7 @@ class DiscDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
 class ContDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment):
     """
     Description:
-        Environment to simulate a continuously controlled Squirrel-Cage Induction Motor (SCIM).
+        Environment to simulate a continuously controlled Doubly-Fed Induction Motor (SCIM).
 
     Key:
         `DFIMCont-v1`

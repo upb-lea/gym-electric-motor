@@ -1671,6 +1671,7 @@ class TestInductionMotor:
     class for testing InductionMotor
     """
     # defined test values
+    class_to_test = InductionMotor
     _motor_parameter = sci_motor_parameter['motor_parameter']
     _p = _motor_parameter['p']  # pole pair number for testing
     _nominal_values = sci_motor_parameter['nominal_values']
@@ -1839,6 +1840,57 @@ class TestInductionMotor:
             [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ],  # epsilon_dot
         ])
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
+             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3 ,j_rotor=4, r_s=5, r_r=6),
+             np.array([[-1.9848901098901102, 0, 0.08241758241758242, 0.0, 0],
+                       [0, -1.9848901098901102, 0.0, 0.08241758241758242, 0],
+                       [4.615384615384616, 0, -0.46153846153846156, 0, 0],
+                       [0, 4.615384615384616, 0, -0.46153846153846156, 0],
+                       [0, 0, 0, 0, 0]])),
+        ]
+    )
+    def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
+        # Test first return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        el_jac, _, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_jac == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
+             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             np.array([10 * 2 / 56 * 3,
+                       - 10 * 2 / 56 * 2,
+                       - 2 * 3,
+                       2 * 2,
+                       2])),
+        ]
+    )
+    def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, el_over_omega, _ = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(el_over_omega == result)
+
+    @pytest.mark.parametrize(
+        'state, u_in, omega, motor_parameter, result',[
+            (np.array([5, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
+             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             np.array([- 3 * 3 / 2 * 2 * 10 / 13,
+                2 * 3 / 2 * 2 * 10 / 13,
+                1 * 3 / 2 * 2 * 10 / 13,
+                - 5 * 3 / 2 * 2 * 10 / 13,
+            0])),
+        ]
+    )
+    def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
+        # Test second return of electrical jacobian function
+        motor = self.class_to_test(motor_parameter=motor_parameter)
+        _, _, torque_over_el = motor.electrical_jacobian(state, u_in, omega)
+        assert np.all(torque_over_el == result)
 
 
 class TestSquirrelCageInductionMotor:

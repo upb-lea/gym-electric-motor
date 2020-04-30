@@ -25,7 +25,7 @@ class SquirrelCageInductionMotorEnvironment(ElectricMotorEnvironment):
 class DiscSquirrelCageInductionMotorEnvironment(SquirrelCageInductionMotorEnvironment):
     """
     Description:
-        Environment to simulate a discretely controlled Squirrel-Cage Induction Motor (SCIM).
+        Environment to simulate a discretely controlled Squirrel Cage Induction Motor (SCIM).
 
     Key:
         `SCIMDisc-v1`
@@ -92,7 +92,7 @@ class DiscSquirrelCageInductionMotorEnvironment(SquirrelCageInductionMotorEnviro
 class ContSquirrelCageInductionMotorEnvironment(SquirrelCageInductionMotorEnvironment):
     """
     Description:
-        Environment to simulate a continuously controlled Squirrel-Cage Induction Motor (SCIM).
+        Environment to simulate a continuously controlled Squirrel Cage Induction Motor (SCIM).
 
     Key:
         `SCIMCont-v1`

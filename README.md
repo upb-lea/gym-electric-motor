@@ -15,8 +15,9 @@ learning algorithms to train agents controlling electric motors.
 
 [Read the detailed docs!](https://upb-lea.github.io/gym-electric-motor/)
 
-So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM)
-and synchronous reluctance motor (SynRM) are available.
+So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM), 
+synchronous reluctance motor (SynRM), squirrel cage induction motor (SCIM) and doubly-fed induction 
+motor (DFIM) are available.
 Beside electrical motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or 
 switching commands (discrete mode). 
 The figure shows the basic scheme of the converter, motor and load. 

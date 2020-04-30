@@ -294,64 +294,34 @@ class DcMotorSystem(SCMLSystem):
         high = set_state_array(high, state_names)
         return Box(low, high)
 
-
-class SynchronousMotorSystem(SCMLSystem):
+class ThreePhaseMotorSystem(SCMLSystem):
     """
-    SCML-System that can be used with all Synchronous Motors
+    SCML-System that implements the basic transformations needed for three phase drives.
     """
-
-    def __init__(self, control_space='abc', **kwargs):
+    def abc_to_alphabeta_space(self, abc_quantities):
         """
+        Transformation from abc to alphabeta space
+
         Args:
-            control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
-            kwargs: Further arguments to pass tp SCMLSystem
+            abc_quantities: Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))
+
+        Returns:
+            (quantity_alpha, quantity_beta): The quantities in the alphabeta-space
         """
-        super().__init__(**kwargs)
-        self.control_space = control_space
-        if control_space == 'dq':
-            assert type(self._converter.action_space) == Box, \
-                'dq-control space is only available for Continuous Controlled Converters'
-            self._action_space = Box(-1, 1, shape=(2,))
+        alphabeta_quantity = self._electrical_motor.t_23(abc_quantities)
+        return alphabeta_quantity
 
-    def _build_state_space(self, state_names):
-        # Docstring of superclass
-        low = -1 * np.ones_like(state_names, dtype=float)
-        low[self.U_SUP_IDX] = 0.0
-        high = np.ones_like(state_names, dtype=float)
-        return Box(low, high)
+    def alphabeta_to_abc_space(self, alphabeta_quantities):
+        """
+        Transformation from dq to abc space
 
-    def _build_state_names(self):
-        # Docstring of superclass
-        return (
-            self._mechanical_load.state_names
-            + ['torque']
-            + ['i_a'] + ['i_b'] + ['i_c'] + ['i_sq'] + ['i_sd']
-            + ['u_a'] + ['u_b'] + ['u_c'] + ['u_sq'] + ['u_sd']
-            + ['epsilon']
-            + ['u_sup']
-        )
+        Args:
+            alphabeta_quantities: Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))
 
-    def _set_indices(self):
-        # Docstring of superclass
-        self._omega_ode_idx = self._mechanical_load.OMEGA_IDX
-        self._load_ode_idx = list(range(len(self._mechanical_load.state_names)))
-        self._ode_currents_idx = list(range(
-            self._load_ode_idx[-1] + 1, self._load_ode_idx[-1] + 1 + len(self._electrical_motor.CURRENTS)
-        ))
-        self._motor_ode_idx = self._ode_currents_idx
-        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
-        self._ode_currents_idx = self._motor_ode_idx[:-1]
-        self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
-        self.TORQUE_IDX = len(self.mechanical_load.state_names)
-        currents_lower = self.TORQUE_IDX + 1
-        currents_upper = currents_lower + 5
-        self.CURRENTS_IDX = list(range(currents_lower, currents_upper))
-        voltages_lower = currents_upper
-        voltages_upper = voltages_lower + 5
-        self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
-        self.EPSILON_IDX = voltages_upper
-        self.U_SUP_IDX = self.EPSILON_IDX + 1
-        self._ode_epsilon_idx = self._motor_ode_idx[-1]
+        Returns:
+            (quantity_a, quantity_b, quantity_c): The quantities in the abc-space
+        """
+        return self._electrical_motor.t_32(alphabeta_quantities)
 
     def abc_to_dq_space(self, abc_quantities, epsilon_el, normed_epsilon=False):
         """
@@ -385,6 +355,96 @@ class SynchronousMotorSystem(SCMLSystem):
         if normed_epsilon:
             epsilon_el *= np.pi
         return self._electrical_motor.t_32(self._electrical_motor.q(dq_quantities[::-1], epsilon_el))
+
+    def alphabeta_to_dq_space(self, alphabeta_quantities, epsilon_el, normed_epsilon=False):
+        """
+        Transformation from alphabeta to dq space
+
+        Args:
+            alphabeta_quantities: Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))
+            epsilon_el: Electrical angle of the motor
+            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
+
+        Returns:
+            (quantity_q, quantity_d): The quantities in the dq-space
+        """
+        if normed_epsilon:
+            epsilon_el *= np.pi
+        dq_quantity = self._electrical_motor.q_inv(alphabeta_quantities, epsilon_el)
+        return dq_quantity[::-1]
+
+    def dq_to_alphabeta_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
+        """
+        Transformation from dq to alphabeta space
+
+        Args:
+            dq_quantities: Two quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
+            epsilon_el: Electrical angle of the motor
+            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
+
+        Returns:
+            (quantity_alpha, quantity_beta): The quantities in the alphabeta-space
+        """
+        if normed_epsilon:
+            epsilon_el *= np.pi
+        return self._electrical_motor.q(dq_quantities[::-1], epsilon_el)
+
+class SynchronousMotorSystem(ThreePhaseMotorSystem):
+    """
+    SCML-System that can be used with all Synchronous Motors
+    """
+
+    def __init__(self, control_space='abc', **kwargs):
+        """
+        Args:
+            control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
+            kwargs: Further arguments to pass tp SCMLSystem
+        """
+        super().__init__(**kwargs)
+        self.control_space = control_space
+        if control_space == 'dq':
+            assert type(self._converter.action_space) == Box, \
+                'dq-control space is only available for Continuous Controlled Converters'
+            self._action_space = Box(-1, 1, shape=(2,))
+
+    def _build_state_space(self, state_names):
+        # Docstring of superclass
+        low = -1 * np.ones_like(state_names, dtype=float)
+        low[self.U_SUP_IDX] = 0.0
+        high = np.ones_like(state_names, dtype=float)
+        return Box(low, high)
+
+    def _build_state_names(self):
+        # Docstring of superclass
+        return (
+            self._mechanical_load.state_names +['torque',
+                                                'i_a', 'i_b', 'i_c', 'i_sq', 'i_sd',
+                                                'u_a', 'u_b', 'u_c', 'u_sq', 'u_sd',
+                                                'epsilon', 'u_sup',
+                                                ]
+        )
+
+    def _set_indices(self):
+        # Docstring of superclass
+        self._omega_ode_idx = self._mechanical_load.OMEGA_IDX
+        self._load_ode_idx = list(range(len(self._mechanical_load.state_names)))
+        self._ode_currents_idx = list(range(
+            self._load_ode_idx[-1] + 1, self._load_ode_idx[-1] + 1 + len(self._electrical_motor.CURRENTS)
+        ))
+        self._motor_ode_idx = self._ode_currents_idx
+        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
+        self._ode_currents_idx = self._motor_ode_idx[:-1]
+        self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
+        self.TORQUE_IDX = len(self.mechanical_load.state_names)
+        currents_lower = self.TORQUE_IDX + 1
+        currents_upper = currents_lower + 5
+        self.CURRENTS_IDX = list(range(currents_lower, currents_upper))
+        voltages_lower = currents_upper
+        voltages_upper = voltages_lower + 5
+        self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
+        self.EPSILON_IDX = voltages_upper
+        self.U_SUP_IDX = self.EPSILON_IDX + 1
+        self._ode_epsilon_idx = self._motor_ode_idx[-1]
 
     def simulate(self, action, *_, **__):
         # Docstring of superclass
@@ -453,17 +513,17 @@ class SynchronousMotorSystem(SCMLSystem):
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
-        system_state = np.array(
-            list(mechanical_state)
-            + [torque]
-            + list(i_abc) + list(i_qd)
-            + list(u_abc) + list(u_qd)
-            + [eps]
-            + [u_sup]
-        )
+        system_state = np.concatenate((
+            mechanical_state,
+            [torque],
+            i_abc, i_qd,
+            u_abc, u_qd,
+            [eps],
+            [u_sup],
+        ))
         return (system_state + noise) / self._limits
 
-class SquirrelCageInductionMotorSystem(SCMLSystem):
+class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
     """
     SCML-System for the Squirrel Cage Induction Motor
     """
@@ -488,22 +548,21 @@ class SquirrelCageInductionMotorSystem(SCMLSystem):
     def _build_state_names(self):
         # Docstring of superclass
         return (
-            self._mechanical_load.state_names
-            + ['torque']
-            + ['i_sa'] + ['i_sb'] + ['i_sc'] + ['i_sq'] + ['i_sd']
-            + ['u_sa'] + ['u_sb'] + ['u_sc'] + ['u_sq'] + ['u_sd']
-            + ['epsilon']
-            + ['u_sup']
+            self._mechanical_load.state_names + ['torque',
+                                                 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',
+                                                 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',
+                                                 'epsilon', 'u_sup',
+                                                 ]
         )
 
     def _set_indices(self):
         # Docstring of superclass
         super()._set_indices()
-        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1] + [self._motor_ode_idx[-1] + 2]
+        self._motor_ode_idx += range(self._motor_ode_idx[-1] + 1, self._motor_ode_idx[-1] + 1 + len(self._electrical_motor.FLUXES))
         self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
 
-        self._ode_currents_idx = self._motor_ode_idx[:-3]
-        self._ode_flux_idx = self._motor_ode_idx[-3:-1]
+        self._ode_currents_idx = self._motor_ode_idx[self._electrical_motor.I_SALPHA_IDX:self._electrical_motor.I_SBETA_IDX + 1]
+        self._ode_flux_idx = self._motor_ode_idx[self._electrical_motor.PSI_RALPHA_IDX:self._electrical_motor.PSI_RBETA_IDX + 1]
 
         self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
         self.TORQUE_IDX = len(self.mechanical_load.state_names)
@@ -516,97 +575,6 @@ class SquirrelCageInductionMotorSystem(SCMLSystem):
         self.EPSILON_IDX = voltages_upper
         self.U_SUP_IDX = self.EPSILON_IDX + 1
         self._ode_epsilon_idx = self._motor_ode_idx[-1]
-
-    def abc_to_alphabeta_space(self, abc_quantities):
-        """
-        Transformation from abc to alphabeta space
-
-        Args:
-            abc_quantities: Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))
-
-        Returns:
-            (quantity_alpha, quantity_beta): The quantities in the alphabeta-space
-        """
-        alphabeta_quantity = self._electrical_motor.t_23(abc_quantities)
-        return alphabeta_quantity
-
-    def alphabeta_to_abc_space(self, alphabeta_quantities):
-        """
-        Transformation from dq to abc space
-
-        Args:
-            alphabeta_quantities: Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))
-
-        Returns:
-            (quantity_a, quantity_b, quantity_c): The quantities in the abc-space
-        """
-        return self._electrical_motor.t_32(alphabeta_quantities)
-
-    def abc_to_dq_space(self, abc_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from abc to dq space
-
-        Args:
-            abc_quantities: Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_q, quantity_d): The quantities in the dq-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        dq_quantity = self._electrical_motor.q_inv(self._electrical_motor.t_23(abc_quantities), epsilon_el)
-        return dq_quantity[::-1]
-
-    def dq_to_abc_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from dq to abc space
-
-        Args:
-            dq_quantities: Three quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_a, quantity_b, quantity_c): The quantities in the abc-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        return self._electrical_motor.t_32(self._electrical_motor.q(dq_quantities[::-1], epsilon_el))
-
-    def alphabeta_to_dq_space(self, alphabeta_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from alphabeta to dq space
-
-        Args:
-            alphabeta_quantities: Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_q, quantity_d): The quantities in the dq-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        dq_quantity = self._electrical_motor.q_inv(alphabeta_quantities, epsilon_el)
-        return dq_quantity[::-1]
-
-    def dq_to_alphabeta_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from dq to alphabeta space
-
-        Args:
-            dq_quantities: Two quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_alpha, quantity_beta): The quantities in the alphabeta-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        return self._electrical_motor.q(dq_quantities[::-1], epsilon_el)
 
     def calculate_field_angle(self, state):
         psi_ralpha = state[self._ode_flux_idx[0]]
@@ -631,7 +599,6 @@ class SquirrelCageInductionMotorSystem(SCMLSystem):
         for t in switching_times[:-1]:
             u_in = self._converter.convert(i_in, self._ode_solver.t)
             u_in = [u * u_sup for u in u_in]
-            u_qd = self.abc_to_dq_space(u_in, eps_fs)
             u_alphabeta = self.abc_to_alphabeta_space(u_in)
             self._ode_solver.set_f_params(u_alphabeta)
             ode_state = self._ode_solver.integrate(t)
@@ -657,8 +624,7 @@ class SquirrelCageInductionMotorSystem(SCMLSystem):
             eps -= 2 * np.pi
 
         system_state = np.concatenate((
-            mechanical_state,
-            [torque],
+            mechanical_state, [torque],
             i_abc, i_qd,
             u_in, u_qd,
             [eps],
@@ -689,17 +655,16 @@ class SquirrelCageInductionMotorSystem(SCMLSystem):
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
-        system_state = np.array(
-            list(mechanical_state)
-            + [torque]
-            + list(i_abc) + list(i_qd)
-            + list(u_abc) + list(u_qd)
-            + [eps]
-            + [u_sup]
-        )
+        system_state = np.concatenate([
+            mechanical_state, [torque],
+            i_abc, i_qd,
+            u_abc, u_qd,
+            [eps],
+            [u_sup]
+        ])
         return (system_state + noise) / self._limits
 
-class DoublyFedInductionMotorSystem(SCMLSystem):
+class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
     """
     SCML-System for the Doubly Fed Induction Motor
     """
@@ -713,6 +678,16 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
         self.control_space = control_space
         if control_space == 'dq':
             self._action_space = Box(-1, 1, shape=(4,))
+
+        self.stator_voltage_space_idx = 0
+        self.stator_voltage_low_idx = 0
+        self.stator_voltage_high_idx = self.stator_voltage_low_idx + \
+                                       self._converter.subsignal_voltage_space_dims[self.stator_voltage_space_idx]
+
+        self.rotor_voltage_space_idx = 1
+        self.rotor_voltage_low_idx = self.stator_voltage_high_idx
+        self.rotor_voltage_high_idx = self.rotor_voltage_low_idx + \
+                                       self._converter.subsignal_voltage_space_dims[self.rotor_voltage_space_idx]
 
     def _set_limits(self):
         """
@@ -733,25 +708,23 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
 
     def _build_state_names(self):
         # Docstring of superclass
-        return (
-            self._mechanical_load.state_names
-            + ['torque']
-            + ['i_sa'] + ['i_sb'] + ['i_sc'] + ['i_sq'] + ['i_sd']
-            + ['i_ra'] + ['i_rb'] + ['i_rc'] + ['i_rq'] + ['i_rd']
-            + ['u_sa'] + ['u_sb'] + ['u_sc'] + ['u_sq'] + ['u_sd']
-            + ['u_ra'] + ['u_rb'] + ['u_rc'] + ['u_rq'] + ['u_rd']
-            + ['epsilon']
-            + ['u_sup']
-        )
+        names_l = self._mechanical_load.state_names + ['torque',
+                                                       'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',
+                                                       'i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd',
+                                                       'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',
+                                                       'u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd',
+                                                       'epsilon', 'u_sup',
+                                                       ]
+        return names_l
 
     def _set_indices(self):
         # Docstring of superclass
         super()._set_indices()
-        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1] + [self._motor_ode_idx[-1] + 2]
+        self._motor_ode_idx += range(self._motor_ode_idx[-1] + 1, self._motor_ode_idx[-1] + 1 + len(self._electrical_motor.FLUXES))
         self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
 
-        self._ode_currents_idx = self._motor_ode_idx[:-3]
-        self._ode_flux_idx = self._motor_ode_idx[-3:-1]
+        self._ode_currents_idx = self._motor_ode_idx[self._electrical_motor.I_SALPHA_IDX:self._electrical_motor.I_SBETA_IDX + 1]
+        self._ode_flux_idx = self._motor_ode_idx[self._electrical_motor.PSI_RALPHA_IDX:self._electrical_motor.PSI_RBETA_IDX + 1]
 
         self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
         self.TORQUE_IDX = len(self.mechanical_load.state_names)
@@ -765,111 +738,22 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
         self.U_SUP_IDX = self.EPSILON_IDX + 1
         self._ode_epsilon_idx = self._motor_ode_idx[-1]
 
-    def abc_to_alphabeta_space(self, abc_quantities):
-        """
-        Transformation from abc to alphabeta space
-
-        Args:
-            abc_quantities: Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))
-
-        Returns:
-            (quantity_alpha, quantity_beta): The quantities in the alphabeta-space
-        """
-        alphabeta_quantity = self._electrical_motor.t_23(abc_quantities)
-        return alphabeta_quantity
-
-    def alphabeta_to_abc_space(self, alphabeta_quantities):
-        """
-        Transformation from dq to abc space
-
-        Args:
-            alphabeta_quantities: Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))
-
-        Returns:
-            (quantity_a, quantity_b, quantity_c): The quantities in the abc-space
-        """
-        return self._electrical_motor.t_32(alphabeta_quantities)
-
-    def abc_to_dq_space(self, abc_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from abc to dq space
-
-        Args:
-            abc_quantities: Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_q, quantity_d): The quantities in the dq-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        dq_quantity = self._electrical_motor.q_inv(self._electrical_motor.t_23(abc_quantities), epsilon_el)
-        return dq_quantity[::-1]
-
-    def dq_to_abc_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from dq to abc space
-
-        Args:
-            dq_quantities: Three quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_a, quantity_b, quantity_c): The quantities in the abc-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        return self._electrical_motor.t_32(self._electrical_motor.q(dq_quantities[::-1], epsilon_el))
-
-    def alphabeta_to_dq_space(self, alphabeta_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from alphabeta to dq space
-
-        Args:
-            alphabeta_quantities: Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_q, quantity_d): The quantities in the dq-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        dq_quantity = self._electrical_motor.q_inv(alphabeta_quantities, epsilon_el)
-        return dq_quantity[::-1]
-
-    def dq_to_alphabeta_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
-        """
-        Transformation from dq to alphabeta space
-
-        Args:
-            dq_quantities: Two quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
-            epsilon_el: Electrical angle of the motor
-            normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
-
-        Returns:
-            (quantity_alpha, quantity_beta): The quantities in the alphabeta-space
-        """
-        if normed_epsilon:
-            epsilon_el *= np.pi
-        return self._electrical_motor.q(dq_quantities[::-1], epsilon_el)
-
     def calculate_field_angle(self, state):
-        psi_ralpha = state[self._ode_flux_idx[0]]
-        psi_rbeta = state[self._ode_flux_idx[1]]
+        # field angle is calculated from states
+        psi_ralpha = state[self._motor_ode_idx[self._electrical_motor.PSI_RALPHA_IDX]]
+        psi_rbeta = state[self._motor_ode_idx[self._electrical_motor.PSI_RBETA_IDX]]
         eps_fs = np.arctan2(psi_rbeta, psi_ralpha)
         return eps_fs
 
     def calculate_rotor_current(self, state):
+        # rotor current is calculated from states
         mp = self._electrical_motor.motor_parameter
         l_r = mp['l_m'] + mp['l_rsig']
 
-        i_salpha = state[self._ode_currents_idx[0]]
-        i_sbeta = state[self._ode_currents_idx[1]]
-        psi_ralpha = state[self._ode_flux_idx[0]]
-        psi_rbeta = state[self._ode_flux_idx[1]]
+        i_salpha = state[self._motor_ode_idx[self._electrical_motor.I_SALPHA_IDX]]
+        i_sbeta = state[self._motor_ode_idx[self._electrical_motor.I_SBETA_IDX]]
+        psi_ralpha = state[self._motor_ode_idx[self._electrical_motor.PSI_RALPHA_IDX]]
+        psi_rbeta = state[self._motor_ode_idx[self._electrical_motor.PSI_RBETA_IDX]]
 
         i_ralpha = 1 / l_r * psi_ralpha - mp['l_m'] / l_r * i_salpha
         i_rbeta = 1 / l_r * psi_rbeta - mp['l_m'] / l_r * i_sbeta
@@ -893,9 +777,12 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
         eps_field = self.calculate_field_angle(ode_state)
         eps_el = ode_state[self._ode_epsilon_idx]
 
+        # convert dq input voltage to abc
         if self.control_space == 'dq':
-            action_stator = action[0:2]
-            action_rotor = action[2:4]
+            stator_input_len = len(self._electrical_motor.STATOR_VOLTAGES)
+            rotor_input_len = len(self._electrical_motor.ROTOR_VOLTAGES)
+            action_stator = action[:stator_input_len]
+            action_rotor = action[stator_input_len:stator_input_len + rotor_input_len]
             action_stator = self.dq_to_abc_space(action_stator, eps_field)
             action_rotor = self.dq_to_abc_space(action_rotor, eps_field)
             action = np.concatenate((action_stator, action_rotor)).tolist()
@@ -909,11 +796,9 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
 
         for t in switching_times[:-1]:
             u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
-            u_sabc = u_in[0:3]
-            u_rdef = u_in[3:6]
-            u_sabc = [u * u_sup for u in u_sabc]
-            u_rdef = [u * u_sup for u in u_rdef]
-            u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
+            u_in = [u * u_sup for u in u_in]
+            u_sabc = u_in[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
+            u_rdef = u_in[self.rotor_voltage_low_idx:self.rotor_voltage_high_idx]
             u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
             u_salphabeta = self.abc_to_alphabeta_space(u_sabc)
             u_ralphabeta = self.dq_to_alphabeta_space(u_rqd, eps_field)
@@ -929,8 +814,8 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
 
         u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
-        u_sabc = u_in[0:3]
-        u_rdef = u_in[3:6]
+        u_sabc = u_in[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
+        u_rdef = u_in[self.rotor_voltage_low_idx:self.rotor_voltage_high_idx]
         u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
         u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
         u_salphabeta = self.abc_to_alphabeta_space(u_sabc)
@@ -985,8 +870,8 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
 
         u_sr_abcdef = self.converter.reset()
         u_sr_abcdef = [u * u_sup for u in u_sr_abcdef]
-        u_sabc = u_sr_abcdef[0:3]
-        u_rdef = u_sr_abcdef[3:6]
+        u_sabc = u_sr_abcdef[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
+        u_rdef = u_sr_abcdef[self.rotor_voltage_low_idx:self.rotor_voltage_high_idx]
         u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
         u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
 
@@ -1001,14 +886,13 @@ class DoublyFedInductionMotorSystem(SCMLSystem):
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
-        system_state = np.array(
-            list(mechanical_state)
-            + [torque]
-            + list(i_sabc) + list(i_sqd)
-            + list(i_rdef) + list(i_rqd)
-            + list(u_sabc) + list(u_sqd)
-            + list(u_rdef) + list(u_rqd)
-            + [eps_el]
-            + [u_sup]
-        )
+        system_state = np.concatenate([
+            mechanical_state, [torque],
+            i_sabc, i_sqd,
+            i_rdef, i_rqd,
+            u_sabc, u_sqd,
+            u_rdef, u_rqd,
+            [eps_el],
+            [u_sup]
+        ])
         return (system_state + noise) / self._limits
