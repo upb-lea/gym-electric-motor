@@ -1,23 +1,23 @@
-# Contribution Guideline
+# How to Contribute
 
-First off, thank you for considering contributing to GEM. It's people like you that make GEM such a great tool.
+First off, thank you for considering contributing to GEM. It's people like you that make GEM a great tool!
 
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
 
-### What we are looking for
+## What we are looking for
 
 Improving documentation, bug triaging, or writing tutorials are all helpful contributions we are looking forward to.
 Especially submitting bug reports, feature requests, or code which can be incorporated directly into GEM is what we would love to receive.
 
-Please, don't use the issue tracker for support questions.
-
-
-### Code of Conduct
+## Code of Conduct
 
 The goal is to maintain a diverse community that's pleasant for everyone. That's why we would greatly appreciate it if everyone contributing to and interacting with the community also followed our [Code of Conduct](https://github.com/upb-lea/gym-electric-motor/blob/master/CODE_OF_CONDUCT.md).
 
-## Reporting Bugs
+## Asking for support and requesting features
+Please create issues with the __question__ label for support questions and for feature requests.
+Even if you want to contribute a new feature yourself please state your intention in the issue tracker first, such that the maintainers can give valuable feedback on how to tackle this in the most appropriate way.
 
+## Reporting Bugs
 The best way to report an issue and to ensure a timely response is to use the issue tracker.
 
 * Create a GitHub account. 
@@ -45,6 +45,7 @@ The best way to report an issue and to ensure a timely response is to use the is
 
 * Submit the bug.
     * By default GitHub will email you to let you know when new comments have been made on your bug. In the event you've turned this feature off, you should check back on occasion to ensure you don't miss any questions a developer trying to fix the bug might ask.
+
 
 ## Versions and Tags
 
