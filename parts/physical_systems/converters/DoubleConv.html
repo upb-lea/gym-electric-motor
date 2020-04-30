@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Double Converters &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Multi Converters &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -97,7 +97,7 @@
 <li class="toctree-l4"><a class="reference internal" href="2QC.html">Two Quadrant Converters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="4QC.html">Four Quadrant Converters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="B6C.html">Three Phase Converters</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Double Converters</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Multi Converters</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../mechanical_loads/mechanical_load.html">Mechanical Loads</a></li>
@@ -163,7 +163,7 @@
         
           <li><a href="converter.html">Power Electronic Converters</a> &raquo;</li>
         
-      <li>Double Converters</li>
+      <li>Multi Converters</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -182,27 +182,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="double-converters">
-<h1>Double Converters<a class="headerlink" href="#double-converters" title="Permalink to this headline">¶</a></h1>
-<p>The Double Converters include two (discrete or continuous) subconverters for the use in the Externally Excited Dc Motor.</p>
-<div class="section" id="discrete-double-converter">
-<h2>Discrete Double Converter<a class="headerlink" href="#discrete-double-converter" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="multi-converters">
+<h1>Multi Converters<a class="headerlink" href="#multi-converters" title="Permalink to this headline">¶</a></h1>
+<p>The Multi Converters allow to include an arbitrary number of (discrete or continuous) subconverters for the use in e.g. the Externally Excited Dc Motor.
+Subconverters must be ‘elementary’ and can not be Multi Converters.</p>
+<div class="section" id="discrete-multi-converter">
+<h2>Discrete Multi Converter<a class="headerlink" href="#discrete-multi-converter" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="gym_electric_motor.physical_systems.converters.DiscDoubleConverter">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">DiscDoubleConverter</code><span class="sig-paren">(</span><em class="sig-param">subconverters</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscDoubleConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscDoubleConverter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.</p>
-<dl>
-<dt>Key:</dt><dd><p>‘Disc-Double’</p>
+<dt id="gym_electric_motor.physical_systems.converters.DiscMultiConverter">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">DiscMultiConverter</code><span class="sig-paren">(</span><em class="sig-param">subconverters</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscMultiConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscMultiConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converter that allows to include an arbitrary number of independent discrete subconverters.
+Subconverters must be ‘elementary’ and can not be MultiConverters.</p>
+<dl class="simple">
+<dt>Key:</dt><dd><p>‘Disc-Multi’</p>
 </dd>
-<dt>Actions:</dt><dd><div class="line-block">
-<div class="line">The actions are built from the two sub converter actions.</div>
-<div class="line">Action of Subconverter 0: Action % subconverters[0].action_space.n</div>
-<div class="line">Action of Subconverter 1: Action // subconverters[0].action_space.n</div>
-</div>
+<dt>Actions:</dt><dd><p>Concatenation of the subconverters’ action spaces</p>
 </dd>
-<dt>Action Space:</dt><dd><p>Discrete(subconverter[0].action_space.n * subconverter[1].action_space.n)</p>
+<dt>Action Space:</dt><dd><p>MultiDiscrete([subconverter[0].action_space.n , subconverter[1].action_space.n, …])</p>
 </dd>
-<dt>Output Voltage Space:</dt><dd><p>Output Voltage Space of Subconverter 0 x Output Voltage Space of Subconverter 1</p>
+<dt>Output Voltage Space:</dt><dd><dl class="simple">
+<dt>Box([subconverter[0].voltages.low, subconverter[1].voltages.low, …],</dt><dd><p>[subconverter[0].voltages.high, subconverter[1].voltages.high, …])</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -214,8 +215,8 @@
 </dd>
 </dl>
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscDoubleConverter.convert">
-<code class="sig-name descname">convert</code><span class="sig-paren">(</span><em class="sig-param">i_out</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscDoubleConverter.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.convert" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.DiscMultiConverter.convert">
+<code class="sig-name descname">convert</code><span class="sig-paren">(</span><em class="sig-param">i_out</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscMultiConverter.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscMultiConverter.convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>The conversion function that converts the previously set action to an input voltage for the motor.
 This function has to be called at least at every previously defined switching time, because the input voltage
 for the motor might change at these times.</p>
@@ -236,8 +237,8 @@ for the motor might change at these times.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscDoubleConverter.i_sup">
-<code class="sig-name descname">i_sup</code><span class="sig-paren">(</span><em class="sig-param">i_out</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscDoubleConverter.i_sup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.i_sup" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.DiscMultiConverter.i_sup">
+<code class="sig-name descname">i_sup</code><span class="sig-paren">(</span><em class="sig-param">i_out</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscMultiConverter.i_sup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscMultiConverter.i_sup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the current, the converter takes from the supply for the given output currents and the current
 switching state.</p>
 <dl class="field-list simple">
@@ -254,8 +255,8 @@ switching state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscDoubleConverter.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscDoubleConverter.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.DiscMultiConverter.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscMultiConverter.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscMultiConverter.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset all converter states to a default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -268,8 +269,8 @@ switching state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscDoubleConverter.set_action">
-<code class="sig-name descname">set_action</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscDoubleConverter.set_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.set_action" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.DiscMultiConverter.set_action">
+<code class="sig-name descname">set_action</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscMultiConverter.set_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscMultiConverter.set_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the next action of the converter at the beginning of a simulation step in the system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -290,20 +291,27 @@ switching state.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="continuous-double-converter">
-<h2>Continuous Double Converter<a class="headerlink" href="#continuous-double-converter" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="continuous-multi-converter">
+<h2>Continuous Multi Converter<a class="headerlink" href="#continuous-multi-converter" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="gym_electric_motor.physical_systems.converters.ContDoubleConverter">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">ContDoubleConverter</code><span class="sig-paren">(</span><em class="sig-param">subconverters</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContDoubleConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDoubleConverter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.</p>
+<dt id="gym_electric_motor.physical_systems.converters.ContMultiConverter">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">ContMultiConverter</code><span class="sig-paren">(</span><em class="sig-param">subconverters</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContMultiConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContMultiConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converter that allows to include an arbitrary number of independent continuous subconverters.
+Subconverters must be ‘elementary’ and can not be MultiConverters.</p>
 <dl class="simple">
-<dt>Key:</dt><dd><p>‘Cont-Double’</p>
+<dt>Key:</dt><dd><p>‘Cont-Multi’</p>
 </dd>
 <dt>Actions:</dt><dd><p>Concatenation of the subconverters’ action spaces</p>
 </dd>
-<dt>Action Space:</dt><dd><p>Action Space of Subconverter 0 x Action Space of Subconverter 1</p>
+<dt>Action Space:</dt><dd><dl class="simple">
+<dt>Box([subconverter[0].action_space.low, subconverter[1].action_space.low, …],</dt><dd><p>[subconverter[0].action_space.high, subconverter[1].action_space.high, …])</p>
 </dd>
-<dt>Output Voltage Space:</dt><dd><p>Output Voltage Space of Subconverter 0 x Output Voltage Space of Subconverter 1</p>
+</dl>
+</dd>
+<dt>Output Voltage Space:</dt><dd><dl class="simple">
+<dt>Box([subconverter[0].voltages.low, subconverter[1].voltages.low, …],</dt><dd><p>[subconverter[0].voltages.high, subconverter[1].voltages.high, …])</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -315,8 +323,8 @@ switching state.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.ContDoubleConverter.convert">
-<code class="sig-name descname">convert</code><span class="sig-paren">(</span><em class="sig-param">i_out</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContDoubleConverter.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDoubleConverter.convert" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.ContMultiConverter.convert">
+<code class="sig-name descname">convert</code><span class="sig-paren">(</span><em class="sig-param">i_out</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContMultiConverter.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContMultiConverter.convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>The conversion function that converts the previously set action to an input voltage for the motor.
 This function has to be called at least at every previously defined switching time, because the input voltage
 for the motor might change at these times.</p>
@@ -337,8 +345,8 @@ for the motor might change at these times.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.ContDoubleConverter.i_sup">
-<code class="sig-name descname">i_sup</code><span class="sig-paren">(</span><em class="sig-param">i_out</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContDoubleConverter.i_sup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDoubleConverter.i_sup" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.ContMultiConverter.i_sup">
+<code class="sig-name descname">i_sup</code><span class="sig-paren">(</span><em class="sig-param">i_out</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContMultiConverter.i_sup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContMultiConverter.i_sup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the current, the converter takes from the supply for the given output currents and the current
 switching state.</p>
 <dl class="field-list simple">
@@ -355,8 +363,8 @@ switching state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.ContDoubleConverter.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContDoubleConverter.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDoubleConverter.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.ContMultiConverter.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContMultiConverter.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContMultiConverter.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset all converter states to a default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -369,8 +377,8 @@ switching state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.ContDoubleConverter.set_action">
-<code class="sig-name descname">set_action</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContDoubleConverter.set_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDoubleConverter.set_action" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.ContMultiConverter.set_action">
+<code class="sig-name descname">set_action</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContMultiConverter.set_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContMultiConverter.set_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the next action of the converter at the beginning of a simulation step in the system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -413,7 +421,7 @@ switching state.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

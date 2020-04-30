@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Synchronous Reluctance Motor &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Synchronous Reluctance Motor &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Base DC Motor" href="dc_base.html" />
+    <link rel="next" title="Squirrel Cage Induction Motor" href="scim.html" />
     <link rel="prev" title="Permanent Magnet Synchronous Motor" href="pmsm.html" /> 
 </head>
 
@@ -102,8 +102,12 @@
 <li class="toctree-l4"><a class="reference internal" href="shunt.html">DC Shunt Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pmsm.html">Permanent Magnet Synchronous Motor</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Synchronous Reluctance Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scim.html">Squirrel Cage Induction Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dfim.html">Doubly Fed Induction Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dc_base.html">Base DC Motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="synchronous_base.html">Synchronous Base Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="three_phase_base.html">Base Three Phase Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="synchronous_base.html">Base Synchronous Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="induction_base.html">Base Induction Motor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../voltage_supplies/voltage_supply.html">Voltage Supplies</a></li>
@@ -308,31 +312,31 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>u_sq</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Quadrature axis voltage</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_sd</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Direct axis voltage</p></td>
 </tr>
 <tr class="row-even"><td><p>u_a</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch a</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_b</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch b</p></td>
 </tr>
 <tr class="row-even"><td><p>u_c</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch c</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_alpha</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage in alpha axis</p></td>
 </tr>
 <tr class="row-even"><td><p>u_beta</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage in beta axis</p></td>
 </tr>
 </tbody>
@@ -673,7 +677,7 @@ So this method calls q(quantities, -epsilon).</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="dc_base.html" class="btn btn-neutral float-right" title="Base DC Motor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scim.html" class="btn btn-neutral float-right" title="Squirrel Cage Induction Motor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="pmsm.html" class="btn btn-neutral float-left" title="Permanent Magnet Synchronous Motor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -685,7 +689,7 @@ So this method calls q(quantities, -epsilon).</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

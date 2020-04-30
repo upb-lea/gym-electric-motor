@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Discrete Synchronous Reluctance Motor Environment &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Discrete Synchronous Reluctance Motor Environment &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Reference Generators" href="../reference_generators/reference_generator.html" />
+    <link rel="next" title="Continuous Squirrel Cage Induction Motor Environment" href="scim_cont.html" />
     <link rel="prev" title="Continuous Synchronous Reluctance Motor Environment" href="synrm_cont.html" /> 
 </head>
 
@@ -100,6 +100,10 @@
 <li class="toctree-l2"><a class="reference internal" href="pmsm_disc.html">Discrete Permanent Magnet Synchronous Motor Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="synrm_cont.html">Continuous Synchronous Reluctance Motor Environment</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Discrete Synchronous Reluctance Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scim_cont.html">Continuous Squirrel Cage Induction Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scim_disc.html">Discrete Squirrel Cage Induction Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dfim_cont.html">Continuous Doubly Fed Induction Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dfim_disc.html">Discrete Doubly Fed Induction Motor Environment</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -182,7 +186,7 @@
 <dd><dl class="simple">
 <dt>Description:</dt><dd><p>Environment to simulate a discretely controlled Synchronous Reluctance Motor (SynRM).</p>
 </dd>
-<dt>Key:</dt><dd><p><cite>emotor-synrm-disc-v1</cite></p>
+<dt>Key:</dt><dd><p><cite>SynRMDisc-v1</cite></p>
 </dd>
 </dl>
 <p>Default Modules:</p>
@@ -213,11 +217,12 @@
 </dl>
 </div></blockquote>
 <dl class="simple">
-<dt>State Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i_a',</span> <span class="pre">'i_b',</span> <span class="pre">'i_c',</span> <span class="pre">'u_a',</span> <span class="pre">'u_b',</span> <span class="pre">'u_c',</span> <span class="pre">'epsilon',</span> <span class="pre">'u_sup']</span></code></p>
+<dt>State Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i_sa',</span> <span class="pre">'i_sb',</span> <span class="pre">'i_sc',</span> <span class="pre">'i_sq',</span> <span class="pre">'i_sd',</span></code>
+<code class="docutils literal notranslate"><span class="pre">'u_sa',</span> <span class="pre">'u_sb',</span> <span class="pre">'u_sc',</span> <span class="pre">'u_sq',</span> <span class="pre">'u_sd','epsilon',</span> <span class="pre">'u_sup']</span></code></p>
 </dd>
 <dt>Observation Space:</dt><dd><p>Type: Tuple(State_Space, Reference_Space)</p>
 </dd>
-<dt>State Space:</dt><dd><p>Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])</p>
+<dt>State Space:</dt><dd><p>Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])</p>
 </dd>
 <dt>Reference Space:</dt><dd><p>Box(low=[-1], high=[1])</p>
 </dd>
@@ -247,7 +252,7 @@ kwargs(dict): Further kwargs tot pass to the superclass and the submodules</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../reference_generators/reference_generator.html" class="btn btn-neutral float-right" title="Reference Generators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scim_cont.html" class="btn btn-neutral float-right" title="Continuous Squirrel Cage Induction Motor Environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="synrm_cont.html" class="btn btn-neutral float-left" title="Continuous Synchronous Reluctance Motor Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -259,7 +264,7 @@ kwargs(dict): Further kwargs tot pass to the superclass and the submodules</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

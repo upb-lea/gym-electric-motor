@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Supply Converter Motor Load System (SCML) &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Supply Converter Motor Load System (SCML) &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -311,7 +311,6 @@ Default: The jacobians are used, if available</p></li>
 </div>
 <div class="section" id="synchronous-motor-system">
 <h2>Synchronous Motor System<a class="headerlink" href="#synchronous-motor-system" title="Permalink to this headline">¶</a></h2>
-<p>The Synchronous Motor System is an SCML-System that was internally</p>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">
 <em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">SynchronousMotorSystem</code><span class="sig-paren">(</span><em class="sig-param">control_space='abc'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem" title="Permalink to this definition">¶</a></dt>
@@ -324,48 +323,6 @@ Default: The jacobians are used, if available</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.abc_to_dq_space">
-<code class="sig-name descname">abc_to_dq_space</code><span class="sig-paren">(</span><em class="sig-param">abc_quantities</em>, <em class="sig-param">epsilon_el</em>, <em class="sig-param">normed_epsilon=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.abc_to_dq_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.abc_to_dq_space" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation from abc to dq space</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p></li>
-<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<em>bool</em>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The quantities in the dq-space</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(quantity_q, quantity_d)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.dq_to_abc_space">
-<code class="sig-name descname">dq_to_abc_space</code><span class="sig-paren">(</span><em class="sig-param">dq_quantities</em>, <em class="sig-param">epsilon_el</em>, <em class="sig-param">normed_epsilon=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.dq_to_abc_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.dq_to_abc_space" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation from dq to abc space</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dq_quantities</strong> – Three quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))</p></li>
-<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<em>bool</em>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The quantities in the abc-space</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(quantity_a, quantity_b, quantity_c)</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset">
 <code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset" title="Permalink to this definition">¶</a></dt>
@@ -380,6 +337,98 @@ Default: The jacobians are used, if available</p></li>
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate">
 <code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation of the Physical System for one time step with the input action.
+This method is called in the environment in every step to update the systems state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>element of action_space</em>) – The action to play on the system for the next time step.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The systems state after the action was applied.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>element of state_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="squirrel-cage-induction-motor-system">
+<h2>Squirrel Cage Induction Motor System<a class="headerlink" href="#squirrel-cage-induction-motor-system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">SquirrelCageInductionMotorSystem</code><span class="sig-paren">(</span><em class="sig-param">control_space='abc'</em>, <em class="sig-param">ode_solver='scipy.ode'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>SCML-System for the Squirrel Cage Induction Motor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>control_space</strong> (<em>str</em>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
+<li><p><strong>kwargs</strong> – Further arguments to pass tp SCMLSystem</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset all the systems modules to an initial state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new state of the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation of the Physical System for one time step with the input action.
+This method is called in the environment in every step to update the systems state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>element of action_space</em>) – The action to play on the system for the next time step.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The systems state after the action was applied.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>element of state_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="doubly-fed-induction-motor-system">
+<h2>Doubly Fed Induction Motor System<a class="headerlink" href="#doubly-fed-induction-motor-system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">DoublyFedInductionMotorSystem</code><span class="sig-paren">(</span><em class="sig-param">control_space='abc'</em>, <em class="sig-param">ode_solver='scipy.ode'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>SCML-System for the Doubly Fed Induction Motor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>control_space</strong> (<em>str</em>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
+<li><p><strong>kwargs</strong> – Further arguments to pass tp SCMLSystem</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset all the systems modules to an initial state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new state of the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -420,7 +469,7 @@ This method is called in the environment in every step to update the systems sta
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

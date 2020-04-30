@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Environments &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Environments &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -100,6 +100,10 @@
 <li class="toctree-l2"><a class="reference internal" href="pmsm_disc.html">Discrete Permanent Magnet Synchronous Motor Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="synrm_cont.html">Continuous Synchronous Reluctance Motor Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="synrm_disc.html">Discrete Synchronous Reluctance Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scim_cont.html">Continuous Squirrel Cage Induction Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scim_disc.html">Discrete Squirrel Cage Induction Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dfim_cont.html">Continuous Doubly Fed Induction Motor Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dfim_disc.html">Discrete Doubly Fed Induction Motor Environment</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -223,6 +227,18 @@ Furthermore, a short introduction into the Interface of the environments is give
 <tr class="row-odd"><td><p>Discrete Synchronous Reluctance Motor Environment</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'SynRMDisc-v1'</span></code></p></td>
 </tr>
+<tr class="row-even"><td><p>Continuous Squirrel Cage Induction Motor Environment</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'SCIMCont-v1'</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Discrete Squirrel Cage Induction Motor Environment</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'SCIMDisc-v1'</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Continuous Doubly Fed Induction Motor Environment</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'DFIMCont-v1'</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Discrete Doubly Fed Induction Motor Environment</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'DFIMDisc-v1'</span></code></p></td>
+</tr>
 </tbody>
 </table>
 <div class="toctree-wrapper compound">
@@ -240,6 +256,10 @@ Furthermore, a short introduction into the Interface of the environments is give
 <li class="toctree-l1"><a class="reference internal" href="pmsm_disc.html">Discrete Permanent Magnet Synchronous Motor Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="synrm_cont.html">Continuous Synchronous Reluctance Motor Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="synrm_disc.html">Discrete Synchronous Reluctance Motor Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scim_cont.html">Continuous Squirrel Cage Induction Motor Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scim_disc.html">Discrete Squirrel Cage Induction Motor Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfim_cont.html">Continuous Doubly Fed Induction Motor Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfim_disc.html">Discrete Doubly Fed Induction Motor Environment</a></li>
 </ul>
 </div>
 <div class="section" id="module-gym_electric_motor.core">
@@ -456,7 +476,7 @@ done(bool): Flag, indicating if a reset is required before new steps can be take
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gym_electric_motor.physical_systems.converters &mdash; gym-electric-motor 2019 documentation</title>
+  <title>gym_electric_motor.physical_systems.converters &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -156,7 +156,7 @@
             
   <h1>Source code for gym_electric_motor.physical_systems.converters</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Discrete</span><span class="p">,</span> <span class="n">Box</span>
+<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Discrete</span><span class="p">,</span> <span class="n">Box</span><span class="p">,</span> <span class="n">MultiDiscrete</span>
 
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">instantiate</span>
 
@@ -173,10 +173,10 @@
 <span class="sd">        | E.g. (0, 1) - Only positive currents / (-1, 1) Positive and negative currents</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#: Minimum and Maximum possible output voltage of the converter</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="c1">#: Minimum and Maximum possible output current of the converter</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1">#: gym.Space that defines Minimum, Maximum and Dimension of possible output voltage of the converter</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1">#: gym.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1">#: gym.Space that defines the set of all possible actions for the converter</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1">#: Default action that is taken after a reset.</span>
@@ -286,7 +286,7 @@
 
 <div class="viewcode-block" id="ContDynamicallyAveragedConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">(</span><span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlock</span><span class="p">(</span><span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">(</span><span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlock</span><span class="p">(</span><span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span></div>
 
     <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -353,15 +353,12 @@
 <span class="sd">        Discrete(2)</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (0, 1)</span>
-<span class="sd">        | currents: (0, 1)</span>
-
-<span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Box(0, 1, shape=(1,))</span>
+<span class="sd">        | voltages: Box(0, 1, shape=(1,))</span>
+<span class="sd">        | currents: Box(0, 1, shape=(1,))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DiscOneQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -387,15 +384,12 @@
 <span class="sd">        Discrete(3)</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (0, 1)</span>
-<span class="sd">        | currents: (-1, 1)</span>
-
-<span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Box(0, 1, shape=(1,))</span>
+<span class="sd">        | voltages: Box(0, 1, shape=(1,))</span>
+<span class="sd">        | currents: Box(-1, 1, shape=(1,))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DiscTwoQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -458,14 +452,11 @@
 <span class="sd">        Discrete(4)</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (-1, 1)</span>
-<span class="sd">        | currents: (-1, 1)</span>
-
-<span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Box(-1, 1, shape=(1,))</span>
+<span class="sd">        | Box(-1, 1, shape=(1,))</span>
+<span class="sd">        | Box(-1, 1, shape=(1,))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -509,15 +500,12 @@
 <span class="sd">        Box([0,1])</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (0, 1)</span>
-<span class="sd">        | currents: (0, 1)</span>
-
-<span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Box(0, 1, shape=(1,))</span>
+<span class="sd">        | voltages: Box(0, 1, shape=(1,))</span>
+<span class="sd">        | currents: Box(0, 1, shape=(1,))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
@@ -545,16 +533,13 @@
 <span class="sd">        Box([0,1])</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (0, 1)</span>
-<span class="sd">        | currents: (-1, 1)</span>
-
-<span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Box(0, 1, shape=(1,))</span>
-
+<span class="sd">        | voltages: Box(0, 1, shape=(1,))</span>
+<span class="sd">        | currents: Box(-1, 1, shape=(1,))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
@@ -583,18 +568,15 @@
 <span class="sd">        | Duty Cycle Transistor T4: 0.5 * (Action + 1)</span>
 
 <span class="sd">    Action Space:</span>
-<span class="sd">        Box([-1,1])</span>
+<span class="sd">        Box(-1, 1, shape=(1,))</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (-1,1)</span>
-<span class="sd">        | currents: (-1,1)</span>
-
-<span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Box(-1, 1, shape=(1,))</span>
+<span class="sd">        | voltages: Box(-1, 1, shape=(1,))</span>
+<span class="sd">        | currents: Box(-1, 1, shape=(1,))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
@@ -628,23 +610,23 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">(</span><span class="n">i_out</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="o">-</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span></div></div>
 
 
-<div class="viewcode-block" id="DiscDoubleConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscDoubleConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="DiscMultiConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscMultiConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.</span>
+<span class="sd">    Converter that allows to include an arbitrary number of independent discrete subconverters.</span>
+<span class="sd">    Subconverters must be &#39;elementary&#39; and can not be MultiConverters.</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Disc-Double&#39;</span>
+<span class="sd">        &#39;Disc-Multi&#39;</span>
 
 <span class="sd">    Actions:</span>
-<span class="sd">        | The actions are built from the two sub converter actions.</span>
-<span class="sd">        | Action of Subconverter 0: Action % subconverters[0].action_space.n</span>
-<span class="sd">        | Action of Subconverter 1: Action // subconverters[0].action_space.n</span>
+<span class="sd">        Concatenation of the subconverters&#39; action spaces</span>
 
 <span class="sd">    Action Space:</span>
-<span class="sd">        Discrete(subconverter[0].action_space.n * subconverter[1].action_space.n)</span>
+<span class="sd">        MultiDiscrete([subconverter[0].action_space.n , subconverter[1].action_space.n, ...])</span>
 
 <span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Output Voltage Space of Subconverter 0 x Output Voltage Space of Subconverter 1</span>
+<span class="sd">        Box([subconverter[0].voltages.low, subconverter[1].voltages.low, ...],</span>
+<span class="sd">            [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subconverters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -653,64 +635,98 @@
 <span class="sd">            subconverters(list(str/class/object): Subconverters to instantiate .</span>
 <span class="sd">            kwargs(dict): Parameters to pass to the Subconverters and the superclass</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">currents</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">]</span>
-        <span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">]</span>
-        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="n">subconverters</span><span class="p">]</span>
 
-<div class="viewcode-block" id="DiscDoubleConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">currents_low</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">currents_high</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">voltages_low</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">voltages_high</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># get the limits and space dims from each subconverter</span>
+        <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+
+            <span class="n">currents_low</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+            <span class="n">currents_high</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+            <span class="n">voltages_low</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+            <span class="n">voltages_high</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+        <span class="c1"># convert to 1D list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="p">)</span>
+
+        <span class="n">currents_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">currents_low</span><span class="p">)</span>
+        <span class="n">currents_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">currents_high</span><span class="p">)</span>
+
+        <span class="n">voltages_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">voltages_low</span><span class="p">)</span>
+        <span class="n">voltages_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">voltages_high</span><span class="p">)</span>
+
+        <span class="c1"># put limits into gym_space format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">MultiDiscrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">currents_low</span><span class="p">,</span> <span class="n">currents_high</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">voltages_low</span><span class="p">,</span> <span class="n">voltages_high</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DiscMultiConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">u_in</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
-            <span class="n">u_in</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">convert</span><span class="p">([</span><span class="n">i</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">subsignal_space_size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="p">):</span>
+            <span class="n">subsignal_idx_high</span> <span class="o">=</span> <span class="n">subsignal_idx_low</span> <span class="o">+</span> <span class="n">subsignal_space_size</span>
+            <span class="n">u_in</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">i_out</span><span class="p">[</span><span class="n">subsignal_idx_low</span><span class="p">:</span><span class="n">subsignal_idx_high</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+            <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="n">subsignal_idx_high</span>
         <span class="k">return</span> <span class="n">u_in</span></div>
 
-<div class="viewcode-block" id="DiscDoubleConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DiscMultiConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">u_in</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">:</span>
             <span class="n">u_in</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">u_in</span></div>
 
-<div class="viewcode-block" id="DiscDoubleConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="DiscMultiConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">:</span>
-            <span class="n">sub_action</span> <span class="o">=</span> <span class="n">action</span> <span class="o">%</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span>
+        <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">sub_action</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
             <span class="n">times</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">sub_action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-            <span class="n">action</span> <span class="o">=</span> <span class="n">action</span> <span class="o">//</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">times</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="DiscDoubleConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscDoubleConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="DiscMultiConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="n">i_out</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span></div></div>
+        <span class="n">i_sup</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">subsignal_space_size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span><span class="p">):</span>
+            <span class="n">subsignal_idx_high</span> <span class="o">=</span> <span class="n">subsignal_idx_low</span> <span class="o">+</span> <span class="n">subsignal_space_size</span>
+            <span class="n">i_sup</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">i_sup</span><span class="p">(</span><span class="n">i_out</span><span class="p">[</span><span class="n">subsignal_idx_low</span><span class="p">:</span><span class="n">subsignal_idx_high</span><span class="p">])</span>
+            <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="n">subsignal_idx_high</span>
+        <span class="k">return</span> <span class="n">i_sup</span></div></div>
 
 
-<div class="viewcode-block" id="ContDoubleConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter">[docs]</a><span class="k">class</span> <span class="nc">ContDoubleConverter</span><span class="p">(</span><span class="n">ContDynamicallyAveragedConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="ContMultiConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContMultiConverter">[docs]</a><span class="k">class</span> <span class="nc">ContMultiConverter</span><span class="p">(</span><span class="n">ContDynamicallyAveragedConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converter that includes two independent discrete subconverters for the use in an externally excited dc motor.</span>
+<span class="sd">    Converter that allows to include an arbitrary number of independent continuous subconverters.</span>
+<span class="sd">    Subconverters must be &#39;elementary&#39; and can not be MultiConverters.</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Cont-Double&#39;</span>
+<span class="sd">        &#39;Cont-Multi&#39;</span>
 
 <span class="sd">    Actions:</span>
 <span class="sd">        Concatenation of the subconverters&#39; action spaces</span>
 
 <span class="sd">    Action Space:</span>
-<span class="sd">        Action Space of Subconverter 0 x Action Space of Subconverter 1</span>
+<span class="sd">        Box([subconverter[0].action_space.low, subconverter[1].action_space.low, ...],</span>
+<span class="sd">            [subconverter[0].action_space.high, subconverter[1].action_space.high, ...])</span>
 
 <span class="sd">    Output Voltage Space:</span>
-<span class="sd">        Output Voltage Space of Subconverter 0 x Output Voltage Space of Subconverter 1</span>
+<span class="sd">        Box([subconverter[0].voltages.low, subconverter[1].voltages.low, ...],</span>
+<span class="sd">            [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subconverters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -720,25 +736,50 @@
 <span class="sd">            kwargs(dict): Parameters to pass to the Subconverters</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="p">]</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="n">low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">low</span><span class="p">))</span>
-        <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">high</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">currents</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">]</span>
-        <span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">]</span>
-        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="n">subconverters</span><span class="p">]</span>
 
-<div class="viewcode-block" id="ContDoubleConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">action_space_low</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">action_space_high</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">currents_low</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">currents_high</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">voltages_low</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">voltages_high</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># get the limits and space dims from each subconverter</span>
+        <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">action_space_low</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+            <span class="n">action_space_high</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+            <span class="n">currents_low</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+            <span class="n">currents_high</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">currents</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+            <span class="n">voltages_low</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">low</span><span class="p">)</span>
+            <span class="n">voltages_high</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subconverter</span><span class="o">.</span><span class="n">voltages</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+
+        <span class="c1"># convert to 1D list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="p">)</span>
+
+        <span class="n">action_space_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">action_space_low</span><span class="p">)</span>
+        <span class="n">action_space_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">action_space_high</span><span class="p">)</span>
+
+        <span class="n">currents_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">currents_low</span><span class="p">)</span>
+        <span class="n">currents_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">currents_high</span><span class="p">)</span>
+
+        <span class="n">voltages_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">voltages_low</span><span class="p">)</span>
+        <span class="n">voltages_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">voltages_high</span><span class="p">)</span>
+
+        <span class="c1"># put limits into gym_space format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">action_space_low</span><span class="p">,</span> <span class="n">action_space_high</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">currents_low</span><span class="p">,</span> <span class="n">currents_high</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">voltages_low</span><span class="p">,</span> <span class="n">voltages_high</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContMultiConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContMultiConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
@@ -748,27 +789,37 @@
             <span class="n">times</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">sub_action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">times</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="ContDoubleConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ContMultiConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContMultiConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">u_in</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">:</span>
             <span class="n">u_in</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">u_in</span></div>
 
-<div class="viewcode-block" id="ContDoubleConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="ContMultiConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContMultiConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">u_in</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
-            <span class="n">u_in</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">convert</span><span class="p">([</span><span class="n">i</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">subsignal_space_size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="p">):</span>
+            <span class="n">subsignal_idx_high</span> <span class="o">=</span> <span class="n">subsignal_idx_low</span> <span class="o">+</span> <span class="n">subsignal_space_size</span>
+            <span class="n">u_in</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">i_out</span><span class="p">[</span><span class="n">subsignal_idx_low</span><span class="p">:</span><span class="n">subsignal_idx_high</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+            <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="n">subsignal_idx_high</span>
         <span class="k">return</span> <span class="n">u_in</span></div>
 
     <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_in</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Not used</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="ContDoubleConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContDoubleConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="ContMultiConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContMultiConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="n">i_out</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span></div></div>
+        <span class="n">i_sup</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">subsignal_space_size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span><span class="p">):</span>
+            <span class="n">subsignal_idx_high</span> <span class="o">=</span> <span class="n">subsignal_idx_low</span> <span class="o">+</span> <span class="n">subsignal_space_size</span>
+            <span class="n">i_sup</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">i_sup</span><span class="p">(</span><span class="n">i_out</span><span class="p">[</span><span class="n">subsignal_idx_low</span><span class="p">:</span><span class="n">subsignal_idx_high</span><span class="p">])</span>
+            <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="n">subsignal_idx_high</span>
+
+        <span class="k">return</span> <span class="n">i_sup</span></div></div>
 
 
 <div class="viewcode-block" id="DiscB6BridgeConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscB6BridgeConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
@@ -803,8 +854,8 @@
 <span class="sd">        Discrete(8)</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (-1,1)</span>
-<span class="sd">        | currents: (-1,1)</span>
+<span class="sd">        | voltages: Box(-1,1, shape=(3,))</span>
+<span class="sd">        | currents: Box(-1,1, shape=(3,))</span>
 
 <span class="sd">    Output Voltage Space:</span>
 <span class="sd">        Box(-0.5, 0.5, shape=(3,))</span>
@@ -812,9 +863,9 @@
 
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
     <span class="c1"># Only positive voltages can be applied</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
     <span class="c1"># positive and negative currents are possible</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
     <span class="n">_reset_action</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">_subactions</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
@@ -881,8 +932,8 @@
 <span class="sd">        Box(-1, 1, shape=(3,))</span>
 
 <span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: (-1,1)</span>
-<span class="sd">        | currents: (-1,1)</span>
+<span class="sd">        | voltages: Box(-1,1, shape=(3,))</span>
+<span class="sd">        | currents: Box(-1,1, shape=(3,))</span>
 
 <span class="sd">    Output Voltage Space:</span>
 <span class="sd">        Box(-0.5, 0.5, shape=(3,))</span>
@@ -890,9 +941,9 @@
 
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
     <span class="c1"># Only positive voltages can be applied</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
     <span class="c1"># Positive and negative currents are possible</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
 
     <span class="n">_reset_action</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
@@ -949,7 +1000,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

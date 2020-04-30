@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Electric Motors &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Electric Motors &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -407,7 +407,7 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor">
 <em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">SynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor" title="Permalink to this definition">¶</a></dt>
-<dd><p>The SynchronousMotor and its subclasses implement the technical system of a Three Phase Synchronous motor.</p>
+<dd><p>The SynchronousMotor and its subclasses implement the technical system of a three phase synchronous motor.</p>
 <p>This includes the system equations, the motor parameters of the equivalent circuit diagram,
 as well as limits and bandwidth.</p>
 <table class="docutils align-default">
@@ -676,84 +676,6 @@ dict(float): The motors parameter dictionary</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q">
-<em class="property">static </em><code class="sig-name descname">q</code><span class="sig-paren">(</span><em class="sig-param">quantities</em>, <em class="sig-param">epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor.q"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation of the dq-representation into alpha-beta using the electrical angle</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>quantities</strong> – Array of two quantities in dq-representation. Example [i_d, i_q]</p></li>
-<li><p><strong>epsilon</strong> – Current electrical angle of the motor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv">
-<em class="property">static </em><code class="sig-name descname">q_inv</code><span class="sig-paren">(</span><em class="sig-param">quantities</em>, <em class="sig-param">epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor.q_inv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation of the alpha-beta-representation into dq using the electrical angle</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>quantities</strong> – Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]</p></li>
-<li><p><strong>epsilon</strong> – Current electrical angle of the motor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Array of the two quantities converted to dq-representation. Example [u_d, u_q]</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
-So this method calls q(quantities, -epsilon).</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv_me">
-<code class="sig-name descname">q_inv_me</code><span class="sig-paren">(</span><em class="sig-param">quantities</em>, <em class="sig-param">epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor.q_inv_me"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_inv_me" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation of the alpha-beta-representation into dq using the mechanical angle</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>quantities</strong> – Array of two quantities in alpha-beta-representation. Example [u_alpha, u_beta]</p></li>
-<li><p><strong>epsilon</strong> – Current mechanical angle of the motor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Array of the two quantities converted to dq-representation. Example [u_d, u_q]</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The transformation from alpha-beta to dq is just its inverse conversion with negated epsilon.
-So this method calls q(quantities, -epsilon).</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_me">
-<code class="sig-name descname">q_me</code><span class="sig-paren">(</span><em class="sig-param">quantities</em>, <em class="sig-param">epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor.q_me"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.q_me" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation of the dq-representation into alpha-beta using the mechanical angle</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>quantities</strong> – Array of two quantities in dq-representation. Example [i_d, i_q]</p></li>
-<li><p><strong>epsilon</strong> – Current mechanical angle of the motor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.reset">
 <code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the motors state to a new initial state. (Default 0)</p>
@@ -763,34 +685,6 @@ So this method calls q(quantities, -epsilon).</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>numpy.ndarray(float)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_23">
-<em class="property">static </em><code class="sig-name descname">t_23</code><span class="sig-paren">(</span><em class="sig-param">quantities</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor.t_23"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_23" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation from abc representation to alpha-beta representation</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quantities</strong> – The properties in the abc representation like ‘’[u_a, u_b, u_c]’’</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The converted quantities in the alpha-beta representation like ‘’[u_alpha, u_beta]’’</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_32">
-<em class="property">static </em><code class="sig-name descname">t_32</code><span class="sig-paren">(</span><em class="sig-param">quantities</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#SynchronousMotor.t_32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.t_32" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformation from alpha-beta representation to abc representation</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quantities</strong> – The properties in the alpha-beta representation like <code class="docutils literal notranslate"><span class="pre">[u_alpha,</span> <span class="pre">u_beta]</span></code></p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The converted quantities in the abc representation like <code class="docutils literal notranslate"><span class="pre">[u_a,</span> <span class="pre">u_b,</span> <span class="pre">u_c]</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -920,31 +814,31 @@ So this method calls q(quantities, -epsilon).</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>u_sq</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Quadrature axis voltage</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_sd</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Direct axis voltage</p></td>
 </tr>
 <tr class="row-even"><td><p>u_a</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch a</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_b</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch b</p></td>
 </tr>
 <tr class="row-even"><td><p>u_c</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch c</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_alpha</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage in alpha axis</p></td>
 </tr>
 <tr class="row-even"><td><p>u_beta</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage in beta axis</p></td>
 </tr>
 </tbody>
@@ -1239,31 +1133,31 @@ The nominal peak current of a phase is given by <span class="math notranslate no
 </thead>
 <tbody>
 <tr class="row-even"><td><p>u_sq</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Quadrature axis voltage</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_sd</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Direct axis voltage</p></td>
 </tr>
 <tr class="row-even"><td><p>u_a</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch a</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_b</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch b</p></td>
 </tr>
 <tr class="row-even"><td><p>u_c</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage through branch c</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_alpha</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage in alpha axis</p></td>
 </tr>
 <tr class="row-even"><td><p>u_beta</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Voltage in beta axis</p></td>
 </tr>
 </tbody>
@@ -1361,7 +1255,7 @@ the general limits/nominal values (e.g. i)</p>
 </dl>
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.electrical_jacobian">
-<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#PermanentMagnetSynchronousMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.electrical_jacobian" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors.html#PermanentMagnetSynchronousMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.electrical_jacobian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</p>
 <p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
 be set to True. Otherwise, the jacobian will not be called.</p>
@@ -1431,7 +1325,7 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

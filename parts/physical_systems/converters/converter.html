@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Power Electronic Converters &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Power Electronic Converters &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -97,7 +97,7 @@
 <li class="toctree-l4"><a class="reference internal" href="2QC.html">Two Quadrant Converters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="4QC.html">Four Quadrant Converters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="B6C.html">Three Phase Converters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="DoubleConv.html">Double Converters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DoubleConv.html">Multi Converters</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../mechanical_loads/mechanical_load.html">Mechanical Loads</a></li>
@@ -189,7 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="2QC.html">Two Quadrant Converters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4QC.html">Four Quadrant Converters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="B6C.html">Three Phase Converters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DoubleConv.html">Double Converters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DoubleConv.html">Multi Converters</a></li>
 </ul>
 </div>
 <p>The converters are divided into two classes: The discretely controlled and continuously controlled converters.
@@ -251,8 +251,8 @@ for the motor might change at these times.</p>
 
 <dl class="attribute">
 <dt id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents">
-<code class="sig-name descname">currents</code><em class="property"> = (None, None)</em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minimum and Maximum possible output current of the converter</p>
+<code class="sig-name descname">currents</code><em class="property"> = None</em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents" title="Permalink to this definition">¶</a></dt>
+<dd><p>gym.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</p>
 </dd></dl>
 
 <dl class="method">
@@ -309,8 +309,8 @@ switching state.</p>
 
 <dl class="attribute">
 <dt id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter.voltages">
-<code class="sig-name descname">voltages</code><em class="property"> = (None, None)</em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.voltages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minimum and Maximum possible output voltage of the converter</p>
+<code class="sig-name descname">voltages</code><em class="property"> = None</em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.voltages" title="Permalink to this definition">¶</a></dt>
+<dd><p>gym.Space that defines Minimum, Maximum and Dimension of possible output voltage of the converter</p>
 </dd></dl>
 
 </dd></dl>
@@ -524,7 +524,7 @@ switching state.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

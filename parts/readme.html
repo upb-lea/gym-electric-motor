@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Readme File &mdash; gym-electric-motor 2019 documentation</title>
+  <title>Readme File &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -200,8 +200,9 @@ different electric motors.</strong></p>
 Therefore, the toolbox is specifically designed for running reinforcement
 learning algorithms to train agents controlling electric motors.</p>
 <p><a class="reference external" href="https://upb-lea.github.io/gym-electric-motor/">Read the detailed docs!</a></p>
-<p>So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM)
-and synchronous reluctance motor (SynRM) are available.
+<p>So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM),
+synchronous reluctance motor (SynRM), squirrel cage induction motor (SCIM) and doubly-fed induction
+motor (DFIM) are available.
 Beside electrical motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or
 switching commands (discrete mode).
 The figure shows the basic scheme of the converter, motor and load.</p>
@@ -249,7 +250,12 @@ pip install -e .
 </div>
 <div class="section" id="authors">
 <h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
-<p>Arne Traue, Gerrit Book</p>
+<p>Praneeth Balakrishna,
+Gerrit Book,
+Wilhelm Kirchgässner,
+Maximilian Schenke,
+Arne Traue,
+Oliver Wallscheid</p>
 </div>
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
@@ -295,65 +301,97 @@ constructor arguments you can parametrize the environment to your control proble
 <div class="section" id="environment-ids">
 <h3>Environment Ids<a class="headerlink" href="#environment-ids" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li><p>DC Motors</p>
+<ul>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Externally excited DC motor with continuous actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcExtExCont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Externally excited DC motor with continuous actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-extex-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Externally excited DC motor with discrete actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcExtExDisc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Externally excited DC motor with discrete actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Permanently excited DC motor with continuous actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcPermExCont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Permanently excited DC motor with continuous actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-permex-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Permanently excited DC motor with discrete actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcPermexDisc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>Permanently excited DC motor with discrete actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC shunt motor with continuous actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcShuntCont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC shunt motor with continuous actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-shunt-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC shunt motor with discrete actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcShuntDisc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC shunt motor with discrete actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-cont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC series motor with continuous actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcSeriesCont-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC series motor with continuous actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-dc-series-disc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC series motor with discrete actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'DcSeriesDisc-v1'</span></code><span class="raw-html-m2r"><br></span></dt><dd><p>DC series motor with discrete actions.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><p>Synchronous Motors</p>
+<ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'PMSMCont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Permanent magnet synchronous motor with continuous actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-cont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Permanent magnet synchronous motor with continuous actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'PMSMDisc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Permanent magnet synchronous motor with discrete actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-pmsm-disc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Permanent magnet synchronous motor with discrete actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'SynRMCont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Synchronous reluctance motor with continuous actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-synrm-cont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Synchronous reluctance motor with continuous actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'SynRMDisc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Synchronous reluctance motor with discrete actions.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><p>Induction Motors</p>
+<ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'SCIMCont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Squirrel cage induction motor with continuous actions.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">'emotor-synrm-disc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Synchronous reluctance motor with discrete actions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">'SCIMDisc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Squirrel cage induction motor with discrete actions.</p>
 </dd>
 </dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'DFIMCont-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Doubly fed induction motor with continuous actions.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'DFIMDisc-v1'</span></code>:<span class="raw-html-m2r"><br></span></dt><dd><p>Doubly fed induction motor with discrete actions.</p>
+</dd>
+</dl>
+</li>
+</ul>
 </li>
 </ul>
 <div class="section" id="make-keyword-arguments">
@@ -464,6 +502,11 @@ All visualizations are optional and recommended to be disabled for increased spe
 <li><p>PMSM (permanent magnet synchronous motor)</p></li>
 <li><p>SynRM (synchronous reluctance motor)</p></li>
 </ul>
+<p>Two variants of the induction motor:</p>
+<ul class="simple">
+<li><p>SCIM (squirrel cage induction motor)</p></li>
+<li><p>DFIM (doubly fed induction motor)</p></li>
+</ul>
 </div>
 <div class="section" id="converter">
 <h3>Converter<a class="headerlink" href="#converter" title="Permalink to this headline">¶</a></h3>
@@ -539,7 +582,7 @@ Execute pytest in the project’s root folder:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>

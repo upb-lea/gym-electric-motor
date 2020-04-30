@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gym_electric_motor.envs.gym_dcm.dc_extex_motor_env &mdash; gym-electric-motor 2019 documentation</title>
+  <title>gym_electric_motor.envs.gym_dcm.dc_extex_motor_env &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -185,7 +185,7 @@
 <span class="sd">        Environment to simulate a discretely controlled externally excited DC Motor</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        `emotor-dc-extex-disc-v1`</span>
+<span class="sd">        `DcExtExDisc-v1`</span>
 
 <span class="sd">    Default Modules:</span>
 
@@ -232,7 +232,7 @@
 <span class="sd">        (Have a look at the reward functions.)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="s1">&#39;Disc-Double&#39;</span><span class="p">,</span> <span class="n">subconverters</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Disc-4QC&#39;</span><span class="p">,</span> <span class="s1">&#39;Disc-1QC&#39;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="s1">&#39;Disc-Multi&#39;</span><span class="p">,</span> <span class="n">subconverters</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Disc-4QC&#39;</span><span class="p">,</span> <span class="s1">&#39;Disc-1QC&#39;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring in Base Class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="n">converter</span><span class="p">,</span> <span class="n">subconverters</span><span class="o">=</span><span class="n">subconverters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -243,7 +243,7 @@
 <span class="sd">        Environment to simulate a continuously controlled externally excited DC Motor</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        `emotor-dc-extex-cont-v1`</span>
+<span class="sd">        `DcExtExCont-v1`</span>
 
 <span class="sd">    Default Modules:</span>
 
@@ -291,7 +291,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="s1">&#39;Cont-Double&#39;</span><span class="p">,</span> <span class="n">subconverters</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Cont-4QC&#39;</span><span class="p">,</span> <span class="s1">&#39;Cont-1QC&#39;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="s1">&#39;Cont-Multi&#39;</span><span class="p">,</span> <span class="n">subconverters</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Cont-4QC&#39;</span><span class="p">,</span> <span class="s1">&#39;Cont-1QC&#39;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring in Base Class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="n">converter</span><span class="p">,</span> <span class="n">subconverters</span><span class="o">=</span><span class="n">subconverters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
@@ -306,7 +306,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Arne Traue, Gerrit Book
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
 
     </p>
   </div>
