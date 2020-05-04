@@ -28,7 +28,7 @@ class DiscPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
         Environment to simulate a discretely controlled Permanent Magnet Synchronous Motor (PMSM).
 
     Key:
-        `emotor-pmsm-disc-v1`
+        `PMSMDisc-v1`
 
     Default Modules:
 
@@ -53,13 +53,14 @@ class DiscPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_a', 'i_b', 'i_c', 'u_a', 'u_b', 'u_c', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',``
+        ``'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd','epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+        Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     Reference Space:
         Box(low=[-1], high=[1])
@@ -87,7 +88,7 @@ class ContPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
         Environment to simulate a continuously controlled Permanent Magnet Synchronous Motor (PMSM).
 
     Key:
-        `emotor-pmsm-cont-v1`
+        `PMSMCont-v1`
 
     Default Modules:
 
@@ -112,13 +113,14 @@ class ContPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_a', 'i_b', 'i_c', 'u_a', 'u_b', 'u_c', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq',``
+        ``'i_sd', 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd','epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+        Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     Reference Space:
         Box(low=[-1], high=[1])

@@ -28,7 +28,7 @@ class DiscDcPermanentlyExcitedMotorEnvironment(DcPermanentlyExcitedMotorEnvironm
         Environment to simulate a discretely controlled permanently excited DC Motor
 
     Key:
-        `emotor-dc-permex-disc-v1`
+        `DcPermExDisc-v1`
 
     Default Modules:
 
@@ -85,7 +85,7 @@ class ContDcPermanentlyExcitedMotorEnvironment(DcPermanentlyExcitedMotorEnvironm
         Environment to simulate a continuously controlled permanently excited DC Motor
 
     Key:
-        `emotor-dc-permex-cont-v1`
+        `DcPermExCont-v1`
 
     Default Modules:
 

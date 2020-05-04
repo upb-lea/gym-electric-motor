@@ -28,7 +28,7 @@ class DiscSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
         Environment to simulate a discretely controlled Synchronous Reluctance Motor (SynRM).
 
     Key:
-        `emotor-synrm-disc-v1`
+        `SynRMDisc-v1`
 
     Default Modules:
 
@@ -53,13 +53,14 @@ class DiscSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_a', 'i_b', 'i_c', 'u_a', 'u_b', 'u_c', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',``
+        ``'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd','epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+        Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     Reference Space:
         Box(low=[-1], high=[1])
@@ -86,7 +87,7 @@ class ContSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
         Environment to simulate a continuously controlled Synchronous Reluctance Motor (SynRM).
 
     Key:
-        `emotor-synrm-cont-v1`
+        `SynRMCont-v1`
 
     Default Modules:
 
@@ -111,13 +112,14 @@ class ContSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_a', 'i_b', 'i_c', 'u_a', 'u_b', 'u_c', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',``
+        ``'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd','epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+        Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     Reference Space:
         Box(low=[-1], high=[1])

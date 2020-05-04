@@ -11,6 +11,7 @@ __pycache__
 
 # setuptools
 *egg-info*
+dist/
 
 # miscellaneous
 ddpg_DcSeries-Cont-v0_weights_actor\.h5f

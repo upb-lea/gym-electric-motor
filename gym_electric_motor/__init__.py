@@ -46,6 +46,14 @@ register(id='SynRMCont-v1',
          entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
 register(id='SynRMDisc-v1',
          entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
+register(id='SCIMCont-v1',
+         entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
+register(id='SCIMDisc-v1',
+         entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
+register(id='DFIMCont-v1',
+         entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
+register(id='DFIMDisc-v1',
+         entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
 
 # Old Ids
 
@@ -72,4 +80,13 @@ register(id='emotor-pmsm-disc-v1',
 register(id='emotor-synrm-cont-v1',
          entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
 register(id='emotor-synrm-disc-v1',
-         entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
+        entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
+register(id='emotor-scim-cont-v1',
+         entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
+register(id='emotor-scim-disc-v1',
+         entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
+register(id='emotor-dfim-cont-v1',
+         entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
+register(id='emotor-dfim-disc-v1',
+         entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
+

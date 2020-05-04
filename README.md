@@ -15,8 +15,9 @@ learning algorithms to train agents controlling electric motors.
 
 [Read the detailed docs!](https://upb-lea.github.io/gym-electric-motor/)
 
-So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM)
-and synchronous reluctance motor (SynRM) are available.
+So far, several DC-motor models and the three-phase motors permanent magnet synchronous motor (PMSM), 
+synchronous reluctance motor (SynRM), squirrel cage induction motor (SCIM) and doubly-fed induction 
+motor (DFIM) are available.
 Beside electrical motors, also converters and load models are implemented. The converters can be driven by means of a duty cycle (continuous mode) or 
 switching commands (discrete mode). 
 The figure shows the basic scheme of the converter, motor and load. 
@@ -94,42 +95,60 @@ constructor arguments you can parametrize the environment to your control proble
 
 ##### Environment Ids
 
-* `'emotor-dc-extex-cont-v1'`     
-    Externally excited DC motor with continuous actions.
- 
-* `'emotor-dc-extex-disc-v1'`   
-    Externally excited DC motor with discrete actions.
+* DC Motors
 
-* `'emotor-dc-permex-cont-v1'`    
-    Permanently excited DC motor with continuous actions.
-
-* `'emotor-dc-permex-disc-v1'`    
-    Permanently excited DC motor with discrete actions.
-
-* `'emotor-dc-shunt-cont-v1'`    
-    DC shunt motor with continuous actions.
-
-* `'emotor-dc-shunt-disc-v1'`    
-    DC shunt motor with discrete actions.
-
-* `'emotor-dc-series-cont-v1'`    
-    DC series motor with continuous actions.
-
-* `'emotor-dc-series-disc-v1'`  
-    DC series motor with discrete actions.
+    * `'DcExtExCont-v1'`     
+        Externally excited DC motor with continuous actions.
+     
+    * `'DcExtExDisc-v1'`   
+        Externally excited DC motor with discrete actions.
     
-* `'emotor-pmsm-cont-v1'`:  
-    Permanent magnet synchronous motor with continuous actions.
-
-* `'emotor-pmsm-disc-v1'`:  
-    Permanent magnet synchronous motor with discrete actions.
+    * `'DcPermExCont-v1'`    
+        Permanently excited DC motor with continuous actions.
     
-* `'emotor-synrm-cont-v1'`:  
-    Synchronous reluctance motor with continuous actions.
+    * `'DcPermexDisc-v1'`    
+        Permanently excited DC motor with discrete actions.
+    
+    * `'DcShuntCont-v1'`    
+        DC shunt motor with continuous actions.
+    
+    * `'DcShuntDisc-v1'`    
+        DC shunt motor with discrete actions.
+    
+    * `'DcSeriesCont-v1'`    
+        DC series motor with continuous actions.
+    
+    * `'DcSeriesDisc-v1'`  
+        DC series motor with discrete actions.
+        
+* Synchronous Motors
+    
+    * `'PMSMCont-v1'`:  
+        Permanent magnet synchronous motor with continuous actions.
+    
+    * `'PMSMDisc-v1'`:  
+        Permanent magnet synchronous motor with discrete actions.
+        
+    * `'SynRMCont-v1'`:  
+        Synchronous reluctance motor with continuous actions.
+    
+    * `'SynRMDisc-v1'`:  
+        Synchronous reluctance motor with discrete actions.
+        
+* Induction Motors
 
-* `'emotor-synrm-disc-v1'`:  
-    Synchronous reluctance motor with discrete actions.
-
+    * `'SCIMCont-v1'`:  
+        Squirrel cage induction motor with continuous actions.
+        
+    * `'SCIMDisc-v1'`:  
+        Squirrel cage induction motor with discrete actions.
+        
+    * `'DFIMCont-v1'`:  
+        Doubly fed induction motor with continuous actions.
+        
+    * `'DFIMDisc-v1'`:  
+        Doubly fed induction motor with discrete actions.
+        
 #### Make Keyword-Arguments
 Using the keyword arguments in the `gem.make(id, **kwargs)` function you can select different function modules for the 
 environment and parametrize these modules. 
@@ -208,6 +227,11 @@ Two three phase motors:
 
 - PMSM (permanent magnet synchronous motor)
 - SynRM (synchronous reluctance motor)
+
+Two variants of the induction motor:
+
+- SCIM (squirrel cage induction motor)
+- DFIM (doubly fed induction motor)
 
 ##### Converter
 Following converters are included:

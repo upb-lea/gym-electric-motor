@@ -114,7 +114,7 @@ def discrete_converter_functions_testing(converter, action_space_n, times,
             converter_voltage = converter.convert([i_in], time_step)
             converter.i_sup([i_in])
             for u in converter_voltage:
-                assert converter.voltages[0] <= u <= converter.voltages[1], "Voltage limits violated"
+                assert converter.voltages.low[0] <= u <= converter.voltages.high[0], "Voltage limits violated"
             # test for different cases of (non) ideal behaviour
             if dead_time and interlocking_time > 0:
                 test_voltage = test_voltage_dead_interlocking[step_counter]
@@ -227,19 +227,19 @@ def test_discrete_single_initializations(convert, convert_class, tau, interlocki
 @pytest.mark.parametrize("tau", g_taus)
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
 @pytest.mark.parametrize("dead_time", g_dead_times)
-def test_discrete_double_converter_initializations(tau, interlocking_time, dead_time):
+def test_discrete_multi_converter_initializations(tau, interlocking_time, dead_time):
     """
     tests different initializations of the converters
     :return:
     """
     # define all converter
-    all_single_disc_converter = ['Disc-1QC', 'Disc-2QC', 'Disc-4QC']
+    all_single_disc_converter = ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Disc-B6C']
     interlocking_time *= tau
     # chose every combination of single converters
     for conv_1 in all_single_disc_converter:
         for conv_2 in all_single_disc_converter:
             converter = make_module(
-                cv.PowerElectronicConverter, 'Disc-Double', tau=tau,
+                cv.PowerElectronicConverter, 'Disc-Multi', tau=tau,
                 interlocking_time=interlocking_time, dead_time=dead_time,
                 subconverters=[conv_1, conv_2]
             )
@@ -253,48 +253,51 @@ def test_discrete_double_converter_initializations(tau, interlocking_time, dead_
 @pytest.mark.parametrize("tau", g_taus)
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
 @pytest.mark.parametrize("dead_time", g_dead_times)
-def test_discrete_double_power_electronic_converter(tau, interlocking_time, dead_time):
+def test_discrete_multi_power_electronic_converter(tau, interlocking_time, dead_time):
     """
     setup all combinations of single converters and test the convert function if no error is raised
     :return:
     """
     # define all converter
-    all_single_disc_converter = ['Disc-1QC', 'Disc-2QC', 'Disc-4QC']
+    all_single_disc_converter = ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Disc-B6C']
     interlocking_time *= tau
 
-    for conv_1 in all_single_disc_converter:
-        for conv_2 in all_single_disc_converter:
+    for conv_0 in all_single_disc_converter:
+        for conv_1 in all_single_disc_converter:
             converter = make_module(
-                cv.PowerElectronicConverter, 'Disc-Double', tau=tau,
+                cv.PowerElectronicConverter, 'Disc-Multi', tau=tau,
                 interlocking_time=interlocking_time, dead_time=dead_time,
-                subconverters=[conv_1, conv_2]
+                subconverters=[conv_0, conv_1]
             )
+            comparable_converter_0 = make_module(cv.PowerElectronicConverter, conv_0, tau=tau,
+                                                 interlocking_time=interlocking_time, dead_time=dead_time)
             comparable_converter_1 = make_module(cv.PowerElectronicConverter, conv_1, tau=tau,
                                                  interlocking_time=interlocking_time, dead_time=dead_time)
-            comparable_converter_2 = make_module(cv.PowerElectronicConverter, conv_2, tau=tau,
-                                                 interlocking_time=interlocking_time, dead_time=dead_time)
-            action_space_n = converter.action_space.n
-            assert converter.reset() == [0.0, 0.0]  # test if reset returns 0.0
-            actions = [randint(0, action_space_n) for _ in range(100)]
+            action_space_n = converter.action_space.nvec
+            assert np.all(
+                converter.reset() ==
+                np.concatenate([[-0.5, -0.5, -0.5] if ('Disc-B6C' == conv) else [0] for conv in [conv_0, conv_1]])
+            )  # test if reset returns 0.0
+            actions = [[np.random.randint(0, upper_bound) for upper_bound in action_space_n] for _ in range(100)]
             times = np.arange(100) * tau
-            action_space_1_n = comparable_converter_1.action_space.n
-            action_space_2_n = comparable_converter_2.action_space.n
             for action, t in zip(actions, times):
                 time_steps = converter.set_action(action, t)
-                time_steps_1 = comparable_converter_1.set_action(action % action_space_1_n, t)
-                time_steps_2 = comparable_converter_2.set_action((action // action_space_1_n) % action_space_2_n, t)
+                time_steps_1 = comparable_converter_0.set_action(action[0], t)
+                time_steps_2 = comparable_converter_1.set_action(action[1], t)
                 for time_step in time_steps_1 + time_steps_2:
                     assert time_step in time_steps
                 for time_step in time_steps:
-                    i_in_1 = uniform(-1, 1)
-                    i_in_2 = uniform(-1, 1)
-                    i_in = [i_in_1, i_in_2]
+                    i_in_0 = np.random.uniform(-1, 1, 3) if conv_0 == 'Disc-B6C' else [np.random.uniform(-1, 1)]
+                    i_in_1 = np.random.uniform(-1, 1, 3) if conv_1 == 'Disc-B6C' else [np.random.uniform(-1, 1)]
+                    i_in = np.concatenate([i_in_0, i_in_1])
                     voltage = converter.convert(i_in, time_step)
-                    voltage_1 = comparable_converter_1.convert([i_in_1], time_step)
-                    voltage_2 = comparable_converter_2.convert([i_in_2], time_step)
-                    converter.i_sup(i_in)
-                    assert voltage[0] == voltage_1[0], "First converter is wrong"
-                    assert voltage[1] == voltage_2[0], "Second converter is wrong"
+                    # test if the single phase converters work independent and correct for singlephase subsystems
+                    if 'Disc-B6C' not in [conv_0, conv_1]:
+                        voltage_0 = comparable_converter_0.convert(i_in_0, time_step)
+                        voltage_1 = comparable_converter_1.convert(i_in_1, time_step)
+                        converter.i_sup(i_in)
+                        assert voltage[0] == voltage_0[0], "First converter is wrong"
+                        assert voltage[1] == voltage_1[0], "Second converter is wrong"
 
 
 # endregion
@@ -386,30 +389,31 @@ def comparable_voltage(converter_type, action, i_in, tau, interlocking_time, dea
 @pytest.mark.parametrize("tau", g_taus)
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
 @pytest.mark.parametrize("dead_time", g_dead_times)
-def test_continuous_double_power_electronic_converter(tau, interlocking_time, dead_time):
+def test_continuous_multi_power_electronic_converter(tau, interlocking_time, dead_time):
     """
     test functions of continuous double converter
     :return:
     """
     # define all converter
-    all_single_cont_converter = ['Cont-1QC', 'Cont-2QC', 'Cont-4QC']
+    all_single_cont_converter = ['Cont-1QC', 'Cont-2QC', 'Cont-4QC', 'Cont-B6C']
     interlocking_time *= tau
     times = g_times_cont * tau
     for conv_1 in all_single_cont_converter:
         for conv_2 in all_single_cont_converter:
             # setup converter with all possible combinations
-            converter = make_module(cv.PowerElectronicConverter, 'Cont-Double', tau=tau,
+            converter = make_module(cv.PowerElectronicConverter, 'Cont-Multi', tau=tau,
                                     interlocking_time=interlocking_time, dead_time=dead_time,
                                     subconverters=[conv_1, conv_2])
-            assert all(converter.reset() == np.zeros(2))
+            assert all(converter.reset() ==
+                       np.concatenate([[-0.5, -0.5, -0.5] if ('Cont-B6C' == conv) else [0] for conv in [conv_1, conv_2]]))
             action_space = converter.action_space
             seed(123)
             actions = [uniform(action_space.low, action_space.high) for _ in range(0, 100)]
-            continuous_double_converter_functions_testing(converter, times, interlocking_time, dead_time, actions,
+            continuous_multi_converter_functions_testing(converter, times, interlocking_time, dead_time, actions,
                                                           [conv_1, conv_2])
 
 
-def continuous_double_converter_functions_testing(converter, times, interlocking_time, dead_time, actions,
+def continuous_multi_converter_functions_testing(converter, times, interlocking_time, dead_time, actions,
                                                   converter_type):
     """
     test function for conversion
@@ -431,25 +435,26 @@ def continuous_double_converter_functions_testing(converter, times, interlocking
         for time_step in time_steps:
             for i_in in g_i_ins_cont:
                 # test if conversion works
-                i_in_0 = i_in
-                i_in_1 = -i_in
+                i_in_0 = [i_in] * 3 if converter_type[0] == 'Cont-B6C' else [i_in]
+                i_in_1 = [-i_in] * 3 if converter_type[1] == 'Cont-B6C' else [i_in]
                 if converter_type[0] == 'Cont-1QC':
-                    i_in_0 = abs(i_in_0)
+                    i_in_0 = np.abs(i_in_0)
                 if converter_type[1] == 'Cont-1QC':
-                    i_in_1 = abs(i_in_1)
-                conversion = converter.convert([i_in_0, i_in_1], time_step)
+                    i_in_1 = np.abs(i_in_1)
+                conversion = converter.convert(np.concatenate([i_in_0, i_in_1]), time_step)
                 params = parameters + "  " + str(i_in) + "  " + str(time_step) + "  " + str(conversion)
                 # test if the limits are hold
                 assert (converter.action_space.low.tolist() <= conversion) and \
                        (converter.action_space.high.tolist() >= conversion), \
                     "Error, does not hold limits:" + str(params)
-                # test if the converters work independent and correct
-                voltage_0 = comparable_voltage(converter_type[0], action[0], i_in_0, tau, interlocking_time, dead_time,
-                                               last_action[0])
-                voltage_1 = comparable_voltage(converter_type[1], action[1], i_in_1, tau, interlocking_time, dead_time,
-                                               last_action[1])
-                assert abs(voltage_0 - conversion[0]) < 1E-5, "Wrong converter value for armature circuit"
-                assert abs(voltage_1 - conversion[1]) < 1E-5, "Wrong converter value for excitation circuit"
+                # test if the single phase converters work independent and correct for singlephase subsystems
+                if 'Cont-B6C' not in converter_type:
+                    voltage_0 = comparable_voltage(converter_type[0], action[0], i_in_0[0], tau, interlocking_time, dead_time,
+                                                   last_action[0])
+                    voltage_1 = comparable_voltage(converter_type[1], action[1], i_in_1[0], tau, interlocking_time, dead_time,
+                                                   last_action[1])
+                    assert abs(voltage_0 - conversion[0]) < 1E-5, "Wrong converter value for armature circuit"
+                    assert abs(voltage_1 - conversion[1]) < 1E-5, "Wrong converter value for excitation circuit"
         last_action = action
 
 
@@ -710,8 +715,12 @@ class TestContDynamicallyAveragedConverter(TestPowerElectronicConverter):
     def converter(self, monkeypatch):
         converter = self.class_to_test(tau=0.1, dead_time=False, interlocking_time=0)
         converter.action_space = converter.action_space or Box(-1, 1, shape=(1,))
-        converter.voltages = (converter.voltages[0] or -1, converter.voltages[1] or -1)
-        converter.currents = (converter.currents[0] or 0, converter.currents[1] or 1)
+        if converter.voltages and converter.currents:
+            converter.voltages = Box(converter.voltages.low[0], converter.voltages.high[0], shape=(1,)) #(converter.voltages.low[0] or -1, converter.voltages.high[0] or -1)
+            converter.currents = Box(converter.voltages.low[0], converter.voltages.high[0], shape=(1,)) #(converter.currents.low[0] or  0, converter.currents.high[0] or  1)
+        else:
+            converter.voltages = Box(-1, -1, shape=(1,))
+            converter.currents = Box(0, 1 ,shape=(1,))
         monkeypatch.setattr(converter, "_convert", lambda i_in, t: i_in[0])
         return converter
 
@@ -722,9 +731,9 @@ class TestContDynamicallyAveragedConverter(TestPowerElectronicConverter):
         assert u[0] == min(
             max(
                 converter._convert(i_out, 0) - converter._interlock(i_out),
-                converter.voltages[0]
+                converter.voltages.low[0]
             ),
-            converter.voltages[1]
+            converter.voltages.high[0]
         )
 
     @pytest.mark.parametrize("action_space", [Box(-1, 1, shape=(1,))])
@@ -984,54 +993,68 @@ class TestContFourQuadrantConverter(TestContDynamicallyAveragedConverter):
         assert i_sup == sc1.last_i_sup + sc2.last_i_sup
 
 
-class TestDiscDoubleConverter(TestDiscConverter):
-    class_to_test = cv.DiscDoubleConverter
-    key = 'Disc-Double'
+class TestDiscMultiConverter(TestDiscConverter):
+    class_to_test = cv.DiscMultiConverter
+    key = 'Disc-Multi'
 
     @pytest.fixture
     def converter(self):
         return self.class_to_test(subconverters=[
-            DummyConverter(action_space=Discrete(3)), DummyConverter(action_space=Discrete(4))
+            DummyConverter(action_space=Discrete(3), voltages=Box(-1, 1, shape=(1,)), currents=Box(0, 1, shape=(1,))),
+            DummyConverter(action_space=Discrete(8), voltages=Box(-1, 1, shape=(3,)), currents=Box(-1, 1, shape=(3,))),
+            DummyConverter(action_space=Discrete(4), voltages=Box(-1, 1, shape=(1,)), currents=Box(-1, 1, shape=(1,))),
         ])
 
     @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'subconverters': ['Disc-1QC', 'Disc-4QC'], 'a': 'Ignore all the rest', 'b': 12}),
-        (0.1, False, 0.0, {'subconverters': ['Disc-1QC', 'Disc-4QC']}),
+        (1, True, 0.1, {'subconverters': ['Disc-1QC', 'Disc-B6C', 'Disc-4QC'], 'a': 'Ignore all the rest', 'b': 12}),
+        (0.1, False, 0.0, {'subconverters': ['Disc-1QC', 'Disc-B6C', 'Disc-4QC']}),
     ])
     def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
         super().test_initialization(tau, dead_time, interlocking_time, kwargs)
         conv = self.class_to_test(tau=tau, dead_time=dead_time, interlocking_time=interlocking_time, **kwargs)
-        assert conv.action_space.n == np.prod([subconv.action_space.n for subconv in conv._subconverters])
+        assert np.all(
+            conv.subsignal_voltage_space_dims ==
+            np.array([(np.squeeze(subconv.voltages.shape) or 1) for subconv in conv._subconverters])
+        ), "Voltage space dims in the multi converter do not fit the subconverters."
+        assert np.all(
+            conv.subsignal_current_space_dims ==
+            np.array([(np.squeeze(subconv.currents.shape) or 1) for subconv in conv._subconverters])
+        ), "Current space dims in the multi converter do not fit the subconverters."
+        assert np.all(conv.action_space.nvec == [subconv.action_space.n for subconv in conv._subconverters]
+                      ), "Action space of the multi converter does not fit the subconverters."
         for sc in conv._subconverters:
             assert sc._interlocking_time == interlocking_time
             assert sc._dead_time == dead_time
             assert sc._tau == tau
 
     def test_registered(self):
-        dummy_converters = [DummyConverter(), DummyConverter()]
+        dummy_converters = [DummyConverter(), DummyConverter(), DummyConverter()]
         conv = gem.utils.instantiate(cv.PowerElectronicConverter, self.key, subconverters=dummy_converters)
         assert type(conv) == self.class_to_test
 
     def test_reset(self, converter):
         u_in = converter.reset()
-        assert u_in == [0.0] * len(converter._subconverters)
+        assert u_in == [0.0] * converter.voltages.shape[0]
         assert np.all([subconv.reset_counter == 1 for subconv in converter._subconverters])
 
     def test_set_action(self, monkeypatch, converter, **_):
-        for action in range(converter.action_space.n):
-            t = action * converter._tau
-            converter.set_action(action, t)
+        for action in np.ndindex(tuple(converter.action_space.nvec)):
             sc0 = converter._subconverters[0]
             sc1 = converter._subconverters[1]
-            assert sc0.action + sc0.action_space.n * sc1.action == action
+            sc2 = converter._subconverters[2]
+            t = (action[0] * sc1.action_space.n * sc2.action_space.n +
+                 action[1] * sc2.action_space.n + action[2])* converter._tau
+            converter.set_action(action, t)
+            assert np.all((sc0.action,  sc1.action, sc2.action) == action)
             assert sc0.action_set_time == t
             assert sc1.action_set_time == t
+            assert sc2.action_set_time == t
 
     def test_default_init(self):
-        converter = self.class_to_test(subconverters=['Disc-1QC', 'Disc-2QC'])
+        converter = self.class_to_test(subconverters=['Disc-1QC', 'Disc-B6C', 'Disc-2QC'])
         assert converter._tau == 1e-5
 
-    @pytest.mark.parametrize('i_out', [[0, 2], [1, 2], [-1, 1]])
+    @pytest.mark.parametrize('i_out', [[0, 6, 2, 7, 9], [1, 0.5, 2], [-1, 1]])
     def test_convert(self, converter, i_out):
         # Setting of the demanded output voltages from the dummy converters
         for subconverter in converter._subconverters:
@@ -1041,46 +1064,63 @@ class TestDiscDoubleConverter(TestDiscConverter):
             u == [subconv.action for subconv in converter._subconverters]
         )
 
-    @pytest.mark.parametrize('i_out', [[0, 2], [1, 0], [-2, 1]])
+    @pytest.mark.parametrize('i_out',  [[0, 6, 2, 7, 9], [1, 0.5, 2, -7, 50], [-1, 1, 0.01, 16, -42]])
     def test_i_sup(self, converter, i_out):
-        sc1, sc2 = converter._subconverters
+        sc0, sc1, sc2 = converter._subconverters
         converter.set_action(converter.action_space.sample(), np.random.rand())
         i_sup = converter.i_sup(i_out)
-        assert sc1.last_i_out + sc2.last_i_out == i_out
-        assert i_sup == sc1.last_i_out[0] + sc2.last_i_out[0]
+        assert sc0.last_i_out + sc1.last_i_out + sc2.last_i_out == i_out
+        assert i_sup == sc0.last_i_out[0] + sc1.last_i_out[0] + sc2.last_i_out[0]
 
 
-class TestContDoubleConverter(TestContDynamicallyAveragedConverter):
-    class_to_test = cv.ContDoubleConverter
-    key = 'Cont-Double'
+class TestContMultiConverter(TestContDynamicallyAveragedConverter):
+    class_to_test = cv.ContMultiConverter
+    key = 'Cont-Multi'
 
     @pytest.fixture
     def converter(self):
         return self.class_to_test(subconverters=[
-            DummyConverter(action_space=Box(-1, 1, shape=(1,))), DummyConverter(action_space=Box(0, 1, shape=(1,)))
+            DummyConverter(
+                action_space=Box(-1, 1, shape=(1,)), voltages=Box(-1, 1, shape=(1,)), currents=Box(-1, 1, shape=(1,))
+            ),
+            DummyConverter(
+                action_space=Box(-1, 1, shape=(3,)), voltages=Box(-1, 1, shape=(3,)), currents=Box(-1, 1, shape=(3,))
+            ),
+            DummyConverter(
+                action_space=Box(0, 1, shape=(1,)), voltages=Box(0, 1, shape=(1,)), currents=Box(0, 1, shape=(1,))
+            ),
         ])
 
     def test_registered(self):
-        dummy_converters = [DummyConverter(), DummyConverter()]
+        dummy_converters = [DummyConverter(), DummyConverter(), DummyConverter()]
         dummy_converters[0].action_space = Box(-1, 1, shape=(1,))
-        dummy_converters[1].action_space = Box(0, 1, shape=(1,))
+        dummy_converters[1].action_space = Box(-1, 1, shape=(3,))
+        dummy_converters[2].action_space = Box(0, 1, shape=(1,))
         conv = gem.utils.instantiate(cv.PowerElectronicConverter, self.key, subconverters=dummy_converters)
         assert type(conv) == self.class_to_test
         assert conv._subconverters == dummy_converters
 
     @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'subconverters': ['Cont-1QC', 'Cont-4QC'], 'a': 'Ignore all the rest', 'b': 12}),
-        (0.1, False, 0.0, {'subconverters': ['Cont-1QC', 'Cont-4QC']}),
+        (1, True, 0.1, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC'], 'a': 'Ignore all the rest', 'b': 12}),
+        (0.1, False, 0.0, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
     ])
     def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
         super().test_initialization(tau, dead_time, interlocking_time, kwargs)
         conv = self.class_to_test(tau=tau, dead_time=dead_time, interlocking_time=interlocking_time, **kwargs)
         assert np.all(
             conv.action_space.low == np.concatenate([subconv.action_space.low for subconv in conv._subconverters])
-        )
+        ), "Action space lower boundaries in the multi converter do not fit the subconverters."
         assert np.all(
             conv.action_space.high == np.concatenate([subconv.action_space.high for subconv in conv._subconverters])
-        )
+        ), "Action space upper boundaries in the multi converter do not fit the subconverters."
+        assert np.all(
+            conv.subsignal_voltage_space_dims ==
+            np.array([(np.squeeze(subconv.voltages.shape) or 1) for subconv in conv._subconverters])
+        ), "Voltage space dims in the multi converter do not fit the subconverters."
+        assert np.all(
+            conv.subsignal_current_space_dims ==
+            np.array([(np.squeeze(subconv.currents.shape) or 1) for subconv in conv._subconverters])
+        ), "Current space dims in the multi converter do not fit the subconverters."
         for sc in conv._subconverters:
             assert sc._interlocking_time == interlocking_time
             assert sc._dead_time == dead_time
@@ -1088,31 +1128,37 @@ class TestContDoubleConverter(TestContDynamicallyAveragedConverter):
 
     def test_reset(self, converter):
         u_in = converter.reset()
-        assert u_in == [0.0] * len(converter._subconverters)
+        assert u_in == [0.0] * converter.voltages.shape[0]
         assert np.all([subconv.reset_counter == 1 for subconv in converter._subconverters])
 
     def test_action_clipping(self, converter):
         # Done by the subconverters
         pass
 
-    @pytest.mark.parametrize('action', [[0, 1], [0, 0], [-1, 0], [-1, 1]])
+    @pytest.mark.parametrize('action', [[0, 0, 0, 0, 0], [0, 0, 1, 1, 1], [-1, 1, -1, 1, -1], [1, 1, 1, 1, 1], []])
     def test_set_action(self, monkeypatch, converter, action):
         t = np.random.randint(10) * converter._tau
         converter.set_action(action, t)
         sc0 = converter._subconverters[0]
         sc1 = converter._subconverters[1]
-        assert np.all(np.concatenate((sc0.action, sc1.action)) == action)
+        sc2 = converter._subconverters[2]
+        assert np.all(np.concatenate((sc0.action, sc1.action, sc2.action)) == action)
         assert sc0.action_set_time == t
         assert sc1.action_set_time == t
 
-    @pytest.mark.parametrize('i_out', [[-2, 1], [-0.5, 2], [0, 1], [0.5, -1], [2, 1]])
+    @pytest.mark.parametrize('i_out', [[-2, 2, 0, -1, 1], [-0.5, 5, -7, 0, 2], [0, 1, 3, -0.7, -4],
+                                       [], [2, 1, -2], [2, 9, 7, -4, 9, 41, 17]])
     def test_convert(self, monkeypatch, converter, i_out):
         t = np.random.rand()
-        converter.set_action([0.2, 0.3], 0)
+        action_space_size = [1, 3, 1]
+        converter.set_action([0.2, 0.4, 0.5, -0.8, 0.3], 0)
         u = converter.convert(i_out, t)
         sub_u = []
-        for i, subconverter in enumerate(converter._subconverters):
-            assert subconverter.i_out == [i_out[i]]
+        start_idx = 0
+        for subconverter, subaction_space_size in zip(converter._subconverters, action_space_size):
+            end_idx = start_idx + subaction_space_size
+            assert subconverter.i_out == i_out[start_idx:end_idx]
+            start_idx = end_idx
             assert subconverter.t == t
             sub_u += subconverter.action
         assert u == sub_u

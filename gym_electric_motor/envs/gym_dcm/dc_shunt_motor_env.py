@@ -29,7 +29,7 @@ class DiscDcShuntMotorEnvironment(DcShuntMotorEnvironment):
         Environment to simulate a discretely controlled DC Shunt Motor.
 
     Key:
-        `emotor-dc-shunt-disc-v1`
+        `DcShuntDisc-v1`
 
     Default Modules:
 
@@ -86,7 +86,7 @@ class ContDcShuntMotorEnvironment(DcShuntMotorEnvironment):
         Environment to simulate a continuously controlled DC Shunt Motor.
 
     Key:
-        `emotor-dc-shunt-cont-v1`
+        `DcShuntCont-v1`
 
     Default Modules:
 

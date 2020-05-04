@@ -307,34 +307,32 @@ class ElectricMotorVisualization:
 
 class ReferenceGenerator:
     """
-    The abstract base class for reference generators in the gym electric motor environments.
+    The abstract base class for reference generators in gym electric motor environments.
 
     reference_space:
-        Space from the OpenAI Gym Toolbox to define the space of the reference observations.
+        Space of reference observations as defined in the OpenAI Gym Toolbox.
 
     The reference generator is called twice per step.
 
     Call of get_reference():
-        Once, to get the reference array. The reference array has got the same shape as the state array and contains
-        the current reference values for referenced state variables and a default value (e.g zero) at all other entries.
-        This reference array is used to calculate the rewards.
+        Returns the reference array which has the same shape as the state array and contains
+        values for currently referenced state variables and a default value (e.g zero) for non-referenced variables.
+        This reference array is used to calculate rewards.
 
         Example:
             ``reference_array=np.array([0.8, 0.0, 0.0, 0.0])`` \n
             ``state_variables=['omega', 'torque', 'i', 'u', 'u_sup']`` \n
-            This would be the corresponding reference array for an environment with the upper state array with an omega
-            reference.
+            Here, the state consists of five quantities but only ``'omega'`` is referenced during control.
 
     Call of get_reference_observation():
-        Another time to get the reference observation. The reference observation needs to be in the defined reference
-        space. For example, it can contain future reference values of the next n steps (of the referenced states only).
-        It can have in general any shape and content. The returned object of this method is the reference that is
-        shown to the agent.
+        Returns the reference observation, which is shown to the agent.
+        Any shape and content is generally valid, however, values must be within the declared reference space.        
+        For example, the reference observation may contain future reference values of the next ``n`` steps.
 
         Example:
             ``reference_observation = np.array([0.8, 0.6, 0.4])`` \n
-            This array could model a reference observation for an omega controlled environment that shows the agent not
-            only the reference for the next time step t+1 but also t+3 and t+3.
+            This reference observation may be valid for an omega-controlled environment that shows the agent not
+            only the reference for the next time step omega_(t+1)=0.8 but also omega_(t+2)=0.6 and omega_(t+3)=0.4.
 
     """
 
@@ -399,7 +397,7 @@ class ReferenceGenerator:
             initial_reference(ndarray(float)): If not None: A desired initial reference array.
 
         Returns:
-            reference_array(ndarray(float)): The current reference array of time step 0.
+            reference_array(ndarray(float)): The reference array at time step 0.
 
             reference_observation(value in reference_space): The reference observation for the next time step. \\
 
@@ -410,14 +408,14 @@ class ReferenceGenerator:
 
     def close(self):
         """
-        Called by the environment, when the environment is deleted to close files, store logs...
+        Called by the environment, when the environment is deleted to close files, store logs, etc.
         """
         pass
 
 
 class RewardFunction:
     """
-    The abstract base class for reward functions in the gym electric motor environments.
+    The abstract base class for reward functions in gym electric motor environments.
 
     The reward function is called once per step and returns reward for the current time step.
     Furthermore, the reward function includes the limit observer. If limits have been violated and the episode ended
@@ -490,8 +488,7 @@ class RewardFunction:
 
     def reward(self, state, reference, action=None):
         """
-        Reward calculation. If limits have been violated the limit violation reward will be returned. Otherwise,
-        the standard reward will be returned.
+        Reward calculation. If limits have been violated the reward is calculated with a separate function.
 
         Args:
             state(ndarray(float)): Environments state array.
