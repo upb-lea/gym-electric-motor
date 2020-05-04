@@ -144,6 +144,24 @@ class ElectricMotor:
         """
         raise NotImplementedError
 
+    def _update_limits(self, limits_d={}):
+        """Replace missing limits and nominal values with physical maximums.
+
+        Args:
+            limits_d(dict): Mapping: quantitity to its limit if not specified
+        """
+
+        # omega is replaced the same for all motor types
+        limits_d.update(dict(omega=self._default_limits['omega']))
+
+        for q, lim in limits_d.items():
+            if self._limits.get(q, 0) == 0:
+                self._limits[q] = lim
+
+        for entry in self._limits.keys():
+            if self._nominal_values.get(entry, 0) == 0:
+                self._nominal_values[entry] = self._limits[entry]
+
 
 class DcMotor(ElectricMotor):
     """
@@ -241,36 +259,6 @@ class DcMotor(ElectricMotor):
             u_in[0],
             u_in[1],
         ]))
-
-    def _update_limits(self):
-        """
-        Calculate for all the missing maximal and nominal values the physical maximal possible values.
-        """
-        if self._limits.get('u_a', 0) == 0:
-            self._limits['u_a'] = self._default_limits['u']
-        if self._limits.get('u_e', 0) == 0:
-            self._limits['u_e'] = self._default_limits['u']
-        if self._limits.get('i_a', 0) == 0.0:
-            self._limits['i_a'] = self._limits.get('i', None) or self._limits['u_a'] / self._motor_parameter['r_a']
-        if self._nominal_values.get('i_a', 0) == 0:
-            self._nominal_values['i_a'] = self._limits['i_a']
-        if self._limits.get('i_e', 0) == 0.0:
-            self._limits['i_e'] = self._limits.get('i', None) or self._limits['u_e'] / self.motor_parameter['r_e']
-        if self._nominal_values.get('i_e', 0) == 0:
-            self._nominal_values['i_e'] = self._limits['i_e']
-        if self._limits.get('torque', 0) == 0.0:
-            motor_limit_state = [self._limits[state] for state in self.CURRENTS]
-            self._limits['torque'] = self.torque(motor_limit_state)
-        if self._nominal_values.get('torque', 0) == 0:
-            self._nominal_values['torque'] = self._limits['torque']
-        if self._limits.get('omega', 0) == 0.0:
-            self._limits['omega'] = self._default_limits['omega']
-        if self._nominal_values.get('omega', 0) == 0:
-            self._nominal_values['omega'] = self._limits['omega']
-
-        for entry in self._limits.keys():
-            if self._nominal_values.get(entry, 0) == 0:
-                self._nominal_values[entry] = self._limits[entry]
 
     def get_state_space(self, input_currents, input_voltages):
         """
@@ -401,32 +389,20 @@ class DcShuntMotor(DcMotor):
         return low, high
 
     def _update_limits(self):
-        """
-        Calculate for all the missing maximal and nominal values the physical maximal possible values.
-        """
-        if self._limits.get('u', 0) == 0:
-            self._limits['u'] = self._default_limits['u']
-        if self._limits.get('i_a', 0) == 0.0:
-            self._limits['i_a'] = self._limits.get('i', None) or self._limits['u_a'] / self._motor_parameter['r_a']
-        if self._nominal_values.get('i_a', 0) == 0:
-            self._nominal_values['i_a'] = self._limits['i_a']
-        if self._limits.get('i_e', 0) == 0.0:
-            self._limits['i_e'] = self._limits.get('i', None) or self._limits['u_e'] / self.motor_parameter['r_e']
-        if self._nominal_values.get('i_e', 0) == 0:
-            self._nominal_values['i_e'] = self._limits['i_e']
-        if self._limits.get('torque', 0) == 0.0:
-            motor_limit_state = [self._limits[state] for state in self.CURRENTS]
-            self._limits['torque'] = self.torque(motor_limit_state)
-        if self._nominal_values.get('torque', 0) == 0:
-            self._nominal_values['torque'] = self._limits['torque']
-        if self._limits.get('omega', 0) == 0.0:
-            self._limits['omega'] = self._default_limits['omega']
-        if self._nominal_values.get('omega', 0) == 0:
-            self._nominal_values['omega'] = self._limits['omega']
+        # Docstring of superclass
 
-        for entry in self._limits.keys():
-            if self._nominal_values.get(entry, 0) == 0:
-                self._nominal_values[entry] = self._limits[entry]
+        limit_agenda = \
+            {'u': self._default_limits['u'],
+             'i_a': self._limits.get('i', None) or
+                    self._limits['u'] / self._motor_parameter['r_a'],
+             'i_e': self._limits.get('i', None) or
+                    self._limits['u'] / self.motor_parameter['r_e'],
+             'torque': self.torque([self._limits[state] for state
+                                    in self.CURRENTS]),
+             'omega': self._default_limits['omega'],
+             }
+
+        super()._update_limits(limit_agenda)
 
 
 class DcSeriesMotor(DcMotor):
@@ -507,6 +483,14 @@ class DcSeriesMotor(DcMotor):
 
     def _update_limits(self):
         # Docstring of superclass
+
+        limits_agenda = {
+            'u': self._default_limits['u'],
+            'i': self._limits['u'] / (self._motor_parameter['r_a'] +
+                                      self._motor_parameter['r_e']),
+            'torque': self.torque(motor_limit_state)
+        }
+
         if self._limits.get('u', 0) == 0:
             self._limits['u'] = self._default_limits['u']
         if self._limits.get('i', 0) == 0.0:
@@ -675,6 +659,22 @@ class DcExternallyExcitedMotor(DcMotor):
             np.array([-mp['l_e_prime'] * state[self.I_E_IDX] / mp['l_a'], 0]),
             np.array([mp['l_e_prime'] * state[self.I_E_IDX], mp['l_e_prime'] * state[self.I_A_IDX]])
         )
+
+    def _update_limits(self):
+        # Docstring of superclass
+
+        limit_agenda = \
+            {'u_a': self._default_limits['u'],
+             'u_e': self._default_limits['u'],
+             'i_a': self._limits.get('i', None) or
+                    self._limits['u_a'] / self._motor_parameter['r_a'],
+             'i_e': self._limits.get('i', None) or
+                    self._limits['u_e'] / self.motor_parameter['r_e'],
+             'torque': self.torque([self._limits[state] for state
+                                    in self.CURRENTS]),
+             'omega': self._default_limits['omega'],
+             }
+        super()._update_limits(limit_agenda)
 
 
 class SynchronousMotor(ElectricMotor):
