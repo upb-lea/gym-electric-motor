@@ -646,9 +646,9 @@ class DcExternallyExcitedMotor(DcMotor):
             {'u_a': self._default_limits['u'],
              'u_e': self._default_limits['u'],
              'i_a': self._limits.get('i', None) or
-                    self._limits['u_a'] / self._motor_parameter['r_a'],
+                    self._limits['u'] / self._motor_parameter['r_a'],
              'i_e': self._limits.get('i', None) or
-                    self._limits['u_e'] / self.motor_parameter['r_e'],
+                    self._limits['u'] / self.motor_parameter['r_e'],
              }
         super()._update_limits(limit_agenda)
 
@@ -773,9 +773,8 @@ class ThreePhaseMotor(ElectricMotor):
 
     def _update_limits(self, limits_d, nominal_d={}):
         # Docstring of superclass
-
-        limits_d['torque'] = self._torque_limit()
         super()._update_limits(limits_d, nominal_d)
+        super()._update_limits(dict(torque=self._torque_limit()))
 
 
 class SynchronousMotor(ThreePhaseMotor):
@@ -935,8 +934,7 @@ class SynchronousMotor(ThreePhaseMotor):
             limits_agenda[i] = self._limits.get('i', None) or \
                                self._limits[u] / self._motor_parameter['r_s']
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
-                                self._nominal_values[u] / self._motor_parameter[
-                                    'r_s']
+                                self._nominal_values[u] / self._motor_parameter['r_s']
 
         super()._update_limits(limits_agenda, nominal_agenda)
 
@@ -1544,6 +1542,24 @@ class SquirrelCageInductionMotor(InductionMotor):
 
         return super().electrical_ode(state, u_sr_aphabeta, omega, *args)
 
+    def _update_limits(self):
+        # Docstring of superclass
+
+        voltage_limit = 0.5 * self._limits['u']
+        voltage_nominal = 0.5 * self._nominal_values['u']
+
+        limits_agenda = {}
+        nominal_agenda = {}
+        for u, i in zip(self.VOLTAGES, self.CURRENTS):
+            limits_agenda[u] = voltage_limit
+            nominal_agenda[u] = voltage_nominal
+            limits_agenda[i] = self._limits.get('i', None) or \
+                               self._limits[u] / self._motor_parameter['r_s']
+            nominal_agenda[i] = self._nominal_values.get('i', None) or \
+                                self._nominal_values[u] / self._motor_parameter['r_s']
+
+        super()._update_limits(limits_agenda, nominal_agenda)
+
 
 class DoublyFedInductionMotor(InductionMotor):
     """
@@ -1636,9 +1652,7 @@ class DoublyFedInductionMotor(InductionMotor):
             the general limits/nominal values (e.g. i)
         """
     ROTOR_VOLTAGES = ['u_ralpha', 'u_rbeta']
-
-    VOLTAGES = ['u_ra', 'u_rb', 'u_rc', 'u_ralpha', 'u_rbeta', 'u_rd', 'u_rq']
-    CURRENTS = ['i_ra', 'i_rb', 'i_rc', 'i_ralpha', 'i_rbeta', 'i_rd', 'i_rq']
+    ROTOR_CURRENTS = ['i_ralpha', 'i_rbeta']
 
     _default_motor_parameter = {
         'p': 2,
@@ -1653,3 +1667,25 @@ class DoublyFedInductionMotor(InductionMotor):
     _default_limits = dict(omega=160, torque=0.0, i=1900, epsilon=math.pi, u=1200)
     _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900, epsilon=math.pi, u=1200)
 
+    def __init__(self, **kwargs):
+        self.VOLTAGES += self.ROTOR_VOLTAGES
+        self.CURRENTS += self.ROTOR_CURRENTS
+        super().__init(**kwargs)
+
+    def _update_limits(self):
+        # Docstring of superclass
+
+        voltage_limit = 0.5 * self._limits['u']
+        voltage_nominal = 0.5 * self._nominal_values['u']
+
+        limits_agenda = {}
+        nominal_agenda = {}
+        for u, i in zip(self.VOLTAGES, self.CURRENTS):
+            limits_agenda[u] = voltage_limit
+            nominal_agenda[u] = voltage_nominal
+            limits_agenda[i] = self._limits.get('i', None) or \
+                               self._limits[u] / self._motor_parameter['r_s']
+            nominal_agenda[i] = self._nominal_values.get('i', None) or \
+                                self._nominal_values[u] / self._motor_parameter['r_s']
+
+        super()._update_limits(limits_agenda, nominal_agenda)
