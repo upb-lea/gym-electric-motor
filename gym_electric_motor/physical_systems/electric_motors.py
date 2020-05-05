@@ -569,6 +569,9 @@ class DcPermanentlyExcitedMotor(DcMotor):
     _default_nominal_values = dict(omega=22, torque=0.0, i=16, u=400)
     _default_limits = dict(omega=50, torque=0.0, i=25, u=400)
 
+    # placeholder for omega, currents and u_in
+    _ode_placeholder = np.zeros(2 + len(CURRENTS_IDX), dtype=np.float64)
+
     def torque(self, state):
         # Docstring of superclass
         return self._motor_parameter['psi_e'] * state[self.I_IDX]
@@ -587,7 +590,9 @@ class DcPermanentlyExcitedMotor(DcMotor):
 
     def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
-        return np.matmul(self._model_constants, np.array([omega, state[self.I_IDX], u_in[0]]))
+        self._ode_placeholder[:] = [omega] + np.atleast_1d(state[self.I_IDX]).tolist()\
+                                   + [u_in[0]]
+        return np.matmul(self._model_constants, self._ode_placeholder)
 
     def electrical_jacobian(self, state, u_in, omega, *_):
         mp = self._motor_parameter
@@ -1322,24 +1327,6 @@ class InductionMotor(ThreePhaseMotor):
         # Docstring of superclass
         return np.zeros(len(self.CURRENTS) + len(self.FLUXES) + 1)
 
-    def _update_limits(self):
-        # Docstring of superclass
-
-        voltage_limit = 0.5 * self._limits['u']
-        voltage_nominal = 0.5 * self._nominal_values['u']
-
-        limits_agenda = {}
-        nominal_agenda = {}
-        for u, i in zip(self.VOLTAGES, self.CURRENTS):
-            limits_agenda[u] = voltage_limit
-            nominal_agenda[u] = voltage_nominal
-            limits_agenda[i] = self._limits.get('i', None) or \
-                               self._limits[u] / self._motor_parameter['r_r']
-            nominal_agenda[i] = self._nominal_values.get('i', None) or \
-                                self._nominal_values[u] / self._motor_parameter['r_r']
-
-        super()._update_limits(limits_agenda, nominal_agenda)
-
     def electrical_ode(self, state, u_sr_alphabeta, omega, *args):
         """
         The differential equation of the Induction Motor.
@@ -1684,8 +1671,9 @@ class DoublyFedInductionMotor(InductionMotor):
             limits_agenda[u] = voltage_limit
             nominal_agenda[u] = voltage_nominal
             limits_agenda[i] = self._limits.get('i', None) or \
-                               self._limits[u] / self._motor_parameter['r_s']
+                               self._limits[u] / self._motor_parameter['r_r']
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
-                                self._nominal_values[u] / self._motor_parameter['r_s']
+                                self._nominal_values[u] / \
+                                self._motor_parameter['r_r']
 
         super()._update_limits(limits_agenda, nominal_agenda)

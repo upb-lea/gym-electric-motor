@@ -109,6 +109,10 @@ class SCMLSystem(PhysicalSystem):
         self._set_limits()
         self._set_nominal_state()
         self._noise_generator.set_signal_power_level(self._nominal_state)
+        self.system_state = np.zeros_like(state_names, dtype=float)
+        self._system_eq_placeholder = None
+        self._motor_deriv_size = None
+        self._load_deriv_size = None
 
     def _set_limits(self):
         """
@@ -189,14 +193,16 @@ class SCMLSystem(PhysicalSystem):
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
         noise = self._noise_generator.noise()
-        system_state = np.zeros_like(self.state_names, dtype=float)
-        motor_state = ode_state[len(self.mechanical_load.state_names):]
-        system_state[:len(self._mechanical_load.state_names)] = ode_state[:len(self._mechanical_load.state_names)]
-        system_state[self.TORQUE_IDX] = torque
-        system_state[self.CURRENTS_IDX] = motor_state[self._electrical_motor.CURRENTS_IDX]
-        system_state[self.VOLTAGES_IDX] = u_in
-        system_state[self.U_SUP_IDX] = u_sup
-        return (system_state + noise) / self._limits
+
+        n_mech_states = len(self.mechanical_load.state_names)
+        motor_state = ode_state[n_mech_states:]
+        self.system_state[:n_mech_states] = ode_state[:n_mech_states]
+        self.system_state[self.TORQUE_IDX] = torque
+        self.system_state[self.CURRENTS_IDX] = \
+            motor_state[self._electrical_motor.CURRENTS_IDX]
+        self.system_state[self.VOLTAGES_IDX] = u_in
+        self.system_state[self.U_SUP_IDX] = u_sup
+        return (self.system_state + noise) / self._limits
 
     def _system_equation(self, t, state, u_in, **__):
         """
@@ -212,12 +218,30 @@ class SCMLSystem(PhysicalSystem):
         Returns:
             ndarray(float): The derivatives of the ODE-State. Based on this, the Ode Solver calculates the next state.
         """
-        motor_derivative = self._electrical_motor.electrical_ode(
-            state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
-        )
-        torque = self._electrical_motor.torque(state[self._motor_ode_idx])
-        load_derivative = self._mechanical_load.mechanical_ode(t, state[self._load_ode_idx], torque)
-        return np.concatenate((load_derivative, motor_derivative))
+        if self._system_eq_placeholder is None:
+
+            motor_derivative = self._electrical_motor.electrical_ode(
+                state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+            )
+            torque = self._electrical_motor.torque(state[self._motor_ode_idx])
+            load_derivative = self._mechanical_load.mechanical_ode(t, state[
+                self._load_ode_idx], torque)
+            self._system_eq_placeholder = np.concatenate((load_derivative,
+                                                          motor_derivative))
+            self._motor_deriv_size = motor_derivative.size
+            self._load_deriv_size = load_derivative.size
+        else:
+            self._system_eq_placeholder[:self._load_deriv_size] = \
+                self._mechanical_load.mechanical_ode(
+                    t, state[self._load_ode_idx],
+                    self._electrical_motor.torque(state[self._motor_ode_idx])
+                ).ravel()
+            self._system_eq_placeholder[self._load_deriv_size:] = \
+                self._electrical_motor.electrical_ode(
+                    state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+                ).ravel()
+
+        return self._system_eq_placeholder
 
     def _system_jacobian(self, t, state, u_in, **__):
         motor_jac, el_state_over_omega, torque_over_el_state = self._electrical_motor.electrical_jacobian(
