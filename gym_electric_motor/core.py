@@ -137,7 +137,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         Returns a list of state names of all states in the observation (called in state_filter) in the same order
         """
-        return self._physical_system.state_names[self.state_filter]
+        return [self._physical_system.state_names[s] for s in self.state_filter]
 
     @property
     def nominal_state(self):
@@ -178,9 +178,8 @@ class ElectricMotorEnvironment(gym.core.Env):
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
-        self.state_filter = []
-        for state_var in state_filter:
-            self.state_filter.append(np.where(np.array(self._physical_system.state_names) == state_var)[0][0])
+        self.state_filter = [self._physical_system.state_names.index(s)
+                             for s in state_filter]
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high)
@@ -436,10 +435,10 @@ class RewardFunction:
                 'voltages' with other states are possible. Choose None for not observing states.
         """
         self._physical_system = None
-        observed_states = observed_states or ()
-        if type(observed_states) is str:
+        observed_states = observed_states or []
+        if not isinstance(observed_states, list):
             observed_states = [observed_states]
-        self._observed_states = dict.fromkeys(observed_states, 1)
+        self._observed_states = observed_states
         self._reference_generator = None
         self._limits = None
 
@@ -464,27 +463,38 @@ class RewardFunction:
             physical_system(PhysicalSystem): The physical system of the environment
             reference_generator(ReferenceGenerator): The reference generator of the environment.
         """
-        self._physical_system = physical_system
-        if 'all' in self._observed_states.keys():  # key 'all' observes all states
-            self._observed_states = dict.fromkeys(physical_system.state_names, 1)
 
-        if 'currents' in self._observed_states.keys():  # key 'current' observes all currents
-            self._observed_states.pop('currents')
-            for state in physical_system.state_names:
-                if state[0:2] == 'i_':
-                    if state not in self._observed_states.keys():
-                        self._observed_states[state] = 1
+        observed_states = {}
+        allowed_observed_states = physical_system.state_names + \
+                                  ['all', 'currents', 'voltages']
+        assert all(s in allowed_observed_states for s
+                   in self._observed_states), \
+            f'Given states to observe {self._observed_states} are not within' \
+            f' allowed states {allowed_observed_states}'
 
-        if 'voltages' in self._observed_states.keys():  # key 'voltages' observes all voltages, also the supply voltage
-            self._observed_states.pop('voltages')
-            for state in physical_system.state_names:
-                if state[0:2] == 'u_':
-                    if state not in self._observed_states.keys():
-                        self._observed_states[state] = 1
+        for observed_state in self._observed_states:
+            if 'all' == observed_state:  # key 'all' observes all states
+                observed_states = dict.fromkeys(physical_system.state_names, 1)
+                break
+            elif 'currents' == observed_state:
+                observed_states.update(
+                    dict.fromkeys([k for k in physical_system.state_names
+                                   if k.startswith('i_') or
+                                   (k.startswith('i') and len(k) == 1)], 1))
+            elif 'voltages' == observed_state:
+                observed_states.update(
+                    dict.fromkeys([k for k in physical_system.state_names
+                                   if k.startswith('u_') or
+                                   (k.startswith('u') and len(k) == 1)], 1))
+            else:
+                observed_states[observed_state] = 1
 
-        self._observed_states = set_state_array(self._observed_states, physical_system.state_names).astype(bool)
         self._limits = physical_system.limits / abs(physical_system.limits)
+        self._physical_system = physical_system
         self._reference_generator = reference_generator
+        self._observed_states = set_state_array(observed_states,
+                                                physical_system.state_names)\
+                                               .astype(bool)
 
     def reward(self, state, reference, action=None):
         """
