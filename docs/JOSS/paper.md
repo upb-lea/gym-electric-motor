@@ -39,7 +39,7 @@ bibliography: Literature.bib
 
 The ``gym-electric-motor`` (``GEM``) library provides simulation environments for 
 electrical drive systems, and therefore allows to easily design and analyze drive control
-solutions in Python. Since ``GEM`` is strongly inspired by OpenAI's ``gym``, it 
+solutions in Python. Since ``GEM`` is strongly inspired by OpenAI's ``gym`` [@gym-whitepaper], it 
 is particulary well-equipped for (but not limited to) applications in the field of 
 reinforcement-learning-based control algorithms. The API allows to apply changes
 the motor parametrization to e.g. simulate a specific motor or configure
@@ -55,22 +55,22 @@ such engineering tasks. In the more recent past, however, commercial software li
 ``MATLAB`` has difficulties to stay on par with the expandability and flexibility offered 
 by open-source libraries that are available for more accessible programming languages like Python. 
 Moreover, the latest efforts concerning industrial application of reinforcement-learning control 
-algorithms heavily depend on Python packages like [``Keras``](Chollet2015) or [``Tensorflow``](tensorflow2015-whitepaper). 
+algorithms heavily depend on Python packages like ``Keras`` [@Chollet2015] or ``Tensorflow`` [@tensorflow2015-whitepaper]. 
 To allow easy access to a drive simulation environment, the ``GEM`` library has been developed.
 
-# Package Architeture
+# Package Architecture
 
 The ``GEM`` library models an electric drive system by it's four main components: voltage supply, power converter, 
 electric motor and mechanical load. The general structure of such a system is depicted in Fig. \autoref{fig:SCML_system}. 
 
-![Structure of an electric drive system\label{fig:SCML_system}](SCML_Setting.svg)
+![Structure of an electric drive system\label{fig:SCML_system}](../plots/SCML_Setting.svg)
 
 The __voltage supply__ provides for the necessary power that is used by the motor. 
 It is modeled by a fixed supply voltage $u_{sup}$, which allows to monitor the supply current into the converter.
-A __converter__ is necessary to supply the motor with electric power of proper frequency and magnitude, 
-which may also include the conversion of the direct current from the supply to an alternating 
-current to be fed to the motor. Typical drive converters have a switching behavior: there is a finite set of
-different voltages that can be applied to the motor. 
+A __converter__ is needed to supply the motor with electric power of proper frequency and magnitude, 
+which may also include the conversion of the direct current from the supply to alternating 
+current. Typical drive converters have switching behavior: there is a finite set of
+different voltages that can be applied to the motor, depending on which switches are open and which are closed. 
 Besides this physically accurate view, a popular modelling approach for switched mode converters
 is based on dynamic averaging of the applied voltage $u_{in}$, making the voltage a continuous variable.
 Both of these modelling approaches are implemented and can be chosen freely,
@@ -84,53 +84,25 @@ coordinate frame. Finally, the torque $T$ resulting from the motor is applied to
 It is characterized by a moment of inertia and by a load torque $T_L$ that is directed against the motor torque. 
 Load torque behavior can be parametrized with respect to the angular velocity $\omega_{me}$ in the form of constant,
 linear and quadratic dependency (and arbitrary combinations thereof). Speed changes that result from the difference 
-of motor and load torque are modelled with another ODE which completely covers the mechanical system behavior.
+between motor and load torque are modelled with another ODE which completely covers the mechanical system behavior.
+Alternatively, the motor speed can be set to a fixed value, which can be useful for the investigation of control
+algorithms concerning generatoric operation. 
 
 # Features
 
-# Template Paper
-
-# Mathematics
-
-Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
-
-Double dollars make self-standing equations:
-
-$$\Theta(x) = \left\{\begin{array}{l}
-0\textrm{ if } x < 0\cr
-1\textrm{ else}
-\end{array}\right.$$
-
-You can also use plain \LaTeX for equations
-\begin{equation}\label{eq:fourier}
-\hat f(\omega) = \int_{-\infty}^{\infty} f(x) e^{i\omega x} dx
-\end{equation}
-and refer to \autoref{eq:fourier} from text.
-
-# Citations
-
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
-
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below for @fidgit.
-
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
-
-# Figures
-
-Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
-and referenced from text using \autoref{fig:example}.
-
-Fenced code blocks are rendered with syntax highlighting:
-```python
-for n in range(10):
-    yield f(n)
-```	
+A large number of different motor systems is already implemented. These include DC drives as well as
+synchronous and induction three-phase drives. A complete list can be viewed in the ``GEM`` documentation [@GEM-docu].
+The corresponding power converters allow to control the motor either directly via applied voltage (continuous-control-set)
+or by defining the converter's switching state (finite-control-set). Specifically for the use within reinforcement-learning
+applications, the toolbox comes with a built-in reference generator, which can be used to create trajectories of 
+reference operational points (e.g. for the motor current, velocity or torque). These generated references are furthermore
+used to calculate a reward. In the domain of reinforcement-learning, reward is the optimization variable that is to be 
+maximized. For the control system scenario, reward is usually defined by the negative distance between the momentary 
+operation point and the desired operation point, 
+such that expedient controller behavior can be monitored easily. The metric by which
+the distance of two operational points is measured, can be adjusted to the users desire. The reward mechanism
+also allows to take physical limitations of the drive system into account, e.g. in the way of a notably low reward
+if limit values are surpassed. Optionally, the environment can be setup such that a reset of the system
+is necessary in case of a limit violation.
 
 # References
