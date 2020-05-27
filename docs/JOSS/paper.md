@@ -15,15 +15,18 @@ authors:
     affiliation: 1
     
   - name: Wilhelm Kirchgässner
+    orcid: 0000-0001-9490-1843
     affiliation: 1
     
   - name: Maximilian Schenke
+    orcid: 0000-0001-5427-9527
     affiliation: 1
     
   - name: Arne Traue
     affiliation: 1
     
   - name: Oliver Wallscheid
+    orcid: 0000-0001-9362-8777
     affiliation: 1
     
 affiliations:

@@ -933,7 +933,7 @@ class SynchronousMotor(ThreePhaseMotor):
 
         limits_agenda = {}
         nominal_agenda = {}
-        for u, i in zip(self.VOLTAGES, self.CURRENTS):
+        for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
             limits_agenda[u] = voltage_limit
             nominal_agenda[u] = voltage_nominal
             limits_agenda[i] = self._limits.get('i', None) or \
@@ -1026,8 +1026,8 @@ class SynchronousReluctanceMotor(SynchronousMotor):
     }
     _default_limits = {'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi, 'u': 600}
 
-    VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_alpha', 'u_beta', 'u_sd', 'u_sq']
-    CURRENTS = ['i_a', 'i_b', 'i_c', 'i_alpha', 'i_beta', 'i_sd', 'i_sq']
+    IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
+    IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']
 
     def _update_model(self):
         # Docstring of superclass
@@ -1157,6 +1157,9 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     HAS_JACOBIAN = True
     _default_limits = dict(omega=80, torque=0.0, i=20, epsilon=math.pi, u=600)
     _default_nominal_values = dict(omega=75, torque=0.0, i=12, epsilon=math.pi, u=600)
+
+    IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
+    IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']
 
     def _update_model(self):
         # Docstring of superclass
@@ -1292,8 +1295,8 @@ class InductionMotor(ThreePhaseMotor):
     FLUXES = ['psi_ralpha', 'psi_rbeta']
     STATOR_VOLTAGES = ['u_salpha', 'u_sbeta']
 
-    VOLTAGES = ['u_sa', 'u_sb', 'u_sc', 'u_salpha', 'u_sbeta', 'u_sd', 'u_sq']
-    CURRENTS = ['i_sa', 'i_sb', 'i_sc', 'i_salpha', 'i_sbeta', 'i_sd', 'i_sq']
+    IO_VOLTAGES = ['u_sa', 'u_sb', 'u_sc', 'u_salpha', 'u_sbeta', 'u_sd', 'u_sq']
+    IO_CURRENTS = ['i_sa', 'i_sb', 'i_sc', 'i_salpha', 'i_sbeta', 'i_sd', 'i_sq']
 
     HAS_JACOBIAN = True
     _default_motor_parameter = {
@@ -1537,7 +1540,7 @@ class SquirrelCageInductionMotor(InductionMotor):
 
         limits_agenda = {}
         nominal_agenda = {}
-        for u, i in zip(self.VOLTAGES, self.CURRENTS):
+        for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
             limits_agenda[u] = voltage_limit
             nominal_agenda[u] = voltage_nominal
             limits_agenda[i] = self._limits.get('i', None) or \
@@ -1638,8 +1641,12 @@ class DoublyFedInductionMotor(InductionMotor):
             Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
             the general limits/nominal values (e.g. i)
         """
+
     ROTOR_VOLTAGES = ['u_ralpha', 'u_rbeta']
     ROTOR_CURRENTS = ['i_ralpha', 'i_rbeta']
+
+    IO_ROTOR_VOLTAGES = ['i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd']
+    IO_ROTOR_CURRENTS = ['u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd']
 
     _default_motor_parameter = {
         'p': 2,
@@ -1655,9 +1662,9 @@ class DoublyFedInductionMotor(InductionMotor):
     _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900, epsilon=math.pi, u=1200)
 
     def __init__(self, **kwargs):
-        self.VOLTAGES += self.ROTOR_VOLTAGES
-        self.CURRENTS += self.ROTOR_CURRENTS
-        super().__init(**kwargs)
+        self.IO_VOLTAGES += self.IO_ROTOR_VOLTAGES
+        self.IO_CURRENTS += self.IO_ROTOR_CURRENTS
+        super().__init__(**kwargs)
 
     def _update_limits(self):
         # Docstring of superclass
@@ -1667,7 +1674,7 @@ class DoublyFedInductionMotor(InductionMotor):
 
         limits_agenda = {}
         nominal_agenda = {}
-        for u, i in zip(self.VOLTAGES, self.CURRENTS):
+        for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
             limits_agenda[u] = voltage_limit
             nominal_agenda[u] = voltage_nominal
             limits_agenda[i] = self._limits.get('i', None) or \
