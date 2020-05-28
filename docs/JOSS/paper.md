@@ -66,7 +66,7 @@ To allow easy access to a drive simulation environment, the ``GEM`` library has 
 The ``GEM`` library models an electric drive system by it's four main components: voltage supply, power converter, 
 electric motor and mechanical load. The general structure of such a system is depicted in Fig. \autoref{fig:SCML_system}. 
 
-![Structure of an electric drive system\label{fig:SCML_system}](../plots/SCML_Setting.svg)
+![Structure of an electric drive system\label{fig:SCML_system}](../plots/SCML_Setting.eps)
 
 The __voltage supply__ provides for the necessary power that is used by the motor. 
 It is modeled by a fixed supply voltage $u_{sup}$, which allows to monitor the supply current into the converter.
@@ -116,7 +116,7 @@ concerning angular velocity $\omega_\mathrm{me}$, torque $T$, voltage $u_{a,b,c}
 Here, the voltage is depicted within the physical $abc$-frame while the current is viewed within the 
 simplified $dq$-frame. 
 
-![Simulation of a squirrel cage induction motor connected to a rigid network at $50 \, \mathrm{Hz}$\label{fig:SCIM_example}](../plots/SCIM_Example.svg)
+![Simulation of a squirrel cage induction motor connected to a rigid network at $50 \, \mathrm{Hz}$\label{fig:SCIM_example}](../plots/SCIM_Example.eps)
 
 Exemplary code snippets that demonstrate the usage of ``GEM`` are included 
 within the projects repository:
