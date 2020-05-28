@@ -39,12 +39,10 @@ bibliography: Literature.bib
 # Summary
 
 The ``gym-electric-motor`` (``GEM``) library provides simulation environments for 
-electrical drive systems, and therefore allows to easily design and analyze drive control
+electrical drive systems and, therefore, allows to easily design and analyze drive control
 solutions in Python. Since ``GEM`` is strongly inspired by OpenAI's ``gym`` [@gym-whitepaper], it 
 is particulary well-equipped for (but not limited to) applications in the field of 
-reinforcement-learning-based control algorithms. The API allows to apply changes to
-the motor parametrization to e.g. simulate a specific motor or configure
-the desired load behavior.
+reinforcement-learning-based control algorithms. In addition, the interface allows to plugin-in any expert-driven control approach, such as model predictive control, to be tested  and to perform benchmark comparisons. The GEM package includes a wide variety of motors, power electronic converters and mechanical load models that can be flexibly selected and parameterized via the API. A modular software code also allows additional system components to be included in the framework simulation.
 
 # Field of Application
 
@@ -57,7 +55,7 @@ such engineering tasks. In the more recent past, however, commercial software li
 by open-source libraries that are available for more accessible programming languages like Python. 
 Moreover, the latest efforts concerning industrial application of reinforcement-learning control 
 algorithms heavily depend on Python packages like ``Keras`` [@Chollet2015] or ``Tensorflow`` [@tensorflow2015-whitepaper]. 
-In order to allow easy access to a drive simulation environment, the ``GEM`` library has been developed.
+In order to allow easy access to an open-source drive simulation environment, the ``GEM`` library has been developed.
 
 # Package Architecture
 
@@ -102,7 +100,7 @@ operation point and the desired operation point, such that expedient controller 
 the distance of two operational points is measured, can be adjusted to the users desire. The reward mechanism
 also allows to take physical limitations of the drive system into account, e.g. in the way of a notably low reward
 if limit values are surpassed. Optionally, the environment can be setup such that a reset of the system
-is induced in case of a limit violation.
+is induced in case of a limit violation. In addition, built-in visualization and plotting routines allow to monitor the training process of reinforcement learning agents or the performance of expert-driven control approaches which are being tested.
 
 # Examples
 
