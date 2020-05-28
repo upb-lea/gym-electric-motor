@@ -1,5 +1,5 @@
 ---
-title: 'Gym-electric-motor (GEM): A Python library for the simulation of electric motors'
+title: 'gym-electric-motor (GEM): A Python toolbox for the simulation of electric motors'
 tags:
   - Python
   - electric drive control
@@ -81,7 +81,7 @@ allowing usage of control algorithms that operate on a finite set of switching s
 The __electric motor__ is the centerpiece of every drive system. It is modelled by a system of ordinary differential 
 equations (ODEs) which represent the electrical behavior of the motor itself. Particularly the domain of three-phase drives
 makes use of coordinate transformations to view these ODEs in a more interpretable frame. In ``GEM``, both, 
-the physical ($rst$-) and the simplified ($dq$-)coordinates are available to be used as the frame of input 
+the physical ($abc$-) and the simplified ($dq$-)coordinates are available to be used as the frame of input 
 and output variables, allowing for easy and quick controller analysis and diagnose within the most convenient 
 coordinate frame. Finally, the torque $T$ resulting from the motor is applied to the __mechanical load__. 
 It is characterized by a moment of inertia and by a load torque $T_L$ that is directed against the motor torque. 
@@ -106,6 +106,23 @@ such that expedient controller behavior can be monitored easily. The metric by w
 the distance of two operational points is measured, can be adjusted to the users desire. The reward mechanism
 also allows to take physical limitations of the drive system into account, e.g. in the way of a notably low reward
 if limit values are surpassed. Optionally, the environment can be setup such that a reset of the system
-is necessary in case of a limit violation.
+is demanded in case of a limit violation.
+
+# Examples
+
+A minimal example of ``GEM's`` simulation capability is presented in Fig. \autoref{fig:SCIM_example}.
+The plot shows the start-up behavior of a squirrel cage induction motor connected to a rigid network
+concerning angular velocity $\omega_\mathrm{me}$, torque $T$, voltage $u_{a,b,c}$ and current $i_{d,q}$.
+Here, the voltage is depicted within the physical $abc$-frame while the current is viewed within the 
+simplified $dq$-frame. 
+
+![Simulation of a squirrel cage induction motor connected to a rigid network at $50 \, \mathrm{Hz}$\label{fig:SCIM_example}](../plots/SCIM_Example.svg)
+
+Exemplary code snippets that demonstrate the usage of ``GEM`` are included 
+within the projects repository:
+- [ddpg_pmsm_dq_current_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py): a reinforcement-learning control approach applied to the current control of a permanent magnet synchronous motor within the $dq$-frame 
+- [ddpg_series_omega_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py): a reinforcement-learning control approach applied to the speed control of a series motor
+- [dqn_series_current_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py): a reinforcement-learning control approach for finite-control-set voltage control of a series motor
+- [pi_series_omega_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py): a conventional control algorithm applied to the speed control of a series motor
 
 # References
