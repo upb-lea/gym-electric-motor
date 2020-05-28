@@ -1,5 +1,5 @@
 ---
-title: 'gym-electric-motor (GEM): A Python toolbox for the simulation of electric motors'
+title: 'gym-electric-motor (GEM): A Python toolbox for the simulation of electric drive systems'
 tags:
   - Python
   - electric drive control
