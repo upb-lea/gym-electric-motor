@@ -1,5 +1,6 @@
 from ..core import ElectricMotorVisualization
 import numpy as np
+
 class ConsolePrinter(ElectricMotorVisualization):
 
     _limits = None
@@ -20,14 +21,10 @@ class ConsolePrinter(ElectricMotorVisualization):
         self._cum_reward = 0
         self._violation = False
         np.set_printoptions(formatter={'float': '{:0>7.3f}'.format})
-        #np.set_printoptions(precision=2)
-        #np.set_printoptions(suppress=True)
             
     def reset(self, reference_trajectories=None, *_, **__):
         if self._print_freq == 'episode' and self._violation == False:
-            print('Termination because of external reset')
-            print('Total number of steps in this episode: ', self._num_steps)
-            print('Cumulated Reward of this episode: ', self._cum_reward)
+            print(f'External Reset. Number of steps: {self._num_steps: 08d} Cumulated Reward: {self._cum_reward:7.3f}')
         else:
             self._violation = False
         self._num_steps = 0
@@ -43,8 +40,6 @@ class ConsolePrinter(ElectricMotorVisualization):
         if self._print_freq == 'step':
             print(f'State {state * self._limits} Reference {reference * self._limits} Reward {reward:7.3f} Step {self._num_steps:08d} Cumulated Reward {self._cum_reward:7.3f}' , end='\r')
         elif self._print_freq == 'episode' and done:
-            print('Termination because of constraint violation')
-            print('Total number of steps in this episode: ', self._num_steps)
-            print('Cumulated Reward of this episode: ', self._cum_reward)
+            print(f'Constraint Violation! Number of steps: {self._num_steps: 08d} Cumulated Reward: {self._cum_reward:7.3f}')
             self._violation = True
             
