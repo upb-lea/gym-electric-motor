@@ -1,6 +1,5 @@
 from ..core import ElectricMotorVisualization
-
-
+import numpy as np
 class ConsolePrinter(ElectricMotorVisualization):
 
     _limits = None
@@ -16,23 +15,24 @@ class ConsolePrinter(ElectricMotorVisualization):
                     'episode': Printing after an episode has terminated
         """
         
-        #Assert a class variable to an integer depending on the 
         self._print_freq = print_freq
         self._num_steps = 0
         self._cum_reward = 0
         self._violation = False
+        np.set_printoptions(formatter={'float': '{:0>7.3f}'.format})
+        #np.set_printoptions(precision=2)
+        #np.set_printoptions(suppress=True)
             
-        #pass
-
     def reset(self, reference_trajectories=None, *_, **__):
         if self._print_freq == 'episode' and self._violation == False:
             print('Termination because of external reset')
             print('Total number of steps in this episode: ', self._num_steps)
             print('Cumulated Reward of this episode: ', self._cum_reward)
-            self._num_steps = 0
-            self._cum_reward = 0
         else:
             self._violation = False
+        self._num_steps = 0
+        self._cum_reward = 0
+
 
     def set_modules(self, physical_system, *_, **__):
         self._limits = physical_system.limits
@@ -41,17 +41,10 @@ class ConsolePrinter(ElectricMotorVisualization):
         self._num_steps += 1
         self._cum_reward += reward
         if self._print_freq == 'step':
-            print(
-                f'State {state * self._limits} \n'
-                f'Reference {reference * self._limits}\n'
-                f'Reward {reward}\n'
-                f'\n'
-            )
+            print(f'State {state * self._limits} Reference {reference * self._limits} Reward {reward:7.3f} Step {self._num_steps:08d} Cumulated Reward {self._cum_reward:7.3f}' , end='\r')
         elif self._print_freq == 'episode' and done:
             print('Termination because of constraint violation')
             print('Total number of steps in this episode: ', self._num_steps)
             print('Cumulated Reward of this episode: ', self._cum_reward)
             self._violation = True
-            self._num_steps = 0
-            self._cum_reward = 0
             
