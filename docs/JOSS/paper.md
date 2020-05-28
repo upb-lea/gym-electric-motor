@@ -32,9 +32,7 @@ authors:
 affiliations:
  - name: Department of Power Electronics and Electrical Drives, Paderborn University, Germany
    index: 1
- - name: Institution 2
-   index: 2
-date: 26. May 2020
+date: 28. May 2020
 bibliography: Literature.bib
 ---
 
@@ -64,7 +62,7 @@ To allow easy access to a drive simulation environment, the ``GEM`` library has 
 # Package Architecture
 
 The ``GEM`` library models an electric drive system by it's four main components: voltage supply, power converter, 
-electric motor and mechanical load. The general structure of such a system is depicted in Fig. \autoref{fig:SCML_system}. 
+electric motor and mechanical load. The general structure of such a system is depicted in \autoref{fig:SCML_system}. 
 
 ![Structure of an electric drive system\label{fig:SCML_system}](../plots/SCML_Setting.eps)
 
@@ -84,8 +82,8 @@ makes use of coordinate transformations to view these ODEs in a more interpretab
 the physical ($abc$-) and the simplified ($dq$-)coordinates are available to be used as the frame of input 
 and output variables, allowing for easy and quick controller analysis and diagnose within the most convenient 
 coordinate frame. Finally, the torque $T$ resulting from the motor is applied to the __mechanical load__. 
-It is characterized by a moment of inertia and by a load torque $T_L$ that is directed against the motor torque. 
-Load torque behavior can be parametrized with respect to the angular velocity $\omega_{me}$ in the form of constant,
+The load is characterized by a moment of inertia and by a load torque $T_L$ that is directed against the motor torque. 
+Load torque behavior can be parametrized with respect to the angular velocity $\omega_\mathrm{me}$ in the form of constant,
 linear and quadratic dependency (and arbitrary combinations thereof). Speed changes that result from the difference 
 between motor and load torque are modelled with another ODE which completely covers the mechanical system behavior.
 Alternatively, the motor speed can be set to a fixed value, which can be useful for the investigation of control
@@ -110,7 +108,7 @@ is demanded in case of a limit violation.
 
 # Examples
 
-A minimal example of ``GEM's`` simulation capability is presented in Fig. \autoref{fig:SCIM_example}.
+A minimal example of ``GEM's`` simulation capability is presented in \autoref{fig:SCIM_example}.
 The plot shows the start-up behavior of a squirrel cage induction motor connected to a rigid network
 concerning angular velocity $\omega_\mathrm{me}$, torque $T$, voltage $u_{a,b,c}$ and current $i_{d,q}$.
 Here, the voltage is depicted within the physical $abc$-frame while the current is viewed within the 
@@ -120,9 +118,10 @@ simplified $dq$-frame.
 
 Exemplary code snippets that demonstrate the usage of ``GEM`` are included 
 within the projects repository:
-* [ddpg_pmsm_dq_current_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py): a reinforcement-learning control approach applied to the current control of a permanent magnet synchronous motor within the $dq$-frame 
-* [ddpg_series_omega_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py): a reinforcement-learning control approach applied to the speed control of a series motor
-* [dqn_series_current_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py): a reinforcement-learning control approach for finite-control-set voltage control of a series motor
-* [pi_series_omega_control](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py): a conventional control algorithm applied to the speed control of a series motor
+
+- [``ddpg_pmsm_dq_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py): a reinforcement-learning control approach applied to the current control of a permanent magnet synchronous motor within the $dq$-frame 
+- [``ddpg_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py): a reinforcement-learning control approach applied to the speed control of a series motor
+- [``dqn_series_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py): a reinforcement-learning control approach for finite-control-set voltage control of a series motor
+- [``pi_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py): a conventional control algorithm applied to the speed control of a series motor
 
 # References
