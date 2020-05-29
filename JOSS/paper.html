@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Summary &mdash; gym-electric-motor 2020 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts/utils.html">Utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Summary</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/JOSS/paper.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <hr class="docutils" />
+<p>title: ‘gym-electric-motor (GEM): A Python toolbox for the simulation of electric drive systems’
+tags:</p>
+<ul class="simple">
+<li><p>Python</p></li>
+<li><p>electric drive control</p></li>
+<li><p>electric motors</p></li>
+<li><p>OpenAI Gym</p></li>
+<li><p>power electronics</p></li>
+<li><p>reinforcement learning
+authors:</p></li>
+<li><p>name: Praneeth Balakrishna
+affiliation: 1</p></li>
+<li><p>name: Gerrit Book
+affiliation: 1</p></li>
+<li><p>name: Wilhelm Kirchgässner
+orcid: 0000-0001-9490-1843
+affiliation: 1</p></li>
+<li><p>name: Maximilian Schenke
+orcid: 0000-0001-5427-9527
+affiliation: 1</p></li>
+<li><p>name: Arne Traue
+affiliation: 1</p></li>
+<li><p>name: Oliver Wallscheid
+orcid: 0000-0001-9362-8777
+affiliation: 1</p></li>
+</ul>
+<p>affiliations:</p>
+<ul class="simple">
+<li><p>name: Department of Power Electronics and Electrical Drives, Paderborn University, Germany
+index: 1
+date: 28. May 2020
+bibliography: Literature.bib</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="summary">
+<h1>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">gym-electric-motor</span></code> (<code class="docutils literal notranslate"><span class="pre">GEM</span></code>) library provides simulation environments for
+electrical drive systems and, therefore, allows to easily design and analyze drive control
+solutions in Python. Since <code class="docutils literal notranslate"><span class="pre">GEM</span></code> is strongly inspired by OpenAI’s <code class="docutils literal notranslate"><span class="pre">gym</span></code> [&#64;gym-whitepaper], it
+is particulary well-equipped for (but not limited to) applications in the field of
+reinforcement-learning-based control algorithms. In addition, the interface allows to plugin-in any expert-driven
+control approach, such as model predictive control, to be tested  and to perform benchmark comparisons.
+The <code class="docutils literal notranslate"><span class="pre">GEM</span></code> package includes a wide variety of motors, power electronic converters and mechanical load models that
+can be flexibly selected and parameterized via the API. A modular software code also allows additional system
+components to be included in the framework simulation.</p>
+</div>
+<div class="section" id="field-of-application">
+<h1>Field of Application<a class="headerlink" href="#field-of-application" title="Permalink to this headline">¶</a></h1>
+<p>Electric drive systems are an important topic both in academic and
+industrial research due to the worldwide availability and deployment of such
+plants. Control algorithms for these systems have usually been designed, parameterized and
+tested within <cite>``MATLAB - Simulink`</cite> &lt;<a class="reference external" href="https://www.mathworks.com/products/matlab.html">https://www.mathworks.com/products/matlab.html</a>&gt;`_,
+which is developed and promoted specifically for
+such engineering tasks. In the more recent past, however, commercial software like
+<code class="docutils literal notranslate"><span class="pre">MATLAB</span></code> has difficulties to stay on par with the expandability and flexibility offered
+by open-source libraries that are available for more accessible programming languages like Python.
+Moreover, the latest efforts concerning industrial application of reinforcement-learning control
+algorithms heavily depend on Python packages like <code class="docutils literal notranslate"><span class="pre">Keras</span></code> [&#64;Chollet2015] or <code class="docutils literal notranslate"><span class="pre">Tensorflow</span></code> [&#64;tensorflow2015-whitepaper].
+In order to allow easy access to an open-source drive simulation environment, the <code class="docutils literal notranslate"><span class="pre">GEM</span></code> library has been developed.</p>
+</div>
+<div class="section" id="package-architecture">
+<h1>Package Architecture<a class="headerlink" href="#package-architecture" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">GEM</span></code> library models an electric drive system by it’s four main components: voltage supply, power converter,
+electric motor and mechanical load. The general structure of such a system is depicted in autoref{fig:SCML_system}.</p>
+<a class="reference external image-reference" href="../plots/SCML_Setting.eps"><img alt="Structure of an electric drive system\label{fig:SCML_system}" src="../_images/SCML_Setting.eps" /></a>
+<p>The <strong>voltage supply</strong> provides the necessary power that is used by the motor.
+It is modeled by a fixed supply voltage $u<em>mathrm{sup}$, which allows to monitor the supply current into the converter.
+A **converter*</em> is needed to supply the motor with electric power of proper frequency and magnitude,
+which may also include the conversion of the direct current from the supply to alternating
+current. Typical drive converters have switching behavior: there is a finite set of
+different voltages that can be applied to the motor, depending on which switches are open and which are closed.
+Besides this physically accurate view, a popular modeling approach for switched mode converters
+is based on dynamic averaging of the applied voltage $u*mathrm{in}$, making the voltage a continuous variable.
+Both of these modeling approaches are implemented and can be chosen freely, allowing usage of control algorithms that operate on a finite set of switching states or on continuous input voltages.
+The <strong>electric motor</strong> is the centerpiece of every drive system. It is modeled by a system of ordinary differential
+equations (ODEs), which represent the electrical behavior of the motor itself. In particular, the domain of three-phase drives
+makes use of coordinate transformations to view these ODEs in a more interpretable frame. In <code class="docutils literal notranslate"><span class="pre">GEM</span></code>, both,
+the physical ($abc$-) and the simplified ($dq$-)coordinates are available to be used as the frame of input
+and output variables, allowing for easy and quick controller analysis and diagnose within the most convenient
+coordinate frame. Finally, the torque $T$ resulting from the motor is applied to the <strong>mechanical load</strong>.
+The load is characterized by a moment of inertia and by a load torque $T<em>mathrm{L}$ that is directed against the motor torque.
+Load torque behavior can be parameterized with respect to the angular velocity $omega</em>mathrm{me}$ in the form of constant,
+linear and quadratic dependency (and arbitrary combinations thereof). Speed changes that result from the difference
+between motor and load torque are modeled with another ODE which completely covers the mechanical system behavior.
+Alternatively, the motor speed can be set to a fixed value, which can be useful for the investigation of control
+algorithms concerning generatoric operation.</p>
+</div>
+<div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
+<p>A large number of different motor systems is already implemented. These include DC drives as well as
+synchronous and induction three-phase drives. A complete list can be viewed in the <code class="docutils literal notranslate"><span class="pre">GEM</span></code> documentation [&#64;GEM-docu].
+The corresponding power converters allow to control the motor either directly via applied voltage (continuous-control-set)
+or by defining the converter’s switching state (finite-control-set). Specifically for the use within reinforcement-learning
+applications, the toolbox comes with a built-in reference generator, which can be used to create trajectories of
+reference operational points (e.g. for the motor current, velocity or torque). These generated references are furthermore
+used to calculate a reward. In the domain of reinforcement-learning, reward is the optimization variable that is to be
+maximized. For the control system scenario, reward is usually defined by the negative distance between the momentary
+operation point and the desired operation point, such that expedient controller behavior can be monitored easily. The metric by which
+the distance of two operational points is measured, can be adjusted to the users desire. The reward mechanism
+also allows to take physical limitations of the drive system into account, e.g. in the way of a notably low reward
+if limit values are surpassed. Optionally, the environment can be setup such that a reset of the system
+is induced in case of a limit violation. In addition, built-in visualization and plotting routines allow to monitor the training process of reinforcement learning agents or the performance of expert-driven control approaches which are being tested.</p>
+</div>
+<div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>A minimal example of <code class="docutils literal notranslate"><span class="pre">GEM's</span></code> simulation capability is presented in autoref{fig:SCIM<em>example}.
+The plot shows the start-up behavior of a squirrel cage induction motor connected to a rigid network
+concerning angular velocity $omega</em>mathrm{me}$, torque $T$, voltage $u<em>{a,b,c}$ and current $i</em>{d,q}$.
+Here, the voltage is depicted within the physical $abc$-frame while the current is viewed within the
+simplified $dq$-frame.</p>
+<a class="reference external image-reference" href="../plots/SCIM_Example.eps"><img alt="Simulation of a squirrel cage induction motor connected to a rigid network at $50 \, \mathrm{Hz}$\label{fig:SCIM_example}" src="../_images/SCIM_Example.eps" /></a>
+<p>Exemplary code snippets that demonstrate the usage of <code class="docutils literal notranslate"><span class="pre">GEM</span></code> are included
+within the projects repository:</p>
+<ul class="simple">
+<li><p><cite>``ddpg_pmsm_dq_current_control`</cite> &lt;<a class="reference external" href="https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py">https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py</a>&gt;`_: a reinforcement-learning control approach applied to the current control of a permanent magnet synchronous motor within the $dq$-frame</p></li>
+<li><p><cite>``ddpg_series_omega_control`</cite> &lt;<a class="reference external" href="https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py">https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py</a>&gt;`_: a reinforcement-learning control approach applied to the speed control of a series motor</p></li>
+<li><p><cite>``dqn_series_current_control`</cite> &lt;<a class="reference external" href="https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py">https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py</a>&gt;`_: a reinforcement-learning control approach for finite-control-set current control of a series motor</p></li>
+<li><p><cite>``pi_series_omega_control`</cite> &lt;<a class="reference external" href="https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py">https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py</a>&gt;`_: a conventional control algorithm applied to the speed control of a series motor</p></li>
+</ul>
+</div>
+<div class="section" id="references">
+<h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
