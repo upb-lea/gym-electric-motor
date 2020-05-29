@@ -1692,7 +1692,7 @@ class TestInductionMotor:
         """
         self._monkey_update_model_counter += 1
 
-    def monkey_update_limits(self):
+    def monkey_update_limits(self, *args):
         """
         mock function for _update_limits()
         :return:
@@ -1713,8 +1713,8 @@ class TestInductionMotor:
         assert self._expected_parameter['limit_values'] == limit_values, 'unexpected limit values passed'
 
     @pytest.mark.parametrize("motor_parameter", [_motor_parameter, None])
-    @pytest.mark.parametrize("nominal_values, expected_nv", [(None, {}), (_nominal_values, _nominal_values)])
-    @pytest.mark.parametrize("limit_values, expected_lv", [(None, {}), (_limit_values, _limit_values)])
+    @pytest.mark.parametrize("nominal_values, expected_nv", [({}, {}), (_nominal_values, _nominal_values)])
+    @pytest.mark.parametrize("limit_values, expected_lv", [({}, {}), (_limit_values, _limit_values)])
     def test_init(self, monkeypatch, motor_parameter, nominal_values, limit_values, expected_nv, expected_lv):
         """
         test initialization of InductionMotor
@@ -1961,7 +1961,7 @@ class TestDoublyFedInductionMotor:
         """
         pass
 
-    def monkey_super_update_limits(self):
+    def monkey_super_update_limits(self, *args):
         """
         mock function for super()._update_limits()
         :return:
@@ -1976,17 +1976,20 @@ class TestDoublyFedInductionMotor:
         """
         # call function to test
         monkeypatch.setattr(DoublyFedInductionMotor, '__init__', self.monkey_init)
-        monkeypatch.setattr(InductionMotor, '_update_limits', self.monkey_super_update_limits)
+
         test_object = DoublyFedInductionMotor()
         test_object._motor_parameter = self._motor_parameter
         test_object._limits = self._limit_values
         test_object._nominal_values = self._nominal_values
         # verify the expected results
         test_object._update_limits()
-        assert self._monkey_super_update_limits_counter == 1, 'super().update_limits() is not called once'
+
         assert test_object._limits['u_rbeta'] == 0.5 * self._limit_values['u']
         assert test_object._nominal_values['i_ralpha'] == (test_object._nominal_values.get('i', None) or test_object._nominal_values['u_ralpha'] / test_object._motor_parameter['r_r'])
 
+        monkeypatch.setattr(InductionMotor, '_update_limits', self.monkey_super_update_limits)
+        test_object._update_limits()
+        assert self._monkey_super_update_limits_counter == 1, 'super().update_limits() is not called once'
 # endregion
 
 # endregion
