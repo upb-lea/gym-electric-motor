@@ -10,8 +10,19 @@ import numpy as np
 
 class Controller:
 
+    """
+      The following is a base class for various controllers along with the motor environments
+
+    """
+
     @classmethod
     def make(cls, controller_type, environment, **controller_kwargs):
+        """
+        Args:
+            controller_type : Choose among the given set of controller at the end of this class
+            environment : Choose the corresponding motor environment from 'envs' class.
+
+        """
         assert controller_type in _controllers.keys(), f'Controller {controller_type} unknown'
         controller = _controllers[controller_type](environment, **controller_kwargs)
         return controller
@@ -24,6 +35,11 @@ class Controller:
 
 
 class OnOffController(Controller):
+
+    """
+        The following controller is a simple OnOffController which allows the state to choose high_action when referenced_state is below
+        ref_idx and low_action otherwise
+    """
 
     def __init__(self, environment, state_idx=None, reference_idx=0):
         action_space = environment.action_space
@@ -44,6 +60,13 @@ class OnOffController(Controller):
 
 
 class ThreePointController(Controller):
+
+    """
+    Below is an implementation of a 3 point controller: When state_idx is below the reference_idx, it choose high_action and when the
+    state_idx is above the reference_idx,it choose low_action. If it is between the reference_idx values, it will choose idle_action
+    A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and high frequency around the reference_idx
+
+    """
 
     def __init__(self, environment, hysteresis=0.01, state_idx=None, reference_idx=0):
         action_space = environment.action_space
@@ -69,6 +92,13 @@ class ThreePointController(Controller):
 
 class PController(Controller):
 
+    """
+    In the below proportional control implementation, the controller output is proportional to the error signal,  which is the difference
+    between the reference_idx and the state_idx .i.e., the output of a proportional controller
+    is the multiplication product of the error signal and the proportional gain
+    Here kp =10 is assumed for proportionality gain.
+    """
+
     def __init__(self, environment, k_p=10, controller_no=0, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Box, 'No suitable action space for P Controller'
@@ -92,6 +122,11 @@ class PController(Controller):
 
 
 class PIController(PController):
+    """
+      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
+      and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
+      It outputs a weighted sum of the input error signal and the integral of the input error signal.
+    """
 
     def __init__(self, environment, k_p=10, k_i=0.01, controller_no=0, reference_idx=0):
         super().__init__(environment, k_p, controller_no, reference_idx)
@@ -118,6 +153,10 @@ class PIController(PController):
 
 
 class PmsmOnOffController(Controller):
+    """
+    The following controller is a simple OnOffController which allows the state to choose u_q values as '1'' when it is below
+        reference_state and '-1' otherwise
+    """
 
     def __init__(self, environment, state_idx=None, ref_idx=0):
         t32 = environment.physical_system.electrical_motor.t_32
@@ -150,6 +189,12 @@ class PmsmOnOffController(Controller):
 
 class SynRmOnOffController(PmsmOnOffController):
 
+    """
+     The following controller is a PmsmOnOffController which allows the state to choose u_d and u_q voltages values as '1'  when it is below
+        reference_state and '-1' otherwise
+
+    """
+
     def control(self, state, reference):
         if state[self._referenced_state] < reference[self._ref_idx]:
             u_q = 1
@@ -163,6 +208,20 @@ class SynRmOnOffController(PmsmOnOffController):
 
 
 class CascadedPIController(Controller):
+
+    """
+      cascade architecture has:
+      two controllers (an inner secondary and outer primary controller)
+      two measured process variable sensors (an inner PV2 and outer PV1).A primary or master controller generates a control effort
+      that serves as the setpoint for a secondary or slave controller.That controller in turn uses the actuator to apply its control
+      effort directly to the secondary process.The secondary process then generates a secondary process variable that serves as
+      the control effort for the primary process.
+
+      The geometry of this defines an inner loop involving the secondary controller and an outer loop involving the primary controller.
+      The inner loop functions like a traditional feedback control system with a setpoint, a process variable, and a controller
+      acting on a process by means of an actuator. The outer loop does the same except that it uses the entire inner loop as its actuator.
+
+    """
 
     def __init__(self, environment, ref_idx=0):
         self._omega_idx = environment.physical_system.OMEGA_IDX
@@ -292,6 +351,14 @@ class CascadedPIController(Controller):
 
 
 class FOCController(Controller):
+
+    """
+    FOC is used to control AC synchronous and induction motors.The stator currents of a three-phase AC electric motor are identified
+    as two orthogonal components that can be visualized with a vector. One component defines the magnetic flux of the motor, the other the torque.
+    The control system of the drive calculates the corresponding current component references from the flux and torque references given
+    by the drive's speed control. Here Synchronous motor is chosen as environment.
+
+    """
 
     def __init__(self, environment, ref_idx=0, weight=1):
         assert type(environment.physical_system) is SynchronousMotorSystem
@@ -446,6 +513,14 @@ class FOCController(Controller):
 
 class PmsmPController(Controller):
 
+    """
+    In the below proportional control algorithm, the controller output is proportional to the error signal,  which is the difference
+    between the reference_idx and the state_idx .i.e., the output of a proportional controller
+    is the multiplication product of the error signal and the proportional gain
+    Here kp =1 is assumed for a proportionality gain.
+
+    """
+
     def __init__(self, environment, state_idx=None, ref_idx=0, k_p=1):
         self._k_p = k_p
         t32 = environment.physical_system.electrical_motor.t_32
@@ -475,6 +550,10 @@ class PmsmPController(Controller):
 
 
 class ThreePhaseSteadyState(Controller):
+    """
+    In the below control scheme, we have chosen a parameter 'k'= - 1. With every increase of k value, we calculate the length of u_a and we
+    output the values as product of 'k' and length of u_a for each of u_a,u_b,u_c.
+    """
 
     def __init__(self, environment, omega_el=15):
         self._omega_el = omega_el
