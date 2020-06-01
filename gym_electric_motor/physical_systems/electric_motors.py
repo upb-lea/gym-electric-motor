@@ -113,26 +113,43 @@ class ElectricMotor:
         """
         pass
 
-    def torque(self, currents):
-        """
-        Torque equation of the motor.
-
-        Args:
-            currents(numpy.ndarray(float)): Motor currents to calculate the Torque.
-
-        Returns:
-            float: Motor torque for the given state.
-        """
-        raise NotImplementedError
-
-    def reset(self):
+    def reset(self, initializer=0.0):
         """
         Reset the motors state to a new initial state. (Default 0)
+        Args:
+            initializer: Constant(int/ float) initial value or
+                         Interval(array like) for random initial value, clipped to nominal values when to high
+                         'random'(string) as keyword, as interval nominal values are choosen
 
         Returns:
             numpy.ndarray(float): The initial motors state.
         """
-        return np.zeros(len(self.CURRENTS), dtype=float)
+        if isinstance(initializer, (int, float)):
+            initial_value = initializer
+            return np.ones(len(self.CURRENTS), dtype=float) * initial_value
+
+        elif isinstance(initializer, (np.ndarray, list, tuple)):
+            assert len(initializer) == 2, 'shape is %r not 2' % initializer.shape
+            #todo check if multidim?
+            upper_bound =
+            lower_bound =
+            return np.ones(len(self.CURRENTS), dtype=float) * initial_value
+
+        elif isinstance(initializer, str):
+            upper_bound = np.asarray([self._nominal_values[i_x] for i_x in self.CURRENTS])
+            lower_bound = np.zeros(len(self.CURRENTS), dtype=float)
+
+            if initializer == 'uniform':
+                #initial uniformdistributet value for each current
+                initial_value = (upper_bound - lower_bound) * np.random.random_sample(len(self.CURRENTS)) + lower_bound
+                return np.ones(len(self.CURRENTS), dtype=float) * initial_value
+
+            elif initializer == 'gaussian':
+                
+
+        #return np.zeros(len(self.CURRENTS), dtype=float)
+        return np.ones(len(self.CURRENTS), dtype=float)
+
 
     def i_in(self, state):
         """
