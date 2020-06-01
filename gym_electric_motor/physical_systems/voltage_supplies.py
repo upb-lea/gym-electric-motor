@@ -1,3 +1,5 @@
+from gym_electric_motor.physical_systems.solvers import EulerSolver
+
 class VoltageSupply:
     """
     Base class for all VoltageSupplies to be used in a SCMLSystem.
@@ -62,3 +64,25 @@ class IdealVoltageSupply(VoltageSupply):
     def get_voltage(self, *_, **__):
         # Docstring of superclass
         return self._u_nominal
+
+
+class RCVoltageSupply(VoltageSupply):
+    """Voltage supply moduled as RC element"""
+    
+    def __init__(self, u_nominal, R, C, **__):
+        super().__init__(u_nominal)
+        self.supply_range = (0,u_nominal) #???
+        #self._R = R
+        #self._C = C
+        self._solver = EulerSolver()
+        self._solver.set_f_params(u_nominal,R,C)
+        
+        def system_equation(t, u_out, u_nominal, R, C):
+            return (C*u_nominal - u_out)/(R*C)
+            
+        self._solver.set_system_equation(system_equation)
+                
+    
+    def get_voltage(self, i_sup, t):
+        
+        return self._solver.integrate(t)
