@@ -131,9 +131,11 @@ class ElectricMotor:
         elif isinstance(initializer, (np.ndarray, list, tuple)):
             assert len(initializer) == 2, 'shape is %r not 2' % initializer.shape
             #todo check if multidim?
-            upper_bound =
-            lower_bound =
-            return np.ones(len(self.CURRENTS), dtype=float) * initial_value
+            #todo add comments
+            #upper_bound =
+            #lower_bound =
+            #return np.ones(len(self.CURRENTS), dtype=float) * initial_value
+            raise NotImplementedError
 
         elif isinstance(initializer, str):
             upper_bound = np.asarray([self._nominal_values[i_x] for i_x in self.CURRENTS])
@@ -145,11 +147,7 @@ class ElectricMotor:
                 return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
             elif initializer == 'gaussian':
-                
-
-        #return np.zeros(len(self.CURRENTS), dtype=float)
-        return np.ones(len(self.CURRENTS), dtype=float)
-
+                raise NotImplementedError
 
     def i_in(self, state):
         """
