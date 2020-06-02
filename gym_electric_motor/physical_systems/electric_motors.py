@@ -34,7 +34,6 @@ class ElectricMotor:
     _default_nominal_values = {}
     #: _default_limits(dict(float)): Default motor limits (0 for unbounded limits)
     _default_limits = {}
-    # todo necessary?
     #: _default_initial_state(dict): Default initial motor-state values
     _default_initializer = {'init_type': 'constant', 'init_value': 0.0}
 
@@ -71,7 +70,7 @@ class ElectricMotor:
     def initializer(self):
         """
         Returns:
-            float/array like: The motors initial state
+            dict: The motors initial state and additional initializer parameters
         """
         return self._initializer
 
@@ -82,8 +81,9 @@ class ElectricMotor:
                 for each motor.
         :param  nominal_values: Nominal values for the motor quantities.
         :param  limit_values: Limits for the motor quantities.
-        :param  initializer: Initial motor states e.g currents (type and value
-                range of init)
+        :param  initializer: Initial motor states (currents)
+                            ('constant', 'uniform', 'gaussian' sampled from
+                             given interval or out of nominal motor values)
         """
         motor_parameter = motor_parameter or {}
         self._motor_parameter = self._default_motor_parameter.copy()
@@ -139,23 +139,20 @@ class ElectricMotor:
         Returns:
             numpy.ndarray(float): The initial motors state.
         """
-        # todo better assertion messages
         assert isinstance(self._initializer, dict), \
             'initializer have to be dict, but is %r' % type(self._initializer)
-        # using explicit dict keys?
         initial_value = np.atleast_1d(self._initializer['init_value'])
+
         if self._initializer['init_type'] == 'constant':
             # check if value is general constant or a constant for each current
             assert (initial_value.shape[0] == 1 or
                     initial_value.shape[0] == len(self.CURRENTS)), \
                 'initial_value does not match right dimension'
-            #initial_value = initial_value or 0.0
             return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
         elif self._initializer['init_type'] in ['uniform', 'gaussian']:
             assert initial_value.ndim == len(self.CURRENTS), \
                 'number of states does not match number of limits'
-            # todo catch scalar case with assert
             nominal_currents = np.asarray([self._nominal_values[ix]
                                            for ix in self.CURRENTS])
             upper = initial_value.T[-1] if initial_value.shape[0] == 2 \
