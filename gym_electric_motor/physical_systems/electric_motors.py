@@ -1,6 +1,6 @@
 import numpy as np
 import math
-
+from scipy.stats import truncnorm
 
 class ElectricMotor:
     """
@@ -34,8 +34,8 @@ class ElectricMotor:
     #: _default_limits(dict(float)): Default motor limits (0 for unbounded limits)
     _default_limits = {}
     # todo necessary?
-    #: _default_initial_state(float/array like): Default initial motor-state values
-    #_default_initial_state = 0.0
+    #: _default_initial_state(dict): Default initial motor-state values
+    _default_initializer = {'init_type': 'constant', 'init_value': 0.0}
 
     @property
     def nominal_values(self):
@@ -67,20 +67,22 @@ class ElectricMotor:
         return self._motor_parameter
 
     @property
-    def initial_state(self):
+    def initializer(self):
         """
         Returns:
             float/array like: The motors initial state
         """
-        return self._initial_state
+        return self._initializer
 
     def __init__(self, motor_parameter=None, nominal_values=None,
-                 limit_values=None, initial_state=None, **__):
+                 limit_values=None, initializer=None, **__):
         """
-        :param  motor_parameter: Motor parameter dictionary. Contents specified for each motor.
-        :param nominal_values: Nominal values for the motor quantities.
-        :param limit_values: Limits for the motor quantities.
-        :param initial_state: Initial motor states e.g currents
+        :param  motor_parameter: Motor parameter dictionary. Contents specified
+                for each motor.
+        :param  nominal_values: Nominal values for the motor quantities.
+        :param  limit_values: Limits for the motor quantities.
+        :param  initializer: Initial motor states e.g currents (type and value
+                range of init)
         """
         motor_parameter = motor_parameter or {}
         self._motor_parameter = self._default_motor_parameter.copy()
@@ -91,12 +93,9 @@ class ElectricMotor:
         nominal_values = nominal_values or {}
         self._nominal_values = self._default_nominal_values.copy()
         self._nominal_values.update(nominal_values)
-
-        initial_state = initial_state or 0.0
-        # todo necessary?
-        #self._initial_state = self._default_initial_state.copy()
-        self._initial_state = initial_state
-
+        initializer = initializer or {}
+        self._initializer = self._default_initializer.copy()
+        self._initializer.update(initializer)
 
     def electrical_ode(self, state, u_in, omega, *_):
         """
@@ -139,31 +138,45 @@ class ElectricMotor:
         Returns:
             numpy.ndarray(float): The initial motors state.
         """
-        if isinstance(self._initial_state, (int, float)):
-            initial_value = self._initial_state
+        assert isinstance(self._initializer, dict), \
+            'initializer have to be dict, but is %r' %type(self._initializer)
+        #using explicit dict keys?
+        initial_value = np.asarray(self._initializer['init_value'], dtype=float)
+
+        if self._initializer['init_type'] == 'constant':
+            # check if value is general constant or a constant for each current
+            assert (initial_value.shape[0] == 1 or
+                    initial_value.shape[0] == len(self.CURRENTS)), \
+                    'initial_value does not match right dimension'
             return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
-        elif isinstance(self._initial_state, (np.ndarray, list, tuple)):
-            assert len(self._initial_state) == 2, 'shape is %r not 2' % len(self._initial_state)
-            #todo check if multidim?
-            #todo add comments
-            #todo handle seperat input for every current (array[i1, i2, ...])
-            upper_bound = np.asarray([self._nominal_values[i_x] for i_x in self.CURRENTS])
-            lower_bound = np.zeros(len(self.CURRENTS), dtype=float)
-            #return np.ones(len(self.CURRENTS), dtype=float) * initial_value
-            raise NotImplementedError
-
-        elif isinstance(self._initial_state, str):
-            upper_bound = np.asarray([self._nominal_values[i_x] for i_x in self.CURRENTS])
-            lower_bound = np.zeros(len(self.CURRENTS), dtype=float)
-
-            if self._initial_state == 'uniform':
-                #initial uniformdistributet value for each current
-                initial_value = (upper_bound - lower_bound) * np.random.random_sample(len(self.CURRENTS)) + lower_bound
+        elif self._initializer['init_type'] in ['uniform', 'gaussian']:
+            # todo catch scalar case with assert
+            # todo user definded interval
+            assert initial_value.shape[0] == 2, \
+                   'two limits needed as initial_value'
+            upper = np.asarray(
+                [self._nominal_values[i_x] for i_x in self.CURRENTS]
+                )
+            lower = np.zeros(len(self.CURRENTS), dtype=float)
+            # change lower respective to state space (could be negativ)
+            #lower = upper * self.
+            if self._initializer['init_type'] == 'uniform':
+                initial_value = (upper - lower) * \
+                                np.random.random_sample(len(self.CURRENTS)) + \
+                                lower
                 return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
-            elif self._initial_state == 'gaussian':
-                raise NotImplementedError
+            elif self._initializer['init_type'] == 'gaussian':
+                #todo add mean, std as function parameters
+                mean = upper / 2
+                std = 1
+                a, b = (lower - mean) / std, (upper - mean) / std
+                initial_value = truncnorm.rvs(a, b, loc=mean, scale=std)
+                return np.ones(len(self.CURRENTS), dtype=float) * initial_value
+
+        else:
+            raise KeyError
 
     def i_in(self, state):
         """
@@ -254,10 +267,10 @@ class DcMotor(ElectricMotor):
 
     def __init__(self,
                  motor_parameter=None, nominal_values=None,
-                 limit_values=None, initial_state=None, **__):
+                 limit_values=None, initializer=None, **__):
         # Docstring of superclass
         super().__init__(motor_parameter, nominal_values,
-                         limit_values, initial_state)
+                         limit_values, initializer)
         #: Matrix that contains the constant parameters of the systems equation for faster computation
         self._model_constants = None
         self._update_model()
@@ -907,13 +920,13 @@ class SynchronousMotor(ThreePhaseMotor):
 
     def __init__(self,
                  motor_parameter=None, nominal_values=None,
-                 limit_values=None, initial_state=None, **kwargs):
+                 limit_values=None, initializer=None, **kwargs):
 
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
         super().__init__(motor_parameter, nominal_values,
-                         limit_values, initial_state)
+                         limit_values, initializer)
         self._update_model()
         self._update_limits()
 
@@ -1356,12 +1369,12 @@ class InductionMotor(ThreePhaseMotor):
         return self._motor_parameter
 
     def __init__(self, motor_parameter=None, nominal_values=None,
-                 limit_values=None, initial_state=None, **__):
+                 limit_values=None, initializer=None, **__):
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
         super().__init__(motor_parameter, nominal_values,
-                         limit_values, initial_state)
+                         limit_values, initializer)
         self._update_model()
         self._update_limits()
 
