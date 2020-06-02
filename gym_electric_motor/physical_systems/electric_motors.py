@@ -2,6 +2,7 @@ import numpy as np
 import math
 from scipy.stats import truncnorm
 
+
 class ElectricMotor:
     """
         Base class for all technical electrical motor models.
@@ -138,29 +139,36 @@ class ElectricMotor:
         Returns:
             numpy.ndarray(float): The initial motors state.
         """
+        # todo better assertion messages
         assert isinstance(self._initializer, dict), \
-            'initializer have to be dict, but is %r' %type(self._initializer)
-        #using explicit dict keys?
-        initial_value = np.asarray(self._initializer['init_value'], dtype=float)
+            'initializer have to be dict, but is %r' % type(self._initializer)
+        # using explicit dict keys?
+        initial_value = np.atleast_1d(self._initializer['init_value'])
 
         if self._initializer['init_type'] == 'constant':
             # check if value is general constant or a constant for each current
             assert (initial_value.shape[0] == 1 or
                     initial_value.shape[0] == len(self.CURRENTS)), \
-                    'initial_value does not match right dimension'
+                'initial_value does not match right dimension'
+            #initial_value = initial_value or 0.0
             return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
         elif self._initializer['init_type'] in ['uniform', 'gaussian']:
             # todo catch scalar case with assert
-            # todo user definded interval
-            assert initial_value.shape[0] == 2, \
-                   'two limits needed as initial_value'
-            upper = np.asarray(
-                [self._nominal_values[i_x] for i_x in self.CURRENTS]
-                )
-            lower = np.zeros(len(self.CURRENTS), dtype=float)
-            # change lower respective to state space (could be negativ)
-            #lower = upper * self.
+            nominal_currents = np.asarray([self._nominal_values[ix]
+                                           for ix in self.CURRENTS])
+            upper = initial_value.T[-1] if initial_value.shape[0] == 2 \
+                else nominal_currents
+            lower = initial_value.T[0] if initial_value.shape[0] == 2 \
+                else np.zeros(len(self.CURRENTS), dtype=float)
+            # clip limits to nominal values, if to high
+            upper = np.clip(upper, a_min=None, a_max=nominal_currents)
+            # todo change lower nominal values could be negativ
+            lower = np.clip(lower,
+                            a_min=np.zeros(len(self.CURRENTS), dtype=float),
+                            a_max=None)
+            # todo change lower respective to state space (could be negativ)
+            # lower = upper * state space
             if self._initializer['init_type'] == 'uniform':
                 initial_value = (upper - lower) * \
                                 np.random.random_sample(len(self.CURRENTS)) + \
@@ -168,7 +176,7 @@ class ElectricMotor:
                 return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
             elif self._initializer['init_type'] == 'gaussian':
-                #todo add mean, std as function parameters
+                # todo add mean, std as function parameters, mean have to be in limits
                 mean = upper / 2
                 std = 1
                 a, b = (lower - mean) / std, (upper - mean) / std
@@ -260,10 +268,13 @@ class DcMotor(ElectricMotor):
     CURRENTS = ['i_a', 'i_e']
     VOLTAGES = ['u_a', 'u_e']
     _default_motor_parameter = {
-        'r_a': 0.78, 'r_e': 25, 'l_a': 6.3e-3, 'l_e': 1.2, 'l_e_prime': 0.0094, 'j_rotor': 0.017,
+        'r_a': 0.78, 'r_e': 25, 'l_a': 6.3e-3, 'l_e': 1.2, 'l_e_prime': 0.0094,
+        'j_rotor': 0.017,
     }
-    _default_nominal_values = {'omega': 368, 'torque': 0.0, 'i_a': 50, 'i_e': 1.2, 'u': 420}
-    _default_limits = {'omega': 500, 'torque': 0.0, 'i_a': 75, 'i_e': 2, 'u': 420}
+    _default_nominal_values = {'omega': 368, 'torque': 0.0, 'i_a': 50,
+                               'i_e': 1.2, 'u': 420}
+    _default_limits = {'omega': 500, 'torque': 0.0, 'i_a': 75, 'i_e': 2,
+                       'u': 420}
 
     def __init__(self,
                  motor_parameter=None, nominal_values=None,
@@ -287,12 +298,15 @@ class DcMotor(ElectricMotor):
             [-mp['r_a'], 0, -mp['l_e_prime'], 1, 0],
             [0, -mp['r_e'], 0, 0, 1]
         ])
-        self._model_constants[self.I_A_IDX] = self._model_constants[self.I_A_IDX] / mp['l_a']
-        self._model_constants[self.I_E_IDX] = self._model_constants[self.I_E_IDX] / mp['l_e']
+        self._model_constants[self.I_A_IDX] = self._model_constants[
+                                                  self.I_A_IDX] / mp['l_a']
+        self._model_constants[self.I_E_IDX] = self._model_constants[
+                                                  self.I_E_IDX] / mp['l_e']
 
     def torque(self, currents):
         # Docstring of superclass
-        return self._motor_parameter['l_e_prime'] * currents[self.I_A_IDX] * currents[self.I_E_IDX]
+        return self._motor_parameter['l_e_prime'] * currents[self.I_A_IDX] * \
+               currents[self.I_E_IDX]
 
     def i_in(self, currents):
         # Docstring of superclass
@@ -323,9 +337,9 @@ class DcMotor(ElectricMotor):
         e_converter = 1
         low = {
             'omega': -1 if input_voltages.low[a_converter] == -1
-            or input_voltages.low[e_converter] == -1 else 0,
+                           or input_voltages.low[e_converter] == -1 else 0,
             'torque': -1 if input_currents.low[a_converter] == -1
-            or input_currents.low[e_converter] == -1 else 0,
+                            or input_currents.low[e_converter] == -1 else 0,
             'i_a': -1 if input_currents.low[a_converter] == -1 else 0,
             'i_e': -1 if input_currents.low[e_converter] == -1 else 0,
             'u_a': -1 if input_voltages.low[a_converter] == -1 else 0,
@@ -392,8 +406,10 @@ class DcShuntMotor(DcMotor):
     HAS_JACOBIAN = True
     VOLTAGES = ['u']
 
-    _default_nominal_values = {'omega': 368, 'torque': 0.0, 'i_a': 50, 'i_e': 1.2, 'u': 420}
-    _default_limits = {'omega': 500, 'torque': 0.0, 'i_a': 75, 'i_e': 2, 'u': 420}
+    _default_nominal_values = {'omega': 368, 'torque': 0.0, 'i_a': 50,
+                               'i_e': 1.2, 'u': 420}
+    _default_limits = {'omega': 500, 'torque': 0.0, 'i_a': 75, 'i_e': 2,
+                       'u': 420}
 
     def i_in(self, state):
         # Docstring of superclass
@@ -411,7 +427,8 @@ class DcShuntMotor(DcMotor):
                 [0, -mp['r_e'] / mp['l_e']]
             ]),
             np.array([-mp['l_e_prime'] * state[self.I_E_IDX] / mp['l_a'], 0]),
-            np.array([mp['l_e_prime'] * state[self.I_E_IDX], mp['l_e_prime'] * state[self.I_A_IDX]])
+            np.array([mp['l_e_prime'] * state[self.I_E_IDX],
+                      mp['l_e_prime'] * state[self.I_A_IDX]])
         )
 
     def get_state_space(self, input_currents, input_voltages):
@@ -513,7 +530,9 @@ class DcSeriesMotor(DcMotor):
         self._model_constants = np.array([
             [-mp['r_a'] - mp['r_e'], -mp['l_e_prime'], 1]
         ])
-        self._model_constants[self.I_IDX] = self._model_constants[self.I_IDX] / (mp['l_a'] + mp['l_e'])
+        self._model_constants[self.I_IDX] = self._model_constants[
+                                                self.I_IDX] / (
+                                                    mp['l_a'] + mp['l_e'])
 
     def torque(self, currents):
         # Docstring of superclass
@@ -564,8 +583,10 @@ class DcSeriesMotor(DcMotor):
     def electrical_jacobian(self, state, u_in, omega, *_):
         mp = self._motor_parameter
         return (
-            np.array([[-(mp['r_a'] + mp['r_e'] + mp['l_e_prime'] * omega) / (mp['l_a'] + mp['l_e'])]]),
-            np.array([-mp['l_e_prime'] * state[self.I_IDX] / (mp['l_a'] + mp['l_e'])]),
+            np.array([[-(mp['r_a'] + mp['r_e'] + mp['l_e_prime'] * omega) / (
+                    mp['l_a'] + mp['l_e'])]]),
+            np.array([-mp['l_e_prime'] * state[self.I_IDX] / (
+                    mp['l_a'] + mp['l_e'])]),
             np.array([2 * mp['l_e_prime'] * state[self.I_IDX]])
         )
 
@@ -637,7 +658,8 @@ class DcPermanentlyExcitedMotor(DcMotor):
 
     def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
-        self._ode_placeholder[:] = [omega] + np.atleast_1d(state[self.I_IDX]).tolist()\
+        self._ode_placeholder[:] = [omega] + np.atleast_1d(
+            state[self.I_IDX]).tolist() \
                                    + [u_in[0]]
         return np.matmul(self._model_constants, self._ode_placeholder)
 
@@ -688,7 +710,8 @@ class DcExternallyExcitedMotor(DcMotor):
                 [0, -mp['r_e'] / mp['l_e']]
             ]),
             np.array([-mp['l_e_prime'] * state[self.I_E_IDX] / mp['l_a'], 0]),
-            np.array([mp['l_e_prime'] * state[self.I_E_IDX], mp['l_e_prime'] * state[self.I_A_IDX]])
+            np.array([mp['l_e_prime'] * state[self.I_E_IDX],
+                      mp['l_e_prime'] * state[self.I_A_IDX]])
         )
 
     def _update_limits(self):
@@ -706,7 +729,6 @@ class DcExternallyExcitedMotor(DcMotor):
 
 
 class ThreePhaseMotor(ElectricMotor):
-
     """
             The ThreePhaseMotor and its subclasses implement the technical system of Three Phase Motors.
 
@@ -766,7 +788,8 @@ class ThreePhaseMotor(ElectricMotor):
         """
         cos = math.cos(epsilon)
         sin = math.sin(epsilon)
-        return cos * quantities[0] - sin * quantities[1], sin * quantities[0] + cos * quantities[1]
+        return cos * quantities[0] - sin * quantities[1], sin * quantities[
+            0] + cos * quantities[1]
 
     @staticmethod
     def q_inv(quantities, epsilon):
@@ -921,7 +944,6 @@ class SynchronousMotor(ThreePhaseMotor):
     def __init__(self,
                  motor_parameter=None, nominal_values=None,
                  limit_values=None, initializer=None, **kwargs):
-
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
@@ -989,7 +1011,8 @@ class SynchronousMotor(ThreePhaseMotor):
             limits_agenda[i] = self._limits.get('i', None) or \
                                self._limits[u] / self._motor_parameter['r_s']
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
-                                self._nominal_values[u] / self._motor_parameter['r_s']
+                                self._nominal_values[u] / \
+                                self._motor_parameter['r_s']
 
         super()._update_limits(limits_agenda, nominal_agenda)
 
@@ -1070,11 +1093,13 @@ class SynchronousReluctanceMotor(SynchronousMotor):
 
     """
     HAS_JACOBIAN = True
-    _default_motor_parameter = {'p': 2, 'l_d': 73.2e-3, 'l_q': 7.3e-3, 'j_rotor': 2.45e-3, 'r_s': 0.3256}
+    _default_motor_parameter = {'p': 2, 'l_d': 73.2e-3, 'l_q': 7.3e-3,
+                                'j_rotor': 2.45e-3, 'r_s': 0.3256}
     _default_nominal_values = {
         'i': 54, 'torque': 0, 'omega': 523.0, 'epsilon': np.pi, 'u': 600
     }
-    _default_limits = {'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi, 'u': 600}
+    _default_limits = {'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi,
+                       'u': 600}
 
     IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
     IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']
@@ -1089,24 +1114,29 @@ class SynchronousReluctanceMotor(SynchronousMotor):
             [0, 0, -mp['r_s'], 0, 1, mp['l_q'] * mp['p'], 0],
             [mp['p'], 0, 0, 0, 0, 0, 0]
         ])
-        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
-        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
+        self._model_constants[self.I_SQ_IDX] = self._model_constants[
+                                                   self.I_SQ_IDX] / mp['l_q']
+        self._model_constants[self.I_SD_IDX] = self._model_constants[
+                                                   self.I_SD_IDX] / mp['l_d']
 
     def _torque_limit(self):
         # Docstring of superclass
-        return self.torque([self._limits['i_sq'] / np.sqrt(2), self._limits['i_sd'] / np.sqrt(2), 0])
+        return self.torque([self._limits['i_sq'] / np.sqrt(2),
+                            self._limits['i_sd'] / np.sqrt(2), 0])
 
     def torque(self, currents):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * ((mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+        return 1.5 * mp['p'] * (
+                (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * \
+               currents[self.I_SQ_IDX]
 
     def electrical_jacobian(self, state, u_in, omega, *_):
         mp = self._motor_parameter
         return (
             np.array([
-                [-mp['r_s'] / mp['l_q'], -mp['l_d']/mp['l_q']*omega, 0],
-                [mp['l_q'] / mp['l_d']*omega, - mp['r_s'] / mp['l_d'], 0],
+                [-mp['r_s'] / mp['l_q'], -mp['l_d'] / mp['l_q'] * omega, 0],
+                [mp['l_q'] / mp['l_d'] * omega, - mp['r_s'] / mp['l_d'], 0],
                 [0, 0, 0]
             ]),
             np.array([
@@ -1206,7 +1236,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     }
     HAS_JACOBIAN = True
     _default_limits = dict(omega=80, torque=0.0, i=20, epsilon=math.pi, u=600)
-    _default_nominal_values = dict(omega=75, torque=0.0, i=12, epsilon=math.pi, u=600)
+    _default_nominal_values = dict(omega=75, torque=0.0, i=12, epsilon=math.pi,
+                                   u=600)
 
     IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
     IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']
@@ -1216,13 +1247,16 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         mp = self._motor_parameter
         self._model_constants = np.array([
             # omega,                 i_q,        i_d,        u_q, u_d, omega * i_q,         omega * i_d
-            [-mp['psi_p'] * mp['p'], -mp['r_s'], 0,          1,   0,   0,                   -mp['l_d'] * mp['p']],
-            [0,                      0,          -mp['r_s'], 0,   1,   mp['l_q'] * mp['p'], 0],
-            [mp['p'],                0,          0,          0,   0,   0,                   0]
+            [-mp['psi_p'] * mp['p'], -mp['r_s'], 0, 1, 0, 0,
+             -mp['l_d'] * mp['p']],
+            [0, 0, -mp['r_s'], 0, 1, mp['l_q'] * mp['p'], 0],
+            [mp['p'], 0, 0, 0, 0, 0, 0]
         ])
 
-        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
-        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
+        self._model_constants[self.I_SQ_IDX] = self._model_constants[
+                                                   self.I_SQ_IDX] / mp['l_q']
+        self._model_constants[self.I_SD_IDX] = self._model_constants[
+                                                   self.I_SD_IDX] / mp['l_d']
 
     def _torque_limit(self):
         # Docstring of superclass
@@ -1231,23 +1265,27 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     def torque(self, currents):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX])*currents[self.I_SQ_IDX]
+        return 1.5 * mp['p'] * (
+                mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[
+            self.I_SD_IDX]) * currents[self.I_SQ_IDX]
 
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
         return (
-            np.array([ # dx'/dx
-                [-mp['r_s'] / mp['l_q'], -mp['l_d']/mp['l_q']*omega, 0],
-                [mp['l_q'] / mp['l_d']*omega, -mp['r_s']/mp['l_d'], 0],
+            np.array([  # dx'/dx
+                [-mp['r_s'] / mp['l_q'], -mp['l_d'] / mp['l_q'] * omega, 0],
+                [mp['l_q'] / mp['l_d'] * omega, -mp['r_s'] / mp['l_d'], 0],
                 [0, 0, 0]
             ]),
-            np.array([ # dx'/dw
-                -mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['p'] * mp['psi_p'] / mp['l_q'],
+            np.array([  # dx'/dw
+                -mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp[
+                    'p'] * mp['psi_p'] / mp['l_q'],
                 mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
                 mp['p']
             ]),
-            np.array([ # dT/dx
-                1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
+            np.array([  # dT/dx
+                1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[
+                    self.I_SD_IDX]),
                 1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
                 0
             ])
@@ -1345,8 +1383,10 @@ class InductionMotor(ThreePhaseMotor):
     FLUXES = ['psi_ralpha', 'psi_rbeta']
     STATOR_VOLTAGES = ['u_salpha', 'u_sbeta']
 
-    IO_VOLTAGES = ['u_sa', 'u_sb', 'u_sc', 'u_salpha', 'u_sbeta', 'u_sd', 'u_sq']
-    IO_CURRENTS = ['i_sa', 'i_sb', 'i_sc', 'i_salpha', 'i_sbeta', 'i_sd', 'i_sq']
+    IO_VOLTAGES = ['u_sa', 'u_sb', 'u_sc', 'u_salpha', 'u_sbeta', 'u_sd',
+                   'u_sq']
+    IO_CURRENTS = ['i_sa', 'i_sb', 'i_sc', 'i_salpha', 'i_sbeta', 'i_sd',
+                   'i_sq']
 
     HAS_JACOBIAN = True
     _default_motor_parameter = {
@@ -1359,8 +1399,10 @@ class InductionMotor(ThreePhaseMotor):
         'r_r': 1.355,
     }
 
-    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=560)
-    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=560)
+    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi,
+                           u=560)
+    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9,
+                                   epsilon=math.pi, u=560)
     _model_constants = None
 
     @property
@@ -1416,29 +1458,42 @@ class InductionMotor(ThreePhaseMotor):
     def _torque_limit(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_rsig']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
+        return 1.5 * mp['p'] * mp['l_m'] ** 2 / (mp['l_m'] + mp['l_rsig']) * \
+               self._limits['i_sd'] * self._limits['i_sq'] / 2
 
     def torque(self, states):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] - states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
+        return 1.5 * mp['p'] * mp['l_m'] / (mp['l_m'] + mp['l_rsig']) * (
+                states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] -
+                states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
 
     def _update_model(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        l_s = mp['l_m']+mp['l_ssig']
-        l_r = mp['l_m']+mp['l_rsig']
-        sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
+        l_s = mp['l_m'] + mp['l_ssig']
+        l_r = mp['l_m'] + mp['l_rsig']
+        sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
         tau_r = l_r / mp['r_r']
-        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
+        tau_sig = sigma * l_s / (
+                mp['r_s'] + mp['r_r'] * (mp['l_m'] ** 2) / (l_r ** 2))
 
         self._model_constants = np.array([
             # omega,  i_alpha,         i_beta,          psi_ralpha,                               psi_rbeta,                              omega * psi_ralpha,                  omega * psi_rbeta,                  u_salpha,        u_sbeta,       u_ralpha,                        u_rbeta,
-            [0,       -1/tau_sig,      0,               mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2), 0,                                      0,                                   +mp['l_m']*mp['p']/(sigma*l_r*l_s), 1/(sigma * l_s), 0,             -mp['l_m']/ (sigma * l_r * l_s), 0,                               ],  # i_ralpha_dot
-            [0,       0,               -1/tau_sig,      0,                                        mp['l_m']*mp['r_r']/(sigma*l_s*l_r**2), -mp['l_m']*mp['p']/(sigma*l_r*l_s),  0,                                  0,               1/(sigma*l_s),  0,                              -mp['l_m']/ (sigma * l_r * l_s), ],  # i_rbeta_dot
-            [0,       mp['l_m']/tau_r, 0,               -1/tau_r,                                 0,                                      0,                                   -mp['p'],                           0,               0,              1,                              0,                               ],  # psi_ralpha_dot
-            [0,       0,               mp['l_m']/tau_r, 0,                                        -1/tau_r,                               mp['p'],                             0,                                  0,               0,              0,                              1,                               ],  # psi_rbeta_dot
-            [mp['p'], 0,               0,               0,                                        0,                                      0,                                   0,                                  0,               0,              0,                              0,                               ],  # epsilon_dot
+            [0, -1 / tau_sig, 0,
+             mp['l_m'] * mp['r_r'] / (sigma * l_s * l_r ** 2), 0, 0,
+             +mp['l_m'] * mp['p'] / (sigma * l_r * l_s), 1 / (sigma * l_s), 0,
+             -mp['l_m'] / (sigma * l_r * l_s), 0, ],  # i_ralpha_dot
+            [0, 0, -1 / tau_sig, 0,
+             mp['l_m'] * mp['r_r'] / (sigma * l_s * l_r ** 2),
+             -mp['l_m'] * mp['p'] / (sigma * l_r * l_s), 0, 0,
+             1 / (sigma * l_s), 0, -mp['l_m'] / (sigma * l_r * l_s), ],
+            # i_rbeta_dot
+            [0, mp['l_m'] / tau_r, 0, -1 / tau_r, 0, 0, -mp['p'], 0, 0, 1,
+             0, ],  # psi_ralpha_dot
+            [0, 0, mp['l_m'] / tau_r, 0, -1 / tau_r, mp['p'], 0, 0, 0, 0, 1, ],
+            # psi_rbeta_dot
+            [mp['p'], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ],  # epsilon_dot
         ])
 
     def electrical_jacobian(self, state, u_in, omega, *args):
@@ -1447,26 +1502,34 @@ class InductionMotor(ThreePhaseMotor):
         l_r = mp['l_m'] + mp['l_rsig']
         sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
         tau_r = l_r / mp['r_r']
-        tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m'] ** 2) / (l_r ** 2))
+        tau_sig = sigma * l_s / (
+                mp['r_s'] + mp['r_r'] * (mp['l_m'] ** 2) / (l_r ** 2))
 
         return (
-            np.array([ # dx'/dx
+            np.array([  # dx'/dx
                 # i_alpha          i_beta               psi_alpha                                    psi_beta                                   epsilon
-                [-1/tau_sig,        0,                  mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),    omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), 0],
-                [0,                 - 1 / tau_sig,      - omega * mp['l_m']*mp['p']/(sigma*l_r*l_s), mp['l_m']*mp['r_r']/(sigma*l_s * l_r**2),  0],
-                [mp['l_m'] / tau_r, 0,                  - 1 / tau_r,                                 - omega * mp['p'],                         0],
-                [0,                  mp['l_m'] / tau_r, omega * mp['p'],                             - 1 / tau_r,                               0],
-                [0,                 0,                  0,                                           0,                                         0]
+                [-1 / tau_sig, 0,
+                 mp['l_m'] * mp['r_r'] / (sigma * l_s * l_r ** 2),
+                 omega * mp['l_m'] * mp['p'] / (sigma * l_r * l_s), 0],
+                [0, - 1 / tau_sig,
+                 - omega * mp['l_m'] * mp['p'] / (sigma * l_r * l_s),
+                 mp['l_m'] * mp['r_r'] / (sigma * l_s * l_r ** 2), 0],
+                [mp['l_m'] / tau_r, 0, - 1 / tau_r, - omega * mp['p'], 0],
+                [0, mp['l_m'] / tau_r, omega * mp['p'], - 1 / tau_r, 0],
+                [0, 0, 0, 0, 0]
             ]),
-            np.array([ # dx'/dw
-                mp['l_m'] * mp['p'] / (sigma*l_r*l_s) * state[self.PSI_RBETA_IDX],
-                - mp['l_m'] * mp['p'] / (sigma*l_r*l_s) * state[self.PSI_RALPHA_IDX],
+            np.array([  # dx'/dw
+                mp['l_m'] * mp['p'] / (sigma * l_r * l_s) * state[
+                    self.PSI_RBETA_IDX],
+                - mp['l_m'] * mp['p'] / (sigma * l_r * l_s) * state[
+                    self.PSI_RALPHA_IDX],
                 - mp['p'] * state[self.PSI_RBETA_IDX],
                 mp['p'] * state[self.PSI_RALPHA_IDX],
                 mp['p']
             ]),
-            np.array([ # dT/dx
-                - state[self.PSI_RBETA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+            np.array([  # dT/dx
+                - state[self.PSI_RBETA_IDX] * 3 / 2 * mp['p'] * mp[
+                    'l_m'] / l_r,
                 state[self.PSI_RALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
                 state[self.I_SBETA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
                 - state[self.I_SALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
@@ -1571,8 +1634,10 @@ class SquirrelCageInductionMotor(InductionMotor):
         'r_r': 1.355,
     }
 
-    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi, u=560)
-    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9, epsilon=math.pi, u=560)
+    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi,
+                           u=560)
+    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9,
+                                   epsilon=math.pi, u=560)
 
     def electrical_ode(self, state, u_salphabeta, omega, *args):
         """
@@ -1598,7 +1663,8 @@ class SquirrelCageInductionMotor(InductionMotor):
             limits_agenda[i] = self._limits.get('i', None) or \
                                self._limits[u] / self._motor_parameter['r_s']
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
-                                self._nominal_values[u] / self._motor_parameter['r_s']
+                                self._nominal_values[u] / \
+                                self._motor_parameter['r_s']
 
         super()._update_limits(limits_agenda, nominal_agenda)
 
@@ -1710,8 +1776,10 @@ class DoublyFedInductionMotor(InductionMotor):
         'r_r': 21e-3,
     }
 
-    _default_limits = dict(omega=160, torque=0.0, i=1900, epsilon=math.pi, u=1200)
-    _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900, epsilon=math.pi, u=1200)
+    _default_limits = dict(omega=160, torque=0.0, i=1900, epsilon=math.pi,
+                           u=1200)
+    _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900,
+                                   epsilon=math.pi, u=1200)
 
     def __init__(self, **kwargs):
         self.IO_VOLTAGES += self.IO_ROTOR_VOLTAGES
