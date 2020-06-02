@@ -90,7 +90,6 @@ class MotorDashboard(ElectricMotorVisualization):
         self._plotted_state_index = []
         self._k = 0
         self.initialized = False
-        self._reward_function = None
 
         # If available use the Qt5 Backend and the update function to update the plot (faster)
         try:
@@ -99,10 +98,9 @@ class MotorDashboard(ElectricMotorVisualization):
         except ImportError:
             warnings.warn('Cannot use Qt5Agg matplotlib backend. Plotting will be slower.')
 
-    def set_modules(self, physical_system, reference_generator, reward_function):
+    def set_modules(self, physical_system, reference_generator, _):
         self._physical_system = physical_system
         self._referenced_states = reference_generator.referenced_states
-        self._reward_function = reward_function   #??
 
     def reset(self, reference_trajectories=None, *_, **__):
         """
@@ -137,7 +135,6 @@ class MotorDashboard(ElectricMotorVisualization):
             reward: current reward in this step
             done: Flag, if the episode has terminated
         """
-
         if not self.initialized:
             self.initialized = True
             self._update_physical_system_data()
@@ -145,9 +142,12 @@ class MotorDashboard(ElectricMotorVisualization):
             self._set_up_plots()
             for var in self.dash_vars:
                 var.reset()
+            self.dash_vars[5].reset()  #??
             plt.pause(0.05)
         k = self._k
         state_denorm = state * self._limits
+        #np.append(state_denorm, reward)
+
         if reference is not None:
             reference_denorm = reference * self._limits
             for var, data, ref in zip(
@@ -156,6 +156,9 @@ class MotorDashboard(ElectricMotorVisualization):
                     reference_denorm[self._plotted_state_index]
             ):
                 var.step(data, k, ref)
+
+            self.dash_vars[5].step(reward, k)
+
         else:
             for var, data in zip(self.dash_vars, state_denorm[self._plotted_state_index]):
                 var.step(data, k)
@@ -182,6 +185,8 @@ class MotorDashboard(ElectricMotorVisualization):
         self._nominal_state = self._physical_system.nominal_state
         self._tau = self._physical_system.tau
         self._update_cycle = int(self._update_period / self._tau)
+        self.reward_range = self._reward_function.reward_range    # min max range of reward
+
         try:
             self._labels = self._physical_system.labels
         except AttributeError:
@@ -203,8 +208,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 'u_sd': '$u_{sd}/V$',
                 'u_e': '$u_{e}/V$',
                 'u_sup': '$u_{sup}/V$',
-                'epsilon': r'$\epsilon/rad$',
-                'reward': r'$r$'     #??
+                'epsilon': r'$\epsilon/rad$'
             }
         self._state_space = self._physical_system.state_space
 
@@ -213,7 +217,7 @@ class MotorDashboard(ElectricMotorVisualization):
         This function handles the setup of all plots.
         """
         plt.close()
-        self._figure, axes = plt.subplots(len(self._plotted_variables))
+        self._figure, axes = plt.subplots(len(self._plotted_variables) +1)  # +1 for reward plot  todo
         self._figure.subplots_adjust(wspace=0.0, hspace=0.4)
 
         if matplotlib.get_backend() == 'Qt5Agg':
@@ -228,6 +232,15 @@ class MotorDashboard(ElectricMotorVisualization):
 
         low_nominal = self._nominal_state * self._state_space.low
         high_nominal = self._nominal_state * self._state_space.high
+        # if 'reward' in self._plotted_variables: # ??  reward range handlling
+        #     low.append(self.reward_range[0])
+        #     high.append(self.reward_range[1])
+        #     low_nominal.append(0)
+        #     high_nominal.append(0)
+        rew_low = self.reward_range[0]
+        rew_high = self.reward_range[1]
+        rew_nominal_high = 0
+        rew_nominal_low = 0
 
         if len(self._plotted_state_index) > 1:
             self.dash_vars = np.array(
@@ -256,6 +269,12 @@ class MotorDashboard(ElectricMotorVisualization):
                     )
                 ]
             )
+            reward_dash = _DashboardVariable('reward', axes[-1], rew_low, rew_high, rew_nominal_low,
+                                             rew_nominal_high,self._episode_length, self._tau, self._update_period,
+                                             self._labels['reward'], self._visu_period, False)
+
+            np.append(self.dash_vars, reward_dash)
+
         elif len(self._plotted_state_index) == 1:
             self.dash_vars = np.array(
                 [
@@ -287,12 +306,20 @@ class MotorDashboard(ElectricMotorVisualization):
 
             The value [True] is the shortcut for plotting all variables.
         """
+        reward_idx = 42
         self._plotted_state_index = []
         if self._plotted_variables == 'all':
-            self._plotted_variables = list(self._physical_system.state_names)
-            self._plotted_variables.append('reward')
-            self._plotted_state_index = list(range(len(self._plotted_variables) + 1))  # added reward
+<<<<<<< HEAD
+            self._plotted_variables = list(self._physical_system.state_names)  #??
+            #self._plotted_variables.append('reward')
+            self._plotted_state_index = list(range(len(self._plotted_variables))) # +1 for reward
 
+            #self._plotted_state_index.append()
+
+=======
+            self._plotted_variables = list(self._physical_system.state_names)
+            self._plotted_state_index = list(range(len(self._plotted_variables)))
+>>>>>>> parent of ff30190... initial commit, plot reward in visualization
         elif self._plotted_variables == 'none':
             self._plotted_variables = []
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
@@ -300,12 +327,16 @@ class MotorDashboard(ElectricMotorVisualization):
             temp = self._plotted_variables
             self._plotted_variables = []
             for variable in self._labels.keys():
-                if variable in temp and (variable in self._physical_system.state_names or variable == 'reward'):  # ??
+                if variable in temp and variable in self._physical_system.state_names:
                     self._plotted_variables.append(variable)
-                    if variable == 'reward':
-                        self._plotted_state_index.append(42)
-                    else:
-                        self._plotted_state_index.append(self._physical_system.state_names.index(variable))
+                    self._plotted_state_index.append(self._physical_system.state_names.index(variable))
+<<<<<<< HEAD
+                    # if variable == 'reward':
+                    #     self._plotted_state_index.append(reward_idx)
+                    # else:
+                    #     self._plotted_state_index.append(self._physical_system.state_names.index(variable))
+=======
+>>>>>>> parent of ff30190... initial commit, plot reward in visualization
         if len(self._plotted_variables) < 1:
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
 
