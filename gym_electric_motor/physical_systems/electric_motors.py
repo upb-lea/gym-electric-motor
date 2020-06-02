@@ -144,7 +144,6 @@ class ElectricMotor:
             'initializer have to be dict, but is %r' % type(self._initializer)
         # using explicit dict keys?
         initial_value = np.atleast_1d(self._initializer['init_value'])
-
         if self._initializer['init_type'] == 'constant':
             # check if value is general constant or a constant for each current
             assert (initial_value.shape[0] == 1 or
@@ -154,6 +153,8 @@ class ElectricMotor:
             return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
         elif self._initializer['init_type'] in ['uniform', 'gaussian']:
+            assert initial_value.ndim == len(self.CURRENTS), \
+                'number of states does not match number of limits'
             # todo catch scalar case with assert
             nominal_currents = np.asarray([self._nominal_values[ix]
                                            for ix in self.CURRENTS])
