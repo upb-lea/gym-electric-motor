@@ -90,7 +90,6 @@ class MotorDashboard(ElectricMotorVisualization):
         self._plotted_state_index = []
         self._k = 0
         self.initialized = False
-        self._reward_function = None
 
         # If available use the Qt5 Backend and the update function to update the plot (faster)
         try:
@@ -99,10 +98,9 @@ class MotorDashboard(ElectricMotorVisualization):
         except ImportError:
             warnings.warn('Cannot use Qt5Agg matplotlib backend. Plotting will be slower.')
 
-    def set_modules(self, physical_system, reference_generator, reward_function):
+    def set_modules(self, physical_system, reference_generator, _):
         self._physical_system = physical_system
         self._referenced_states = reference_generator.referenced_states
-        self._reward_function = reward_function   #??
 
     def reset(self, reference_trajectories=None, *_, **__):
         """
@@ -137,7 +135,6 @@ class MotorDashboard(ElectricMotorVisualization):
             reward: current reward in this step
             done: Flag, if the episode has terminated
         """
-
         if not self.initialized:
             self.initialized = True
             self._update_physical_system_data()
@@ -203,8 +200,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 'u_sd': '$u_{sd}/V$',
                 'u_e': '$u_{e}/V$',
                 'u_sup': '$u_{sup}/V$',
-                'epsilon': r'$\epsilon/rad$',
-                'reward': r'$r$'     #??
+                'epsilon': r'$\epsilon/rad$'
             }
         self._state_space = self._physical_system.state_space
 
@@ -290,9 +286,7 @@ class MotorDashboard(ElectricMotorVisualization):
         self._plotted_state_index = []
         if self._plotted_variables == 'all':
             self._plotted_variables = list(self._physical_system.state_names)
-            self._plotted_variables.append('reward')
-            self._plotted_state_index = list(range(len(self._plotted_variables) + 1))  # added reward
-
+            self._plotted_state_index = list(range(len(self._plotted_variables)))
         elif self._plotted_variables == 'none':
             self._plotted_variables = []
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
@@ -300,12 +294,9 @@ class MotorDashboard(ElectricMotorVisualization):
             temp = self._plotted_variables
             self._plotted_variables = []
             for variable in self._labels.keys():
-                if variable in temp and (variable in self._physical_system.state_names or variable == 'reward'):  # ??
+                if variable in temp and variable in self._physical_system.state_names:
                     self._plotted_variables.append(variable)
-                    if variable == 'reward':
-                        self._plotted_state_index.append(42)
-                    else:
-                        self._plotted_state_index.append(self._physical_system.state_names.index(variable))
+                    self._plotted_state_index.append(self._physical_system.state_names.index(variable))
         if len(self._plotted_variables) < 1:
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
 
