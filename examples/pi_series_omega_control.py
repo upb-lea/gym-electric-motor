@@ -37,5 +37,8 @@ if __name__ == '__main__':
         env.render()
         action = controller.control(state, reference)
         (state, reference), reward, done, _ = env.step(action)
+        #print("the last flag is: ", done)
+        if done:
+            env.reset()
         cum_rew += reward
     print(cum_rew)

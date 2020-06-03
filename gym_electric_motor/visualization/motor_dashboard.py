@@ -6,7 +6,6 @@ import warnings
 
 
 class MotorDashboard(ElectricMotorVisualization):
-
     """
     Visualization of the variables of the motor in graphs. This can be the angular velocity omega, torque
     phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.
@@ -139,7 +138,9 @@ class MotorDashboard(ElectricMotorVisualization):
             self.initialized = True
             self._update_physical_system_data()
             self._order_plotted_variables()
+
             self._set_up_plots()
+
             for var in self.dash_vars:
                 var.reset()
             plt.pause(0.05)
@@ -175,9 +176,10 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         update the limits, nominal values and sampling time
         """
-        self._limits = self._physical_system.limits
-        self._nominal_state = self._physical_system.nominal_state
+        self._limits = self._physical_system.limits  # can add reward limit as 1
+        self._nominal_state = self._physical_system.nominal_state  # reward nominal state=??
         self._tau = self._physical_system.tau
+
         self._update_cycle = int(self._update_period / self._tau)
         try:
             self._labels = self._physical_system.labels
@@ -200,7 +202,8 @@ class MotorDashboard(ElectricMotorVisualization):
                 'u_sd': '$u_{sd}/V$',
                 'u_e': '$u_{e}/V$',
                 'u_sup': '$u_{sup}/V$',
-                'epsilon': r'$\epsilon/rad$'
+                'epsilon': r'$\epsilon/rad$',
+                'reward': r'$\r/units$'
             }
         self._state_space = self._physical_system.state_space
 
@@ -219,11 +222,12 @@ class MotorDashboard(ElectricMotorVisualization):
             fig_manager.window.showMaximized()
         else:
             self._update_figure = self._figure.canvas.draw
-        low = self._limits * self._state_space.low
-        high = self._limits * self._state_space.high
-
-        low_nominal = self._nominal_state * self._state_space.low
-        high_nominal = self._nominal_state * self._state_space.high
+        # state_low = self._limits * self._state_space.low
+        # state_high = self._limits * self._state_space.high
+        #
+        # state_low_nominal = self._nominal_state * self._state_space.low
+        # state_high_nominal = self._nominal_state * self._state_space.high
+        low, high, low_nominal, high_nominal, ref = self._get_variable_ranges()
 
         if len(self._plotted_state_index) > 1:
             self.dash_vars = np.array(
@@ -242,14 +246,13 @@ class MotorDashboard(ElectricMotorVisualization):
                         self._visu_period,
                         with_ref
                     )
-                    for var, ax, lo, hi, lo_nominal, hi_nominal, with_ref in zip(
-                        self._plotted_variables, axes,
-                        low[self._plotted_state_index],
-                        high[self._plotted_state_index],
-                        low_nominal[self._plotted_state_index],
-                        high_nominal[self._plotted_state_index],
-                        self._referenced_states[self._plotted_state_index]
-                    )
+                    for var, ax, lo, hi, lo_nominal, hi_nominal, with_ref in zip(self._plotted_variables, axes,
+                                                                                 low,
+                                                                                 high,
+                                                                                 low_nominal,
+                                                                                 high_nominal,
+                                                                                 ref
+                                                                                 )
                 ]
             )
         elif len(self._plotted_state_index) == 1:
@@ -285,26 +288,68 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         self._plotted_state_index = []
         if self._plotted_variables == 'all':
-            self._plotted_variables = list(self._physical_system.state_names)
+            self._plotted_state_variables = list(self._physical_system.state_names)
             self._plotted_state_index = list(range(len(self._plotted_variables)))
         elif self._plotted_variables == 'none':
-            self._plotted_variables = []
+            self._plotted_state_variables = []
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
         else:
             temp = self._plotted_variables
-            self._plotted_variables = []
+            self._plotted_state_variables = []
             for variable in self._labels.keys():
                 if variable in temp and variable in self._physical_system.state_names:
-                    self._plotted_variables.append(variable)
+                    self._plotted_state_variables.append(variable)
                     self._plotted_state_index.append(self._physical_system.state_names.index(variable))
+
+        self._add_reward_variable()
         if len(self._plotted_variables) < 1:
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
+
+    def _add_reward_variable(self):
+        reward_variable = ['reward']
+        if self._plotted_variables == 'all':
+            self._plotted_variables = self._plotted_state_variables + reward_variable
+
+        elif self._plotted_variables == 'none':
+            self._plotted_variables = self._plotted_state_variables
+
+        else:
+            if 'reward' in self._plotted_variables:
+                self._plotted_variables = self._plotted_state_variables + reward_variable
+            else:
+                self._plotted_variables = self._plotted_state_variables
+
+    def _get_variable_ranges(self):
+        rew_lo = -2000
+        rew_hi = 0
+        rew_nom_lo = -1000
+        rew_nom_hi = -500
+        state_low = self._limits * self._state_space.low
+        state_high = self._limits * self._state_space.high
+        state_low_nominal = self._nominal_state * self._state_space.low
+        state_high_nominal = self._nominal_state * self._state_space.high
+
+        low = state_low[self._plotted_state_index],
+        high = state_high[self._plotted_state_index],
+        low_nominal = state_low_nominal[self._plotted_state_index],
+        high_nominal = state_high_nominal[self._plotted_state_index],
+        is_referenced = self._referenced_states[self._plotted_state_index]
+
+        if 'reward' in self._plotted_variables:
+            np.append(low, rew_lo)
+            np.append(high, rew_hi)
+            np.append(low_nominal, rew_nom_lo)
+            np.append(high_nominal, rew_nom_hi)
+            np.append(is_referenced, False)
+
+        return low, high, low_nominal, high_nominal, is_referenced
 
 
 class _DashboardVariable:
     """
         Class to manage a single axis for a state variable on the dashboard with trajectory (and reference)
     """
+
     def __init__(self, name, ax, min_limit, max_limit, min_nominal, max_nominal, episode_length, tau, update_period,
                  label, visu_period, referenced):
         """
@@ -368,8 +413,8 @@ class _DashboardVariable:
         self._remaining_steps = int(self._visu_period / self._update_period * self._past_data_dash) + 1
 
         self.ax.set_xlim(0, self._visu_period)
-        self.ax.set_ylim(self.min_limit - 0.1*(self.max_limit - self.min_limit),
-                         self.max_limit + 0.1*(self.max_limit - self.min_limit))
+        self.ax.set_ylim(self.min_limit - 0.1 * (self.max_limit - self.min_limit),
+                         self.max_limit + 0.1 * (self.max_limit - self.min_limit))
         self.ax.set_xlabel('t/s')
 
         # set y ticks, display min and max for nominal and limit and two values between the nominal values
@@ -379,7 +424,7 @@ class _DashboardVariable:
 
         self.ax.set_ylabel(self._label, fontsize=13)
         self.ax.draw_artist(self.ax.patch)
-        self._x = np.linspace(0, self._update_period, self.update_cycle+1)
+        self._x = np.linspace(0, self._update_period, self.update_cycle + 1)
 
         self.plot_nominal_state()  # show nominal values on dashboard
         if 'u' == self.name[0]:
