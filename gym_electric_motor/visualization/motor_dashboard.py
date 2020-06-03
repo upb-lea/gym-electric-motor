@@ -145,17 +145,20 @@ class MotorDashboard(ElectricMotorVisualization):
                 var.reset()
             plt.pause(0.05)
         k = self._k
-        state_denorm = state * self._limits
+        # state_denorm = state * self._limits
+
+        plot_vals_denorm, reference_denorm = self._calc_plotable_vals(state, reference, reward)
+
         if reference is not None:
-            reference_denorm = reference * self._limits
+            # reference_denorm = reference * self._limits
             for var, data, ref in zip(
                     self.dash_vars,
-                    state_denorm[self._plotted_state_index],
-                    reference_denorm[self._plotted_state_index]
+                    plot_vals_denorm,
+                    reference_denorm
             ):
                 var.step(data, k, ref)
         else:
-            for var, data in zip(self.dash_vars, state_denorm[self._plotted_state_index]):
+            for var, data in zip(self.dash_vars, plot_vals_denorm):
                 var.step(data, k)
 
         if (k + 1) % self._update_cycle == 0 or k == self._episode_length - 1 or done:
@@ -203,7 +206,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 'u_e': '$u_{e}/V$',
                 'u_sup': '$u_{sup}/V$',
                 'epsilon': r'$\epsilon/rad$',
-                'reward': r'$\r/units$'
+                'reward': 'Reward'
             }
         self._state_space = self._physical_system.state_space
 
@@ -289,7 +292,7 @@ class MotorDashboard(ElectricMotorVisualization):
         self._plotted_state_index = []
         if self._plotted_variables == 'all':
             self._plotted_state_variables = list(self._physical_system.state_names)
-            self._plotted_state_index = list(range(len(self._plotted_variables)))
+            self._plotted_state_index = list(range(len(self._plotted_state_variables)))
         elif self._plotted_variables == 'none':
             self._plotted_state_variables = []
             warnings.warn("No valid variables for visualization", Warning, stacklevel=2)
@@ -322,27 +325,39 @@ class MotorDashboard(ElectricMotorVisualization):
     def _get_variable_ranges(self):
         rew_lo = -2000
         rew_hi = 0
-        rew_nom_lo = -1000
-        rew_nom_hi = -500
+        rew_nom_lo = 0
+        rew_nom_hi = 0
         state_low = self._limits * self._state_space.low
+        # state_low = list(state_low)
         state_high = self._limits * self._state_space.high
         state_low_nominal = self._nominal_state * self._state_space.low
         state_high_nominal = self._nominal_state * self._state_space.high
 
-        low = state_low[self._plotted_state_index],
-        high = state_high[self._plotted_state_index],
-        low_nominal = state_low_nominal[self._plotted_state_index],
-        high_nominal = state_high_nominal[self._plotted_state_index],
+        low = state_low[self._plotted_state_index]
+        high = state_high[self._plotted_state_index]
+        low_nominal = state_low_nominal[self._plotted_state_index]
+        high_nominal = state_high_nominal[self._plotted_state_index]
         is_referenced = self._referenced_states[self._plotted_state_index]
 
         if 'reward' in self._plotted_variables:
-            np.append(low, rew_lo)
-            np.append(high, rew_hi)
-            np.append(low_nominal, rew_nom_lo)
-            np.append(high_nominal, rew_nom_hi)
-            np.append(is_referenced, False)
+            low = np.append(low, rew_lo)
+            high = np.append(high, rew_hi)
+            low_nominal = np.append(low_nominal, rew_nom_lo)
+            high_nominal = np.append(high_nominal, rew_nom_hi)
+            is_referenced = np.append(is_referenced, False)
 
         return low, high, low_nominal, high_nominal, is_referenced
+
+    def _calc_plotable_vals(self, state, reference, reward):
+        reward_ref = 0
+        state_denorm = state * self._limits
+        plot_state_denorm = state_denorm[self._plotted_state_index]
+        vals_denorm = np.append(plot_state_denorm, reward)
+
+        reference_denorm = reference * self._limits
+        plot_reference_denorm = reference_denorm[self._plotted_state_index]
+        ref_vals_denorm = np.append(plot_reference_denorm, reward_ref)
+        return vals_denorm, ref_vals_denorm
 
 
 class _DashboardVariable:
@@ -417,21 +432,28 @@ class _DashboardVariable:
                          self.max_limit + 0.1 * (self.max_limit - self.min_limit))
         self.ax.set_xlabel('t/s')
 
-        # set y ticks, display min and max for nominal and limit and two values between the nominal values
-        axis_scale = np.linspace(self.min_nominal, self.max_nominal, 5)
-        axis_scale = np.append(axis_scale, np.array([self.max_limit, self.min_limit, 0]))
-        self.ax.set_yticks(axis_scale)
-
         self.ax.set_ylabel(self._label, fontsize=13)
         self.ax.draw_artist(self.ax.patch)
         self._x = np.linspace(0, self._update_period, self.update_cycle + 1)
 
-        self.plot_nominal_state()  # show nominal values on dashboard
-        if 'u' == self.name[0]:
-            self.ax.set_ylim(self.min_nominal - 0.1 * (self.max_nominal - self.min_nominal),
-                             self.max_nominal + 0.1 * (self.max_nominal - self.min_nominal))
+        #set y-ticks for reward. this does not require nominal/limit values
+        if self.name == 'reward':
+            axis_scale = np.linspace(self.max_limit, self.min_limit, 5)
+            self.ax.set_yticks(axis_scale)
+
         else:
-            self.plot_limits()  # show limits on dashboard
+
+            # set y ticks, display min and max for nominal and limit and two values between the nominal values
+            axis_scale = np.linspace(self.min_nominal, self.max_nominal, 5)
+            axis_scale = np.append(axis_scale, np.array([self.max_limit, self.min_limit, 0]))
+            self.ax.set_yticks(axis_scale)
+
+            self.plot_nominal_state()  # show nominal values on dashboard
+            if 'u' == self.name[0]:
+                self.ax.set_ylim(self.min_nominal - 0.1 * (self.max_nominal - self.min_nominal),
+                                 self.max_nominal + 0.1 * (self.max_nominal - self.min_nominal))
+            else:
+                self.plot_limits()  # show limits on dashboard
 
         self.ax.grid()
         self.point_list = []

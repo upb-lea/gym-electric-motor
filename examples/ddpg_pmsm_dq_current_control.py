@@ -81,7 +81,7 @@ if __name__ == '__main__':
         ode_solver='scipy.solve_ivp', solver_kwargs={},
         # Pass an instance
         reference_generator=rg,
-        plotted_variables=['i_sq', 'i_sd', 'u_sq', 'u_sd'],
+        plotted_variables=['i_sq', 'i_sd', 'u_sq', 'u_sd', 'reward'],
         reward_weights={'i_sq': 1000, 'i_sd': 1000},
         reward_power=0.5,
         observed_states=['i_sq', 'i_sd'],
