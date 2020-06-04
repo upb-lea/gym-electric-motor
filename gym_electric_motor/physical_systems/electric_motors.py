@@ -35,7 +35,7 @@ class ElectricMotor:
     #: _default_limits(dict(float)): Default motor limits (0 for unbounded limits)
     _default_limits = {}
     #: _default_initial_state(dict): Default initial motor-state values
-    _default_initializer = {'init_type': 'constant', 'init_value': 0.0}
+    _default_initializer = {}
 
     @property
     def nominal_values(self):
@@ -132,26 +132,30 @@ class ElectricMotor:
         """
         pass
 
-    def reset(self):
+    def reset(self, upper_bound, lower_bound):
         """
         Reset the motors state to a new initial state. (Default 0)
 
         Returns:
             numpy.ndarray(float): The initial motors state.
         """
-        assert isinstance(self._initializer, dict), \
-            'initializer have to be dict, but is %r' % type(self._initializer)
+        # assert isinstance(self._initializer, dict), \
+        #     'initializer have to be dict, but is %r' % type(self._initializer)
         initial_value = np.atleast_1d(self._initializer['init_value'])
 
-        if self._initializer['init_type'] == 'constant':
-            # check if value is general constant or a constant for each current
-            assert (initial_value.shape[0] == 1 or
-                    initial_value.shape[0] == len(self.CURRENTS)), \
-                'initial_value does not match right dimension'
-            return np.ones(len(self.CURRENTS), dtype=float) * initial_value
+        # here the nominal values are used as limits/ boundaries
+        #upper_bound
+        #lower_bound
 
-        elif self._initializer['init_type'] in ['uniform', 'gaussian']:
-            assert initial_value.ndim == len(self.CURRENTS), \
+        if isinstance(self._initializer, (float, int)):
+            # check if initial state met nominal boundaries
+            if lower_bound <= self._initializer <= upper_bound:
+                return np.ones(len(self.CURRENTS), dtype=float) * self._initializer
+            else:
+                raise ValueError
+
+        elif isinstance(self._initializer, str):
+            #assert initial_value.ndim == len(self.CURRENTS), \
                 'number of states does not match number of limits'
             nominal_currents = np.asarray([self._nominal_values[ix]
                                            for ix in self.CURRENTS])
@@ -167,13 +171,13 @@ class ElectricMotor:
                             a_max=None)
             # todo change lower respective to state space (could be negativ)
             # lower = upper * state space
-            if self._initializer['init_type'] == 'uniform':
+            if self._initializer == 'uniform':
                 initial_value = (upper - lower) * \
                                 np.random.random_sample(len(self.CURRENTS)) + \
                                 lower
                 return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
-            elif self._initializer['init_type'] == 'gaussian':
+            elif self._initializer == 'gaussian':
                 # todo add mean, std as function parameters, mean have to be in limits
                 mean = upper / 2
                 std = 1
