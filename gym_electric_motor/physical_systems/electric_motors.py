@@ -35,7 +35,10 @@ class ElectricMotor:
     #: _default_limits(dict(float)): Default motor limits (0 for unbounded limits)
     _default_limits = {}
     #: _default_initial_state(dict): Default initial motor-state values
-    _default_initializer = {}
+    _default_initializer = {'init_value': 0.0,
+                            'random_init': None,
+                            'random_params': [None, None],
+                            'interval': None}
 
     @property
     def nominal_values(self):
@@ -139,54 +142,73 @@ class ElectricMotor:
         Returns:
             numpy.ndarray(float): The initial motors state.
         """
+        # use default or use userdefined interval
+        if (self._initializer['interval'] is not None
+                and isinstance(self._initializer, (list, np.ndarray, tuple))):
+            upper_bound = self._initializer['interval'][0]
+            lower_bound = self._initializer['interval'][1]
+
+        else:
+            # maybe redundant or bad style or good to make things clear?
+            # upper_bound = upper_bound
+            # lower_bound = lower_bound
+            pass
+
         # assert isinstance(self._initializer, dict), \
         #     'initializer have to be dict, but is %r' % type(self._initializer)
-        initial_value = np.atleast_1d(self._initializer['init_value'])
-
+        #initial_value = np.atleast_1d(self._initializer['init_value'])
+        # todo check ob error raises sinnvoll sind
         # here the nominal values are used as limits/ boundaries
+        # todo richtige begrenzungen berechnen/ übergeben bekommen
         #upper_bound
         #lower_bound
+        # nominal_currents = np.asarray([self._nominal_values[ix]
+                                       # for ix in self.CURRENTS])
 
-        if isinstance(self._initializer, (float, int)):
-            # check if initial state met nominal boundaries
+        # upper = initial_value.T[-1] if initial_value.shape[0] == 2 \
+        #     else nominal_currents
+        # lower = initial_value.T[0] if initial_value.shape[0] == 2 \
+        #     else np.zeros(len(self.CURRENTS), dtype=float)
+        # # clip limits to nominal values, if to high
+        # upper = np.clip(upper, a_min=None, a_max=nominal_currents)
+        # # todo change lower nominal values could be negativ
+        # lower = np.clip(lower,
+        #                 a_min=np.zeros(len(self.CURRENTS), dtype=float),
+        #                 a_max=None)
+        # # todo change lower respective to state space (could be negativ)
+        # # lower = upper * state space
+
+        # constant initialization
+        if (self._initializer['init_value'] is not None
+                and isinstance(self._initializer, (int, float))):
+
+            # check init_value meets interval boundaries
             if lower_bound <= self._initializer <= upper_bound:
                 return np.ones(len(self.CURRENTS), dtype=float) * self._initializer
+
             else:
                 raise ValueError
 
-        elif isinstance(self._initializer, str):
-            #assert initial_value.ndim == len(self.CURRENTS), \
-                'number of states does not match number of limits'
-            nominal_currents = np.asarray([self._nominal_values[ix]
-                                           for ix in self.CURRENTS])
-            upper = initial_value.T[-1] if initial_value.shape[0] == 2 \
-                else nominal_currents
-            lower = initial_value.T[0] if initial_value.shape[0] == 2 \
-                else np.zeros(len(self.CURRENTS), dtype=float)
-            # clip limits to nominal values, if to high
-            upper = np.clip(upper, a_min=None, a_max=nominal_currents)
-            # todo change lower nominal values could be negativ
-            lower = np.clip(lower,
-                            a_min=np.zeros(len(self.CURRENTS), dtype=float),
-                            a_max=None)
-            # todo change lower respective to state space (could be negativ)
-            # lower = upper * state space
+        # random initialization
+        elif (self._initializer['random_init'] is not None
+                and isinstance((self._initializer, str))):
+
             if self._initializer == 'uniform':
-                initial_value = (upper - lower) * \
+                initial_value = (upper_bound - lower_bound) * \
                                 np.random.random_sample(len(self.CURRENTS)) + \
-                                lower
+                                lower_bound
                 return np.ones(len(self.CURRENTS), dtype=float) * initial_value
 
             elif self._initializer == 'gaussian':
-                # todo add mean, std as function parameters, mean have to be in limits
-                mean = upper / 2
-                std = 1
-                a, b = (lower - mean) / std, (upper - mean) / std
+                # todo can mean be outside of intervall (ok with truncnorm)
+                mean = self._initializer['random_params'][0] or upper_bound / 2
+                std = self._initializer['random_params'][1] or 1
+                a, b = (lower_bound - mean) / std, (upper_bound - mean) / std
                 initial_value = truncnorm.rvs(a, b, loc=mean, scale=std)
                 return np.ones(len(self.CURRENTS), dtype=float) * initial_value
-
+            
         else:
-            raise KeyError
+            raise ValueError
 
     def i_in(self, state):
         """
