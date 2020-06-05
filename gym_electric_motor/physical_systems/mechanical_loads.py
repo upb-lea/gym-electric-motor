@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.stats import truncnorm
 
 
 class MechanicalLoad:
@@ -43,12 +44,22 @@ class MechanicalLoad:
         """
         return self._nominal_values
 
+    @property
+    def initializer(self):
+        """
+        Returns:
+            dict: The motors initial state and additional initializer parameters
+        """
+        return self._initializer
+
     OMEGA_IDX = 0
 
     #: Parameter indicating if the class is implementing the optional jacobian function
     HAS_JACOBIAN = False
+    #: _default_initial_state(dict): Default initial motor-state values
+    _default_initializer = {}
 
-    def __init__(self, state_names=None, j_load=0.0, **__):
+    def __init__(self, state_names=None, j_load=0.0, initializer=None, **__):
         """
         Args:
             state_names(list(str)): List of the names of the states in the mechanical-ODE.
@@ -58,6 +69,9 @@ class MechanicalLoad:
         self._state_names = list(state_names or ['omega'])
         self._limits = {}
         self._nominal_values = {}
+        initializer = initializer or {}
+        self._initializer = self._default_initializer.copy()
+        self._initializer.update(initializer)
 
     def reset(self, *_, **__):
         """
@@ -66,7 +80,89 @@ class MechanicalLoad:
         Returns:
             ndarray(float): Initial state of the mechanical-ODE.
         """
-        return np.zeros_like(self._state_names, dtype=float)
+        initial_states = self._initializer['ml_init']['states']
+        print(initial_states.keys())
+        # for order and organization purposes
+        interval = self._initializer['ml_init']['interval']
+        random_type = self._initializer['random_init']['type']
+        random_params = self._initializer['random_init']['params']
+
+        # use default or use user-defined interval
+        if (interval is not None
+                and isinstance(interval, (list, np.ndarray, tuple))):
+            lower_bound = np.asarray(interval).T[0]
+            upper_bound = np.asarray(interval).T[1]
+            # clip bounds to nominal values
+            nom_currents = np.asarray([self._nominal_values[s]
+                                       for s in initial_states.keys()])
+            upper_bound = np.clip(upper_bound,
+                                  a_min=None,
+                                  a_max=nom_currents)
+            lower_bound = np.clip(lower_bound,
+                                  a_min=np.zeros(len(initial_states.keys()),
+                                                 dtype=float),
+                                  a_max=None)
+        # use nominal limits as interval
+        else:
+            # todo when no parameters passed, when state space irrelevant, 0 correct?
+            upper_bound = np.asarray([self._nominal_values[s]
+                                      for s in initial_states.keys()])
+            lower_bound = np.zeros(len(initial_states.keys()), dtype=float)
+
+        # todo check ob error raises sinnvoll sind
+        # todo richtige begrenzungen berechnen/ übergeben bekommen
+        # eingabe anpassen an restlichen init motor states (eps, ...) auch als dict?
+        # todo change lower nominal values could be negativ
+        # todo change lower respective to state space (could be negativ)
+        # lower = upper * state space
+
+        # random initialization for each motor state (current, epsilon)
+        if random_type is not None and isinstance(random_type, str):
+            initial_states = dict.fromkeys(initial_states.keys(), None)
+            if random_type == 'uniform':
+                initial_value = (upper_bound - lower_bound) * \
+                                np.random.random_sample(
+                                    len(initial_states.keys())) + \
+                                lower_bound
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
+
+            elif random_type == 'gaussian':
+                # todo can mean be outside of intervall (ok with truncnorm)
+                mue = random_params['mue'] or upper_bound / 2
+                sigma = random_params['sigma'] or 1
+                a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
+                initial_value = truncnorm.rvs(a, b,
+                                              loc=mue,
+                                              scale=sigma,
+                                              size=(
+                                                  len(initial_states.keys())))
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
+
+            else:
+                """
+                possible to implement other Distributions
+                """
+                raise NotImplementedError
+
+        # constant initialization for each motor state (current, epsilon)
+        elif (initial_states is not None
+              and len(initial_states.keys()) == len(initial_states.keys())):
+            initial_value = np.atleast_1d(list(initial_states.values()))
+            # check init_value meets interval boundaries
+            if ((lower_bound <= initial_value).all()
+                    and (initial_value <= upper_bound).all()):
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
+
+            else:
+                raise Exception('Initialization Value have to be in nominal '
+                                'boundaries')
+
+        else:
+            raise Exception('No matching Initialization Case')
+        raise NotImplementedError
 
     def set_j_rotor(self, j_rotor):
         """
@@ -131,6 +227,11 @@ class PolynomialStaticLoad(MechanicalLoad):
     """
 
     _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=0)
+    _default_initializer = {'ml_init': {'states': {'omega': 0.0},
+                                        'interval': None},
+                            'random_init': {'type': None,
+                                            'params': {'mue': None, 'sigma': None}}
+                            }
 
     #: Parameter indicating if the class is implementing the optional jacobian function
     HAS_JACOBIAN = True
@@ -143,13 +244,14 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
-    def __init__(self, load_parameter=(), limits=None, **__):
+    def __init__(self, load_parameter=(), limits=None, initializer=None, **__):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.
         """
         self._load_parameter.update(load_parameter)
-        super().__init__(j_load=self._load_parameter['j_load'])
+        super().__init__(j_load=self._load_parameter['j_load'],
+                         initializer=initializer)
         self._limits.update(limits or {})
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']
@@ -175,10 +277,17 @@ class PolynomialStaticLoad(MechanicalLoad):
 
 class ConstantSpeedLoad(MechanicalLoad):
     """
-       Constant speed mechanical load system which will always set the speed to a predefined value.
+       Constant speed mechanical load system which will always set the speed
+       to a predefined value.
     """
 
     HAS_JACOBIAN = True
+    # todo nicht nötig, da omega hier const ist
+    # _default_initializer = {'ml_init': {'states': {'omega': 0.0},
+    #                                     'interval': None},
+    #                         'random_init': {'type': None,
+    #                                         'params': {'mue': None, 'sigma': None}}
+    #                         }
 
     @property
     def omega_fixed(self):
