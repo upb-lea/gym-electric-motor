@@ -1488,7 +1488,16 @@ class InductionMotor(ThreePhaseMotor):
 
     def reset(self):
         # Docstring of superclass
-        return np.zeros(len(self.CURRENTS) + len(self.FLUXES) + 1)
+        # states = self.CURRENTS + ['epsilon']
+        # if 'i' in self._initializer['init_value'].keys():
+        #     initial_states = {ix: self._initializer['init_value'].get('i')
+        #                       for ix in self.CURRENTS}
+        #     initial_states[states[-1]] = self._initializer['init_value'].get('epsilon')
+        # else:
+        #     initial_states = None
+        # return super().reset(initial_states)
+        #return np.zeros(len(self.CURRENTS) + len(self.FLUXES) + 1)
+        raise NotImplementedError
 
     def electrical_ode(self, state, u_sr_alphabeta, omega, *args):
         """
