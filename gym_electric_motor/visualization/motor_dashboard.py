@@ -124,7 +124,7 @@ class MotorDashboard(ElectricMotorVisualization):
                     var.reset()
         plt.pause(0.05)
 
-    def step(self, state, reference=None, reward=None, done=False, *_, **__):
+    def step(self, state, reference=None, reward=None, action=None, done=False, *_, **__):
         """
         Function to call in every step of the environment
 
@@ -132,8 +132,11 @@ class MotorDashboard(ElectricMotorVisualization):
             state: current state to plot
             reference: current reference in this step
             reward: current reward in this step
+            action: current action applied on the environment
             done: Flag, if the episode has terminated
         """
+        a = action
+
         if not self.initialized:
             self.initialized = True
             self._update_physical_system_data()
@@ -454,7 +457,8 @@ class _DashboardVariable:
                                  self.max_nominal + 0.1 * (self.max_nominal - self.min_nominal))
             else:
                 self.plot_limits()  # show limits on dashboard
-
+            self.ax.legend(loc='upper right', fontsize='x-small', bbox_to_anchor=(1.1, 1))
+            
         self.ax.grid()
         self.point_list = []
         self.reference_list = []
@@ -506,13 +510,15 @@ class _DashboardVariable:
         Plots a dotted line at the nominal values
         """
         if self.min_nominal < 0:
-            self.ax.axhline(self.min_nominal, color='y', linestyle=':', linewidth=2)
-        self.ax.axhline(self.max_nominal, color='y', linestyle=':', linewidth=2)
+            self.ax.axhline(self.min_nominal, color='y', linestyle=':', linewidth=2, label='nominal')
+        self.ax.axhline(self.max_nominal, color='y', linestyle=':', linewidth=2, label='nominal')
+        self.ax.legend(bbox_to_anchor=(1, 0.5))
 
     def plot_limits(self):
         """
         Plots a dashed read line at minimal and maximal values
         """
         if self.min_limit < 0:
-            self.ax.axhline(self.min_limit, color='r', linestyle='--', linewidth=2)
-        self.ax.axhline(self.max_limit, color='r', linestyle='--', linewidth=2)
+            self.ax.axhline(self.min_limit, color='r', linestyle='--', linewidth=2, label='min_limit')
+        self.ax.axhline(self.max_limit, color='r', linestyle='--', linewidth=2, label='max_limit')
+
