@@ -132,21 +132,27 @@ class ElectricMotor:
         """
         pass
 
-    def reset(self, initial_states=None):
+    def initialize(self, state_space=None,
+                   state_positions=None, initial_states=None):
         """
-        Reset the motors state to a new initial state. (Default 0)
+        Initializes give state values. Values can be given as a constant or
+        sampled random out of a statistical distribution. Initial value is in
+        range of the nominal values or a given interval.
 
         Args:
-            initial_states(dict): states needed to be initialized,
-                                  with initialization value
+            state_space(gym.Box): normalized state space boundaries
+            state_positions(dict): indexes of system states
+            initial_states(list): system states to be initilized (when not
+                                    explicitly given by 'initializer')
         Returns:
-            numpy.ndarray(float): The initial motors state.
+            ndarray(float): initial value for each state
+
         """
         initial_states = initial_states or self._initializer['em_init']['states']
 
         # for order and organization purposes
         interval = self._initializer['em_init']['interval']
-        random_type = self._initializer['random_init']['type']
+        random_dist = self._initializer['random_init']['distribution']
         random_params = self._initializer['random_init']['params']
 
         # use default or use user-defined interval
@@ -161,56 +167,54 @@ class ElectricMotor:
                                   a_min=None,
                                   a_max=nom_currents)
             lower_bound = np.clip(lower_bound,
-                                  a_min=np.zeros(len(initial_states.keys()), dtype=float),
+                                  a_min=np.zeros(len(initial_states.keys()),
+                                                 dtype=float),
                                   a_max=None)
-        # use nominal limits as interval
+        # use nominal limits as interval in state space
         else:
-            # todo when no parameters passed, when state space irrelevant, 0 correct?
+            state_idx = [state_positions[state] for state in initial_states]
             upper_bound = np.asarray([self._nominal_values[s]
                                       for s in initial_states.keys()])
-            lower_bound = np.zeros(len(initial_states.keys()), dtype=float)
-
-        #todo check ob error raises sinnvoll sind
-        #todo richtige begrenzungen berechnen/ übergeben bekommen
-        #eingabe anpassen an restlichen init motor states (eps, ...) auch als dict?
-        #todo change lower nominal values could be negativ
-        #todo change lower respective to state space (could be negativ)
-        #lower = upper * state space
+            upper_bound *= state_space.high[state_idx]
+            lower_bound = upper_bound * state_space.low[state_idx]
 
         # random initialization for each motor state (current, epsilon)
-        if random_type is not None and isinstance(random_type, str):
+        if random_dist is not None and isinstance(random_dist, str):
             initial_states = dict.fromkeys(initial_states.keys(), None)
-            if random_type == 'uniform':
+            if random_dist == 'uniform':
                 initial_value = (upper_bound - lower_bound) * \
-                                np.random.random_sample(len(initial_states.keys())) + \
+                                np.random.random_sample(
+                                    len(initial_states.keys())) + \
                                 lower_bound
-                return np.ones(len(initial_states.keys()), dtype=float) * initial_value
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
 
-            elif random_type == 'gaussian':
+            elif random_dist == 'gaussian' or random_dist == 'normal':
                 # todo can mean be outside of intervall (ok with truncnorm)
-                mue = random_params['mue'] or upper_bound / 2
-                sigma = random_params['sigma'] or 1
+                mue = random_params[0] or upper_bound / 2
+                sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(a, b,
                                               loc=mue,
                                               scale=sigma,
-                                              size=(len(initial_states.keys())))
-                return np.ones(len(initial_states.keys()), dtype=float) * initial_value
+                                              size=(
+                                                  len(initial_states.keys())))
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
 
             else:
-                """
-                possible to implement other Distributions
-                """
+                # todo implement other distribution, if wantend
                 raise NotImplementedError
 
         # constant initialization for each motor state (current, epsilon)
         elif (initial_states is not None
-                and len(initial_states.keys()) == len(initial_states.keys())):
+              and len(initial_states.keys()) == len(initial_states.keys())):
             initial_value = np.atleast_1d(list(initial_states.values()))
             # check init_value meets interval boundaries
             if ((lower_bound <= initial_value).all()
                     and (initial_value <= upper_bound).all()):
-                return np.ones(len(initial_states.keys()), dtype=float) * initial_value
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
 
             else:
                 raise Exception('Initialization Value have to be in nominal '
@@ -218,6 +222,28 @@ class ElectricMotor:
 
         else:
             raise Exception('No matching Initialization Case')
+
+    def reset(self,
+              state_space=None,
+              state_positions=None,
+              initial_states=None):
+        """
+        Reset the motors state to a new initial state. (Default 0)
+
+        Args:
+            state_space(gym.Box): normalized state space boundaries
+            state_positions(dict): indexes of system states
+            initial_states(list): system states to be initilized (when not
+                                    explicitly given by 'initializer')
+        Returns:
+            numpy.ndarray(float): The initial motor states.
+        """
+        if self._initializer:
+            return self.initialize(state_space=state_space,
+                                   state_positions=state_positions,
+                                   initial_states=initial_states)
+        else:
+            return np.zeros(len(self.CURRENTS))
 
     def i_in(self, state):
         """
@@ -312,7 +338,7 @@ class DcMotor(ElectricMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -454,7 +480,7 @@ class DcShuntMotor(DcMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -575,7 +601,7 @@ class DcSeriesMotor(DcMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -695,7 +721,7 @@ class DcPermanentlyExcitedMotor(DcMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'typdistributione': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -1019,16 +1045,27 @@ class SynchronousMotor(ThreePhaseMotor):
         # Docstring of superclass
         return self._motor_parameter
 
-    def reset(self):
+    def reset(self,
+              state_space=None,
+              state_positions=None,
+              initial_states=None):
         # Docstring of superclass
         states = self.CURRENTS + ['epsilon']
-        if 'i' in self._initializer['init_value'].keys():
-            initial_states = {ix: self._initializer['init_value'].get('i')
-                              for ix in self.CURRENTS}
-            initial_states[states[-1]] = self._initializer['init_value'].get('epsilon')
+        if 'i' in self._initializer['em_init']['states'].keys():
+            initial_states = \
+                {ix: self._initializer['em_init']['states'].get('i')
+                    for ix in self.CURRENTS}
+            initial_states[states[-1]] = \
+                self._initializer['em_init']['states'].get('epsilon')
         else:
             initial_states = None
-        return super().reset(initial_states)
+
+        if self._initializer:
+            return self.initialize(state_space=state_space,
+                                   state_positions=state_positions,
+                                   initial_states=initial_states)
+        else:
+            return np.zeros(len(self.CURRENTS) + 1)
 
     def torque(self, state):
         # Docstring of superclass
@@ -1173,7 +1210,7 @@ class SynchronousReluctanceMotor(SynchronousMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -1318,7 +1355,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -1493,7 +1530,7 @@ class InductionMotor(ThreePhaseMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -1743,7 +1780,7 @@ class SquirrelCageInductionMotor(InductionMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
@@ -1892,7 +1929,7 @@ class DoublyFedInductionMotor(InductionMotor):
                                         'interval': None},
                             'ml_init': {'states': {'omega': None},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 
