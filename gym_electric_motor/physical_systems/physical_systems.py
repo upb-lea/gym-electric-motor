@@ -295,7 +295,7 @@ class SCMLSystem(PhysicalSystem):
             u_in,
             [u_sup]
         ))
-        print('sys', system_state)
+        #print('sys', system_state)
         return (system_state + noise) / self._limits
 
 
@@ -536,14 +536,13 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)
-        print('motor', motor_state)
+        #print('motor', motor_state)
         mechanical_state = self._mechanical_load.reset()
-        print('mech', mechanical_state)
+        #print('mech', mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
-        print(ode_state)
+        #print(ode_state)
         u_sup = self.supply.reset()
         eps = ode_state[self._ode_epsilon_idx]
-        print('epsilon', self._ode_epsilon_idx)
         if eps > np.pi:
             eps -= 2 * np.pi
         u_abc = self.converter.reset()
