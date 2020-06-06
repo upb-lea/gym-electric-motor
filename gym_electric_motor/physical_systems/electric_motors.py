@@ -70,7 +70,7 @@ class ElectricMotor:
     def initializer(self):
         """
         Returns:
-            dict: The motors initial state and additional initializer parameters
+            dict: Motor initial state and additional initializer parameter
         """
         return self._initializer
 
@@ -170,12 +170,12 @@ class ElectricMotor:
                                       for s in initial_states.keys()])
             lower_bound = np.zeros(len(initial_states.keys()), dtype=float)
 
-        # todo check ob error raises sinnvoll sind
-        # todo richtige begrenzungen berechnen/ übergeben bekommen
-        # eingabe anpassen an restlichen init motor states (eps, ...) auch als dict?
-        # todo change lower nominal values could be negativ
-        # todo change lower respective to state space (could be negativ)
-        # lower = upper * state space
+        #todo check ob error raises sinnvoll sind
+        #todo richtige begrenzungen berechnen/ übergeben bekommen
+        #eingabe anpassen an restlichen init motor states (eps, ...) auch als dict?
+        #todo change lower nominal values could be negativ
+        #todo change lower respective to state space (could be negativ)
+        #lower = upper * state space
 
         # random initialization for each motor state (current, epsilon)
         if random_type is not None and isinstance(random_type, str):
