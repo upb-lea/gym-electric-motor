@@ -19,7 +19,7 @@ class Controller:
     def make(cls, controller_type, environment, **controller_kwargs):
         """
         Args:
-            controller_type : Choose among the given set of controller at the end of this class
+            controller_type : Choose among the given set of controllers at the end of this class
             environment : Choose the corresponding motor environment from 'envs' class.
 
         """
@@ -95,8 +95,7 @@ class PController(Controller):
     """
     In the below proportional control implementation, the controller output is proportional to the error signal,  which is the difference
     between the reference_idx and the state_idx .i.e., the output of a proportional controller
-    is the multiplication product of the error signal and the proportional gain
-    Here kp =10 is assumed for proportionality gain.
+    is the multiplication product of the error signal and the proportional gain.Here kp =10 is assumed for proportionality gain.
     """
 
     def __init__(self, environment, k_p=10, controller_no=0, state_idx=None, reference_idx=0):
@@ -132,11 +131,21 @@ class PIController(PController):
         super().__init__(environment, k_p, controller_no, reference_idx)
         self._k_i = k_i
         self._tau = environment.physical_system.tau
+        self._limits = environment.physical_system.limits
         self._integrated_value = 0
+        self._referenced_state_max = self._limits[self._referenced_state] * environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] * environment.physical_system.state_space.low[self._referenced_state]
 
     def control(self, state, reference):
         diff = reference[self._ref_idx] - state[self._referenced_state]
         self._integrated_value += diff * self._tau
+        if state[self._referenced_state] > self._referenced_state_max:  # check upper limit
+            state[self._referenced_state] = self._referenced_state_max
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        if state[self._referenced_state] < self._referenced_state_min:  # check upper limit
+            state[self._referenced_state] = self._referenced_state_min
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+
         return np.array([
             max(
                 self._action_min,
