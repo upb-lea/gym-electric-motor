@@ -73,15 +73,112 @@ class MechanicalLoad:
         self._initializer = self._default_initializer.copy()
         self._initializer.update(initializer)
 
-    def reset(self, *_, **__):
+    def initialize(self, nominal_values, **__):
         """
-        Reset the motors mechanical-ODE to an initial state (default: all zeros).
+        Initializes give state values. Values can be given as a constant or
+        sampled random out of a statistical distribution. Initial value is in
+        range of the nominal values or a given interval.
 
+        Args:
+            state_space(gym.Box): normalized state space boundaries
+            state_positions(dict): indexes of system states
+            initial_states(list): system states to be initilized (when not
+                                    explicitly given by 'initializer')
         Returns:
-            ndarray(float): Initial state of the mechanical-ODE.
-        """
+            ndarray(float): initial value for each state
 
-        return np.zeros_like(self._state_names, dtype=float)
+        """
+        # for order and organization purposes
+        initial_states = self._initializer['ml_init']['states']
+        interval = self._initializer['ml_init']['interval']
+        random_dist = self._initializer['random_init']['distribution']
+        random_params = self._initializer['random_init']['params']
+
+        # use default or use user-defined interval
+        if (interval is not None
+                and isinstance(interval, (list, np.ndarray, tuple))):
+            lower_bound = np.asarray(interval).T[0]
+            upper_bound = np.asarray(interval).T[1]
+            # clip bounds to nominal values
+            nom_currents = np.asarray([nominal_values[s]
+                                       for s in initial_states.keys()])
+            upper_bound = np.clip(upper_bound,
+                                  a_min=None,
+                                  a_max=nom_currents)
+            lower_bound = np.clip(lower_bound,
+                                  a_min=np.zeros(len(initial_states.keys()),
+                                                 dtype=float),
+                                  a_max=None)
+        # use nominal limits as interval in state space
+        else:
+            upper_bound = np.asarray([nominal_values[s]
+                                      for s in initial_states.keys()])
+            lower_bound = np.zeros_like(upper_bound)
+
+        # random initialization for each motor state (current, epsilon)
+        if random_dist is not None and isinstance(random_dist, str):
+            initial_states = dict.fromkeys(initial_states.keys(), None)
+            if random_dist == 'uniform':
+                initial_value = (upper_bound - lower_bound) * \
+                                np.random.random_sample(
+                                    len(initial_states.keys())) + \
+                                lower_bound
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
+
+            elif random_dist == 'gaussian' or random_dist == 'normal':
+                # todo can mean be outside of intervall (ok with truncnorm)
+                mue = random_params[0] or upper_bound / 2
+                sigma = random_params[1] or 1
+                a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
+                initial_value = truncnorm.rvs(a, b,
+                                              loc=mue,
+                                              scale=sigma,
+                                              size=(
+                                                  len(initial_states.keys())))
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
+
+            else:
+                # todo implement other distribution, if wantend
+                raise NotImplementedError
+
+        # constant initialization for each motor state (current, epsilon)
+        elif (initial_states is not None
+              and len(initial_states.keys()) == len(initial_states.keys())):
+            initial_value = np.atleast_1d(list(initial_states.values()))
+            # check init_value meets interval boundaries
+            if ((lower_bound <= initial_value).all()
+                    and (initial_value <= upper_bound).all()):
+                return np.ones(len(initial_states.keys()),
+                               dtype=float) * initial_value
+
+            else:
+                raise Exception('Initialization Value have to be in nominal '
+                                'boundaries')
+
+        else:
+            raise Exception('No matching Initialization Case')
+
+    def reset(self,
+              state_positions,
+              nominal_states,
+              **__):
+        """
+        Reset the motors state to a new initial state. (Default 0)
+
+        Args:
+            state_positions(dict): indexes of system states
+        Returns:
+            numpy.ndarray(float): The initial motor states.
+        """
+        if self._initializer:
+            nominal_values = {state: nominal_states[state_positions[state]]
+                        for state in self._state_names}
+            print(nominal_values)
+            return self.initialize(nominal_values=nominal_values)
+        else:
+            return np.zeros_like(self._state_names, dtype=float)
 
     def set_j_rotor(self, j_rotor):
         """

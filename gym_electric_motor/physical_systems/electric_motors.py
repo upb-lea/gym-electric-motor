@@ -133,7 +133,8 @@ class ElectricMotor:
         pass
 
     def initialize(self, state_space=None,
-                   state_positions=None, initial_states=None):
+                   state_positions=None, initial_states=None,
+                   **__):
         """
         Initializes give state values. Values can be given as a constant or
         sampled random out of a statistical distribution. Initial value is in
@@ -149,6 +150,7 @@ class ElectricMotor:
 
         """
         initial_states = initial_states or self._initializer['em_init']['states']
+
 
         # for order and organization purposes
         interval = self._initializer['em_init']['interval']
@@ -226,7 +228,8 @@ class ElectricMotor:
     def reset(self,
               state_space=None,
               state_positions=None,
-              initial_states=None):
+              initial_states=None,
+              **__):
         """
         Reset the motors state to a new initial state. (Default 0)
 

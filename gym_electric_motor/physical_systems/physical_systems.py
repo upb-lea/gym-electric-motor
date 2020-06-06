@@ -273,7 +273,9 @@ class SCMLSystem(PhysicalSystem):
             state_space=self.state_space,
             state_positions=self.state_positions)
         #print('motor reset', motor_state)
-        mechanical_state = self._mechanical_load.reset()
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            nominal_states=self.nominal_state)
         #print('load reset', mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
@@ -537,7 +539,9 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             state_space=self.state_space,
             state_positions=self.state_positions)
         #print('motor', motor_state)
-        mechanical_state = self._mechanical_load.reset()
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            nominal_states=self.nominal_state)
         #print('mech', mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         #print(ode_state)
@@ -563,6 +567,7 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             [eps],
             [u_sup],
         ))
+        print('sys', system_state)
         return (system_state + noise) / self._limits
 
 
@@ -680,7 +685,9 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)
-        mechanical_state = self._mechanical_load.reset()
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            nominal_states=self.nominal_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
 
@@ -903,7 +910,9 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)
-        mechanical_state = self._mechanical_load.reset()
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            nominal_states=self.nominal_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
 
