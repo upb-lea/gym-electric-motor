@@ -173,6 +173,43 @@ class PolynomialStaticLoad(MechanicalLoad):
             np.array([1/self._j_total])
 
 
+class ExternalSpeedLoad(MechanicalLoad):
+    """
+       External speed mechanical load system which will set the speed to a
+       predefined speed-function/ speed-profile.
+    """
+
+    HAS_JACOBIAN = True
+
+    @property
+    def omega(self):
+        """
+        Returns:
+            float: Function-value for omega in rad/s at time-step t.
+        """
+        return self._omega
+
+    def reset(self, *_, **__):
+        # Docstring from superclass
+        return np.array([self._omega])
+
+    def __init__(self, omega_initial=0, **__):
+        """
+        Args:
+            omega_fixed(float)): Fix value for the speed in rad/s.
+        """
+        super().__init__()
+        self._omega = omega_initial
+
+    def mechanical_ode(self, *_, **__):
+        # Docstring of superclass
+        return np.array([0])
+
+    def mechanical_jacobian(self, t, mechanical_state, torque):
+        # Docstring of superclass
+        return np.array([0]), np.array([0])
+
+
 class ConstantSpeedLoad(MechanicalLoad):
     """
        Constant speed mechanical load system which will always set the speed to a predefined value.
