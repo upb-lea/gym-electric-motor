@@ -144,8 +144,7 @@ class MechanicalLoad:
                 raise NotImplementedError
 
         # constant initialization for each motor state (current, epsilon)
-        elif (initial_states is not None
-              and len(initial_states.keys()) == len(initial_states.keys())):
+        elif initial_states is not None:
             initial_value = np.atleast_1d(list(initial_states.values()))
             # check init_value meets interval boundaries
             if ((lower_bound <= initial_value).all()
@@ -175,7 +174,6 @@ class MechanicalLoad:
         if self._initializer:
             nominal_values = {state: nominal_states[state_positions[state]]
                         for state in self._state_names}
-            print(nominal_values)
             return self.initialize(nominal_values=nominal_values)
         else:
             return np.zeros_like(self._state_names, dtype=float)
@@ -245,7 +243,7 @@ class PolynomialStaticLoad(MechanicalLoad):
     _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=0)
     _default_initializer = {'ml_init': {'states': {'omega': 0.0},
                                         'interval': None},
-                            'random_init': {'type': None,
+                            'random_init': {'distribution': None,
                                             'params': {'mue': None, 'sigma': None}}
                             }
 

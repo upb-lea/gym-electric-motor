@@ -160,11 +160,12 @@ class ElectricMotor:
         # use default or use user-defined interval
         if (interval is not None
                 and isinstance(interval, (list, np.ndarray, tuple))):
-            lower_bound = np.asarray(interval).T[0]
-            upper_bound = np.asarray(interval).T[1]
+            lower_bound = np.asarray(interval, dtype=float).T[0]
+            upper_bound = np.asarray(interval, dtype=float).T[1]
             # clip bounds to nominal values
             nom_currents = np.asarray([self._nominal_values[s]
-                                       for s in initial_states.keys()])
+                                       for s in initial_states.keys()],
+                                      dtype=float)
             upper_bound = np.clip(upper_bound,
                                   a_min=None,
                                   a_max=nom_currents)
@@ -176,9 +177,10 @@ class ElectricMotor:
         else:
             state_idx = [state_positions[state] for state in initial_states]
             upper_bound = np.asarray([self._nominal_values[s]
-                                      for s in initial_states.keys()])
-            upper_bound *= state_space.high[state_idx]
-            lower_bound = upper_bound * state_space.low[state_idx]
+                                for s in initial_states.keys()], dtype=float)
+            upper_bound *= np.asarray(state_space.high[state_idx], dtype=float)
+            lower_bound = upper_bound * \
+                          np.asarray(state_space.low[state_idx], dtype=float)
 
         # random initialization for each motor state (current, epsilon)
         if random_dist is not None and isinstance(random_dist, str):
