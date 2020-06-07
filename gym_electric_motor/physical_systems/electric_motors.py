@@ -1555,12 +1555,6 @@ class InductionMotor(ThreePhaseMotor):
     def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, initializer=None, **__):
         # Docstring of superclass
-<<<<<<< HEAD
-        nominal_values = nominal_values or {}
-        limit_values = limit_values or {}
-        super().__init__(motor_parameter, nominal_values,
-                         limit_values, initializer)
-=======
 
         # convert placeholder i and u to actual IO quantities
         _nominal_values = self._default_nominal_values.copy()
@@ -1576,7 +1570,6 @@ class InductionMotor(ThreePhaseMotor):
         _limit_values.update(limit_values or {})
 
         super().__init__(motor_parameter, nominal_values, limit_values)
->>>>>>> nightly
         self._update_model()
         self._update_limits(_limit_values, _nominal_values)
 
@@ -1840,16 +1833,11 @@ class SquirrelCageInductionMotor(InductionMotor):
             limits_agenda[i] = self._limits.get('i', None) or \
                                self._limits[u] / self._motor_parameter['r_s']
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
-<<<<<<< HEAD
                                 self._nominal_values[u] / \
                                 self._motor_parameter['r_s']
-
-=======
-                                self._nominal_values[u] / self._motor_parameter['r_s']
         # overwrite default limits and nominal values with func args
         limits_agenda.update(limit_values)
         nominal_agenda.update(nominal_values)
->>>>>>> nightly
         super()._update_limits(limits_agenda, nominal_agenda)
 
 
