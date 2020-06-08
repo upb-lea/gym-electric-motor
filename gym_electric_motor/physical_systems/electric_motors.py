@@ -75,7 +75,7 @@ class ElectricMotor:
         return self._initializer
 
     def __init__(self, motor_parameter=None, nominal_values=None,
-                 limit_values=None, initializer=None, **__):
+                 limit_values=None, motor_initializer=None, **__):
         """
         :param  motor_parameter: Motor parameter dictionary. Contents specified
                 for each motor.
@@ -94,9 +94,9 @@ class ElectricMotor:
         nominal_values = nominal_values or {}
         self._nominal_values = self._default_nominal_values.copy()
         self._nominal_values.update(nominal_values)
-        initializer = initializer or {}
+        motor_initializer = motor_initializer or {}
         self._initializer = self._default_initializer.copy()
-        self._initializer.update(initializer)
+        self._initializer.update(motor_initializer)
 
     def electrical_ode(self, state, u_in, omega, *_):
         """
@@ -149,13 +149,12 @@ class ElectricMotor:
             ndarray(float): initial value for each state
 
         """
-        initial_states = initial_states or self._initializer['em_init']['states']
-
+        initial_states = initial_states or self._initializer['states']
 
         # for order and organization purposes
-        interval = self._initializer['em_init']['interval']
-        random_dist = self._initializer['random_init']['distribution']
-        random_params = self._initializer['random_init']['params']
+        interval = self._initializer['interval']
+        random_dist = self._initializer['random_init']
+        random_params = self._initializer['random_params']
 
         # use default or use user-defined interval
         if (interval is not None
@@ -201,8 +200,7 @@ class ElectricMotor:
                 initial_value = truncnorm.rvs(a, b,
                                               loc=mue,
                                               scale=sigma,
-                                              size=(
-                                                  len(initial_states.keys())))
+                                              size=len(initial_states.keys()))
                 return np.ones(len(initial_states.keys()),
                                dtype=float) * initial_value
 
@@ -339,13 +337,10 @@ class DcMotor(ElectricMotor):
                                'i_e': 1.2, 'u': 420}
     _default_limits = {'omega': 500, 'torque': 0.0, 'i_a': 75, 'i_e': 2,
                        'u': 420}
-    _default_initializer = {'em_init': {'states': {'i_a': 0.0, 'i_e': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i_a': 0.0, 'i_e': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     def __init__(self,
                  motor_parameter=None, nominal_values=None,
@@ -481,13 +476,10 @@ class DcShuntMotor(DcMotor):
                                'i_e': 1.2, 'u': 420}
     _default_limits = {'omega': 500, 'torque': 0.0, 'i_a': 75, 'i_e': 2,
                        'u': 420}
-    _default_initializer = {'em_init': {'states': {'i_a': 0.0, 'i_e': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i_a': 0.0, 'i_e': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
 
     def i_in(self, state):
@@ -605,13 +597,10 @@ class DcSeriesMotor(DcMotor):
     }
     _default_nominal_values = dict(omega=80, torque=0.0, i=50, u=420)
     _default_limits = dict(omega=100, torque=0.0, i=100, u=420)
-    _default_initializer = {'em_init': {'states': {'i': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     def _update_model(self):
         # Docstring of superclass
@@ -726,13 +715,10 @@ class DcPermanentlyExcitedMotor(DcMotor):
     }
     _default_nominal_values = dict(omega=22, torque=0.0, i=16, u=400)
     _default_limits = dict(omega=50, torque=0.0, i=25, u=400)
-    _default_initializer = {'em_init': {'states': {'i': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'typdistributione': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     # placeholder for omega, currents and u_in
     _ode_placeholder = np.zeros(2 + len(CURRENTS_IDX), dtype=np.float64)
@@ -1046,12 +1032,12 @@ class SynchronousMotor(ThreePhaseMotor):
 
     def __init__(self,
                  motor_parameter=None, nominal_values=None,
-                 limit_values=None, initializer=None, **kwargs):
+                 limit_values=None, motor_initializer=None, **kwargs):
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
         super().__init__(motor_parameter, nominal_values,
-                         limit_values, initializer)
+                         limit_values, motor_initializer)
         self._update_model()
         self._update_limits()
 
@@ -1066,12 +1052,12 @@ class SynchronousMotor(ThreePhaseMotor):
               initial_states=None):
         # Docstring of superclass
         states = self.CURRENTS + ['epsilon']
-        if 'i' in self._initializer['em_init']['states'].keys():
+        if 'i' in self._initializer['states'].keys():
             initial_states = \
-                {ix: self._initializer['em_init']['states'].get('i')
+                {ix: self._initializer['states'].get('i')
                     for ix in self.CURRENTS}
             initial_states[states[-1]] = \
-                self._initializer['em_init']['states'].get('epsilon')
+                self._initializer['states'].get('epsilon')
         else:
             initial_states = None
 
@@ -1221,13 +1207,10 @@ class SynchronousReluctanceMotor(SynchronousMotor):
     }
     _default_limits = {'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi,
                        'u': 600}
-    _default_initializer = {'em_init': {'states': {'i': 0.0, 'epsilon': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i': 0.0, 'epsilon': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
     IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']
@@ -1366,13 +1349,10 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     _default_limits = dict(omega=80, torque=0.0, i=20, epsilon=math.pi, u=600)
     _default_nominal_values = dict(omega=75, torque=0.0, i=12, epsilon=math.pi,
                                    u=600)
-    _default_initializer = {'em_init': {'states': {'i': 0.0, 'epsilon': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i': 0.0, 'epsilon': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
 
 
@@ -1541,13 +1521,11 @@ class InductionMotor(ThreePhaseMotor):
     _default_nominal_values = dict(omega=314, torque=0.0, i=3.9,
                                    epsilon=math.pi, u=560)
     _model_constants = None
-    _default_initializer = {'em_init': {'states': {'i': 0.0, 'epsilon': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i': 0.0, 'epsilon': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
+
 
     @property
     def motor_parameter(self):
@@ -1576,6 +1554,7 @@ class InductionMotor(ThreePhaseMotor):
         self._update_limits(_limit_values, _nominal_values)
 
     def reset(self):
+        # todo implement!
         # Docstring of superclass
         # states = self.CURRENTS + ['epsilon']
         # if 'i' in self._initializer['init_value'].keys():
@@ -1802,13 +1781,10 @@ class SquirrelCageInductionMotor(InductionMotor):
                            u=560)
     _default_nominal_values = dict(omega=314, torque=0.0, i=3.9,
                                    epsilon=math.pi, u=560)
-    _default_initializer = {'em_init': {'states': {'i': 0.0, 'epsilon': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i': 0.0, 'epsilon': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     def electrical_ode(self, state, u_salphabeta, omega, *args):
         """
@@ -1954,13 +1930,11 @@ class DoublyFedInductionMotor(InductionMotor):
                            u=1200)
     _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900,
                                    epsilon=math.pi, u=1200)
-    _default_initializer = {'em_init': {'states': {'i': 0.0, 'epsilon': 0.0},
-                                        'interval': None},
-                            'ml_init': {'states': {'omega': None},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'i': 0.0, 'epsilon': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
+
 
     def __init__(self, **kwargs):
         self.IO_VOLTAGES += self.IO_ROTOR_VOLTAGES

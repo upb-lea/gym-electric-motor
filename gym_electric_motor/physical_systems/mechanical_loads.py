@@ -59,7 +59,7 @@ class MechanicalLoad:
     #: _default_initial_state(dict): Default initial motor-state values
     _default_initializer = {}
 
-    def __init__(self, state_names=None, j_load=0.0, initializer=None, **__):
+    def __init__(self, state_names=None, j_load=0.0, load_initializer=None, **__):
         """
         Args:
             state_names(list(str)): List of the names of the states in the mechanical-ODE.
@@ -69,9 +69,9 @@ class MechanicalLoad:
         self._state_names = list(state_names or ['omega'])
         self._limits = {}
         self._nominal_values = {}
-        initializer = initializer or {}
+        load_initializer = load_initializer or {}
         self._initializer = self._default_initializer.copy()
-        self._initializer.update(initializer)
+        self._initializer.update(load_initializer)
 
     def initialize(self, nominal_values, **__):
         """
@@ -80,19 +80,16 @@ class MechanicalLoad:
         range of the nominal values or a given interval.
 
         Args:
-            state_space(gym.Box): normalized state space boundaries
-            state_positions(dict): indexes of system states
-            initial_states(list): system states to be initilized (when not
-                                    explicitly given by 'initializer')
+            nominal_values(dict): nominal values for states
         Returns:
             ndarray(float): initial value for each state
 
         """
         # for order and organization purposes
-        initial_states = self._initializer['ml_init']['states']
-        interval = self._initializer['ml_init']['interval']
-        random_dist = self._initializer['random_init']['distribution']
-        random_params = self._initializer['random_init']['params']
+        initial_states = self._initializer['states']
+        interval = self._initializer['interval']
+        random_dist = self._initializer['random_init']
+        random_params = self._initializer['random_params']
 
         # use default or use user-defined interval
         if (interval is not None
@@ -241,11 +238,10 @@ class PolynomialStaticLoad(MechanicalLoad):
     """
 
     _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=0)
-    _default_initializer = {'ml_init': {'states': {'omega': 0.0},
-                                        'interval': None},
-                            'random_init': {'distribution': None,
-                                            'params': {'mue': None, 'sigma': None}}
-                            }
+    _default_initializer = {'states': {'omega': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     #: Parameter indicating if the class is implementing the optional jacobian function
     HAS_JACOBIAN = True
@@ -258,14 +254,15 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
-    def __init__(self, load_parameter=(), limits=None, initializer=None, **__):
+    def __init__(self, load_parameter=(), limits=None,
+                 load_initializer=None, **__):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.
         """
         self._load_parameter.update(load_parameter)
         super().__init__(j_load=self._load_parameter['j_load'],
-                         initializer=initializer)
+                         load_initializer=load_initializer)
         self._limits.update(limits or {})
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']
