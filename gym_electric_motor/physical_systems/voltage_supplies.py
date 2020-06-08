@@ -71,7 +71,7 @@ class IdealVoltageSupply(VoltageSupply):
 class RCVoltageSupply(VoltageSupply):
     """Voltage supply moduled as RC element"""
     
-    def __init__(self, u_nominal, supply_parameter = {'R':1,'C':1}, **__):
+    def __init__(self, u_nominal, supply_parameter={'R':1,'C':1}, **__):
         """
         RC circuit takes additional values for it's electrical elements.
         Args:
