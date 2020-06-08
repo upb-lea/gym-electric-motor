@@ -3,30 +3,61 @@ import matplotlib.lines as lin
 
 
 class MotorDashboardPlot:
+    """Base Plot class that all plots in the MotorDashboard have to derive from."""
 
     def __init__(self):
         self._axis = None
 
     def initialize(self, axis):
+        """Initialization of the plot. Set labels, legends,... here.
+
+        Args:
+            axis(matplotlib.pyplot.axis): Axis to plot in
+        """
         self._axis = axis
 
     def set_modules(self, ps, rg, rf):
+        """Interconnection of the environments modules.
+        Save all relevant information from other modules here (e.g. state_names, references,...)
+        Args:
+            ps(PhysicalSystem): The PhysicalSystem of the environment
+            rg(ReferenceGenerator): The ReferenceGenerator of the environment.
+            rf(RewardFunction): The RewardFunction of the environment
+        """
         pass
 
     def step(self, k, state, reference, action, reward, done):
+        """Passing of current environmental information..
+
+        Args:
+            k(int): Current episode step.
+            state(ndarray(float)): State of the system
+            reference(ndarray(float)): Reference array of the system
+            action(ndarray(float)): Last taken action. (None after reset)
+            reward(ndarray(float)): Last received reward. (None after reset)
+            done(bool): Flag if the current state is terminal
+        """
         raise NotImplementedError
 
     def update(self):
+        """Called by the MotorDashboard each time before the figure is updated."""
         pass
 
     def reset(self):
+        """Called by the MotorDashboard each time the environment is reset."""
         pass
 
 
 class StatePlot(MotorDashboardPlot):
+    """Class to plot any motor state and its reference."""
 
+    # Width of the Plot in seconds
     x_width = 3
+
+    # Either "continuous" or "repeating"
     mode = 'continuous'
+
+    # Configurations of the lines
     state_line_cfg = {
         'color': 'blue',
         'linestyle': '',
@@ -47,6 +78,7 @@ class StatePlot(MotorDashboardPlot):
         'linewidth': 1
     }
 
+    # Labels for each state variable.
     state_labels = {
         'omega': r'$\omega/(rad/s)$',
         'torque': '$T/Nm$',
@@ -69,23 +101,40 @@ class StatePlot(MotorDashboardPlot):
     }
 
     def __init__(self, state):
+        """
+        Args:
+            state(str): Name of the state to plot
+        """
+        #: State space of the plotted variable
         self._state_space = None
+        # State name of the plotted variable
         self._state = state
+        # Index in the state array of the plotted variable
         self._state_idx = None
+        # Maximal value of the plotted variable
         self._limits = None
+        # Bool: Flag if the plotted variable is referenced.
         self._referenced = None
+
+        # matplotlib-Lines for the state and reference
         self._state_line = None
         self._reference_line = None
+
+        # Data containers
         self._state_data = []
         self._ref_data = []
         self._t_data = []
+
         self._tau = None
+        # Flag, if the passed data is normalized
         self._normalized = True
+        # Number of points on the x-axis in a plot (= x_width / tau)
         self._x_points = None
         self._t = 0
         super().__init__()
 
     def set_modules(self, ps, rg, rf):
+        # Docstring of superclass
         self._state_idx = ps.state_positions[self._state]
         self._limits = ps.limits[self._state_idx]
         self._state_space = ps.state_space.low[self._state_idx], ps.state_space.high[self._state_idx]
