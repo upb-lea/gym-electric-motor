@@ -1,4 +1,8 @@
 import numpy as np
+from ..reference_generators import (sawtooth_reference_generator as saw_ref,
+                                    sinusoidal_reference_generator as sin_ref,
+                                    step_reference_generator as step_ref,
+                                    triangle_reference_generator as tri_ref)
 
 
 class MechanicalLoad:
