@@ -13,7 +13,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
     """
 
-    def __init__(self, plots, update_cycle=1000):
+    def __init__(self, plots, update_cycle=1000, **__):
         """
         Args:
             plots(list): A list of plots to show. Each element may either be a string or an already instantiated
@@ -76,7 +76,7 @@ class MotorDashboard(ElectricMotorVisualization):
             rf(RewardFunction): RewardFunction of the environment
         """
         for plot in self._plots:
-            plot.set_modules(*modules)
+            plot.set_modules(ps, rg, rf)
 
     def _initialize(self):
         """Called with first render() call to setup the figures and plots.
