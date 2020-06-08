@@ -170,6 +170,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reward_function.set_modules(self.physical_system, self._reference_generator)
         self._visualization.set_modules(self.physical_system, self._reference_generator, self._reward_function)
         self._reset_required = True
+        self._done = None
 
         # Initialization of properties
         self._state = np.zeros(len(self.physical_system.state_names))
@@ -189,6 +190,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         ))
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
+        self._action = None
 
     def reset(self, *_, **__):
         """
@@ -200,16 +202,19 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reset_required = False
         self._state = self._physical_system.reset()
         self._reference, next_ref, trajectories = self.reference_generator.reset(self._state)
-        self._visualization.reset(trajectories)
+        self._visualization.reset()
         self._reward_function.reset(self._state, self._reference)
         self._reward = 0.0
+        self._action = None
         return self._state[self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
         Update the visualization of the motor.
         """
-        self._visualization.step(self._state, self._reference, self._reward, self._reset_required)
+        self._visualization.step(
+            self._physical_system.k, self._state, self._reference, self._action, self._reward, self._done
+        )
 
     def step(self, action):
         """
@@ -226,10 +231,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         if self._reset_required:
             raise Exception('A reset is required before the environment can perform further steps')
+        self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
-        self._reward, self._reset_required = self._reward_function.reward(self._state, self._reference, action)
-
+        self._reward, self._done = self._reward_function.reward(self._state, self._reference, action)
+        self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
         return (self._state[self.state_filter], ref_next), self._reward, self._reset_required, {}
 
@@ -278,7 +284,7 @@ class ElectricMotorVisualization:
         """
         pass
 
-    def step(self, state, reference, reward, *_, **__):
+    def step(self, k, state, reference, action, reward, done):
         """
         Called by the environment every cycle and passes the current, normalized state array,
         the normalized references in the same shape as the state array and the received reward.
@@ -291,9 +297,12 @@ class ElectricMotorVisualization:
             Only the first reference value is important here, because all others are not referenced.
 
         Args:
+            k(int): Current episode step
             state(ndarray(float)): The state of the physical system.
             reference(ndarray(float)): The reference array of the reference generator.
+            action(ndarray(float)): The last taken action. None after reset.
             reward(float): The reward from the reward function.
+            done(bool): Flag, if the environment is in a terminal state.
         """
         pass
 
