@@ -7,9 +7,8 @@ class ConsolePrinter(ElectricMotorVisualization):
     the number of training steps, the rewards and the cumulated reward. Also shows why an episode has terminated (external, constraint violation)
     """
 
-    _limits = None
 
-    def __init__(self, verbose = 0, update_freq = 1, **kwargs):
+    def __init__(self, verbose=0, update_freq=1, **kwargs):
         """
         Args:
             verbose(Int):
@@ -22,7 +21,7 @@ class ConsolePrinter(ElectricMotorVisualization):
                 Unsigned Integer setting the update frequency if verbose is 2. It's value n means that each nth step the corresponding output will be printed
                     
         """
-        
+        self._limits = None
         self._print_freq = verbose
         self._update_freq = update_freq
         self._num_steps = 0
@@ -30,16 +29,19 @@ class ConsolePrinter(ElectricMotorVisualization):
         self._violation = False
         np.set_printoptions(formatter={'float': '{:0=9.3f}'.format})
             
-    def reset(self, reference_trajectories=None, *_, **__):
+    def reset(self, *_, **__):
         """Gets called on environment reset. Handles internal value reset and External reset printing"""
-        if self._print_freq and self._violation == False:
-            print(f'\nExternal Reset. ' 
-                  f'Number of steps: {self._num_steps: 08d} '
-                  f'Cumulated Reward: {self._cum_reward:7.3f}')
         if self._print_freq:
+            if not self._violation:
+                print(f'\nExternal Reset. ' 
+                      f'Number of steps: {self._num_steps: 08d} '
+                      f'Cumulated Reward: {self._cum_reward:7.3f}')
+            
             self._violation = False
             self._num_steps = 0
             self._cum_reward = 0
+   
+            
 
 
     def set_modules(self, physical_system, *_, **__):
