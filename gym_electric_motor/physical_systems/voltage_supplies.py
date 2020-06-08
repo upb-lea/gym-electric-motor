@@ -1,4 +1,5 @@
 from gym_electric_motor.physical_systems.solvers import EulerSolver
+import warnings
 
 class VoltageSupply:
     """
@@ -71,25 +72,32 @@ class RCVoltageSupply(VoltageSupply):
     """Voltage supply moduled as RC element"""
     
     def __init__(self, u_nominal, supply_parameter = {'R':1,'C':1}, **__):
+        """
+        RC circuit takes additional values for it's electrical elements.
+        Args:
+            R(float): Reluctance in Ohm
+            C(float): Capacitance in Farad
+        """
         super().__init__(u_nominal)
         # Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded
-        
         self.supply_range = (0,u_nominal) 
         self._R = supply_parameter['R']
         self._C = supply_parameter['C']
-        self._u_sup = 0.0
+        if self._R*self._C < 1e-4:
+            warnings.warn("The product of R and C might be too small for the correct calculation of the supply voltage")
+
+        self._u_sup = u_nominal
         self._u_0 = u_nominal
         self._solver = EulerSolver()
-        print(self._u_0)
         def system_equation(t, u_sup, u_0, i_sup, R, C):
-            # calculates ODE for derivate of u_sup
+            # ODE for derivate of u_sup
             return (u_0 - u_sup - R*i_sup)/(R*C)
         self._solver.set_system_equation(system_equation)
         
     def reset(self):
         # On reset the capacitor is unloaded again
-        self._solver.set_initial_value(0.0)
-        self._u_sup = 0.0
+        self._solver.set_initial_value(self._u_0)
+        self._u_sup = self._u_0
         return self._u_sup
                 
     
