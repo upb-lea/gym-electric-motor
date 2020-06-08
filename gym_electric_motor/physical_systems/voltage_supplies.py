@@ -66,23 +66,30 @@ class IdealVoltageSupply(VoltageSupply):
         return self._u_nominal
 
 
+#TODO: Discuss, if RCVoltageSupply solves its ODE itself
 class RCVoltageSupply(VoltageSupply):
     """Voltage supply moduled as RC element"""
     
     def __init__(self, u_nominal, R, C, **__):
         super().__init__(u_nominal)
-        self.supply_range = (0,u_nominal) #???
-        #self._R = R
-        #self._C = C
+        # Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded
+        self.supply_range = (0,u_nominal) 
+        self._R = R
+        self._C = C
+        self._u_sup = 0.0
+        self._u_0 = u_nominal
         self._solver = EulerSolver()
-        self._solver.set_f_params(u_nominal,R,C)
-        
-        def system_equation(t, u_out, u_nominal, R, C):
-            return (C*u_nominal - u_out)/(R*C)
-            
+        def system_equation(t, u_sup, u_0, i_sup, R, C):
+            # calculates ODE for derivate of u_sup
+            return (u_0 - u_sup - R*i_sup)/(R*C)
         self._solver.set_system_equation(system_equation)
+        
+    def reset(self):
+        # On reset the capacitor is unloaded again
+        self._solver.set_initial_value(0.0)
                 
     
     def get_voltage(self, i_sup, t):
-        
-        return self._solver.integrate(t)
+        self._solver.set_f_params(self._u_sup, self._u_0, i_sup, self._R, self._C)
+        self._u_sup = self._solver.integrate(t)
+        return self._u_sup
