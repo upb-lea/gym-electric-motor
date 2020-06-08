@@ -175,16 +175,18 @@ class SCMLSystem(PhysicalSystem):
         ode_state = self._ode_solver.y
         i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
         switching_times = self._converter.set_action(action, self._t)
-        i_sup = self._converter.i_sup(i_in)
-        u_sup = self._supply.get_voltage(self._t, i_sup)
 
         for t in switching_times[:-1]:
+            i_sup = self._converter.i_sup(i_in)
+            u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(i_in, self._ode_solver.t)
             u_in = [u * u_sup for u in u_in]
             self._ode_solver.set_f_params(u_in)
             ode_state = self._ode_solver.integrate(t)
             i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
-
+        
+        i_sup = self._converter.i_sup(i_in)
+        u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         self._ode_solver.set_f_params(u_in)
@@ -478,10 +480,10 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             action = self.dq_to_abc_space(action, eps)
         i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
         switching_times = self._converter.set_action(action, self._t)
-        i_sup = self._converter.i_sup(i_in)
-        u_sup = self._supply.get_voltage(self._t, i_sup)
 
         for t in switching_times[:-1]:
+            i_sup = self._converter.i_sup(i_in)
+            u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(i_in, self._ode_solver.t)
             u_in = [u * u_sup for u in u_in]
             u_qd = self.abc_to_dq_space(u_in, eps)
@@ -490,6 +492,8 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             eps = ode_state[self._ode_epsilon_idx]
             i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
 
+        i_sup = self._converter.i_sup(i_in)
+        u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         u_qd = self.abc_to_dq_space(u_in, eps)
@@ -617,10 +621,10 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
 
         i_in = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
         switching_times = self._converter.set_action(action, self._t)
-        i_sup = self._converter.i_sup(i_in)
-        u_sup = self._supply.get_voltage(self._t, i_sup)
 
         for t in switching_times[:-1]:
+            i_sup = self._converter.i_sup(i_in)
+            u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(i_in, self._ode_solver.t)
             u_in = [u * u_sup for u in u_in]
             u_alphabeta = self.abc_to_alphabeta_space(u_in)
@@ -629,6 +633,8 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
             eps_fs = self.calculate_field_angle(ode_state)
             i_in = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
 
+        i_sup = self._converter.i_sup(i_in)
+        u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         u_qd = self.abc_to_dq_space(u_in, eps_fs)
@@ -815,10 +821,9 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         i_rdef = self.alphabeta_to_abc_space(self.calculate_rotor_current(ode_state))
         switching_times = self._converter.set_action(action, self._t)
 
-        i_sup = self._converter.i_sup(np.concatenate((i_sabc, i_rdef)))
-        u_sup = self._supply.get_voltage(self._t, i_sup)
-
         for t in switching_times[:-1]:
+            i_sup = self._converter.i_sup(np.concatenate((i_sabc, i_rdef)))
+            u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
             u_in = [u * u_sup for u in u_in]
             u_sabc = u_in[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
@@ -835,7 +840,9 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             eps_el = ode_state[self._ode_epsilon_idx]
             i_sabc = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
             i_rdef = self.alphabeta_to_abc_space(self.calculate_rotor_current(ode_state))
-
+            
+        i_sup = self._converter.i_sup(np.concatenate((i_sabc, i_rdef)))
+        u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
         u_in = [u * u_sup for u in u_in]
         u_sabc = u_in[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
