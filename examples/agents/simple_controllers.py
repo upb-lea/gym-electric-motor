@@ -515,6 +515,12 @@ class FOCController(Controller):
         u_qd_des = np.array([u_sq_des, u_sd_des])
         voltages = self._backward_transformation(u_qd_des, epsilon_shift)
 
+        # zero voltage injection
+        u_o = 1/2 * (max(voltages) + min(voltages))
+        voltages[0] = voltages[0] - u_o
+        voltages[1] = voltages[1] - u_o
+        voltages[2] = voltages[2] - u_o
+
         # normalise inputs
         result = np.clip(voltages / self._limits[self._voltages_idx[0]], -1, 1)
         return result
