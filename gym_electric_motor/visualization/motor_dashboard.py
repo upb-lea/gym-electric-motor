@@ -1,5 +1,6 @@
 from gym_electric_motor.core import ElectricMotorVisualization
-import gym_electric_motor.visualization.motor_dashboard_plots as mdp
+#import gym_electric_motor.visualization.motor_dashboard_plots as mdp
+from . import motor_dashboard_plots as mdp
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -7,7 +8,7 @@ import matplotlib.pyplot as plt
 class MotorDashboard(ElectricMotorVisualization):
     """Dashboard to plot the GEM states into graphs.
 
-    Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible fpr the plots in a single
+    Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
     matplotlib axis.
     The MotorDashboard is responsible for all matplotlib.figure related tasks, especially updating the figures.
 
