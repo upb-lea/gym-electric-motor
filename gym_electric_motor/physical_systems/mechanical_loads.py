@@ -1,8 +1,5 @@
 import numpy as np
-from ..reference_generators import (sawtooth_reference_generator as saw_ref,
-                                    sinusoidal_reference_generator as sin_ref,
-                                    step_reference_generator as step_ref,
-                                    triangle_reference_generator as tri_ref)
+from .solvers import EulerSolver
 
 
 class MechanicalLoad:
@@ -197,17 +194,22 @@ class ExternalSpeedLoad(MechanicalLoad):
         # Docstring from superclass
         return np.array([self._omega])
 
-    def __init__(self, omega_initial=0, **__):
+    def __init__(self, omega_initial=0, speed_profile=None, jacobi=None **__):
         """
         Args:
             omega_fixed(float)): Fix value for the speed in rad/s.
         """
         super().__init__()
         self._omega = omega_initial
+        # todo noch default const fall ergänzen
+        self._speed_profile = speed_profile
+        self._jacobi = jacobi
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
-        return np.array([0])
+        EulerSolver.set_system_equation(, jacobi)
+
+        return np.array([(torque - self._static_load(mechanical_state[self.OMEGA_IDX])) / self._j_total])
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
