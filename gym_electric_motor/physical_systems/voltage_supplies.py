@@ -73,7 +73,7 @@ class RCVoltageSupply(VoltageSupply):
     
     def __init__(self, u_nominal, supply_parameter={'R':1,'C':4e-3}, **__):
         """
-        RC circuit takes additional values for it's electrical elements.
+        This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element
         Args:
             supply_parameter(dict): Consists or Reluctance R in Ohm and Capacitance C in Farad
         Additional notes:
@@ -98,6 +98,7 @@ class RCVoltageSupply(VoltageSupply):
         self._solver.set_system_equation(system_equation)
         
     def reset(self):
+        # Docstring of superclass
         # On reset the capacitor is unloaded again
         self._solver.set_initial_value(np.array([self._u_0]))
         self._u_sup = self._u_0
@@ -105,6 +106,7 @@ class RCVoltageSupply(VoltageSupply):
                 
     
     def get_voltage(self, t,i_sup):
+        # Docstring of superclass
         self._solver.set_f_params(self._u_0, i_sup, self._r, self._c)
         self._u_sup = self._solver.integrate(t)[0]
         return self._u_sup
