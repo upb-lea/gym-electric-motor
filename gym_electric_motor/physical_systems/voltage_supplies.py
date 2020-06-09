@@ -1,5 +1,6 @@
 from gym_electric_motor.physical_systems.solvers import EulerSolver
 import warnings
+import numpy as np
 
 class VoltageSupply:
     """
@@ -67,16 +68,19 @@ class IdealVoltageSupply(VoltageSupply):
         return self._u_nominal
 
 
-#TODO: Discuss, if RCVoltageSupply solves its ODE itself
 class RCVoltageSupply(VoltageSupply):
     """Voltage supply moduled as RC element"""
     
-    def __init__(self, u_nominal, supply_parameter={'R':1,'C':1}, **__):
+    def __init__(self, u_nominal, supply_parameter={'R':1,'C':4e-3}, **__):
         """
         RC circuit takes additional values for it's electrical elements.
         Args:
             R(float): Reluctance in Ohm
             C(float): Capacitance in Farad
+        Additional notes:
+            If the product of R and C get too small the numerical stability of the ODE is not given anymore
+            since our time difference tau is only in the range of 10e-3. You might want to consider R as a
+            time constant used for numerical stability and only model C realistically
         """
         super().__init__(u_nominal)
         # Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded
@@ -84,24 +88,25 @@ class RCVoltageSupply(VoltageSupply):
         self._R = supply_parameter['R']
         self._C = supply_parameter['C']
         if self._R*self._C < 1e-4:
-            warnings.warn("The product of R and C might be too small for the correct calculation of the supply voltage")
+            warnings.warn("The product of R and C might be too small for the correct calculation of the supply voltage. You might want to consider R as a time constant.")
 
         self._u_sup = u_nominal
         self._u_0 = u_nominal
         self._solver = EulerSolver()
         def system_equation(t, u_sup, u_0, i_sup, R, C):
             # ODE for derivate of u_sup
-            return (u_0 - u_sup - R*i_sup)/(R*C)
+            return np.array([(u_0 - u_sup[0] - R*i_sup)/(R*C)])
         self._solver.set_system_equation(system_equation)
         
     def reset(self):
         # On reset the capacitor is unloaded again
-        self._solver.set_initial_value(self._u_0)
+        self._solver.set_initial_value(np.array([self._u_0]))
         self._u_sup = self._u_0
         return self._u_sup
                 
     
     def get_voltage(self, t,i_sup):
         self._solver.set_f_params(self._u_0, i_sup, self._R, self._C)
-        self._u_sup = self._solver.integrate(t)
+        self._u_sup = self._solver.integrate(t)[0]
         return self._u_sup
+    
