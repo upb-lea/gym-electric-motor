@@ -1,5 +1,4 @@
 import numpy as np
-from .solvers import EulerSolver
 
 
 class MechanicalLoad:
@@ -180,7 +179,7 @@ class ExternalSpeedLoad(MechanicalLoad):
        predefined speed-function/ speed-profile.
     """
 
-    HAS_JACOBIAN = True
+    HAS_JACOBIAN = False
 
     @property
     def omega(self):
@@ -188,32 +187,43 @@ class ExternalSpeedLoad(MechanicalLoad):
         Returns:
             float: Function-value for omega in rad/s at time-step t.
         """
-        return self._omega
+        return self._omega_initial
 
     def reset(self, *_, **__):
         # Docstring from superclass
-        return np.array([self._omega])
+        return np.array([self._omega_initial])
 
-    def __init__(self, omega_initial=0, speed_profile=None, jacobi=None **__):
+    def __init__(self, speed_profile=None,
+                 omega_initial=0, tau=1e-4, **kwargs):
         """
         Args:
-            omega_fixed(float)): Fix value for the speed in rad/s.
+            speed_profile(lambda exp/fct): function or lambda expression
+                which take time t as argument and return speed omega
+            omega_initial(float)): Fix value for the speed in rad/s.
+            tau(float): discrete time step of the system
+            kwargs(dict): further arguments for speed_profile
         """
         super().__init__()
-        self._omega = omega_initial
-        # todo noch default const fall ergänzen
-        self._speed_profile = speed_profile
-        self._jacobi = jacobi
+        self.__dict__.update(**kwargs)
+        self.kwargs = kwargs
+        self._omega_initial = omega_initial
+        self._speed_profile = speed_profile #(w(t))
+        #self._profile_args = profile_args
+        self._tau = tau
 
-    def mechanical_ode(self, *_, **__):
+        #self._jacobi = jacobi
+
+    def mechanical_ode(self, t, mechanical_state, torque):
         # Docstring of superclass
-        EulerSolver.set_system_equation(, jacobi)
-
-        return np.array([(torque - self._static_load(mechanical_state[self.OMEGA_IDX])) / self._j_total])
+        omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
+        # return T/j mit T = j/tau * (w(k+1) - w(k))
+        return np.array([(self.j_total / self._tau) *
+                         (omega_next - mechanical_state[self.OMEGA_IDX])])
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
-        return np.array([0]), np.array([0])
+        # jacobian here not necessary, since omega is externally given
+        return None
 
 
 class ConstantSpeedLoad(MechanicalLoad):
