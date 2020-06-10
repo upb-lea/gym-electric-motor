@@ -197,9 +197,12 @@ class ExternalSpeedLoad(MechanicalLoad):
                  omega_initial=0, tau=1e-4, **kwargs):
         """
         Args:
-            speed_profile(lambda exp/fct): function or lambda expression
+            speed_profile(function): function or lambda expression
                 which take time t as argument and return speed omega
-            omega_initial(float)): Fix value for the speed in rad/s.
+                example:
+                    (lambda t, amplitude, freq: amplitude*numpy.sin(2*pi*f)))
+                    with additional parameter: amplitude, freq
+            omega_initial(float)): Initial value for the speed in rad/s.
             tau(float): discrete time step of the system
             kwargs(dict): further arguments for speed_profile
         """
