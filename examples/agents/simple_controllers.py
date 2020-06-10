@@ -1,5 +1,7 @@
 from gym.spaces import Discrete, Box
-import sys, os
+import sys
+import os
+
 sys.path.append(os.path.abspath(os.path.join('..')))
 from gym_electric_motor.physical_systems.electric_motors import DcShuntMotor, DcExternallyExcitedMotor, \
     DcPermanentlyExcitedMotor, DcSeriesMotor
@@ -9,7 +11,6 @@ import numpy as np
 
 
 class Controller:
-
     """
       The following is a base class for various controllers along with the motor environments
 
@@ -35,12 +36,10 @@ class Controller:
 
 
 class OnOffController(Controller):
-
     """
         The following controller is a simple OnOffController which allows the state to choose high_action when referenced_state is below
         ref_idx and low_action otherwise
     """
-
     def __init__(self, environment, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Discrete, 'Not suitable action space for On off controller'
@@ -60,14 +59,13 @@ class OnOffController(Controller):
 
 
 class ThreePointController(Controller):
-
     """
     Below is an implementation of a 3 point controller: When state_idx is below the reference_idx, it choose high_action and when the
     state_idx is above the reference_idx,it choose low_action. If it is between the reference_idx values, it will choose idle_action
-    A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and high frequency around the reference_idx
+    A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and
+    high frequency around the reference_idx
 
     """
-
     def __init__(self, environment, hysteresis=0.01, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Discrete, 'Not suitable action space for three point controller'
@@ -91,13 +89,11 @@ class ThreePointController(Controller):
 
 
 class PController(Controller):
-
     """
     In the below proportional control implementation, the controller output is proportional to the error signal,  which is the difference
     between the reference_idx and the state_idx .i.e., the output of a proportional controller
     is the multiplication product of the error signal and the proportional gain.Here kp =10 is assumed for proportionality gain.
     """
-
     def __init__(self, environment, k_p=10, controller_no=0, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Box, 'No suitable action space for P Controller'
@@ -126,15 +122,17 @@ class PIController(PController):
       and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
       It outputs a weighted sum of the input error signal and the integral of the input error signal.
     """
-
     def __init__(self, environment, k_p=10, k_i=0.01, controller_no=0, reference_idx=0):
         super().__init__(environment, k_p, controller_no, reference_idx)
+        assert type(environment.physical_system) is DcSeriesMotor  #
         self._k_i = k_i
         self._tau = environment.physical_system.tau
         self._limits = environment.physical_system.limits
         self._integrated_value = 0
-        self._referenced_state_max = self._limits[self._referenced_state] * environment.physical_system.state_space.high[self._referenced_state]
-        self._referenced_state_min = self._limits[self._referenced_state] * environment.physical_system.state_space.low[self._referenced_state]
+        self._referenced_state_max = self._limits[self._referenced_state] * \
+                                     environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] * environment.physical_system.state_space.low[
+            self._referenced_state]
 
     def control(self, state, reference):
         diff = reference[self._ref_idx] - state[self._referenced_state]
@@ -166,7 +164,6 @@ class PmsmOnOffController(Controller):
     The following controller is a simple OnOffController which allows the state to choose u_q values as '1'' when it is below
         reference_state and '-1' otherwise
     """
-
     def __init__(self, environment, state_idx=None, ref_idx=0):
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
@@ -179,6 +176,8 @@ class PmsmOnOffController(Controller):
         self._l_q = environment.physical_system.electrical_motor.motor_parameter['l_q']
         self._epsilon_idx = environment.physical_system.EPSILON_IDX
         self._currents_idx = environment.physical_system.CURRENTS_IDX
+        self._currents_idx[0] = np.argmax(environment.state_names == 'i_sq')
+        self._currents_idx[1] = np.argmax(environment.state_names == 'i_sd')
         self._ref_idx = ref_idx
         self._omega_idx = environment.physical_system.state_positions['omega']
         self._u_sup = environment.physical_system.supply.u_nominal
@@ -197,13 +196,11 @@ class PmsmOnOffController(Controller):
 
 
 class SynRmOnOffController(PmsmOnOffController):
-
     """
-     The following controller is a PmsmOnOffController which allows the state to choose u_d and u_q voltages values as '1'  when it is below
+     The following controller is a SynRmOnOffController which allows the state to choose u_d and u_q voltages values as '1'  when it is below
         reference_state and '-1' otherwise
 
     """
-
     def control(self, state, reference):
         if state[self._referenced_state] < reference[self._ref_idx]:
             u_q = 1
@@ -217,21 +214,17 @@ class SynRmOnOffController(PmsmOnOffController):
 
 
 class CascadedPIController(Controller):
-
     """
       cascade architecture has:
       two controllers (an inner secondary and outer primary controller)
-      two measured process variable sensors (an inner PV2 and outer PV1).A primary or master controller generates a control effort
-      that serves as the setpoint for a secondary or slave controller.That controller in turn uses the actuator to apply its control
+      two measurement/state variable sensors (an inner PV2 and outer PV1).A primary or master controller generates a control effort
+      that serves as the reference for a secondary or slave controller.That controller in turn uses the actuator to apply its control
       effort directly to the secondary process.The secondary process then generates a secondary process variable that serves as
-      the control effort for the primary process.
-
-      The geometry of this defines an inner loop involving the secondary controller and an outer loop involving the primary controller.
-      The inner loop functions like a traditional feedback control system with a setpoint, a process variable, and a controller
-      acting on a process by means of an actuator. The outer loop does the same except that it uses the entire inner loop as its actuator.
-
+      the control effort for the primary process. The geometry of this defines an inner loop involving the current controller and
+      an outer loop involving the speed controller.The inner loop functions like a traditional feedback control system with a
+      reference variable, a measured variable, and a controller acting on a process by means of an actuator. The outer loop does
+      the same except that it uses the entire inner loop as its actuator.
     """
-
     def __init__(self, environment, ref_idx=0):
         self._omega_idx = environment.physical_system.OMEGA_IDX
         self._currents_idx = environment.physical_system.CURRENTS_IDX
@@ -360,7 +353,6 @@ class CascadedPIController(Controller):
 
 
 class FOCController(Controller):
-
     """
     FOC is used to control AC synchronous and induction motors.The stator currents of a three-phase AC electric motor are identified
     as two orthogonal components that can be visualized with a vector. One component defines the magnetic flux of the motor, the other the torque.
@@ -369,8 +361,9 @@ class FOCController(Controller):
 
     """
 
-    def __init__(self, environment, ref_idx=0, weight=1):
+    def __init__(self, environment, ref_idx=0, weight=1, dq_decoupling=False):
         assert type(environment.physical_system) is SynchronousMotorSystem
+        self._dq_decoupling = dq_decoupling  # Can be turned ON
         self._ref_idx = ref_idx
         self._weight = weight
         self._omega_idx = environment.physical_system.OMEGA_IDX
@@ -456,7 +449,7 @@ class FOCController(Controller):
         t_des = temp + d_omega * self._k_p_t  # proportional part
         i_sq_des = 2 * t_des / (3 * mp['p'] * mp['psi_p'])
         # anti wind-up
-        if i_sq_des > self._limits[self._currents_idx[0]] * self._weight\
+        if i_sq_des > self._limits[self._currents_idx[0]] * self._weight \
                 or i_sq_des < -self._limits[self._currents_idx[0]] * self._weight:
             i_sq_des = min(
                 max(i_sq_des, -self._limits[self._currents_idx[0]] * self._weight),
@@ -469,9 +462,9 @@ class FOCController(Controller):
             i_sd_des = 0
         else:
             i_sd_des = (
-                (self._limits[self._voltages_idx[0]] / omega_ref) ** 2
-                - (mp['l_q'] * self._limits[self._currents_idx[0]]) ** 2 - mp['psi_p'] ** 2
-                / (2 * mp['psi_p'] * mp['l_d']))
+                    (self._limits[self._voltages_idx[0]] / omega_ref) ** 2
+                    - (mp['l_q'] * self._limits[self._currents_idx[0]]) ** 2 - mp['psi_p'] ** 2
+                    / (2 * mp['psi_p'] * mp['l_d']))
 
         # transform back to abc-domain
         currents = self._backward_transformation((i_sq_des, i_sd_des), epsilon)
@@ -511,12 +504,20 @@ class FOCController(Controller):
         u_sq_des = d_u_sq_des + u_q_0
         epsilon_shift = epsilon + 3 / 2 * self._tau * omega
 
+        # If we require dq-decoupling at higher speeds, the below block can be executed
+        if self._dq_decoupling:
+            u_sd_des = u_sd_des - u_d_0
+            u_sq_des = u_sq_des + u_q_0
+        else:
+            u_sd_des = u_sd_des
+            u_sq_des = u_sq_des
+
         # from d/q to alpha/beta and a/b/c
         u_qd_des = np.array([u_sq_des, u_sd_des])
         voltages = self._backward_transformation(u_qd_des, epsilon_shift)
 
         # zero voltage injection
-        u_o = 1/2 * (max(voltages) + min(voltages))
+        u_o = 1 / 2 * (max(voltages) + min(voltages))
         voltages[0] = voltages[0] - u_o
         voltages[1] = voltages[1] - u_o
         voltages[2] = voltages[2] - u_o
@@ -527,7 +528,6 @@ class FOCController(Controller):
 
 
 class PmsmPController(Controller):
-
     """
     In the below proportional control algorithm, the controller output is proportional to the error signal,  which is the difference
     between the reference_idx and the state_idx .i.e., the output of a proportional controller
@@ -576,8 +576,8 @@ class ThreePhaseSteadyState(Controller):
         self._k = 0
         t = np.linspace(0, 2 * np.pi / abs(omega_el), 1 / abs(omega_el * self._tau))
         self._u_a = np.sin(omega_el * t)
-        self._u_b = np.sin(omega_el * t - 2/3 * np.pi)
-        self._u_c = np.sin(omega_el * t + 2/3 * np.pi)
+        self._u_b = np.sin(omega_el * t - 2 / 3 * np.pi)
+        self._u_c = np.sin(omega_el * t + 2 / 3 * np.pi)
 
     def reset(self):
         self._k = -1
