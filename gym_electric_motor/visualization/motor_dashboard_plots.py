@@ -144,6 +144,9 @@ class StatePlot(MotorDashboardPlot):
         if self._limits == self._state_space[1]:
             self._normalized = False
 
+        # self._action_space = ps.action_space
+        # a=5
+
     def initialize(self, axis):
         super().initialize(axis)
         axis.grid()
@@ -160,7 +163,7 @@ class StatePlot(MotorDashboardPlot):
         self._axis.set_ylim(min_limit - 0.1 * (max_limit - min_limit), max_limit + 0.1*(max_limit - min_limit))
         self._axis.set_xlim(0, self.x_width)
         self._axis.set_xlabel('t/s')
-        y_label = self.state_labels.get(self._state, self._state)
+        y_label = self.state_labels.get(self._state)  # fix
         self._axis.set_ylabel(y_label)
 
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False).tolist()
@@ -256,6 +259,7 @@ class RewardPlot(MotorDashboardPlot):
             self._t_data[idx] = self._t
         self._reward_data[idx] = reward
         if done:
+
             self._axis.axvline(self._t, color='red', linewidth=1)
 
     def update(self):
@@ -268,12 +272,93 @@ class RewardPlot(MotorDashboardPlot):
 
 
 class ActionPlot(MotorDashboardPlot):
-    def __init__(self, plot):
+    x_width = 3
+    mode = 'continuous'
+    action_line_cfg = {
+        'color': 'yellow',
+        'linestyle': '',
+        'linewidth': 0.75,
+        'marker': '.',
+        'markersize': .5
+    }
+
+    def __init__(self, action):
         super().__init__()
-        self._plot = plot
+        self._action_space = None
+        self._action = action
+        self._action_idx = None
+        # matplotlib-Lines
+        self._action_line = None
+        # Data containers
+        self._action_data = None
+        self._t_data = None
+        self._tau = None
+        # Number of points on the x-axis in a plot (= x_width / tau)
+        self._x_points = None
+        self._t = 0
+        self._action_range_min = None
+        self._action_range_max = None
+        self._action_type = None
+
+    def initialize(self, axis):
+        super().initialize(axis)
+        axis.grid()
+
+        self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
+        self._action_data = np.zeros_like(self._t_data, dtype=float)
+        self._action_line, = self._axis.plot(self._t_data, self._action_data, **self.action_line_cfg)
+        act_min = -1 #self._action_space.low[self._action_idx]   # todo  bugfix
+        act_max = 1 #self._action_space.low[self._action_idx]
+        spacing = (act_min - act_max) * 0.1
+        self._axis.set_ylim(act_min - spacing, act_max + spacing)
+        self._axis.set_xlim(0, self.x_width)
+        self._axis.set_xlabel('t/s')
+        self._axis.set_ylabel(self._action)
+        base_action_line = lin.Line2D([], [], color=self.action_line_cfg['color'])
+        self._axis.legend((base_action_line,), (self._action,), loc='upper left')
+
+    def set_modules(self, ps, rg, rf):
+        self._action_space = ps.action_space
+        #extract the action index from the action name
+        self._action_idx = int(self._action.split('_')[1])
+        ## add discrete/continuous logic here
+        if self._action_space.dtype == 'float32':  # for continuous action space
+            self._action_type = 'Continuous'
+            self._action_range_min = self._action_space.low[self._action_idx]
+            self._action_range_max = self._action_space.high[self._action_idx]
+
+        else:
+            self._action_type = 'Discrete'
+            self._action_range_min = 0
+            self._action_range_max = self._action_space.n
+
+        self._tau = ps.tau
+        self._x_points = int(self.x_width/self._tau)
 
     def step(self, k, state, reference, action, reward, done):
-        pass
+        self._t += self._tau
+        idx = int((self._t % self.x_width) / self._tau)
+        if self.mode == 'continuous':
+            self._t_data[idx] = self._t
+        if self._action_type == 'Discrete':
+            self._action_data[idx] = action
+        else:
+            self._action_data[idx] = action[self._action_idx] if action != None else 0  # todo bugfix act= None initially
+
+        if done:
+            self._axis.axvline(self._t, color='red', linewidth=1)
+
+    def update(self):
+        self._action_line.set_data(self._t_data, self._action_data)
+        if self.mode == 'continuous':
+            x_lim = self._axis.get_xlim()
+            upper_lim = max(self._t, x_lim[1])
+            lower_lim = upper_lim - self.x_width
+            self._axis.set_xlim(lower_lim, upper_lim)
+
+
+
+
 
 
 class MeanEpisodeRewardPlot(MotorDashboardPlot):
