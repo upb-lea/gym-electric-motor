@@ -189,6 +189,7 @@ class StatePlot(MotorDashboardPlot):
         if self._referenced:
             self._ref_data[idx] = ref
         if done:
+            self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
     def update(self):
@@ -259,7 +260,7 @@ class RewardPlot(MotorDashboardPlot):
             self._t_data[idx] = self._t
         self._reward_data[idx] = reward
         if done:
-
+            self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
     def update(self):
@@ -275,7 +276,7 @@ class ActionPlot(MotorDashboardPlot):
     x_width = 3
     mode = 'continuous'
     action_line_cfg = {
-        'color': 'yellow',
+        'color': 'magenta',
         'linestyle': '',
         'linewidth': 0.75,
         'marker': '.',
@@ -307,8 +308,8 @@ class ActionPlot(MotorDashboardPlot):
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
         self._action_data = np.zeros_like(self._t_data, dtype=float)
         self._action_line, = self._axis.plot(self._t_data, self._action_data, **self.action_line_cfg)
-        act_min = -1 #self._action_space.low[self._action_idx]   # todo  bugfix
-        act_max = 1 #self._action_space.low[self._action_idx]
+        act_min = self._action_range_min
+        act_max = self._action_range_max
         spacing = (act_min - act_max) * 0.1
         self._axis.set_ylim(act_min - spacing, act_max + spacing)
         self._axis.set_xlim(0, self.x_width)
@@ -318,6 +319,7 @@ class ActionPlot(MotorDashboardPlot):
         self._axis.legend((base_action_line,), (self._action,), loc='upper left')
 
     def set_modules(self, ps, rg, rf):
+
         self._action_space = ps.action_space
         #extract the action index from the action name
         self._action_idx = int(self._action.split('_')[1])
@@ -340,12 +342,15 @@ class ActionPlot(MotorDashboardPlot):
         idx = int((self._t % self.x_width) / self._tau)
         if self.mode == 'continuous':
             self._t_data[idx] = self._t
-        if self._action_type == 'Discrete':
-            self._action_data[idx] = action
-        else:
-            self._action_data[idx] = action[self._action_idx] if action != None else 0  # todo bugfix act= None initially
+
+        if action is not None:
+            if self._action_type == 'Discrete':
+                self._action_data[idx] = action
+            else:
+                self._action_data[idx] = action[self._action_idx]
 
         if done:
+            self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
     def update(self):
