@@ -74,7 +74,7 @@ if __name__ == '__main__':
     env = gem.make(
         'emotor-pmsm-cont-v1',
         # Pass a class with extra parameters
-        visualization=MotorDashboard(['i_sq', 'i_sd', 'u_sq', 'u_sd', 'reward']), visu_period=1,
+        visualization=MotorDashboard(['i_sq', 'i_sd', 'action_1', 'action_0']), visu_period=1,
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
         control_space='dq',
         # Pass a string (with extra parameters)

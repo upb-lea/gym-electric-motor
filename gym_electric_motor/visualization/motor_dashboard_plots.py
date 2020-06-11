@@ -210,6 +210,8 @@ class StatePlot(MotorDashboardPlot):
 
 
 class RewardPlot(MotorDashboardPlot):
+    """ Class used to plot the instantaneous reward during the episode
+    """
 
     x_width = 3
     mode = 'continuous'
@@ -222,6 +224,7 @@ class RewardPlot(MotorDashboardPlot):
     }
 
     def __init__(self):
+
         self._reward_range = None
         self._reward_line = None
         self._reward_data = None
@@ -232,6 +235,7 @@ class RewardPlot(MotorDashboardPlot):
         super().__init__()
 
     def initialize(self, axis):
+
         super().initialize(axis)
         axis.grid()
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
@@ -245,6 +249,7 @@ class RewardPlot(MotorDashboardPlot):
         self._axis.set_xlabel('t/s')
         y_label = 'reward'
         self._axis.set_ylabel(y_label)
+        # adds a constant line at 0 which is eventually updated by the plot variable values. legend can be set here.
         dummy_rew_line = lin.Line2D([], [], color=self.reward_line_cfg['color'])
         self._axis.legend((dummy_rew_line,), ('reward',), loc='upper left')
 
@@ -260,6 +265,7 @@ class RewardPlot(MotorDashboardPlot):
             self._t_data[idx] = self._t
         self._reward_data[idx] = reward
         if done:
+            # plots the values at the terminal step before adding a red vertical line indicating episode termination
             self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
@@ -273,6 +279,9 @@ class RewardPlot(MotorDashboardPlot):
 
 
 class ActionPlot(MotorDashboardPlot):
+    """ class to plot the instantaneous actions applied on-to the environment
+
+    """
     x_width = 3
     mode = 'continuous'
     action_line_cfg = {
@@ -285,29 +294,36 @@ class ActionPlot(MotorDashboardPlot):
 
     def __init__(self, action):
         super().__init__()
+        # the action space of the environment. can be Box() or Discrete()
         self._action_space = None
         self._action = action
+        # the index for the actions.
         self._action_idx = None
-        # matplotlib-Lines
         self._action_line = None
         # Data containers
         self._action_data = None
         self._t_data = None
         self._tau = None
-        # Number of points on the x-axis in a plot (= x_width / tau)
         self._x_points = None
         self._t = 0
+        # the range of the action values
         self._action_range_min = None
         self._action_range_max = None
+        # the type of action space: Discrete or Continuous
         self._action_type = None
 
     def initialize(self, axis):
+        """
+        Args:
+            axis (object): the subplot axis for plotting the action variable
+        """
         super().initialize(axis)
         axis.grid()
 
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
         self._action_data = np.zeros_like(self._t_data, dtype=float)
         self._action_line, = self._axis.plot(self._t_data, self._action_data, **self.action_line_cfg)
+        # set the layout of the subplot
         act_min = self._action_range_min
         act_max = self._action_range_max
         spacing = (act_min - act_max) * 0.1
@@ -319,19 +335,22 @@ class ActionPlot(MotorDashboardPlot):
         self._axis.legend((base_action_line,), (self._action,), loc='upper left')
 
     def set_modules(self, ps, rg, rf):
-
+        # fetch the action space from the physical system
         self._action_space = ps.action_space
         #extract the action index from the action name
         self._action_idx = int(self._action.split('_')[1])
-        ## add discrete/continuous logic here
+        # check for the type of action space: Discrete or Continuous
         if self._action_space.dtype == 'float32':  # for continuous action space
             self._action_type = 'Continuous'
+            # fetch the action range of continuous type actions
             self._action_range_min = self._action_space.low[self._action_idx]
             self._action_range_max = self._action_space.high[self._action_idx]
 
         else:
             self._action_type = 'Discrete'
+            # lower bound of discrete action = 0
             self._action_range_min = 0
+            # fetch the action range of discrete type actions
             self._action_range_max = self._action_space.n
 
         self._tau = ps.tau
@@ -342,7 +361,7 @@ class ActionPlot(MotorDashboardPlot):
         idx = int((self._t % self.x_width) / self._tau)
         if self.mode == 'continuous':
             self._t_data[idx] = self._t
-
+        # the first action at the start of the simulation is None. Add a check.
         if action is not None:
             if self._action_type == 'Discrete':
                 self._action_data[idx] = action
@@ -350,6 +369,7 @@ class ActionPlot(MotorDashboardPlot):
                 self._action_data[idx] = action[self._action_idx]
 
         if done:
+            # plots the values at the terminal step before adding a red vertical line indicating episode termination
             self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
@@ -360,10 +380,6 @@ class ActionPlot(MotorDashboardPlot):
             upper_lim = max(self._t, x_lim[1])
             lower_lim = upper_lim - self.x_width
             self._axis.set_xlim(lower_lim, upper_lim)
-
-
-
-
 
 
 class MeanEpisodeRewardPlot(MotorDashboardPlot):

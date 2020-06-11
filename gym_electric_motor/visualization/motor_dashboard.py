@@ -22,7 +22,8 @@ class MotorDashboard(ElectricMotorVisualization):
                 Possible strings:
                     - {state_name}: The corresponding state is plotted
                     - reward: The reward per step is plotted
-                    - action_{i}: The i-th action is plotted (might be refined)
+                    - action_{i}: The i-th action is plotted. 'action_0' for discrete action space
+                    
             update_cycle(int): Number after how many steps the plot shall be updated. (default 1000)
         """
         plt.ion()
