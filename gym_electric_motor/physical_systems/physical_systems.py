@@ -272,11 +272,12 @@ class SCMLSystem(PhysicalSystem):
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)
-        #print('motor reset', motor_state)
+        print('motor reset', motor_state)
         mechanical_state = self._mechanical_load.reset(
+            state_space=self.state_space,
             state_positions=self.state_positions,
-            nominal_states=self.nominal_state)
-        #print('load reset', mechanical_state)
+            nominal_state=self.nominal_state)
+        print('load reset', mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
         #print('supply', u_sup)
@@ -541,7 +542,8 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         #print('motor', motor_state)
         mechanical_state = self._mechanical_load.reset(
             state_positions=self.state_positions,
-            nominal_states=self.nominal_state)
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
         #print('mech', mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         #print(ode_state)
@@ -682,12 +684,14 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
 
     def reset(self, *_):
         # Docstring of superclass
-        motor_state = self._electrical_motor.reset(
-            state_space=self.state_space,
-            state_positions=self.state_positions)
         mechanical_state = self._mechanical_load.reset(
             state_positions=self.state_positions,
-            nominal_states=self.nominal_state)
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions,
+            omega=mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
 
@@ -907,12 +911,15 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
 
     def reset(self, *_):
         # Docstring of superclass
-        motor_state = self._electrical_motor.reset(
-            state_space=self.state_space,
-            state_positions=self.state_positions)
+        print(self.nominal_state)
         mechanical_state = self._mechanical_load.reset(
             state_positions=self.state_positions,
-            nominal_states=self.nominal_state)
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions,
+            omega=mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
 
