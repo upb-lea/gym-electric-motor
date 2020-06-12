@@ -9,6 +9,18 @@ class MechanicalLoad:
     It contains an mechanical ode system as well as the state names, limits and nominal values
     of the mechanical quantities. The only required state is 'omega' as the rotational speed of the motor shaft
     in rad/s.
+
+    Initialization is given by initializer(dict). Can be constant state value
+    or random value in given or nominal interval.
+    dict should be like:
+        { 'states': <dict with state names and initital values>,
+          'interval': < boundaries for each state (only for random init>,
+          'random_init': <str: 'uniform' or 'normal'>,
+          'random_params: {'mue': <const>, 'sigma': <const>}
+    Example initializer(dict) for constant initialization:
+        { 'states': {'omega': 15.5}}
+    Example  initializer(dict) for random initialization:
+        { 'random_init': 'normal'}
     """
 
     @property
