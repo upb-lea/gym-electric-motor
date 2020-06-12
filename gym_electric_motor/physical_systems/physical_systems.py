@@ -272,22 +272,16 @@ class SCMLSystem(PhysicalSystem):
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)
-        print('motor reset', motor_state)
         mechanical_state = self._mechanical_load.reset(
             state_space=self.state_space,
             state_positions=self.state_positions,
             nominal_state=self.nominal_state)
-        print('load reset', mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
-        #print('supply', u_sup)
         u_in = self.converter.reset()
-        #print('input', u_in)
         u_in = [u * u_sup for u in u_in]
         torque = self.electrical_motor.torque(motor_state)
-        #print('torque', torque)
         noise = self._noise_generator.reset()
-        #print('noise', noise)
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
@@ -298,7 +292,6 @@ class SCMLSystem(PhysicalSystem):
             u_in,
             [u_sup]
         ))
-        #print('sys', system_state)
         return (system_state + noise) / self._limits
 
 
@@ -539,14 +532,11 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)
-        #print('motor', motor_state)
         mechanical_state = self._mechanical_load.reset(
             state_positions=self.state_positions,
             state_space=self.state_space,
             nominal_state=self.nominal_state)
-        #print('mech', mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
-        #print(ode_state)
         u_sup = self.supply.reset()
         eps = ode_state[self._ode_epsilon_idx]
         if eps > np.pi:
@@ -569,7 +559,6 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             [eps],
             [u_sup],
         ))
-        print('sys', system_state)
         return (system_state + noise) / self._limits
 
 
@@ -911,7 +900,6 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
 
     def reset(self, *_):
         # Docstring of superclass
-        print(self.nominal_state)
         mechanical_state = self._mechanical_load.reset(
             state_positions=self.state_positions,
             state_space=self.state_space,

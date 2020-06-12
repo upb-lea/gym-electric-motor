@@ -85,7 +85,7 @@ class MechanicalLoad:
         range of the nominal values or a given interval.
 
         Args:
-            nominal_state(list): nominal values fpr each state given from
+            nominal_state(list): nominal values for each state given from
                                   physical system
             state_space(gym.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
@@ -101,97 +101,70 @@ class MechanicalLoad:
         # setting nominal values as interval limits
         state_idx = [state_positions[state] for state in self._initial_states.keys()]
         upper_bound = np.asarray(nominal_state[state_idx], dtype=float)
-        lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)
+        lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
             lower_bound = np.clip(lower_bound,
                                   a_min=
-                                  np.asarray(self.interval, dtype=float).T[0],
+                                  np.asarray(interval, dtype=float).T[0],
                                   a_max=None)
             upper_bound = np.clip(upper_bound,
                                   a_min=None,
                                   a_max=
-                                  np.asarray(self.interval, dtype=float).T[1])
+                                  np.asarray(interval, dtype=float).T[1])
         else:
             pass
-        # if (interval is not None
-        #         and isinstance(interval, (list, np.ndarray, tuple))):
-        #     lower_bound = np.asarray(interval).T[0]
-        #     upper_bound = np.asarray(interval).T[1]
-        #     # clip bounds to nominal values
-        #     nom_currents = np.asarray([nominal_values[s]
-        #                                for s in initial_states.keys()])
-        #     upper_bound = np.clip(upper_bound,
-        #                           a_min=None,
-        #                           a_max=nom_currents)
-        #     lower_bound = np.clip(lower_bound,
-        #                           a_min=np.zeros(len(initial_states.keys()),
-        #                                          dtype=float),
-        #                           a_max=None)
-        # # use nominal limits as interval in state space
-        # else:
-        #     upper_bound = np.asarray([nominal_values[s]
-        #                               for s in initial_states.keys()])
-        #     lower_bound = np.zeros_like(upper_bound)
+        # random initialization for each load state (omega)
+        if random_dist is not None:
+            if random_dist == 'uniform':
+                initial_value = (upper_bound - lower_bound) * \
+                                np.random.random_sample(
+                                    len(self._initial_states.keys())) + \
+                                lower_bound
+                random_states = \
+                    {state: initial_value[idx]
+                     for idx, state in
+                     enumerate(self._initial_states.keys())}
+                self._initial_states.update(random_states)
 
-        # random initialization for each motor state (current, epsilon)
+            elif random_dist in ['normal', 'gaussian']:
+                # specific input or middle of interval
+                mue = random_params[0] or \
+                      (upper_bound - lower_bound) / 2 + lower_bound
+                sigma = random_params[1] or 1
+                a = (lower_bound - mue) / sigma
+                b = (upper_bound - mue) / sigma
+                initial_value = truncnorm.rvs(a, b,
+                                              loc=mue,
+                                              scale=sigma,
+                                              size=(len(self._initial_states.keys())))
+                random_states = \
+                    {state: initial_value[idx]
+                     for idx, state in
+                     enumerate(self._initial_states.keys())}
+                self._initial_states.update(random_states)
 
-            if random_dist is not None:
-                # initial_states = dict.fromkeys(initial_states.keys(), None)
-                if random_dist == 'uniform':
-                    initial_value = (upper_bound - lower_bound) * \
-                                    np.random.random_sample(
-                                        len(self._initial_states.keys())) + \
-                                    lower_bound
-                    random_states = \
-                        {state: initial_value[idx]
-                         for idx, state in
-                         enumerate(self._initial_states.keys())}
-                    self._initial_states.update(random_states)
-
-                #               return np.ones(len(self._initial_states.keys()),
-                #                             dtype=float) * initial_value
-                elif random_dist in ['normal', 'gaussian']:
-                    mue = random_params[0] or upper_bound / 2
-                    sigma = random_params[1] or 1
-                    a, b = (lower_bound - mue) / sigma, (
-                                upper_bound - mue) / sigma
-                    initial_value = truncnorm.rvs(a, b,
-                                                  loc=mue,
-                                                  scale=sigma,
-                                                  size=len(
-                                                      self._initial_states.keys()))
-                    random_states = \
-                        {state: initial_value[idx]
-                         for idx, state in
-                         enumerate(self._initial_states.keys())}
-                    self._initial_states.update(random_states)
-                #                return np.ones(len(self._initial_states.keys()),
-                #                              dtype=float) * initial_value
-                else:
-                    # todo implement other distribution
-                    raise NotImplementedError
-
-            # constant initialization for each motor state (current, epsilon)
-            elif self._initial_states is not None:
-                initial_value = np.atleast_1d(
-                    list(self._initial_states.values()))
-                # check init_value meets interval boundaries
-                if ((lower_bound <= initial_value).all()
-                        and (initial_value <= upper_bound).all()):
-                    initial_states_ = \
-                        {state: initial_value[idx]
-                         for idx, state in
-                         enumerate(self._initial_states.keys())}
-                    self._initial_states.update(initial_states_)
-                    # return np.ones(len(initial_states.keys()),
-                    #              dtype=float) * initial_value
-                else:
-                    raise Exception(
-                        'Initialization Value have to be in nominal '
-                        'boundaries')
             else:
-                raise Exception('No matching Initialization Case')
+                # todo implement other distribution
+                raise NotImplementedError
+        # constant initialization for each motor state (current, epsilon)
+        elif self._initial_states is not None:
+            initial_value = np.atleast_1d(
+                list(self._initial_states.values()))
+            # check init_value meets interval boundaries
+            if ((lower_bound <= initial_value).all()
+                    and (initial_value <= upper_bound).all()):
+                initial_states_ = \
+                    {state: initial_value[idx]
+                     for idx, state in
+                     enumerate(self._initial_states.keys())}
+                self._initial_states.update(initial_states_)
+            else:
+                raise Exception(
+                    'Initialization Value have to be in nominal '
+                    'boundaries')
+        else:
+            raise Exception('No matching Initialization Case')
 
     def reset(self,
               state_positions=None,

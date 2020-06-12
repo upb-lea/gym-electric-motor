@@ -166,41 +166,16 @@ class ElectricMotor:
         if interval is not None:
             lower_bound = np.clip(lower_bound,
                                   a_min=
-                                  np.asarray(self.interval, dtype=float).T[0],
+                                  np.asarray(interval, dtype=float).T[0],
                                   a_max=None)
             upper_bound = np.clip(upper_bound,
                                   a_min=None,
                                   a_max=
-                                  np.asarray(self.interval, dtype=float).T[1])
+                                  np.asarray(interval, dtype=float).T[1])
         else:
             pass
-
-        # if interval is not None:
-        #     lower_bound = np.asarray(interval, dtype=float).T[0]
-        #     upper_bound = np.asarray(interval, dtype=float).T[1]
-        #     # clip bounds to nominal values
-        #     nom_currents = np.asarray([self._nominal_values[s]
-        #                                for s in initial_states.keys()],
-        #                               dtype=float)
-        #     upper_bound = np.clip(upper_bound,
-        #                           a_min=None,
-        #                           a_max=nom_currents)
-        #     lower_bound = np.clip(lower_bound,
-        #                           a_min=np.zeros(len(initial_states.keys()),
-        #                                          dtype=float),
-        #                           a_max=None)
-        # # use nominal limits as interval in state space
-        # else:
-        #     state_idx = [state_positions[state] for state in initial_states]
-        #     upper_bound = np.asarray([self._nominal_values[s]
-        #                         for s in initial_states.keys()], dtype=float)
-        #     upper_bound *= np.asarray(state_space.high[state_idx], dtype=float)
-        #     lower_bound = upper_bound * \
-        #                   np.asarray(state_space.low[state_idx], dtype=float)
-
         # random initialization for each motor state (current, epsilon)
         if random_dist is not None:
-            #initial_states = dict.fromkeys(initial_states.keys(), None)
             if random_dist == 'uniform':
                 initial_value = (upper_bound - lower_bound) * \
                                 np.random.random_sample(
@@ -213,13 +188,15 @@ class ElectricMotor:
                 self._initial_states.update(random_states)
 
             elif random_dist in ['normal', 'gaussian']:
-                mue = random_params[0] or upper_bound / 2
+                # specific input or middle of interval
+                mue = random_params[0] or \
+                      (upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(a, b,
                                               loc=mue,
                                               scale=sigma,
-                                              size=len(self._initial_states.keys()))
+                                              size=(len(self._initial_states.keys())))
                 # writing initial values in initial_states dict
                 random_states = \
                     {state: initial_value[idx]
@@ -1870,7 +1847,6 @@ class SquirrelCageInductionMotor(InductionMotor):
         voltage_limit = 0.5 * self._limits['u']
         voltage_nominal = 0.5 * self._nominal_values['u']
         omega = omega or self.nominal_values['omega']
-        print('update', omega)
         # psi_ralphabeta = self._flux_limit(omega=omega,
         #                                   u_q_max=self._nominal_values['u'])
         limits_agenda = {}
