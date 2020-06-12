@@ -175,6 +175,9 @@ class MechanicalLoad:
         Reset the motors state to a new initial state. (Default 0)
 
         Args:
+            nominal_state(list): nominal values for each state given from
+                                  physical system
+            state_space(gym.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
         Returns:
             numpy.ndarray(float): The initial motor states.

@@ -15,6 +15,19 @@ class ElectricMotor:
 
         Each electric motor can be parametrized by a dictionary of motor parameters, the nominal state dictionary
         and the limit dictionary.
+
+        Initialization is given by initializer(dict). Can be constant state value
+        or random value in given or nominal interval.
+        dict should be like:
+            { 'states': <dict with state names and initital values>,
+              'interval': < boundaries for each state (only for random init>,
+              'random_init': <str: 'uniform' or 'normal'>,
+              'random_params: {'mue': <const>, 'sigma': <const>}
+        Example initializer(dict) for constant initialization:
+            { 'states': {'i_e': 0.5, 'i_a': 15.5}}
+        Example  initializer(dict) for random initialization:
+            { 'random_init': 'normal'}
+
     """
 
     #: Parameter indicating if the class is implementing the optional jacobian function
@@ -234,17 +247,12 @@ class ElectricMotor:
         Args:
             state_space(gym.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
-            initial_states(list): system states to be initilized (when not
-                                    explicitly given by 'initializer')
         Returns:
             numpy.ndarray(float): The initial motor states.
         """
         if self._initializer:
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))
-            #return self.initialize(state_space=state_space,
-             #                      state_positions=state_positions,
-              #                     initial_states=initial_states)
         else:
             return np.zeros(len(self.CURRENTS))
 
@@ -1049,23 +1057,11 @@ class SynchronousMotor(ThreePhaseMotor):
     def reset(self,
               state_space=None,
               state_positions=None,
-              #initial_states=None,
               **__):
         # Docstring of superclass
         if self._initializer:
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))
-            # states = self.CURRENTS + ['epsilon']
-            # if 'i' in self._initializer['states'].keys():
-            #     initial_states = {ix: self._initializer['states'].get('i')
-            #                       for ix in self.CURRENTS}
-            #     initial_states[states[-1]] = \
-            #         self._initializer['states'].get('epsilon')
-            # else:
-            #     initial_states = None
-            # return self.initialize(state_space=state_space,
-            #                        state_positions=state_positions,
-            #                        initial_states=initial_states)
         else:
             return np.zeros(len(self.CURRENTS) + 1)
 
@@ -1570,7 +1566,6 @@ class InductionMotor(ThreePhaseMotor):
     def reset(self,
               state_space=None,
               state_positions=None,
-              #initial_states=None,
               omega=None):
         # Docstring of superclass
         if self._initializer:
