@@ -88,7 +88,6 @@ class RCVoltageSupply(VoltageSupply):
         self._c = supply_parameter['C']
         if self._r*self._c < 1e-4:
             warnings.warn("The product of R and C might be too small for the correct calculation of the supply voltage. You might want to consider R as a time constant.")
-
         self._u_sup = u_nominal
         self._u_0 = u_nominal
         self._solver = EulerSolver()
@@ -99,7 +98,7 @@ class RCVoltageSupply(VoltageSupply):
         
     def reset(self):
         # Docstring of superclass
-        # On reset the capacitor is unloaded again
+        # On reset the capacitor is loaded again
         self._solver.set_initial_value(np.array([self._u_0]))
         self._u_sup = self._u_0
         return self._u_sup
