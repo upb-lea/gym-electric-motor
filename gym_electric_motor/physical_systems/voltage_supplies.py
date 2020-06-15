@@ -78,8 +78,8 @@ class RCVoltageSupply(VoltageSupply):
             supply_parameter(dict): Consists or Reluctance R in Ohm and Capacitance C in Farad
         Additional notes:
             If the product of R and C get too small the numerical stability of the ODE is not given anymore
-            since our time difference tau is only in the range of 10e-3. You might want to consider R as a
-            time constant used for numerical stability and only model C realistically
+            typical time differences tau are only in the range of 10e-3. One might want to consider R*C as a
+            time constant. The resistance R can be considered as a simplified inner resistance model.
         """
         super().__init__(u_nominal)
         # Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded
@@ -87,7 +87,7 @@ class RCVoltageSupply(VoltageSupply):
         self._r = supply_parameter['R']
         self._c = supply_parameter['C']
         if self._r*self._c < 1e-4:
-            warnings.warn("The product of R and C might be too small for the correct calculation of the supply voltage. You might want to consider R as a time constant.")
+            warnings.warn("The product of R and C might be too small for the correct calculation of the supply voltage. You might want to consider R*C as a time constant.")
         self._u_sup = u_nominal
         self._u_0 = u_nominal
         self._solver = EulerSolver()
@@ -102,7 +102,6 @@ class RCVoltageSupply(VoltageSupply):
         self._solver.set_initial_value(np.array([self._u_0]))
         self._u_sup = self._u_0
         return self._u_sup
-                
     
     def get_voltage(self, t,i_sup):
         # Docstring of superclass
