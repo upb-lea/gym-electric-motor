@@ -210,16 +210,15 @@ class ExternalSpeedLoad(MechanicalLoad):
         self.__dict__.update(**kwargs)
         self.kwargs = kwargs
         self._omega_initial = omega_initial
-        self._speed_profile = speed_profile #(w(t))
-        #self._profile_args = profile_args
+        # w(t)
+        self._speed_profile = speed_profile
         self._tau = tau
-
         #self._jacobi = jacobi
 
     def mechanical_ode(self, t, mechanical_state, torque):
         # Docstring of superclass
         omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
-        # return T/j mit T = j/tau * (w(k+1) - w(k))
+        # return T/j with T = j/tau * (w(k+1) - w(k))
         return np.array([(self.j_total / self._tau) *
                          (omega_next - mechanical_state[self.OMEGA_IDX])])
 
