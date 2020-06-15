@@ -217,8 +217,11 @@ class ExternalSpeedLoad(MechanicalLoad):
 
     def mechanical_ode(self, t, mechanical_state, torque):
         # Docstring of superclass
+        # calc next omega with given profile und tau
         omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
         # return T/j with T = j/tau * (w(k+1) - w(k))
+        # calculated T out of euler-forward, given omega_next and
+        # actual omega give from system
         return np.array([(self.j_total / self._tau) *
                          (omega_next - mechanical_state[self.OMEGA_IDX])])
 
