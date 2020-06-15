@@ -27,19 +27,24 @@ class ConsolePrinter(ElectricMotorVisualization):
         self._num_steps = 0
         self._cum_reward = 0
         self._violation = False
+        self._episode = 0
         np.set_printoptions(formatter={'float': '{:0=9.3f}'.format})
             
     def reset(self, *_, **__):
         """Gets called on environment reset. Handles internal value reset and External reset printing"""
         if self._print_freq:
             if not self._violation:
-                print(f'\nExternal Reset. ' 
+                print(
+                      f'\nEpisode {self._episode} '
+                      f'External Reset. ' 
                       f'Number of steps: {self._num_steps: 08d} '
                       f'Cumulated Reward: {self._cum_reward:7.3f}')
             
             self._violation = False
             self._num_steps = 0
             self._cum_reward = 0
+        self._episode += 1
+
    
             
 
@@ -56,7 +61,7 @@ class ConsolePrinter(ElectricMotorVisualization):
             self._num_steps += 1
             self._cum_reward += reward
             if self._print_freq == 2 and not self._num_steps%self._update_freq:
-                print(
+                print(  f'Episode {self._episode} '
                         f'State {state * self._limits} '
                         f'Reference {reference * self._limits} '
                         f'Reward {reward:7.3f} '
@@ -65,7 +70,6 @@ class ConsolePrinter(ElectricMotorVisualization):
                         , end='\r'
                         )
             if done:
-                print('')
-                print(f'Constraint Violation! Number of steps: {self._num_steps: 08d} Cumulated Reward: {self._cum_reward:7.3f}')
+                print(f'\nEpisode {self._episode} Constraint Violation! Number of steps: {self._num_steps: 08d} Cumulated Reward: {self._cum_reward:7.3f}')
                 self._violation = True
             
