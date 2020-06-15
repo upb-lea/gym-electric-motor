@@ -83,6 +83,8 @@ class RCVoltageSupply(VoltageSupply):
         """
         super().__init__(u_nominal)
         # Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded
+        assert 'R' in supply_parameter.keys(), "Pass key 'R' for Reluctance in your dict"
+        assert 'C' in supply_parameter.keys(), "Pass key 'C' for Capacitance in your dict"
         self.supply_range = (0,u_nominal) 
         self._r = supply_parameter['R']
         self._c = supply_parameter['C']
