@@ -207,7 +207,6 @@ class ExternalSpeedLoad(MechanicalLoad):
             kwargs(dict): further arguments for speed_profile
         """
         super().__init__()
-        self.__dict__.update(**kwargs)
         self.kwargs = kwargs
         self._omega_initial = omega_initial
         # w(t)
