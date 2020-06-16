@@ -318,6 +318,10 @@ class ExternalSpeedLoad(MechanicalLoad):
     """
 
     HAS_JACOBIAN = False
+    _default_initializer = {'states': {'omega': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     @property
     def omega(self):
@@ -332,7 +336,8 @@ class ExternalSpeedLoad(MechanicalLoad):
         return np.array([self._omega_initial])
 
     def __init__(self, speed_profile=None,
-                 omega_initial=0, tau=1e-4, **kwargs):
+                 omega_initial=0, tau=1e-4, load_initializer=None,
+                 **kwargs):
         """
         Args:
             speed_profile(function): function or lambda expression
@@ -344,7 +349,7 @@ class ExternalSpeedLoad(MechanicalLoad):
             tau(float): discrete time step of the system
             kwargs(dict): further arguments for speed_profile
         """
-        super().__init__()
+        super().__init__(load_initializer=load_initializer)
         self.__dict__.update(**kwargs)
         self.kwargs = kwargs
         self._omega_initial = omega_initial
@@ -357,6 +362,7 @@ class ExternalSpeedLoad(MechanicalLoad):
         # Docstring of superclass
         # calc next omega with given profile und tau
         omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
+
         # return T/j with T = j/tau * (w(k+1) - w(k))
         # calculated T out of euler-forward, given omega_next and
         # actual omega give from system
@@ -376,6 +382,10 @@ class ConstantSpeedLoad(MechanicalLoad):
     """
 
     HAS_JACOBIAN = True
+    _default_initializer = {'states': {'omega': 0.0},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
 
     @property
     def omega_fixed(self):
@@ -389,13 +399,16 @@ class ConstantSpeedLoad(MechanicalLoad):
         # Docstring from superclass
         return np.array([self._omega])
 
-    def __init__(self, omega_fixed=0, **__):
+    def __init__(self, omega_fixed=0, load_initializer=None, **__):
         """
         Args:
             omega_fixed(float)): Fix value for the speed in rad/s.
         """
-        super().__init__()
+        self._default_initializer['states']['omega'] = omega_fixed
+        super().__init__(load_initializer=load_initializer)
         self._omega = omega_fixed
+
+
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
