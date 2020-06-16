@@ -87,8 +87,17 @@ class ElectricMotor:
         """
         return self._initializer
 
+    @property
+    def initial_limits(self):
+        """
+        Returns:
+            dict: nominal motor limits for choosing initial values
+        """
+        return self._initial_limits
+
     def __init__(self, motor_parameter=None, nominal_values=None,
-                 limit_values=None, motor_initializer=None, **__):
+                 limit_values=None, motor_initializer=None, initial_limits=None,
+                 **__):
         """
         :param  motor_parameter: Motor parameter dictionary. Contents specified
                 for each motor.
@@ -113,7 +122,9 @@ class ElectricMotor:
         self._initial_states = self._initializer['states']
         # intialize limits, because in general they're not needed to be changed
         # during during training or episodes
+        initial_limits = initial_limits or {}
         self._initial_limits = self._nominal_values.copy()
+        self._initial_limits.update(initial_limits)
 
     def electrical_ode(self, state, u_in, omega, *_):
         """
@@ -149,50 +160,6 @@ class ElectricMotor:
         """
         pass
 
-    # def update_initial_limits(self, new_limits=None
-    #                        state_space,
-    #                        state_positions,):
-    #     """
-    #
-    #     Args:
-    #         new_limits(dict): new limitations for initial_limits
-    #         new_limits(dict): new limitations for initial_limits
-    #     """
-    #     interval = self._initializer['interval']
-    #     if isinstance(self._nominal_values, dict):
-    #         nominal_values_ = np.asarray(list(self._nominal_values.values()))
-    #     else:
-    #         nominal_values_ = self._nominal_values
-    #
-    #     #for Induction motors new limitations
-    #     if any(map(lambda state: state in self._initial_states.keys(),
-    #               ['psi_ralpha', 'psi_rbeta'])):
-    #        # draw a sample magnetic field angle from [-pi,pi]
-    #        eps_mag = 2 * np.pi * np.random.random_sample() - np.pi
-    #        # calc maximal alphabeta-currents, given dq-currents
-    #         i_alphabeta_max = self.
-    #
-    #
-    #
-    #
-    #     # setting upper and lower limits regarding state space
-    #     state_idx = [state_positions[state] for state in self._initial_states.keys()]
-    #     upper_bound = np.asarray(nominal_values_[state_idx], dtype=float)
-    #     lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
-    #     # clip nominal boundaries to user defined limits
-    #     if interval is not None:
-    #         lower_bound = np.clip(lower_bound,
-    #                               a_min=
-    #                               np.asarray(interval, dtype=float).T[0],
-    #                               a_max=None)
-    #         upper_bound = np.clip(upper_bound,
-    #                               a_min=None,
-    #                               a_max=
-    #                               np.asarray(interval, dtype=float).T[1])
-    #
-    #     return upper_bound, lower_bound
-
-
     def initialize(self,
                    state_space,
                    state_positions,
@@ -219,26 +186,22 @@ class ElectricMotor:
         else:
             nominal_values_ = self._nominal_values
 
-
-        # for Induction motors seperate limitations
-        #if any(map(lambda state: state in self._initial_states.keys(),
-         #          ['psi_ralpha', 'psi_rbeta'])):
-            # draw a sample magnetic field angle from [-pi,pi]
-          #  eps_mag = 2 * np.pi * np.random.random_sample() - np.pi
-            # calc maximal alphabeta-currents, given dq-currents
-            #i_alphabeta_max = self.
-
-
-        print(self._nominal_values)
-        # psi_ralphabeta = self._flux_limit(omega=omega,
-        #                                   u_q_max=self._nominal_values['u'])
-        # for psi_key, psi_value in zip(self.FLUXES, psi_ralphabeta):
-        #     limits_agenda[psi_key] = psi_value
-        #     nominal_agenda[psi_key] = psi_value
-        # setting nominal values as interval limits
-        state_idx = [state_positions[state] for state in self._initial_states.keys()]
-        upper_bound = np.asarray(nominal_values_[state_idx], dtype=float)
-        lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
+        # different limits for InductionMoto
+        if any(map(lambda state: state in self._initial_states.keys(),
+                   ['psi_ralpha', 'psi_rbeta'])):
+            nominal_values_ = [self._initial_limits[state]
+                               for state in self._initial_states]
+            upper_bound = np.asarray(nominal_values_, dtype=float)
+            # state space for Induction Envs based on documentation
+            # ['i_salpha', 'i_sbeta', 'psi_ralpha', 'psi_rbeta', 'epsilon']
+            state_space_low = np.array([-1, -1, -1, -1, -1])
+            lower_bound = upper_bound * state_space_low
+        else:
+            state_idx = [state_positions[state] for state in
+                         self._initial_states.keys()]
+            upper_bound = np.asarray(nominal_values_[state_idx], dtype=float)
+            lower_bound = upper_bound * \
+                          np.asarray(state_space.low, dtype=float)[state_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
             lower_bound = np.clip(lower_bound,
@@ -348,6 +311,15 @@ class ElectricMotor:
             if self._nominal_values.get(entry, 0) == 0:
                 self._nominal_values[entry] = nominal_d.get(entry, None) or \
                                               self._limits[entry]
+
+    def _update_initial_limits(self, nominal_new={}, **kwargs):
+        """
+        Complete initial states with further state limits
+
+        Args:
+            nominal_new(dict): new/further state limits
+        """
+        self._initial_limits.update(nominal_new)
 
 
 class DcMotor(ElectricMotor):
@@ -1012,6 +984,11 @@ class ThreePhaseMotor(ElectricMotor):
         super()._update_limits(limits_d, nominal_d)
         super()._update_limits(dict(torque=self._torque_limit()))
 
+    def _update_initial_limits(self, nominal_new={}, **kwargs):
+        # Docstring of superclass
+        super()._update_initial_limits(self._nominal_values)
+        super()._update_initial_limits(nominal_new)
+
 
 class SynchronousMotor(ThreePhaseMotor):
     """
@@ -1102,8 +1079,7 @@ class SynchronousMotor(ThreePhaseMotor):
 
     _model_constants = None
 
-    def __init__(self,
-                 motor_parameter=None, nominal_values=None,
+    def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, motor_initializer=None, **kwargs):
         # Docstring of superclass
         nominal_values = nominal_values or {}
@@ -1118,10 +1094,7 @@ class SynchronousMotor(ThreePhaseMotor):
         # Docstring of superclass
         return self._motor_parameter
 
-    def reset(self,
-              state_space=None,
-              state_positions=None,
-              **__):
+    def reset(self, state_space=None, state_positions=None, **__):
         # Docstring of superclass
         if self._initializer:
             self.initialize(state_space, state_positions)
@@ -1181,7 +1154,6 @@ class SynchronousMotor(ThreePhaseMotor):
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
                                 self._nominal_values[u] / \
                                 self._motor_parameter['r_s']
-
         super()._update_limits(limits_agenda, nominal_agenda)
 
 
@@ -1592,13 +1564,6 @@ class InductionMotor(ThreePhaseMotor):
                             'interval': None,
                             'random_init': None,
                             'random_params': (None, None)}
-    # _default_initializer = {'states':  {'i_salpha': 0.0, 'i_sbeta': 0.0,
-    #                                     'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
-    #                                     'epsilon': 0.0},
-    #                         'interval': None,
-    #                         'random_init': None,
-    #                         'random_params': (None, None)}
-
 
     @property
     def motor_parameter(self):
@@ -1606,7 +1571,8 @@ class InductionMotor(ThreePhaseMotor):
         return self._motor_parameter
 
     def __init__(self, motor_parameter=None, nominal_values=None,
-                 limit_values=None, motor_initializer=None, **__):
+                 limit_values=None, motor_initializer=None, initial_limits=None,
+                 **__):
         # Docstring of superclass
 
         # convert placeholder i and u to actual IO quantities
@@ -1622,11 +1588,9 @@ class InductionMotor(ThreePhaseMotor):
         del _limit_values['u'], _limit_values['i']
         _limit_values.update(limit_values or {})
 
-        print('induction')
         super().__init__(motor_parameter, nominal_values,
-                         limit_values, motor_initializer)
+                         limit_values, motor_initializer, initial_limits)
         self._update_model()
-        print(self._initial_states)
         self._update_limits(_limit_values, _nominal_values)
 
     def reset(self,
@@ -1635,6 +1599,7 @@ class InductionMotor(ThreePhaseMotor):
               omega=None):
         # Docstring of superclass
         if self._initializer:
+            self._update_initial_limits(omega=omega)
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))
         else:
@@ -1684,31 +1649,38 @@ class InductionMotor(ThreePhaseMotor):
                 states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] -
                 states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
 
-    def _flux_limit(self, omega=1.0, eps_mag=0, u_q_max=0.0, u_rq_max=0.0):
-        # raise NotImplementedError
-        # omega max nehmen als max wert?? könnte problem sein
-        # richtige streuung gewählt sigma?
-        # todo epsilon richtig?
+    def _flux_limit(self, omega=0, eps_mag=0, u_q_max=0.0, u_rq_max=0.0):
+        """
+        Calculate Flux limits for given current and magnetic-field angle
 
-        print(self._initial_states)
-        i_d, i_q = self.q_inv([self._initial_states['i_salpha'],
-                              self._initial_states['i_sbeta']],
-                              eps_mag)
+        Args:
+            omega(float): speed given by mechanical load
+            eps_mag(float): magnetic field angle
+            u_q_max(float): maximal strator voltage in q-system
+            u_rq_max(float): maximal rotor voltage in q-system
 
+        returns:
+            list with maximal flux in alpha,beta system
+        """
         mp = self.motor_parameter
         l_s = mp['l_m'] * mp['l_ssig']
         l_r = mp['l_m'] * mp['l_rsig']
         l_mr = mp['l_m'] / l_r
         sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
-
-        psi_d_max = mp['p'] * omega * sigma * l_s * i_q + \
-                    (mp['r_s'] + mp['r_r'] * l_mr**2) + \
-                    u_q_max + \
-                    l_mr * u_rq_max
-        psi_d_max /= - mp['p'] * omega * l_mr
-        # clipping flux and setting nominal limit
-        psi_d_max = 0.9 * np.clip(psi_d_max, a_min=None, a_max=mp['l_m'] * i_d)
-        print(psi_d_max)
+        # limiting flux for a low omega
+        if omega == 0:
+            psi_d_max = mp['l_m'] * self._nominal_values['i_sd']
+        else:
+            i_d, i_q = self.q_inv([self._initial_states['i_salpha'],
+                                  self._initial_states['i_sbeta']],
+                                  eps_mag)
+            psi_d_max = mp['p'] * omega * sigma * l_s * i_q + \
+                        (mp['r_s'] + mp['r_r'] * l_mr**2) + \
+                        u_q_max + \
+                        l_mr * u_rq_max
+            psi_d_max /= - mp['p'] * omega * l_mr
+            # clipping flux and setting nominal limit
+            psi_d_max = 0.9 * np.clip(psi_d_max, a_min=None, a_max=mp['l_m'] * i_d)
         # returning flux in alpha, beta system
         return self.q([psi_d_max, 0], eps_mag)
 
@@ -1881,12 +1853,6 @@ class SquirrelCageInductionMotor(InductionMotor):
                            u=560)
     _default_nominal_values = dict(omega=314, torque=0.0, i=3.9,
                                    epsilon=math.pi, u=560)
-    # _default_initializer = {'states':  {'i_sd': 0.0, 'i_sq': 0.0,
-    #                                     'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
-    #                                     'epsilon': 0.0},
-    #                         'interval': None,
-    #                         'random_init': None,
-    #                         'random_params': (None, None)}
     _default_initializer = {'states':  {'i_salpha': 0.0, 'i_sbeta': 0.0,
                                         'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
                                         'epsilon': 0.0},
@@ -1922,31 +1888,18 @@ class SquirrelCageInductionMotor(InductionMotor):
         nominal_agenda.update(nominal_values)
         super()._update_limits(limits_agenda, nominal_agenda)
 
-    def _update_initial_limit(self,):
-        def update_initial_limits(self, new_limits=None
-                               state_space,
-                               state_positions,):
-            """
+    def _update_initial_limits(self, nominal_new={}, omega=None):
+        # Docstring of superclass
+        # draw a sample magnetic field angle from [-pi,pi]
+        eps_mag = 2 * np.pi * np.random.random_sample() - np.pi
+        flux_alphabeta_limits = self._flux_limit(omega=omega,
+                                                 eps_mag=eps_mag,
+                                                 u_q_max=self._nominal_values['u_sq'])
+        flux_nominal_limits = {state: value for state, value in
+                               zip(self.FLUXES, flux_alphabeta_limits)}
+        flux_nominal_limits.update(nominal_new)
+        super()._update_initial_limits(flux_nominal_limits)
 
-            Args:
-                new_limits(dict): new limitations for initial_limits
-                new_limits(dict): new limitations for initial_limits
-            """
-            interval = self._initializer['interval']
-            if isinstance(self._nominal_values, dict):
-                nominal_values_ = np.asarray(list(self._nominal_values.values()))
-            else:
-                nominal_values_ = self._nominal_values
-
-            #for Induction motors new limitations
-            if any(map(lambda state: state in self._initial_states.keys(),
-                      ['psi_ralpha', 'psi_rbeta'])):
-               # draw a sample magnetic field angle from [-pi,pi]
-               eps_mag = 2 * np.pi * np.random.random_sample() - np.pi
-               # calc maximal alphabeta-currents, given dq-currents
-                i_alphabeta_max = self.
-
-            i_alphabeta_max = self.q(self._nominal_values['isd'], self._nominal_values['isq'])
 
 class DoublyFedInductionMotor(InductionMotor):
     """
@@ -2059,12 +2012,6 @@ class DoublyFedInductionMotor(InductionMotor):
                            u=1200)
     _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900,
                                    epsilon=math.pi, u=1200)
-    # _default_initializer = {'states': {'i_sd': 0.0, 'i_sq': 0.0,
-    #                                    'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
-    #                                    'epsilon': 0.0},
-    #                         'interval': None,
-    #                         'random_init': None,
-    #                         'random_params': (None, None)}
     _default_initializer = {'states':  {'i_salpha': 0.0, 'i_sbeta': 0.0,
                                         'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
                                         'epsilon': 0.0},
@@ -2072,22 +2019,16 @@ class DoublyFedInductionMotor(InductionMotor):
                             'random_init': None,
                             'random_params': (None, None)}
 
-
     def __init__(self, **kwargs):
         self.IO_VOLTAGES += self.IO_ROTOR_VOLTAGES
         self.IO_CURRENTS += self.IO_ROTOR_CURRENTS
         super().__init__(**kwargs)
 
-    def _update_limits(self, limit_values={}, nominal_values={}, omega=None):
+    def _update_limits(self, limit_values={}, nominal_values={}):
         # Docstring of superclass
 
         voltage_limit = 0.5 * self._limits['u']
         voltage_nominal = 0.5 * self._nominal_values['u']
-        omega = omega or self.nominal_values['omega']
-        # psi_ralphabeta = self._flux_limit(omega=omega,
-        #                                   u_q_max=self._nominal_values['u'],
-        #                                   u_rq_max=self._nominal_values['u'])
-
         limits_agenda = {}
         nominal_agenda = {}
         for u, i in zip(self.IO_VOLTAGES+self.ROTOR_VOLTAGES,
@@ -2099,8 +2040,19 @@ class DoublyFedInductionMotor(InductionMotor):
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
                                 self._nominal_values[u] / \
                                 self._motor_parameter['r_r']
-
         # overwrite default limits and nominal values with func args
         limits_agenda.update(limit_values)
         nominal_agenda.update(nominal_values)
         super()._update_limits(limits_agenda, nominal_agenda)
+
+    def _update_initial_limits(self, nominal_new={}, omega=None):
+        # Docstring of superclass
+        # draw a sample magnetic field angle from [-pi,pi]
+        eps_mag = 2 * np.pi * np.random.random_sample() - np.pi
+        flux_alphabeta_limits = self._flux_limit(omega=omega,
+                                                 eps_mag=eps_mag,
+                                                 u_q_max=self._nominal_values['u_sq'],
+                                                 u_rq_max=self._nominal_values['u_rq'])
+        flux_nominal_limits = {state: value for state, value in
+                               zip(self.FLUXES, flux_alphabeta_limits)}
+        super()._update_initial_limits(flux_nominal_limits)
