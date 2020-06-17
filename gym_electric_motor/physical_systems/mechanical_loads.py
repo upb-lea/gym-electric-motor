@@ -85,6 +85,8 @@ class MechanicalLoad:
         self._initializer = self._default_initializer.copy()
         self._initializer.update(load_initializer)
         self._initial_states = self._initializer['states']
+        print('super init')
+        print(load_initializer)
 
     def initialize(self,
                    nominal_state,
@@ -285,6 +287,8 @@ class PolynomialStaticLoad(MechanicalLoad):
         Args:
             load_parameter(dict(float)): Parameter dictionary.
         """
+        print('init')
+        print('load_int',load_initializer)
         self._load_parameter.update(load_parameter)
         super().__init__(j_load=self._load_parameter['j_load'],
                          load_initializer=load_initializer)
@@ -331,13 +335,33 @@ class ExternalSpeedLoad(MechanicalLoad):
         """
         return self._omega_initial
 
-    def reset(self, *_, **__):
-        # Docstring from superclass
-        return np.array([self._omega_initial])
+    def reset(self,
+              state_positions=None,
+              state_space=None,
+              nominal_state=None,
+              **__):
+        """
+        Reset the motors state to a new initial state. (Default 0)
 
-    def __init__(self, speed_profile=None,
-                 omega_initial=0, tau=1e-4, load_initializer=None,
-                 **kwargs):
+        Args:
+            nominal_state(list): nominal values for each state given from
+                                  physical system
+            state_space(gym.Box): normalized state space boundaries
+            state_positions(dict): indexes of system states
+        Returns:
+            numpy.ndarray(float): The initial motor states.
+        """
+        if self._initializer:
+            self.initialize(nominal_state, state_space, state_positions)
+            return np.asarray(list(self._initial_states.values()))
+        else:
+            return np.zeros_like(self._state_names, dtype=float)
+    # def reset(self, *_, **__):
+    #     # Docstring from superclass
+    #     return np.array([self._omega_initial])
+
+    def __init__(self, speed_profile=None, omega_initial=None,
+                 tau=1e-4, load_initializer=None, **kwargs):
         """
         Args:
             speed_profile(function): function or lambda expression
@@ -349,10 +373,12 @@ class ExternalSpeedLoad(MechanicalLoad):
             tau(float): discrete time step of the system
             kwargs(dict): further arguments for speed_profile
         """
+        print('init')
+        print(load_initializer)
         super().__init__(load_initializer=load_initializer)
-        self.__dict__.update(**kwargs)
         self.kwargs = kwargs
-        self._omega_initial = omega_initial
+        print('init ext', self._initializer)
+        self._omega_initial = omega_initial or self._initializer['states']['omega']
         # w(t)
         self._speed_profile = speed_profile
         self._tau = tau
@@ -362,8 +388,6 @@ class ExternalSpeedLoad(MechanicalLoad):
         # Docstring of superclass
         # calc next omega with given profile und tau
         omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
-
-        # return T/j with T = j/tau * (w(k+1) - w(k))
         # calculated T out of euler-forward, given omega_next and
         # actual omega give from system
         return np.array([(self.j_total / self._tau) *
