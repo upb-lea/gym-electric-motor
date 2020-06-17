@@ -7,8 +7,7 @@ from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanen
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
     DoublyFedInductionMotor
 
-from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, \
-    ExternalSpeedLoad, ConstantSpeedLoad
+from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad
 
 from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSolver, ScipyOdeSolver
 

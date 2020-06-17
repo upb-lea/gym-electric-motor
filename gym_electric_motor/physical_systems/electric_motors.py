@@ -19,14 +19,19 @@ class ElectricMotor:
         Initialization is given by initializer(dict). Can be constant state value
         or random value in given or nominal interval.
         dict should be like:
-            { 'states': <dict with state names and initital values>,
+            { 'states': <dict: state names and initital values>,
               'interval': < boundaries for each state (only for random init>,
               'random_init': <str: 'uniform' or 'normal'>,
               'random_params: {'mue': <const>, 'sigma': <const>}
-        Example initializer(dict) for constant initialization:
+        Examples:
+             initializer(dict) for constant initialization:
             { 'states': {'i_e': 0.5, 'i_a': 15.5}}
-        Example  initializer(dict) for random initialization:
-            { 'random_init': 'normal'}
+
+             initializer(dict) for random initialization with optional limits:
+            { 'random_init': 'normal'
+              'interval': [[lower bound 1 ,upper bound 1],
+                           [        ...                 ],
+                           [lower bound n, upper bound n]}
 
     """
 
@@ -125,6 +130,13 @@ class ElectricMotor:
         initial_limits = initial_limits or {}
         self._initial_limits = self._nominal_values.copy()
         self._initial_limits.update(initial_limits)
+        # preventing wrong critical user input
+        assert isinstance(self._initializer, dict), 'wrong initializer'
+        if self._initializer['interval'] is not None:
+            assert isinstance(self._initializer['interval'],
+                             (tuple, list, np.ndarray)), 'wrong dtype for Interval'
+            assert (len(self._initializer['interval']) is
+                    len(self._initial_states.keys())), '#boundaries != #inital states'
 
     def electrical_ode(self, state, u_in, omega, *_):
         """
@@ -181,12 +193,8 @@ class ElectricMotor:
         interval = self._initializer['interval']
         random_dist = self._initializer['random_init']
         random_params = self._initializer['random_params']
-        if isinstance(self._nominal_values, dict):
-            nominal_values_ = np.asarray(list(self._nominal_values.values()))
-        else:
-            nominal_values_ = self._nominal_values
 
-        # different limits for InductionMoto
+        # different limits for InductionMotor
         if any(map(lambda state: state in self._initial_states.keys(),
                    ['psi_ralpha', 'psi_rbeta'])):
             nominal_values_ = [self._initial_limits[state]
@@ -197,11 +205,19 @@ class ElectricMotor:
             state_space_low = np.array([-1, -1, -1, -1, -1])
             lower_bound = upper_bound * state_space_low
         else:
-            state_idx = [state_positions[state] for state in
+            if isinstance(self._nominal_values, dict):
+                nominal_values_ = [self._nominal_values[state]
+                                   for state in self._initial_states]
+                nominal_values_ = np.asarray(nominal_values_)
+            else:
+                nominal_values_ = np.asarray(self._nominal_values)
+
+            state_space_idx = [state_positions[state] for state in
                          self._initial_states.keys()]
-            upper_bound = np.asarray(nominal_values_[state_idx], dtype=float)
+
+            upper_bound = np.asarray(nominal_values_, dtype=float)
             lower_bound = upper_bound * \
-                          np.asarray(state_space.low, dtype=float)[state_idx]
+                          np.asarray(state_space.low, dtype=float)[state_space_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
             lower_bound = np.clip(lower_bound,
@@ -212,8 +228,6 @@ class ElectricMotor:
                                   a_min=None,
                                   a_max=
                                   np.asarray(interval, dtype=float).T[1])
-        else:
-            pass
         # random initialization for each motor state (current, epsilon)
         if random_dist is not None:
             if random_dist == 'uniform':

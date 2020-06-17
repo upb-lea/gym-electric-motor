@@ -10,6 +10,10 @@ class MechanicalLoad:
     of the mechanical quantities. The only required state is 'omega' as the rotational speed of the motor shaft
     in rad/s.
 
+    ExternalSpeedLoad and ConstantSpeedLoad should be initialized with the own
+    initial value in class initialisation, when definded external
+    # todo updateting intialization with motor_initializer
+
     Initialization is given by initializer(dict). Can be constant state value
     or random value in given or nominal interval.
     dict should be like:
@@ -85,8 +89,6 @@ class MechanicalLoad:
         self._initializer = self._default_initializer.copy()
         self._initializer.update(load_initializer)
         self._initial_states = self._initializer['states']
-        print('super init')
-        print(load_initializer)
 
     def initialize(self,
                    nominal_state,
@@ -287,8 +289,6 @@ class PolynomialStaticLoad(MechanicalLoad):
         Args:
             load_parameter(dict(float)): Parameter dictionary.
         """
-        print('init')
-        print('load_int',load_initializer)
         self._load_parameter.update(load_parameter)
         super().__init__(j_load=self._load_parameter['j_load'],
                          load_initializer=load_initializer)
@@ -321,11 +321,12 @@ class ExternalSpeedLoad(MechanicalLoad):
        predefined speed-function/ speed-profile.
     """
 
-    HAS_JACOBIAN = False
     _default_initializer = {'states': {'omega': 0.0},
                             'interval': None,
                             'random_init': None,
                             'random_params': (None, None)}
+
+    HAS_JACOBIAN = False
 
     @property
     def omega(self):
@@ -335,33 +336,12 @@ class ExternalSpeedLoad(MechanicalLoad):
         """
         return self._omega_initial
 
-    def reset(self,
-              state_positions=None,
-              state_space=None,
-              nominal_state=None,
-              **__):
-        """
-        Reset the motors state to a new initial state. (Default 0)
-
-        Args:
-            nominal_state(list): nominal values for each state given from
-                                  physical system
-            state_space(gym.Box): normalized state space boundaries
-            state_positions(dict): indexes of system states
-        Returns:
-            numpy.ndarray(float): The initial motor states.
-        """
-        if self._initializer:
-            self.initialize(nominal_state, state_space, state_positions)
-            return np.asarray(list(self._initial_states.values()))
-        else:
-            return np.zeros_like(self._state_names, dtype=float)
-    # def reset(self, *_, **__):
-    #     # Docstring from superclass
-    #     return np.array([self._omega_initial])
+    def reset(self, *_, **__):
+        # Docstring from superclass
+        return np.array([self._omega_initial])
 
     def __init__(self, speed_profile=None, omega_initial=None,
-                 tau=1e-4, load_initializer=None, **kwargs):
+                 load_initializer=None, tau=1e-4, **kwargs):
         """
         Args:
             speed_profile(function): function or lambda expression
@@ -373,11 +353,8 @@ class ExternalSpeedLoad(MechanicalLoad):
             tau(float): discrete time step of the system
             kwargs(dict): further arguments for speed_profile
         """
-        print('init')
-        print(load_initializer)
         super().__init__(load_initializer=load_initializer)
         self.kwargs = kwargs
-        print('init ext', self._initializer)
         self._omega_initial = omega_initial or self._initializer['states']['omega']
         # w(t)
         self._speed_profile = speed_profile
@@ -430,9 +407,7 @@ class ConstantSpeedLoad(MechanicalLoad):
         """
         self._default_initializer['states']['omega'] = omega_fixed
         super().__init__(load_initializer=load_initializer)
-        self._omega = omega_fixed
-
-
+        self._omega = omega_fixed or self._initializer['states']['omega']
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
