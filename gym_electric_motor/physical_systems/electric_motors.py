@@ -270,8 +270,6 @@ class ElectricMotor:
                     {state: initial_value[idx]
                      for idx, state in enumerate(self._initial_states.keys())}
                 self._initial_states.update(initial_states_)
-                #return np.ones(len(initial_states.keys()),
-                 #              dtype=float) * initial_value
             else:
                 raise Exception('Initialization Value have to be in nominal '
                                 'boundaries')
