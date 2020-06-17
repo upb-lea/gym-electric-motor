@@ -1907,6 +1907,9 @@ class SquirrelCageInductionMotor(InductionMotor):
         flux_alphabeta_limits = self._flux_limit(omega=omega,
                                                  eps_mag=eps_mag,
                                                  u_q_max=self._nominal_values['u_sq'])
+        # using absolute value, because limits should describe upper limit
+        # after abs-operator, norm of alphabeta flux still equal to d-component of flux
+        flux_alphabeta_limits = np.abs(flux_alphabeta_limits)
         flux_nominal_limits = {state: value for state, value in
                                zip(self.FLUXES, flux_alphabeta_limits)}
         flux_nominal_limits.update(nominal_new)
