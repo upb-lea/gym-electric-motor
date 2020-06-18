@@ -560,6 +560,7 @@ class DummyOdeSolver(OdeSolver):
         super().__init__()
 
     def integrate(self, t):
+        self.last_y = self._y
         self._y = self._y + t - self._t
         self._t = t
         return self._y
