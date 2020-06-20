@@ -3,7 +3,7 @@ from gym_electric_motor.core import ElectricMotorVisualization
 from . import motor_dashboard_plots as mdp
 import matplotlib
 import matplotlib.pyplot as plt
-
+import collections
 
 class MotorDashboard(ElectricMotorVisualization):
     """Dashboard to plot the GEM states into graphs.
@@ -14,7 +14,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
     """
 
-    def __init__(self, plots, update_cycle=1000, **__):
+    def __init__(self, plots, update_cycle=1000, dark_mode=False, **__):
         """
         Args:
             plots(list): A list of plots to show. Each element may either be a string or an already instantiated
@@ -25,11 +25,13 @@ class MotorDashboard(ElectricMotorVisualization):
                     - action_{i}: The i-th action is plotted. 'action_0' for discrete action space
                     
             update_cycle(int): Number after how many steps the plot shall be updated. (default 1000)
+            dark_mode(Bool):  Select a dark background for visualization by setting it to True
         """
         plt.ion()
         self._update_cycle = update_cycle
         self._figure = None
         self._plots = []
+        self._dark_mode = dark_mode
         for plot in plots:
             if type(plot) is str:
                 if plot == 'reward':
@@ -84,12 +86,27 @@ class MotorDashboard(ElectricMotorVisualization):
         """Called with first render() call to setup the figures and plots.
         """
         plt.close()
-        self._figure, axes = plt.subplots(len(self._plots))
-        self._figure.subplots_adjust(wspace=0.0, hspace=0.4)
+        assert len(self._plots)>0, "no plot variable selected"
+        # For the dark background lovers
+        if self._dark_mode:
+            plt.style.use('dark_background')
+        self._figure, axes = plt.subplots(len(self._plots), sharex=True)
+        self._figure.subplots_adjust(wspace=0.0, hspace=0.2)
+        #plt.style.use("dark_background")
+        plt.xlabel('t/s')  # adding a common x-label to all the subplots
 
-        for plot, axis in zip(self._plots, axes):
-            plot.initialize(axis)
-        plt.pause(0.1)
+        # if isinstance(axes, collections.Iterable):
+        #     print("list is iterable")
+
+        #plt.subplot() does not return an iterable var when the number of subplots==1
+        if len(self._plots) < 2:
+            self._plots[0].initialize(axes)
+            plt.pause(0.1)
+        else:
+
+            for plot, axis in zip(self._plots, axes):
+                plot.initialize(axis)
+            plt.pause(0.1)
 
     def _update(self):
         """Called every {update_cycle} steps to refresh the figure.
