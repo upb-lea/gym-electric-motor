@@ -108,9 +108,10 @@ class ElectricMotor:
                 for each motor.
         :param  nominal_values: Nominal values for the motor quantities.
         :param  limit_values: Limits for the motor quantities.
-        :param  initializer: Initial motor states (currents)
+        :param  motor_initializer: Initial motor states (currents)
                             ('constant', 'uniform', 'gaussian' sampled from
                              given interval or out of nominal motor values)
+        :param initial_limits: limits for of the initial state-value
         """
         motor_parameter = motor_parameter or {}
         self._motor_parameter = self._default_motor_parameter.copy()
@@ -202,6 +203,7 @@ class ElectricMotor:
             upper_bound = np.asarray(nominal_values_, dtype=float)
             # state space for Induction Envs based on documentation
             # ['i_salpha', 'i_sbeta', 'psi_ralpha', 'psi_rbeta', 'epsilon']
+            # hardcoded for Inductionmotors currently set up in the toolbox
             state_space_low = np.array([-1, -1, -1, -1, -1])
             lower_bound = upper_bound * state_space_low
         else:
