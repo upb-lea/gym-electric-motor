@@ -161,7 +161,6 @@ class StatePlot(MotorDashboardPlot):
 
         self._axis.set_ylim(min_limit - 0.1 * (max_limit - min_limit), max_limit + 0.1*(max_limit - min_limit))
         self._axis.set_xlim(0, self.x_width)
-        #self._axis.set_xlabel('t/s')
         y_label = self.state_labels.get(self._state)  # fix
         self._axis.set_ylabel(y_label)
 
@@ -245,7 +244,6 @@ class RewardPlot(MotorDashboardPlot):
         spacing = 0.1 * (max_limit - min_limit)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
         self._axis.set_xlim(0, self.x_width)
-        #self._axis.set_xlabel('t/s')
         y_label = 'reward'
         self._axis.set_ylabel(y_label)
         # adds a constant line at 0 which is eventually updated by the plot variable values. legend can be set here.
@@ -328,7 +326,6 @@ class ActionPlot(MotorDashboardPlot):
         spacing = (act_min - act_max) * 0.1
         self._axis.set_ylim(act_min - spacing, act_max + spacing)
         self._axis.set_xlim(0, self.x_width)
-        #self._axis.set_xlabel('t/s')
         self._axis.set_ylabel(self._action)
         base_action_line = lin.Line2D([], [], color=self.action_line_cfg['color'])
         self._axis.legend((base_action_line,), (self._action,), loc='upper left')

@@ -229,8 +229,8 @@ class ElectricMotorEnvironment(gym.core.Env):
             done(bool): Flag, indicating if a reset is required before new steps can be taken.
             {}: An empty dictionary for consistency with the OpenAi Gym interface.
         """
-        if self._reset_required:
-            raise Exception('A reset is required before the environment can perform further steps')
+
+        assert not self._reset_required, 'A reset is required before the environment can perform further steps'
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
@@ -300,7 +300,7 @@ class ElectricMotorVisualization:
             k(int): Current episode step
             state(ndarray(float)): The state of the physical system.
             reference(ndarray(float)): The reference array of the reference generator.
-            action(ndarray(float)): The last taken action. None after reset.
+            action(ndarray(float)): The last action taken. None after reset.
             reward(float): The reward from the reward function.
             done(bool): Flag, if the environment is in a terminal state.
         """

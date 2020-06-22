@@ -1,5 +1,4 @@
 from gym_electric_motor.core import ElectricMotorVisualization
-#import gym_electric_motor.visualization.motor_dashboard_plots as mdp
 from . import motor_dashboard_plots as mdp
 import matplotlib
 import matplotlib.pyplot as plt
@@ -94,9 +93,6 @@ class MotorDashboard(ElectricMotorVisualization):
         self._figure.subplots_adjust(wspace=0.0, hspace=0.2)
         #plt.style.use("dark_background")
         plt.xlabel('t/s')  # adding a common x-label to all the subplots
-
-        # if isinstance(axes, collections.Iterable):
-        #     print("list is iterable")
 
         #plt.subplot() does not return an iterable var when the number of subplots==1
         if len(self._plots) < 2:
