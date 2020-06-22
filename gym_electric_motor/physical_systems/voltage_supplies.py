@@ -93,11 +93,12 @@ class RCVoltageSupply(VoltageSupply):
         self._u_sup = u_nominal
         self._u_0 = u_nominal
         self._solver = EulerSolver()
-        def system_equation(t, u_sup, u_0, i_sup, r, c):
-            # ODE for derivate of u_sup
-            return np.array([(u_0 - u_sup[0] - r*i_sup)/(r*c)])
-        self._solver.set_system_equation(system_equation)
+        self._solver.set_system_equation(self.system_equation)
         
+    def system_equation(self, t, u_sup, u_0, i_sup, r, c):
+        # ODE for derivate of u_sup
+        return np.array([(u_0 - u_sup[0] - r*i_sup)/(r*c)])
+
     def reset(self):
         # Docstring of superclass
         # On reset the capacitor is loaded again

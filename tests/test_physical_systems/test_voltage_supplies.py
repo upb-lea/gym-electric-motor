@@ -86,19 +86,14 @@ class TestRCVoltageSupply(TestVoltageSupply):
             assert supply._u_sup == u_nominal + time
             
     def test_system_equation(self):
-        """Tests the correct behavior of the system equation in the get_voltage() function"""
-        def system_equation(t, u_sup, u_0, i_sup, r, c):
-            # ODE for derivate of u_sup
-            return np.array([(u_0 - u_sup[0] - r*i_sup)/(r*c)])
-        supply = vs.RCVoltageSupply()
-        i_sups = [0,2,4,6,8,10]
-        ts = [1e-3,1e-2,1,10,100]
-        for i_sup,t in zip(i_sups,ts):
-            supply.reset()
-            expected_diff = system_equation(t,[supply._u_sup], supply._u_0, i_sup, supply._r, supply._c) * t
-            voltage = supply.get_voltage(t,i_sup)
-            assert voltage - supply._u_0 == expected_diff
-
+         """Tests the correct behavior of the system equation by hand calculated values"""
+         supply = vs.RCVoltageSupply()
+         system_equation = supply.system_equation
+         assert system_equation(0,[10],50,1,1,1) == 39
+         assert system_equation(0,[20],50,2,2,2) == 6.5
+         assert system_equation(0,[30],50,3,3,3) == 1 + 2/9
+         #time invariance
+         assert system_equation(0,[30],50,3,3,3) == system_equation(5,[30],50,3,3,3)     
 
 
 
