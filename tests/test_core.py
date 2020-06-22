@@ -108,7 +108,6 @@ class TestElectricMotorEnvironment:
         assert np.all(np.all(state == ps.state)), 'Returned state is not the physical systems state'
         assert np.all(ref == rg.reference_observation), 'Returned reference is not the reference generators reference'
         assert np.all(state == rg.get_reference_state), 'Incorrect state passed to the reference generator'
-        assert np.all(vs.reference_trajectory == rg.trajectory), 'Incorrect trajectory passed to the visualization'
         assert rf.last_state == state, 'Incorrect state passed to the Reward Function'
         assert rf.last_reference == rg.reference_array, 'Incorrect Reference passed to the reward function'
 
