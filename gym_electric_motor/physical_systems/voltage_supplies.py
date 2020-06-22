@@ -71,7 +71,7 @@ class IdealVoltageSupply(VoltageSupply):
 class RCVoltageSupply(VoltageSupply):
     """Voltage supply moduled as RC element"""
     
-    def __init__(self, u_nominal, supply_parameter={'R':1,'C':4e-3}, **__):
+    def __init__(self, u_nominal=600.0, supply_parameter={'R':1,'C':4e-3}, **__):
         """
         This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element
         Args:
