@@ -7,7 +7,7 @@ from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanen
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
     DoublyFedInductionMotor
 
-from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ConstantSpeedLoad
+from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad
 
 from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSolver, ScipyOdeSolver
 
@@ -45,6 +45,7 @@ register_class(ContB6BridgeConverter, PowerElectronicConverter, 'Cont-B6C')
 
 register_class(PolynomialStaticLoad, MechanicalLoad, 'PolyStaticLoad')
 register_class(ConstantSpeedLoad, MechanicalLoad, 'ConstSpeedLoad')
+register_class(ExternalSpeedLoad, MechanicalLoad, 'ExtSpeedLoad')
 
 register_class(GaussianWhiteNoiseGenerator, NoiseGenerator, 'GWN')
 
