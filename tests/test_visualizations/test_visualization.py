@@ -7,19 +7,19 @@ import pytest
 
 # region first version tests
 
-@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcShunt', 'DcExtEx'])
-@pytest.mark.parametrize("converter_type", ['Disc-2QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
-@pytest.mark.parametrize("plotted_variables", [['torque', 'omega', 'u_sup'], ['all'], ['none'], ['omega'],
-                                               ['omega', 'u', 'u_a', 'u_e']])
-def test_visualization(motor_type, converter_type, plotted_variables, turn_off_windows):
-    """
+#@pytest.mark.parametrize("motor_type", ['DcPermEx', 'DcShunt', 'DcExtEx'])
+#@pytest.mark.parametrize("converter_type", ['Disc-2QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
+#@pytest.mark.parametrize("plotted_variables", [['torque', 'omega', 'u_sup'], ['all'], ['none'], ['omega'],
+#                                             ['omega', 'u', 'u_a', 'u_e']])
+#def test_visualization(motor_type, converter_type, plotted_variables, turn_off_windows):
+"""
     test initialization and basic functions for all motor and converters
     :param motor_type: motor name (string)
     :param converter_type: converter name (string)
     :param plotted_variables: shown variables (list/True/False)
     :return:
     """
-    # set parameters
+"""    # set parameters
     update_period = 1E-2
     visu_period = 0.1
     # setup physical system
@@ -65,13 +65,13 @@ def test_visualization(motor_type, converter_type, plotted_variables, turn_off_w
 @pytest.mark.parametrize("converter_type", ['Cont-4QC'])
 @pytest.mark.parametrize("plotted_variables", ['none', ['no_useful_reference']])
 def test_visualization_plotted_variables(motor_type, converter_type, plotted_variables, turn_off_windows):
-    """
+    """"""
     test initialization and basic functions for all motor and converters
     :param motor_type: motor name (string)
     :param converter_type: converter name (string)
     :param plotted_variables: shown variables (list/True/False)
     :return:
-    """
+    """"""
     # setup physical system
     physical_system = setup_physical_system(motor_type, converter_type)
     # setup reference generator
@@ -96,7 +96,7 @@ def test_visualization_plotted_variables(motor_type, converter_type, plotted_var
 @pytest.mark.parametrize("visu_period", [1E-2, 1E-1, 1])
 def test_visualization_parameter(motor_type, converter_type, plotted_variables, update_period, visu_period,
                                  turn_off_windows):
-    """
+    """"""
     test visu period and update period
     :param motor_type: motor name (string)
     :param converter_type: converter name (string)
@@ -104,7 +104,7 @@ def test_visualization_parameter(motor_type, converter_type, plotted_variables, 
     :param update_period: update period from dashboard
     :param visu_period: visu period from dashboard
     :return:
-    """
+    """"""
     # setup physical system
     physical_system = setup_physical_system(motor_type, converter_type)
     # setup reference generator
@@ -136,7 +136,7 @@ def test_visualization_parameter(motor_type, converter_type, plotted_variables, 
 @pytest.mark.parametrize("visu_period", [1, 0.5])
 def test_visualization_reset(motor_type, converter_type, plotted_variables, update_period, visu_period,
                              turn_off_windows):
-    """
+    """"""
     test reset with given references
     :param motor_type: motor name (string)
     :param converter_type: converter name (string)
@@ -144,7 +144,7 @@ def test_visualization_reset(motor_type, converter_type, plotted_variables, upda
     :param update_period: update period from dashboard
     :param visu_period: visu period from dashboard
     :return:
-    """
+    """"""
     # setup physical system
     physical_system = setup_physical_system(motor_type, converter_type)
     # setup reference generator
@@ -187,3 +187,4 @@ def test_visualization_reset(motor_type, converter_type, plotted_variables, upda
     dashboard.close()
 
 # endregion
+"""

@@ -25,7 +25,7 @@ if __name__ == '__main__':
         state_filter=['omega', 'i'],
         # Pass an instance
         reward_function=WeightedSumOfErrors(observed_states='i'),
-        visualization=MotorDashboard(update_period=1e-2, visu_period=1e-1, plotted_variables=['omega', 'i', 'u']),
+        visualization=MotorDashboard(plots=['i','omega']),
         converter='Disc-1QC',
         # Take standard class and pass parameters (Load)
         motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
