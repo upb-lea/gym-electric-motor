@@ -367,7 +367,7 @@ class ExternalSpeedLoad(MechanicalLoad):
         omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
         # calculated T out of euler-forward, given omega_next and
         # actual omega give from system
-        return np.array([(self.j_total / self._tau) *
+        return np.array([(1 / self._tau) *
                          (omega_next - mechanical_state[self.OMEGA_IDX])])
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
