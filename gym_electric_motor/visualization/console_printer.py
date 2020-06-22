@@ -43,12 +43,24 @@ class ConsolePrinter(ElectricMotorVisualization):
     def step(self, k, state, reference, action, reward, done):
         """Gets called at each step of the environment.
         Handles per step printing as well es constraint violation printing"""
-        if self._print_freq:
-            if not self._num_steps:
-                print('\n')
+        if self._print_freq > 0:
             self._num_steps += 1
             self._cum_reward += reward
-            if self._print_freq == 2 and not self._num_steps % self._update_freq:
+            if done:
+                self._violation = True
+            if self._print_freq > 0 and self._reset:
+                print(
+                    f'\nEpisode {self._episode} ',
+                    f'Constraint Violation! ' if self._violation else 'External Reset. ',
+                    f'Number of steps: {self._num_steps: 8d} ',
+                    f'Cumulative Reward: {self._cum_reward:7.3f}\n')
+                self._violation = False
+                self._num_steps = 1
+                self._cum_reward = reward
+                self._reset = False
+                self._episode += 1
+                
+            if self._print_freq == 2 and (self._num_steps % self._update_freq) == 0:
                 print(f'Episode {self._episode} '
                       f'State {state * self._limits} '
                       f'Reference {reference * self._limits} '
@@ -57,17 +69,4 @@ class ConsolePrinter(ElectricMotorVisualization):
                       f'Cumulative Reward {self._cum_reward:7.3f}',
                       end='\r'
                       )
-            if done:
-                self._violation = True
 
-            if self._print_freq and self._reset:
-                print(
-                    f'\nEpisode {self._episode} ',
-                    f'Constraint Violation! ' if self._violation else 'External Reset. ',
-                    f'Number of steps: {self._num_steps: 8d} ',
-                    f'Cumulative Reward: {self._cum_reward:7.3f}')
-                self._violation = False
-                self._num_steps = 0
-                self._cum_reward = 0
-                self._reset = False
-                self._episode += 1
