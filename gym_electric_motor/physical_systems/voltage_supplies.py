@@ -69,21 +69,22 @@ class IdealVoltageSupply(VoltageSupply):
 
 
 class RCVoltageSupply(VoltageSupply):
-    """Voltage supply moduled as RC element"""
+    """Voltage supply modeled as RC element"""
     
-    def __init__(self, u_nominal=600.0, supply_parameter={'R':1,'C':4e-3}, **__):
+    def __init__(self, u_nominal=600.0, supply_parameter=None, **__):
         """
         This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element
         Args:
-            supply_parameter(dict): Consists or Reluctance R in Ohm and Capacitance C in Farad
+            supply_parameter(dict): Consists or Resistance R in Ohm and Capacitance C in Farad
         Additional notes:
             If the product of R and C get too small the numerical stability of the ODE is not given anymore
             typical time differences tau are only in the range of 10e-3. One might want to consider R*C as a
             time constant. The resistance R can be considered as a simplified inner resistance model.
         """
         super().__init__(u_nominal)
+        supply_parameter = supply_parameter or {'R': 1, 'C': 4e-3}
         # Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded
-        assert 'R' in supply_parameter.keys(), "Pass key 'R' for Reluctance in your dict"
+        assert 'R' in supply_parameter.keys(), "Pass key 'R' for Resistance in your dict"
         assert 'C' in supply_parameter.keys(), "Pass key 'C' for Capacitance in your dict"
         self.supply_range = (0,u_nominal) 
         self._r = supply_parameter['R']
