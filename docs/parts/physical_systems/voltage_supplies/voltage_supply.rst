@@ -6,6 +6,8 @@ Voltage Supplies
     :caption: Available Voltage Supplies:
 
     ideal_voltage_supply
+    rc_voltage_supply
+
 
 Voltage Supply Base Class
 *************************************
