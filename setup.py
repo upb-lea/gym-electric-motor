@@ -19,7 +19,7 @@ setuptools.setup(
       packages=setuptools.find_packages(),
       install_requires=requirements,
       extras_require={'examples': 
-                      ['keras_rl2>=1.0.3']
+                      ['keras-rl2 @git+https://github.com/wau/keras-rl2.git']
                      },
       author=', '.join(sorted(AUTHORS, key=lambda n: n.split()[-1].lower())),
       long_description=long_description,
