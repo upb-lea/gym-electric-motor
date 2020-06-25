@@ -15,7 +15,7 @@ test_const_initializer = {'states': {'omega': 15.0},
                           'interval': None,
                           'random_init': None,
                           'random_params': (None, None)}
-# todo rand init
+# todo random init as testcase ?
 test_rand_initializer = { 'interval': None,
                           'random_init': None,
                           'random_params': (None, None)}
@@ -24,7 +24,6 @@ test_amp = 20
 test_bias = 10
 test_freq = 2
 # simple triangular profile as example
-# todo error beheben (nachfragen)
 test_speed_profile = lambda_fixture(lambda t, amp, freq, bias:
                       amp*signal.sawtooth(2*np.pi*freq*t, width=0.5)+bias)
 
@@ -48,7 +47,6 @@ def concreteMechanicalLoad():
     state_names = load_parameter1['state_names']
     j_load = load_parameter1['j_load']
     test_initializer = test_const_initializer
-    # todo random init return
     return MechanicalLoad(state_names, j_load, a=2, b=6,
                           load_initializer=test_initializer)
 
@@ -72,7 +70,6 @@ def concretePolynomialLoad():
     test_load_params = dict(a=0.01, b=0.05, c=0.1, j_load=0.1, p=0.5, q = 0.98, r= 2678.88)
     test_initializer = test_const_initializer
     # x, y are random kwargs
-    # todo random init
     return PolynomialStaticLoad(load_parameter=test_load_params, x=3, y=76.,
                                 load_initializer=test_initializer)
 
@@ -132,7 +129,6 @@ def test_MechanicalLoad_reset(concreteMechanicalLoad):
                                             nominal_state=test_nominal,
                                             state_space=test_space
                                             )
-    # todo what if 2 init const random test (sinnvoll weil random)
     testVal = np.asarray(list(test_const_initializer['states'].values()))
     assert (resetVal == testVal).all()
 
