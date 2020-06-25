@@ -88,7 +88,10 @@ class MechanicalLoad:
         load_initializer = load_initializer or {}
         self._initializer = self._default_initializer.copy()
         self._initializer.update(load_initializer)
-        self._initial_states = self._initializer['states']
+        try:
+            self._initial_states = self._initializer['states']
+        except:
+            self._initial_states = {state: 0.0 for state in self._state_names}
 
     def initialize(self,
                    nominal_state,
@@ -257,7 +260,8 @@ class MechanicalLoad:
 
 class PolynomialStaticLoad(MechanicalLoad):
     """
-    Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.
+    Mechanical system that models the Mechanical-ODE based on a static
+    polynomial load torque.
 
     Parameter dictionary entries:
         | a: Constant Load Torque coefficient (for modeling static friction)
@@ -288,6 +292,8 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.
+            limits(dict):
+            load_initializer(dict):
         """
         self._load_parameter.update(load_parameter)
         super().__init__(j_load=self._load_parameter['j_load'],
@@ -321,13 +327,8 @@ class ExternalSpeedLoad(MechanicalLoad):
        predefined speed-function/ speed-profile.
     """
 
-    _default_initializer = {'states': {'omega': 0.0},
-                            'interval': None,
-                            'random_init': None,
-                            'random_params': (None, None)}
-
     HAS_JACOBIAN = False
-
+    # todo initialiter sache klären
     @property
     def omega(self):
         """
@@ -340,8 +341,8 @@ class ExternalSpeedLoad(MechanicalLoad):
         # Docstring from superclass
         return np.array([self._omega_initial])
 
-    def __init__(self, speed_profile=None, omega_initial=None,
-                 load_initializer=None, tau=1e-4, **kwargs):
+    def __init__(self, speed_profile=None, omega_initial=0,
+                 tau=1e-4, **kwargs):
         """
         Args:
             speed_profile(function): function or lambda expression
@@ -353,20 +354,20 @@ class ExternalSpeedLoad(MechanicalLoad):
             tau(float): discrete time step of the system
             kwargs(dict): further arguments for speed_profile
         """
-        super().__init__(load_initializer=load_initializer)
+        super().__init__()
         self.kwargs = kwargs
-        self._omega_initial = omega_initial or self._initializer['states']['omega']
-        # w(t)
+        self._omega_initial = omega_initial #or self._initializer['states']['omega']
         self._speed_profile = speed_profile
         self._tau = tau
         #self._jacobi = jacobi
 
-    def mechanical_ode(self, t, mechanical_state, torque):
+    def mechanical_ode(self, t, mechanical_state, torque=None):
         # Docstring of superclass
         # calc next omega with given profile und tau
         omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
         # calculated T out of euler-forward, given omega_next and
         # actual omega give from system
+        #print(' test:', omega_next, mechanical_state[self.OMEGA_IDX],omega_next - mechanical_state[self.OMEGA_IDX])
         return np.array([(1 / self._tau) *
                          (omega_next - mechanical_state[self.OMEGA_IDX])])
 
@@ -383,10 +384,6 @@ class ConstantSpeedLoad(MechanicalLoad):
     """
 
     HAS_JACOBIAN = True
-    _default_initializer = {'states': {'omega': 0.0},
-                            'interval': None,
-                            'random_init': None,
-                            'random_params': (None, None)}
 
     @property
     def omega_fixed(self):
@@ -400,14 +397,15 @@ class ConstantSpeedLoad(MechanicalLoad):
         # Docstring from superclass
         return np.array([self._omega])
 
-    def __init__(self, omega_fixed=0, load_initializer=None, **__):
+    def __init__(self, omega_fixed=0):#, load_initializer=None, **__):
         """
         Args:
             omega_fixed(float)): Fix value for the speed in rad/s.
         """
-        self._default_initializer['states']['omega'] = omega_fixed
-        super().__init__(load_initializer=load_initializer)
-        self._omega = omega_fixed or self._initializer['states']['omega']
+        #self._default_initializer['states']['omega'] = omega_fixed
+        #super().__init__(load_initializer)
+        super().__init__()
+        self._omega = omega_fixed #or self._initializer['states']['omega']
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass

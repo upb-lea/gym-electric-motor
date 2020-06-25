@@ -1,12 +1,30 @@
 import pytest
 import gym_electric_motor as gem
-from gym_electric_motor.physical_systems import PolynomialStaticLoad, MechanicalLoad, ConstantSpeedLoad
+from gym_electric_motor.physical_systems import PolynomialStaticLoad, MechanicalLoad, ConstantSpeedLoad, ExternalSpeedLoad
+from gym.spaces import Box
 import numpy as np
+from scipy import signal
 import math
 
 # The load parameter values used in the test
 load_parameter1 = {'j_load': 0.2, 'state_names': ['omega'], 'j_rot_load': 0.25, 'omega_range': (0, 1),
                    'parameter': dict(a=0.12, b=0.13, c=0.4, j_load=0.2)}
+# The different initializers used in test
+test_const_initializer = {'states': {'omega': 15.0},
+                          'interval': None,
+                          'random_init': None,
+                          'random_params': (None, None)}
+# todo rand init
+test_rand_initializer = { 'interval': None,
+                          'random_init': None,
+                          'random_params': (None, None)}
+# profile_parameter
+test_amp = 20
+test_bias = 10
+test_freq = 2
+# simple triangular profile as example
+test_speed_profile = (lambda t, amp, freq, bias:
+                      amp*signal.sawtooth(2*np.pi*freq*t, width=0.5)+bias)
 
 
 @pytest.fixture
@@ -27,7 +45,10 @@ def concreteMechanicalLoad():
     # Parameters picked from the parameter dict above
     state_names = load_parameter1['state_names']
     j_load = load_parameter1['j_load']
-    return MechanicalLoad(state_names, j_load, a=2, b=6)
+    test_initializer = test_const_initializer
+    # todo random init return
+    return MechanicalLoad(state_names, j_load, a=2, b=6,
+                          load_initializer=test_initializer)
 
 
 @pytest.fixture
@@ -47,7 +68,11 @@ def concretePolynomialLoad():
     """
     addnl_params = dict(p=0.5, q=0.98, r=2678.88)
     test_load_params = dict(a=0.01, b=0.05, c=0.1, j_load=0.1, p=0.5, q = 0.98, r= 2678.88)
-    return PolynomialStaticLoad(load_parameter=test_load_params, x=3, y=76)  # x, y are random kwargs
+    test_initializer = test_const_initializer
+    # x, y are random kwargs
+    # todo random init
+    return PolynomialStaticLoad(load_parameter=test_load_params, x=3, y=76.,
+                                load_initializer=test_initializer)
 
 
 def test_InitMechanicalLoad(defaultMechanicalLoad, concreteMechanicalLoad):
@@ -60,9 +85,11 @@ def test_InitMechanicalLoad(defaultMechanicalLoad, concreteMechanicalLoad):
     assert defaultMechanicalLoad.state_names == load_parameter1['state_names']
     assert defaultMechanicalLoad.j_total == 0
     assert defaultMechanicalLoad.limits == {}
+    assert defaultMechanicalLoad.initializer == {}
     assert concreteMechanicalLoad.state_names == load_parameter1['state_names']
     assert concreteMechanicalLoad.j_total == load_parameter1['j_load']
     assert concreteMechanicalLoad.limits == {}
+    assert concreteMechanicalLoad.initializer == test_const_initializer
 
 
 def test_MechanicalLoad_set_j_rotor(concreteMechanicalLoad):
@@ -86,15 +113,25 @@ def test_MechanicalLoad_MechanicalOde(concreteMechanicalLoad):
     with pytest.raises(NotImplementedError):
         concreteMechanicalLoad.mechanical_ode(*test_args)
 
-
 def test_MechanicalLoad_reset(concreteMechanicalLoad):
     """
     Test the reset() function
     :param concreteMechanicalLoad:
     :return:
     """
-    resetVal = concreteMechanicalLoad.reset(a=7, b=9)  # set additional random kwargs
-    testVal = np.zeros_like(load_parameter1['state_names'], dtype=float)
+    # random testcase for the necessary parameters needed for initialization
+    test_positions = {'omega': 0}
+    test_nominal = np.array([80])
+    # gym.Box state space with random size
+    test_space = Box(low=-1.0, high=1.0, shape=(3,))
+    # set additional random kwargs
+    resetVal = concreteMechanicalLoad.reset(a=7, b=9,
+                                            state_positions=test_positions,
+                                            nominal_state=test_nominal,
+                                            state_space=test_space
+                                            )
+    # todo what if 2 init const random test (sinnvoll weil random)
+    testVal = np.asarray(list(test_const_initializer['states'].values()))
     assert (resetVal == testVal).all()
 
 
@@ -188,6 +225,56 @@ class TestConstSpeedLoad(TestMechanicalLoad):
         (0, 0, (0, 0)),
         (2, -523, (0, 0)),
         (2, 0.2, (0, 0))
+    ]
+    )
+    def test_jacobian(self, omega, omega_fixed, expected):
+        test_object = self.class_to_test(omega_fixed)
+
+        # 2 Runs to test independence on time and torque
+        result0 = test_object.mechanical_jacobian(0.456, np.array([omega]), 0.385)
+        result1 = test_object.mechanical_jacobian(5.345, np.array([omega]), -0.654)
+
+        assert result0[0] == result1[0] == expected[0]
+        assert result0[1] == result1[1] == expected[1]
+
+
+class TestExtSpeedLoad(TestMechanicalLoad):
+
+    key = 'ExtSpeedLoad'
+    class_to_test = ExternalSpeedLoad
+
+    @pytest.fixture
+    def ext_speed_load(self):
+        return ExternalSpeedLoad(test_speed_profile, 10,
+                                 amp=test_amp, bias=test_bias, freq=test_freq)
+
+    def test_initialization(self):
+        load = ExternalSpeedLoad(test_speed_profile, 10,
+                                 amp=test_amp, bias=test_bias, freq=test_freq)
+        assert load._speed_profile == test_speed_profile
+        assert load._omega_initial == 10
+        for key in ['amp', 'bias', 'freq']:
+            assert key in load.kwargs
+
+    # to verify all 3 branches
+    @pytest.mark.parametrize("omega, expected_result", [(-3, -69840.),
+                                                        (0, -99840.),
+                                                        (5, -149840.)])
+    def test_mechanical_ode(self, ext_speed_load, omega, expected_result):
+        test_mechanical_state = np.array([omega])
+        test_t = 1
+        op = ExternalSpeedLoad()
+        output_val = op.mechanical_ode(test_t, test_mechanical_state)
+        assert math.isclose(expected_result, output_val, abs_tol=1E-6)
+
+    def test_reset(self, ext_speed_load):
+        assert all(ext_speed_load.reset() == np.array([ext_speed_load._omega_initial]))
+
+    @pytest.mark.parametrize('omega, omega_fixed, expected', [
+        (-0.5, 1000, None),
+        (0, 0, None),
+        (2, -523, None),
+        (2, 0.2, None)
     ]
     )
     def test_jacobian(self, omega, omega_fixed, expected):
