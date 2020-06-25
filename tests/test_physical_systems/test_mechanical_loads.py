@@ -5,6 +5,7 @@ from gym.spaces import Box
 import numpy as np
 from scipy import signal
 import math
+from pytest_lambda import lambda_fixture
 
 # The load parameter values used in the test
 load_parameter1 = {'j_load': 0.2, 'state_names': ['omega'], 'j_rot_load': 0.25, 'omega_range': (0, 1),
@@ -24,7 +25,7 @@ test_bias = 10
 test_freq = 2
 # simple triangular profile as example
 # todo error beheben (nachfragen)
-test_speed_profile = (lambda t, amp, freq, bias:
+test_speed_profile = lambda_fixture(lambda t, amp, freq, bias:
                       amp*signal.sawtooth(2*np.pi*freq*t, width=0.5)+bias)
 
 
@@ -264,29 +265,30 @@ class TestExtSpeedLoad(TestMechanicalLoad):
     def test_mechanical_ode(self, ext_speed_load, omega, expected_result):
         test_mechanical_state = np.array([omega])
         test_t = 1
-        op = ExternalSpeedLoad()
+        op = ext_speed_load
         output_val = op.mechanical_ode(test_t, test_mechanical_state)
         assert math.isclose(expected_result, output_val, abs_tol=1E-6)
 
     def test_reset(self, ext_speed_load):
         assert all(ext_speed_load.reset() == np.array([ext_speed_load._omega_initial]))
 
-    @pytest.mark.parametrize('omega, omega_fixed, expected', [
-        (-0.5, 1000, None),
-        (0, 0, None),
-        (2, -523, None),
-        (2, 0.2, None)
+    @pytest.mark.parametrize('omega, omega_initial, expected', [
+        (-0.5, 1000, (None, None)),
+        (0, 0, (None, None)),
+        (2, -523, (None, None)),
+        (2, 0.2, (None, None))
     ]
     )
-    def test_jacobian(self, omega, omega_fixed, expected):
-        test_object = self.class_to_test(omega_fixed)
+    def test_jacobian(self, omega, omega_initial, expected):
+        test_object = self.class_to_test(test_speed_profile, 10, amp=test_amp,
+                                         bias=test_bias, freq=test_freq)
 
         # 2 Runs to test independence on time and torque
         result0 = test_object.mechanical_jacobian(0.456, np.array([omega]), 0.385)
         result1 = test_object.mechanical_jacobian(5.345, np.array([omega]), -0.654)
 
-        assert result0[0] == result1[0] == expected[0]
-        assert result0[1] == result1[1] == expected[1]
+        assert result0 == result1 == expected[0]
+        assert result0 == result1 == expected[1]
 
 
 class TestPolyStaticLoad(TestMechanicalLoad):
