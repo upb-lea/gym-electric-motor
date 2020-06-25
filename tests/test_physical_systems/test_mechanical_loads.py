@@ -23,6 +23,7 @@ test_amp = 20
 test_bias = 10
 test_freq = 2
 # simple triangular profile as example
+# todo error beheben (nachfragen)
 test_speed_profile = (lambda t, amp, freq, bias:
                       amp*signal.sawtooth(2*np.pi*freq*t, width=0.5)+bias)
 
