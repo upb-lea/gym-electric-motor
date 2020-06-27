@@ -1,29 +1,48 @@
 from examples.agents.simple_controllers import Controller
 import time
 import sys, os
+
 sys.path.append(os.path.abspath(os.path.join('..')))
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
 
+"""
+Run this file from within the 'examples' folder:
+>> cd examples
+>> python perm_dc_omega.py
+
+Description:
+        Environment to control a Continuously controlled DC Permanently Excited Motor.
+
+        Controlled Quantity: 'omega'
+
+        Limitations: Physical limitations of the motor like Current,Speed
+
+        Converter : FourQuadrantConverter from converters.py
+
+"""
+
 if __name__ == '__main__':
+
+    """Discrete mode: It is the mode where the input command causes the controlled variable to change its 
+    value in discrete steps,with a brief static condition occurring between each step.
+    
+    Continuous mode is the one where the input command signal causes  the controlled variable to remain constant,
+    or to change in a linear(rather than step) mode. 
+    """
     env = gem.make(
-        'DcPermExDisc-v1',  # replace with 'DcPermExCont-v1' for continuous mode
-        # Pass an instance
-        visualization=MotorDashboard(plotted_variables=['omega', 'torque', 'i', 'u', 'u_sup'], visu_period=1),
-        # motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
-        # Take standard class and pass parameters (Load)
-        # load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
-        # Pass a string (with extra parameters)
+        'DcPermExCont-v1',  # replace with 'DcPermExDisc-v1' for continuous mode
+        visualization=MotorDashboard(plots=['omega', 'torque', 'i', 'u', 'u_sup'], visu_period=1),
         ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
-        # Pass a Class with extra parameters
         reference_generator=rg.SwitchedReferenceGenerator(
             sub_generators=[
                 rg.SinusoidalReferenceGenerator, rg.WienerProcessReferenceGenerator(), rg.StepReferenceGenerator()
             ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
         )
     )
-    controller = Controller.make('three_point', env)   # works for 'on_off','pi_controller'(cont),'p_controller'(cont), 'cascaded_pi'(cont) too
+    controller = Controller.make('p_controller', env)
+    # The above controller can be replaced with 'on_off'(disc),three_point(disc),'p_controller', 'cascaded pi' from simple_controllers class
     state, reference = env.reset()
     start = time.time()
     cum_rew = 0
