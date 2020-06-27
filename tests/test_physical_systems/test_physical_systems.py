@@ -118,6 +118,8 @@ class TestSCMLSystem:
     def test_reset(self, scml_system):
         scml_system._t = 12
         scml_system._k = 33
+        state_space = scml_system.state_space
+        state_positions = scml_system.state_positions
         initial_state = scml_system.reset()
         assert all(
             initial_state == (np.array([0, 0, 0, 0, 0, 0, 560]) + scml_system._noise_generator.reset())

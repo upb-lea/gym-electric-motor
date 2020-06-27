@@ -22,7 +22,7 @@ class ElectricMotor:
             { 'states': <dict: state names and initital values>,
               'interval': < boundaries for each state (only for random init>,
               'random_init': <str: 'uniform' or 'normal'>,
-              'random_params: {'mue': <const>, 'sigma': <const>}
+              'random_params: (mue(float), sigma(int))
         Examples:
              initializer(dict) for constant initialization:
             { 'states': {'i_e': 0.5, 'i_a': 15.5}}
@@ -54,6 +54,8 @@ class ElectricMotor:
     _default_limits = {}
     #: _default_initial_state(dict): Default initial motor-state values
     _default_initializer = {}
+    #: _default_initial_limits(dict): Default limit for initialization
+    _default_initial_limits = {}
 
     @property
     def nominal_values(self):
@@ -125,19 +127,23 @@ class ElectricMotor:
         motor_initializer = motor_initializer or {}
         self._initializer = self._default_initializer.copy()
         self._initializer.update(motor_initializer)
-        self._initial_states = self._initializer['states']
-        # intialize limits, because in general they're not needed to be changed
-        # during during training or episodes
+        self._initial_states = {}
+        # self._initial_states.update(self._default_initializer['states'])
+        # if self._initializer['states'] is not None:
+        #     self._initial_states.update(self._initializer['states'])
+        # intialize limits, in general they're not needed to be changed
+        # during  training or episodes
         initial_limits = initial_limits or {}
         self._initial_limits = self._nominal_values.copy()
         self._initial_limits.update(initial_limits)
         # preventing wrong critical user input
         assert isinstance(self._initializer, dict), 'wrong initializer'
-        if self._initializer['interval'] is not None:
-            assert isinstance(self._initializer['interval'],
-                             (tuple, list, np.ndarray)), 'wrong dtype for Interval'
-            assert (len(self._initializer['interval']) is
-                    len(self._initial_states.keys())), '#boundaries != #inital states'
+        # if self._initializer['interval'] is not None:
+        #     assert isinstance(self._initializer['interval'],
+                            # (tuple, list, np.ndarray)), 'wrong dtype for Interval'
+            # assert (len(self._initializer['interval']) is
+            #         len(self._initial_states.keys())), '# boundaries != # inital states'
+
 
     def electrical_ode(self, state, u_in, omega, *_):
         """
@@ -194,6 +200,9 @@ class ElectricMotor:
         interval = self._initializer['interval']
         random_dist = self._initializer['random_init']
         random_params = self._initializer['random_params']
+        self._initial_states.update(self._default_initializer['states'])
+        if self._initializer['states'] is not None:
+            self._initial_states.update(self._initializer['states'])
 
         # different limits for InductionMotor
         if any(map(lambda state: state in self._initial_states.keys(),
@@ -203,13 +212,13 @@ class ElectricMotor:
             upper_bound = np.asarray(nominal_values_, dtype=float)
             # state space for Induction Envs based on documentation
             # ['i_salpha', 'i_sbeta', 'psi_ralpha', 'psi_rbeta', 'epsilon']
-            # hardcoded for Inductionmotors currently set up in the toolbox
+            # hardcoded for Inductionmotors currently given up in the toolbox
             state_space_low = np.array([-1, -1, -1, -1, -1])
             lower_bound = upper_bound * state_space_low
         else:
             if isinstance(self._nominal_values, dict):
                 nominal_values_ = [self._nominal_values[state]
-                                   for state in self._initial_states]
+                                   for state in self._initial_states.keys()]
                 nominal_values_ = np.asarray(nominal_values_)
             else:
                 nominal_values_ = np.asarray(self._nominal_values)
@@ -279,8 +288,8 @@ class ElectricMotor:
             raise Exception('No matching Initialization Case')
 
     def reset(self,
-              state_space=None,
-              state_positions=None,
+              state_space,
+              state_positions,
               **__):
         """
         Reset the motors state to a new initial state. (Default 0)
@@ -1098,6 +1107,9 @@ class SynchronousMotor(ThreePhaseMotor):
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
+        motor_initializer = motor_initializer or {}
+        self._initializer = self._default_initializer.copy()
+        self._initializer.update(motor_initializer)
         super().__init__(motor_parameter, nominal_values,
                          limit_values, motor_initializer)
         self._update_model()
@@ -1108,7 +1120,12 @@ class SynchronousMotor(ThreePhaseMotor):
         # Docstring of superclass
         return self._motor_parameter
 
-    def reset(self, state_space=None, state_positions=None, **__):
+    @property
+    def initializer(self):
+        # Docstring of superclass
+        return self._initializer
+
+    def reset(self, state_space, state_positions, **__):
         # Docstring of superclass
         if self._initializer:
             self.initialize(state_space, state_positions)
@@ -1170,6 +1187,11 @@ class SynchronousMotor(ThreePhaseMotor):
                                 self._motor_parameter['r_s']
         super()._update_limits(limits_agenda, nominal_agenda)
 
+    def initialize(self,
+                   state_space,
+                   state_positions,
+                   **__):
+        super().initialize(state_space, state_positions)
 
 class SynchronousReluctanceMotor(SynchronousMotor):
     """
@@ -1258,10 +1280,6 @@ class SynchronousReluctanceMotor(SynchronousMotor):
                             'interval': None,
                             'random_init': None,
                             'random_params': (None, None)}
-    # _default_initializer = {'states': {'i': 0.0, 'epsilon': 0.0},
-    #                         'interval': None,
-    #                         'random_init': None,
-    #                         'random_params': (None, None)}
 
     IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
     IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']

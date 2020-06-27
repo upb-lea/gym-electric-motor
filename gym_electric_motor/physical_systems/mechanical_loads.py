@@ -20,9 +20,9 @@ class MechanicalLoad:
         { 'states': <dict with state names and initital values>,
           'interval': < boundaries for each state (only for random init>,
           'random_init': <str: 'uniform' or 'normal'>,
-          'random_params: {'mue': <const>, 'sigma': <const>}
+          'random_params: (mue(float), sigma(int))
     Example initializer(dict) for constant initialization:
-        { 'states': {'omega': 15.5}}
+        { 'states': {'omega': 16.0}}
     Example  initializer(dict) for random initialization:
         { 'random_init': 'normal'}
     """
@@ -94,9 +94,9 @@ class MechanicalLoad:
             self._initial_states = {state: 0.0 for state in self._state_names}
 
     def initialize(self,
+                   state_space,
+                   state_positions,
                    nominal_state,
-                   state_space=None,
-                   state_positions=None,
                    **__):
         """
         Initializes give state values. Values can be given as a constant or
@@ -106,7 +106,7 @@ class MechanicalLoad:
         Args:
             nominal_state(list): nominal values for each state given from
                                   physical system
-            state_space(gym.Box): normalized state space boundaries
+            state_space(gym.spaces.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
         Returns:
             ndarray(float): initial value for each state
@@ -116,10 +116,16 @@ class MechanicalLoad:
         interval = self._initializer['interval']
         random_dist = self._initializer['random_init']
         random_params = self._initializer['random_params']
-
+        if isinstance(nominal_state, (list, np.ndarray)):
+            nominal_state = np.asarray(nominal_state, dtype=float)
+        elif isinstance(self._nominal_values, dict):
+            nominal_state = [nominal_state[state]
+                               for state in self._initial_states.keys()]
+            nominal_state = np.asarray(nominal_state)
         # setting nominal values as interval limits
         state_idx = [state_positions[state] for state in self._initial_states.keys()]
-        upper_bound = np.asarray(nominal_state[state_idx], dtype=float)
+        print(state_idx)
+        upper_bound = nominal_state[state_idx]
         lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
@@ -186,9 +192,9 @@ class MechanicalLoad:
             raise Exception('No matching Initialization Case')
 
     def reset(self,
-              state_positions=None,
-              state_space=None,
-              nominal_state=None,
+              state_space,
+              state_positions,
+              nominal_state,
               **__):
         """
         Reset the motors state to a new initial state. (Default 0)
@@ -202,7 +208,7 @@ class MechanicalLoad:
             numpy.ndarray(float): The initial motor states.
         """
         if self._initializer:
-            self.initialize(nominal_state, state_space, state_positions)
+            self.initialize(state_space, state_positions, nominal_state)
             return np.asarray(list(self._initial_states.values()))
         else:
             return np.zeros_like(self._state_names, dtype=float)
