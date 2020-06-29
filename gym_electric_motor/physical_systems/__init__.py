@@ -13,7 +13,7 @@ from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSol
 
 from .noise_generators import NoiseGenerator, GaussianWhiteNoiseGenerator
 
-from .voltage_supplies import VoltageSupply, IdealVoltageSupply, RCVoltageSupply
+from .voltage_supplies import VoltageSupply, IdealVoltageSupply, RCVoltageSupply, AC1PhaseSupply, AC3PhaseSupply
 
 
 from ..utils import register_class, register_superclass
@@ -64,5 +64,9 @@ register_class(DoublyFedInductionMotor, ElectricMotor, 'DFIM')
 
 register_class(IdealVoltageSupply, VoltageSupply, 'IdealVoltageSupply')
 register_class(RCVoltageSupply, VoltageSupply, 'RCVoltageSupply')
+register_class(AC1PhaseSupply, VoltageSupply, 'AC1PhaseSupply')
+register_class(AC3PhaseSupply, VoltageSupply, 'AC3PhaseSupply')
+
+
 
 

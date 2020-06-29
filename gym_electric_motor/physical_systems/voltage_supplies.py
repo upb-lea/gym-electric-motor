@@ -125,13 +125,14 @@ class AC1PhaseSupply(VoltageSupply):
         self._fixed_phi = supply_parameter['fixed_phase']
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
+        self.supply_range = [-1*self._u_nominal, self._u_nominal]
         
     def reset(self):
         if not self._fixed_phi:
             self._phi = np.random.rand()*2*np.pi
         return self.get_voltage(0)
     
-    def get_voltage(self, t, **__):
+    def get_voltage(self, t, *_, **__):
         # Docstring of superclass
         self._u_sup = [self._u_nominal*np.sin(self._f*t + self._phi)]
         return self._u_sup
@@ -148,6 +149,7 @@ class AC3PhaseSupply(VoltageSupply):
         self._fixed_phi = supply_parameter['fixed_phase']
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
+        self.supply_range = [-1*self._u_nominal, self._u_nominal]
         
     def reset(self):
         # Docstring of superclass
@@ -155,7 +157,7 @@ class AC3PhaseSupply(VoltageSupply):
             self._phi = np.random.rand()*2*np.pi
         return self.get_voltage(0)
     
-    def get_voltage(self, t, **__):
+    def get_voltage(self, t, *_, **__):
         # Docstring of superclass
         self._u_sup = [self._u_nominal*np.sin(self._f*t + self._phi + 2/3*np.pi*i) for i in range(3)]
         return self._u_sup
