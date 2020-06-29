@@ -165,7 +165,7 @@ class TestSCMLSystem:
         assert all(desired_next_state == next_state)
         assert scml_system.converter.action == action
         assert scml_system.converter.action_set_time == 0
-        assert scml_system.converter.last_i_out == scml_system.electrical_motor.i_in(ode_state[2:])
+        assert scml_system.converter.last_i_out == scml_system.electrical_motor.i_in(scml_system._ode_solver.last_y[2:])
 
     def test_system_jacobian(self, scml_system):
         el_jac = np.arange(4).reshape(2, 2)

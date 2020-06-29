@@ -290,8 +290,9 @@ def test_threephase_environments(reward_function_type, reference_generator_type,
                         u_sup=u_sup,
                         reward_weights=reward_weights,
                         observed_states=observed_states,
-                        plotted_variables=['omega'],
-                        motor_initializer=initializer)
+                        motor_initializer=initializer,
+                        plots=['omega'])
+
 
     _physical_system = setup_physical_system(motor_type, converter_type, three_phase=True, **kwargs)
     reference_generator = make_module(ReferenceGenerator, reference_generator_type,

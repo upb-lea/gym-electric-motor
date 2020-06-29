@@ -148,7 +148,7 @@ class ElectricMotor:
                             # (tuple, list, np.ndarray)), 'wrong dtype for Interval'
             # assert (len(self._initializer['interval']) is
             #         len(self._initial_states.keys())), '# boundaries != # inital states'
-
+        print('super init called')
 
     def electrical_ode(self, state, u_in, omega, *_):
         """
@@ -1109,18 +1109,20 @@ class SynchronousMotor(ThreePhaseMotor):
 
     _model_constants = None
 
-    _initializer = None
+    #_initializer = None
 
     def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, motor_initializer=None, **kwargs):
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
+        print('sync init')
+        print(motor_initializer)
         super().__init__(motor_parameter, nominal_values,
                          limit_values, motor_initializer)
+        print('back in sync')
         self._update_model()
         self._update_limits()
-        print(self._initializer)
 
     @property
     def motor_parameter(self):
