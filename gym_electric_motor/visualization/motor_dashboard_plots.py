@@ -318,7 +318,7 @@ class ActionPlot(MotorDashboardPlot):
         act_max = self._action_range_max
         spacing = (act_max - act_min) * 0.1
         self._axis.set_ylim(act_min - spacing, act_max + spacing)
-        self._axis.set_xlim(0, self.x_width)
+        self._axis.set_xlim(-self.x_width, 0)
         self._axis.set_ylabel(self._action)
         base_action_line = lin.Line2D([], [], color=self.action_line_cfg['color'])
         self._axis.legend((base_action_line,), (self._action,), loc='upper left')
