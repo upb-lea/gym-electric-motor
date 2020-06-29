@@ -126,7 +126,6 @@ class MechanicalLoad:
             nominal_state = np.asarray(nominal_state)
         # setting nominal values as interval limits
         state_idx = [state_positions[state] for state in self._initial_states.keys()]
-        print(state_idx)
         upper_bound = nominal_state[state_idx]
         lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
         # clip nominal boundaries to user defined

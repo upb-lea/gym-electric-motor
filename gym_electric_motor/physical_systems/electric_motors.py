@@ -279,7 +279,6 @@ class ElectricMotor:
                                 'boundaries')
         else:
             raise Exception('No matching Initialization Case')
-        print('init', self._initial_states)
 
     def reset(self,
               state_space,
@@ -1703,7 +1702,6 @@ class InductionMotor(ThreePhaseMotor):
         if omega == 0:
             psi_d_max = mp['l_m'] * self._nominal_values['i_sd']
         else:
-            print(self._initial_states)
             i_d, i_q = self.q_inv([self._initial_states['i_salpha'],
                                   self._initial_states['i_sbeta']],
                                   eps_mag)
