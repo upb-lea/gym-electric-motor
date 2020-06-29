@@ -241,18 +241,18 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
 @pytest.mark.parametrize("reward_function_type", g_reward_functions)
 @pytest.mark.parametrize("reference_generator_type", g_reference_generator)
 @pytest.mark.parametrize("tau_test", [1E-5, 1E-4, 1E-3])
-@pytest.mark.parametrize("motor_type, motor_class, time_type",
-                         [('PMSM', ContPermanentMagnetSynchronousMotorEnvironment, 'Cont'),
-                          ('PMSM', DiscPermanentMagnetSynchronousMotorEnvironment, 'Disc'),
-                          ('SynRM', ContSynchronousReluctanceMotorEnvironment, 'Cont'),
-                          ('SynRM', DiscSynchronousReluctanceMotorEnvironment, 'Disc'),
-                          ('SCIM', ContSquirrelCageInductionMotorEnvironment, 'Cont'),
-                          ('SCIM', DiscSquirrelCageInductionMotorEnvironment, 'Disc'),
-                          ('DFIM', ContDoublyFedInductionMotorEnvironment, 'Cont'),
-                          ('DFIM', DiscDoublyFedInductionMotorEnvironment, 'Disc'),
+@pytest.mark.parametrize("motor_type, motor_class, time_type, initializer",
+                         [('PMSM', ContPermanentMagnetSynchronousMotorEnvironment, 'Cont', pmsm_initializer),
+                          ('PMSM', DiscPermanentMagnetSynchronousMotorEnvironment, 'Disc', pmsm_initializer),
+                          ('SynRM', ContSynchronousReluctanceMotorEnvironment, 'Cont', synrm_initializer),
+                          ('SynRM', DiscSynchronousReluctanceMotorEnvironment, 'Disc', synrm_initializer),
+                          ('SCIM', ContSquirrelCageInductionMotorEnvironment, 'Cont', sci_initializer),
+                          ('SCIM', DiscSquirrelCageInductionMotorEnvironment, 'Disc', sci_initializer),
+                          ('DFIM', ContDoublyFedInductionMotorEnvironment, 'Cont', dfim_initializer),
+                          ('DFIM', DiscDoublyFedInductionMotorEnvironment, 'Disc', dfim_initializer),
                           ])
 def test_threephase_environments(reward_function_type, reference_generator_type, tau_test, motor_type, motor_class,
-                                  time_type, turn_off_windows):
+                                  time_type, turn_off_windows, initializer):
     kwargs = {}
     if motor_type == "DFIM":
         converter_type = time_type + '-Multi'
@@ -290,7 +290,8 @@ def test_threephase_environments(reward_function_type, reference_generator_type,
                         u_sup=u_sup,
                         reward_weights=reward_weights,
                         observed_states=observed_states,
-                        plotted_variables=['omega'])
+                        plotted_variables=['omega'],
+                        motor_initializer=initializer)
 
     _physical_system = setup_physical_system(motor_type, converter_type, three_phase=True, **kwargs)
     reference_generator = make_module(ReferenceGenerator, reference_generator_type,
@@ -306,7 +307,8 @@ def test_threephase_environments(reward_function_type, reference_generator_type,
                         supply=voltage_supply,
                         reference_generator=reference_generator,
                         ode_solver='euler',
-                        reward_function=reward_function)
+                        reward_function=reward_function,
+                        motor_initializer=initializer)
     # test the different initializations
     envs = [env_default, env_1, env_2]
     seed(123)
