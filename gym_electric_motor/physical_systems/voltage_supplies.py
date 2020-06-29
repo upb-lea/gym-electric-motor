@@ -125,7 +125,7 @@ class AC1PhaseSupply(VoltageSupply):
         self._fixed_phi = supply_parameter['fixed_phase']
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
-        self.supply_range = [-1*self._u_nominal, self._u_nominal]
+        self.supply_range = [-1*self._u_nominal*np.sqrt(2), self._u_nominal*np.sqrt(2)]
         
     def reset(self):
         if not self._fixed_phi:
@@ -149,7 +149,7 @@ class AC3PhaseSupply(VoltageSupply):
         self._fixed_phi = supply_parameter['fixed_phase']
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
-        self.supply_range = [-1*self._u_nominal, self._u_nominal]
+        self.supply_range = [-1*self._u_nominal/np.sqrt(3)*np.sqrt(2), self._u_nominal/np.sqrt(3)*np.sqrt(2)]
         
     def reset(self):
         # Docstring of superclass
