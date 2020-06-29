@@ -13,10 +13,15 @@ g_u_in = [0, 400, -400, 325.2, -205.4]
 g_t_load = [0, 1, 5, -5, 4.35]
 
 # default/ global initializer
+default_test_initializer = {'states': {},
+                    'interval': None,
+                    'random_init': None,
+                    'random_params': None}
 test_initializer = {'states': {},
                     'interval': None,
                     'random_init': None,
                     'random_params': None}
+
 
 # region general test functions
 
@@ -596,7 +601,7 @@ class TestElectricMotor:
     @pytest.mark.parametrize("limits, result_limit_values",
                              [(None, {}), (_limits, _limits)])
     @pytest.mark.parametrize("motor_initializer, result_motor_initializer",
-                             [(None, {}), (_initializer, _initializer)])
+                             [(None, default_test_initializer), (_initializer, _initializer)])
     def test_init(self, motor_parameter, nominal_values, limits, motor_initializer,
                   result_motor_parameter, result_nominal_values,
                   result_limit_values, result_motor_initializer):
@@ -636,7 +641,7 @@ class TestElectricMotor:
         test_object = ElectricMotor()
         monkeypatch.setattr(ElectricMotor, "CURRENTS", self._CURRENTS)
         # call function to test
-        result = test_object.reset(self.state_position, self.state_space)
+        result = test_object.reset(self.state_space, self.state_position)
         # verify the expected results
         assert all(result == np.zeros(self._length_Currents)), 'unexpected state after reset()'
 
@@ -704,6 +709,7 @@ class TestDcMotor:
         :param motor_parameter:
         :param nominal_values:
         :param limits:
+        :param motor_initializer:
         :return:
         """
         self.monkey_super_init_counter += 1
@@ -1370,7 +1376,7 @@ class TestThreePhaseMotor:
     _expected_quantities = None
     _expected_result = None
     _expected_parameter = None
-    _expected_initializer = None
+    #_expected_initializer = None
 
     # defined test values
     _motor_parameter = pmsm_motor_parameter['motor_parameter']
@@ -1482,7 +1488,8 @@ class TestThreePhaseMotor:
         # verify the expected results
         assert self._monkey_q_counter == 1, "q function was not called correctly"
 
-class TestSynchronousMotor:
+
+class TestSynchronousMotor(TestThreePhaseMotor):
     """
     class for testing SynchronousMotor
     """
@@ -1555,6 +1562,7 @@ class TestSynchronousMotor:
         monkeypatch.setattr(SynchronousMotor, "_update_model", self.monkey_update_model)
         monkeypatch.setattr(SynchronousMotor, "_update_limits", self.monkey_update_limits)
         monkeypatch.setattr(ElectricMotor, '__init__', self.monkey_super_init)
+
         self._expected_parameter = dict(motor_parameter=motor_parameter, nominal_values=expected_nv,
                                         limit_values=expected_lv, motor_initializer=motor_initializer)
         # call function to test
@@ -1574,6 +1582,7 @@ class TestSynchronousMotor:
         # setup test scenario
         monkeypatch.setattr(SynchronousMotor, '__init__', self.monkey_update_model)
         monkeypatch.setattr(SynchronousMotor, 'CURRENTS', self._CURRENTS)
+        #monkeypatch.setattr(SynchronousMotor, '_initializer', self._initializer)
         test_object = SynchronousMotor()
         # call function to test
         result = test_object.reset(self.state_position, self.state_space)
