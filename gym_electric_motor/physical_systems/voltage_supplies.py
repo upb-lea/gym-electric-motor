@@ -116,6 +116,7 @@ class RCVoltageSupply(VoltageSupply):
 class AC1PhaseSupply(VoltageSupply):
     
     def __init__(self, u_nominal=230, supply_parameter=None, **__):
+        print(u_nominal)
         super().__init__(u_nominal)
         supply_parameter = supply_parameter or {'frequency': 50, 'phase': np.random.rand()*2*np.pi, 'fixed_phase': False}
         assert 'frequency' in supply_parameter.keys(), "Pass key 'frequency' for frequency f in Hz in your dict"
@@ -134,7 +135,7 @@ class AC1PhaseSupply(VoltageSupply):
     
     def get_voltage(self, t, *_, **__):
         # Docstring of superclass
-        self._u_sup = [self._u_nominal*np.sin(self._f*t + self._phi)]
+        self._u_sup = [self._u_nominal*np.sqrt(2)*np.sin(self._f*t + self._phi)]
         return self._u_sup
 
 class AC3PhaseSupply(VoltageSupply):
@@ -159,7 +160,7 @@ class AC3PhaseSupply(VoltageSupply):
     
     def get_voltage(self, t, *_, **__):
         # Docstring of superclass
-        self._u_sup = [self._u_nominal*np.sin(self._f*t + self._phi + 2/3*np.pi*i) for i in range(3)]
+        self._u_sup = [self._u_nominal*np.sqrt(2)*np.sin(self._f*t + self._phi + 2/3*np.pi*i) for i in range(3)]
         return self._u_sup
  
     
