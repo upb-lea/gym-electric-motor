@@ -2,6 +2,8 @@ import numpy as np
 from scipy.stats import truncnorm
 
 
+# todo updateting intialization with load_initializer,
+# now can be initialized directly in load class
 class MechanicalLoad:
     """
     The MechanicalLoad is the base class for all the mechanical systems attached to the electrical motors rotor.
@@ -12,15 +14,15 @@ class MechanicalLoad:
 
     ExternalSpeedLoad and ConstantSpeedLoad should be initialized with the own
     initial value in class initialisation, when definded external
-    # todo updateting intialization with motor_initializer
 
     Initialization is given by initializer(dict). Can be constant state value
-    or random value in given or nominal interval.
+    or random value in given interval.
     dict should be like:
-        { 'states': <dict with state names and initital values>,
-          'interval': < boundaries for each state (only for random init>,
-          'random_init': <str: 'uniform' or 'normal'>,
-          'random_params: (mue(float), sigma(int))
+        { 'states'(dict): with state names and initital values
+          'interval'(array like): boundaries for each state
+                    (only for random init), shape(num states, 2)
+          'random_init'(str): 'uniform' or 'normal'
+          'random_params(tuple): mue(float), sigma(int)
     Example initializer(dict) for constant initialization:
         { 'states': {'omega': 16.0}}
     Example  initializer(dict) for random initialization:
@@ -334,7 +336,6 @@ class ExternalSpeedLoad(MechanicalLoad):
     """
 
     HAS_JACOBIAN = False
-    # todo initialiter sache klären
     @property
     def omega(self):
         """
@@ -362,7 +363,7 @@ class ExternalSpeedLoad(MechanicalLoad):
         """
         super().__init__()
         self.kwargs = kwargs
-        self._omega_initial = omega_initial #or self._initializer['states']['omega']
+        self._omega_initial = omega_initial
         self._speed_profile = speed_profile
         self._tau = tau
         #self._jacobi = jacobi
@@ -373,7 +374,6 @@ class ExternalSpeedLoad(MechanicalLoad):
         omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
         # calculated T out of euler-forward, given omega_next and
         # actual omega give from system
-        #print(' test:', omega_next, mechanical_state[self.OMEGA_IDX],omega_next - mechanical_state[self.OMEGA_IDX])
         return np.array([(1 / self._tau) *
                          (omega_next - mechanical_state[self.OMEGA_IDX])])
 
@@ -403,15 +403,13 @@ class ConstantSpeedLoad(MechanicalLoad):
         # Docstring from superclass
         return np.array([self._omega])
 
-    def __init__(self, omega_fixed=0):#, load_initializer=None, **__):
+    def __init__(self, omega_fixed=0):
         """
         Args:
             omega_fixed(float)): Fix value for the speed in rad/s.
         """
-        #self._default_initializer['states']['omega'] = omega_fixed
-        #super().__init__(load_initializer)
         super().__init__()
-        self._omega = omega_fixed #or self._initializer['states']['omega']
+        self._omega = omega_fixed
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass

@@ -34,13 +34,14 @@ g_reward_functions = ['WSE', 'SWSE']
 @pytest.mark.parametrize("reward_function_type", g_reward_functions)
 @pytest.mark.parametrize("reference_generator_type", g_reference_generator)
 @pytest.mark.parametrize("tau_test", [1E-5, 1E-4, 1E-3])
-@pytest.mark.parametrize("motor_type, state_filter, motor_class",
-                         [('DcPermEx', ['omega', 'u', 'i'], ContDcPermanentlyExcitedMotorEnvironment),
-                          ('DcSeries', ['torque'], ContDcSeriesMotorEnvironment),
-                          ('DcShunt', ['omega'], ContDcShuntMotorEnvironment),
-                          ('DcExtEx', ['torque'], ContDcExternallyExcitedMotorEnvironment)])
+@pytest.mark.parametrize("motor_type, state_filter, motor_class, initializer",
+                         [('DcPermEx', ['omega', 'u', 'i'], ContDcPermanentlyExcitedMotorEnvironment, permex_initializer),
+                          ('DcSeries', ['torque'], ContDcSeriesMotorEnvironment, series_initializer),
+                          ('DcShunt', ['omega'], ContDcShuntMotorEnvironment, shunt_initializer),
+                          ('DcExtEx', ['torque'], ContDcExternallyExcitedMotorEnvironment, extex_initializer)])
 def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_type,
-                                    reference_generator_type, tau_test, state_filter, motor_class, turn_off_windows):
+                                    reference_generator_type, tau_test, state_filter,
+                                    motor_class, turn_off_windows, initializer):
     """
     test cont dc motor environments
 
@@ -95,6 +96,7 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
                         u_sup=u_sup,
                         reward_weights=reward_weights,
                         observed_states=observed_states,
+                        motor_initializer=initializer,
                         **kwargs
                         )
 
@@ -113,7 +115,8 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
                         reference_generator=reference_generator,
                         reward_function=reward_function,
                         state_filter=state_filter,
-                        observed_states=None)
+                        observed_states=None,
+                        motor_initializer=initializer,)
     # test the different initializations
     envs = [env_default, env_1, env_2]
     for index, env in enumerate(envs):
@@ -139,13 +142,14 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
 @pytest.mark.parametrize("reward_function_type", g_reward_functions)
 @pytest.mark.parametrize("reference_generator_type", g_reference_generator)
 @pytest.mark.parametrize("tau_test", [1E-5, 1E-4, 1E-3])
-@pytest.mark.parametrize("motor_type, state_filter, motor_class",
-                         [('DcPermEx', ['omega', 'u', 'i'], DiscDcPermanentlyExcitedMotorEnvironment),
-                          ('DcSeries', ['torque'], DiscDcSeriesMotorEnvironment),
-                          ('DcShunt', ['omega'], DiscDcShuntMotorEnvironment),
-                          ('DcExtEx', ['torque'], DiscDcExternallyExcitedMotorEnvironment)])
+@pytest.mark.parametrize("motor_type, state_filter, motor_class, initializer",
+                         [('DcPermEx', ['omega', 'u', 'i'], DiscDcPermanentlyExcitedMotorEnvironment, permex_initializer),
+                          ('DcSeries', ['torque'], DiscDcSeriesMotorEnvironment, series_initializer),
+                          ('DcShunt', ['omega'], DiscDcShuntMotorEnvironment, shunt_initializer),
+                          ('DcExtEx', ['torque'], DiscDcExternallyExcitedMotorEnvironment, extex_initializer)])
 def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_type,
-                                    reference_generator_type, tau_test, state_filter, motor_class, turn_off_windows):
+                                    reference_generator_type, tau_test, state_filter,
+                                    motor_class, turn_off_windows, initializer):
     """
     test disc dc motor environments
     :param motor_type: motor name (stirng)
@@ -199,6 +203,7 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
                         u_sup=u_sup,
                         reward_weights=reward_weights,
                         observed_states=observed_states,
+                        motor_initializer=initializer,
                         **kwargs
                         )
 
@@ -216,7 +221,8 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
                         supply=voltage_supply,
                         reference_generator=reference_generator,
                         reward_function=reward_function,
-                        state_filter=state_filter)
+                        state_filter=state_filter,
+                        motor_initializer=initializer,)
     # test the different initializations
     envs = [env_default, env_1, env_2]
     for index, env in enumerate(envs):
