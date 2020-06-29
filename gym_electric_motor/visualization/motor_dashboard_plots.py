@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.lines as lin
+from gym.spaces import Box
 
 
 class MotorDashboardPlot:
@@ -15,6 +16,7 @@ class MotorDashboardPlot:
             axis(matplotlib.pyplot.axis): Axis to plot in
         """
         self._axis = axis
+        self._axis.grid(True)
 
     def set_modules(self, ps, rg, rf):
         """Interconnection of the environments modules.
@@ -52,7 +54,7 @@ class StatePlot(MotorDashboardPlot):
     """Class to plot any motor state and its reference."""
 
     # Width of the Plot in seconds
-    x_width = 3
+    x_width = 1
 
     # Either "continuous" or "repeating"
     mode = 'continuous'
@@ -144,11 +146,8 @@ class StatePlot(MotorDashboardPlot):
         if self._limits == self._state_space[1]:
             self._normalized = False
 
-
-
     def initialize(self, axis):
         super().initialize(axis)
-        axis.grid()
         if self._referenced:
             self._reference_line, = self._axis.plot(self._t_data, self._ref_data, **self.reference_line_cfg)
         self._state_line, = self._axis.plot(self._t_data, self._state_data, **self.state_line_cfg)
@@ -160,8 +159,8 @@ class StatePlot(MotorDashboardPlot):
         lim = self._axis.axhline(max_limit, **self.limit_line_cfg)
 
         self._axis.set_ylim(min_limit - 0.1 * (max_limit - min_limit), max_limit + 0.1*(max_limit - min_limit))
-        self._axis.set_xlim(0, self.x_width)
-        y_label = self.state_labels.get(self._state)  # fix
+        self._axis.set_xlim(-self.x_width, 0)
+        y_label = self.state_labels.get(self._state, self._state)
         self._axis.set_ylabel(y_label)
 
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False).tolist()
@@ -187,12 +186,12 @@ class StatePlot(MotorDashboardPlot):
         if self._referenced:
             self._ref_data[idx] = ref
         if done:
-            self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
     def update(self):
         state_data = self._state_data
         ref_data = self._ref_data
+
         if self._normalized:
             state_data = state_data * self._limits
             if self._referenced:
@@ -211,7 +210,7 @@ class RewardPlot(MotorDashboardPlot):
     """ Class used to plot the instantaneous reward during the episode
     """
 
-    x_width = 3
+    x_width = 1
     mode = 'continuous'
     reward_line_cfg = {
         'color': 'gray',
@@ -222,7 +221,6 @@ class RewardPlot(MotorDashboardPlot):
     }
 
     def __init__(self):
-
         self._reward_range = None
         self._reward_line = None
         self._reward_data = None
@@ -233,9 +231,7 @@ class RewardPlot(MotorDashboardPlot):
         super().__init__()
 
     def initialize(self, axis):
-
         super().initialize(axis)
-        axis.grid()
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
         self._reward_data = np.zeros_like(self._t_data, dtype=float)
         self._reward_line, = self._axis.plot(self._t_data, self._reward_data, **self.reward_line_cfg)
@@ -243,7 +239,7 @@ class RewardPlot(MotorDashboardPlot):
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-        self._axis.set_xlim(0, self.x_width)
+        self._axis.set_xlim(-self.x_width, 0)
         y_label = 'reward'
         self._axis.set_ylabel(y_label)
         # adds a constant line at 0 which is eventually updated by the plot variable values. legend can be set here.
@@ -262,12 +258,11 @@ class RewardPlot(MotorDashboardPlot):
             self._t_data[idx] = self._t
         self._reward_data[idx] = reward
         if done:
-            # plots the values at the terminal step before adding a red vertical line indicating episode termination
-            self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
     def update(self):
         self._reward_line.set_data(self._t_data, self._reward_data)
+
         if self.mode == 'continuous':
             x_lim = self._axis.get_xlim()
             upper_lim = max(self._t, x_lim[1])
@@ -276,10 +271,10 @@ class RewardPlot(MotorDashboardPlot):
 
 
 class ActionPlot(MotorDashboardPlot):
-    """ class to plot the instantaneous actions applied on-to the environment
-
+    """ Class to plot the instantaneous actions applied on-to the environment
     """
-    x_width = 3
+
+    x_width = 1
     mode = 'continuous'
     action_line_cfg = {
         'color': 'magenta',
@@ -315,15 +310,13 @@ class ActionPlot(MotorDashboardPlot):
             axis (object): the subplot axis for plotting the action variable
         """
         super().initialize(axis)
-        axis.grid()
-
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
         self._action_data = np.zeros_like(self._t_data, dtype=float)
         self._action_line, = self._axis.plot(self._t_data, self._action_data, **self.action_line_cfg)
         # set the layout of the subplot
         act_min = self._action_range_min
         act_max = self._action_range_max
-        spacing = (act_min - act_max) * 0.1
+        spacing = (act_max - act_min) * 0.1
         self._axis.set_ylim(act_min - spacing, act_max + spacing)
         self._axis.set_xlim(0, self.x_width)
         self._axis.set_ylabel(self._action)
@@ -333,10 +326,10 @@ class ActionPlot(MotorDashboardPlot):
     def set_modules(self, ps, rg, rf):
         # fetch the action space from the physical system
         self._action_space = ps.action_space
-        #extract the action index from the action name
+        # extract the action index from the action name
         self._action_idx = int(self._action.split('_')[1])
         # check for the type of action space: Discrete or Continuous
-        if self._action_space.dtype == 'float32':  # for continuous action space
+        if type(self._action_space) is Box:  # for continuous action space
             self._action_type = 'Continuous'
             # fetch the action range of continuous type actions
             self._action_range_min = self._action_space.low[self._action_idx]
@@ -365,8 +358,6 @@ class ActionPlot(MotorDashboardPlot):
                 self._action_data[idx] = action[self._action_idx]
 
         if done:
-            # plots the values at the terminal step before adding a red vertical line indicating episode termination
-            self.update()
             self._axis.axvline(self._t, color='red', linewidth=1)
 
     def update(self):

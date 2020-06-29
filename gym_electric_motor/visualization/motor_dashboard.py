@@ -1,8 +1,7 @@
 from gym_electric_motor.core import ElectricMotorVisualization
 from . import motor_dashboard_plots as mdp
-import matplotlib
 import matplotlib.pyplot as plt
-import collections
+
 
 class MotorDashboard(ElectricMotorVisualization):
     """Dashboard to plot the GEM states into graphs.
@@ -26,7 +25,6 @@ class MotorDashboard(ElectricMotorVisualization):
             update_cycle(int): Number after how many steps the plot shall be updated. (default 1000)
             dark_mode(Bool):  Select a dark background for visualization by setting it to True
         """
-        plt.ion()
         self._update_cycle = update_cycle
         self._figure = None
         self._plots = []
@@ -85,30 +83,25 @@ class MotorDashboard(ElectricMotorVisualization):
         """Called with first render() call to setup the figures and plots.
         """
         plt.close()
-        assert len(self._plots)>0, "no plot variable selected"
-        # For the dark background lovers
+        assert len(self._plots) > 0, "no plot variable selected"
+        # Use dark-mode, if selected
         if self._dark_mode:
             plt.style.use('dark_background')
         self._figure, axes = plt.subplots(len(self._plots), sharex=True)
         self._figure.subplots_adjust(wspace=0.0, hspace=0.2)
-        #plt.style.use("dark_background")
         plt.xlabel('t/s')  # adding a common x-label to all the subplots
 
-        #plt.subplot() does not return an iterable var when the number of subplots==1
-        if len(self._plots) < 2:
-            self._plots[0].initialize(axes)
-            plt.pause(0.1)
-        else:
-
-            for plot, axis in zip(self._plots, axes):
-                plot.initialize(axis)
-            plt.pause(0.1)
+        # plt.subplot() does not return an iterable var when the number of subplots==1
+        if len(self._plots) == 1:
+            axes = [axes]
+        for plot, axis in zip(self._plots, axes):
+            plot.initialize(axis)
+        plt.pause(0.1)
 
     def _update(self):
         """Called every {update_cycle} steps to refresh the figure.
         """
         for plot in self._plots:
             plot.update()
-        if matplotlib.get_backend() == 'NbAgg':
-            self._figure.canvas.draw()
+        self._figure.canvas.draw()
         self._figure.canvas.flush_events()
