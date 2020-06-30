@@ -13,7 +13,7 @@ from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSol
 
 from .noise_generators import NoiseGenerator, GaussianWhiteNoiseGenerator
 
-from .voltage_supplies import VoltageSupply, IdealVoltageSupply
+from .voltage_supplies import VoltageSupply, IdealVoltageSupply, RCVoltageSupply
 
 
 from ..utils import register_class, register_superclass
@@ -64,5 +64,6 @@ register_class(SquirrelCageInductionMotor, ElectricMotor, 'SCIM')
 register_class(DoublyFedInductionMotor, ElectricMotor, 'DFIM')
 
 register_class(IdealVoltageSupply, VoltageSupply, 'IdealVoltageSupply')
+register_class(RCVoltageSupply, VoltageSupply, 'RCVoltageSupply')
 
 

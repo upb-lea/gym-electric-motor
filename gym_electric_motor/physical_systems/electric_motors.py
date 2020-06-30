@@ -13,6 +13,7 @@ class ElectricMotor:
                 * i_a: Anchor circuit current
                 * i_e: Exciting circuit current
 
+<<<<<<< HEAD
         Each electric motor can be parametrized by a dictionary of motor parameters, the nominal state dictionary
         and the limit dictionary.
 
@@ -33,6 +34,27 @@ class ElectricMotor:
                            [        ...                 ],
                            [lower bound n, upper bound n]}
 
+||||||| merged common ancestors
+        Each electric motor can be parametrized by a dictionary of motor parameters, the nominal state dictionary
+        and the limit dictionary.
+=======
+        Each electric motor can be parametrized by a dictionary of motor parameters,
+        the nominal state dictionary and the limit dictionary.
+
+        Initialization is given by initializer(dict). Can be constant state value
+        or random value in given interval.
+        dict should be like:
+        { 'states'(dict): with state names and initital values
+                  'interval'(array like): boundaries for each state
+                            (only for random init), shape(num states, 2)
+                  'random_init'(str): 'uniform' or 'normal'
+                  'random_params(tuple): mue(float), sigma(int)
+        Example initializer(dict) for constant initialization:
+            { 'states': {'omega': 16.0}}
+        Example  initializer(dict) for random initialization:
+            { 'random_init': 'normal'}
+
+>>>>>>> new_issue9_30
     """
 
     #: Parameter indicating if the class is implementing the optional jacobian function
@@ -53,7 +75,13 @@ class ElectricMotor:
     #: _default_limits(dict(float)): Default motor limits (0 for unbounded limits)
     _default_limits = {}
     #: _default_initial_state(dict): Default initial motor-state values
-    _default_initializer = {}
+    #_default_initializer = {}
+    _default_initializer = {'states': {},
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': None}
+    #: _default_initial_limits(dict): Default limit for initialization
+    _default_initial_limits = {}
 
     @property
     def nominal_values(self):
@@ -125,19 +153,16 @@ class ElectricMotor:
         motor_initializer = motor_initializer or {}
         self._initializer = self._default_initializer.copy()
         self._initializer.update(motor_initializer)
-        self._initial_states = self._initializer['states']
-        # intialize limits, because in general they're not needed to be changed
-        # during during training or episodes
+        self._initial_states = {}
+        if self._initializer['states'] is not None:
+             self._initial_states.update(self._initializer['states'])
+        # intialize limits, in general they're not needed to be changed
+        # during  training or episodes
         initial_limits = initial_limits or {}
         self._initial_limits = self._nominal_values.copy()
         self._initial_limits.update(initial_limits)
-        # preventing wrong critical user input
+        # preventing wrong user input for the basic case
         assert isinstance(self._initializer, dict), 'wrong initializer'
-        if self._initializer['interval'] is not None:
-            assert isinstance(self._initializer['interval'],
-                             (tuple, list, np.ndarray)), 'wrong dtype for Interval'
-            assert (len(self._initializer['interval']) is
-                    len(self._initial_states.keys())), '#boundaries != #inital states'
 
     def electrical_ode(self, state, u_in, omega, *_):
         """
@@ -180,7 +205,8 @@ class ElectricMotor:
         """
         Initializes given state values. Values can be given as a constant or
         sampled random out of a statistical distribution. Initial value is in
-        range of the nominal values or a given interval.
+        range of the nominal values or a given interval. Values are written in
+        initial_states attribute
 
         Args:
             state_space(gym.Box): normalized state space boundaries (given by
@@ -188,28 +214,31 @@ class ElectricMotor:
             state_positions(dict): indexes of system states (given by physical
                                    system)
         Returns:
-            ndarray(float): initial value for each state
+
         """
         # for organization purposes
         interval = self._initializer['interval']
         random_dist = self._initializer['random_init']
         random_params = self._initializer['random_params']
+        self._initial_states.update(self._default_initializer['states'])
+        if self._initializer['states'] is not None:
+            self._initial_states.update(self._initializer['states'])
 
         # different limits for InductionMotor
         if any(map(lambda state: state in self._initial_states.keys(),
                    ['psi_ralpha', 'psi_rbeta'])):
             nominal_values_ = [self._initial_limits[state]
                                for state in self._initial_states]
-            upper_bound = np.asarray(nominal_values_, dtype=float)
+            upper_bound = np.asarray(np.abs(nominal_values_), dtype=float)
             # state space for Induction Envs based on documentation
             # ['i_salpha', 'i_sbeta', 'psi_ralpha', 'psi_rbeta', 'epsilon']
-            # hardcoded for Inductionmotors currently set up in the toolbox
+            # hardcoded for Inductionmotors currently given in the toolbox
             state_space_low = np.array([-1, -1, -1, -1, -1])
             lower_bound = upper_bound * state_space_low
         else:
             if isinstance(self._nominal_values, dict):
                 nominal_values_ = [self._nominal_values[state]
-                                   for state in self._initial_states]
+                                   for state in self._initial_states.keys()]
                 nominal_values_ = np.asarray(nominal_values_)
             else:
                 nominal_values_ = np.asarray(self._nominal_values)
@@ -279,8 +308,8 @@ class ElectricMotor:
             raise Exception('No matching Initialization Case')
 
     def reset(self,
-              state_space=None,
-              state_positions=None,
+              state_space,
+              state_positions,
               **__):
         """
         Reset the motors state to a new initial state. (Default 0)
@@ -291,7 +320,8 @@ class ElectricMotor:
         Returns:
             numpy.ndarray(float): The initial motor states.
         """
-        if self._initializer:
+        # check for valid initializer
+        if self._initializer and self._initializer['states']:
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))
         else:
@@ -391,6 +421,7 @@ class DcMotor(ElectricMotor):
         'r_a': 0.78, 'r_e': 25, 'l_a': 6.3e-3, 'l_e': 1.2, 'l_e_prime': 0.0094,
         'j_rotor': 0.017,
     }
+
     _default_nominal_values = {'omega': 368, 'torque': 0.0, 'i_a': 50,
                                'i_e': 1.2, 'u': 420}
     _default_limits = {'omega': 500, 'torque': 0.0, 'i_a': 75, 'i_e': 2,
@@ -400,8 +431,7 @@ class DcMotor(ElectricMotor):
                             'random_init': None,
                             'random_params': (None, None)}
 
-    def __init__(self,
-                 motor_parameter=None, nominal_values=None,
+    def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, motor_initializer=None, **__):
         # Docstring of superclass
         super().__init__(motor_parameter, nominal_values,
@@ -1093,6 +1123,8 @@ class SynchronousMotor(ThreePhaseMotor):
 
     _model_constants = None
 
+    _initializer = None
+
     def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, motor_initializer=None, **kwargs):
         # Docstring of superclass
@@ -1108,9 +1140,16 @@ class SynchronousMotor(ThreePhaseMotor):
         # Docstring of superclass
         return self._motor_parameter
 
-    def reset(self, state_space=None, state_positions=None, **__):
+    @property
+    def initializer(self):
         # Docstring of superclass
-        if self._initializer:
+        return self._initializer
+
+    def reset(self, state_space,
+              state_positions,
+              **__):
+        # Docstring of superclass
+        if self._initializer and self._initializer['states']:
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))
         else:
@@ -1169,6 +1208,12 @@ class SynchronousMotor(ThreePhaseMotor):
                                 self._nominal_values[u] / \
                                 self._motor_parameter['r_s']
         super()._update_limits(limits_agenda, nominal_agenda)
+
+    # def initialize(self,
+    #                state_space,
+    #                state_positions,
+    #                **__):
+    #     super().initialize(state_space, state_positions)
 
 
 class SynchronousReluctanceMotor(SynchronousMotor):
@@ -1252,16 +1297,13 @@ class SynchronousReluctanceMotor(SynchronousMotor):
     _default_nominal_values = {
         'i': 54, 'torque': 0, 'omega': 523.0, 'epsilon': np.pi, 'u': 600
     }
+
     _default_limits = {'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi,
                        'u': 600}
     _default_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                             'interval': None,
                             'random_init': None,
                             'random_params': (None, None)}
-    # _default_initializer = {'states': {'i': 0.0, 'epsilon': 0.0},
-    #                         'interval': None,
-    #                         'random_init': None,
-    #                         'random_params': (None, None)}
 
     IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
     IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']
@@ -1404,8 +1446,6 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
                             'interval': None,
                             'random_init': None,
                             'random_params': (None, None)}
-
-
 
     IO_VOLTAGES = ['u_a', 'u_b', 'u_c', 'u_sd', 'u_sq']
     IO_CURRENTS = ['i_a', 'i_b', 'i_c', 'i_sd', 'i_sq']
@@ -1579,16 +1619,22 @@ class InductionMotor(ThreePhaseMotor):
                             'random_init': None,
                             'random_params': (None, None)}
 
+    _initializer = None
+
     @property
     def motor_parameter(self):
         # Docstring of superclass
         return self._motor_parameter
 
+    @property
+    def initializer(self):
+        # Docstring of superclass
+        return self._initializer
+
     def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, motor_initializer=None, initial_limits=None,
                  **__):
         # Docstring of superclass
-
         # convert placeholder i and u to actual IO quantities
         _nominal_values = self._default_nominal_values.copy()
         _nominal_values.update({u: _nominal_values['u'] for u in self.IO_VOLTAGES})
@@ -1608,11 +1654,11 @@ class InductionMotor(ThreePhaseMotor):
         self._update_limits(_limit_values, _nominal_values)
 
     def reset(self,
-              state_space=None,
-              state_positions=None,
+              state_space,
+              state_positions,
               omega=None):
         # Docstring of superclass
-        if self._initializer:
+        if self._initializer and self._initializer['states']:
             self._update_initial_limits(omega=omega)
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))
@@ -1674,7 +1720,7 @@ class InductionMotor(ThreePhaseMotor):
             u_rq_max(float): maximal rotor voltage in q-system
 
         returns:
-            list with maximal flux in alpha,beta system
+            maximal flux values(list) in alpha-beta-system
         """
         mp = self.motor_parameter
         l_s = mp['l_m'] * mp['l_ssig']
@@ -1910,7 +1956,8 @@ class SquirrelCageInductionMotor(InductionMotor):
                                                  eps_mag=eps_mag,
                                                  u_q_max=self._nominal_values['u_sq'])
         # using absolute value, because limits should describe upper limit
-        # after abs-operator, norm of alphabeta flux still equal to d-component of flux
+        # after abs-operator, norm of alphabeta flux still equal to
+        # d-component of flux
         flux_alphabeta_limits = np.abs(flux_alphabeta_limits)
         flux_nominal_limits = {state: value for state, value in
                                zip(self.FLUXES, flux_alphabeta_limits)}

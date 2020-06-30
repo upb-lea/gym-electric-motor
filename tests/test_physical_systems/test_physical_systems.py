@@ -118,6 +118,8 @@ class TestSCMLSystem:
     def test_reset(self, scml_system):
         scml_system._t = 12
         scml_system._k = 33
+        state_space = scml_system.state_space
+        state_positions = scml_system.state_positions
         initial_state = scml_system.reset()
         assert all(
             initial_state == (np.array([0, 0, 0, 0, 0, 0, 560]) + scml_system._noise_generator.reset())
@@ -163,7 +165,7 @@ class TestSCMLSystem:
         assert all(desired_next_state == next_state)
         assert scml_system.converter.action == action
         assert scml_system.converter.action_set_time == 0
-        assert scml_system.converter.last_i_out == scml_system.electrical_motor.i_in(ode_state[2:])
+        assert scml_system.converter.last_i_out == scml_system.electrical_motor.i_in(scml_system._ode_solver.last_y[2:])
 
     def test_system_jacobian(self, scml_system):
         el_jac = np.arange(4).reshape(2, 2)
