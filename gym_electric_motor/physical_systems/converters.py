@@ -112,7 +112,7 @@ class PowerElectronicConverter:
     
 class NoConverter(PowerElectronicConverter):
     """Dummy Converter class used to directly transfer the supply voltage to the motor"""
-    #Dummy default values for voltages and currents. No real use other than to have the system running
+    #Dummy default values for voltages and currents. No real use other than to fit the current physical system architecture
     voltages = Box(0, 1, shape=(3,))
     currents = Box(0, 1, shape=(3,))
 
