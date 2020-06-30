@@ -1095,6 +1095,8 @@ class SynchronousMotor(ThreePhaseMotor):
 
     _model_constants = None
 
+    _initializer = None
+
     def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, motor_initializer=None, **kwargs):
         # Docstring of superclass
