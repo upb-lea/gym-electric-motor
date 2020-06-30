@@ -1723,8 +1723,8 @@ class InductionMotor(ThreePhaseMotor):
             maximal flux values(list) in alpha-beta-system
         """
         mp = self.motor_parameter
-        l_s = mp['l_m'] * mp['l_ssig']
-        l_r = mp['l_m'] * mp['l_rsig']
+        l_s = mp['l_m'] + mp['l_ssig']
+        l_r = mp['l_m'] + mp['l_rsig']
         l_mr = mp['l_m'] / l_r
         sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
         # limiting flux for a low omega
@@ -1734,7 +1734,7 @@ class InductionMotor(ThreePhaseMotor):
             i_d, i_q = self.q_inv([self._initial_states['i_salpha'],
                                   self._initial_states['i_sbeta']],
                                   eps_mag)
-            psi_d_max = mp['p'] * omega * sigma * l_s * i_q + \
+            psi_d_max = mp['p'] * omega * sigma * l_s * i_d + \
                         (mp['r_s'] + mp['r_r'] * l_mr**2) + \
                         u_q_max + \
                         l_mr * u_rq_max
