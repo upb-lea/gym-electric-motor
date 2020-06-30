@@ -111,12 +111,13 @@ class PowerElectronicConverter:
         return [self._action_start_time + self._tau]
     
 class NoConverter(PowerElectronicConverter):
+    """Dummy Converter class used to directly transfer the supply voltage to the motor"""
+    #Dummy default values for voltages and currents. No real use other than to have the system running
     voltages = Box(0, 1, shape=(3,))
     currents = Box(0, 1, shape=(3,))
 
-    
     def i_sup(self, i_out):
-        return i_out
+        return i_out[0]
 
     def convert(self, i_out, t):
         return 1
