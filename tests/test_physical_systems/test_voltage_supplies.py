@@ -2,6 +2,7 @@ import gym_electric_motor as gem
 import gym_electric_motor.physical_systems.voltage_supplies as vs
 from ..testing_utils import DummyOdeSolver
 import numpy as np
+import pytest
 
 class TestVoltageSupply:
 
@@ -36,13 +37,13 @@ class TestIdealVoltageSupply(TestVoltageSupply):
         """Test the get voltage function.
             It must return u_nominal."""
         supply = vs.IdealVoltageSupply(u_nominal)
-        assert supply.get_voltage() == u_nominal
+        assert supply.get_voltage() == [u_nominal]
 
     def test_reset(self, u_nominal=450.0):
         """Test the reset function.
             It must return u_nominal."""
         supply = vs.IdealVoltageSupply(u_nominal)
-        assert supply.reset() == u_nominal
+        assert supply.reset() == [u_nominal]
         
 class TestRCVoltageSupply(TestVoltageSupply):
     
@@ -53,7 +54,7 @@ class TestRCVoltageSupply(TestVoltageSupply):
         """Test for default initialization values"""
         voltage_supply = vs.RCVoltageSupply()
         assert voltage_supply._u_0 == 600.0
-        assert voltage_supply._u_sup == 600.0
+        assert voltage_supply._u_sup == [600.0]
         assert voltage_supply.supply_range == (0.0, 600.0)
         assert voltage_supply._r == 1
         assert voltage_supply._c == 4e-3
@@ -62,13 +63,13 @@ class TestRCVoltageSupply(TestVoltageSupply):
         """Test the reset function.
             It must return u_nominal."""
         voltage_supply = vs.RCVoltageSupply(u_nominal)
-        assert voltage_supply.reset() == u_nominal
+        assert voltage_supply.reset() == [u_nominal]
 
         
     def test_initialization(self, u_nominal=450.0,supply_parameter={'R':3,'C':6e-2}):
         voltage_supply = vs.RCVoltageSupply(u_nominal, supply_parameter)
         assert voltage_supply._u_0 == u_nominal
-        assert voltage_supply._u_sup == u_nominal
+        assert voltage_supply._u_sup == [u_nominal]
         assert voltage_supply.supply_range == (0.0, u_nominal) 
         assert voltage_supply._r == supply_parameter['R']
         assert voltage_supply._c == supply_parameter['C']
@@ -82,7 +83,7 @@ class TestRCVoltageSupply(TestVoltageSupply):
         monkeypatch.setattr(supply, '_solver', solver)
         times = [0.5,1,1.5,1.78,2.1,3]
         for time in times:
-            assert supply.get_voltage(time,0) == u_nominal + time
+            assert supply.get_voltage(time,0) == [u_nominal + time]
             assert supply._u_sup == u_nominal + time
             
     def test_system_equation(self):
@@ -95,6 +96,60 @@ class TestRCVoltageSupply(TestVoltageSupply):
          #time invariance
          assert system_equation(0,[30],50,3,3,3) == system_equation(5,[30],50,3,3,3)     
 
+class TestAC1PhaseSupply(TestVoltageSupply):
+    key = 'AC1PhaseSupply'
+    class_to_test = vs.AC1PhaseSupply
+    
+    def test_default_initialization(self):
+        """Test for default initialization values"""
+        voltage_supply = vs.AC1PhaseSupply()
+        assert voltage_supply.u_nominal == 230.0
+        assert voltage_supply._max_amp == 230.0 * np.sqrt(2)
+        assert voltage_supply.supply_range == [-230.0 * np.sqrt(2), 230.0 * np.sqrt(2)]
+        assert voltage_supply._fixed_phi == False
+        assert voltage_supply._f == 50
+        
+    def test_reset(self, u_nominal=230.0):
+        """Test the reset function for correct behavior on fixed phase""" 
+        supply_parameter = {'frequency': 50, 'phase': 0, 'fixed_phase': False}
+        voltage_supply = vs.AC1PhaseSupply(u_nominal, supply_parameter)
+        assert voltage_supply._phi == 0
+        _ = voltage_supply.reset()
+        assert voltage_supply._phi != 0, "Test this again and if this error doesn't appear next time you should consider playing lotto"
+
+        supply_parameter = {'frequency': 50, 'phase': 0, 'fixed_phase': True}
+        voltage_supply = vs.AC1PhaseSupply(u_nominal, supply_parameter)
+        assert voltage_supply._phi == 0
+        assert voltage_supply.reset() == [0.0]
+        assert voltage_supply._phi == 0
+
+        
+    def test_initialization(self, u_nominal = 300.0):
+        supply_parameter = {'frequency': 35, 'phase': 0, 'fixed_phase': True}
+        voltage_supply = vs.AC1PhaseSupply(u_nominal, supply_parameter)
+        assert voltage_supply.u_nominal == 300.0
+        assert voltage_supply._max_amp == 300.0 * np.sqrt(2)
+        assert voltage_supply.supply_range == [-300.0 * np.sqrt(2), 300.0 * np.sqrt(2)]
+        assert voltage_supply._fixed_phi == True
+        assert voltage_supply._phi == 0
+        assert voltage_supply._f == 35
+        
+    def test_get_voltage(self):
+        """Test the get voltage function for different times t."""
+        supply_parameter = {'frequency': 1, 'phase': 0, 'fixed_phase': True}
+        supply = vs.AC1PhaseSupply(supply_parameter = supply_parameter)
+        
+        times = [0, 2*np.pi, 4*np.pi]
+        for time in times:
+            assert supply.get_voltage(time) == pytest.approx([0.0])
+            
+        times = [np.pi/2, 5*np.pi/2, 9*np.pi/2]
+        for time in times:
+            assert supply.get_voltage(time) == pytest.approx([230.0 * np.sqrt(2)])
+            
+        times = [3*np.pi/2, 7*np.pi/2, 11*np.pi/2]
+        for time in times:
+            assert supply.get_voltage(time) == pytest.approx([-230.0 * np.sqrt(2)])
 
 
     
