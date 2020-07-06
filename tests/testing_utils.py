@@ -316,7 +316,7 @@ class DummyVoltageSupply(VoltageSupply):
         self.t = t
         self.args = args
         self.kwargs = kwargs
-        return self._u_nominal
+        return [self._u_nominal]
 
 
 class DummyConverter(PowerElectronicConverter):
