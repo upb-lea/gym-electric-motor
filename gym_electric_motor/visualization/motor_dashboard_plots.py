@@ -8,6 +8,10 @@ class MotorDashboardPlot:
 
     def __init__(self):
         self._axis = None
+        self._tau = None
+        self._x_points = None
+        self._t = 0
+        self._t_data = []
 
     def initialize(self, axis):
         """Initialization of the plot. Set labels, legends,... here.
@@ -17,6 +21,7 @@ class MotorDashboardPlot:
         """
         self._axis = axis
         self._axis.grid(True)
+        self._axis.set_xlim(-self.x_width, 0)
 
     def set_modules(self, ps, rg, rf):
         """Interconnection of the environments modules.
@@ -26,7 +31,9 @@ class MotorDashboardPlot:
             rg(ReferenceGenerator): The ReferenceGenerator of the environment.
             rf(RewardFunction): The RewardFunction of the environment
         """
-        pass
+        self._tau = ps.tau
+        # Number of points on the x-axis in a plot (= x_width / tau)
+        self._x_points = int(self.x_width / self._tau)
 
     def step(self, k, state, reference, action, reward, done):
         """Passing of current environmental information..
@@ -43,7 +50,13 @@ class MotorDashboardPlot:
 
     def update(self):
         """Called by the MotorDashboard each time before the figure is updated."""
-        pass
+        # configure x-axis properties
+        if self.mode == 'continuous':
+            x_lim = self._axis.get_xlim()
+            upper_lim = max(self._t, x_lim[1])
+            lower_lim = upper_lim - self.x_width
+            self._axis.set_xlim(lower_lim, upper_lim)
+
 
     def reset(self):
         """Called by the MotorDashboard each time the environment is reset."""
@@ -125,24 +138,18 @@ class StatePlot(MotorDashboardPlot):
         # Data containers
         self._state_data = []
         self._ref_data = []
-        self._t_data = []
 
-        self._tau = None
         # Flag, if the passed data is normalized
         self._normalized = True
-        # Number of points on the x-axis in a plot (= x_width / tau)
-        self._x_points = None
-        self._t = 0
         super().__init__()
 
     def set_modules(self, ps, rg, rf):
         # Docstring of superclass
+        super(StatePlot, self).set_modules(ps, rg, rf)
         self._state_idx = ps.state_positions[self._state]
         self._limits = ps.limits[self._state_idx]
         self._state_space = ps.state_space.low[self._state_idx], ps.state_space.high[self._state_idx]
         self._referenced = rg.referenced_states[self._state_idx]
-        self._tau = ps.tau
-        self._x_points = int(self.x_width / self._tau)
         if self._limits == self._state_space[1]:
             self._normalized = False
 
@@ -159,7 +166,6 @@ class StatePlot(MotorDashboardPlot):
         lim = self._axis.axhline(max_limit, **self.limit_line_cfg)
 
         self._axis.set_ylim(min_limit - 0.1 * (max_limit - min_limit), max_limit + 0.1*(max_limit - min_limit))
-        self._axis.set_xlim(-self.x_width, 0)
         y_label = self.state_labels.get(self._state, self._state)
         self._axis.set_ylabel(y_label)
 
@@ -199,11 +205,8 @@ class StatePlot(MotorDashboardPlot):
         if self._referenced:
             self._reference_line.set_data(self._t_data, ref_data)
         self._state_line.set_data(self._t_data, state_data)
-        if self.mode == 'continuous':
-            x_lim = self._axis.get_xlim()
-            upper_lim = max(self._t, x_lim[1])
-            lower_lim = upper_lim - self.x_width
-            self._axis.set_xlim(lower_lim, upper_lim)
+
+        super(StatePlot, self).update()
 
 
 class RewardPlot(MotorDashboardPlot):
@@ -224,10 +227,6 @@ class RewardPlot(MotorDashboardPlot):
         self._reward_range = None
         self._reward_line = None
         self._reward_data = None
-        self._tau = None
-        self._x_points = None
-        self._t = 0
-        self._t_data = None
         super().__init__()
 
     def initialize(self, axis):
@@ -239,7 +238,6 @@ class RewardPlot(MotorDashboardPlot):
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-        self._axis.set_xlim(-self.x_width, 0)
         y_label = 'reward'
         self._axis.set_ylabel(y_label)
         # adds a constant line at 0 which is eventually updated by the plot variable values. legend can be set here.
@@ -247,9 +245,8 @@ class RewardPlot(MotorDashboardPlot):
         self._axis.legend((dummy_rew_line,), ('reward',), loc='upper left')
 
     def set_modules(self, ps, rg, rf):
+        super(RewardPlot, self).set_modules(ps, rg, rf)
         self._reward_range = rf.reward_range
-        self._tau = ps.tau
-        self._x_points = int(self.x_width / self._tau)
 
     def step(self, k, state, reference, action, reward, done):
         self._t += self._tau
@@ -262,12 +259,7 @@ class RewardPlot(MotorDashboardPlot):
 
     def update(self):
         self._reward_line.set_data(self._t_data, self._reward_data)
-
-        if self.mode == 'continuous':
-            x_lim = self._axis.get_xlim()
-            upper_lim = max(self._t, x_lim[1])
-            lower_lim = upper_lim - self.x_width
-            self._axis.set_xlim(lower_lim, upper_lim)
+        super(RewardPlot, self).update()
 
 
 class ActionPlot(MotorDashboardPlot):
@@ -294,10 +286,6 @@ class ActionPlot(MotorDashboardPlot):
         self._action_line = None
         # Data containers
         self._action_data = None
-        self._t_data = None
-        self._tau = None
-        self._x_points = None
-        self._t = 0
         # the range of the action values
         self._action_range_min = None
         self._action_range_max = None
@@ -318,12 +306,12 @@ class ActionPlot(MotorDashboardPlot):
         act_max = self._action_range_max
         spacing = (act_max - act_min) * 0.1
         self._axis.set_ylim(act_min - spacing, act_max + spacing)
-        self._axis.set_xlim(-self.x_width, 0)
         self._axis.set_ylabel(self._action)
         base_action_line = lin.Line2D([], [], color=self.action_line_cfg['color'])
         self._axis.legend((base_action_line,), (self._action,), loc='upper left')
 
     def set_modules(self, ps, rg, rf):
+        super(ActionPlot, self).set_modules(ps, rg, rf)
         # fetch the action space from the physical system
         self._action_space = ps.action_space
         # extract the action index from the action name
@@ -342,9 +330,6 @@ class ActionPlot(MotorDashboardPlot):
             # fetch the action range of discrete type actions
             self._action_range_max = self._action_space.n
 
-        self._tau = ps.tau
-        self._x_points = int(self.x_width/self._tau)
-
     def step(self, k, state, reference, action, reward, done):
         self._t += self._tau
         idx = int((self._t % self.x_width) / self._tau)
@@ -362,11 +347,7 @@ class ActionPlot(MotorDashboardPlot):
 
     def update(self):
         self._action_line.set_data(self._t_data, self._action_data)
-        if self.mode == 'continuous':
-            x_lim = self._axis.get_xlim()
-            upper_lim = max(self._t, x_lim[1])
-            lower_lim = upper_lim - self.x_width
-            self._axis.set_xlim(lower_lim, upper_lim)
+        super(ActionPlot, self).update()
 
 
 class MeanEpisodeRewardPlot(MotorDashboardPlot):
