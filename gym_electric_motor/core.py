@@ -146,7 +146,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         return self._physical_system.nominal_state[self.state_filter]
 
-    def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None,
+    def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None, callbacks = None,
                  **kwargs):
         """
         Setting and initialization of all environments' modules.
@@ -157,6 +157,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             reward_function(RewardFunction): The reward function of this environment.
             visualization(ElectricMotorVisualization): The visualization of this environment.
             state_filter(list(str)): Selection of states that are shown in the observation.
+            callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
         """
         self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
@@ -191,7 +192,16 @@ class ElectricMotorEnvironment(gym.core.Env):
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
         self._action = None
-
+        
+        self._callbacks = callbacks
+        for callback in self._callbacks:
+            callback.set_env(self)
+        
+    def _call_callbacks(self, callbacks, func_name):
+        for callback in callbacks:
+            func = getattr(callback, func_name)
+            func()
+            
     def reset(self, *_, **__):
         """
         Reset of the environment and all its modules to an initial state.
@@ -199,6 +209,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         Returns:
              The initial observation consisting of the initial state and initial reference.
         """
+        self._call_callbacks(self._callbacks, 'on_reset_begin')
         self._reset_required = False
         self._state = self._physical_system.reset()
         self._reference, next_ref, trajectories = self.reference_generator.reset(self._state)
@@ -206,6 +217,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reward_function.reset(self._state, self._reference)
         self._reward = 0.0
         self._action = None
+        self._call_callbacks(self._callbacks, 'on_reset_end')
         return self._state[self.state_filter], next_ref
 
     def render(self, *_, **__):
@@ -231,18 +243,21 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
 
         assert not self._reset_required, 'A reset is required before the environment can perform further steps'
+        self._call_callbacks(self._callbacks, 'on_step_begin')
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
         self._reward, self._done = self._reward_function.reward(self._state, self._reference, action)
         self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
+        self._call_callbacks(self._callbacks, 'on_step_end')
         return (self._state[self.state_filter], ref_next), self._reward, self._reset_required, {}
 
     def close(self):
         """
         Called when the environment is deleted. Closes all its modules.
         """
+        self._call_callbacks(self._callbacks, 'on_close')
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
@@ -693,4 +708,19 @@ class PhysicalSystem:
         Called, when the environment is closed.
         Close the System and all of its submodules by closing files, saving logs etc.
         """
+        pass
+    
+class Callback:
+    
+    def set_env(self, env):
+        self._env = env
+    def on_reset_begin(self):
+        pass
+    def on_reset_end(self):
+        pass
+    def on_step_begin(self):
+        pass
+    def on_step_end(self):
+        pass
+    def on_close(self):
         pass
