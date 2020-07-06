@@ -1,7 +1,6 @@
 from gym.spaces import Discrete, Box
 import sys
 import os
-import statistics as s
 
 sys.path.append(os.path.abspath(os.path.join('..')))
 from gym_electric_motor.physical_systems.electric_motors import DcShuntMotor, DcExternallyExcitedMotor, \
@@ -127,6 +126,49 @@ class DCPController(Controller):
         ])
 
 
+class IController(Controller):
+
+    def __init__(self, environment, k_i=0.01, controller_no=0, state_idx=None, reference_idx=0):
+        action_space = environment.action_space
+        assert type(action_space) is Box and type(
+            environment.physical_system) is DcMotorSystem, 'No Suitable action Space for I controller'
+        self._k_i = k_i
+        self._tau = environment.physical_system.tau
+        self._integrated_value = 0
+        self._limits = environment.physical_system.limits
+        self._controller_no = controller_no
+        self._action_min = action_space.low[controller_no]
+        self._action_max = action_space.low[controller_no]
+        self._ref_idx = reference_idx
+        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
+        self._referenced_state_max = self._limits[self._referenced_state] * \
+                                     environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] * environment.physical_system.state_space.low[
+            self._referenced_state]
+
+    def control(self, state, reference):
+        diff = reference[self._ref_idx] - state[self._referenced_state]
+        self._integrated_value += diff * self._tau
+        if state[self._referenced_state] > self._referenced_state_max:  # check upper limit
+            state[self._referenced_state] = self._referenced_state_max
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        if state[self._referenced_state] < self._referenced_state_min:  # check upper limit
+            state[self._referenced_state] = self._referenced_state_min
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+
+        return np.array([
+            max(
+                self._action_min,
+                min(
+                    self._action_max, self._k_i / self._tau * self._integrated_value
+                )
+            )
+        ])
+
+    def reset(self, **__):
+        self._integrated_value = 0
+
+
 class DCPIController(DCPController):
     """
       The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
@@ -140,7 +182,7 @@ class DCPIController(DCPController):
         super().__init__(environment, k_p, controller_no, reference_idx)
         action_space = environment.action_space
         assert type(action_space) is Box and type(
-            environment.physical_system) is DcMotorSystem, 'No suitable action space for P Controller'
+            environment.physical_system) is DcMotorSystem, 'No suitable action space for PI Controller'
         self._k_i = k_i
         self._tau = environment.physical_system.tau
         self._limits = environment.physical_system.limits
@@ -313,7 +355,7 @@ class DCCascadedPIController(Controller):
         des_duty_cycle = u_a / self._limits[self._u_a_idx]
         # Voltage compensation
         u_sup_avg = (self._u_sup * self._tau) / self._tau
-        des_duty_cycle = des_duty_cycle * (u_sup_avg/ self._u_sup)
+        des_duty_cycle = des_duty_cycle * (u_sup_avg / self._u_sup)
         duty_cycle = min(
             max(des_duty_cycle, self._u_a_min / self._limits[self._u_a_idx]),
             self._u_a_max / self._limits[self._u_a_idx])
@@ -619,6 +661,7 @@ _controllers = {
     'on_off': OnOffController,
     'three_point': ThreePointController,
     'p_controller': DCPController,
+    'i_controller': IController,
     'pi_controller': DCPIController,
     'pmsm_on_off': PmsmOnOffController,
     'synrm_on_off': SynRmOnOffController,
