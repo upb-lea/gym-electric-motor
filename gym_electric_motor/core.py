@@ -38,7 +38,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             Generation of the reference for the motor to follow. Needs to be a subclass of *ReferenceGenerator*
 
         Reward Function:
-            Calculation of the reward based on the state of the physical system and the generated reference
+            Calculation of the reward  based on the state of the physical system and the generated reference
             and observation if the motor state is within the limits. Needs to be a subclass of *RewardFunction*.
 
         Visualization:
@@ -146,7 +146,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         return self._physical_system.nominal_state[self.state_filter]
 
-    def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None, callbacks = None,
+    def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None, callbacks = [],
                  **kwargs):
         """
         Setting and initialization of all environments' modules.
