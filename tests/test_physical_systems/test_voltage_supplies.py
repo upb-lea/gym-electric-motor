@@ -139,6 +139,7 @@ class TestAC1PhaseSupply(TestVoltageSupply):
         supply_parameter = {'frequency': 1, 'phase': 0, 'fixed_phase': True}
         supply = vs.AC1PhaseSupply(supply_parameter=supply_parameter)
         
+        #Test for default sinus values
         times = [0, 2*np.pi, 4*np.pi]
         for time in times:
             assert supply.get_voltage(time) == pytest.approx([0.0])
@@ -204,6 +205,7 @@ class TestAC3PhaseSupply(TestVoltageSupply):
         
         assert len(supply.get_voltage(0)) == 3
         
+        #Test for default sinus values
         times = [0, 2*np.pi, 4*np.pi]
         for time in times:
             assert supply.get_voltage(time)[0] == pytest.approx(0.0)
