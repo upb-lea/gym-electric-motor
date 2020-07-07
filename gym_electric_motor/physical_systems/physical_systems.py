@@ -371,7 +371,7 @@ class ThreePhaseMotorSystem(SCMLSystem):
         Transformation from dq to abc space
 
         Args:
-            dq_quantities: Three quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
+            dq_quantities: Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))
             epsilon_el: Electrical angle of the motor
             normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
 
@@ -380,7 +380,7 @@ class ThreePhaseMotorSystem(SCMLSystem):
         """
         if normed_epsilon:
             epsilon_el *= np.pi
-        return self._electrical_motor.t_32(self._electrical_motor.q(dq_quantities[::-1], epsilon_el))
+        return self._electrical_motor.t_32(self._electrical_motor.q(dq_quantities, epsilon_el))
 
     def alphabeta_to_dq_space(self, alphabeta_quantities, epsilon_el, normed_epsilon=False):
         """
@@ -392,19 +392,19 @@ class ThreePhaseMotorSystem(SCMLSystem):
             normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
 
         Returns:
-            (quantity_q, quantity_d): The quantities in the dq-space
+            (quantity_d, quantity_q): The quantities in the dq-space
         """
         if normed_epsilon:
             epsilon_el *= np.pi
         dq_quantity = self._electrical_motor.q_inv(alphabeta_quantities, epsilon_el)
-        return dq_quantity[::-1]
+        return dq_quantity
 
     def dq_to_alphabeta_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
         """
         Transformation from dq to alphabeta space
 
         Args:
-            dq_quantities: Two quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
+            dq_quantities: Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))
             epsilon_el: Electrical angle of the motor
             normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
 
@@ -413,7 +413,7 @@ class ThreePhaseMotorSystem(SCMLSystem):
         """
         if normed_epsilon:
             epsilon_el *= np.pi
-        return self._electrical_motor.q(dq_quantities[::-1], epsilon_el)
+        return self._electrical_motor.q(dq_quantities, epsilon_el)
 
 class SynchronousMotorSystem(ThreePhaseMotorSystem):
     """
@@ -814,7 +814,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             action_stator = action[:stator_input_len]
             action_rotor = action[stator_input_len:stator_input_len + rotor_input_len]
             action_stator = self.dq_to_abc_space(action_stator, eps_field)
-            action_rotor = self.dq_to_abc_space(action_rotor, eps_field)
+            action_rotor = self.dq_to_abc_space(action_rotor, eps_field-eps_el)
             action = np.concatenate((action_stator, action_rotor)).tolist()
 
         i_sabc = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
