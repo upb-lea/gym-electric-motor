@@ -501,7 +501,7 @@ class FOCController(Controller):
         omega = state[self._omega_idx] * self._limits[self._omega_idx]
         omega_ref = reference[self._ref_idx] * self._limits[self._omega_idx]
 
-        # u = state[self._voltages_idx] * self._limits[self._voltages_idx]
+        u = state[self._voltages_idx] * self._limits[self._voltages_idx]
         epsilon = state[self._epsilon_idx] * self._limits[self._epsilon_idx]
         i = state[self._currents_idx] * self._limits[self._currents_idx]
         # transformation from a/b/c to alpha/beta and d/q
@@ -585,13 +585,47 @@ class FOCController(Controller):
         u_qd_des = np.array([u_sq_des, u_sd_des])
         voltages = self._backward_transformation(u_qd_des, epsilon_shift)
 
-        # zero voltage injection
+        # normalise inputs
+        result = np.clip(voltages / self._limits[self._voltages_idx[0]], -1, 1)
+        return result
+
+
+class zero_voltage_injection:
+    def __init__(self, environment, state_idx=None, ref_idx=0):
+        self._omega_idx = environment.physical_system.OMEGA_IDX
+        self._currents_idx = environment.physical_system.CURRENTS_IDX
+        self._voltages_idx = environment.physical_system.VOLTAGES_IDX
+        self._limits = environment.physical_system.limits
+        self._tau = environment.physical_system.tau
+        q = environment.physical_system.electrical_motor.q
+        t23 = environment.physical_system.electrical_motor.t_23
+        self._epsilon_idx = environment.physical_system.EPSILON_IDX
+        self._limits = environment.physical_system.limits
+        t32 = environment.physical_system.electrical_motor.t_3
+        self._ref_idx = ref_idx
+        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
+        q_inv = environment.physical_system.electrical_motor.q_inv
+        self._forward_transformation = lambda quantities, eps: q_inv(t23(quantities), eps)[::-1]
+        self._backward_transformation = (
+            lambda quantities, eps: t32(q(quantities[::-1], eps))
+        )
+
+        self._motor_parameter = environment.physical_system.electrical_motor.motor_parameter
+
+    def control(self, state):
+        i = state[self._currents_idx] * self._limits[self._currents_idx]
+        epsilon = state[self._epsilon_idx] * self._limits[self._epsilon_idx]
+        i_qd = self._forward_transformation(i, epsilon)
+        mp = self._motor_parameter
+        omega = state[self._omega_idx] * self._limits[self._omega_idx]
+        u_d_0 = omega * mp['l_q'] * i_qd[0]
+        u_q_0 = omega * (mp['psi_p'] + mp['l_d'] * i_qd[1])
+        u_a, u_b, u_c = self._backward_transformation((u_q_0, u_d_0), epsilon)
+        voltages = [u_a, u_b, u_c]
         u_o = 1 / 2 * (max(voltages) + min(voltages))
         voltages[0] = voltages[0] - u_o
         voltages[1] = voltages[1] - u_o
         voltages[2] = voltages[2] - u_o
-
-        # normalise inputs
         result = np.clip(voltages / self._limits[self._voltages_idx[0]], -1, 1)
         return result
 
