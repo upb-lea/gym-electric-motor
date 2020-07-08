@@ -1237,8 +1237,8 @@ class InductionMotor(ThreePhaseMotor):
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_sa            A      Current through branch a
         i_sb            A      Current through branch b
         i_sc            A      Current through branch c
@@ -1248,8 +1248,8 @@ class InductionMotor(ThreePhaseMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_sa            V      Voltage through branch a
         u_sb            V      Voltage through branch b
         u_sc            V      Voltage through branch c
@@ -1313,8 +1313,8 @@ class InductionMotor(ThreePhaseMotor):
     _default_motor_parameter = {
         'p': 2,
         'l_m': 143.75e-3,
-        'l_ssig': 5.87e-3,
-        'l_rsig': 5.87e-3,
+        'l_sigs': 5.87e-3,
+        'l_sigr': 5.87e-3,
         'j_rotor': 1.1e-3,
         'r_s': 2.9338,
         'r_r': 1.355,
@@ -1387,18 +1387,18 @@ class InductionMotor(ThreePhaseMotor):
     def _torque_limit(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_rsig']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
+        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_sigr']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
 
     def torque(self, states):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_rsig']) * (states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] - states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
+        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_sigr']) * (states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] - states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
 
     def _update_model(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        l_s = mp['l_m']+mp['l_ssig']
-        l_r = mp['l_m']+mp['l_rsig']
+        l_s = mp['l_m']+mp['l_sigs']
+        l_r = mp['l_m']+mp['l_sigr']
         sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
         tau_r = l_r / mp['r_r']
         tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m']**2) / (l_r**2))
@@ -1414,8 +1414,8 @@ class InductionMotor(ThreePhaseMotor):
 
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
-        l_s = mp['l_m'] + mp['l_ssig']
-        l_r = mp['l_m'] + mp['l_rsig']
+        l_s = mp['l_m'] + mp['l_sigs']
+        l_r = mp['l_m'] + mp['l_sigr']
         sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
         tau_r = l_r / mp['r_r']
         tau_sig = sigma * l_s / (mp['r_s'] + mp['r_r'] * (mp['l_m'] ** 2) / (l_r ** 2))
@@ -1454,8 +1454,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         r_s                    Ohm         2.9338        Stator resistance
         r_r                    Ohm         1.355         Rotor resistance
         l_m                    H           143.75e-3     Main inductance
-        l_ssig                 H           5.87e-3       Stator-side stray inductance
-        l_rsig                 H           5.87e-3       Rotor-side stray inductance
+        l_sigs                 H           5.87e-3       Stator-side stray inductance
+        l_sigr                 H           5.87e-3       Rotor-side stray inductance
         p                      1           2             Pole pair number
         j_rotor                kg/m^2      0.0011        Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
@@ -1463,8 +1463,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_sa            A      Stator current through branch a
         i_sb            A      Stator current through branch b
         i_sc            A      Stator current through branch c
@@ -1474,8 +1474,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         Rotor flux      Unit   Description
         =============== ====== =============================================
-        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_rd          Vs     Direct axis of the rotor oriented flux
+        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_ra          Vs     Rotor oriented flux in branch a
         psi_rb          Vs     Rotor oriented flux in branch b
         psi_rc          Vs     Rotor oriented flux in branch c
@@ -1485,8 +1485,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_sa            V      Stator voltage through branch a
         u_sb            V      Stator voltage through branch b
         u_sc            V      Stator voltage through branch c
@@ -1535,8 +1535,8 @@ class SquirrelCageInductionMotor(InductionMotor):
     _default_motor_parameter = {
         'p': 2,
         'l_m': 143.75e-3,
-        'l_ssig': 5.87e-3,
-        'l_rsig': 5.87e-3,
+        'l_sigs': 5.87e-3,
+        'l_sigr': 5.87e-3,
         'j_rotor': 1.1e-3,
         'r_s': 2.9338,
         'r_r': 1.355,
@@ -1582,20 +1582,20 @@ class DoublyFedInductionMotor(InductionMotor):
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
-        r_s                    Ohm         12e-3        Stator resistance
+        r_s                    Ohm         12e-3         Stator resistance
         r_r                    Ohm         21e-3         Rotor resistance
-        l_m                    H           13.5e-3        Main inductance
-        l_ssig                 H           0.2e-3        Stator-side stray inductance
-        l_rsig                 H           0.1e-3        Rotor-side stray inductance
+        l_m                    H           13.5e-3       Main inductance
+        l_sigs                 H           0.2e-3        Stator-side stray inductance
+        l_sigr                 H           0.1e-3        Rotor-side stray inductance
         p                      1           2             Pole pair number
-        j_rotor                kg/m^2      1e3        Moment of inertia of the rotor
+        j_rotor                kg/m^2      1e3           Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
 
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_sa            A      Current through branch a
         i_sb            A      Current through branch b
         i_sc            A      Current through branch c
@@ -1605,8 +1605,8 @@ class DoublyFedInductionMotor(InductionMotor):
         =============== ====== =============================================
         Rotor flux      Unit   Description
         =============== ====== =============================================
-        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_rd          Vs     Direct axis of the rotor oriented flux
+        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_ra          Vs     Rotor oriented flux in branch a
         psi_rb          Vs     Rotor oriented flux in branch b
         psi_rc          Vs     Rotor oriented flux in branch c
@@ -1616,8 +1616,8 @@ class DoublyFedInductionMotor(InductionMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_sa            V      Stator voltage through branch a
         u_sb            V      Stator voltage through branch b
         u_sc            V      Stator voltage through branch c
@@ -1671,14 +1671,14 @@ class DoublyFedInductionMotor(InductionMotor):
     ROTOR_VOLTAGES = ['u_ralpha', 'u_rbeta']
     ROTOR_CURRENTS = ['i_ralpha', 'i_rbeta']
 
-    IO_ROTOR_VOLTAGES = ['u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd']
-    IO_ROTOR_CURRENTS = ['i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd']
+    IO_ROTOR_VOLTAGES = ['u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq']
+    IO_ROTOR_CURRENTS = ['i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq']
 
     _default_motor_parameter = {
         'p': 2,
         'l_m': 13.5e-3,
-        'l_ssig': 0.2e-3,
-        'l_rsig': 0.1e-3,
+        'l_sigs': 0.2e-3,
+        'l_sigr': 0.1e-3,
         'j_rotor': 1e3,
         'r_s': 12e-3,
         'r_r': 21e-3,

@@ -1791,8 +1791,8 @@ class TestInductionMotor:
         sigma = (l_s * l_r - 140e-3 ** 2) / (l_s * l_r)
         tau_sig = sigma * l_s / (3 + 1.5 * (140e-3 ** 2) / (l_r ** 2))
 
-        assert abs(l_s - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_ssig'])) < 1E-6, 'unexpected stator inductance'
-        assert abs(l_r - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_rsig'])) < 1E-6, 'unexpected rotor inductance'
+        assert abs(l_s - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_sigs'])) < 1E-6, 'unexpected stator inductance'
+        assert abs(l_r - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_sigr'])) < 1E-6, 'unexpected rotor inductance'
         assert abs(sigma - ((l_s * l_r - test_object._motor_parameter['l_m'] ** 2) / (l_s * l_r))) < 1E-6, 'unexpected leakage coefficient'
         assert abs(tau_r - (l_r / test_object._motor_parameter['r_r'])) < 1E-6, 'unexpected rotor time constant'
         assert abs(tau_sig - (sigma * l_s / (test_object._motor_parameter['r_s'] + test_object._motor_parameter['r_r'] * (test_object._motor_parameter['l_m'] ** 2) / (l_r ** 2)))) < 1E-6, 'unexpected leakage time constant'
@@ -1809,7 +1809,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3 ,j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3 ,j_rotor=4, r_s=5, r_r=6),
              np.array([[-1.9848901098901102, 0, 0.08241758241758242, 0.0, 0],
                        [0, -1.9848901098901102, 0.0, 0.08241758241758242, 0],
                        [4.615384615384616, 0, -0.46153846153846156, 0, 0],
@@ -1826,7 +1826,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3, j_rotor=4, r_s=5, r_r=6),
              np.array([10 * 2 / 56 * 3,
                        - 10 * 2 / 56 * 2,
                        - 2 * 3,
@@ -1843,7 +1843,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([5, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3, j_rotor=4, r_s=5, r_r=6),
              np.array([- 3 * 3 / 2 * 2 * 10 / 13,
                 2 * 3 / 2 * 2 * 10 / 13,
                 1 * 3 / 2 * 2 * 10 / 13,

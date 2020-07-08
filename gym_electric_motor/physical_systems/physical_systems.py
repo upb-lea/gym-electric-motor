@@ -778,7 +778,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
     def calculate_rotor_current(self, state):
         # rotor current is calculated from states
         mp = self._electrical_motor.motor_parameter
-        l_r = mp['l_m'] + mp['l_rsig']
+        l_r = mp['l_m'] + mp['l_sigr']
 
         i_salpha = state[self._motor_ode_idx[self._electrical_motor.I_SALPHA_IDX]]
         i_sbeta = state[self._motor_ode_idx[self._electrical_motor.I_SBETA_IDX]]
