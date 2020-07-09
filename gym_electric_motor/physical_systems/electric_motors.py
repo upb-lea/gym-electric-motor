@@ -12,7 +12,7 @@ class ElectricMotor:
             ODE-State of a DC-shunt motor: `` [i_a, i_e ] ``
                 * i_a: Anchor circuit current
                 * i_e: Exciting circuit current
-                
+
         Each electric motor can be parametrized by a dictionary of motor parameters,
         the nominal state dictionary and the limit dictionary.
 
