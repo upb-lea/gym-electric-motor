@@ -12,32 +12,7 @@ class ElectricMotor:
             ODE-State of a DC-shunt motor: `` [i_a, i_e ] ``
                 * i_a: Anchor circuit current
                 * i_e: Exciting circuit current
-
-<<<<<<< HEAD
-        Each electric motor can be parametrized by a dictionary of motor parameters, the nominal state dictionary
-        and the limit dictionary.
-
-        Initialization is given by initializer(dict). Can be constant state value
-        or random value in given or nominal interval.
-        dict should be like:
-            { 'states': <dict: state names and initital values>,
-              'interval': < boundaries for each state (only for random init>,
-              'random_init': <str: 'uniform' or 'normal'>,
-              'random_params: {'mue': <const>, 'sigma': <const>}
-        Examples:
-             initializer(dict) for constant initialization:
-            { 'states': {'i_e': 0.5, 'i_a': 15.5}}
-
-             initializer(dict) for random initialization with optional limits:
-            { 'random_init': 'normal'
-              'interval': [[lower bound 1 ,upper bound 1],
-                           [        ...                 ],
-                           [lower bound n, upper bound n]}
-
-||||||| merged common ancestors
-        Each electric motor can be parametrized by a dictionary of motor parameters, the nominal state dictionary
-        and the limit dictionary.
-=======
+                
         Each electric motor can be parametrized by a dictionary of motor parameters,
         the nominal state dictionary and the limit dictionary.
 
@@ -53,8 +28,6 @@ class ElectricMotor:
             { 'states': {'omega': 16.0}}
         Example  initializer(dict) for random initialization:
             { 'random_init': 'normal'}
-
->>>>>>> new_issue9_30
     """
 
     #: Parameter indicating if the class is implementing the optional jacobian function
@@ -1735,7 +1708,7 @@ class InductionMotor(ThreePhaseMotor):
                                   self._initial_states['i_sbeta']],
                                   eps_mag)
             psi_d_max = mp['p'] * omega * sigma * l_s * i_d + \
-                        (mp['r_s'] + mp['r_r'] * l_mr**2) + \
+                        (mp['r_s'] + mp['r_r'] * l_mr**2) * i_q + \
                         u_q_max + \
                         l_mr * u_rq_max
             psi_d_max /= - mp['p'] * omega * l_mr
