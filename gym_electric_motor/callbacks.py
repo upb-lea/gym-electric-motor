@@ -17,8 +17,10 @@ class DummyCallback(Callback):
         
 class AdaptiveLimitMargin(Callback):
     """
-    Callback used to adapt the limit margin of a reference generator during runtime. Supports all SubepisodedReferenceGenerators 
-    and SwitchedReferenceGenerator with only SubepisodedReferenceGenerators as sub generators.
+    Callback used to adapt the limit margin of a reference generator during runtime. Supports all 
+    :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator`  
+    and :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SwitchedReferenceGenerator` with only 
+    :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator` as sub generators.
     """
     
     def __init__(self, initial_limit_margin=(-0.1,0.1), maximum_limit_margin=(-1,1), step_size=0.1, update_time='episode', update_freq=10):

@@ -712,34 +712,34 @@ class PhysicalSystem:
     
 class Callback:   
     """
-    The abstract base class for Callbacks from gym electric motor environments. Each of its functions gets called at one point in
-    the environment. For further information read the documentation of the functions.
+    The abstract base class for Callbacks. Each of its functions gets called at one point in
+    the :mod:`~gym_electric_motor.core.ElectricMotorEnvironment`.
 
     Attributes:
         _env: The GEM environment. Use it to have full control over the environment on runtime. 
     """
     
     def set_env(self, env):
-        """Set the environment of the motor."""
+        """Sets the environment of the motor."""
         self._env = env
         
     def on_reset_begin(self):
-        """Gets called at the beginning of each reset() call"""
+        """Gets called at the beginning of each reset"""
         pass
     
     def on_reset_end(self):
-        """Gets called at the end of each reset() call"""        
+        """Gets called at the end of each reset"""        
         pass
     
     def on_step_begin(self):
-        """Gets called at the beginning of each step() call"""
+        """Gets called at the beginning of each step"""
         pass
     
     def on_step_end(self):
-        """Gets called at the end of each step() call"""        
+        """Gets called at the end of each step"""        
         pass
     
     def on_close(self):
-        """Gets called at the beginning of a close() call"""        
+        """Gets called at the beginning on a close"""        
         pass
     
