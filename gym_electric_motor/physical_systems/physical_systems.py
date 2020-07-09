@@ -1,5 +1,6 @@
 import numpy as np
 from gym.spaces import Box
+from scipy.stats import truncnorm
 import warnings
 from ..core import PhysicalSystem
 from ..physical_systems import electric_motors as em, mechanical_loads as ml, converters as cv, \
@@ -9,9 +10,10 @@ from ..utils import instantiate, set_state_array
 
 class SCMLSystem(PhysicalSystem):
     """
-    The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of a technical setting consisting of these
-    components as well as a noise generator and a solver for the electrical ODE of the motor and mechanical ODE of the
-    load.
+    The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
+    a technical setting consisting of these components as well as a noise
+    generator and a solver for the electrical ODE of the motor and mechanical
+    ODE of the load.
     """
     OMEGA_IDX = 0
     TORQUE_IDX = 1
@@ -55,10 +57,10 @@ class SCMLSystem(PhysicalSystem):
         """
         return self._mechanical_load
 
-    def __init__(
-        self, converter, motor, load=None, supply='IdealVoltageSupply', ode_solver='euler', solver_kwargs=None,
-        noise_generator=None, tau=1e-4, calc_jacobian=None, **kwargs
-    ):
+    def __init__(self, converter, motor,
+                 load=None, supply='IdealVoltageSupply', ode_solver='euler',
+                 solver_kwargs=None, noise_generator=None, tau=1e-4,
+                 calc_jacobian=None, **kwargs):
         """
         Args:
             converter(PowerElectronicConverter): Converter for the physical system
@@ -269,8 +271,13 @@ class SCMLSystem(PhysicalSystem):
         Returns:
              The new state of the system.
         """
-        motor_state = self._electrical_motor.reset()
-        mechanical_state = self._mechanical_load.reset()
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions)
+        mechanical_state = self._mechanical_load.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions,
+            nominal_state=self.nominal_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
         u_in = self.converter.reset()
@@ -319,6 +326,7 @@ class DcMotorSystem(SCMLSystem):
         low = set_state_array(low, state_names)
         high = set_state_array(high, state_names)
         return Box(low, high)
+
 
 class ThreePhaseMotorSystem(SCMLSystem):
     """
@@ -414,6 +422,7 @@ class ThreePhaseMotorSystem(SCMLSystem):
         if normed_epsilon:
             epsilon_el *= np.pi
         return self._electrical_motor.q(dq_quantities[::-1], epsilon_el)
+
 
 class SynchronousMotorSystem(ThreePhaseMotorSystem):
     """
@@ -524,8 +533,13 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
 
     def reset(self, *_):
         # Docstring of superclass
-        motor_state = self._electrical_motor.reset()
-        mechanical_state = self._mechanical_load.reset()
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions)
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
         eps = ode_state[self._ode_epsilon_idx]
@@ -550,6 +564,7 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             [u_sup],
         ))
         return (system_state + noise) / self._limits
+
 
 class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
     """
@@ -664,8 +679,14 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
 
     def reset(self, *_):
         # Docstring of superclass
-        motor_state = self._electrical_motor.reset()
-        mechanical_state = self._mechanical_load.reset()
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions,
+            omega=mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
 
@@ -693,6 +714,7 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
             [u_sup]
         ])
         return (system_state + noise) / self._limits
+
 
 class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
     """
@@ -885,8 +907,14 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
 
     def reset(self, *_):
         # Docstring of superclass
-        motor_state = self._electrical_motor.reset()
-        mechanical_state = self._mechanical_load.reset()
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions,
+            omega=mechanical_state)
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
 
