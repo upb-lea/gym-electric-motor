@@ -712,7 +712,7 @@ class PhysicalSystem:
     
 class Callback:   
     """
-    The abstract base class for Callbacks from gym electric motor environments. Each of its functions gets called at another point in
+    The abstract base class for Callbacks from gym electric motor environments. Each of its functions gets called at one point in
     the environment. For further information read the documentation of the functions.
 
     Attributes:
