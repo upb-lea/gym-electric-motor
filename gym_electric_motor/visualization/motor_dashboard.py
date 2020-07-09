@@ -35,6 +35,8 @@ class MotorDashboard(ElectricMotorVisualization):
                     self._plots.append(mdp.RewardPlot())
                 elif plot.startswith('action_'):
                     self._plots.append(mdp.ActionPlot(plot))
+                elif plot.startswith('mean_'):
+                    self._plots.append(mdp.MeanEpisodeRewardPlot())
                 else:
                     self._plots.append(mdp.StatePlot(plot))
             else:

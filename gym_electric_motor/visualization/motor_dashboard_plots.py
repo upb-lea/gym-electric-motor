@@ -57,7 +57,6 @@ class MotorDashboardPlot:
             lower_lim = upper_lim - self.x_width
             self._axis.set_xlim(lower_lim, upper_lim)
 
-
     def reset(self):
         """Called by the MotorDashboard each time the environment is reset."""
         pass
@@ -165,7 +164,7 @@ class StatePlot(MotorDashboardPlot):
             self._axis.axhline(min_limit, **self.limit_line_cfg)
         lim = self._axis.axhline(max_limit, **self.limit_line_cfg)
 
-        self._axis.set_ylim(min_limit - 0.1 * (max_limit - min_limit), max_limit + 0.1*(max_limit - min_limit))
+        self._axis.set_ylim(min_limit - 0.1 * (max_limit - min_limit), max_limit + 0.1 * (max_limit - min_limit))
         y_label = self.state_labels.get(self._state, self._state)
         self._axis.set_ylabel(y_label)
 
@@ -176,7 +175,7 @@ class StatePlot(MotorDashboardPlot):
         if self._referenced:
             dummy_ref_line = lin.Line2D([], [], color=self.reference_line_cfg['color'])
             self._axis.legend(
-                (dummy_state_line, dummy_ref_line, lim), (y_label, y_label+'*', 'limit'), loc='upper left'
+                (dummy_state_line, dummy_ref_line, lim), (y_label, y_label + '*', 'limit'), loc='upper left'
             )
         else:
             self._axis.legend((dummy_state_line, lim), (y_label, 'limit'), loc='upper left')
@@ -351,5 +350,62 @@ class ActionPlot(MotorDashboardPlot):
 
 
 class MeanEpisodeRewardPlot(MotorDashboardPlot):
+    x_width = 1
+    mode = 'continuous'
+    reward_line_cfg = {
+        'color': 'gray',
+        'linestyle': '',
+        'linewidth': 0.75,
+        'marker': 'o',
+        'markersize': .75
+    }
+
+    def __init__(self):
+        self._reward_range = None
+        self._reward_line = None
+        self._reward_data = None
+        self._reward_sum = 0
+        self._episode_length = 0
+        super().__init__()
+
+    def initialize(self, axis):
+        super().initialize(axis)
+        self._t_data = 0  # np.linspace(0, self.x_width, self._x_points, endpoint=False)
+        self._reward_data = 0  # np.zeros_like(self._t_data, dtype=float)
+        self._reward_line, = self._axis.plot(self._t_data, self._reward_data, **self.reward_line_cfg)
+        min_limit = self._reward_range[0]
+        max_limit = self._reward_range[1]
+        spacing = 0.1 * (max_limit - min_limit)
+        self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
+        y_label = 'mean_episode_reward'
+        self._axis.set_ylabel(y_label)
+        # adds a constant line at 0 which is eventually updated by the plot variable values. legend can be set here.
+        dummy_rew_line = lin.Line2D([], [], color=self.reward_line_cfg['color'])
+        self._axis.legend((dummy_rew_line,), ('mean_episode_reward',), loc='upper left')
+
+    def set_modules(self, ps, rg, rf):
+        super(MeanEpisodeRewardPlot, self).set_modules(ps, rg, rf)
+        self._reward_range = rf.reward_range
+
     def step(self, k, state, reference, action, reward, done):
-        pass
+        self._t += self._tau
+        self._reward_sum += reward
+        if done:
+            self._axis.axvline(self._t, color='red', linewidth=1)
+
+        self._episode_length = k
+
+    def update(self):
+        if self._episode_length > 0:
+            self._reward_data = self._reward_sum / self._episode_length
+            self._reward_line.set_data([self._t], [self._reward_data])
+        #super().update()
+        # configure x-axis properties
+        if self.mode == 'continuous':
+            #x_lim = self._axis.get_xlim()
+            upper_lim = self._t #max(self._t, x_lim[1])
+            lower_lim = upper_lim - self.x_width
+            self._axis.set_xlim(lower_lim, upper_lim)
+
+    def reset(self):
+        self.update()
