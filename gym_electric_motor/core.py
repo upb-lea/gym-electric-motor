@@ -22,6 +22,8 @@ from gym.spaces import Box
 from .utils import set_state_array
 from .utils import instantiate
 
+import time
+
 
 class ElectricMotorEnvironment(gym.core.Env):
     """
@@ -234,6 +236,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
+        #print('step state', np.max(self._state), np.min(self._state))
         self._reward, self._done = self._reward_function.reward(self._state, self._reference, action)
         self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
@@ -450,6 +453,8 @@ class RewardFunction:
         self._observed_states = observed_states
         self._reference_generator = None
         self._limits = None
+        self._constraint_monitor = None
+        self.performance = []
 
     def __call__(self, state, reference):
         """
@@ -472,7 +477,6 @@ class RewardFunction:
             physical_system(PhysicalSystem): The physical system of the environment
             reference_generator(ReferenceGenerator): The reference generator of the environment.
         """
-
         observed_states = {}
         allowed_observed_states = physical_system.state_names + \
                                   ['all', 'currents', 'voltages']
@@ -550,7 +554,8 @@ class RewardFunction:
         Returns:
             bool: True, if any observed limit has been violated, False otherwise.
         """
-        return (abs(state[self._observed_states]) > self._limits[self._observed_states]).any()
+        raise NotImplementedError
+        #return (abs(state[self._observed_states]) > self._limits[self._observed_states]).any()
 
     def _limit_violation_reward(self, state):
         """
