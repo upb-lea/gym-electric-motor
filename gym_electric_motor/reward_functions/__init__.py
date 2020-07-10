@@ -1,4 +1,5 @@
 from .weighted_sum_of_errors import WeightedSumOfErrors, ShiftedWeightedSumOfErrors
+from .constraint_monitor import ConstraintMonitor
 from ..utils import register_class
 from .. import RewardFunction
 
