@@ -22,8 +22,6 @@ from gym.spaces import Box
 from .utils import set_state_array
 from .utils import instantiate
 
-import time
-
 
 class ElectricMotorEnvironment(gym.core.Env):
     """
@@ -452,8 +450,7 @@ class RewardFunction:
         self._observed_states = observed_states
         self._reference_generator = None
         self._limits = None
-        self._constraint_monitor = None
-        self.performance = []
+  #      self._constraint_monitor = None
 
     def __call__(self, state, reference):
         """
