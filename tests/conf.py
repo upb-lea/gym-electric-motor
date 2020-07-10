@@ -1,7 +1,7 @@
 import math
 from matplotlib import pyplot as plt
 import matplotlib
-from PyQt5.QtWidgets import QWidget
+#from PyQt5.QtWidgets import QWidget
 from gym_electric_motor.core import *
 from gym.spaces import Box
 
@@ -167,13 +167,13 @@ def monkey_pause_function(time=None):
     pass
 
 
-def monkey_show_maximized_function(args=None):
-    """
-    function used instead of figureManager.showMaximized()
-    :param args:
-    :return:
-    """
-    pass
+# def monkey_show_maximized_function(args=None):
+#     """
+#     function used instead of figureManager.showMaximized()
+#     :param args:
+#     :return:
+#     """
+#     pass
 
 
 def monkey_show_function(args=None):
@@ -194,7 +194,7 @@ def turn_off_windows(monkeypatch):
     """
     monkeypatch.setattr(plt, "ion", monkey_ion_function)
     monkeypatch.setattr(plt, "pause", monkey_pause_function)
-    monkeypatch.setattr(QWidget, "showMaximized", monkey_show_maximized_function)
+#    monkeypatch.setattr(QWidget, "showMaximized", monkey_show_maximized_function)
     monkeypatch.setattr(matplotlib.figure.Figure, "show", monkey_show_function)
 
 
