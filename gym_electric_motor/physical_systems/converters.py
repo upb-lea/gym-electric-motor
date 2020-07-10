@@ -120,7 +120,7 @@ class NoConverter(PowerElectronicConverter):
         return i_out[0]
 
     def convert(self, i_out, t):
-        return 1
+        return [1]
 
 class ContDynamicallyAveragedConverter(PowerElectronicConverter):
     """

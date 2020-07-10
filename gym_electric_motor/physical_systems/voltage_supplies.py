@@ -120,20 +120,25 @@ class AC1PhaseSupply(VoltageSupply):
         """
         Args:
             u_nominal(float): Single phasic effective value of the voltage supply
-            supply_parameter(dict): Consists of frequency f in Hz, phase phi in range of [0,2*pi) 
-                                    and the flag fixed_phase which is set if the phase should be the same for each episode
+            supply_parameter(dict): Consists of frequency f in Hz and phase phi in range of [0,2*pi) in case you wish for a fixed phase
         """
 
         super().__init__(u_nominal)
-        supply_parameter = supply_parameter or {'frequency': 50, 'phase': np.random.rand()*2*np.pi, 'fixed_phase': False}
         
-        assert 'frequency' in supply_parameter.keys(), "Pass key 'frequency' for frequency f in Hz in your dict"
-        assert 'phase' in supply_parameter.keys(), "Pass key 'phase' for the starting phase in in your dict"
-        assert 'fixed_phase' in supply_parameter.keys(), "Pass key 'fixed_phase' as Boolean to indicate whether the phase given by the user should be used for every episode"
-        assert type(supply_parameter['fixed_phase']) == type(True), "Value for key 'fixed_phase' should be Boolean"
-        assert supply_parameter['phase'] < 2*np.pi and supply_parameter['phase'] >= 0, "The phase angle has to be given in rad in range [0,2*pi)"
+        self._fixed_phi = False
+        if supply_parameter is not None:
+            assert isinstance(supply_parameter, dict), "supply_parameter should be a dict"
+            assert 'frequency' in supply_parameter.keys(), "Pass key 'frequency' for frequency f in Hz in your dict"
+            if 'phase' in supply_parameter.keys():
+                assert 0<= supply_parameter['phase'] < 2*np.pi, "The phase angle has to be given in rad in range [0,2*pi)"
+                self._fixed_phi = True
+                supply_parameter = supply_parameter
+            else:
+                supply_parameter['phase'] = np.random.rand()*2*np.pi
+        else:
+            supply_parameter = {'frequency': 50, 'phase': np.random.rand()*2*np.pi}
+
     
-        self._fixed_phi = supply_parameter['fixed_phase']
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
         self._max_amp = self._u_nominal*np.sqrt(2)
@@ -146,7 +151,7 @@ class AC1PhaseSupply(VoltageSupply):
     
     def get_voltage(self, t, *_, **__):
         # Docstring of superclass
-        self._u_sup = [self._max_amp*np.sin(self._f*t + self._phi)]
+        self._u_sup = [self._max_amp*np.sin(2*np.pi*self._f*t + self._phi)]
         return self._u_sup
 
 class AC3PhaseSupply(VoltageSupply):
@@ -156,20 +161,23 @@ class AC3PhaseSupply(VoltageSupply):
         """
         Args:
             u_nominal(float): Three phasic effective value of the voltage supply
-            supply_parameter(dict): Consists of frequency f in Hz, phase phi in range of [0,2*pi) 
-                                    and the flag fixed_phase which is set if the phase should be the same for each episode
+            supply_parameter(dict): Consists of frequency f in Hz and phase phi in range of [0,2*pi) in case you wish for a fixed phase
         """
 
         super().__init__(u_nominal)
-        supply_parameter = supply_parameter or {'frequency': 50, 'phase': np.random.rand()*2*np.pi, 'fixed_phase': False}
-        
-        assert 'frequency' in supply_parameter.keys(), "Pass key 'frequency' for frequency f in Hz in your dict"
-        assert 'phase' in supply_parameter.keys(), "Pass key 'phase' for the starting phase in in your dict"
-        assert 'fixed_phase' in supply_parameter.keys(), "Pass key 'fixed_phase' as Boolean to indicate whether the phase given by the user should be used for every episode"
-        assert type(supply_parameter['fixed_phase']) == type(True), "Value for key 'fixed_phase' should be Boolean"
-        assert supply_parameter['phase'] < 2*np.pi and supply_parameter['phase'] >= 0, "The phase angle has to be given in rad in range [0,2*pi)"
+        self._fixed_phi = False
+        if supply_parameter is not None:
+            assert isinstance(supply_parameter, dict), "supply_parameter should be a dict"
+            assert 'frequency' in supply_parameter.keys(), "Pass key 'frequency' for frequency f in Hz in your dict"
+            if 'phase' in supply_parameter.keys():
+                assert 0<= supply_parameter['phase'] < 2*np.pi, "The phase angle has to be given in rad in range [0,2*pi)"
+                self._fixed_phi = True
+                supply_parameter = supply_parameter
+            else:
+                supply_parameter['phase'] = np.random.rand()*2*np.pi
+        else:
+            supply_parameter = {'frequency': 50, 'phase': np.random.rand()*2*np.pi}
 
-        self._fixed_phi = supply_parameter['fixed_phase']
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
         self._max_amp = self._u_nominal/np.sqrt(3)*np.sqrt(2)
@@ -183,7 +191,7 @@ class AC3PhaseSupply(VoltageSupply):
     
     def get_voltage(self, t, *_, **__):
         # Docstring of superclass
-        self._u_sup = [self._max_amp*np.sin(self._f*t + self._phi + 2/3*np.pi*i) for i in range(3)]
+        self._u_sup = [self._max_amp*np.sin(2*np.pi*self._f*t + self._phi + 2/3*np.pi*i) for i in range(3)]
         return self._u_sup
  
     

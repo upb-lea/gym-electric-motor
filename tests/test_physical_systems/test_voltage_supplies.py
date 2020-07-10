@@ -2,7 +2,6 @@ import gym_electric_motor as gem
 import gym_electric_motor.physical_systems.voltage_supplies as vs
 from ..testing_utils import DummyOdeSolver
 import numpy as np
-import pytest
 
 class TestVoltageSupply:
 
@@ -111,13 +110,13 @@ class TestAC1PhaseSupply(TestVoltageSupply):
         
     def test_reset(self, u_nominal=230.0):
         """Test the reset function for correct behavior on fixed phase""" 
-        supply_parameter = {'frequency': 50, 'phase': 0, 'fixed_phase': False}
+        supply_parameter = {'frequency': 50}
         voltage_supply = vs.AC1PhaseSupply(u_nominal, supply_parameter)
-        assert voltage_supply._phi == 0
+        first_phi = voltage_supply._phi
         _ = voltage_supply.reset()
-        assert voltage_supply._phi != 0, "Test this again and if this error doesn't appear next time you should consider playing lotto"
+        assert voltage_supply._phi != first_phi, "Test this again and if this error doesn't appear next time you should consider playing lotto"
 
-        supply_parameter = {'frequency': 50, 'phase': 0, 'fixed_phase': True}
+        supply_parameter = {'frequency': 50, 'phase': 0}
         voltage_supply = vs.AC1PhaseSupply(u_nominal, supply_parameter)
         assert voltage_supply._phi == 0
         assert voltage_supply.reset() == [0.0]
@@ -125,7 +124,7 @@ class TestAC1PhaseSupply(TestVoltageSupply):
 
         
     def test_initialization(self, u_nominal = 300.0):
-        supply_parameter = {'frequency': 35, 'phase': 0, 'fixed_phase': True}
+        supply_parameter = {'frequency': 35, 'phase': 0}
         voltage_supply = vs.AC1PhaseSupply(u_nominal, supply_parameter)
         assert voltage_supply.u_nominal == 300.0
         assert voltage_supply._max_amp == 300.0 * np.sqrt(2)
@@ -136,29 +135,28 @@ class TestAC1PhaseSupply(TestVoltageSupply):
         
     def test_get_voltage(self):
         """Test the get voltage function for different times t."""
-        supply_parameter = {'frequency': 1, 'phase': 0, 'fixed_phase': True}
+        supply_parameter = {'frequency': 1, 'phase': 0}
         supply = vs.AC1PhaseSupply(supply_parameter=supply_parameter)
         
         #Test for default sinus values
-        times = [0, 2*np.pi, 4*np.pi]
+        times = [0, 1, 2]
         for time in times:
-            assert supply.get_voltage(time) == pytest.approx([0.0])
+            assert np.allclose(supply.get_voltage(time), [0.0])
             
-        times = [np.pi/2, 5*np.pi/2, 9*np.pi/2]
+        times = [1/4, 5/4, 9/4]
         for time in times:
-            assert supply.get_voltage(time) == pytest.approx([230.0 * np.sqrt(2)])
+            assert np.allclose(supply.get_voltage(time),[230.0 * np.sqrt(2)])
             
-        times = [3*np.pi/2, 7*np.pi/2, 11*np.pi/2]
+        times = [3/4, 7/4, 11/4]
         for time in times:
-            assert supply.get_voltage(time) == pytest.approx([-230.0 * np.sqrt(2)])
+            assert np.allclose(supply.get_voltage(time),[-230.0 * np.sqrt(2)])
           
         #"Hand" calculated
-        supply_parameter = {'frequency': 36, 'phase': 0.5, 'fixed_phase': True}
+        supply_parameter = {'frequency': 36, 'phase': 0.5}
         supply = vs.AC1PhaseSupply(supply_parameter=supply_parameter)
-        assert supply.get_voltage(1) == pytest.approx([-303.058731])
-        assert supply.get_voltage(2) == pytest.approx([-78.381295])
-        assert supply.get_voltage(3) == pytest.approx([323.118651])
-
+        assert np.allclose(supply.get_voltage(1/(2*np.pi)),[-303.058731])
+        assert np.allclose(supply.get_voltage(2/(2*np.pi)),[-78.381295])
+        assert np.allclose(supply.get_voltage(3/(2*np.pi)),[323.118651])
 
 class TestAC3PhaseSupply(TestVoltageSupply):
     key = 'AC3PhaseSupply'
@@ -175,13 +173,13 @@ class TestAC3PhaseSupply(TestVoltageSupply):
         
     def test_reset(self, u_nominal=400.0):
         """Test the reset function for correct behavior on fixed phase""" 
-        supply_parameter = {'frequency': 50, 'phase': 0, 'fixed_phase': False}
+        supply_parameter = {'frequency': 50}
         voltage_supply = vs.AC3PhaseSupply(u_nominal, supply_parameter)
-        assert voltage_supply._phi == 0
+        first_phi = voltage_supply._phi
         _ = voltage_supply.reset()
-        assert voltage_supply._phi != 0, "Test this again and if this error doesn't appear next time you should consider playing lotto"
+        assert voltage_supply._phi != first_phi, "Test this again and if this error doesn't appear next time you should consider playing lotto"
 
-        supply_parameter = {'frequency': 50, 'phase': 0, 'fixed_phase': True}
+        supply_parameter = {'frequency': 50, 'phase': 0}
         voltage_supply = vs.AC3PhaseSupply(u_nominal, supply_parameter)
         assert voltage_supply._phi == 0
         _ = voltage_supply.reset()
@@ -189,7 +187,7 @@ class TestAC3PhaseSupply(TestVoltageSupply):
 
         
     def test_initialization(self, u_nominal = 300.0):
-        supply_parameter = {'frequency': 35, 'phase': 0, 'fixed_phase': True}
+        supply_parameter = {'frequency': 35, 'phase': 0}
         voltage_supply = vs.AC3PhaseSupply(u_nominal, supply_parameter)
         assert voltage_supply.u_nominal == 300.0
         assert voltage_supply._max_amp == 300.0 / np.sqrt(3) * np.sqrt(2)
@@ -200,27 +198,27 @@ class TestAC3PhaseSupply(TestVoltageSupply):
         
     def test_get_voltage(self):
         """Test the get voltage function for different times t."""
-        supply_parameter = {'frequency': 1, 'phase': 0, 'fixed_phase': True}
+        supply_parameter = {'frequency': 1, 'phase': 0}
         supply = vs.AC3PhaseSupply(supply_parameter=supply_parameter)
         
         assert len(supply.get_voltage(0)) == 3
         
         #Test for default sinus values
-        times = [0, 2*np.pi, 4*np.pi]
+        times = [0, 1, 2]
         for time in times:
-            assert supply.get_voltage(time)[0] == pytest.approx(0.0)
+            assert np.allclose(supply.get_voltage(time)[0], [0.0])
             
-        times = [np.pi/2, 5*np.pi/2, 9*np.pi/2]
+        times = [1/4, 5/4, 9/4]
         for time in times:
-            assert supply.get_voltage(time)[0] == pytest.approx(400.0 / np.sqrt(3) * np.sqrt(2))
+            assert np.allclose(supply.get_voltage(time)[0], 400.0 / np.sqrt(3) * np.sqrt(2))
             
-        times = [3*np.pi/2, 7*np.pi/2, 11*np.pi/2]
+        times = [3/4, 7/4, 11/4]
         for time in times:
-            assert supply.get_voltage(time)[0] == pytest.approx(-400.0 / np.sqrt(3) * np.sqrt(2))
+            assert np.allclose(supply.get_voltage(time)[0], -400.0 / np.sqrt(3) * np.sqrt(2))
     
         #"Hand" calculated
-        supply_parameter = {'frequency': 41, 'phase': 3.26, 'fixed_phase': True}
+        supply_parameter = {'frequency': 41, 'phase': 3.26}
         supply = vs.AC3PhaseSupply(supply_parameter=supply_parameter)
-        assert supply.get_voltage(1) == pytest.approx([89.536111,227.238311, -316.774422])
-        assert supply.get_voltage(2) == pytest.approx([-138.223662,-187.151049, 325.374712])
+        assert np.allclose(supply.get_voltage(1/(2*np.pi)),[89.536111,227.238311, -316.774422])
+        assert np.allclose(supply.get_voltage(2/(2*np.pi)),[-138.223662,-187.151049, 325.374712])
 
