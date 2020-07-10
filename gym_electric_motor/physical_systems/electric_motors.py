@@ -1018,8 +1018,8 @@ class SynchronousMotor(ThreePhaseMotor):
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
         r_s                    Ohm         0.78          Stator resistance
-        l_q                    H           6.3e-3        Quadrature axis inductance
         l_d                    H           1.2           Direct axis inductance
+        l_q                    H           6.3e-3        Quadrature axis inductance
         psi_p                  Wb          0.0094        Effective excitation flux (PMSM only)
         p                      1           2             Pole pair number
         j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
@@ -1028,8 +1028,8 @@ class SynchronousMotor(ThreePhaseMotor):
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_a             A      Current through branch a
         i_b             A      Current through branch b
         i_c             A      Current through branch c
@@ -1039,8 +1039,8 @@ class SynchronousMotor(ThreePhaseMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            A      Quadrature axis voltage
         u_sd            A      Direct axis voltage
+        u_sq            A      Quadrature axis voltage
         u_a             A      Voltage through branch a
         u_b             A      Voltage through branch b
         u_c             A      Voltage through branch c
@@ -1087,12 +1087,12 @@ class SynchronousMotor(ThreePhaseMotor):
             Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
             the general limits/nominal values (e.g. i)
         """
-    I_SQ_IDX = 0
-    I_SD_IDX = 1
+    I_SD_IDX = 0
+    I_SQ_IDX = 1
     EPSILON_IDX = 2
     CURRENTS_IDX = [0, 1]
-    CURRENTS = ['i_sq', 'i_sd']
-    VOLTAGES = ['u_sq', 'u_sd']
+    CURRENTS = ['i_sd', 'i_sq']
+    VOLTAGES = ['u_sd', 'u_sq']
 
     _model_constants = None
 
@@ -1138,26 +1138,26 @@ class SynchronousMotor(ThreePhaseMotor):
         """
         raise NotImplementedError
 
-    def electrical_ode(self, state, u_qd, omega, *_):
+    def electrical_ode(self, state, u_dq, omega, *_):
         """
         The differential equation of the Synchronous Motor.
 
         Args:
-            state: The current state of the motor. [i_sq, i_sd, epsilon]
+            state: The current state of the motor. [i_sd, i_sq, epsilon]
             omega: The mechanical load
-            u_qd: The input voltages [u_sq, u_sd]
+            u_qd: The input voltages [u_sd, u_sq]
 
         Returns:
-            The derivatives of the state vector d/dt([i_sq, i_sd, epsilon])
+            The derivatives of the state vector d/dt([i_sd, i_sq, epsilon])
         """
         return np.matmul(self._model_constants, np.array([
             omega,
-            state[self.I_SQ_IDX],
             state[self.I_SD_IDX],
-            u_qd[0],
-            u_qd[1],
-            omega * state[self.I_SQ_IDX],
+            state[self.I_SQ_IDX],
+            u_dq[0],
+            u_dq[1],
             omega * state[self.I_SD_IDX],
+            omega * state[self.I_SQ_IDX],
         ]))
 
     def i_in(self, state):
@@ -1195,8 +1195,8 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
         r_s                    Ohm         0.78          Stator resistance
-        l_q                    H           6.3e-3        Quadrature axis inductance
         l_d                    H           1.2           Direct axis inductance
+        l_q                    H           6.3e-3        Quadrature axis inductance
         p                      1           2             Pole pair number
         j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
@@ -1204,8 +1204,8 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_a             A      Current through branch a
         i_b             A      Current through branch b
         i_c             A      Current through branch c
@@ -1215,8 +1215,8 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_a             V      Voltage through branch a
         u_b             V      Voltage through branch b
         u_c             V      Voltage through branch c
@@ -1286,20 +1286,18 @@ class SynchronousReluctanceMotor(SynchronousMotor):
 
         mp = self._motor_parameter
         self._model_constants = np.array([
-            # omega, i_sq, i_sd, u_sq, u_sd, omega * i_sq, omega * i_sd
-            [0, -mp['r_s'], 0, 1, 0, 0, -mp['l_d'] * mp['p']],
-            [0, 0, -mp['r_s'], 0, 1, mp['l_q'] * mp['p'], 0],
-            [mp['p'], 0, 0, 0, 0, 0, 0]
+            #  omega,       i_sd,       i_sq, u_sd, u_sq,          omega * i_sd,          omega * i_sq
+            [      0, -mp['r_s'],          0,    1,    0,                     0,   mp['l_q'] * mp['p']],
+            [      0,          0, -mp['r_s'],    0,    1,  -mp['l_d'] * mp['p'],                     0],
+            [mp['p'],          0,          0,    0,    0,                     0,                     0]
         ])
-        self._model_constants[self.I_SQ_IDX] = self._model_constants[
-                                                   self.I_SQ_IDX] / mp['l_q']
-        self._model_constants[self.I_SD_IDX] = self._model_constants[
-                                                   self.I_SD_IDX] / mp['l_d']
+
+        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
+        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
 
     def _torque_limit(self):
         # Docstring of superclass
-        return self.torque([self._limits['i_sq'] / np.sqrt(2),
-                            self._limits['i_sd'] / np.sqrt(2), 0])
+        return self.torque([self._limits['i_sd'] / np.sqrt(2), self._limits['i_sq'] / np.sqrt(2), 0])
 
     def torque(self, currents):
         # Docstring of superclass
@@ -1312,18 +1310,18 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         mp = self._motor_parameter
         return (
             np.array([
-                [-mp['r_s'] / mp['l_q'], -mp['l_d'] / mp['l_q'] * omega, 0],
-                [mp['l_q'] / mp['l_d'] * omega, - mp['r_s'] / mp['l_d'], 0],
+                [-mp['r_s'] / mp['l_d'], mp['l_q'] / mp['l_d'] * mp['p'] * omega, 0],
+                [-mp['l_d'] / mp['l_q'] * mp['p'] * omega, -mp['r_s'] / mp['l_q'], 0],
                 [0, 0, 0]
             ]),
             np.array([
-                - mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX],
                 mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                - mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX],
                 mp['p']
             ]),
             np.array([
-                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX],
                 1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX],
                 0
             ])
         )
@@ -1335,8 +1333,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
         r_s                    Ohm         0.78          Stator resistance
-        l_q                    H           6.3e-3        Quadrature axis inductance
         l_d                    H           1.2           Direct axis inductance
+        l_q                    H           6.3e-3        Quadrature axis inductance
         p                      1           2             Pole pair number
         j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
@@ -1344,8 +1342,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_a             A      Current through branch a
         i_b             A      Current through branch b
         i_c             A      Current through branch c
@@ -1355,8 +1353,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_a             V      Voltage through branch a
         u_b             V      Voltage through branch b
         u_c             V      Voltage through branch c
@@ -1427,21 +1425,18 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         # Docstring of superclass
         mp = self._motor_parameter
         self._model_constants = np.array([
-            # omega,                 i_q,        i_d,        u_q, u_d, omega * i_q,         omega * i_d
-            [-mp['psi_p'] * mp['p'], -mp['r_s'], 0, 1, 0, 0,
-             -mp['l_d'] * mp['p']],
-            [0, 0, -mp['r_s'], 0, 1, mp['l_q'] * mp['p'], 0],
-            [mp['p'], 0, 0, 0, 0, 0, 0]
+            #                 omega,        i_d,        i_q, u_d, u_q,          omega * i_d,          omega * i_q
+            [                     0, -mp['r_s'],          0,   1,   0,                    0, mp['l_q'] * mp['p']],
+            [-mp['psi_p'] * mp['p'],          0, -mp['r_s'],   0,   1, -mp['l_d'] * mp['p'],                   0],
+            [               mp['p'],          0,          0,   0,   0,                    0,                   0],
         ])
 
-        self._model_constants[self.I_SQ_IDX] = self._model_constants[
-                                                   self.I_SQ_IDX] / mp['l_q']
-        self._model_constants[self.I_SD_IDX] = self._model_constants[
-                                                   self.I_SD_IDX] / mp['l_d']
+        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
+        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
 
     def _torque_limit(self):
         # Docstring of superclass
-        return self.torque([self._limits['i_sq'], 0, 0])
+        return self.torque([0, self._limits['i_sq'], 0])
 
     def torque(self, currents):
         # Docstring of superclass
@@ -1453,21 +1448,19 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
         return (
-            np.array([  # dx'/dx
-                [-mp['r_s'] / mp['l_q'], -mp['l_d'] / mp['l_q'] * omega, 0],
-                [mp['l_q'] / mp['l_d'] * omega, -mp['r_s'] / mp['l_d'], 0],
+            np.array([ # dx'/dx
+                [-mp['r_s'] / mp['l_d'], mp['l_q']/mp['l_d'] * omega * mp['p'], 0],
+                [-mp['l_d'] / mp['l_q'] * omega * mp['p'], - mp['r_s'] / mp['l_q'], 0],
                 [0, 0, 0]
             ]),
-            np.array([  # dx'/dw
-                -mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp[
-                    'p'] * mp['psi_p'] / mp['l_q'],
+            np.array([ # dx'/dw
                 mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                - mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['p'] * mp['psi_p'] / mp['l_q'],
                 mp['p']
             ]),
-            np.array([  # dT/dx
-                1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[
-                    self.I_SD_IDX]),
+            np.array([ # dT/dx
                 1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
+                1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
                 0
             ])
         )
@@ -1495,8 +1488,8 @@ class InductionMotor(ThreePhaseMotor):
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_sa            A      Current through branch a
         i_sb            A      Current through branch b
         i_sc            A      Current through branch c
@@ -1506,8 +1499,8 @@ class InductionMotor(ThreePhaseMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_sa            V      Voltage through branch a
         u_sb            V      Voltage through branch b
         u_sc            V      Voltage through branch c
@@ -1573,8 +1566,8 @@ class InductionMotor(ThreePhaseMotor):
     _default_motor_parameter = {
         'p': 2,
         'l_m': 143.75e-3,
-        'l_ssig': 5.87e-3,
-        'l_rsig': 5.87e-3,
+        'l_sigs': 5.87e-3,
+        'l_sigr': 5.87e-3,
         'j_rotor': 1.1e-3,
         'r_s': 2.9338,
         'r_r': 1.355,
@@ -1643,7 +1636,7 @@ class InductionMotor(ThreePhaseMotor):
         The differential equation of the Induction Motor.
 
         Args:
-            state: The current state of the motor. [i_salpha, i_sbeta, psi_ralpha, psi_rbeta, epsilon]
+            state: The momentary state of the motor. [i_salpha, i_sbeta, psi_ralpha, psi_rbeta, epsilon]
             omega: The mechanical load
             u_sr_alphabeta: The input voltages [u_salpha, u_sbeta, u_ralpha, u_rbeta]
 
@@ -1672,15 +1665,12 @@ class InductionMotor(ThreePhaseMotor):
     def _torque_limit(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m'] ** 2 / (mp['l_m'] + mp['l_rsig']) * \
-               self._limits['i_sd'] * self._limits['i_sq'] / 2
+        return 1.5 * mp['p'] * mp['l_m'] ** 2/(mp['l_m']+mp['l_sigr']) * self._limits['i_sd'] * self._limits['i_sq'] / 2
 
     def torque(self, states):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * mp['l_m'] / (mp['l_m'] + mp['l_rsig']) * (
-                states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] -
-                states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
+        return 1.5 * mp['p'] * mp['l_m']/(mp['l_m'] + mp['l_sigr']) * (states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX] - states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX])
 
     def _flux_limit(self, omega=0, eps_mag=0, u_q_max=0.0, u_rq_max=0.0):
         """
@@ -1696,8 +1686,8 @@ class InductionMotor(ThreePhaseMotor):
             maximal flux values(list) in alpha-beta-system
         """
         mp = self.motor_parameter
-        l_s = mp['l_m'] + mp['l_ssig']
-        l_r = mp['l_m'] + mp['l_rsig']
+        l_s = mp['l_m'] + mp['l_sigs']
+        l_r = mp['l_m'] + mp['l_sigr']
         l_mr = mp['l_m'] / l_r
         sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
         # limiting flux for a low omega
@@ -1720,9 +1710,9 @@ class InductionMotor(ThreePhaseMotor):
     def _update_model(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        l_s = mp['l_m'] + mp['l_ssig']
-        l_r = mp['l_m'] + mp['l_rsig']
-        sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
+        l_s = mp['l_m']+mp['l_sigs']
+        l_r = mp['l_m']+mp['l_sigr']
+        sigma = (l_s*l_r-mp['l_m']**2) /(l_s*l_r)
         tau_r = l_r / mp['r_r']
         tau_sig = sigma * l_s / (
                 mp['r_s'] + mp['r_r'] * (mp['l_m'] ** 2) / (l_r ** 2))
@@ -1746,8 +1736,8 @@ class InductionMotor(ThreePhaseMotor):
 
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
-        l_s = mp['l_m'] + mp['l_ssig']
-        l_r = mp['l_m'] + mp['l_rsig']
+        l_s = mp['l_m'] + mp['l_sigs']
+        l_r = mp['l_m'] + mp['l_sigr']
         sigma = (l_s * l_r - mp['l_m'] ** 2) / (l_s * l_r)
         tau_r = l_r / mp['r_r']
         tau_sig = sigma * l_s / (
@@ -1794,8 +1784,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         r_s                    Ohm         2.9338        Stator resistance
         r_r                    Ohm         1.355         Rotor resistance
         l_m                    H           143.75e-3     Main inductance
-        l_ssig                 H           5.87e-3       Stator-side stray inductance
-        l_rsig                 H           5.87e-3       Rotor-side stray inductance
+        l_sigs                 H           5.87e-3       Stator-side stray inductance
+        l_sigr                 H           5.87e-3       Rotor-side stray inductance
         p                      1           2             Pole pair number
         j_rotor                kg/m^2      0.0011        Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
@@ -1803,8 +1793,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_sa            A      Stator current through branch a
         i_sb            A      Stator current through branch b
         i_sc            A      Stator current through branch c
@@ -1814,8 +1804,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         Rotor flux      Unit   Description
         =============== ====== =============================================
-        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_rd          Vs     Direct axis of the rotor oriented flux
+        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_ra          Vs     Rotor oriented flux in branch a
         psi_rb          Vs     Rotor oriented flux in branch b
         psi_rc          Vs     Rotor oriented flux in branch c
@@ -1825,8 +1815,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_sa            V      Stator voltage through branch a
         u_sb            V      Stator voltage through branch b
         u_sc            V      Stator voltage through branch c
@@ -1875,8 +1865,8 @@ class SquirrelCageInductionMotor(InductionMotor):
     _default_motor_parameter = {
         'p': 2,
         'l_m': 143.75e-3,
-        'l_ssig': 5.87e-3,
-        'l_rsig': 5.87e-3,
+        'l_sigs': 5.87e-3,
+        'l_sigr': 5.87e-3,
         'j_rotor': 1.1e-3,
         'r_s': 2.9338,
         'r_r': 1.355,
@@ -1943,20 +1933,20 @@ class DoublyFedInductionMotor(InductionMotor):
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
-        r_s                    Ohm         12e-3        Stator resistance
+        r_s                    Ohm         12e-3         Stator resistance
         r_r                    Ohm         21e-3         Rotor resistance
-        l_m                    H           13.5e-3        Main inductance
-        l_ssig                 H           0.2e-3        Stator-side stray inductance
-        l_rsig                 H           0.1e-3        Rotor-side stray inductance
+        l_m                    H           13.5e-3       Main inductance
+        l_sigs                 H           0.2e-3        Stator-side stray inductance
+        l_sigr                 H           0.1e-3        Rotor-side stray inductance
         p                      1           2             Pole pair number
-        j_rotor                kg/m^2      1e3        Moment of inertia of the rotor
+        j_rotor                kg/m^2      1e3           Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
 
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================
-        i_sq            A      Quadrature axis current
         i_sd            A      Direct axis current
+        i_sq            A      Quadrature axis current
         i_sa            A      Current through branch a
         i_sb            A      Current through branch b
         i_sc            A      Current through branch c
@@ -1966,8 +1956,8 @@ class DoublyFedInductionMotor(InductionMotor):
         =============== ====== =============================================
         Rotor flux      Unit   Description
         =============== ====== =============================================
-        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_rd          Vs     Direct axis of the rotor oriented flux
+        psi_rq          Vs     Quadrature axis of the rotor oriented flux
         psi_ra          Vs     Rotor oriented flux in branch a
         psi_rb          Vs     Rotor oriented flux in branch b
         psi_rc          Vs     Rotor oriented flux in branch c
@@ -1977,8 +1967,8 @@ class DoublyFedInductionMotor(InductionMotor):
         =============== ====== =============================================
         Motor Voltages  Unit   Description
         =============== ====== =============================================
-        u_sq            V      Quadrature axis voltage
         u_sd            V      Direct axis voltage
+        u_sq            V      Quadrature axis voltage
         u_sa            V      Stator voltage through branch a
         u_sb            V      Stator voltage through branch b
         u_sc            V      Stator voltage through branch c
@@ -2032,14 +2022,14 @@ class DoublyFedInductionMotor(InductionMotor):
     ROTOR_VOLTAGES = ['u_ralpha', 'u_rbeta']
     ROTOR_CURRENTS = ['i_ralpha', 'i_rbeta']
 
-    IO_ROTOR_VOLTAGES = ['u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd']
-    IO_ROTOR_CURRENTS = ['i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd']
+    IO_ROTOR_VOLTAGES = ['u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq']
+    IO_ROTOR_CURRENTS = ['i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq']
 
     _default_motor_parameter = {
         'p': 2,
         'l_m': 13.5e-3,
-        'l_ssig': 0.2e-3,
-        'l_rsig': 0.1e-3,
+        'l_sigs': 0.2e-3,
+        'l_sigr': 0.1e-3,
         'j_rotor': 1e3,
         'r_s': 12e-3,
         'r_r': 21e-3,
