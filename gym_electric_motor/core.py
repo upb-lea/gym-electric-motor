@@ -236,7 +236,6 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
-        #print('step state', np.max(self._state), np.min(self._state))
         self._reward, self._done = self._reward_function.reward(self._state, self._reference, action)
         self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
@@ -554,8 +553,8 @@ class RewardFunction:
         Returns:
             bool: True, if any observed limit has been violated, False otherwise.
         """
-        raise NotImplementedError
-        #return (abs(state[self._observed_states]) > self._limits[self._observed_states]).any()
+        # can be overwriten by child-class
+        return (abs(state[self._observed_states]) > self._limits[self._observed_states]).any()
 
     def _limit_violation_reward(self, state):
         """
