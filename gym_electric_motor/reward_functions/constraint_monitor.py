@@ -8,8 +8,12 @@ from gym.spaces import Box
 
 class ConstraintMonitor:
     """
-
-
+    The ConstraintMonitor Class monitors the system-states and assesses whether
+    they comply the given limits or violate them.
+    It returns the necessary information for the RewardFunction, to calculate
+    the corresponding reward-value.
+    Limits, here called constraints, can be given by the physical limits from
+    the environment, or user-defined constraints.
     """
     @property
     def constraints(self):
@@ -59,11 +63,14 @@ class ConstraintMonitor:
                  normalised=False,):
         """
         Args:
-            constraints():
-            discount_factor(float):
-            penalty_coefficient(float):
-            normalised(bool):
-
+            constraints(gym.spaces.Box, list): user-defined constraints,
+                given as a Box() or a list with maximal values for each state
+            discount_factor(float): scalar to discount physical-limits by the
+                given factor
+            penalty_coefficient(float): factor for the penalty function
+            normalised(bool): describes whether the constraints, given by the
+                user, are normalised or not
+        Return:
         """
         # assert isinstance(constraints, gym.spaces.Box),\
         #     'constraints have to be a gym.Box'
@@ -78,12 +85,17 @@ class ConstraintMonitor:
 
     def set_attributes(self, observed_states, limits):
         """
+        Setting the necessary attributes for different class-methods
 
+        Args:
+            observed_states(list): list with boolean entries, indicating which
+                states have to be monitored
+            limits(np.ndarray): limits given by the physical.system
+        Returns:
         """
         # setting system limits as constraint, when no constraints given
         if self._constraints is None:
             self._constraints = limits * self._discount_factor
-            #print(self._constraints)
 
         # normalize constraints to limit values
         if not self._normalised:
@@ -91,34 +103,38 @@ class ConstraintMonitor:
                                                             limits)
         self._observed_states = observed_states
 
-        #print(abs(limits))
-        #print(self._constraints)
-
     def check_constraint_violation(self, state):
         """
+        Checks if a given system-state violates the constraints
 
+        Args:
+            state(np.ndarray): system-state of the environment
+        Returns:
+            integer value from [0, 1], where 0 is no violation at all and 1 is
+            a hard constraint violation
         """
         if isinstance(self._constraints, gym.spaces.Box):
-            print('hier')
             lower = self._constraints.low
             upper = self._constraints.high
-            print(lower)
-            print(state)
-            print(upper)
             return int((abs(state) < lower).any() or (abs(state) > upper).any())
 
         elif isinstance(self._constraints, (list, np.ndarray)):
-            print('oder hier')
-            print(abs(state[self._observed_states]))
-            print(self._constraints[self._observed_states])
             check = (abs(state[self._observed_states]) >
                      self._constraints[self._observed_states]).any()
-            print(check)
             return int(check)
         else:
+            # todo return for soft violation
             raise NotImplementedError
 
     def _normalize_constraints(self, constraint, denominator):
+        """
+        Args:
+            constraint(gym.spaces.Box, np.ndarray): constraints to be normalised
+            denominator(np.ndarray): constraint is normalised in relation to
+                this argument
+        Returns:
+             normalised constraints
+        """
         if isinstance(constraint, gym.spaces.Box):
             upper = constraint.high / abs(denominator)
             lower = constraint.low / abs(denominator)
