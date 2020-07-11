@@ -33,8 +33,8 @@ constraints_2 = Box(low=np.array([-70, -440, -70, -300, -420]),
 # for 70% of normal limits
 discount_factor = 0.7
 
-ConMon = ConstraintMonitor(constraints=constraints_2)
-#ConMon = ConstraintMonitor(discount_factor=discount_factor)
+constraint_monitor = ConstraintMonitor(constraints=constraints_2)
+#constraint_monitor = ConstraintMonitor(discount_factor=discount_factor)
 
 if __name__ == '__main__':
     env = gem.make(
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         # Take standard class and pass parameters (Load)
         reward_power=0.5,
         # choose constraint monitor
-        constraint_monitor=ConMon,
+        constraint_monitor=constraint_monitor,
         load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
         # Pass a string (with extra parameters)
         ode_solver='scipy.solve_ivp',

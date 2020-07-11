@@ -450,7 +450,6 @@ class RewardFunction:
         self._observed_states = observed_states
         self._reference_generator = None
         self._limits = None
-  #      self._constraint_monitor = None
 
     def __call__(self, state, reference):
         """
@@ -550,7 +549,6 @@ class RewardFunction:
         Returns:
             bool: True, if any observed limit has been violated, False otherwise.
         """
-        # can be overwriten by child-class
         return (abs(state[self._observed_states]) > self._limits[self._observed_states]).any()
 
     def _limit_violation_reward(self, state):

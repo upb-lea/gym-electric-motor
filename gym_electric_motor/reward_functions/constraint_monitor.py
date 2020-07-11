@@ -12,8 +12,8 @@ class ConstraintMonitor:
     they comply the given limits or violate them.
     It returns the necessary information for the RewardFunction, to calculate
     the corresponding reward-value.
-    Limits, here called constraints, can be given by the physical limits from
-    the environment, or user-defined constraints.
+    The constraints of the system-states can be generally described by the user
+    or are restricted by the physical enviroment-limits
     """
     @property
     def constraints(self):
