@@ -104,7 +104,7 @@ class ThreePointController(Controller):
             return self._idle_action
 
 
-class DCPController(Controller):
+class PController(Controller):
     """
     In the below proportional control implementation, the controller output is proportional to the error signal,  which is the difference
     between the reference_idx and the state_idx .i.e., the output of a proportional controller
@@ -157,25 +157,27 @@ class IController(Controller):
         self._ref_idx = reference_idx
         self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
         self._referenced_state_max = self._limits[self._referenced_state] \
-            * environment.physical_system.state_space.high[self._referenced_state]
+                                     * environment.physical_system.state_space.high[self._referenced_state]
         self._referenced_state_min = self._limits[self._referenced_state] \
-            * environment.physical_system.state_space.low[self._referenced_state]
+                                     * environment.physical_system.state_space.low[self._referenced_state]
 
     def control(self, state, reference):
         diff = reference[self._ref_idx] - state[self._referenced_state]
         self._integrated_value += diff * self._tau
-        if state[self._referenced_state] > self._referenced_state_max:  # check upper limit
-            state[self._referenced_state] = self._referenced_state_max
-            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
-        if state[self._referenced_state] < self._referenced_state_min:  # check upper limit
-            state[self._referenced_state] = self._referenced_state_min
-            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        if self._integrated_value > self._referenced_state_max:  # check upper limit
+            self._integrated_value = self._referenced_state_max
+        else:
+            self._integrated_value = self._integrated_value - diff * self._k_i  # anti-reset windup
+        if self._integrated_value < self._referenced_state_min:  # check upper limit
+            self._integrated_value = self._referenced_state_min
+        else:
+            self._integrated_value = self._integrated_value - diff * self._k_i  # anti-reset windup
 
         return np.array([
             max(
                 self._action_min,
                 min(
-                    self._action_max, self._k_i / self._tau * self._integrated_value
+                    self._action_max, self._tau / self._k_i * self._integrated_value
                 )
             )
         ])
@@ -184,7 +186,7 @@ class IController(Controller):
         self._integrated_value = 0
 
 
-class DCPIController(DCPController):
+class PIController(PController):
     """
       The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
       and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
@@ -203,18 +205,27 @@ class DCPIController(DCPController):
         self._limits = environment.physical_system.limits
         self._integrated_value = 0
         self._referenced_state_max = self._limits[self._referenced_state] \
-            * environment.physical_system.state_space.high[self._referenced_state]
+                                     * environment.physical_system.state_space.high[self._referenced_state]
         self._referenced_state_min = self._limits[self._referenced_state] \
-            * environment.physical_system.state_space.low[self._referenced_state]
+                                     * environment.physical_system.state_space.low[self._referenced_state]
+        self._motor_parameter = environment.physical_system.electrical_motor.motor_parameter
 
     def control(self, state, reference):
+        mp = self._motor_parameter
+        t_motor = mp['l_a'] / mp['r_a']
+        t_t = 3 / 2 * self._tau
+        t_sigma = min(t_motor, t_t)
+        a = t_sigma / t_motor
+        self._tau = a ** 2 * t_sigma  # a = 2 for Symmetric Optimum tuning method
         diff = reference[self._ref_idx] - state[self._referenced_state]
         self._integrated_value += diff * self._tau
-        if state[self._referenced_state] > self._referenced_state_max:  # check upper limit
-            state[self._referenced_state] = self._referenced_state_max
+        if self._integrated_value > self._referenced_state_max:  # check upper limit
+            self._integrated_value = self._referenced_state_max
+        else:
             self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
-        if state[self._referenced_state] < self._referenced_state_min:  # check upper limit
-            state[self._referenced_state] = self._referenced_state_min
+        if self._integrated_value < self._referenced_state_min:  # check lower limit
+            self._integrated_value = self._referenced_state_min
+        else:
             self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
 
         return np.array([
@@ -223,7 +234,7 @@ class DCPIController(DCPController):
                 min(
                     self._action_max,
                     self._k_p * (reference[0] - state[self._referenced_state])
-                    + self._k_i / self._tau * self._integrated_value
+                    + self._tau / self._k_i * self._integrated_value
                 )
             )
         ])
@@ -523,7 +534,7 @@ class FOCController(Controller):
         omega = state[self._omega_idx] * self._limits[self._omega_idx]
         omega_ref = reference[self._ref_idx] * self._limits[self._omega_idx]
 
-        u = state[self._voltages_idx] * self._limits[self._voltages_idx]
+        # u = state[self._voltages_idx] * self._limits[self._voltages_idx]
         epsilon = state[self._epsilon_idx] * self._limits[self._epsilon_idx]
         i_qd = state[self._currents_idx] * self._limits[self._currents_idx]
 
@@ -602,7 +613,7 @@ class FOCController(Controller):
 
         # from d/q to alpha/beta and a/b/c
         u_qd_des = np.array([u_sq_des, u_sd_des])
-        #voltages = self._backward_transformation(u_qd_des, epsilon_shift)
+        # voltages = self._backward_transformation(u_qd_des, epsilon_shift)
 
         # normalise inputs
         result = np.clip(u_qd_des / self._limits[self._voltages_idx[0]], -1, 1)
@@ -721,9 +732,9 @@ class ThreePhaseSteadyState(Controller):
 _controllers = {
     'on_off': OnOffController,
     'three_point': ThreePointController,
-    'p_controller': DCPController,
+    'p_controller': PController,
     'i_controller': IController,
-    'pi_controller': DCPIController,
+    'pi_controller': PIController,
     'pmsm_on_off': PmsmOnOffController,
     'synrm_on_off': SynRmOnOffController,
     'cascaded_pi': DCCascadedPIController,
