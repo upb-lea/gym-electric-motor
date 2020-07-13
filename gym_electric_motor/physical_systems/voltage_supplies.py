@@ -13,6 +13,8 @@ class VoltageSupply:
 
     #: Minimum and Maximum values of the Supply Voltage.
     supply_range = ()
+    #number of output voltages
+    voltage_len = 1
 
     @property
     def u_nominal(self):
@@ -156,7 +158,7 @@ class AC1PhaseSupply(VoltageSupply):
 
 class AC3PhaseSupply(VoltageSupply):
     """AC three phase voltage supply"""
-
+    voltage_len = 3
     def __init__(self, u_nominal=400, supply_parameter=None, **__):
         """
         Args:
