@@ -354,10 +354,10 @@ class MeanEpisodeRewardPlot(MotorDashboardPlot):
     mode = 'continuous'
     reward_line_cfg = {
         'color': 'gray',
-        'linestyle': '',
+        'linestyle': '-',
         'linewidth': 0.75,
         'marker': 'o',
-        'markersize': .75
+        'markersize': 3
     }
 
     def __init__(self):
@@ -399,13 +399,14 @@ class MeanEpisodeRewardPlot(MotorDashboardPlot):
         if self._episode_length > 0:
             self._reward_data = self._reward_sum / self._episode_length
             self._reward_line.set_data([self._t], [self._reward_data])
+           
         #super().update()
         # configure x-axis properties
-        if self.mode == 'continuous':
-            #x_lim = self._axis.get_xlim()
-            upper_lim = self._t #max(self._t, x_lim[1])
-            lower_lim = upper_lim - self.x_width
-            self._axis.set_xlim(lower_lim, upper_lim)
+            if self.mode == 'continuous':
+                x_lim = self._axis.get_xlim()
+                upper_lim = max(self._t, x_lim[1])  # self._t
+                lower_lim = upper_lim - self.x_width
+                self._axis.set_xlim(lower_lim, upper_lim)
 
     def reset(self):
         self.update()
