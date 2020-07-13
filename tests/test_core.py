@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
-from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization, \
-    mock_instantiate, instantiate_dict
+from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization, DummyCallback, \
+    mock_instantiate, instantiate_dict 
 from gym.spaces import Tuple, Box
 import gym_electric_motor
 from gym_electric_motor.visualization import ConsolePrinter
@@ -21,11 +21,13 @@ class TestElectricMotorEnvironment:
         rg = DummyReferenceGenerator()
         rf = DummyRewardFunction()
         vs = DummyVisualization()
+        cb = DummyCallback()
         env = self.test_class(
             physical_system=ps,
             reference_generator=rg,
             reward_function=rf,
-            visualization=vs
+            visualization=vs,
+            callbacks = [cb]
         )
         return env
 
@@ -35,21 +37,21 @@ class TestElectricMotorEnvironment:
             assert type(env) == self.test_class
 
     @pytest.mark.parametrize(
-        "physical_system, reference_generator, reward_function, state_filter, visualization, kwargs",
+        "physical_system, reference_generator, reward_function, state_filter, visualization, callbacks, kwargs",
         [
-            (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, None, {}),
+            (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, None, [], {}),
             (
                     DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
-                    ConsolePrinter, {'a': 1, 'b': 2}
+                    ConsolePrinter, [DummyCallback()], {'a': 1, 'b': 2}
             ),
             (
                     DummyPhysicalSystem(10), DummyReferenceGenerator(),
-                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], None, {}
+                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], None, [DummyCallback(), DummyCallback()],{}
             ),
         ]
     )
     def test_initialization(self, monkeypatch, physical_system, reference_generator, reward_function,
-                            state_filter, visualization, kwargs):
+                            state_filter, visualization, callbacks, kwargs):
         with monkeypatch.context() as m:
             instantiate_dict.clear()
             m.setattr(gym_electric_motor.core, "instantiate", mock_instantiate)
@@ -59,6 +61,7 @@ class TestElectricMotorEnvironment:
                 reward_function=reward_function,
                 visualization=visualization,
                 state_filter=state_filter,
+                callbacks = callbacks,
                 **kwargs
             )
 
@@ -95,15 +98,25 @@ class TestElectricMotorEnvironment:
         assert reference_generator, DummyReferenceGenerator or env.reference_generator.kwargs == kwargs
         assert reward_function != DummyRewardFunction or env.reward_function.kwargs == kwargs
         assert visualization != DummyVisualization or env._visualization.kwargs == kwargs
+        for callback in callbacks:
+            assert callback._env == env
 
     def test_reset(self, env):
         ps = env.physical_system
         rg = env.reference_generator
         rf = env.reward_function
         vs = env._visualization
+        cbs = env._callbacks
         rf.last_state = rf.last_reference = ps.state = rg.get_reference_state = vs.reference_trajectory = None
-
+        # Initial amount of resets
+        for callback in cbs:
+            assert callback.reset_begin == 0
+            assert callback.reset_end == 0
         state, ref = env.reset()
+        # The corresponding callback functions should've been called
+        for callback in cbs:
+            assert callback.reset_begin == 1
+            assert callback.reset_end == 1
         assert (state, ref) in env.observation_space, 'Returned values not in observation space'
         assert np.all(np.all(state == ps.state)), 'Returned state is not the physical systems state'
         assert np.all(ref == rg.reference_observation), 'Returned reference is not the reference generators reference'
@@ -116,12 +129,21 @@ class TestElectricMotorEnvironment:
         ps = env.physical_system
         rg = env.reference_generator
         rf = env.reward_function
+        cbs = env._callbacks
 
         rf.set_done(set_done)
         with pytest.raises(Exception):
             env.step(action), 'Environment goes through the step without previous reset'
         env.reset()
+        # Callback's step inital step values
+        for callback in cbs:
+            assert callback.step_begin == 0
+            assert callback.step_end == 0
         (state, reference), reward, done, _ = env.step(action)
+        # Each of callback's step functions were called in step
+        for callback in cbs:
+            assert callback.step_begin == 1
+            assert callback.step_end == 1
         assert np.all(state == ps.state[env.state_filter]), 'Returned state and Physical Systems state are not equal'
         assert rg.get_reference_state == ps.state,\
             'State passed to the Reference Generator not equal to Physical System state'
@@ -140,7 +162,14 @@ class TestElectricMotorEnvironment:
         rg = env.reference_generator
         rf = env.reward_function
         vs = env._visualization
+        cbs = env._callbacks
+        # Callback's step inital close value
+        for callback in cbs:
+            assert callback.close == 0
         env.close()
+        # Callback's close function was called on close
+        for callback in cbs:
+            assert callback.close == 1
         assert ps.closed, 'Physical System was not closed'
         assert rf.closed, 'Reward Function was not closed'
         assert rg.closed, 'Reference Generator was not closed'

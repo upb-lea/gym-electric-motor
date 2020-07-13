@@ -3,18 +3,7 @@
 from .core import Callback
 from gym_electric_motor.reference_generators import SubepisodedReferenceGenerator, SwitchedReferenceGenerator
 
-class DummyCallback(Callback):
-    def on_reset_begin(self):
-        print('on_reset_begin')
-    def on_reset_end(self):
-        print('on_reset_end')
-    def on_step_begin(self):
-        print('on_step_begin')
-    def on_step_end(self):
-        print('on_step_end')
-    def on_close(self):
-        print('on_close')
-        
+
 class AdaptiveLimitMargin(Callback):
     """
     Callback used to adapt the limit margin of a reference generator during runtime. Supports all 

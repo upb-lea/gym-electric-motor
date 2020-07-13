@@ -11,6 +11,7 @@ from gym.spaces import Box, Discrete
 from scipy.integrate import ode
 from tests.conf import system, jacobian, permex_motor_parameter
 from gym_electric_motor.utils import instantiate
+from gym_electric_motor.core import Callback
 
 
 # region first version
@@ -738,7 +739,7 @@ class DummyElectricMotorEnvironment:
         self._call_callbacks(self._callbacks, 'set_env', self)
         
     def _call_callbacks(self, callbacks, func_name, *args):
-        """Calls each callback's func_name function with **kwargs"""
+        """Calls each callback's func_name function with *args"""
         for callback in callbacks:
             func = getattr(callback, func_name)
             func(*args)
@@ -754,7 +755,26 @@ class DummyElectricMotorEnvironment:
     def close(self):
         self._call_callbacks(self._callbacks, 'on_close')
         
-
+class DummyCallback(Callback):
+    
+    def __init__(self):
+        self.reset_begin = 0
+        self.reset_end = 0
+        self.step_begin = 0
+        self.step_end = 0
+        self.close = 0
+    
+    def on_reset_begin(self):
+        self.reset_begin += 1
+    def on_reset_end(self):
+        self.reset_end += 1
+    def on_step_begin(self):
+        self.step_begin += 1
+    def on_step_end(self):
+        self.step_end += 1
+    def on_close(self):
+        self.close += 1
+        
 
 
             

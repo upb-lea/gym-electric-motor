@@ -197,7 +197,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._call_callbacks(self._callbacks, 'set_env', self)
         
     def _call_callbacks(self, callbacks, func_name, *args):
-        """Calls each callback's func_name function with **kwargs"""
+        """Calls each callback's func_name function with *args"""
         for callback in callbacks:
             func = getattr(callback, func_name)
             func(*args)
