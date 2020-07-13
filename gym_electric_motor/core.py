@@ -194,13 +194,13 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._action = None
         
         self._callbacks = callbacks
-        for callback in self._callbacks:
-            callback.set_env(self)
+        self._call_callbacks(self._callbacks, 'set_env', self)
         
-    def _call_callbacks(self, callbacks, func_name):
+    def _call_callbacks(self, callbacks, func_name, *args):
+        """Calls each callback's func_name function with **kwargs"""
         for callback in callbacks:
             func = getattr(callback, func_name)
-            func()
+            func(*args)
             
     def reset(self, *_, **__):
         """

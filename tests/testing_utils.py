@@ -728,5 +728,37 @@ class DummyRandom:
         self._monkey_random_normal_counter += 1
         result = np.array([0.1, -0.2, 0.6, 0.1, -0.5, -0.3, -1.7, 0.1, -0.2, 0.4])
         return result[:size]
+    
+class DummyElectricMotorEnvironment:
+    """Dummy environment to test pre implemented callbacks. Extend for further testing cases"""
+    
+    def __init__(self, reference_generator = None, callbacks = [], **kwargs):
+        self._reference_generator = reference_generator
+        self._callbacks = callbacks
+        self._call_callbacks(self._callbacks, 'set_env', self)
+        
+    def _call_callbacks(self, callbacks, func_name, *args):
+        """Calls each callback's func_name function with **kwargs"""
+        for callback in callbacks:
+            func = getattr(callback, func_name)
+            func(*args)
+    
+    def step(self):
+        self._call_callbacks(self._callbacks, 'on_step_begin')
+        self._call_callbacks(self._callbacks, 'on_step_end')
+            
+    def reset(self):
+        self._call_callbacks(self._callbacks, 'on_reset_begin')
+        self._call_callbacks(self._callbacks, 'on_reset_end')
+        
+    def close(self):
+        self._call_callbacks(self._callbacks, 'on_close')
+        
+
+
+
+            
+    
+    
 
 # endregion
