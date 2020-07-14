@@ -115,6 +115,7 @@ class NoConverter(PowerElectronicConverter):
     #Dummy default values for voltages and currents. No real use other than to fit the current physical system architecture
     voltages = Box(0, 1, shape=(3,))
     currents = Box(0, 1, shape=(3,))
+    action_space = Box(low=np.array([]), high=np.array([]))
 
     def i_sup(self, i_out):
         return i_out[0]
