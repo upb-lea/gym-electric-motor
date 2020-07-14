@@ -28,8 +28,8 @@
      id="namedview592"
      showgrid="true"
      inkscape:zoom="1.4142136"
-     inkscape:cx="260.6081"
-     inkscape:cy="274.26485"
+     inkscape:cx="211.69422"
+     inkscape:cy="236.35658"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -38,7 +38,7 @@
        id="grid1366" /></sodipodi:namedview><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
      id="defs6"><clipPath
        id="clipPath22"
        clipPathUnits="userSpaceOnUse"><path
@@ -429,7 +429,6 @@
      y="0"
      id="tspan324">20</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,393.91,797.76)"
    style="font-variant:normal;font-weight:normal;font-size:9px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -437,7 +436,6 @@
      x="0"
      y="0"
      id="tspan328">2</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,400.63,797.76)"
@@ -447,7 +445,6 @@
      y="0"
      id="tspan332">Permanentmagnet</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,465.58,797.76)"
    style="font-variant:normal;font-weight:normal;font-size:9px;line-height:0%;font-family:Symbol;-inkscape-font-specification:'Times New';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -455,7 +452,6 @@
      x="0"
      y="0"
      id="tspan336">-</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,468.58,797.76)"
@@ -465,7 +461,6 @@
      y="0"
      id="tspan340">Synchronmotor</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,382.15,787.44)"
    style="font-variant:normal;font-weight:normal;font-size:9px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -473,7 +468,6 @@
      x="0 5.1479998 9.1079998 12.105 18.945 22.905001 27.459 31.419001 35.973 38.474998 40.761002 48.789001 52.749001 57.186001 61.740002 65.699997 68.202003 70.487999 75.518997 79.838997 84.392998 88.352997 92.906998 95.903999 100.458 104.895 109.449 114.003 117.504 119.646 127.674 132.228 134.73 139.302"
      y="0"
      id="tspan344">Permanent Magnet Synchronous Motor</tspan></text>
-
 
 <g
    id="g352"><g
@@ -496,7 +490,6 @@
      y="0"
      id="tspan354">die Fluss</tspan></text>
 
-
 </g></g><g
        id="g368"><g
          clip-path="url(#clipPath46)"
@@ -507,7 +500,6 @@
      x="0"
      y="0"
      id="tspan362">-</tspan></text>
-
 
 </g></g><g
        id="g372"><g
@@ -523,7 +515,6 @@
      y="0"
      id="tspan374">durch die Stromableitungen, erhält </tspan></text>
 
-
 </g></g><g
        id="g388"><g
          clip-path="url(#clipPath58)"
@@ -534,7 +525,6 @@
      x="0 9.3360004 14.664 20.664"
      y="0"
      id="tspan382">man </tspan></text>
-
 
 </g></g><g
        id="g392"><g
@@ -553,7 +543,6 @@
      y="0"
      id="tspan398">current derivatives in the above voltage </tspan></text>
 
-
 </g></g><g
        id="g412"><g
          clip-path="url(#clipPath74)"
@@ -564,7 +553,6 @@
      x="0 5.2800002 11.28 17.280001 22.559999 25.896 29.268 35.268002 41.268002 45.936001 48.936001 51.936001 55.296001 58.632 61.632 65.627998 71.627998 74.963997 78.300003 84.323997 92.987999"
      y="0"
      id="tspan406">equations, it follows</tspan></text>
-
 
 </g></g><g
        id="g416"><g
@@ -583,7 +571,6 @@
      y="0"
      id="tspan422">p</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,124.02,4.0525)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -591,7 +578,6 @@
      x="0 3.7247076"
      y="0"
      id="tspan426">sd</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,116.93,4.0525)"
@@ -601,7 +587,6 @@
      y="0"
      id="tspan430">LLs</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,82.179,4.0525)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -609,7 +594,6 @@
      x="0 3.7247076"
      y="0"
      id="tspan434">sq</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,75.117,4.0525)"
@@ -619,7 +603,6 @@
      y="0"
      id="tspan438">LLs</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,47.498,4.0525)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -627,7 +610,6 @@
      x="0 3.7247076"
      y="0"
      id="tspan442">sq</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,36.906,4.0525)"
@@ -637,7 +619,6 @@
      y="0"
      id="tspan446">LLs</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,7.7632,4.0525)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -645,7 +626,6 @@
      x="0 3.7247076"
      y="0"
      id="tspan450">sq</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,125.98,43.444)"
@@ -655,7 +635,6 @@
      y="0"
      id="tspan454">sq</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,118.92,43.444)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -663,7 +642,6 @@
      x="0"
      y="0"
      id="tspan458">LLs</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,83.63,43.444)"
@@ -673,7 +651,6 @@
      y="0"
      id="tspan462">sd</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,76.544,43.444)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -681,7 +658,6 @@
      x="0"
      y="0"
      id="tspan466">LLs</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,48.224,43.444)"
@@ -691,7 +667,6 @@
      y="0"
      id="tspan470">sd</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,37.631,43.444)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -699,7 +674,6 @@
      x="0"
      y="0"
      id="tspan474">LLs</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,7.7632,43.444)"
@@ -709,7 +683,6 @@
      y="0"
      id="tspan478">sd</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,120.75,7.0919)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -717,7 +690,6 @@
      x="0"
      y="0"
      id="tspan482">i</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,110.57,7.0919)"
@@ -727,7 +699,6 @@
      y="0"
      id="tspan486">L</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,78.938,7.0919)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -735,7 +706,6 @@
      x="0"
      y="0"
      id="tspan490">i</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,68.756,7.0919)"
@@ -745,7 +715,6 @@
      y="0"
      id="tspan494">L</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,44.233,7.0919)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -753,7 +722,6 @@
      x="0"
      y="0"
      id="tspan498">i</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,29.844,7.0919)"
@@ -763,7 +731,6 @@
      y="0"
      id="tspan502">R</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,1.4511,7.0919)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -771,7 +738,6 @@
      x="0"
      y="0"
      id="tspan506">u</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,122.74,46.483)"
@@ -781,7 +747,6 @@
      y="0"
      id="tspan510">i</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,112.55,46.483)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -789,7 +754,6 @@
      x="0"
      y="0"
      id="tspan514">L</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,80.365,46.483)"
@@ -799,7 +763,6 @@
      y="0"
      id="tspan518">i</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,70.183,46.483)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -807,7 +770,6 @@
      x="0"
      y="0"
      id="tspan522">L</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,44.959,46.483)"
@@ -817,7 +779,6 @@
      y="0"
      id="tspan526">i</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,30.569,46.483)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -825,7 +786,6 @@
      x="0"
      y="0"
      id="tspan530">R</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,1.4511,46.483)"
@@ -835,7 +795,6 @@
      y="0"
      id="tspan534">u</tspan></text>
 
-
 <text
    transform="matrix(0.94869278,0,-0.31619931,-0.94869278,144.87,7.0919)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -843,7 +802,6 @@
      x="0 8.947813"
      y="0"
      id="tspan538">ω</tspan></text>
-
 
 <text
    transform="matrix(0.94869278,0,-0.31619931,-0.94869278,102.32,7.0919)"
@@ -853,7 +811,6 @@
      y="0"
      id="tspan542">ωω</tspan></text>
 
-
 <text
    transform="matrix(0.94869278,0,-0.31619931,-0.94869278,104.28,46.483)"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -861,7 +818,6 @@
      x="0"
      y="0"
      id="tspan546">ωω</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,136.4,7.0919)"
@@ -871,7 +827,6 @@
      y="0"
      id="tspan550">ωω</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,93.86,7.0919)"
    style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -879,7 +834,6 @@
      x="0"
      y="0"
      id="tspan554">ωω</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,59.179,7.0919)"
@@ -889,7 +843,6 @@
      y="0"
      id="tspan558">ωω</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,19.952,7.0919)"
    style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -897,7 +850,6 @@
      x="0"
      y="0"
      id="tspan562">ωω</tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,96.012,46.483)"
@@ -907,7 +859,6 @@
      y="0"
      id="tspan566">ωω</tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,60.606,46.483)"
    style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -915,7 +866,6 @@
      x="0"
      y="0"
      id="tspan570"></tspan></text>
-
 
 <text
    transform="matrix(1,0,0,-1,20.654,46.483)"
@@ -925,7 +875,6 @@
      y="0"
      id="tspan574"></tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,79.785,9.697)"
    style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'MT Extra';-inkscape-font-specification:'MT Extra';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -934,7 +883,6 @@
      y="0"
      id="tspan578"></tspan></text>
 
-
 <text
    transform="matrix(1,0,0,-1,81.211,49.088)"
    style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'MT Extra';-inkscape-font-specification:'MT Extra';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -942,7 +890,6 @@
      x="0"
      y="0"
      id="tspan582"></tspan></text>
-
 
 </g></g></g><g
    id="g594"><g
@@ -961,7 +908,6 @@
      y="0"
      id="tspan596">(</tspan></text>
 
-
 </g></g><g
        id="g610"><g
          clip-path="url(#clipPath98)"
@@ -972,7 +918,6 @@
      x="0"
      y="0"
      id="tspan604">2</tspan></text>
-
 
 </g></g><g
        id="g618"><g
@@ -985,7 +930,6 @@
      y="0"
      id="tspan612">.</tspan></text>
 
-
 </g></g><g
        id="g626"><g
          clip-path="url(#clipPath106)"
@@ -997,7 +941,6 @@
      y="0"
      id="tspan620">35</tspan></text>
 
-
 </g></g><g
        id="g634"><g
          clip-path="url(#clipPath110)"
@@ -1008,7 +951,6 @@
      x="0"
      y="0"
      id="tspan628">)</tspan></text>
-
 
 </g></g><g
        id="g638"><g
@@ -1034,8 +976,7 @@
      id="tspan896"
      y="-574.3385"
      x="315.10342"
-     style="stroke-width:1">σs</tspan></text>
-
+     style="stroke-width:1">sσ</tspan></text>
 
 <text
    id="text902"
@@ -1047,7 +988,6 @@
      y="-576.80713"
      x="309.75735"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
-
 
 <path
    inkscape:connector-curvature="0"
@@ -1107,7 +1047,6 @@
      id="tspan944"
      style="stroke-width:1">sα</tspan></text>
 
-
 <text
    id="text950"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
@@ -1118,7 +1057,6 @@
      y="-536.21851"
      x="191.81996"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
-
 
 <path
    inkscape:connector-curvature="0"
@@ -1139,7 +1077,6 @@
      x="231.67635"
      style="stroke-width:1">sα</tspan></text>
 
-
 <text
    id="text968"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
@@ -1150,7 +1087,6 @@
      y="-576.43829"
      x="228.88062"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">i</tspan></text>
-
 
 
 
@@ -1187,7 +1123,6 @@
      x="267.8367"
      style="stroke-width:1">s</tspan></text>
 
-
 <text
    id="text1172"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
@@ -1198,7 +1133,6 @@
      y="-576.80707"
      x="260.81641"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">R</tspan></text>
-
 
 <g
    id="g1396"
@@ -1239,7 +1173,6 @@
      y="0"
      id="tspan652">(</tspan></text>
 
-
 </g></g><g
        id="g666"><g
          clip-path="url(#clipPath134)"
@@ -1250,7 +1183,6 @@
      x="0"
      y="0"
      id="tspan660">2</tspan></text>
-
 
 </g></g><g
        id="g674"><g
@@ -1263,7 +1195,6 @@
      y="0"
      id="tspan668">.</tspan></text>
 
-
 </g></g><g
        id="g682"><g
          clip-path="url(#clipPath142)"
@@ -1275,7 +1206,6 @@
      y="0"
      id="tspan676">36</tspan></text>
 
-
 </g></g><g
        id="g690"><g
          clip-path="url(#clipPath146)"
@@ -1286,7 +1216,6 @@
      x="0"
      y="0"
      id="tspan684">)</tspan></text>
-
 
 </g></g><g
        id="g694"><g
@@ -1314,7 +1243,6 @@
      id="tspan1166-6"
      y="-574.47809"
      x="429.97638">r</tspan></text>
-
 <text
    id="text1172-3"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1325,7 +1253,6 @@
      y="-576.94666"
      x="422.95609"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">R</tspan></text>
-
 <path
    inkscape:connector-curvature="0"
    d="m 376.39933,568.4054 c 0,1.98778 -1.58024,3.59297 -3.53475,3.59297 -1.95451,0 -3.53475,-1.60519 -3.53475,-3.59297 0,-0.0499 0,-0.0998 0,-0.14971"
@@ -1367,8 +1294,7 @@
      style="stroke-width:1.00000012"
      id="tspan896-0"
      y="-574.74017"
-     x="376.40057">σr</tspan></text>
-
+     x="376.40057">rσ</tspan></text>
 <text
    id="text902-4"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1379,7 +1305,6 @@
      y="-577.2088"
      x="371.05453"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
-
 <text
    id="text898-6-5"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1390,7 +1315,6 @@
      id="tspan896-0-3"
      y="-529.05609"
      x="359.69858">m</tspan></text>
-
 <text
    id="text902-4-8"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1401,7 +1325,6 @@
      y="-531.52472"
      x="354.35254"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
-
 <path
    inkscape:connector-curvature="0"
    d="m 428.54225,513.40644 c -6.54552,0 -11.8518,-5.30628 -11.8518,-11.8518 0,-6.54552 5.30628,-11.8518 11.8518,-11.8518 6.54552,0 11.8518,5.30628 11.8518,11.8518 0,6.54552 -5.30628,11.8518 -11.8518,11.8518 z"
@@ -1424,7 +1347,6 @@
 
 
 
-
 t&gt;
 <text
    transform="matrix(1,0,-0.33330001,-1,0,0)"
@@ -1436,7 +1358,6 @@ t&gt;
      y="-7.8252225"
      id="tspan1072-0"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.85616112px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.14065957">ωψ</tspan></text>
-
 </g><g
    id="g746"><g
      clip-path="url(#clipPath154)"
@@ -1451,7 +1372,6 @@ t&gt;
      y="0"
      id="tspan700">Fig. </tspan></text>
 
-
 </g></g><g
        id="g714"><g
          clip-path="url(#clipPath162)"
@@ -1462,7 +1382,6 @@ t&gt;
      x="0"
      y="0"
      id="tspan708">2</tspan></text>
-
 
 </g></g><g
        id="g722"><g
@@ -1475,7 +1394,6 @@ t&gt;
      y="0"
      id="tspan716">-</tspan></text>
 
-
 </g></g><g
        id="g730"><g
          clip-path="url(#clipPath170)"
@@ -1487,7 +1405,6 @@ t&gt;
      y="0"
      id="tspan724">8</tspan></text>
 
-
 </g></g><g
        id="g738"><g
          clip-path="url(#clipPath174)"
@@ -1498,7 +1415,6 @@ t&gt;
      x="0"
      y="0"
      id="tspan732">:</tspan></text>
-
 
 </g></g><g
        id="g742"><g
@@ -1517,7 +1433,6 @@ t&gt;
      y="0"
      id="tspan756">Ersatzschaltbild des Per</tspan></text>
 
-
 </g></g><g
        id="g770"><g
          clip-path="url(#clipPath198)"
@@ -1528,7 +1443,6 @@ t&gt;
      x="0 9.3360004 14.664 20.664 25.92 31.92"
      y="0"
      id="tspan764">manent</tspan></text>
-
 
 </g></g><g
        id="g778"><g
@@ -1541,7 +1455,6 @@ t&gt;
      y="0"
      id="tspan772">-</tspan></text>
 
-
 </g></g><g
        id="g786"><g
          clip-path="url(#clipPath206)"
@@ -1552,7 +1465,6 @@ t&gt;
      x="0 9.3360004 14.664 20.52 26.628 31.908001"
      y="0"
      id="tspan780">magnet</tspan></text>
-
 
 </g></g><g
        id="g794"><g
@@ -1565,7 +1477,6 @@ t&gt;
      y="0"
      id="tspan788">-</tspan></text>
 
-
 </g></g><g
        id="g802"><g
          clip-path="url(#clipPath214)"
@@ -1576,7 +1487,6 @@ t&gt;
      x="0 6.8280001 12.588 18.695999 23.976 29.976 33.972 39.972 45.972 55.307999 61.307999 64.643997 70.643997 74.639999 79.307999 82.403999 85.739998 91.739998"
      y="0"
      id="tspan796">Synchronmotors in </tspan></text>
-
 
 </g></g><g
        id="g810"><g
@@ -1589,7 +1499,6 @@ t&gt;
      y="0"
      id="tspan804">d/q</tspan></text>
 
-
 </g></g><g
        id="g818"><g
          clip-path="url(#clipPath222)"
@@ -1601,7 +1510,6 @@ t&gt;
      y="0"
      id="tspan812">-</tspan></text>
 
-
 </g></g><g
        id="g826"><g
          clip-path="url(#clipPath226)"
@@ -1612,7 +1520,6 @@ t&gt;
      x="0 8.6639996 14.664 20.664 24.6 30.6 33.936001 39.936001 45.264 48.599998 53.880001"
      y="0"
      id="tspan820">Koordinaten</tspan></text>
-
 
 </g></g><g
        id="g830"><g
@@ -1631,7 +1538,6 @@ t&gt;
      y="0"
      id="tspan836">Equivalent circuit diagram of the </tspan></text>
 
-
 </g></g><g
        id="g850"><g
          clip-path="url(#clipPath242)"
@@ -1642,7 +1548,6 @@ t&gt;
      x="0 6 11.28 15.276 24.612 29.879999 35.880001 41.16 47.16 50.495998 53.495998 62.868 68.255997 74.136002 80.244003 85.524002 88.860001 91.860001 96.671997 102.432 108.54 113.82 119.928 123.924 129.924 135.924 141.924 147.888"
      y="0"
      id="tspan844">permanent magnet synchronous</tspan></text>
-
 
 </g></g><g
        id="g854"><g
@@ -1658,7 +1563,6 @@ t&gt;
      y="0"
      id="tspan856">motor in </tspan></text>
 
-
 </g></g><g
        id="g870"><g
          clip-path="url(#clipPath254)"
@@ -1669,7 +1573,6 @@ t&gt;
      x="0 6 9.3360004"
      y="0"
      id="tspan864">d/q</tspan></text>
-
 
 </g></g><g
        id="g878"><g
@@ -1682,7 +1585,6 @@ t&gt;
      y="0"
      id="tspan872">-</tspan></text>
 
-
 </g></g><g
        id="g886"><g
          clip-path="url(#clipPath262)"
@@ -1693,7 +1595,6 @@ t&gt;
      x="0 5.2800002 11.28 17.280001 21.275999 27.275999 30.612 36.612 41.880001 45.216 50.543999"
      y="0"
      id="tspan880">coordinates</tspan></text>
-
 
 </g></g><g
        id="g890"><g
@@ -1708,7 +1609,6 @@ t&gt;
      y="-478.25241"
      x="416.9942"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">-</tspan></text>
-
 <text
    id="text898-61"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
@@ -1718,8 +1618,7 @@ t&gt;
      id="tspan896-1"
      y="-453.3967"
      x="315.10342"
-     style="stroke-width:0.99999988">σs</tspan></text>
-
+     style="stroke-width:0.99999988">sσ</tspan></text>
 <text
    id="text902-6"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
@@ -1730,7 +1629,6 @@ t&gt;
      y="-455.86533"
      x="309.75735"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.99999988">L</tspan></text>
-
 <path
    inkscape:connector-curvature="0"
    d="m 312.76373,447.39463 c 0,1.98778 -1.58025,3.59297 -3.53477,3.59297 -1.95449,0 -3.53474,-1.60519 -3.53474,-3.59297 0,-0.0499 0,-0.0998 0,-0.1497"
@@ -1782,7 +1680,6 @@ t&gt;
    y="-412.97351"><tspan
      id="tspan944-4"
      style="stroke-width:1">sβ</tspan></text>
-
 <text
    id="text950-7"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
@@ -1793,7 +1690,6 @@ t&gt;
      y="-415.44553"
      x="191.81996"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
-
 <path
    inkscape:connector-curvature="0"
    d="m 441.79914,364.9025 -24.2858,-0.0332 c -0.23287,0 -0.41585,0.18297 -0.41585,0.41585 0,0.22456 0.18298,0.41585 0.41585,0.41585 l 24.2858,0.0332 c 0.23288,0 0.41586,-0.18297 0.41586,-0.41585 0,-0.23288 -0.18298,-0.41585 -0.41586,-0.41585 z m -23.45409,-1.28083 -4.99023,1.6551 4.99023,1.67173 z"
@@ -1812,7 +1708,6 @@ t&gt;
      y="-453.19424"
      x="231.67632"
      style="stroke-width:0.99999988">sβ</tspan></text>
-
 <text
    id="text968-8"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
@@ -1823,7 +1718,6 @@ t&gt;
      y="-455.66638"
      x="228.8806"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.99999988">i</tspan></text>
-
 <text
    id="text1168-89"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
@@ -1834,7 +1728,6 @@ t&gt;
      y="-453.3967"
      x="267.8367"
      style="stroke-width:0.99999988">s</tspan></text>
-
 <text
    id="text1172-5"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
@@ -1845,7 +1738,6 @@ t&gt;
      y="-455.86526"
      x="260.81638"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.99999988">R</tspan></text>
-
 <g
    id="g1396-2"
    transform="matrix(0,-0.83170544,0.83170544,0,-126.73109,768.54691)"
@@ -1894,7 +1786,6 @@ t&gt;
      id="tspan1166-6-4"
      y="-453.53625"
      x="429.97638">r</tspan></text>
-
 <text
    id="text1172-3-3"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1905,7 +1796,6 @@ t&gt;
      y="-456.00482"
      x="422.95609"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">R</tspan></text>
-
 <path
    inkscape:connector-curvature="0"
    d="m 376.39933,447.47579 c 0,1.98778 -1.58024,3.59297 -3.53476,3.59297 -1.95451,0 -3.53474,-1.60519 -3.53474,-3.59297 0,-0.0499 0,-0.0998 0,-0.14971"
@@ -1947,8 +1837,7 @@ t&gt;
      style="stroke-width:1.00000012"
      id="tspan896-0-1"
      y="-453.79837"
-     x="376.40057">σr</tspan></text>
-
+     x="376.40057">rσ</tspan></text>
 <text
    id="text902-4-4"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1959,7 +1848,6 @@ t&gt;
      y="-456.267"
      x="371.05453"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
-
 <text
    id="text898-6-5-8"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1970,7 +1858,6 @@ t&gt;
      id="tspan896-0-3-9"
      y="-408.11429"
      x="359.69858">m</tspan></text>
-
 <text
    id="text902-4-8-6"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
@@ -1981,7 +1868,6 @@ t&gt;
      y="-410.58292"
      x="354.35254"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
-
 <path
    inkscape:connector-curvature="0"
    d="m 428.54225,392.47683 c -6.54552,0 -11.8518,-5.30628 -11.8518,-11.8518 0,-6.54552 5.30628,-11.8518 11.8518,-11.8518 6.54551,0 11.85179,5.30628 11.85179,11.8518 0,6.54552 -5.30628,11.8518 -11.85179,11.8518 z"
@@ -2005,7 +1891,6 @@ t&gt;
 
 
 
-
 t&gt;
 <text
    transform="matrix(1,0,-0.33330001,-1,0,0)"
@@ -2017,7 +1902,6 @@ t&gt;
      y="-7.8252225"
      id="tspan1072-0-0"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.85616112px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.14065957">ωψ</tspan></text>
-
 </g><path
    inkscape:connector-curvature="0"
    d="m 469.38593,447.4859 0.0416,-62.21157 c 0,-0.23288 -0.19129,-0.41585 -0.41585,-0.41585 -0.23289,0 -0.41586,0.18297 -0.41586,0.41585 l -0.0416,62.21157 c 0,0.23287 0.18298,0.41585 0.41586,0.41585 0.23288,0 0.41585,-0.18298 0.41585,-0.41585 z m 1.28915,-61.37987 -1.66341,-4.99023 -1.66342,4.99023 z"
@@ -2034,7 +1918,6 @@ t&gt;
    y="-533.18152"><tspan
      id="tspan944-48"
      style="stroke-width:1">rα</tspan></text>
-
 <text
    id="text950-2"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
@@ -2045,7 +1928,6 @@ t&gt;
      y="-535.65356"
      x="474.1358"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
-
 <text
    id="text946-3-1"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45541906px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
@@ -2054,7 +1936,6 @@ t&gt;
    y="-412.40851"><tspan
      id="tspan944-4-4"
      style="stroke-width:1">rβ</tspan></text>
-
 <text
    id="text950-7-9"
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
@@ -2065,5 +1946,4 @@ t&gt;
      y="-414.88052"
      x="474.1358"
      style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
-
 </g></g></g></g></g></svg>
