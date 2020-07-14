@@ -7,6 +7,7 @@ Mechanical Loads
 
     polystatic
     const_speed_load
+    ext_speed_load
 
 MechanicalLoad Base Class
 *************************************
