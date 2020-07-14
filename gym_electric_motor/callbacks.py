@@ -4,7 +4,7 @@ from .core import Callback
 from gym_electric_motor.reference_generators import SubepisodedReferenceGenerator, SwitchedReferenceGenerator
 
 
-class AdaptiveLimitMargin(Callback):
+class RampingLimitMargin(Callback):
     """
     Callback used to adapt the limit margin of a reference generator during runtime. Supports all 
     :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator`  
@@ -12,6 +12,9 @@ class AdaptiveLimitMargin(Callback):
     :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator` as sub generators.
     """
     
+    __CLASS_ERROR__ = ("The RampingLimitMargin does only support the SubepisodedReferenceGenerator as reference generator or "
+                       "SwitchedReferenceGenerator with SubepisodedReferenceGenerator as all sub reference generators")
+
     def __init__(self, initial_limit_margin=(-0.1,0.1), maximum_limit_margin=(-1,1), step_size=0.1, update_time='episode', update_freq=10):
         """
         Args:
@@ -36,8 +39,8 @@ class AdaptiveLimitMargin(Callback):
         self._limit_margin = initial_limit_margin
         self._maximum_limit_margin = maximum_limit_margin
         self._step_size = step_size
-        self._update_time = 0 if update_time == 'step' else 1
-        if self._update_time == 0:
+        self._update_time = update_time
+        if self._update_time == 'step':
             self._step = 0
         else:
             self._episode = 0
@@ -46,16 +49,14 @@ class AdaptiveLimitMargin(Callback):
     def set_env(self, env):
         #see docstring of superclass
         #assertions added to check for the right reference generator 
-        if env._reference_generator.__class__ == SwitchedReferenceGenerator:
+        if isinstance(env._reference_generator, SwitchedReferenceGenerator):
             for sub_generator in env._reference_generator._sub_generators:
-                assert issubclass(sub_generator.__class__, SubepisodedReferenceGenerator), ("The AdaptiveLimitMargin does only support the SubepisodedReferenceGenerator as reference generator or "
-                                                                                            "SwitchedReferenceGenerator with SubepisodedReferenceGenerator as all sub reference generators")
+                assert issubclass(type(sub_generator), SubepisodedReferenceGenerator), self.__CLASS_ERROR__
         else:
-            assert issubclass(env._reference_generator.__class__, SubepisodedReferenceGenerator), ("The AdaptiveLimitMargin does only support the SubepisodedReferenceGenerator as reference generator or" 
-                                                                                                 "SwitchedReferenceGenerator with SubepisodedReferenceGenerator as all sub reference generators")
+            assert issubclass(type(env._reference_generator), SubepisodedReferenceGenerator), self.__CLASS_ERROR__
         self._env = env
         #initial image margin added to the reference generator
-        if env._reference_generator.__class__ == SwitchedReferenceGenerator:
+        if isinstance(env._reference_generator, SwitchedReferenceGenerator):
             for sub_generator in self._env._reference_generator._sub_generators:
                 sub_generator._limit_margin = self._limit_margin
         else:
@@ -63,7 +64,7 @@ class AdaptiveLimitMargin(Callback):
         
     def on_step_end(self):
         #see docstring of superclass
-        if self._update_time == 0:
+        if self._update_time == 'step':
             self._step += 1
             if self._step % self._update_freq == 0:
                 self._step = 0
@@ -71,7 +72,7 @@ class AdaptiveLimitMargin(Callback):
                 
     def on_reset_end(self):
         #see docstring of superclass
-        if self._update_time == 1:
+        if self._update_time == 'episode':
             self._episode += 1
             if self._episode % self._update_freq == 0:
                 self._episode = 0
@@ -85,7 +86,7 @@ class AdaptiveLimitMargin(Callback):
             new_upper_limit = self._limit_margin[1] + self._step_size
             new_upper_limit = new_upper_limit if new_upper_limit < self._maximum_limit_margin[1] else self._maximum_limit_margin[1]
             self._limit_margin = (new_lower_limit, new_upper_limit)
-            if self._env._reference_generator.__class__ == SwitchedReferenceGenerator:
+            if isinstance(self._env._reference_generator, SwitchedReferenceGenerator):
                 for sub_generator in self._env._reference_generator._sub_generators:
                     sub_generator._limit_margin = self._limit_margin
             else:
