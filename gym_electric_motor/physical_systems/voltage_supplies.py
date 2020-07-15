@@ -74,8 +74,10 @@ class RCVoltageSupply(VoltageSupply):
     def __init__(self, u_nominal=600.0, supply_parameter=None, **__):
         """
         This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element
-        Args:
+        
+        Args: 
             supply_parameter(dict): Consists or Resistance R in Ohm and Capacitance C in Farad
+            
         Additional notes:
             If the product of R and C get too small the numerical stability of the ODE is not given anymore
             typical time differences tau are only in the range of 10e-3. One might want to consider R*C as a
