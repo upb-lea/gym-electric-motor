@@ -10,6 +10,7 @@ Power Electronic Converters
     4QC
     B6C
     DoubleConv
+    NoConv
 
 The converters are divided into two classes: The discretely controlled and continuously controlled converters.
 The PowerElectronicConverter class is the base class for all converters. From that, the DiscreteConverter and the
