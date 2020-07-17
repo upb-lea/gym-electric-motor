@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.lines as lin
+from collections import deque
 from gym.spaces import Box
 
 
@@ -349,15 +350,16 @@ class ActionPlot(MotorDashboardPlot):
         super(ActionPlot, self).update()
 
 
-class MeanEpisodeRewardPlot(MotorDashboardPlot):
-    x_width = 1
+class MeanEpisodeRewardPlot:
+    x_width = 100
     mode = 'continuous'
     reward_line_cfg = {
-        'color': 'gray',
+        'color': 'blue',
         'linestyle': '-',
         'linewidth': 0.75,
-        'marker': 'o',
-        'markersize': 3
+        'marker': '',
+        'markersize': 1,
+        'label': 'mean_episode_reward'
     }
 
     def __init__(self):
@@ -366,47 +368,48 @@ class MeanEpisodeRewardPlot(MotorDashboardPlot):
         self._reward_data = None
         self._reward_sum = 0
         self._episode_length = 0
-        super().__init__()
+        self.episode_count = 0
+        self.x = None
+        self._axis = None
 
     def initialize(self, axis):
-        super().initialize(axis)
-        self._t_data = 0  # np.linspace(0, self.x_width, self._x_points, endpoint=False)
-        self._reward_data = 0  # np.zeros_like(self._t_data, dtype=float)
-        self._reward_line, = self._axis.plot(self._t_data, self._reward_data, **self.reward_line_cfg)
+
+        self._axis = axis
+        self._axis.grid(True)
+        self.x = deque(np.zeros(self.x_width), self.x_width)
+        self._reward_data = deque(np.zeros(self.x_width), self.x_width)
+        self._reward_line, = self._axis.plot(self.x, self._reward_data)
         min_limit = self._reward_range[0]
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
+        self._axis.set_xlim(0, self.x_width)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-        y_label = 'mean_episode_reward'
-        self._axis.set_ylabel(y_label)
-        # adds a constant line at 0 which is eventually updated by the plot variable values. legend can be set here.
-        dummy_rew_line = lin.Line2D([], [], color=self.reward_line_cfg['color'])
-        self._axis.legend((dummy_rew_line,), ('mean_episode_reward',), loc='upper left')
+        self._axis.set_ylabel('mean_episode_reward')
 
     def set_modules(self, ps, rg, rf):
-        super(MeanEpisodeRewardPlot, self).set_modules(ps, rg, rf)
         self._reward_range = rf.reward_range
 
     def step(self, k, state, reference, action, reward, done):
-        self._t += self._tau
-        self._reward_sum += reward
-        if done:
-            self._axis.axvline(self._t, color='red', linewidth=1)
 
+        self._reward_sum += reward
         self._episode_length = k
 
     def update(self):
-        if self._episode_length > 0:
-            self._reward_data = self._reward_sum / self._episode_length
-            self._reward_line.set_data([self._t], [self._reward_data])
-           
-        #super().update()
+
+        self.x.append(self.episode_count)
+        self._reward_data.append(self._reward_sum / self._episode_length)
+        self._reward_line.set_data(self.x, self._reward_data)
         # configure x-axis properties
-            if self.mode == 'continuous':
-                x_lim = self._axis.get_xlim()
-                upper_lim = max(self._t, x_lim[1])  # self._t
-                lower_lim = upper_lim - self.x_width
-                self._axis.set_xlim(lower_lim, upper_lim)
+        if self.mode == 'continuous':
+            self._axis.set_xlim(max(0 , self.episode_count - self.x_width), self.episode_count + 0.2 * self.x_width)
+            # x_lim = self._axis.get_xlim()
+            # upper_lim = max(self._t, x_lim[1])  # self._t
+            # lower_lim = upper_lim - self.x_width
+            # self._axis.set_xlim(lower_lim, upper_lim)
 
     def reset(self):
-        self.update()
+        if self._episode_length > 0:
+            self.update()
+
+        self.episode_count += 1
+        self._reward_sum = 0

@@ -27,7 +27,10 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         self._update_cycle = update_cycle
         self._figure = None
+        self._figure_ep = None
         self._plots = []
+        self._episode_plots = []
+
         self._dark_mode = dark_mode
         for plot in plots:
             if type(plot) is str:
@@ -36,7 +39,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 elif plot.startswith('action_'):
                     self._plots.append(mdp.ActionPlot(plot))
                 elif plot.startswith('mean_'):
-                    self._plots.append(mdp.MeanEpisodeRewardPlot())
+                    self._episode_plots.append(mdp.MeanEpisodeRewardPlot())
                 else:
                     self._plots.append(mdp.StatePlot(plot))
             else:
@@ -48,6 +51,12 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         for plot in self._plots:
             plot.reset()
+        for plot in self._episode_plots:
+            plot.reset()
+
+        if self._figure_ep:
+            self._figure_ep.canvas.draw()
+            self._figure_ep.canvas.flush_events()
 
     def step(self, k, state, reference, action, reward, done):
         """ Called within a render() call of an environment.
@@ -66,6 +75,9 @@ class MotorDashboard(ElectricMotorVisualization):
             self._initialize()
         for plot in self._plots:
             plot.step(k, state, reference, action, reward, done)
+        for plot in self._episode_plots:
+            plot.step(k, state, reference, action, reward, done)
+
         if (k + 1) % self._update_cycle == 0:
             self._update()
 
@@ -80,23 +92,35 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         for plot in self._plots:
             plot.set_modules(ps, rg, rf)
+        for plot in self._episode_plots:
+            plot.set_modules(ps, rg, rf)
 
     def _initialize(self):
         """Called with first render() call to setup the figures and plots.
         """
+        axis_ep = []
         plt.close()
         assert len(self._plots) > 0, "no plot variable selected"
         # Use dark-mode, if selected
         if self._dark_mode:
             plt.style.use('dark_background')
         self._figure, axes = plt.subplots(len(self._plots), sharex=True)
+        self._figure_ep, axes_ep = plt.subplots(len(self._episode_plots))
+
         self._figure.subplots_adjust(wspace=0.0, hspace=0.2)
-        plt.xlabel('t/s')  # adding a common x-label to all the subplots
+        self._figure_ep.subplots_adjust(wspace=0.0, hspace=0.02)
+
+        #plt.xlabel('t/s')  # adding a common x-label to all the subplots   #todo
 
         # plt.subplot() does not return an iterable var when the number of subplots==1
         if len(self._plots) == 1:
             axes = [axes]
+        if len(self._episode_plots) == 1:
+            axis_ep = [axes_ep]
         for plot, axis in zip(self._plots, axes):
+            plot.initialize(axis)
+
+        for plot, axis in zip(self._episode_plots, axis_ep):
             plot.initialize(axis)
         plt.pause(0.1)
 
@@ -105,5 +129,10 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         for plot in self._plots:
             plot.update()
+        # for plot in self._episode_plots:
+        #     plot.update()
+
+        # self._figure_ep.canvas.draw()
+        # self._figure_ep.canvas.flush_events()
         self._figure.canvas.draw()
         self._figure.canvas.flush_events()
