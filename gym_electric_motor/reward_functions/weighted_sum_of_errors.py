@@ -1,7 +1,6 @@
 import numpy as np
 
 from ..core import RewardFunction
-from .constraint_monitor import ConstraintMonitor as CM
 from ..utils import set_state_array
 import warnings
 
@@ -26,7 +25,7 @@ class WeightedSumOfErrors(RewardFunction):
     """
 
     def __init__(self, reward_weights=None, normed_reward_weights=False,
-                 gamma=0.9, reward_power=1, constraint_monitor=None, **kwargs):
+                 gamma=0.9, reward_power=1, **kwargs):
         """
         Args:
             reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.
@@ -41,13 +40,10 @@ class WeightedSumOfErrors(RewardFunction):
         self._state_length = None
         self._normed = normed_reward_weights
         self._gamma = gamma
-        self._monitor = constraint_monitor or CM()
         super().__init__(**kwargs)
 
     def set_modules(self, physical_system, reference_generator):
         super().set_modules(physical_system, reference_generator)
-        self._monitor.set_attributes(self._observed_states,
-                                     physical_system.limits)
         self._state_length = self._physical_system.state_space.high - self._physical_system.state_space.low
         self._n = set_state_array(self._n, self._physical_system.state_names)
         referenced_states = reference_generator.referenced_states
@@ -81,10 +77,6 @@ class WeightedSumOfErrors(RewardFunction):
 
     def _reward(self, state, reference, *_):
         return -np.sum(self._reward_weights * (abs(state - reference) / self._state_length) ** self._n)
-
-    def _check_limit_violation(self, state):
-        # Docstring from superclass
-        return self._monitor.check_constraint_violation(state)
 
 
 class ShiftedWeightedSumOfErrors(WeightedSumOfErrors):

@@ -189,6 +189,7 @@ class DummyRewardFunction(RewardFunction):
         self.last_state = None
         self.last_reference = None
         self.last_action = None
+        self.last_time_step = None
         self.closed = False
         self.done = False
         self.kwargs = kwargs
@@ -202,10 +203,11 @@ class DummyRewardFunction(RewardFunction):
     def set_done(self, done):
         self.done = done
 
-    def reward(self, state, reference, action=None):
+    def reward(self, state, reference, k=None, action=None):
         self.last_state = state
         self.last_reference = reference
         self.last_action = action
+        self.last_time_step = k
         return -1 if self.done else 1, self.done
 
     def close(self):
