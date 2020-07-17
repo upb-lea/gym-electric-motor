@@ -1,9 +1,6 @@
 import numpy as np
-from scipy.stats import truncnorm
 
 
-# todo updateting intialization with load_initializer,
-# now can be initialized directly in load class
 class MechanicalLoad:
     """
     The MechanicalLoad is the base class for all the mechanical systems attached to the electrical motors rotor.
@@ -11,21 +8,6 @@ class MechanicalLoad:
     It contains an mechanical ode system as well as the state names, limits and nominal values
     of the mechanical quantities. The only required state is 'omega' as the rotational speed of the motor shaft
     in rad/s.
-    ExternalSpeedLoad and ConstantSpeedLoad should be initialized with the own
-    initial value in class initialisation, when definded external
-
-    Initialization is given by initializer(dict). Can be constant state value
-    or random value in given interval.
-    dict should be like:
-        { 'states'(dict): with state names and initital values
-          'interval'(array like): boundaries for each state
-                    (only for random init), shape(num states, 2)
-          'random_init'(str): 'uniform' or 'normal'
-          'random_params(tuple): mue(float), sigma(int)
-    Example initializer(dict) for constant initialization:
-        { 'states': {'omega': 16.0}}
-    Example  initializer(dict) for random initialization:
-        { 'random_init': 'normal'}
     """
 
     @property
@@ -61,22 +43,12 @@ class MechanicalLoad:
         """
         return self._nominal_values
 
-    @property
-    def initializer(self):
-        """
-        Returns:
-            dict: The motors initial state and additional initializer parameters
-        """
-        return self._initializer
-
     OMEGA_IDX = 0
 
     #: Parameter indicating if the class is implementing the optional jacobian function
     HAS_JACOBIAN = False
-    #: _default_initial_state(dict): Default initial motor-state values
-    _default_initializer = {}
 
-    def __init__(self, state_names=None, j_load=0.0, load_initializer=None, **__):
+    def __init__(self, state_names=None, j_load=0.0, **__):
         """
         Args:
             state_names(list(str)): List of the names of the states in the mechanical-ODE.
@@ -87,130 +59,14 @@ class MechanicalLoad:
         self._limits = {}
         self._nominal_values = {}
 
-        load_initializer = load_initializer or {}
-        self._initializer = self._default_initializer.copy()
-        self._initializer.update(load_initializer)
-        try:
-            self._initial_states = self._initializer['states']
-        except:
-            self._initial_states = {state: 0.0 for state in self._state_names}
-
-    def initialize(self,
-                   state_space,
-                   state_positions,
-                   nominal_state,
-                   **__):
+    def reset(self, *_, **__):
         """
-        Initializes give state values. Values can be given as a constant or
-        sampled random out of a statistical distribution. Initial value is in
-        range of the nominal values or a given interval.
-        Args:
-            nominal_state(list): nominal values for each state given from
-                                  physical system
-            state_space(gym.spaces.Box): normalized state space boundaries
-            state_positions(dict): indexes of system states
+        Reset the motors mechanical-ODE to an initial state (default: all zeros).
+
         Returns:
-
+            ndarray(float): Initial state of the mechanical-ODE.
         """
-        # for order and organization purposes
-        interval = self._initializer['interval']
-        random_dist = self._initializer['random_init']
-        random_params = self._initializer['random_params']
-        if isinstance(nominal_state, (list, np.ndarray)):
-            nominal_state = np.asarray(nominal_state, dtype=float)
-        elif isinstance(self._nominal_values, dict):
-            nominal_state = [nominal_state[state]
-                               for state in self._initial_states.keys()]
-            nominal_state = np.asarray(nominal_state)
-        # setting nominal values as interval limits
-        state_idx = [state_positions[state] for state in self._initial_states.keys()]
-        upper_bound = nominal_state[state_idx]
-        lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
-        # clip nominal boundaries to user defined
-        if interval is not None:
-            lower_bound = np.clip(lower_bound,
-                                  a_min=
-                                  np.asarray(interval, dtype=float).T[0],
-                                  a_max=None)
-            upper_bound = np.clip(upper_bound,
-                                  a_min=None,
-                                  a_max=
-                                  np.asarray(interval, dtype=float).T[1])
-        else:
-            pass
-        # random initialization for each load state (omega)
-        if random_dist is not None:
-            if random_dist == 'uniform':
-                initial_value = (upper_bound - lower_bound) * \
-                                np.random.random_sample(
-                                    len(self._initial_states.keys())) + \
-                                lower_bound
-                random_states = \
-                    {state: initial_value[idx]
-                     for idx, state in
-                     enumerate(self._initial_states.keys())}
-                self._initial_states.update(random_states)
-
-            elif random_dist in ['normal', 'gaussian']:
-                # specific input or middle of interval
-                mue = random_params[0] or \
-                      (upper_bound - lower_bound) / 2 + lower_bound
-                sigma = random_params[1] or 1
-                a = (lower_bound - mue) / sigma
-                b = (upper_bound - mue) / sigma
-                initial_value = truncnorm.rvs(a, b,
-                                              loc=mue,
-                                              scale=sigma,
-                                              size=(len(self._initial_states.keys())))
-                random_states = \
-                    {state: initial_value[idx]
-                     for idx, state in
-                     enumerate(self._initial_states.keys())}
-                self._initial_states.update(random_states)
-
-            else:
-                # todo implement other distribution
-                raise NotImplementedError
-        # constant initialization for each motor state (current, epsilon)
-        elif self._initial_states is not None:
-            initial_value = np.atleast_1d(
-                list(self._initial_states.values()))
-            # check init_value meets interval boundaries
-            if ((lower_bound <= initial_value).all()
-                    and (initial_value <= upper_bound).all()):
-                initial_states_ = \
-                    {state: initial_value[idx]
-                     for idx, state in
-                     enumerate(self._initial_states.keys())}
-                self._initial_states.update(initial_states_)
-            else:
-                raise Exception(
-                    'Initialization Value have to be in nominal '
-                    'boundaries')
-        else:
-            raise Exception('No matching Initialization Case')
-
-    def reset(self,
-              state_space,
-              state_positions,
-              nominal_state,
-              **__):
-        """
-        Reset the motors state to a new initial state. (Default 0)
-
-        Args:
-            nominal_state(list): nominal values for each state given from
-                                  physical system
-            state_space(gym.Box): normalized state space boundaries
-            state_positions(dict): indexes of system states
-        Returns:
-            numpy.ndarray(float): The initial motor states.
-        """
-        if self._initializer:
-            self.initialize(state_space, state_positions, nominal_state)
-            return np.asarray(list(self._initial_states.values()))
-        else:
-            return np.zeros_like(self._state_names, dtype=float)
+        return np.zeros_like(self._state_names, dtype=float)
 
     def set_j_rotor(self, j_rotor):
         """
@@ -265,8 +121,7 @@ class MechanicalLoad:
 
 class PolynomialStaticLoad(MechanicalLoad):
     """
-    Mechanical system that models the Mechanical-ODE based on a static
-    polynomial load torque.
+    Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.
 
     Parameter dictionary entries:
         | a: Constant Load Torque coefficient (for modeling static friction)
@@ -276,10 +131,6 @@ class PolynomialStaticLoad(MechanicalLoad):
     """
 
     _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=0)
-    _default_initializer = {'states': {'omega': 0.0},
-                            'interval': None,
-                            'random_init': None,
-                            'random_params': (None, None)}
 
     #: Parameter indicating if the class is implementing the optional jacobian function
     HAS_JACOBIAN = True
@@ -292,17 +143,13 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
-    def __init__(self, load_parameter=(), limits=None,
-                 load_initializer=None, **__):
+    def __init__(self, load_parameter=(), limits=None, **__):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.
-            limits(dict):
-            load_initializer(dict):
         """
         self._load_parameter.update(load_parameter)
-        super().__init__(j_load=self._load_parameter['j_load'],
-                         load_initializer=load_initializer)
+        super().__init__(j_load=self._load_parameter['j_load'])
         self._limits.update(limits or {})
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']
@@ -326,73 +173,12 @@ class PolynomialStaticLoad(MechanicalLoad):
             np.array([1/self._j_total])
 
 
-class ExternalSpeedLoad(MechanicalLoad):
-    """
-       External speed mechanical load system which will set the speed to a
-       predefined speed-function/ speed-profile.
-    """
-
-    HAS_JACOBIAN = False
-    @property
-    def omega(self):
-        """
-        Returns:
-            float: Function-value for omega in rad/s at time-step t.
-        """
-        return self._omega_initial
-
-    def reset(self, *_, **__):
-        # Docstring from superclass
-        return np.array([self._omega_initial])
-
-    def __init__(self, speed_profile=None, omega_initial=0,
-                 tau=1e-4, **kwargs):
-        """
-        Args:
-            speed_profile(function): function or lambda expression
-                which takes a timestep t as argument and returns speed omega
-                example:
-                    (lambda t, amplitude, freq: amplitude*numpy.sin(2*pi*f)))
-                    with additional parameters:
-                        amplitude(float), freq(float), time(float)
-
-            omega_initial(float)): Initial value for the speed in rad/s.
-            tau(float): discrete time step of the system
-            kwargs(dict): further arguments for speed_profile
-        """
-        super().__init__()
-        self.kwargs = kwargs
-        self._omega_initial = omega_initial
-        self._speed_profile = speed_profile
-        self._tau = tau
-        #self._jacobi = jacobi
-
-    def mechanical_ode(self, t, mechanical_state, torque=None):
-        # Docstring of superclass
-        # calc next omega with given profile und tau
-        omega_next = self._speed_profile(t=t+self._tau, **self.kwargs)
-        # calculated T out of euler-forward, given omega_next and
-        # actual omega give from system
-        return np.array([(1 / self._tau) *
-                         (omega_next - mechanical_state[self.OMEGA_IDX])])
-
-    def mechanical_jacobian(self, t, mechanical_state, torque):
-        # Docstring of superclass
-        # jacobian here not necessary, since omega is externally given
-        return None
-
-
 class ConstantSpeedLoad(MechanicalLoad):
     """
-       Constant speed mechanical load system which will always set the speed
-       to a predefined value.
+       Constant speed mechanical load system which will always set the speed to a predefined value.
     """
 
     HAS_JACOBIAN = True
-    _default_initializer = {'states': {'omega': 0.0},
-                            'interval': None,
-                            'random_init': None,
-                            'random_params': (None, None)}
 
     @property
     def omega_fixed(self):
@@ -406,14 +192,13 @@ class ConstantSpeedLoad(MechanicalLoad):
         # Docstring from superclass
         return np.array([self._omega])
 
-    def __init__(self, omega_fixed=0):
+    def __init__(self, omega_fixed=0, **__):
         """
         Args:
             omega_fixed(float)): Fix value for the speed in rad/s.
         """
-        #self._default_initializer['states']['omega'] = omega_fixed
         super().__init__()
-        self._omega = omega_fixed or self._initializer['states']['omega']
+        self._omega = omega_fixed
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
