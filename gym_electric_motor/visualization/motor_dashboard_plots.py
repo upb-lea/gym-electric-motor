@@ -412,6 +412,7 @@ class MeanEpisodeRewardPlot(EpisodeBasedPlot):
     }
 
     def __init__(self):
+        super().__init__()
         # range of the rewards
         self._reward_range = None
         self._reward_line = None
