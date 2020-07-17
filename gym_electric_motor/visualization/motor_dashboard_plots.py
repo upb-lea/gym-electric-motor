@@ -350,43 +350,102 @@ class ActionPlot(MotorDashboardPlot):
         super(ActionPlot, self).update()
 
 
-class MeanEpisodeRewardPlot:
+class EpisodeBasedPlot:
+    """Base Plot class that all episode based plots ."""
+
+    def __init__(self):
+        pass
+
+    def initialize(self, axis):
+        """Initialization of the plot. Set labels, legends,... here.
+
+        Args:
+            axis(matplotlib.pyplot.axis): Axis to plot in
+        """
+        pass
+
+    def set_modules(self, ps, rg, rf):
+        """Interconnection of the environments modules.
+        Save all relevant information from other modules here (e.g. state_names, references,...)
+        Args:
+            ps(PhysicalSystem): The PhysicalSystem of the environment
+            rg(ReferenceGenerator): The ReferenceGenerator of the environment.
+            rf(RewardFunction): The RewardFunction of the environment
+        """
+        pass
+
+    def step(self, k, state, reference, action, reward, done):
+        """Passing of current environmental information..
+
+        Args:
+            k(int): Current episode step.
+            state(ndarray(float)): State of the system
+            reference(ndarray(float)): Reference array of the system
+            action(ndarray(float)): Last taken action. (None after reset)
+            reward(ndarray(float)): Last received reward. (None after reset)
+            done(bool): Flag if the current state is terminal
+        """
+        raise NotImplementedError
+
+    def update(self):
+        """Called by the MotorDashboard each time before the figure is updated."""
+        pass
+
+    def reset(self):
+        """Called by the MotorDashboard each time the environment is reset."""
+        pass
+
+
+class MeanEpisodeRewardPlot(EpisodeBasedPlot):
+    """
+    class to plot the mean episode reward
+    """
     x_width = 100
     mode = 'continuous'
     reward_line_cfg = {
         'color': 'blue',
         'linestyle': '-',
         'linewidth': 0.75,
-        'marker': '',
+        'marker': 'o',
         'markersize': 1,
-        'label': 'mean_episode_reward'
+        'label': 'mean_reward'
     }
 
     def __init__(self):
+        # range of the rewards
         self._reward_range = None
         self._reward_line = None
+        # data container for mean reward
         self._reward_data = None
         self._reward_sum = 0
         self._episode_length = 0
         self.episode_count = 0
+        # data container for x-axis(episode count)
         self.x = None
         self._axis = None
 
     def initialize(self, axis):
+        """
+            Args:
+             axis (object): the subplot axis for plotting the action variable
+        """
 
         self._axis = axis
         self._axis.grid(True)
+        # create empty deques for x and y data
         self.x = deque(np.zeros(self.x_width), self.x_width)
         self._reward_data = deque(np.zeros(self.x_width), self.x_width)
-        self._reward_line, = self._axis.plot(self.x, self._reward_data)
+        self._reward_line, = self._axis.plot(self.x, self._reward_data, **self.reward_line_cfg)
         min_limit = self._reward_range[0]
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
         self._axis.set_xlim(0, self.x_width)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-        self._axis.set_ylabel('mean_episode_reward')
+        self._axis.set_ylabel('mean_reward')
+        self._axis.legend(loc="upper left")
 
     def set_modules(self, ps, rg, rf):
+        # fetch reward range from reward function module
         self._reward_range = rf.reward_range
 
     def step(self, k, state, reference, action, reward, done):
@@ -398,16 +457,14 @@ class MeanEpisodeRewardPlot:
 
         self.x.append(self.episode_count)
         self._reward_data.append(self._reward_sum / self._episode_length)
+        # plot the data on the canvas
         self._reward_line.set_data(self.x, self._reward_data)
         # configure x-axis properties
         if self.mode == 'continuous':
-            self._axis.set_xlim(max(0 , self.episode_count - self.x_width), self.episode_count + 0.2 * self.x_width)
-            # x_lim = self._axis.get_xlim()
-            # upper_lim = max(self._t, x_lim[1])  # self._t
-            # lower_lim = upper_lim - self.x_width
-            # self._axis.set_xlim(lower_lim, upper_lim)
+            self._axis.set_xlim(max(0, self.episode_count - self.x_width), self.episode_count + 0.2 * self.x_width)
 
     def reset(self):
+        # end of episode is identified via reset
         if self._episode_length > 0:
             self.update()
 

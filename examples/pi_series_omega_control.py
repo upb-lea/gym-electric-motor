@@ -34,7 +34,7 @@ if __name__ == '__main__':
     state, reference = env.reset()
     start = time.time()
     cum_rew = 0
-    for i in range(100000):
+    for i in range(1000000):
         env.render()
         action = controller.control(state, reference)
         (state, reference), reward, done, _ = env.step(action)
