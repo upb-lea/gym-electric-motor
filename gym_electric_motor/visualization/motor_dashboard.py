@@ -109,19 +109,19 @@ class MotorDashboard(ElectricMotorVisualization):
             plt.style.use('dark_background')
         # create seperate figures for time based and episode based plots
         self._figure, axes = plt.subplots(len(self._plots), sharex=True)
-        self._figure_ep, axes_ep = plt.subplots(len(self._episode_plots))
-
-        self._figure.subplots_adjust(wspace=0.0, hspace=0.2)
-        self._figure_ep.subplots_adjust(wspace=0.0, hspace=0.02)
+        if self._episode_plots:
+            self._figure_ep, axes_ep = plt.subplots(len(self._episode_plots))
+            self._figure_ep.subplots_adjust(wspace=0.0, hspace=0.02)
+            self._figure.subplots_adjust(wspace=0.0, hspace=0.2)
+            self._figure_ep.text(0.5, 0.04, 'episode_number', va='center', ha='center')
 
         # adding a common x-label to all the subplots in each figure
         self._figure.text(0.5, 0.04, 't/s', va='center', ha='center')
-        self._figure_ep.text(0.5, 0.04, 'episode_number', va='center', ha='center')
 
         # plt.subplot() does not return an iterable var when the number of subplots==1
         if len(self._plots) == 1:
             axes = [axes]
-        if len(self._episode_plots) == 1:
+        if  len(self._episode_plots) == 1:
             axis_ep = [axes_ep]
         for plot, axis in zip(self._plots, axes):
             plot.initialize(axis)

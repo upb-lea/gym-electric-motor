@@ -408,7 +408,7 @@ class MeanEpisodeRewardPlot(EpisodeBasedPlot):
         'linewidth': 0.75,
         'marker': 'o',
         'markersize': 1,
-        'label': 'mean_reward'
+        'label': 'mean episodic reward'
     }
 
     def __init__(self):

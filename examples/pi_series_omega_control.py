@@ -16,7 +16,7 @@ if __name__ == '__main__':
         'DcSeriesCont-v1',   # replace with 'DcSeriesDisc-v1' for discrete controllers
         # Pass an instance
         #visualization=MotorDashboard(plotted_variables='all', visu_period=1),
-        visualization=MotorDashboard(plots=['i', 'reward', 'mean_reward'], dark_mode=False),
+        visualization=MotorDashboard(plots=['i', 'reward', 'action_0', 'mean_reward'], dark_mode=False),
         motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
         # Take standard class and pass parameters (Load)
         load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
