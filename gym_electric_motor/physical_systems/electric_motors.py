@@ -1265,14 +1265,17 @@ class SynchronousReluctanceMotor(SynchronousMotor):
 
     """
     HAS_JACOBIAN = True
-    _default_motor_parameter = {'p': 2, 'l_d': 73.2e-3, 'l_q': 7.3e-3,
-                                'j_rotor': 2.45e-3, 'r_s': 0.3256}
-    _default_nominal_values = {
-        'i': 54, 'torque': 0, 'omega': 523.0, 'epsilon': np.pi, 'u': 600
-    }
 
-    _default_limits = {'i': 70, 'torque': 0, 'omega': 600.0, 'epsilon': np.pi,
-                       'u': 600}
+    #### Parameters taken from DOI: 10.1109/AMC.2008.4516099 (K. Malekian, M. R. Sharif, J. Milimonfared)
+    _default_motor_parameter = {'p': 4,
+                                'l_d': 10.1e-3,
+                                'l_q':  4.1e-3,
+                                'j_rotor': 0.8e-3,
+                                'r_s': 0.57
+                                }
+
+    _default_nominal_values = {'i': 10, 'torque': 0, 'omega': 3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 100}
+    _default_limits = {'i': 13, 'torque': 0, 'omega': 4.3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 100}
     _default_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                             'interval': None,
                             'random_init': None,
@@ -1401,18 +1404,20 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
             Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
             the general limits/nominal values (e.g. i)
     """
+
+    #### Parameters taken from DOI: 10.1109/TPEL.2020.3006779 (A. Brosch, S. Hanke, O. Wallscheid, J. Boecker)
+    #### and DOI: 10.1109/IEMDC.2019.8785122 (S. Hanke, O. Wallscheid, J. Boecker)
     _default_motor_parameter = {
-        'p': 2,
-        'l_d': 79e-3,
-        'l_q': 113e-3,
-        'j_rotor': 2.45e-3,
-        'r_s': 4.9,
-        'psi_p': 0.165,
+        'p': 3,
+        'l_d': 0.37e-3,
+        'l_q': 1.2e-3,
+        'j_rotor': 0.3883,
+        'r_s': 18e-3,
+        'psi_p': 66e-3,
     }
     HAS_JACOBIAN = True
-    _default_limits = dict(omega=80, torque=0.0, i=20, epsilon=math.pi, u=600)
-    _default_nominal_values = dict(omega=75, torque=0.0, i=12, epsilon=math.pi,
-                                   u=600)
+    _default_limits = dict(omega=12e3 * np.pi / 30, torque=0.0, i=230, epsilon=math.pi, u=300)
+    _default_nominal_values = dict(omega=3e3 * np.pi / 30, torque=0.0, i=170, epsilon=math.pi, u=300)
     _default_initializer = {'states':  {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                             'interval': None,
                             'random_init': None,
@@ -1436,14 +1441,22 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
 
     def _torque_limit(self):
         # Docstring of superclass
-        return self.torque([0, self._limits['i_sq'], 0])
+        mp = self._motor_parameter
+        if mp['l_d'] == mp['l_q']:
+            return self.torque([0, self._limits['i_sq'], 0])
+        else:
+            i_n = self.nominal_values['i']
+            _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
+            _q = - i_n ** 2 / 2
+            i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
+            i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
+            return self.torque([i_d_opt, i_q_opt, 0])
+
 
     def torque(self, currents):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * (
-                mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[
-            self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+        return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
 
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
@@ -1563,6 +1576,8 @@ class InductionMotor(ThreePhaseMotor):
                    'i_sq']
 
     HAS_JACOBIAN = True
+
+    #### Parameters taken from  DOI: 10.1109/EPEPEMC.2018.8522008  (O. Wallscheid, M. Schenke, J. Boecker)
     _default_motor_parameter = {
         'p': 2,
         'l_m': 143.75e-3,
@@ -1573,10 +1588,8 @@ class InductionMotor(ThreePhaseMotor):
         'r_r': 1.355,
     }
 
-    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi,
-                           u=560)
-    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9,
-                                   epsilon=math.pi, u=560)
+    _default_limits = dict(omega=4e3 * np.pi / 30, torque=0.0, i=5.5, epsilon=math.pi, u=560)
+    _default_nominal_values = dict(omega=3e3 * np.pi / 30, torque=0.0, i=3.9, epsilon=math.pi, u=560)
     _model_constants = None
     _default_initializer = {'states':  {'i_salpha': 0.0, 'i_sbeta': 0.0,
                                         'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
@@ -1862,6 +1875,7 @@ class SquirrelCageInductionMotor(InductionMotor):
             Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
             the general limits/nominal values (e.g. i)
         """
+    #### Parameters taken from  DOI: 10.1109/EPEPEMC.2018.8522008  (O. Wallscheid, M. Schenke, J. Boecker)
     _default_motor_parameter = {
         'p': 2,
         'l_m': 143.75e-3,
@@ -1872,10 +1886,8 @@ class SquirrelCageInductionMotor(InductionMotor):
         'r_r': 1.355,
     }
 
-    _default_limits = dict(omega=350, torque=0.0, i=5.5, epsilon=math.pi,
-                           u=560)
-    _default_nominal_values = dict(omega=314, torque=0.0, i=3.9,
-                                   epsilon=math.pi, u=560)
+    _default_limits = dict(omega=4e3 * np.pi / 30, torque=0.0, i=5.5, epsilon=math.pi, u=560)
+    _default_nominal_values = dict(omega=3e3 * np.pi / 30, torque=0.0, i=3.9, epsilon=math.pi, u=560)
     _default_initializer = {'states':  {'i_salpha': 0.0, 'i_sbeta': 0.0,
                                         'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
                                         'epsilon': 0.0},
@@ -2025,20 +2037,19 @@ class DoublyFedInductionMotor(InductionMotor):
     IO_ROTOR_VOLTAGES = ['u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq']
     IO_ROTOR_CURRENTS = ['i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq']
 
+    #### Parameters taken from  DOI: 10.1016/j.jestch.2016.01.015 (N. Kumar, T. R. Chelliah, S. P. Srivastava)
     _default_motor_parameter = {
         'p': 2,
-        'l_m': 13.5e-3,
-        'l_sigs': 0.2e-3,
-        'l_sigr': 0.1e-3,
-        'j_rotor': 1e3,
-        'r_s': 12e-3,
-        'r_r': 21e-3,
+        'l_m': 297.5e-3,
+        'l_sigs': 25.71e-3,
+        'l_sigr': 25.71e-3,
+        'j_rotor': 13.695e-3,
+        'r_s': 4.42,
+        'r_r': 3.51,
     }
 
-    _default_limits = dict(omega=160, torque=0.0, i=1900, epsilon=math.pi,
-                           u=1200)
-    _default_nominal_values = dict(omega=157.08, torque=0.0, i=1900,
-                                   epsilon=math.pi, u=1200)
+    _default_limits = dict(omega=1800 * np.pi / 30, torque=0.0, i=9, epsilon=math.pi, u=720)
+    _default_nominal_values = dict(omega=1650 * np.pi / 30, torque=0.0, i=7.5, epsilon=math.pi, u=720)
     _default_initializer = {'states':  {'i_salpha': 0.0, 'i_sbeta': 0.0,
                                         'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
                                         'epsilon': 0.0},
