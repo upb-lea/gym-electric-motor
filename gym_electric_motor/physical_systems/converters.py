@@ -4,10 +4,12 @@ from gym.spaces import Discrete, Box, MultiDiscrete
 from ..utils import instantiate
 
 
+
+
 class PowerElectronicConverter:
     """
     Base class for all converters in a SCMLSystem.
-
+ 
     Properties:
         | *voltages(tuple(float, float))*: Determines which output voltage polarities the converter can generate.
         | E.g. (0, 1) - Only positive voltages / (-1, 1) Positive and negative voltages
@@ -107,7 +109,19 @@ class PowerElectronicConverter:
         """
         self._switching_pattern = [self._current_action]
         return [self._action_start_time + self._tau]
+    
+class NoConverter(PowerElectronicConverter):
+    """Dummy Converter class used to directly transfer the supply voltage to the motor"""
+    #Dummy default values for voltages and currents. No real use other than to fit the current physical system architecture
+    voltages = Box(0, 1, shape=(3,))
+    currents = Box(0, 1, shape=(3,))
+    action_space = Box(low=np.array([]), high=np.array([]))
 
+    def i_sup(self, i_out):
+        return i_out[0]
+
+    def convert(self, i_out, t):
+        return [1]
 
 class ContDynamicallyAveragedConverter(PowerElectronicConverter):
     """

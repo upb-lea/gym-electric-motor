@@ -53,8 +53,8 @@ class DiscPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',``
-        ``'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd','epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',``
+        ``'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq','epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
@@ -113,8 +113,8 @@ class ContPermanentMagnetSynchronousMotorEnvironment(PermanentMagnetSynchronousM
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq',``
-        ``'i_sd', 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd','epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sd',``
+        ``'i_sq', 'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq','epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
