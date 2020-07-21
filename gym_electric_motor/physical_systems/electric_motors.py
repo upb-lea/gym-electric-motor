@@ -1416,8 +1416,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         'psi_p': 66e-3,
     }
     HAS_JACOBIAN = True
-    _default_limits = dict(omega=12e3 * np.pi / 30, torque=0.0, i=230, epsilon=math.pi, u=300)
-    _default_nominal_values = dict(omega=3e3 * np.pi / 30, torque=0.0, i=170, epsilon=math.pi, u=300)
+    _default_limits = dict(omega=12e3 * np.pi / 30, torque=0.0, i=260, epsilon=math.pi, u=300)
+    _default_nominal_values = dict(omega=3e3 * np.pi / 30, torque=0.0, i=240, epsilon=math.pi, u=300)
     _default_initializer = {'states':  {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                             'interval': None,
                             'random_init': None,
