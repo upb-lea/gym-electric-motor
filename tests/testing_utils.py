@@ -388,9 +388,9 @@ class DummyElectricMotor(ElectricMotor):
         self.u_in = u_in
         return state - u_in
 
-    def reset(self):
+    def reset(self, state_space, state_positions):
         self.reset_counter += 1
-        return super().reset()
+        return super().reset(state_space, state_positions)
 
     def torque(self, currents):
         return np.prod(currents)
@@ -514,7 +514,7 @@ class DummyLoad(MechanicalLoad):
         self.reset_counter = 0
         super().__init__(tau=tau, **kwargs)
 
-    def reset(self, *_, **__):
+    def reset(self, state_space, state_positions, nominal_state,  *_, **__):
         self.reset_counter += 1
         return np.zeros(2)
 

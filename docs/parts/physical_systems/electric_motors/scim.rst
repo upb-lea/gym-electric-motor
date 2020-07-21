@@ -19,7 +19,7 @@ Electrical ODE
 with
 
 .. math::
-    L_s &= L_m + L_{s \sigma}, & L_r &= L_m + L_{r \sigma}\\
+    L_s &= L_m + L_{\sigma s}, & L_r &= L_m + L_{\sigma r}\\
     \sigma &= \frac{L_r L_s - L_m^2}{L_r L_s}, & \tau_r &=\frac{L_r}{R_r}, & \tau_\sigma &= \frac{\sigma L_s}{R_s + R_r \frac{L_m^2}{L_r^2}}
 
 
