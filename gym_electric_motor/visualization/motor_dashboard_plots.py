@@ -408,7 +408,7 @@ class MeanEpisodeRewardPlot(EpisodeBasedPlot):
         'linewidth': 0.75,
         'marker': 'o',
         'markersize': 1,
-        'label': 'mean episodic reward'
+
     }
 
     def __init__(self):
@@ -442,8 +442,7 @@ class MeanEpisodeRewardPlot(EpisodeBasedPlot):
         spacing = 0.1 * (max_limit - min_limit)
         self._axis.set_xlim(0, self.x_width)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-        self._axis.set_ylabel('mean_reward')
-        self._axis.legend(loc="upper left")
+        self._axis.set_ylabel('mean episodic reward')
 
     def set_modules(self, ps, rg, rf):
         # fetch reward range from reward function module
