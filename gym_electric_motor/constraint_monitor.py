@@ -1,6 +1,4 @@
 import numpy as np
-import gym
-from gym.spaces import Box
 
 
 class ConstraintMonitor:
@@ -16,26 +14,6 @@ class ConstraintMonitor:
     The user input have to follow the basic structure, given in the
     userdefined_constraints.py file.
     """
-    # @property
-    # def constraints(self):
-    #     """
-    #     Userdefined constraints for system state-space
-    #
-    #     Returns:
-    #         constraints(gym.Box) for system state-space
-    #
-    #     """
-    #     return self._constraints
-
-    # @property
-    # def discount_factor(self):
-    #     """
-    #     Userdefined value to get discounted limit values
-    #
-    #     Returns:
-    #          discount_factor(float): factor to discount limits
-    #     """
-    #     return self._discount_factor
 
     @property
     def observed_states(self):
@@ -82,16 +60,6 @@ class ConstraintMonitor:
         self._limits = physical_system.limits / abs(physical_system.limits)
         self._observed_states = observed_states
 
-        # setting system limits as constraint, when no constraints given
-        # if self._constraints is None:
-        #     self._constraints = limits * self._discount_factor
-        #
-        # # normalize constraints to limit values
-        # if not self._normalised:
-        #     self._constraints = self._normalize_constraints(self._constraints,
-        #                                                     limits)
-        # self._observed_states = observed_states
-
     def check_constraint_violation(self, state, k=None):
         """
         Checks if a given system-state violates the constraints
@@ -104,9 +72,6 @@ class ConstraintMonitor:
             integer value from [0, 1], where 0 is no violation at all and 1 is
             a hard constraint violation
         """
-        #   examples,
-        #  tests ergänzen (zumindest in core und weighted sum), docu ändern
-
         if self._external_monitor is not None:
             violation_return = self._external_monitor(
                                         state=state,
@@ -119,20 +84,4 @@ class ConstraintMonitor:
             violation_return = (abs(state[self._observed_states]) > self._limits[
                 self._observed_states]).any()
             return float(violation_return)
-
-    # def _normalize_constraints(self, constraint, denominator):
-    #     """
-    #     Args:
-    #         constraint(gym.spaces.Box, np.ndarray): constraints to be normalised
-    #         denominator(np.ndarray): constraint is normalised in relation to
-    #             this argument
-    #     Returns:
-    #          normalised constraints
-    #     """
-    #     if isinstance(constraint, gym.spaces.Box):
-    #         upper = constraint.high / abs(denominator)
-    #         lower = constraint.low / abs(denominator)
-    #         return Box(lower, upper)
-    #     elif isinstance(constraint, (list, np.ndarray)):
-    #         return constraint / abs(denominator)
 
