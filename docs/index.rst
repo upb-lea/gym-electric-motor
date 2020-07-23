@@ -46,6 +46,7 @@ documentation specifies the basic interfaces inside a physical system.
     parts/visualizations/visualization
     parts/core
     parts/utils
+    parts/callbacks
 
 Indices and tables
 ==================

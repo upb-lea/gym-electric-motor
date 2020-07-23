@@ -1,10 +1,8 @@
 import math
 from matplotlib import pyplot as plt
 import matplotlib
-from PyQt5.QtWidgets import QWidget
 from gym_electric_motor.core import *
 from gym.spaces import Box
-
 import pytest
 
 # region parameter definition
@@ -93,7 +91,7 @@ synrm_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                      'random_params': (None, None)}
 
 sci_motor_parameter = {
-    'motor_parameter': {'p': 2, 'l_m': 140e-3, 'l_ssig': 5e-3, 'l_rsig': 5e-3, 'j_rotor': 0.001, 'r_s': 3, 'r_r': 1.5, 'u_sup': u_sup},
+    'motor_parameter': {'p': 2, 'l_m': 140e-3, 'l_sigs': 5e-3, 'l_sigr': 5e-3, 'j_rotor': 0.001, 'r_s': 3, 'r_r': 1.5, 'u_sup': u_sup},
     'nominal_values': {'i': 3.9, 'torque': 4.7, 'omega': 314., 'epsilon': np.pi, 'u': 560},
     'limit_values': {'i': 5.5, 'torque': 6, 'omega': 350.0, 'epsilon': np.pi, 'u': 560},
     'reward_weights': dict(omega=1, torque=0, i_sa=0, i_sb=0, i_sc=0, u_sa=0, u_sb=0, u_sc=0, epsilon=0, u_sup=0)}
@@ -167,14 +165,6 @@ def monkey_pause_function(time=None):
     pass
 
 
-def monkey_show_maximized_function(args=None):
-    """
-    function used instead of figureManager.showMaximized()
-    :param args:
-    :return:
-    """
-    pass
-
 
 def monkey_show_function(args=None):
     """
@@ -194,7 +184,6 @@ def turn_off_windows(monkeypatch):
     """
     monkeypatch.setattr(plt, "ion", monkey_ion_function)
     monkeypatch.setattr(plt, "pause", monkey_pause_function)
-    monkeypatch.setattr(QWidget, "showMaximized", monkey_show_maximized_function)
     monkeypatch.setattr(matplotlib.figure.Figure, "show", monkey_show_function)
 
 

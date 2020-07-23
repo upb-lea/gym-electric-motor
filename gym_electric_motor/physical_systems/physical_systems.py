@@ -170,7 +170,7 @@ class SCMLSystem(PhysicalSystem):
         voltages_lower = currents_upper
         voltages_upper = voltages_lower + len(self._electrical_motor.VOLTAGES)
         self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
-        self.U_SUP_IDX = voltages_upper
+        self.U_SUP_IDX = list(range(voltages_upper, voltages_upper + self._supply.voltage_len))
 
     def simulate(self, action, *_, **__):
         # Docstring of superclass
@@ -182,7 +182,7 @@ class SCMLSystem(PhysicalSystem):
             i_sup = self._converter.i_sup(i_in)
             u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(i_in, self._ode_solver.t)
-            u_in = [u * u_sup for u in u_in]
+            u_in = [u * u_s for u in u_in for u_s in u_sup]
             self._ode_solver.set_f_params(u_in)
             ode_state = self._ode_solver.integrate(t)
             i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
@@ -190,7 +190,7 @@ class SCMLSystem(PhysicalSystem):
         i_sup = self._converter.i_sup(i_in)
         u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(i_in, self._ode_solver.t)
-        u_in = [u * u_sup for u in u_in]
+        u_in = [u * u_s for u in u_in for u_s in u_sup]
         self._ode_solver.set_f_params(u_in)
         ode_state = self._ode_solver.integrate(self._t + self._tau)
         self._t = self._ode_solver.t
@@ -281,7 +281,7 @@ class SCMLSystem(PhysicalSystem):
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
         u_in = self.converter.reset()
-        u_in = [u * u_sup for u in u_in]
+        u_in = [u * u_s for u in u_in for u_s in u_sup]
         torque = self.electrical_motor.torque(motor_state)
         noise = self._noise_generator.reset()
         self._t = 0
@@ -292,7 +292,7 @@ class SCMLSystem(PhysicalSystem):
             [torque],
             motor_state[self._electrical_motor.CURRENTS_IDX],
             u_in,
-            [u_sup]
+            u_sup
         ))
         return (system_state + noise) / self._limits
 
@@ -367,19 +367,19 @@ class ThreePhaseMotorSystem(SCMLSystem):
             normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
 
         Returns:
-            (quantity_q, quantity_d): The quantities in the dq-space
+            (quantity_d, quantity_q): The quantities in the dq-space
         """
         if normed_epsilon:
             epsilon_el *= np.pi
         dq_quantity = self._electrical_motor.q_inv(self._electrical_motor.t_23(abc_quantities), epsilon_el)
-        return dq_quantity[::-1]
+        return dq_quantity
 
     def dq_to_abc_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
         """
         Transformation from dq to abc space
 
         Args:
-            dq_quantities: Three quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
+            dq_quantities: Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))
             epsilon_el: Electrical angle of the motor
             normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
 
@@ -388,7 +388,7 @@ class ThreePhaseMotorSystem(SCMLSystem):
         """
         if normed_epsilon:
             epsilon_el *= np.pi
-        return self._electrical_motor.t_32(self._electrical_motor.q(dq_quantities[::-1], epsilon_el))
+        return self._electrical_motor.t_32(self._electrical_motor.q(dq_quantities, epsilon_el))
 
     def alphabeta_to_dq_space(self, alphabeta_quantities, epsilon_el, normed_epsilon=False):
         """
@@ -400,19 +400,19 @@ class ThreePhaseMotorSystem(SCMLSystem):
             normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
 
         Returns:
-            (quantity_q, quantity_d): The quantities in the dq-space
+            (quantity_d, quantity_q): The quantities in the dq-space
         """
         if normed_epsilon:
             epsilon_el *= np.pi
         dq_quantity = self._electrical_motor.q_inv(alphabeta_quantities, epsilon_el)
-        return dq_quantity[::-1]
+        return dq_quantity
 
     def dq_to_alphabeta_space(self, dq_quantities, epsilon_el, normed_epsilon=False):
         """
         Transformation from dq to alphabeta space
 
         Args:
-            dq_quantities: Two quantities in dq-space (e.g. (u_q, u_d) or (i_q, i_d))
+            dq_quantities: Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))
             epsilon_el: Electrical angle of the motor
             normed_epsilon(bool): True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)
 
@@ -421,7 +421,7 @@ class ThreePhaseMotorSystem(SCMLSystem):
         """
         if normed_epsilon:
             epsilon_el *= np.pi
-        return self._electrical_motor.q(dq_quantities[::-1], epsilon_el)
+        return self._electrical_motor.q(dq_quantities, epsilon_el)
 
 
 class SynchronousMotorSystem(ThreePhaseMotorSystem):
@@ -453,8 +453,8 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         # Docstring of superclass
         return (
             self._mechanical_load.state_names +['torque',
-                                                'i_a', 'i_b', 'i_c', 'i_sq', 'i_sd',
-                                                'u_a', 'u_b', 'u_c', 'u_sq', 'u_sd',
+                                                'i_a', 'i_b', 'i_c', 'i_sd', 'i_sq',
+                                                'u_a', 'u_b', 'u_c', 'u_sd', 'u_sq',
                                                 'epsilon', 'u_sup',
                                                 ]
         )
@@ -478,7 +478,7 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         voltages_upper = voltages_lower + 5
         self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
         self.EPSILON_IDX = voltages_upper
-        self.U_SUP_IDX = self.EPSILON_IDX + 1
+        self.U_SUP_IDX = list(range(self.EPSILON_IDX + 1, self.EPSILON_IDX + 1 + self._supply.voltage_len))
         self._ode_epsilon_idx = self._motor_ode_idx[-1]
 
     def simulate(self, action, *_, **__):
@@ -494,9 +494,9 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             i_sup = self._converter.i_sup(i_in)
             u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(i_in, self._ode_solver.t)
-            u_in = [u * u_sup for u in u_in]
-            u_qd = self.abc_to_dq_space(u_in, eps)
-            self._ode_solver.set_f_params(u_qd)
+            u_in = [u * u_s for u in u_in for u_s in u_sup]
+            u_dq = self.abc_to_dq_space(u_in, eps)
+            self._ode_solver.set_f_params(u_dq)
             ode_state = self._ode_solver.integrate(t)
             eps = ode_state[self._ode_epsilon_idx]
             i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
@@ -504,18 +504,18 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         i_sup = self._converter.i_sup(i_in)
         u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(i_in, self._ode_solver.t)
-        u_in = [u * u_sup for u in u_in]
-        u_qd = self.abc_to_dq_space(u_in, eps)
-        self._ode_solver.set_f_params(u_qd)
+        u_in = [u * u_s for u in u_in for u_s in u_sup]
+        u_dq = self.abc_to_dq_space(u_in, eps)
+        self._ode_solver.set_f_params(u_dq)
         ode_state = self._ode_solver.integrate(self._t + self._tau)
         self._t = self._ode_solver.t
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
         noise = self._noise_generator.noise()
         mechanical_state = ode_state[self._load_ode_idx]
-        i_qd = ode_state[self._ode_currents_idx]
+        i_dq = ode_state[self._ode_currents_idx]
         i_abc = list(
-            self.dq_to_abc_space(i_qd, eps)
+            self.dq_to_abc_space(i_dq, eps)
         )
         eps = ode_state[self._ode_epsilon_idx] % (2 * np.pi)
         if eps > np.pi:
@@ -524,10 +524,10 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         system_state = np.concatenate((
             mechanical_state,
             [torque],
-            i_abc, i_qd,
-            u_in, u_qd,
+            i_abc, i_dq,
+            u_in, u_dq,
             [eps],
-            [u_sup]
+            u_sup
         ))
         return (system_state + noise) / self._limits
 
@@ -546,10 +546,10 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         if eps > np.pi:
             eps -= 2 * np.pi
         u_abc = self.converter.reset()
-        u_abc = [u * u_sup for u in u_abc]
-        u_qd = self.abc_to_dq_space(u_abc, eps)
-        i_qd = ode_state[self._ode_currents_idx]
-        i_abc = self.dq_to_abc_space(i_qd, eps)
+        u_abc = [u * u_s for u in u_abc for u_s in u_sup]
+        u_dq = self.abc_to_dq_space(u_abc, eps)
+        i_dq = ode_state[self._ode_currents_idx]
+        i_abc = self.dq_to_abc_space(i_dq, eps)
         torque = self.electrical_motor.torque(motor_state)
         noise = self._noise_generator.reset()
         self._t = 0
@@ -558,10 +558,10 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         system_state = np.concatenate((
             mechanical_state,
             [torque],
-            i_abc, i_qd,
-            u_abc, u_qd,
+            i_abc, i_dq,
+            u_abc, u_dq,
             [eps],
-            [u_sup],
+            u_sup,
         ))
         return (system_state + noise) / self._limits
 
@@ -592,8 +592,8 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         # Docstring of superclass
         return (
             self._mechanical_load.state_names + ['torque',
-                                                 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',
-                                                 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',
+                                                 'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',
+                                                 'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',
                                                  'epsilon', 'u_sup',
                                                  ]
         )
@@ -616,7 +616,7 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         voltages_upper = voltages_lower + 5
         self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
         self.EPSILON_IDX = voltages_upper
-        self.U_SUP_IDX = self.EPSILON_IDX + 1
+        self.U_SUP_IDX = list(range(self.EPSILON_IDX + 1, self.EPSILON_IDX + 1 + self._supply.voltage_len))
         self._ode_epsilon_idx = self._motor_ode_idx[-1]
 
     def calculate_field_angle(self, state):
@@ -641,7 +641,7 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
             i_sup = self._converter.i_sup(i_in)
             u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(i_in, self._ode_solver.t)
-            u_in = [u * u_sup for u in u_in]
+            u_in = [u * u_s for u in u_in for u_s in u_sup]
             u_alphabeta = self.abc_to_alphabeta_space(u_in)
             self._ode_solver.set_f_params(u_alphabeta)
             ode_state = self._ode_solver.integrate(t)
@@ -651,8 +651,8 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         i_sup = self._converter.i_sup(i_in)
         u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(i_in, self._ode_solver.t)
-        u_in = [u * u_sup for u in u_in]
-        u_qd = self.abc_to_dq_space(u_in, eps_fs)
+        u_in = [u * u_s for u in u_in for u_s in u_sup]
+        u_dq = self.abc_to_dq_space(u_in, eps_fs)
         u_alphabeta = self.abc_to_alphabeta_space(u_in)
         self._ode_solver.set_f_params(u_alphabeta)
         ode_state = self._ode_solver.integrate(self._t + self._tau)
@@ -661,8 +661,8 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
         noise = self._noise_generator.noise()
         mechanical_state = ode_state[self._load_ode_idx]
-        i_qd = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_fs)
-        i_abc = list(self.dq_to_abc_space(i_qd, eps_fs))
+        i_dq = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_fs)
+        i_abc = list(self.dq_to_abc_space(i_dq, eps_fs))
 
         eps = ode_state[self._ode_epsilon_idx] % (2 * np.pi)
         if eps > np.pi:
@@ -670,10 +670,10 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
 
         system_state = np.concatenate((
             mechanical_state, [torque],
-            i_abc, i_qd,
-            u_in, u_qd,
+            i_abc, i_dq,
+            u_in, u_dq,
             [eps],
-            [u_sup]
+            u_sup
         ))
         return (system_state + noise) / self._limits
 
@@ -697,10 +697,10 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
             eps -= 2 * np.pi
 
         u_abc = self.converter.reset()
-        u_abc = [u * u_sup for u in u_abc]
-        u_qd = self.abc_to_dq_space(u_abc, eps_fs)
-        i_qd = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_fs)
-        i_abc = self.dq_to_abc_space(i_qd, eps_fs)
+        u_abc = [u * u_s for u in u_abc for u_s in u_sup]
+        u_dq = self.abc_to_dq_space(u_abc, eps_fs)
+        i_dq = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_fs)
+        i_abc = self.dq_to_abc_space(i_dq, eps_fs)
         torque = self.electrical_motor.torque(motor_state)
         noise = self._noise_generator.reset()
         self._t = 0
@@ -708,10 +708,10 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         self._ode_solver.set_initial_value(ode_state, self._t)
         system_state = np.concatenate([
             mechanical_state, [torque],
-            i_abc, i_qd,
-            u_abc, u_qd,
+            i_abc, i_dq,
+            u_abc, u_dq,
             [eps],
-            [u_sup]
+            u_sup
         ])
         return (system_state + noise) / self._limits
 
@@ -761,10 +761,10 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
     def _build_state_names(self):
         # Docstring of superclass
         names_l = self._mechanical_load.state_names + ['torque',
-                                                       'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd',
-                                                       'i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd',
-                                                       'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',
-                                                       'u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd',
+                                                       'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',
+                                                       'i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq',
+                                                       'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',
+                                                       'u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq',
                                                        'epsilon', 'u_sup',
                                                        ]
         return names_l
@@ -787,7 +787,8 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         voltages_upper = voltages_lower + 10
         self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
         self.EPSILON_IDX = voltages_upper
-        self.U_SUP_IDX = self.EPSILON_IDX + 1
+        self.U_SUP_IDX = list(range(self.EPSILON_IDX + 1, self.EPSILON_IDX + 1 + self._supply.voltage_len))
+
         self._ode_epsilon_idx = self._motor_ode_idx[-1]
 
     def calculate_field_angle(self, state):
@@ -800,7 +801,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
     def calculate_rotor_current(self, state):
         # rotor current is calculated from states
         mp = self._electrical_motor.motor_parameter
-        l_r = mp['l_m'] + mp['l_rsig']
+        l_r = mp['l_m'] + mp['l_sigr']
 
         i_salpha = state[self._motor_ode_idx[self._electrical_motor.I_SALPHA_IDX]]
         i_sbeta = state[self._motor_ode_idx[self._electrical_motor.I_SBETA_IDX]]
@@ -836,7 +837,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             action_stator = action[:stator_input_len]
             action_rotor = action[stator_input_len:stator_input_len + rotor_input_len]
             action_stator = self.dq_to_abc_space(action_stator, eps_field)
-            action_rotor = self.dq_to_abc_space(action_rotor, eps_field)
+            action_rotor = self.dq_to_abc_space(action_rotor, eps_field-eps_el)
             action = np.concatenate((action_stator, action_rotor)).tolist()
 
         i_sabc = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
@@ -847,12 +848,12 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             i_sup = self._converter.i_sup(np.concatenate((i_sabc, i_rdef)))
             u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
-            u_in = [u * u_sup for u in u_in]
+            u_in = [u * u_s for u in u_in for u_s in u_sup]
             u_sabc = u_in[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
             u_rdef = u_in[self.rotor_voltage_low_idx:self.rotor_voltage_high_idx]
-            u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
+            u_rdq = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
             u_salphabeta = self.abc_to_alphabeta_space(u_sabc)
-            u_ralphabeta = self.dq_to_alphabeta_space(u_rqd, eps_field)
+            u_ralphabeta = self.dq_to_alphabeta_space(u_rdq, eps_field)
 
             u_sr_alphabeta = np.array([u_salphabeta, u_ralphabeta])
             self._ode_solver.set_f_params(u_sr_alphabeta)
@@ -866,13 +867,13 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         i_sup = self._converter.i_sup(np.concatenate((i_sabc, i_rdef)))
         u_sup = self._supply.get_voltage(self._t, i_sup)
         u_in = self._converter.convert(np.concatenate([i_sabc, i_rdef]).tolist(), self._ode_solver.t)
-        u_in = [u * u_sup for u in u_in]
+        u_in = [u * u_s for u in u_in for u_s in u_sup]
         u_sabc = u_in[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
         u_rdef = u_in[self.rotor_voltage_low_idx:self.rotor_voltage_high_idx]
-        u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
-        u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
+        u_sdq = self.abc_to_dq_space(u_sabc, eps_field)
+        u_rdq = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
         u_salphabeta = self.abc_to_alphabeta_space(u_sabc)
-        u_ralphabeta = self.dq_to_alphabeta_space(u_rqd, eps_field)
+        u_ralphabeta = self.dq_to_alphabeta_space(u_rdq, eps_field)
 
         u_sr_alphabeta = np.array([u_salphabeta, u_ralphabeta])
         self._ode_solver.set_f_params(u_sr_alphabeta)
@@ -883,11 +884,11 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         noise = self._noise_generator.noise()
         mechanical_state = ode_state[self._load_ode_idx]
 
-        i_sqd = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_field)
-        i_sabc = list(self.dq_to_abc_space(i_sqd, eps_field))
+        i_sdq = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_field)
+        i_sabc = list(self.dq_to_abc_space(i_sdq, eps_field))
 
-        i_rqd = self.alphabeta_to_dq_space(self.calculate_rotor_current(ode_state), eps_field)
-        i_rdef = list(self.dq_to_abc_space(i_rqd, eps_field-eps_el))
+        i_rdq = self.alphabeta_to_dq_space(self.calculate_rotor_current(ode_state), eps_field)
+        i_rdef = list(self.dq_to_abc_space(i_rdq, eps_field-eps_el))
 
         eps_el = ode_state[self._ode_epsilon_idx] % (2 * np.pi)
         if eps_el > np.pi:
@@ -896,12 +897,12 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         system_state = np.concatenate((
             mechanical_state,
             [torque],
-            i_sabc, i_sqd,
-            i_rdef, i_rqd,
-            u_sabc, u_sqd,
-            u_rdef, u_rqd,
+            i_sabc, i_sdq,
+            i_rdef, i_rdq,
+            u_sabc, u_sdq,
+            u_rdef, u_rdq,
             [eps_el],
-            [u_sup],
+            u_sup,
         ))
         return (system_state + noise) / self._limits
 
@@ -928,17 +929,17 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             eps_field -= 2 * np.pi
 
         u_sr_abcdef = self.converter.reset()
-        u_sr_abcdef = [u * u_sup for u in u_sr_abcdef]
+        u_sr_abcdef = [u * u_s for u in u_sr_abcdef for u_s in u_sup]
         u_sabc = u_sr_abcdef[self.stator_voltage_low_idx:self.stator_voltage_high_idx]
         u_rdef = u_sr_abcdef[self.rotor_voltage_low_idx:self.rotor_voltage_high_idx]
-        u_sqd = self.abc_to_dq_space(u_sabc, eps_field)
-        u_rqd = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
+        u_sdq = self.abc_to_dq_space(u_sabc, eps_field)
+        u_rdq = self.abc_to_dq_space(u_rdef, eps_field-eps_el)
 
-        i_sqd = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_field)
-        i_sabc = self.dq_to_abc_space(i_sqd, eps_field)
+        i_sdq = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_field)
+        i_sabc = self.dq_to_abc_space(i_sdq, eps_field)
 
-        i_rqd = self.alphabeta_to_dq_space(self.calculate_rotor_current(ode_state), eps_field-eps_el)
-        i_rdef = self.dq_to_abc_space(i_rqd, eps_field-eps_el)
+        i_rdq = self.alphabeta_to_dq_space(self.calculate_rotor_current(ode_state), eps_field-eps_el)
+        i_rdef = self.dq_to_abc_space(i_rdq, eps_field-eps_el)
 
         torque = self.electrical_motor.torque(motor_state)
         noise = self._noise_generator.reset()
@@ -947,11 +948,11 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         self._ode_solver.set_initial_value(ode_state, self._t)
         system_state = np.concatenate([
             mechanical_state, [torque],
-            i_sabc, i_sqd,
-            i_rdef, i_rqd,
-            u_sabc, u_sqd,
-            u_rdef, u_rqd,
+            i_sabc, i_sdq,
+            i_rdef, i_rdq,
+            u_sabc, u_sdq,
+            u_rdef, u_rdq,
             [eps_el],
-            [u_sup]
+            u_sup
         ])
         return (system_state + noise) / self._limits

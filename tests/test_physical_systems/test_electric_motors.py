@@ -440,28 +440,28 @@ def extex_motor_electrical_ode_testing(motor_1):
 def torque_testing(state, mp):
     """
     use this function as benchmark for the torque
-    :param state: [i_q, i_d, epsilon]
+    :param state: [i_d, i_q, epsilon]
     :param mp: motor parameter (dict)
     :return: generated torque
     """
-    return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[1]) * state[0]
+    return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[0]) * state[1]
 
 
 def synchronous_motor_ode_testing(state, voltage, omega, mp):
     """
     use this function as benchmark for the ode
-    :param state: [i_q, i_d, epsilon]
-    :param voltage: [u_q, u_d]
+    :param state: [i_d, i_q, epsilon]
+    :param voltage: [u_d, u_q]
     :param omega: angular velocity
     :param mp: motor parameter (dict)
     :return: ode system
     """
-    u_d = voltage[1]
-    u_q = voltage[0]
-    i_d = state[1]
-    i_q = state[0]
-    return np.array([(u_q - mp['r_s'] * i_q - omega * mp['p'] * (mp['l_d'] * i_d + mp['psi_p'])) / mp['l_q'],
-                     (u_d - mp['r_s'] * i_d + mp['l_q'] * omega * mp['p'] * i_q) / mp['l_d'],
+    u_d = voltage[0]
+    u_q = voltage[1]
+    i_d = state[0]
+    i_q = state[1]
+    return np.array([(u_d - mp['r_s'] * i_d + mp['l_q'] * omega * mp['p'] * i_q) / mp['l_d'],
+                     (u_q - mp['r_s'] * i_q - omega * mp['p'] * (mp['l_d'] * i_d + mp['psi_p'])) / mp['l_q'],
                      omega * mp['p']])
 
 @pytest.mark.parametrize(
@@ -478,14 +478,13 @@ def test_synchronous_motor_testing(motor_type, motor_class,
                                    states, interval, random_init, random_params):
     """
     testing the synrm and pmsm
-    consider that it uses dq coordinates and the state is [i_q, i_d, epsilon]!!.
-    The same goes with the voltages u_qd and not as usual dq!!
+    consider that it uses dq coordinates and the state is [i_d, i_q, epsilon]!!.
+    voltage u_dq
     :return:
     """
     parameter = test_motor_parameter[motor_type]
-    # use this values for testing
-    state = np.array([0.5, 0.3, 0.68])  # i_q, i_d, epsilon
-    u_qd = np.array([200, 50])
+    state = np.array([0.3, 0.5, 0.68])  # i_d, i_q, epsilon
+    u_dq = np.array([50, 200])
     omega = 25
     # set initializer parameters
     test_initializer['states'] = states
@@ -509,10 +508,10 @@ def test_synchronous_motor_testing(motor_type, motor_class,
         state_positions = pmsm_state_positions
         state_space = pmsm_state_space
     for motor in [default_init_1, default_init_2]:
-        assert motor.torque(state) == torque_testing(state, mp)
+        assert abs(motor.torque(state) - torque_testing(state, mp)) < 1E-8
         assert all(motor.i_in(state) == state[0:2])
-        ode = motor.electrical_ode(state, u_qd, omega)
-        test_ode = synchronous_motor_ode_testing(state, u_qd, omega, mp)
+        ode = motor.electrical_ode(state, u_dq, omega)
+        test_ode = synchronous_motor_ode_testing(state, u_dq, omega, mp)
         assert sum(abs(ode - test_ode)) < 1E-8, "Motor ode is wrong: " + str([ode, test_ode])
     # test parametrized motors
     motor_init_1 = make_module(ElectricMotor, motor_type,
@@ -562,8 +561,8 @@ def test_synchronous_motor_testing(motor_type, motor_class,
         # test functions
         assert motor.torque(state) == torque_testing(state, mp)
         assert all(motor.i_in(state) == state[0:2])
-        ode = motor.electrical_ode(state, u_qd, omega)
-        test_ode = synchronous_motor_ode_testing(state, u_qd, omega, mp)
+        ode = motor.electrical_ode(state, u_dq, omega)
+        test_ode = synchronous_motor_ode_testing(state, u_dq, omega, mp)
         assert sum(abs(ode - test_ode)) < 1E-8, "Motor ode is wrong: " + str([ode, test_ode])
         #motor_state = ['i_sd', 'i_sq', 'epsilon']
         motor_state = ['i', 'i', 'epsilon']
@@ -1662,23 +1661,19 @@ class TestSynchronousReluctanceMotor:
         test_object._update_model()
         # verify results
         expected_constants = np.array([
-            [0, -0.5 / 8E-3, 0, 1 / 8E-3, 0, 0, -3 * 70 / 8],
-            [0, 0, -0.5 / 70E-3, 0, 1 / 70E-3, 8e-3 * 3 / 70E-3, 0],
-            [3, 0, 0, 0, 0, 0, 0]
+            [0, -0.5 / 70E-3,           0, 1 / 70E-3,        0,           0, 3 * 8 / 70],
+            [0,            0, -0.5 / 8E-3,         0, 1 / 8E-3, -3 * 70 / 8,          0],
+            [3,            0,           0,         0,        0,           0,          0]
         ])
+        print(test_object._model_constants)
+        print(expected_constants)
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6, 'unexpected model constants'
 
     @pytest.mark.parametrize(
-        'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 1, 2]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([[-2.5, 0, 0], [0, -0.5, 0], [0, 0, 0]])),
-            (np.array([5, 7, -3]), [4, 8], -2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2),
-             np.array([[-1, 10, 0], [-0.4, -0.2, 0], [0, 0, 0]])),
-            (np.array([5, 7, -2]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([[-2.5, -10, 0], [0.4, -0.5, 0], [0, 0, 0]])),
+        'state,                  u_in, omega,                                  motor_parameter,                                            result',[
+        (np.array([1, 0, 2]),  [2, 0],     0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([[-0.5, 0, 0], [0, -2.5, 0], [0, 0, 0]])),
+        (np.array([7, 5, -3]), [8, 4],    -2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2), np.array([[-0.2, -0.8, 0], [20, -1, 0], [0, 0, 0]])),
+        (np.array([7, 5, -2]), [8, 4],     2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([[-0.5, 0.8, 0], [-20, -2.5, 0], [0, 0, 0]])),
         ]
     )
     def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
@@ -1689,15 +1684,9 @@ class TestSynchronousReluctanceMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([-20, 0, 2])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([0, 2, 1])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=4, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([-40, -1.6, 4])),
+            (np.array([2, 0, 0]), [2, 0], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([0, -20, 2])),
+            (np.array([0, 5, 2]), [8, 4], -2, dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([2, 0, 1])),
+            (np.array([2, -2, 9]), [4, 8], 2, dict(p=4, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([-1.6, -40, 4])),
         ]
     )
     def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
@@ -1708,15 +1697,9 @@ class TestSynchronousReluctanceMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([48, 0, 0])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([0, 45, 0])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([48, -48, 0])),
+            (np.array([2, 0, 0]), [2, 0], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([0, 48, 0])),
+            (np.array([0, 5, 2]), [8, 4], -2, dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([45, 0, 0])),
+            (np.array([2, -2, 9]), [8, 4], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([-48, 48, 0])),
         ]
     )
     def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
@@ -1742,7 +1725,7 @@ class TestPermanentMagnetSynchronousMotor:
         _motor_parameter = pmsm_motor_parameter['motor_parameter']
         test_object = PermanentMagnetSynchronousMotor()
         monkeypatch.setattr(test_object, '_motor_parameter', _motor_parameter)
-        currents = np.array([15, 10])
+        currents = np.array([10, 15])
         # call function to test
         torque = test_object.torque(currents)
         # verify the expected results
@@ -1761,23 +1744,17 @@ class TestPermanentMagnetSynchronousMotor:
         test_object._update_model()
         # verify results
         expected_constants = np.array([
-            [-3*0.171/125E-3, -5 / 125E-3, 0, 1 / 125E-3, 0, 0, -3 * 84 / 125],
-            [0, 0, -5 / 84E-3, 0, 1 / 84E-3, 125E-3 * 3 / 84E-3, 0],
-            [3, 0, 0, 0, 0, 0, 0]
+            [                0, -5 / 84E-3,            0, 1 / 84E-3,          0,                    0, 3 * 125 / 84],
+            [-3 * 0.171/125E-3,           0, -5 / 125E-3,         0, 1 / 125E-3, -84E-3 * 3 / 125E-3,             0],
+            [                3,           0,           0,         0,          0,                   0,             0]
         ])
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 1, 2]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165),
-             np.array([[-2.5, 0, 0], [0, -0.5, 0], [0, 0, 0]])),
-            (np.array([5, 7, -3]), [4, 8], -2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2, psi_p=0.165),
-             np.array([[-1, 10, 0], [-0.4, -0.2, 0], [0, 0, 0]])),
-            (np.array([5, 7, -2]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165),
-             np.array([[-2.5, -10, 0], [0.4, -0.5, 0], [0, 0, 0]])),
+            (np.array([0, 1, 2]), [0, 2], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165), np.array([[-0.5, 0, 0], [0, -2.5, 0], [0, 0, 0]])),
+            (np.array([5, 7, -3]), [4, 8], -2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2, psi_p=0.165), np.array([[-0.2, -0.8, 0], [20, -1, 0], [0, 0, 0]])),
+            (np.array([5, 7, -2]), [4, 8], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165), np.array([[-0.5, 0.8, 0], [-20, -2.5, 0], [0, 0, 0]])),
         ]
     )
     def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
@@ -1788,15 +1765,9 @@ class TestPermanentMagnetSynchronousMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
-             np.array([-20, 0, 2])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([-5, 2, 1])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([-30, -0.8, 2])),
+            (np.array([2, 0, 0]), [2, 0], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0), np.array([0, -20, 2])),
+            (np.array([0, 5, 2]), [8, 4], -2, dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([2, -5, 1])),
+            (np.array([2, -2, 9]), [8, 4], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([-0.8, -30, 2])),
         ]
     )
     def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
@@ -1807,15 +1778,9 @@ class TestPermanentMagnetSynchronousMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
-             np.array([48, 0, 0])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([30, 45, 0])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([78, -48, 0])),
+            (np.array([2, 0, 0]), [0, 2], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0), np.array([0, 48, 0])),
+            (np.array([0, 5, 2]), [4, 8], -2, dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([45, 30, 0])),
+            (np.array([2, -2, 9]), [4, 8], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([-48, 78, 0])),
         ]
     )
     def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
@@ -1998,8 +1963,8 @@ class TestInductionMotor:
         sigma = (l_s * l_r - 140e-3 ** 2) / (l_s * l_r)
         tau_sig = sigma * l_s / (3 + 1.5 * (140e-3 ** 2) / (l_r ** 2))
 
-        assert abs(l_s - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_ssig'])) < 1E-6, 'unexpected stator inductance'
-        assert abs(l_r - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_rsig'])) < 1E-6, 'unexpected rotor inductance'
+        assert abs(l_s - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_sigs'])) < 1E-6, 'unexpected stator inductance'
+        assert abs(l_r - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_sigr'])) < 1E-6, 'unexpected rotor inductance'
         assert abs(sigma - ((l_s * l_r - test_object._motor_parameter['l_m'] ** 2) / (l_s * l_r))) < 1E-6, 'unexpected leakage coefficient'
         assert abs(tau_r - (l_r / test_object._motor_parameter['r_r'])) < 1E-6, 'unexpected rotor time constant'
         assert abs(tau_sig - (sigma * l_s / (test_object._motor_parameter['r_s'] + test_object._motor_parameter['r_r'] * (test_object._motor_parameter['l_m'] ** 2) / (l_r ** 2)))) < 1E-6, 'unexpected leakage time constant'
@@ -2016,7 +1981,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3 ,j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3 ,j_rotor=4, r_s=5, r_r=6),
              np.array([[-1.9848901098901102, 0, 0.08241758241758242, 0.0, 0],
                        [0, -1.9848901098901102, 0.0, 0.08241758241758242, 0],
                        [4.615384615384616, 0, -0.46153846153846156, 0, 0],
@@ -2033,7 +1998,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3, j_rotor=4, r_s=5, r_r=6),
              np.array([10 * 2 / 56 * 3,
                        - 10 * 2 / 56 * 2,
                        - 2 * 3,
@@ -2050,7 +2015,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([5, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3, j_rotor=4, r_s=5, r_r=6),
              np.array([- 3 * 3 / 2 * 2 * 10 / 13,
                 2 * 3 / 2 * 2 * 10 / 13,
                 1 * 3 / 2 * 2 * 10 / 13,
