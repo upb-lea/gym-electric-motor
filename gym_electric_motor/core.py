@@ -21,6 +21,7 @@ from gym.spaces import Box
 
 from .utils import set_state_array
 from .utils import instantiate
+from .constraint_monitor import ConstraintMonitor as CM
 
 
 class ElectricMotorEnvironment(gym.core.Env):
@@ -247,7 +248,10 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
-        self._reward, self._done = self._reward_function.reward(self._state, self._reference, action)
+        self._reward, self._done = self._reward_function.reward(self._state,
+                                                                self._reference,
+                                                                self._physical_system.k,
+                                                                action)
         self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
         self._call_callbacks('on_step_end')
@@ -451,12 +455,15 @@ class RewardFunction:
     #: Tuple(int,int): Lower and upper possible reward (excluding limit violation reward)
     reward_range = (-np.inf, np.inf)
 
-    def __init__(self, observed_states='currents', **__):
+    def __init__(self, observed_states='currents',
+                 constraint_monitor=None, **__):
         """
         Args:
             observed_states(str/iterable(str)): Names of the observed states. 'all' for the observation of every state.
                 'currents' for all currents and 'voltages' for all voltages. Combinations of 'currents' and
                 'voltages' with other states are possible. Choose None for not observing states.
+            constraint_monitor(class instance): ConstraintMonitor for monitoring
+                states regarding defined constraints
         """
         self._physical_system = None
         observed_states = observed_states or []
@@ -464,20 +471,23 @@ class RewardFunction:
             observed_states = [observed_states]
         self._observed_states = observed_states
         self._reference_generator = None
+        self._monitor = CM(external_monitor=constraint_monitor) or CM()
         self._limits = None
 
-    def __call__(self, state, reference):
+    def __call__(self, state, reference, k):
         """
         Call of the reward calculation.
 
         Args:
             state: State array of the environment.
             reference: Reference array of the environment.
+            k: Systems momentary time-step
+
 
         Returns:
             float: The reward for the state, reference pair
         """
-        return self.reward(state, reference)
+        return self.reward(state, reference, k)
 
     def set_modules(self, physical_system, reference_generator):
         """
@@ -487,7 +497,6 @@ class RewardFunction:
             physical_system(PhysicalSystem): The physical system of the environment
             reference_generator(ReferenceGenerator): The reference generator of the environment.
         """
-
         observed_states = {}
         allowed_observed_states = physical_system.state_names + \
                                   ['all', 'currents', 'voltages']
@@ -519,20 +528,22 @@ class RewardFunction:
         self._observed_states = set_state_array(observed_states,
                                                 physical_system.state_names)\
                                                .astype(bool)
+        self._monitor.set_modules(physical_system, self._observed_states)
 
-    def reward(self, state, reference, action=None):
+    def reward(self, state, reference, k=None, action=None):
         """
         Reward calculation. If limits have been violated the reward is calculated with a separate function.
 
         Args:
             state(ndarray(float)): Environments state array.
             reference(ndarray(float)): Environments reference array.
+            k(int): Systems momentary time-step
             action(element of action space): The previously taken action.
 
         Returns:
             float: Reward for this state, reference pair.
         """
-        if not self._check_limit_violation(state):
+        if not self._check_limit_violation(state, k):
             return self._reward(state, reference, action), False
         else:
             return self._limit_violation_reward(state), True
@@ -554,18 +565,20 @@ class RewardFunction:
         """
         pass
 
-    def _check_limit_violation(self, state):
+    def _check_limit_violation(self, state, k=None):
         """
         Check for all observed states, if limits have been violated (i.e. any (absolute) state value is greater than
         the limit defined by the physical system).
 
         Args:
             state(ndarray(float)): State array of the environment.
+            k(int): Systems momentary time-step
+
 
         Returns:
             bool: True, if any observed limit has been violated, False otherwise.
         """
-        return (abs(state[self._observed_states]) > self._limits[self._observed_states]).any()
+        return self._monitor.check_constraint_violation(state, k)
 
     def _limit_violation_reward(self, state):
         """
