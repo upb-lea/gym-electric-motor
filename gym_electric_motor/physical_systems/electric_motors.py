@@ -878,6 +878,175 @@ class DcExternallyExcitedMotor(DcMotor):
         super()._update_limits(limit_agenda)
 
 
+class SwitchedReluctanceMotor(ElectricMotor):
+    """
+        The SwitchedReluctanceMotor implements the technical system of the switched reluctance motor.
+
+        This includes the system equations, the motor parameters, operational limits and bandwidth.
+
+        The model does not include saturation, the iron is assumed to be linear.
+
+        =====================  ==========  ============= ===========================================
+        Motor Parameter        Unit        Default Value Description
+        =====================  ==========  ============= ===========================================
+        r_s                    Ohm         0.01          Resistance of each stator phase winding
+        l_d                    H           23.60e-3      Stator inductance in aligned rotor position
+        l_q                    H           06.67e-3      Stator inductance in unaligned rotor position
+        p_s                    1           3             Number of stator pole pairs
+        alpha_s                1
+        p_r                    1           2             Number of rotor pole pairs
+        j_rotor                kg/m^2      0.0082        Moment of inertia of the rotor
+        =====================  ==========  ============= ===========================================
+
+        =============== ====== =============================================
+        Motor Currents  Unit   Description
+        =============== ====== =============================================
+
+        =============== ====== =============================================
+        =============== ====== =============================================
+        Motor Voltages  Unit   Description
+        =============== ====== =============================================
+
+        =============== ====== =============================================
+
+        ======== ===========================================================
+        Limits / Nominal Value Dictionary Entries:
+        -------- -----------------------------------------------------------
+        Entry    Description
+        ======== ===========================================================
+        i        General current limit / nominal value
+        i_a      Current in phase a
+        i_b      Current in phase b
+        i_c      Current in phase c
+        i_alpha  Current in alpha axis
+        i_beta   Current in beta axis
+        i_sd     Current in direct axis
+        i_sq     Current in quadrature axis
+        omega    Mechanical angular Velocity
+        epsilon  Electrical rotational angle
+        torque   Motor generated torque
+        u_a      Voltage in phase a
+        u_b      Voltage in phase b
+        u_c      Voltage in phase c
+        u_alpha  Voltage in alpha axis
+        u_beta   Voltage in beta axis
+        u_sd     Voltage in direct axis
+        u_sq     Voltage in quadrature axis
+        ======== ===========================================================
+    """
+    _default_motor_parameter = {'p_s': 4,
+                                'alpha_s': 20 * 2 * np.pi / 360,
+                                'p_r': 3,
+                                'alpha_r': 25 * 2 * np.pi / 360,
+                                'l_a': 72e-3,
+                                'l_u': 9e-3,
+                                'j_rotor': 0.057,
+                                'r_s': 0.9,
+                                }
+
+    _default_nominal_values = {'i': 11, 'torque': 0, 'omega': 3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 300}
+    _default_limits = {'i': 11, 'torque': 0, 'omega': 3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 300}
+    _default_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0}, ### ???
+                            'interval': None,
+                            'random_init': None,
+                            'random_params': (None, None)}
+
+    def __init__(self, motor_parameter=None, nominal_values=None,
+                 limit_values=None, motor_initializer=None, **kwargs):
+        # Docstring of superclass
+        nominal_values = nominal_values or {}
+        limit_values = limit_values or {}
+        super().__init__(motor_parameter, nominal_values,
+                         limit_values, motor_initializer)
+        self._update_model()
+        self._update_limits()
+
+        self.I_PHASE_IDX = []
+        self.CURRENTS = []
+        self.VOLTAGES = []
+        for i in range(self._motor_parameter['p_s']):
+            self.I_PHASE_IDX.append(i)
+            self.CURRENTS.append('i_phase' + str(i))
+            self.VOLTAGES.append('u_phase' + str(i))
+        self.IO_CURRENTS = self.CURRENTS.copy()
+        self.IO_VOLTAGES = self.VOLTAGES.copy()
+        self.EPSILON_IDX = self.I_PHASE_IDX[-1] + 1
+        # angular width of aligned zone
+        self._motor_parameter['alpha_a'] = np.abs(self._motor_parameter['alpha_s'] - self._motor_parameter['alpha_r'])
+        # angular width of unaligned zone
+        self._motor_parameter['alpha_u'] = np.abs(np.pi / self._motor_parameter['p_r']
+                         - self._motor_parameter['alpha_r']
+                         - self._motor_parameter['alpha_s'])
+        # angular width of overlapping zone (linear interval between aligned and unaligned)
+        self._motor_parameter['alpha_o'] = np.min([self._motor_parameter['alpha_r'],
+                                                   self._motor_parameter['alpha_s']
+                                                   ])
+        # angular distance of rotor poles
+        self._motor_parameter['alpha_rd'] = np.pi / self._motor_parameter['p_r']
+
+
+    def _update_model(self):
+        # Docstring of superclass
+
+        mp = self._motor_parameter
+        ###                    omega, omega * L_prime * i / L,       i / L, u / L
+        _phase_dgl_constant = [    0,                      -1, - mp['r_s'],     1]
+        _model_constants = []
+        for i in mp['p_s']:
+            _model_constants.append(_phase_dgl_constant)
+        _model_constants.append([2 * mp['p_r'], 0, 0, 0])
+
+        self._model_constants = np.array(_model_constants)
+
+    def electrical_ode(self, state, u_in, omega, *_):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        eps = state[self.EPSILON_IDX] / 2 * mp['p_r'] # mechanic rotor angle
+
+        ### calculate the inductance of each phase
+        l = []
+        l_prime = []
+        for i in range(mp['p_s']):
+            offset = (i * np.pi / mp['p_s']) % mp['alpha_rd']
+            _eps = (eps - offset) % (2 * np.pi / (2 * mp['p_r']))
+
+            if _eps < mp['alpha_a'] / 2 or (mp['alpha_rd'] - mp['alpha_a'] / 2) <= _eps:
+                l.append(mp['l_a'])
+                l_prime.append(0)
+            elif mp['alpha_a'] / 2 < _eps and _eps <= (mp['alpha_a'] / 2 + mp['alpha_o']):
+                l.append((_eps - mp['alpha_a'] / 2) * (mp['l_u'] - mp['l_a']) / mp['alpha_o'] + mp['l_a'])
+                l_prime.append(- (mp['l_a'] - mp['l_u']) / mp['alpha_o'])
+            elif (mp['alpha_rd'] - mp['alpha_a'] / 2 - mp['alpha_o']) < _eps and \
+                    _eps <= (mp['alpha_rd'] - mp['alpha_a'] / 2):
+                l.append((_eps - (mp['alpha_rd'] - mp['alpha_a'] / 2 - mp['alpha_o'])) * \
+                    (mp['l_a'] - mp['l_u']) / mp['alpha_o'] + mp['l_u'])
+                l_prime.append((mp['l_a'] - mp['l_u']) / mp['alpha_o'])
+            else:
+                l.append(mp['l_u'])
+                l_prime.append(0)
+
+        ### calculate di/dt in each phase and deps/dt
+        x_dot = []
+        for i in self._motor_parameter['p_s']:
+            _state_vector_phase = [0,
+                                   omega * l_prime[i] * state[self.I_PHASE_IDX[i]] / l[i],
+                                   state[self.I_PHASE_IDX[i]] / l[i],
+                                   u_in[i] / l[i]]
+            x_dot.append(np.matmul(self._model_constants[i], np.array([_state_vector_phase])))
+        x_dot.append(np.matmul(self._model_constants[-1], np.array([state[self.EPSILON_IDX], 0, 0, 0])))
+
+        return np.array(x_dot)
+
+
+        return np.matmul(self._model_constants, np.array([
+            state[self.I_A_IDX],
+            state[self.I_E_IDX],
+            omega * state[self.I_E_IDX],
+            u_in[0],
+            u_in[1],
+        ]))
+
+
 class ThreePhaseMotor(ElectricMotor):
     """
             The ThreePhaseMotor and its subclasses implement the technical system of Three Phase Motors.
@@ -1570,10 +1739,8 @@ class InductionMotor(ThreePhaseMotor):
     FLUXES = ['psi_ralpha', 'psi_rbeta']
     STATOR_VOLTAGES = ['u_salpha', 'u_sbeta']
 
-    IO_VOLTAGES = ['u_sa', 'u_sb', 'u_sc', 'u_salpha', 'u_sbeta', 'u_sd',
-                   'u_sq']
-    IO_CURRENTS = ['i_sa', 'i_sb', 'i_sc', 'i_salpha', 'i_sbeta', 'i_sd',
-                   'i_sq']
+    IO_VOLTAGES = ['u_sa', 'u_sb', 'u_sc', 'u_salpha', 'u_sbeta', 'u_sd', 'u_sq']
+    IO_CURRENTS = ['i_sa', 'i_sb', 'i_sc', 'i_salpha', 'i_sbeta', 'i_sd', 'i_sq']
 
     HAS_JACOBIAN = True
 

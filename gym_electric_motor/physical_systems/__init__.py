@@ -3,9 +3,11 @@ from .converters import PowerElectronicConverter, DiscOneQuadrantConverter, Disc
     DiscFourQuadrantConverter, DiscMultiConverter, DiscB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter, NoConverter
 
-from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
-    PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
-    DoublyFedInductionMotor
+from .electric_motors import ElectricMotor, \
+    DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
+    SwitchedReluctanceMotor, \
+    PermanentMagnetSynchronousMotor, SynchronousReluctanceMotor, \
+    SquirrelCageInductionMotor, DoublyFedInductionMotor
 
 from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad
 
@@ -59,6 +61,7 @@ register_class(DcSeriesMotor, ElectricMotor, 'DcSeries')
 register_class(DcPermanentlyExcitedMotor, ElectricMotor, 'DcPermEx')
 register_class(DcExternallyExcitedMotor, ElectricMotor, 'DcExtEx')
 register_class(DcShuntMotor, ElectricMotor, 'DcShunt')
+register_class(SwitchedReluctanceMotor, ElectricMotor, 'SRM')
 register_class(PermanentMagnetSynchronousMotor, ElectricMotor, 'PMSM')
 register_class(SynchronousReluctanceMotor, ElectricMotor, 'SynRM')
 register_class(SquirrelCageInductionMotor, ElectricMotor, 'SCIM')
