@@ -96,7 +96,7 @@ env = gem.make(# define a PMSM with continuous action space
                load=gem.physical_systems.ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30), 
                
                # define the duration of one sampling step
-               tau=100e-6, 
+               tau=1e-5,
                
                # turn off terminations via limit violation and parameterize the reward function
                reward_function=gem.reward_functions.WeightedSumOfErrors(observed_states=['i_sq', 'i_sd'], 
@@ -122,9 +122,9 @@ env.reset()
 
 #Since action 0 == action 7 I will restrict the action space
 env.action_space = Discrete(7)
-tau=100e-6
+tau=1e-5
 #tau = env._physical_system.tau
-simulation_time = 20 # seconds
+simulation_time = 5 # seconds
 nb_steps = int(simulation_time // tau)
 
 policy_kwargs = {
