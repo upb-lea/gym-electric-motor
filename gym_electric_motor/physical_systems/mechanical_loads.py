@@ -364,7 +364,9 @@ class ExternalSpeedLoad(MechanicalLoad):
         """
         super().__init__(load_initializer=load_initializer)
         self.kwargs = kwargs
-        self._omega_initial = self._initializer['states']['omega'] or omega_initial
+        self._omega_initial = omega_initial or self._initializer['states']['omega']
+        if omega_initial is not None:
+            self._initializer['states']['omega'] = omega_initial
         self._speed_profile = speed_profile
         self._tau = tau
         #self._jacobi = jacobi
@@ -411,8 +413,9 @@ class ConstantSpeedLoad(MechanicalLoad):
         """
         #self._default_initializer['states']['omega'] = omega_fixed
         super().__init__(load_initializer=load_initializer)
-        self._omega = self._initializer['states']['omega'] or omega_fixed
-
+        self._omega = omega_fixed or self._initializer['states']['omega']
+        if omega_fixed is not None:
+            self._initializer['states']['omega'] = omega_fixed
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
         return np.array([0])
