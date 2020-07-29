@@ -10,6 +10,7 @@ from stable_baselines3.dqn import MlpPolicy
 from gym.spaces import Discrete, Box
 from gym.wrappers import FlattenObservation
 from gym import ObservationWrapper
+from gym.wrappers import TimeLimit
 
 """
 This example is based on stable baselines3 0.8.0a5. Since it is still being frequently updated 
@@ -93,7 +94,12 @@ env = gem.make(# define a PMSM with continuous action space
                u_sup=u_sup, 
                
                # define the speed at which the motor is operated
-               load=gem.physical_systems.ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30), 
+               load='ConstSpeedLoad',
+               load_initializer = {'states': {'omega': 1000 * np.pi / 30,},
+                                   'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
+                                   'random_init': 'uniform',
+                   },
+               #gem.physical_systems.ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30), 
                
                # define the duration of one sampling step
                tau=1e-5,
@@ -117,7 +123,8 @@ env = gem.make(# define a PMSM with continuous action space
        
 
 eps_idx = env._physical_system.state_names.index('epsilon')
-env =  EpsilonWrapper(FlattenObservation(env), eps_idx)
+ml = env._physical_system._mechanical_load
+env =  TimeLimit(EpsilonWrapper(FlattenObservation(env), eps_idx), 10000)
 env.reset()
 
 #Since action 0 == action 7 I will restrict the action space
