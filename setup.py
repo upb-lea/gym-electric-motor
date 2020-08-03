@@ -18,6 +18,7 @@ setuptools.setup(
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
+      python_requires='>=3.6, !=3.8.*',
       extras_require={'examples': 
                       ['keras_rl2>=1.0.3']
                      },
