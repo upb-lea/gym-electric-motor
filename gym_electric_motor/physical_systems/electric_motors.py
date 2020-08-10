@@ -1716,7 +1716,7 @@ class InductionMotor(ThreePhaseMotor):
                         l_mr * u_rq_max
             psi_d_max /= - mp['p'] * omega * l_mr
             # clipping flux and setting nominal limit
-            psi_d_max = 0.9 * np.clip(psi_d_max, a_min=None, a_max=mp['l_m'] * i_d)
+            psi_d_max = 0.9 * np.clip(psi_d_max, a_min=0, a_max=np.abs(mp['l_m'] * i_d))
         # returning flux in alpha, beta system
         return self.q([psi_d_max, 0], eps_mag)
 
@@ -1918,9 +1918,6 @@ class SquirrelCageInductionMotor(InductionMotor):
                                self._limits[u] / self._motor_parameter['r_s']
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
                                 self._nominal_values[u] / self._motor_parameter['r_s']
-        # overwrite default limits and nominal values with func args
-        limits_agenda.update(limit_values)
-        nominal_agenda.update(nominal_values)
         super()._update_limits(limits_agenda, nominal_agenda)
 
     def _update_initial_limits(self, nominal_new={}, omega=None):
@@ -2078,9 +2075,6 @@ class DoublyFedInductionMotor(InductionMotor):
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
                                 self._nominal_values[u] / \
                                 self._motor_parameter['r_r']
-        # overwrite default limits and nominal values with func args
-        limits_agenda.update(limit_values)
-        nominal_agenda.update(nominal_values)
         super()._update_limits(limits_agenda, nominal_agenda)
 
     def _update_initial_limits(self, nominal_new={}, omega=None):
