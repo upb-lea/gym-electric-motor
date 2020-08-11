@@ -7,9 +7,8 @@ import numpy as np
 from stable_baselines3 import DQN
 from stable_baselines3.dqn import MlpPolicy
 from gym.spaces import Discrete, Box
-from gym.wrappers import FlattenObservation
+from gym.wrappers import FlattenObservation, TimeLimit
 from gym import ObservationWrapper
-from gym.wrappers import TimeLimit
 
 """
 This example is based on stable baselines3 0.8.0a5. Since it is still being frequently updated 
@@ -57,9 +56,6 @@ class SqdCurrentMonitor:
     
     i_sd**2 + i_sq**2 < 1.5 * nominal_limit 
     """
-    def __init__(self, ):
-        self.I_SD_IDX = 5
-        self.I_SQ_IDX = 6
     
     def __call__(self, state, observed_states, k, physical_system):
         self.I_SD_IDX = physical_system.state_names.index('i_sd')
@@ -139,7 +135,7 @@ ml = env._physical_system._mechanical_load
 env =  TimeLimit(EpsilonWrapper(FlattenObservation(env), eps_idx), 10000)
 env.reset()
 
-#Since action 0 == action 7 the action space may be districted to now "confuse" the neural network
+#Since action 0 == action 7 the action space may be districted to not "confuse" the neural network
 env.action_space = Discrete(7)
 
 nb_steps = int(simulation_time // tau)
