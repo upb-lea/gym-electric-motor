@@ -55,6 +55,11 @@ if __name__ == '__main__':
     )
 
     dqn.compile(Adam(lr=1e-4), metrics=['mse'])
-    dqn.fit(env, nb_steps=200000, action_repetition=1, verbose=2, visualize=True, nb_max_episode_steps=50000,
+    dqn.fit(env,
+            nb_steps=200000,
+            action_repetition=1,
+            verbose=2,
+            visualize=True,
+            nb_max_episode_steps=50000,
             log_interval=10000)
-    dqn.test(env, nb_episodes=3, nb_max_episode_steps=50000, visualize=True)
+    hist = dqn.test(env, nb_episodes=3, nb_max_episode_steps=50000, visualize=True)

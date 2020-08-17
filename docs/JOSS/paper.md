@@ -42,11 +42,11 @@ The ``gym-electric-motor`` (``GEM``) library provides simulation environments fo
 electrical drive systems and, therefore, allows to easily design and analyze drive control
 solutions in Python. Since ``GEM`` is strongly inspired by OpenAI's ``gym`` [@gym-whitepaper], it 
 is particulary well-equipped for (but not limited to) applications in the field of 
-reinforcement-learning-based control algorithms. In addition, the interface allows to plugin-in any expert-driven 
+reinforcement-learning-based control algorithms. In addition, the interface allows to plug in any expert-driven 
 control approach, such as model predictive control, to be tested  and to perform benchmark comparisons. 
 The ``GEM`` package includes a wide variety of motors, power electronic converters and mechanical load models that 
 can be flexibly selected and parameterized via the API. A modular software code also allows additional system 
-components to be included in the framework simulation.
+components to be included in the simulation framework.
 
 # Field of Application
 
@@ -60,7 +60,29 @@ such engineering tasks. In the more recent past, however, commercial software li
 by open-source libraries that are available for more accessible programming languages like Python. 
 Moreover, the latest efforts concerning industrial application of reinforcement-learning control 
 algorithms heavily depend on Python packages like ``Keras`` [@Chollet2015] or ``Tensorflow`` [@tensorflow2015-whitepaper]. 
-In order to allow easy access to an open-source drive simulation environment, the ``GEM`` library has been developed.
+
+In consequence, a Python-based drive simulation framework is an evident step in order to accelerate corresponding control research and development.
+Providing easy access to the non-commercial, open-source ``GEM`` library allows users from any engineering domain to 
+include accurate drive models into their simulations, also beyond the topic of control applications.
+Concerning the predominance of commercial software like ``MATLAB`` for educational purposes, a free-of-charge simulation alternative
+that does not force students or institutions to pay for licenses, has great potential to support and encourage
+training of new talents in the field of electrical drives.
+
+# Related software
+
+Due to the strong dependence of industrial development chains on simulation data
+there is a comprehensive collection of commercial software that enables numerical analysis of 
+every facet of electric drives. To name just a few, [``MATLAB - Simulink``](https://www.mathworks.com/products/matlab.html)
+is probably the most popular software environment for numerical analysis in engineering.
+Herein, ``MATLAB`` is providing for a scientific calculation framework and ``Simulink`` for a simulation environment
+with a very large field of applications. Examples that are designed for real-time capability can be found in [``dSPACE``](https://www.dspace.com/de/gmb/home.cfm)
+and [``OPAL-RT``](https://www.opal-rt.com/).
+
+In the domain of motor construction it is furthermore interesting to observe the behavior of magnetic and electric fields within a motor.
+Corresponding simulation environments, like [``Ansys``](), [``MotorCAD``]() or [``MotorWizard``]() are very resource and time consuming because they depend on the finite element method, 
+which is a spatial discretization method. Hence, these software packages are not usually considered in control development,
+and are therefore not comparable to the purpose of ``GEM``.
+Nonetheless, they fulfill an important role in motor simulation.
 
 # Package Architecture
 
@@ -80,16 +102,17 @@ is based on dynamic averaging of the applied voltage $u_\mathrm{in}$, making the
 Both of these modeling approaches are implemented and can be chosen freely, allowing usage of control algorithms that operate on a finite set of switching states or on continuous input voltages.
 The __electric motor__ is the centerpiece of every drive system. It is modeled by a system of ordinary differential 
 equations (ODEs), which represent the electrical behavior of the motor itself. In particular, the domain of three-phase drives
-makes use of coordinate transformations to view these ODEs in a more interpretable frame. In ``GEM``, both, 
-the physical ($abc$-) and the simplified ($dq$-)coordinates are available to be used as the frame of input 
+makes use of coordinate transformations to view these ODEs in the more interpretable frame of field-oriented coordinates. 
+In ``GEM``, both, the physically accurate three-phase system ($abc$-coordinates) and the simplified, two-dimensional, field-oriented system ($dq$-coordinates) are available to be used as the frame of input 
 and output variables, allowing for easy and quick controller analysis and diagnose within the most convenient 
-coordinate frame. Finally, the torque $T$ resulting from the motor is applied to the __mechanical load__. 
+coordinate system. Finally, the torque $T$ resulting from the motor is applied to the __mechanical load__. 
 The load is characterized by a moment of inertia and by a load torque $T_\mathrm{L}$ that is directed against the motor torque. 
 Load torque behavior can be parameterized with respect to the angular velocity $\omega_\mathrm{me}$ in the form of constant,
 linear and quadratic dependency (and arbitrary combinations thereof). Speed changes that result from the difference 
 between motor and load torque are modeled with another ODE which completely covers the mechanical system behavior.
 Alternatively, the motor speed can be set to a fixed value, which can be useful for the investigation of control
-algorithms concerning generatoric operation. 
+algorithms concerning generator operation, or it can be set to follow a specified trajectory, which can be useful when
+inspecting scenarios with defined speed demands like in traction applications. 
 
 # Features
 
