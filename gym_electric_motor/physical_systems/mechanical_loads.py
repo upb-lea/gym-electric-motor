@@ -362,7 +362,7 @@ class ExternalSpeedLoad(MechanicalLoad):
             tau(float): discrete time step of the system
             kwargs(dict): further arguments for speed_profile
         """
-        super().__init__(load_initializer=load_initializer)
+        super().__init__(load_initializer=load_initializer, **kwargs)
         self.kwargs = kwargs
         self._omega_initial = omega_initial or self._initializer['states']['omega']
         if omega_initial is not None:
@@ -406,16 +406,16 @@ class ConstantSpeedLoad(MechanicalLoad):
         """
         return self._omega
 
-    def __init__(self, omega_fixed=0, load_initializer=None):
+    def __init__(self, omega_fixed=0, load_initializer=None, **kwargs):
         """
         Args:
             omega_fixed(float)): Fix value for the speed in rad/s.
         """
-        #self._default_initializer['states']['omega'] = omega_fixed
-        super().__init__(load_initializer=load_initializer)
+        super().__init__(load_initializer=load_initializer, **kwargs)
         self._omega = omega_fixed or self._initializer['states']['omega']
         if omega_fixed is not None:
             self._initializer['states']['omega'] = omega_fixed
+
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
         return np.array([0])
