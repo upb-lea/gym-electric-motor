@@ -22,13 +22,14 @@ constant_lambda = (lambda value: value)
 triangle_lambda = (lambda t, amp, f, b: amp * signal.sawtooth(2 * np.pi * f * t,
                                                                width=0.5) + b)
 saw_lambda = (lambda t, amp, f, b: amp * signal.sawtooth(2 * np.pi * f * t) + b)
-
+load_init = {'random_init': 'uniform'},
 # external speed profiles can be given by an ExternalSpeedLoad, ConstantSpeedLoad
 # initial values are defined in the class
-ext_load = ExternalSpeedLoad(omega_initial=5, speed_profile=sinus_lambda,
-                             amp=30, f=2, b=30)
+#ext_load = ExternalSpeedLoad(speed_profile=sinus_lambda,
+ #                            amp=30, f=2, b=30)#, load_initializer=load_init)
 const_load = ConstantSpeedLoad(omega_fixed=42)
-
+ext_load = ExternalSpeedLoad(speed_profile=sinus_lambda,
+                             amp=30, f=2, b=30, load_initializer={'random_init': 'uniform'})
 
 if __name__ == '__main__':
     env = gem.make(
@@ -43,18 +44,23 @@ if __name__ == '__main__':
         ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
         # Pass a Class with extra parameters
         load=ext_load,
+        #load_initializer=load_init,
+        motor_initializer={'random_init': 'uniform'},
+
         reference_generator=const_switch_gen,
     )
     controller = Controller.make('pi_controller', env)  # works for 'on_off'(disc),three_point(disc),'p_controller', 'cascaded pi' too
-    state, reference = env.reset()
-    start = time.time()
-    cum_rew = 0
-    for i in range(50000):
-        env.render()
-        action = controller.control(state, reference)
-        (state, reference), reward, done, _ = env.step(action)
+    for eps in range(10):
+        state, reference = env.reset()
+        print(state)
+        start = time.time()
+        cum_rew = 0
+        for i in range(5000):
+            env.render()
+            action = controller.control(state, reference)
+            (state, reference), reward, done, _ = env.step(action)
 
-        if done:
-            env.reset()
-        cum_rew += reward
-    print(cum_rew)
+            if done:
+                state, _ = env.reset()
+            cum_rew += reward
+        print(cum_rew)
