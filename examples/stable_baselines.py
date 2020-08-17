@@ -106,10 +106,11 @@ env = gem.make(# define a PMSM with discrete action space
                
                # define the speed at which the motor is operated - should be drawn randomly at each episode
                load='ConstSpeedLoad',
-               load_initializer = {'states': {'omega': 1000 * np.pi / 30,},
-                                   'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
-                                   'random_init': 'uniform',
-                   },
+               load_initializer = {'random_init': 'uniform',},
+               
+               #random motor parameters each episode
+               motor_initializer = {'random_init': 'uniform',},
+               
                #gem.physical_systems.ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30), 
                
                # define the duration of one sampling step
