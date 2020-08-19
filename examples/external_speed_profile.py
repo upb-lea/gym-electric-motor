@@ -28,20 +28,17 @@ saw_lambda = (lambda t, amp, f, b: amp * signal.sawtooth(2 * np.pi * f * t) + b)
 # ConstantSpeedLoad, due to the already given profile by an ExternalSpeedLoad
 load_init = {'random_init': 'uniform'},
 
-# external speed profiles can be given by an ExternalSpeedLoad, ConstantSpeedLoad
-# the initial value of the external load should be match with the profile
-# offset to avoid complicated spikes after a new episode start
+# defining a ConstandSpeedLoad
 const_load = ConstantSpeedLoad(omega_fixed=42)
-bias = 20
-ext_load = ExternalSpeedLoad(omega_initial=bias,
-                             speed_profile=sinus_lambda,
-                             amp=10, f=2, b=bias)
+# External speed profiles can be given by an ExternalSpeedLoad,
+# inital value is given by bias of the profile
+ext_load = ExternalSpeedLoad(speed_profile=sinus_lambda, amp=10, f=2, b=42)
 
 if __name__ == '__main__':
     env = gem.make(
         'DcSeriesCont-v1',
         # Pass an instance
-        visualization=MotorDashboard(plots=['omega','reward', 'i'],
+        visualization=MotorDashboard(plots=['omega', 'reward', 'i'],
                                      dark_mode=False),
         motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
         # Take standard class and pass parameters (Load)
