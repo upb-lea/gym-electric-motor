@@ -53,7 +53,7 @@ components to be included in the simulation framework.
 Electric drive systems are an important topic both in academic and 
 industrial research due to the worldwide availability and deployment of such 
 plants. Control algorithms for these systems have usually been designed, parameterized and 
-tested within ``MATLAB - Simulink`` [@MATLAB2020], 
+tested within ``MATLAB - Simulink`` [@MatchWorks], 
 which is developed and promoted specifically for
 such engineering tasks. In the more recent past, however, commercial software like
 ``MATLAB`` has difficulties to stay on par with the expandability and flexibility offered 
@@ -76,18 +76,18 @@ every facet of electric drives. To name just a few, ``MATLAB - Simulink``
 is probably the most popular software environment for numerical analysis in engineering.
 Herein, ``MATLAB`` is providing for a scientific calculation framework and ``Simulink`` for a simulation environment
 with a very large field of applications. Examples that are designed for real-time capability (e.g. for hardware-in-the-loop prototyping) can be found in 
-dSPACE's ``VEOS`` [@VEOS2019]
-or OPAL-RT's ``HYPERSIM`` [HYPERSIM2020].
+dSPACE's ``VEOS`` [@dSPACE]
+or OPAL-RT's ``HYPERSIM`` [@OPAL-RT].
 Non-commercial simulation libraries exist, but they rarely come with predefined system models. 
-An exemplary package from this category is ``SimuPy`` [@SimuPy2017], which provides lots of 
+An exemplary package from this category is ``SimuPy`` [@Margolis], which provides lots of 
 flexibility for the synthesis of simulation models, but also requires the user to possess the necessary expert knowledge
 in order to implement a desired system model.
 
 In the domain of motor construction it is furthermore interesting to observe the behavior of magnetic and electric fields within a motor.
-Corresponding commercial simulation environments, like ``ANSYS`` [@ANSYSMaxwell2020], 
-``Motor-CAD`` [@MotorCAD2020] or 
-``MotorWizard`` [@MotorWizard2020] and the exemplary non-commercial alternative 
-``FEMM`` [FEMM2020]
+Corresponding commercial simulation environments, like ``ANSYS Maxwell`` [@ANSYS], 
+``Motor-CAD`` [@MotorDesignLtd] or 
+``MotorWizard`` [@ElectroMagneticWorks] and the exemplary non-commercial alternative 
+``FEMM`` [@Meeker]
 are often very resource and time consuming because they depend on the finite element method, 
 which is a spatial discretization procedure. Hence, these software packages are not usually considered in control development
 and are therefore not suited to be used for the same purpose as ``GEM``.

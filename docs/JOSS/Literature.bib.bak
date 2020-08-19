@@ -29,7 +29,7 @@
   eprint = {arXiv:1606.01540},
 }
 
-@Misc{matlab,
+@Misc{MathWorks,
   author       = {MATLAB},
   howpublished = {{The MathWorks, Inc.}},
   title        = {R2020a},
@@ -37,7 +37,7 @@
   url          = {https://www.mathworks.com/products/matlab.html},
 }
 
-@Misc{,
+@Misc{dSPACE,
   author       = {VEOS},
   howpublished = {{dSPACE digital signal processing and control engineering GmbH}},
   title        = {4.5},
@@ -45,7 +45,7 @@
   url          = {https://www.dspace.com/en/inc/home/products/sw/simulation_software/veos.cfm},
 }
 
-@Misc{,
+@Misc{OPAL-RT,
   author       = {HYPERSIM},
   howpublished = {{OPAL-RT TECHNOLOGIES, Inc.}},
   title        = {2020.1},
@@ -53,7 +53,7 @@
   url          = {https://www.opal-rt.com/systems-hypersim/},
 }
 
-@Misc{,
+@Misc{Margolis,
   author       = {SimuPy},
   howpublished = {{Benjamin W. L. Margolis}},
   title        = {1.0.0},
@@ -61,7 +61,7 @@
   url          = {https://github.com/simupy/simupy},
 }
 
-@Misc{,
+@Misc{ANSYS,
   author       = {{ANSYS Maxwell}},
   howpublished = {{ANSYS, Inc.}},
   title        = {2020 R1},
@@ -69,7 +69,7 @@
   url          = {https://www.ansys.com/products/electronics/ansys-maxwell},
 }
 
-@Misc{,
+@Misc{Motor Design Ltd.,
   author       = {{Motor-CAD}},
   howpublished = {{Motor Design Ltd.}},
   title        = {v12},
@@ -77,14 +77,14 @@
   url          = {https://www.motor-design.com/motor-cad-software/},
 }
 
-@Misc{,
+@Misc{ElectroMagneticWorks,
   author       = {{MotorWizard}},
   howpublished = {{ElectroMagneticWorks, Inc.}},
   year         = {2020},
   url          = {https://www.emworks.com/product/MotorWizard},
 }
 
-@Misc{,
+@Misc{Meeker,
   author       = {{FEMM (Finite Element Method Magnetics)}},
   howpublished = {{David Meeker}},
   title        = {4.2},
