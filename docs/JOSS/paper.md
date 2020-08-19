@@ -53,7 +53,7 @@ components to be included in the simulation framework.
 Electric drive systems are an important topic both in academic and 
 industrial research due to the worldwide availability and deployment of such 
 plants. Control algorithms for these systems have usually been designed, parameterized and 
-tested within ``MATLAB - Simulink`` [@MatchWorks], 
+tested within ``MATLAB - Simulink`` [@MathWorks], 
 which is developed and promoted specifically for
 such engineering tasks. In the more recent past, however, commercial software like
 ``MATLAB`` has difficulties to stay on par with the expandability and flexibility offered 
