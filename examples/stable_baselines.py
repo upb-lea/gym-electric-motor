@@ -147,7 +147,7 @@ start_time = time.time()
 model = DQN(MlpPolicy, env, buffer_size=buffer_size, learning_starts=learning_starts ,train_freq=train_freq, batch_size=batch_size, gamma=gamma,
             policy_kwargs=policy_kwargs, exploration_fraction=exploration_fraction, target_update_interval=target_update_interval,
             verbose=verbose).learn(total_timesteps=nb_steps)
-print(f'Execution time of stable baselines3 DQN is: {time.time()-start_time}')
+print(f'Execution time of stable baselines3 DQN is: {time.time()-start_time:.2f} seconds')
 
 #in case your want to save the model for further evalutation
 model.save("dqn_PMSM")
