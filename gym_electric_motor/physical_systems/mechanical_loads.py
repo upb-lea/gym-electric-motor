@@ -345,8 +345,7 @@ class ExternalSpeedLoad(MechanicalLoad):
         """
         return self._omega_initial
 
-    def __init__(self, speed_profile, tau=1e-4,
-                 load_initializer=None, **kwargs):
+    def __init__(self, speed_profile, tau=1e-4, **kwargs):
         """
         Args:
             speed_profile(function): function or lambda expression
