@@ -69,7 +69,7 @@
   url          = {https://www.ansys.com/products/electronics/ansys-maxwell},
 }
 
-@Misc{Motor Design Ltd.,
+@Misc{MotorDesignLtd,
   author       = {{Motor-CAD}},
   howpublished = {{Motor Design Ltd.}},
   title        = {v12},
