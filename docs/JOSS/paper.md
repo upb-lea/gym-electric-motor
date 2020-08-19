@@ -53,7 +53,7 @@ components to be included in the simulation framework.
 Electric drive systems are an important topic both in academic and 
 industrial research due to the worldwide availability and deployment of such 
 plants. Control algorithms for these systems have usually been designed, parameterized and 
-tested within MathWork's [``MATLAB - Simulink``](https://www.mathworks.com/products/matlab.html), 
+tested within ``MATLAB - Simulink`` [@MATLAB2020], 
 which is developed and promoted specifically for
 such engineering tasks. In the more recent past, however, commercial software like
 ``MATLAB`` has difficulties to stay on par with the expandability and flexibility offered 
@@ -72,22 +72,22 @@ training of new talents in the field of electrical drives.
 
 Due to the strong dependence of industrial development chains on simulation data
 there is a comprehensive collection of commercial software that enables numerical analysis of 
-every facet of electric drives. To name just a few, [``MATLAB - Simulink``](https://www.mathworks.com/products/matlab.html)
+every facet of electric drives. To name just a few, ``MATLAB - Simulink``
 is probably the most popular software environment for numerical analysis in engineering.
 Herein, ``MATLAB`` is providing for a scientific calculation framework and ``Simulink`` for a simulation environment
 with a very large field of applications. Examples that are designed for real-time capability (e.g. for hardware-in-the-loop prototyping) can be found in 
-dSPACE's [``VEOS``](https://www.dspace.com/en/inc/home/products/sw/simulation_software/veos.cfm)
-or OPAL-RT's [``HYPERSIM``](https://www.opal-rt.com/systems-hypersim/).
+dSPACE's ``VEOS`` [@VEOS2019]
+or OPAL-RT's ``HYPERSIM`` [HYPERSIM2020].
 Non-commercial simulation libraries exist, but they rarely come with predefined system models. 
-An exemplary package from this category is [``SimuPy``](https://github.com/simupy/simupy), which provides lots of 
+An exemplary package from this category is ``SimuPy`` [@SimuPy2017], which provides lots of 
 flexibility for the synthesis of simulation models, but also requires the user to possess the necessary expert knowledge
 in order to implement a desired system model.
 
 In the domain of motor construction it is furthermore interesting to observe the behavior of magnetic and electric fields within a motor.
-Corresponding commercial simulation environments, like [``Ansys``](https://www.ansys.com/products/electronics/ansys-maxwell), 
-[``MotorCAD``](https://www.motor-design.com/motor-cad-software/) or 
-[``MotorWizard``](https://www.emworks.com/product/MotorWizard) and the exemplary non-commercial alternative 
-[``FEMM``](http://www.femm.info/wiki/HomePage)
+Corresponding commercial simulation environments, like ``ANSYS`` [@ANSYSMaxwell2020], 
+``Motor-CAD`` [@MotorCAD2020] or 
+``MotorWizard`` [@MotorWizard2020] and the exemplary non-commercial alternative 
+``FEMM`` [FEMM2020]
 are often very resource and time consuming because they depend on the finite element method, 
 which is a spatial discretization procedure. Hence, these software packages are not usually considered in control development
 and are therefore not suited to be used for the same purpose as ``GEM``.
@@ -120,7 +120,7 @@ Load torque behavior can be parameterized with respect to the angular velocity $
 linear and quadratic dependency (and arbitrary combinations thereof). Speed changes that result from the difference 
 between motor and load torque are modeled with another ODE which completely covers the mechanical system behavior.
 Alternatively, the motor speed can be set to a fixed value, which can be useful for the investigation of control
-algorithms concerning generator operation, or it can be set to follow a specified trajectory, which can be useful when
+algorithms concerning generator operation, or it can be set to follow a specified trajectory, which is convenient when
 inspecting scenarios with defined speed demands like in traction applications. 
 
 # Features
