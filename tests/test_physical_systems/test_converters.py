@@ -762,6 +762,23 @@ class TestDiscConverter(TestPowerElectronicConverter):
 
     class_to_test = cv.DiscConverter
 
+    @pytest.mark.parametrize("action_space", [1, 2, 3, 4])
+    def test_set_action(self, monkeypatch, action_space):
+        converter = self.class_to_test()
+        monkeypatch.setattr(converter, "action_space", Discrete(action_space))
+        time = 0
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(-1, time)
+        assert "-1" in str(assertText.value) and "Discrete(" + str(action_space) + ")" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(int(1e9), time)
+        assert str(int(1e9)) in str(assertText.value) and "Discrete(" + str(action_space) + ")" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(np.pi, time)
+        assert str(np.pi) in str(assertText.value) and "Discrete(" + str(action_space) + ")" in str(assertText.value)
+
     def test_default_init(self):
         converter = self.class_to_test()
         assert converter._tau == 1e-5
