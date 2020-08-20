@@ -188,6 +188,11 @@ class DiscConverter(PowerElectronicConverter):
         # Docstring in base class
         super().__init__(tau=tau, **kwargs)
 
+    def set_action(self, action, t):
+        assert self.action_space.contains(action), \
+            f"The selected action {action} is not a valid element of the action space {self.action_space}."
+        return super().set_action(action, t)
+
     def convert(self, i_out, t):
         # Docstring in base class
         raise NotImplementedError
