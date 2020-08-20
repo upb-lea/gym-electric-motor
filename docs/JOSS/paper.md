@@ -76,8 +76,8 @@ every facet of electric drives. To name just a few, ``MATLAB - Simulink``
 is probably the most popular software environment for numerical analysis in engineering.
 Herein, ``MATLAB`` is providing for a scientific calculation framework and ``Simulink`` for a simulation environment
 with a very large field of applications. Examples that are designed for real-time capability (e.g. for hardware-in-the-loop prototyping) can be found in 
-dSPACE's ``VEOS`` [@dSPACE]
-or OPAL-RT's ``HYPERSIM`` [@OPAL-RT].
+``VEOS`` [@dSPACE]
+or ``HYPERSIM`` [@OPAL-RT].
 Non-commercial simulation libraries exist, but they rarely come with predefined system models. 
 An exemplary package from this category is ``SimuPy`` [@Margolis], which provides lots of 
 flexibility for the synthesis of simulation models, but also requires the user to possess the necessary expert knowledge
