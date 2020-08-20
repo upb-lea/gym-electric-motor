@@ -338,6 +338,8 @@ class DiscFourQuadrantConverter(DiscConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
+        assert self.action_space.contains(action), \
+            f"The selected action {action} is not a valid element of the action space {self.action_space}."
         times = []
         action0 = [1, 1, 2, 2][action]
         action1 = [1, 2, 1, 2][action]
@@ -768,6 +770,8 @@ class DiscB6BridgeConverter(DiscConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
+        assert self.action_space.contains(action), \
+            f"The selected action {action} is not a valid element of the action space {self.action_space}."
         subactions = self._subactions[action]
         times = []
         times += self._subconverters[0].set_action(subactions[0], t)
