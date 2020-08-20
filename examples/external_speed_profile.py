@@ -47,6 +47,7 @@ if __name__ == '__main__':
         ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
         # Pass a Class with extra parameters
         load=ext_load, # const_load
+        tau=1e-4,
 
         # define state initializer
         motor_initializer={'random_init': 'uniform'},

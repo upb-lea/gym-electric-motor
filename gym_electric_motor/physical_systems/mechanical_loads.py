@@ -2,8 +2,7 @@ import numpy as np
 from scipy.stats import truncnorm
 import warnings
 
-# todo updateting intialization with load_initializer,
-# now can be initialized directly in load class
+
 class MechanicalLoad:
     """
     The MechanicalLoad is the base class for all the mechanical systems attached
@@ -79,7 +78,8 @@ class MechanicalLoad:
     #: _default_initial_state(dict): Default initial motor-state values
     _default_initializer = {}
 
-    def __init__(self, state_names=None, j_load=0.0, load_initializer=None, **__):
+    def __init__(self, state_names=None, j_load=0.0,
+                 load_initializer=None, **__):
         """
         Args:
             state_names(list(str)): List of the names of the states in the mechanical-ODE.
@@ -89,7 +89,6 @@ class MechanicalLoad:
         self._state_names = list(state_names or ['omega'])
         self._limits = {}
         self._nominal_values = {}
-
         load_initializer = load_initializer or {}
         self._initializer = self._default_initializer.copy()
         self._initializer.update(load_initializer)
@@ -345,7 +344,8 @@ class ExternalSpeedLoad(MechanicalLoad):
         """
         return self._omega_initial
 
-    def __init__(self, speed_profile, tau=1e-4, **kwargs):
+    def __init__(self, speed_profile, load_initializer=None, tau=1e-4,
+                 **kwargs):
         """
         Args:
             speed_profile(function): function or lambda expression
@@ -357,18 +357,20 @@ class ExternalSpeedLoad(MechanicalLoad):
             tau(float): discrete time step of the system
             kwargs(dict): further arguments for speed_profile
         """
-
         super().__init__(**kwargs)
-        warnings.warn('Given initializer will be overwritten with starting value from speed-profile, '
-                      'to avoid complications at the load reset. It is recommended to choose starting value of'
-                      ' load by the defined speed-profile.',
-                      UserWarning)
+        if load_initializer is not None:
+            warnings.warn(
+                'Given initializer will be overwritten with starting value '
+                'from speed-profile, to avoid complications at the load reset.'
+                ' It is recommended to choose starting value of'
+                ' load by the defined speed-profile.',
+                UserWarning)
 
         self.kwargs = kwargs
         self._speed_profile = speed_profile
+        self._tau = tau
         # setting initial load as speed-profile at time 0
         self._omega_initial = self._speed_profile(t=0, **self.kwargs)
-        self._tau = tau
         #self._jacobi = jacobi
 
     def mechanical_ode(self, t, mechanical_state, torque=None):
