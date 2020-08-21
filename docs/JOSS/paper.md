@@ -50,59 +50,64 @@ components to be included in the simulation framework.
 
 # Field of Application
 
-Electric drive systems are an important topic both in academic and 
-industrial research due to the worldwide availability and deployment of such 
-plants. Control algorithms for these systems have usually been designed, parameterized and 
+Electric drive systems and their control are an important topic both in academic and 
+industrial research due to their worldwide usage and deployment. 
+Control algorithms for these systems have usually been designed, parameterized and 
 tested within ``MATLAB - Simulink`` [@MathWorks], 
 which is developed and promoted specifically for
 such engineering tasks. In the more recent past, however, commercial software like
 ``MATLAB`` has difficulties to stay on par with the expandability and flexibility offered 
 by open-source libraries that are available for more accessible programming languages like Python. 
+In consequence, a Python-based drive simulation framework like ``GEM`` is an evident step in order to accelerate corresponding control research and development.
 Moreover, the latest efforts concerning industrial application of reinforcement-learning control 
-algorithms heavily depend on Python packages like ``Keras`` [@Chollet2015] or ``Tensorflow`` [@tensorflow2015-whitepaper]. 
+algorithms heavily depend on Python packages like 
+``Keras`` [@Chollet2015], ``Tensorflow`` [@tensorflow2015-whitepaper] or ``PyTorch``[@NEURIPS2019_9015]. 
+Hence, the built-in OpenAI ``gym`` interface allows to easily couple ``GEM`` to other open-source reinforcement 
+learning toolboxes such as ``Stable Baselines3`` [@stable-baselines3], ``TF-Agents`` [@TFAgents] or ``keras-rl`` [@plappert2016kerasrl].
 
-In consequence, a Python-based drive simulation framework is an evident step in order to accelerate corresponding control research and development.
 Providing easy access to the non-commercial, open-source ``GEM`` library allows users from any engineering domain to 
 include accurate drive models into their simulations, also beyond the topic of control applications.
 Concerning the predominance of commercial software like ``MATLAB`` for educational purposes, a free-of-charge simulation alternative
 that does not force students or institutions to pay for licenses, has great potential to support and encourage
-training of new talents in the field of electrical drives.
+training of new talents in the field of electrical drives and neighbouring domains (e.g. power electronics or energy systems).
 
 # Related software
 
-Due to the strong dependence of industrial development chains on simulation data
-there is a comprehensive collection of commercial software that enables numerical analysis of 
-every facet of electric drives. To name just a few, ``MATLAB - Simulink``
-is probably the most popular software environment for numerical analysis in engineering.
+Due to the strong dependence of industrial development chains on simulation data there is a comprehensive collection of
+commercial software that enables numerical analysis of every facet of electric drives. To name just a few,
+``MATLAB - Simulink`` is probably the most popular software environment for numerical analysis in engineering.
 Herein, ``MATLAB`` is providing for a scientific calculation framework and ``Simulink`` for a simulation environment
-with a very large field of applications. Examples that are designed for real-time capability (e.g. for hardware-in-the-loop prototyping) can be found in 
-``VEOS`` [@dSPACE]
-or ``HYPERSIM`` [@OPAL-RT].
-Non-commercial simulation libraries exist, but they rarely come with predefined system models. 
-An exemplary package from this category is ``SimuPy`` [@Margolis], which provides lots of 
-flexibility for the synthesis of simulation models, but also requires the user to possess the necessary expert knowledge
-in order to implement a desired system model.
+with a very large field of applications. Examples that are designed for real-time capability 
+(e.g. for hardware-in-the-loop prototyping) can be found in ``VEOS`` [@dSPACE] or ``HYPERSIM`` [@OPAL-RT].
+Non-commercial simulation libraries exist, but they rarely come with predefined system models. An exemplary package from
+this category is ``SimuPy`` [@Margolis], which provides lots of flexibility for the synthesis of generic simulation 
+models, but also requires the user to possess the necessary expert knowledge in order to implement a desired system 
+model. Likewise, general purpose component-oriented simulation frameworks like ``OpenModelica`` [@OSMC2020] or ``XCos`` [@Scilab2020] can be used
+for setting up electrical drive models, too, but this requires expert domain knowledge and out-of-the-box Python 
+interfaces (e.g. for reinforcement learning) are not available. 
 
-In the domain of motor construction it is furthermore interesting to observe the behavior of magnetic and electric fields within a motor.
+In the domain of motor construction it is furthermore interesting to observe the behavior of magnetic and electric 
+fields within a motor (simulation of partial differential equations).
 Corresponding commercial simulation environments, like ``ANSYS Maxwell`` [@ANSYS], 
 ``Motor-CAD`` [@MotorDesignLtd] or 
 ``MotorWizard`` [@ElectroMagneticWorks] and the exemplary non-commercial alternative 
 ``FEMM`` [@Meeker]
-are often very resource and time consuming because they depend on the finite element method, 
-which is a spatial discretization procedure. Hence, these software packages are not usually considered in control development
-and are therefore not suited to be used for the same purpose as ``GEM``.
-
+are very resource and time consuming because they depend on the finite element method, 
+which is a spatial discretization and numerical integration procedure. Hence, these software packages are not usually considered in control development
+and are therefore not suited to be used for the same purpose as ``GEM``. This particularly applies in the early control 
+design phase when researching new, innovative control approaches (rapid control prototyping) or when students want to 
+receive quasi-instantaneous simulation feedbacks. 
 
 # Package Architecture
 
 The ``GEM`` library models an electric drive system by it's four main components: voltage supply, power converter, 
 electric motor and mechanical load. The general structure of such a system is depicted in \autoref{fig:SCML_system}. 
 
-![Structure of an electric drive system\label{fig:SCML_system}](../plots/SCML_Setting.eps)
+![Simplified structure diagram of an electric drive system\label{fig:SCML_system}](../plots/SCML_Setting.eps)
 
 The __voltage supply__ provides the necessary power that is used by the motor. 
 It is modeled by a fixed supply voltage $u_\mathrm{sup}$, which allows to monitor the supply current into the converter.
-A __converter__ is needed to supply the motor with electric power of proper frequency and magnitude, 
+A __power electronic converter__ is needed to supply the motor with electric power of proper frequency and magnitude, 
 which may also include the conversion of the direct current from the supply to alternating 
 current. Typical drive converters have switching behavior: there is a finite set of
 different voltages that can be applied to the motor, depending on which switches are open and which are closed. 
@@ -129,12 +134,13 @@ A large number of different motor systems is already implemented. These include 
 synchronous and induction three-phase drives. A complete list can be viewed in the ``GEM`` documentation [@GEM-docu].
 The corresponding power converters allow to control the motor either directly via applied voltage (continuous-control-set)
 or by defining the converter's switching state (finite-control-set). Specifically for the use within reinforcement-learning
-applications, the toolbox comes with a built-in reference generator, which can be used to create trajectories of 
-reference operational points (e.g. for the motor current, velocity or torque). These generated references are furthermore
+applications and for testing state-of-the-art expert-driven control designs, the toolbox comes with a built-in reference generator, which can be used to create 
+arbitrary reference trajectories (e.g. for the motor current, velocity or torque). 
+These generated references are furthermore
 used to calculate a reward. In the domain of reinforcement-learning, reward is the optimization variable that is to be 
 maximized. For the control system scenario, reward is usually defined by the negative distance between the momentary 
-operation point and the desired operation point, such that expedient controller behavior can be monitored easily. The metric by which
-the distance of two operational points is measured, can be adjusted to the users desire. The reward mechanism
+operation point and the desired operation point, such that expedient controller behavior can be monitored easily.
+The reward mechanism
 also allows to take physical limitations of the drive system into account, e.g. in the way of a notably low reward
 if limit values are surpassed. Optionally, the environment can be setup such that a reset of the system
 is induced in case of a limit violation. In addition, built-in visualization and plotting routines allow to monitor the training process of reinforcement learning agents or the performance of expert-driven control approaches which are being tested.
@@ -142,19 +148,19 @@ is induced in case of a limit violation. In addition, built-in visualization and
 # Examples
 
 A minimal example of ``GEM's`` simulation capability is presented in \autoref{fig:SCIM_example}.
-The plot shows the start-up behavior of a squirrel cage induction motor connected to a rigid network
-concerning angular velocity $\omega_\mathrm{me}$, torque $T$, voltage $u_{a,b,c}$ and current $i_{d,q}$.
+The plot shows the start-up behavior of a squirrel cage induction motor connected to an idealized three-phase electric 
+grid depicting the angular velocity $\omega_\mathrm{me}$, the torque $T$, the voltage $u_{a,b,c}$ and the current $i_{d,q}$.
 Here, the voltage is depicted within the physical $abc$-frame while the current is viewed within the 
 simplified $dq$-frame. 
 
 ![Simulation of a squirrel cage induction motor connected to a rigid network at $50 \, \mathrm{Hz}$\label{fig:SCIM_example}](../plots/SCIM_Example.eps)
 
-Exemplary code snippets that demonstrate the usage of ``GEM`` are included 
-within the projects repository:
+Exemplary code snippets that demonstrate the usage of ``GEM`` within both a classical control and a reinforcement 
+learning context are included within the projects repository:
 
-- [``ddpg_pmsm_dq_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py): a reinforcement-learning control approach applied to the current control of a permanent magnet synchronous motor within the $dq$-frame 
-- [``ddpg_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py): a reinforcement-learning control approach applied to the speed control of a series motor
-- [``dqn_series_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py): a reinforcement-learning control approach for finite-control-set current control of a series motor
-- [``pi_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py): a conventional control algorithm applied to the speed control of a series motor
+- [``ddpg_pmsm_dq_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py): a deep deterministic policy gradient reinforcement-learning control approach applied to the current control of a permanent magnet synchronous motor within the $dq$-frame 
+- [``ddpg_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py): a deep deterministic policy gradient reinforcement-learning control approach applied to the speed control of a series motor
+- [``dqn_series_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py): a deep Q-value network reinforcement-learning control approach for finite-control-set current control of a series motor
+- [``pi_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py): a conventional linear control algorithm applied to the speed control of a series motor
 
 # References

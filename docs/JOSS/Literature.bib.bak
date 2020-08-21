@@ -37,7 +37,7 @@
 }
 
 @Misc{dSPACE,
-  author = {dSPACE GmbH},
+  author = {{dSPACE GmbH}},
   title  = {VEOS 4.5},
   year   = {2019},
   url    = {https://www.dspace.com/en/inc/home/products/sw/simulation_software/veos.cfm},
@@ -51,10 +51,11 @@
 }
 
 @Misc{Margolis,
-  author = {Benjamin W. L. Margolis},
-  title  = {SimuPy 1.0.0},
-  year   = {2017},
-  url    = {https://github.com/simupy/simupy},
+  author  = {Benjamin W. L. Margolis},
+  title   = {SimuPy 1.0.0},
+  year    = {2017},
+  journal = {GitHub repository},
+  url     = {https://github.com/simupy/simupy},
 }
 
 @Misc{ANSYS,
@@ -83,6 +84,62 @@
   title  = {{FEMM} 4.2},
   year   = {2020},
   url    = {http://www.femm.info/wiki/HomePage},
+}
+
+@InCollection{NEURIPS2019_9015,
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  booktitle = {Advances in Neural Information Processing Systems 32},
+  publisher = {Curran Associates, Inc.},
+  title     = {PyTorch: An Imperative Style, High-Performance Deep Learning Library},
+  year      = {2019},
+  editor    = {H. Wallach and H. Larochelle and A. Beygelzimer and F. d\textquotesingle Alch\'{e}-Buc and E. Fox and R. Garnett},
+  pages     = {8024--8035},
+  url       = {http://papers.neurips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf},
+}
+
+@Misc{stable-baselines3,
+  author       = {Raffin, Antonin and Hill, Ashley and Ernestus, Maximilian and Gleave, Adam and Kanervisto, Anssi and Dormann, Noah},
+  howpublished = {\url{https://github.com/DLR-RM/stable-baselines3}},
+  title        = {Stable Baselines3},
+  year         = {2019},
+  journal      = {GitHub repository},
+  publisher    = {GitHub},
+}
+
+@Misc{TFAgents,
+  author       = {{Sergio Guadarrama and Anoop Korattikara and Oscar Ramirez and Pablo Castro and Ethan Holly and Sam Fishman and Ke Wang and Ekaterina Gonina and Neal Wu and Efi Kokiopoulou and Luciano Sbaiz and Jamie Smith and Gábor Bartók and Jesse Berent and Chris Harris and Vincent Vanhoucke and Eugene Brevdo}},
+  howpublished = {\url{https://github.com/tensorflow/agents}},
+  note         = {[Online; accessed 25-June-2019]},
+  title        = {{TF-Agents}: A library for Reinforcement Learning in TensorFlow},
+  year         = {2018},
+  journal      = {GitHub repository},
+  url          = {https://github.com/tensorflow/agents},
+}
+
+@Misc{plappert2016kerasrl,
+  author       = {Matthias Plappert},
+  howpublished = {\url{https://github.com/keras-rl/keras-rl}},
+  title        = {keras-rl},
+  year         = {2016},
+  journal      = {GitHub repository},
+  publisher    = {GitHub},
+  url          = {https://github.com/keras-rl/keras-rl},
+}
+
+@Misc{OSMC2020,
+  author       = {{Open Source Modelica Consortium}},
+  howpublished = {\url{https://openmodelica.org/}},
+  title        = {OpenModelica},
+  year         = {2020},
+  url          = {https://openmodelica.org/},
+}
+
+@Misc{Scilab2020,
+  author       = {{Scilab}},
+  howpublished = {\url{https://www.scilab.org/software/xcos}},
+  title        = {Xcos (Scilab 6.1.0)},
+  year         = {2020},
+  url          = {https://www.scilab.org/software/xcos},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
