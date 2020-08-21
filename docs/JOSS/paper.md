@@ -41,25 +41,26 @@ bibliography: Literature.bib
 The ``gym-electric-motor`` (``GEM``) library provides simulation environments for 
 electrical drive systems and, therefore, allows to easily design and analyze drive control
 solutions in Python. Since ``GEM`` is strongly inspired by OpenAI's ``gym`` [@gym-whitepaper], it 
-is particulary well-equipped for (but not limited to) applications in the field of 
+is particularly well-equipped for (but not limited to) applications in the field of 
 reinforcement-learning-based control algorithms. In addition, the interface allows to plug in any expert-driven 
 control approach, such as model predictive control, to be tested  and to perform benchmark comparisons. 
 The ``GEM`` package includes a wide variety of motors, power electronic converters and mechanical load models that 
-can be flexibly selected and parameterized via the API. A modular software code also allows additional system 
+can be flexibly selected and parameterized via the API. A modular structure allows additional system 
 components to be included in the simulation framework.
 
 # Field of Application
 
-Electric drive systems and their control are an important topic both in academic and 
+Electric drive systems and their control are an important topic in both academic and 
 industrial research due to their worldwide usage and deployment. 
 Control algorithms for these systems have usually been designed, parameterized and 
 tested within ``MATLAB - Simulink`` [@MathWorks], 
 which is developed and promoted specifically for
 such engineering tasks. In the more recent past, however, commercial software like
-``MATLAB`` has difficulties to stay on par with the expandability and flexibility offered 
+``MATLAB`` has difficulties to stay on par with state-of-the-art concepts 
+for scientific modeling and the flexibility offered 
 by open-source libraries that are available for more accessible programming languages like Python. 
-In consequence, a Python-based drive simulation framework like ``GEM`` is an evident step in order to accelerate corresponding control research and development.
-Moreover, the latest efforts concerning industrial application of reinforcement-learning control 
+Consequently, a Python-based drive simulation framework like ``GEM`` is an evident step in order to accelerate corresponding control research and development.
+Specifically, the latest efforts concerning industrial application of reinforcement-learning control 
 algorithms heavily depend on Python packages like 
 ``Keras`` [@Chollet2015], ``Tensorflow`` [@tensorflow2015-whitepaper] or ``PyTorch``[@NEURIPS2019_9015]. 
 Hence, the built-in OpenAI ``gym`` interface allows to easily couple ``GEM`` to other open-source reinforcement 
@@ -67,17 +68,18 @@ learning toolboxes such as ``Stable Baselines3`` [@stable-baselines3], ``TF-Agen
 
 Providing easy access to the non-commercial, open-source ``GEM`` library allows users from any engineering domain to 
 include accurate drive models into their simulations, also beyond the topic of control applications.
-Concerning the predominance of commercial software like ``MATLAB`` for educational purposes, a free-of-charge simulation alternative
+Considering the prevalence of commercial software like ``MATLAB`` for educational purposes, a free-of-charge simulation alternative
 that does not force students or institutions to pay for licenses, has great potential to support and encourage
 training of new talents in the field of electrical drives and neighbouring domains (e.g. power electronics or energy systems).
 
 # Related software
 
-Due to the strong dependence of industrial development chains on simulation data there is a comprehensive collection of
+Due to the strong dependence of downstream industrial development on simulated environments
+there is a comprehensive variety of
 commercial software that enables numerical analysis of every facet of electric drives. To name just a few,
 ``MATLAB - Simulink`` is probably the most popular software environment for numerical analysis in engineering.
-Herein, ``MATLAB`` is providing for a scientific calculation framework and ``Simulink`` for a simulation environment
-with a very large field of applications. Examples that are designed for real-time capability 
+Herein, ``MATLAB`` is providing for a scientific calculation framework and ``Simulink`` for a model-driven graphical 
+interface with a very large field of applications. Examples that are designed for real-time capability 
 (e.g. for hardware-in-the-loop prototyping) can be found in ``VEOS`` [@dSPACE] or ``HYPERSIM`` [@OPAL-RT].
 Non-commercial simulation libraries exist, but they rarely come with predefined system models. An exemplary package from
 this category is ``SimuPy`` [@Margolis], which provides lots of flexibility for the synthesis of generic simulation 
@@ -93,14 +95,14 @@ Corresponding commercial simulation environments, like ``ANSYS Maxwell`` [@ANSYS
 ``MotorWizard`` [@ElectroMagneticWorks] and the exemplary non-commercial alternative 
 ``FEMM`` [@Meeker]
 are very resource and time consuming because they depend on the finite element method, 
-which is a spatial discretization and numerical integration procedure. Hence, these software packages are not usually considered in control development
-and are therefore not suited to be used for the same purpose as ``GEM``. This particularly applies in the early control 
-design phase when researching new, innovative control approaches (rapid control prototyping) or when students want to 
-receive quasi-instantaneous simulation feedbacks. 
+which is a spatial discretization and numerical integration procedure. Hence, these software packages are usually not
+considered in control development, and complement GEM at most. 
+This particularly applies in the early control design phase when researching new, innovative control approaches 
+(rapid control prototyping) or when students want to receive quasi-instantaneous simulation feedbacks. 
 
 # Package Architecture
 
-The ``GEM`` library models an electric drive system by it's four main components: voltage supply, power converter, 
+The ``GEM`` library models an electric drive system by its four main components: voltage supply, power converter, 
 electric motor and mechanical load. The general structure of such a system is depicted in \autoref{fig:SCML_system}. 
 
 ![Simplified structure diagram of an electric drive system\label{fig:SCML_system}](../plots/SCML_Setting.eps)
@@ -108,14 +110,14 @@ electric motor and mechanical load. The general structure of such a system is de
 The __voltage supply__ provides the necessary power that is used by the motor. 
 It is modeled by a fixed supply voltage $u_\mathrm{sup}$, which allows to monitor the supply current into the converter.
 A __power electronic converter__ is needed to supply the motor with electric power of proper frequency and magnitude, 
-which may also include the conversion of the direct current from the supply to alternating 
-current. Typical drive converters have switching behavior: there is a finite set of
+which commonly includes the conversion of the supply's direct current to alternating 
+current. Typical drive converters exhibit switching behavior: there is a finite set of
 different voltages that can be applied to the motor, depending on which switches are open and which are closed. 
 Besides this physically accurate view, a popular modeling approach for switched mode converters
-is based on dynamic averaging of the applied voltage $u_\mathrm{in}$, making the voltage a continuous variable.
+is based on dynamic averaging of the applied voltage $u_\mathrm{in}$, rendering the voltage a continuous variable.
 Both of these modeling approaches are implemented and can be chosen freely, allowing usage of control algorithms that operate on a finite set of switching states or on continuous input voltages.
-The __electric motor__ is the centerpiece of every drive system. It is modeled by a system of ordinary differential 
-equations (ODEs), which represent the electrical behavior of the motor itself. In particular, the domain of three-phase drives
+The __electric motor__ is the centerpiece of every drive system. It is described by a system of ordinary differential 
+equations (ODEs), which represents the motor's electrical behavior. In particular, the domain of three-phase drives
 makes use of coordinate transformations to view these ODEs in the more interpretable frame of field-oriented coordinates. 
 In ``GEM``, both, the physically accurate three-phase system ($abc$-coordinates) and the simplified, two-dimensional, field-oriented system ($dq$-coordinates) are available to be used as the frame of input 
 and output variables, allowing for easy and quick controller analysis and diagnose within the most convenient 
@@ -137,13 +139,14 @@ or by defining the converter's switching state (finite-control-set). Specificall
 applications and for testing state-of-the-art expert-driven control designs, the toolbox comes with a built-in reference generator, which can be used to create 
 arbitrary reference trajectories (e.g. for the motor current, velocity or torque). 
 These generated references are furthermore
-used to calculate a reward. In the domain of reinforcement-learning, reward is the optimization variable that is to be 
+used to calculate a reward. In the domain of reinforcement learning, reward is the optimization variable that is to be 
 maximized. For the control system scenario, reward is usually defined by the negative distance between the momentary 
 operation point and the desired operation point, such that expedient controller behavior can be monitored easily.
 The reward mechanism
 also allows to take physical limitations of the drive system into account, e.g. in the way of a notably low reward
 if limit values are surpassed. Optionally, the environment can be setup such that a reset of the system
-is induced in case of a limit violation. In addition, built-in visualization and plotting routines allow to monitor the training process of reinforcement learning agents or the performance of expert-driven control approaches which are being tested.
+is induced in case of a limit violation. In addition, built-in visualization and plotting routines allow to monitor
+the training process of reinforcement learning agents or the performance of expert-driven control approaches.
 
 # Examples
 
