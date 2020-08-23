@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 import gym_electric_motor as gem
@@ -14,8 +13,6 @@ from gym.spaces import Discrete, Box
 from gym.wrappers import FlattenObservation, TimeLimit
 from gym import ObservationWrapper
 
-import tensorforce
-import tensorflow
 from tensorforce.environments import Environment
 from tensorforce.agents import Agent
 from tensorforce.execution import Runner
@@ -71,36 +68,18 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-# hyperparameter
-"""
-parameter for agent_config:
-
-    memory: size of replay-buffer
-    batch_size: size of mini-batch used for training
-    network: net-architect for dqn
-    update_frequency: Frequency of updates
-    start_updating: memory warm-up steps
-    learning_rate for optimizer
-    discount: gamma/ discount of future rewards
-    target_sync_frequency: Target network gets updated 'sync_freq' steps
-    target_update_weight: weight for target-network update
-
-"""
-
-
 motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                        r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
                        l_d=0.37e-3,  # [l_d] = H, d-axis inductance
                        l_q=1.2e-3,  # [l_q] = H, q-axis inductance
                        psi_p=65.65e-3,  # [psi_p] = Vs, magnetic flux of the permanent magnet
-                       )  # BRUSA
-u_sup = 350
+                       )
+
 nominal_values=dict(omega=4000*2*np.pi/60,
                     i=230,
-                    u=u_sup
-                    )
+                    u=350)
 
-limit_values=nominal_values.copy()
+limit_values = nominal_values.copy()
 
 q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
 d_generator = WienerProcessReferenceGenerator(reference_state='i_sd')
@@ -108,20 +87,16 @@ rg = MultipleReferenceGenerator([q_generator, d_generator])
 
 sqd_current_monitor = ConstraintMonitor(external_monitor=SqdCurrentMonitor)
 
-
-tau = 1e-5
-gamma = 0.99
-simulation_time = 5 # seconds
 max_eps_steps = 10000
 simulation_steps = 500000
-episodes = simulation_steps / max_eps_steps
-
 
 motor_init = {'interval': None,
-             'random_init': 'uniform',
-             'random_params': (None, None)}
+              'random_init': 'uniform',
+              'random_params': (None, None)}
+
 load_initializer = {'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
                     'random_init': 'uniform'}
+
 const_random_load = ConstantSpeedLoad(load_initializer=load_initializer)
 
 # creating gem enviroment
@@ -132,7 +107,7 @@ gem_env = gem.make(
                visualization=MotorDashboard(plots=['i_sq', 'i_sd', 'reward']),
                # parameterize the physical-system
                motor_parameter=motor_parameter, limit_values=limit_values,
-               nominal_values=nominal_values, u_sup=u_sup, tau=tau,
+               nominal_values=nominal_values, u_sup=350, tau=1e-5,
                # define the starting speed and states (randomly drawn)
                load='ConstSpeedLoad',
                load_initializer={'states': {'omega': 1000 * np.pi / 30,},
@@ -144,7 +119,7 @@ gem_env = gem.make(
                    observed_states=['i_sq', 'i_sd'],
                    reward_weights={'i_sq': 1, 'i_sd': 1},
                    constraint_monitor=SqdCurrentMonitor(),
-                   gamma=gamma,
+                   gamma=0.99,
                    reward_power=1),
                # define the reference generator
                reference_generator=rg,
@@ -161,7 +136,20 @@ gem_env_ = TimeLimit(EpsilonWrapper(FlattenObservation(gem_env), eps_idx),
 tensor_env = Environment.create(environment=gem_env_,
                                 max_episode_timesteps=max_eps_steps)
 
+"""
+hyperparameter for agent_config:
 
+    memory: size of replay-buffer
+    batch_size: size of mini-batch used for training
+    network: net-architect for dqn
+    update_frequency: Frequency of updates
+    start_updating: memory warm-up steps
+    learning_rate for optimizer
+    discount: gamma/ discount of future rewards
+    target_sync_frequency: Target network gets updated 'sync_freq' steps
+    target_update_weight: weight for target-network update
+
+"""
 epsilon_decay = {'type': 'decaying',
                  'decay': 'polynomial',
                  'decay_steps': 50000,
@@ -196,8 +184,7 @@ runner.close()
 
 save = False
 if save:
-    path = '/home/pascal/Sciebo/Uni/Master/Semester_2/' \
-            + 'Projektarbeit/python/Notebooks/tensorforce/saves'
+    path = '_____path_____'# add path as string
 
     dqn_agent.save(directory=path,
                    filename='dqn_trained_',
