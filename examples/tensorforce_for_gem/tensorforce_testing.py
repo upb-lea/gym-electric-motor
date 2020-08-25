@@ -244,7 +244,7 @@ step_counter = 0
 
 for step in tqdm(range(steps)):
     #while not terminal:
-    gem_env_.render()
+    #gem_env_.render()
     actions = dqn_agent.act(states=obs, independent=True)
 
     obs, reward, terminal, _ = gem_env_.step(action=actions)
