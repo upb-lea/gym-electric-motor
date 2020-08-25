@@ -17,6 +17,7 @@ from gym import ObservationWrapper
 from tensorforce.environments import Environment
 from tensorforce.agents import Agent
 
+path = input()
 
 # def set_plot_params(figure_title=22, figsize=(20, 14), title_size=24,
 #                     label_size=20, tick_size=16, marker_size=10, line_width=3,
@@ -205,11 +206,11 @@ agent_config = {
     'target_update_weight': 1.0}
 
 
-path = '/home/pascal/Sciebo/Uni/Master/Semester_2/' \
-        + 'Projektarbeit/python/Notebooks/tensorforce/saves' \
+#path = '/home/pascal/Sciebo/Uni/Master/Semester_2/' \
+#        + 'Projektarbeit/python/Notebooks/tensorforce/saves' \
 
 dqn_agent = Agent.load(directory=path,
-                       filename='dqn_tf_trained_',
+                       filename='dqn_tf_trained_relu',
                        environment=tensor_env,
                        agent='dqn',
                        memory=200000,
