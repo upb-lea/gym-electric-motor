@@ -23,6 +23,8 @@ import time
 print(tensorforce.__version__)
 print(tensorflow.__version__)
 
+path = input()
+
 
 class SqdCurrentMonitor:
     """
@@ -161,8 +163,8 @@ epsilon_decay = {'type': 'decaying',
                  'final_value': 5e-2,
                  'power': 3.0}
 net = [
-    dict(type='dense', size=64),
-    dict(type='dense', size=64),
+    dict(type='dense', size=64, activation='relu'),
+    dict(type='dense', size=64, activation='relu'),
     dict(type='linear', size=7)
 ]
 
@@ -191,11 +193,11 @@ runner.close()
 print(f'Execution time of tensorforce dqn-training is: 'f'{time.time()-start_time:.2f} seconds')
 
 
-path = '/home/pascal/Sciebo/Uni/Master/Semester_2/' \
-        + 'Projektarbeit/python/Notebooks/tensorforce/saves' \
+#path = '/home/pascal/Sciebo/Uni/Master/Semester_2/' \
+#        + 'Projektarbeit/python/Notebooks/tensorforce/saves' \
 
 dqn_agent.save(directory=path,
-               filename='dqn_tf_trained_',
+               filename='dqn_tf_trained_relu',
                format='tensorflow',
                append='timesteps')
 

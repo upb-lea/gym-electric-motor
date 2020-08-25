@@ -18,33 +18,24 @@ from tensorforce.environments import Environment
 from tensorforce.agents import Agent
 
 
-def calc_mae(observation, reference):
-    """
-    observation: d x n
-    reference: d x n
-    """
-    mae = np.mean(np.abs(observation - reference), axis=-1)
-    return mae
-
-
-def set_plot_params(figure_title=22, figsize=(20, 14), title_size=24,
-                    label_size=20, tick_size=16, marker_size=10, line_width=3,
-                    legend_font=16, style='dark'):
-    """ setting matplotlib params """
-
-    if style == 'dark':
-        plt.style.use('dark_background')
-    else:
-        plt.style.use(style)
-
-    params = {'axes.titlesize': title_size,
-              'legend.fontsize': legend_font,
-              'figure.figsize': figsize,
-              'axes.labelsize': label_size,
-              'xtick.labelsize': label_size,
-              'ytick.labelsize': label_size,
-              'figure.titlesize': figure_title}
-    plt.rcParams.update(params)
+# def set_plot_params(figure_title=22, figsize=(20, 14), title_size=24,
+#                     label_size=20, tick_size=16, marker_size=10, line_width=3,
+#                     legend_font=16, style='dark'):
+#     """ setting matplotlib params """
+#
+#     if style == 'dark':
+#         plt.style.use('dark_background')
+#     else:
+#         plt.style.use(style)
+#
+#     params = {'axes.titlesize': title_size,
+#               'legend.fontsize': legend_font,
+#               'figure.figsize': figsize,
+#               'axes.labelsize': label_size,
+#               'xtick.labelsize': label_size,
+#               'ytick.labelsize': label_size,
+#               'figure.titlesize': figure_title}
+#     plt.rcParams.update(params)
 
 
 class SqdCurrentMonitor:
@@ -97,7 +88,6 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-
 sqd_current_monitor = ConstraintMonitor(external_monitor=SqdCurrentMonitor)
 
 motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
@@ -111,7 +101,6 @@ nominal_values=dict(omega=4000*2*np.pi/60,
                     i=230,
                     u=u_sup
                     )
-
 limit_values=nominal_values.copy()
 
 q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
@@ -125,11 +114,9 @@ max_eps_steps = 10000
 simulation_steps = 500000
 episodes = simulation_steps / max_eps_steps
 
-
-
 motor_init = {'interval': None,
-             'random_init': 'uniform',
-             'random_params': (None, None)}
+              'random_init': 'uniform',
+              'random_params': (None, None)}
 load_initializer = {'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
                     'random_init': 'uniform'}
 const_random_load = ConstantSpeedLoad(load_initializer=load_initializer)
@@ -228,7 +215,7 @@ dqn_agent = Agent.load(directory=path,
                        memory=200000,
                        batch_size=25,
                        network=net,
-                       update_frequency= 1,
+                       update_frequency=1,
                        start_updating=10000,
                        learning_rate=1e-4,
                        discount=0.99,
@@ -239,7 +226,7 @@ print('agent loaded')
 
 # test agent
 tau = 1e-5
-steps = 300000
+steps = 100000
 
 rewards = []
 lens = []
@@ -252,10 +239,11 @@ obs = gem_env_.reset()
 obs_hist.append(obs)
 terminal = False
 cum_rew = 0
+step_counter = 0
 
 for step in tqdm(range(steps)):
     #while not terminal:
-    #gem_env_.render()
+    gem_env_.render()
     actions = dqn_agent.act(states=obs, independent=True)
 
     obs, reward, terminal, _ = gem_env_.step(action=actions)
@@ -266,7 +254,8 @@ for step in tqdm(range(steps)):
     cum_rew += reward
 
     if terminal:
-        episode_length = step - 1
+        episode_length = step_counter
+        step_counter = 0
         #print(f'Episode length: {episode_length} steps')
         lens.append(episode_length)
         obs = gem_env_.reset()
