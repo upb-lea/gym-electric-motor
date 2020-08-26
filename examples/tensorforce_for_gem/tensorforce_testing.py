@@ -27,9 +27,12 @@ def save_to_json(data, name, indent=4, sort=False, ending='.json'):
     print('Done writing')
 
 
-def load_json(filepath):
+def load_json(filepath, name, ending='.json'):
     """"""
-    data = json.loads(filepath)
+    with open(filepath + name + ending, "r") as f:
+        data_json = f.read()
+
+    data = json.loads(data_json)
     print('Loaded')
     return data
 
@@ -162,18 +165,7 @@ dqn_agent = Agent.load(directory=agent_path,
                        filename=agent_name,
                        environment=tensor_env,
                        **agent_config)
-                       # agent='dqn',
-                       # memory=200000,
-                       # batch_size=25,
-                       # network=net,
-                       # update_frequency=1,
-                       # start_updating=10000,
-                       # learning_rate=1e-4,
-                       # discount=0.99,
-                       # exploration=epsilon_decay,
-                       # target_sync_frequency=1000,
-                       # target_update_weight=1.0,)
-
+              
 print('\n ... agent loaded ...\n')
 
 # test agent

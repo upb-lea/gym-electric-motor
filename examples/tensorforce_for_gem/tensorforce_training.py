@@ -196,7 +196,7 @@ epsilon_decay = {'type': 'decaying',
 net = [
     dict(type='dense', size=64, activation='relu'),
     dict(type='dense', size=64, activation='relu'),
-    dict(type='linear', size=7)
+    dqn_64_64_randdict(type='linear', size=7)
 ]
 
 agent_config = {
