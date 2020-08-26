@@ -148,8 +148,9 @@ gem_env = gem.make(
 # appling wrappers and modifying environment
 gem_env.action_space = Discrete(7)
 eps_idx = gem_env.physical_system.state_names.index('epsilon')
-gem_env_ = TimeLimit(EpsilonWrapper(FlattenObservation(gem_env), eps_idx),
-                     max_eps_steps)
+#gem_env_ = TimeLimit(EpsilonWrapper(FlattenObservation(gem_env), eps_idx),
+#                     max_eps_steps)
+gem_env_ = EpsilonWrapper(FlattenObservation(gem_env), eps_idx)
 # creating tensorforce environment
 tensor_env = Environment.create(environment=gem_env_,
                                 max_episode_timesteps=max_eps_steps)
@@ -177,7 +178,7 @@ print('\n ... agent loaded ...\n')
 
 # test agent
 tau = 1e-5
-steps = 100000
+steps = 1000000
 
 rewards = []
 lens = []
@@ -201,7 +202,6 @@ for step in tqdm(range(steps)):
     obs, reward, terminal, _ = gem_env_.step(action=actions)
     rewards.append(cum_rew)
     obs_hist.append(obs)
-
     # dqn_agent.observe(terminal, reward=reward)
     cum_rew += reward
     eps_rew += reward
@@ -220,8 +220,8 @@ for step in tqdm(range(steps)):
     step_counter += 1
 
 
-print(f' \n Cumulated Reward over {steps} steps is {cum_rew} \n')
-print(f' \n Longest Episode: {np.amax(lens)} steps \n')
+print(f' \n Cumulated Reward over {steps} steps is {cum_rew/steps} \n')
+#print(f' \n Longest Episode: {np.amax(lens)} steps \n')
 #obs_hist = np.asarray(obs_hist)
 
 
