@@ -19,11 +19,22 @@ from tensorforce.environments import Environment
 from tensorforce.agents import Agent
 from tensorforce.execution import Runner
 import time
+import json
 
-print(tensorforce.__version__)
-print(tensorflow.__version__)
 
-#path = input()
+def save_to_json(data, name, indent=4, sort=False, ending='.json'):
+    """"""
+
+    with open(name + ending, 'w') as json_file:
+        json.dump(data, json_file, indent=indent, sort_keys=sort)
+    print('Done writing')
+
+
+def load_json(filepath):
+    """"""
+    data = json.loads(filepath)
+    print('Loaded')
+    return data
 
 
 class SqdCurrentMonitor:
@@ -76,60 +87,74 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-sqd_current_monitor = ConstraintMonitor(external_monitor=SqdCurrentMonitor)
+config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+              'python/saves/configs/'
+agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+             'python/saves/agents/'
 
+env_name = 'env_config_zero_init'
+agent_config_name = 'default_agent'
+
+
+# define motor arguments
+sqd_current_monitor = ConstraintMonitor(external_monitor=SqdCurrentMonitor)
 motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                        r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
                        l_d=0.37e-3,  # [l_d] = H, d-axis inductance
                        l_q=1.2e-3,  # [l_q] = H, q-axis inductance
                        psi_p=65.65e-3,  # [psi_p] = Vs, magnetic flux of the permanent magnet
                        )
-nominal_values=dict(omega=4000*2*np.pi/60, i=230, u=350)
+u_sup = 350
+nominal_values=dict(omega=4000*2*np.pi/60,
+                    i=230,
+                    u=u_sup
+                    )
 limit_values=nominal_values.copy()
-
-q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
-d_generator = WienerProcessReferenceGenerator(reference_state='i_sd')
-rg = MultipleReferenceGenerator([q_generator, d_generator])
-
-tau = 1e-5
-gamma = 0.99
-simulation_time = 5 # seconds
-max_eps_steps = 10000
-simulation_steps = 500000
-episodes = simulation_steps / max_eps_steps
 
 motor_init = {'random_init': 'uniform'}
 load_initializer = {'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
                     'random_init': 'uniform'}
+
 const_random_load = ConstantSpeedLoad(load_initializer=load_initializer)
+q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
+d_generator = WienerProcessReferenceGenerator(reference_state='i_sd')
+rg = MultipleReferenceGenerator([q_generator, d_generator])
+tau = 1e-5
+gamma = 0.99
 
-# creating gem enviroment
+max_eps_steps = 10000
+simulation_steps = 500000
+episodes = simulation_steps / max_eps_steps
+
+environment_config = dict(
+    motor_parameter=motor_parameter,
+    limit_values=limit_values,
+    nominal_values=nominal_values,
+    u_sup=u_sup,
+    tau=tau,
+    #load='ConstSpeedLoad',
+    #load_initializer={'states': {'omega': 1000 * np.pi / 30,},
+    #                  'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
+    #                  'random_init': 'uniform',},
+    #motor_initializer=motor_init,
+    ode_solver='euler',)
+
+save_to_json(environment_config, config_path + env_name)
+
+# creating gem environment
 gem_env = gem.make(
-               # define a PMSM with discrete action space
-               "PMSMDisc-v1",
-               # visualize the results
-               visualization=MotorDashboard(plots=['i_sq', 'i_sd', 'reward']),
-               # parameterize the physical-system
-               motor_parameter=motor_parameter, limit_values=limit_values,
-               nominal_values=nominal_values, u_sup=350, tau=tau,
-               # define the starting speed and states (randomly drawn)
-               #load='ConstSpeedLoad',
-               #load_initializer={'states': {'omega': 1000 * np.pi / 30,},
-               #                 'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
-               #                 'random_init': 'uniform'},
-               #motor_initializer = motor_init,
-               # parameterize the reward function
-               reward_function=gem.reward_functions.WeightedSumOfErrors(
-                   observed_states=['i_sq', 'i_sd'],
-                   reward_weights={'i_sq': 1, 'i_sd': 1},
-                   constraint_monitor=SqdCurrentMonitor(),
-                   gamma=gamma,
-                   reward_power=1),
-               # define the reference generator
-               reference_generator=rg,
-               # define a numerical solver of adequate accuracy
-               ode_solver='euler')
-
+        "PMSMDisc-v1",
+        visualization=MotorDashboard(plots=['i_sq', 'i_sd', 'reward']),
+        reward_function=gem.reward_functions.WeightedSumOfErrors(
+                observed_states=['i_sq', 'i_sd'],
+                reward_weights={'i_sq': 1, 'i_sd': 1},
+                constraint_monitor=SqdCurrentMonitor(),
+                gamma=gamma,
+                reward_power=1),
+        # define the reference generator
+        reference_generator=rg,
+        **environment_config
+)
 # appling wrappers and modifying environment
 gem_env.action_space = Discrete(7)
 eps_idx = gem_env.physical_system.state_names.index('epsilon')
@@ -138,7 +163,6 @@ gem_env_ = TimeLimit(EpsilonWrapper(FlattenObservation(gem_env), eps_idx),
 # creating tensorforce environment
 tensor_env = Environment.create(environment=gem_env_,
                                 max_episode_timesteps=max_eps_steps)
-
 
 """
 hyperparameter for agent_config:
@@ -181,6 +205,7 @@ agent_config = {
     'target_sync_frequency': 1000,
     'target_update_weight': 1.0}
 
+save_to_json(agent_config, config_path + agent_config_name)
 
 # creating agent via dictionary
 dqn_agent = Agent.create(agent=agent_config, environment=tensor_env)
@@ -190,13 +215,12 @@ runner = Runner(agent=dqn_agent, environment=tensor_env)
 start_time = time.time()
 runner.run(num_timesteps=simulation_steps)
 runner.close()
-print(f'Execution time of tensorforce dqn-training is: 'f'{time.time()-start_time:.2f} seconds')
+print(f'\n Execution time of tensorforce dqn-training is:'
+      f' 'f'{time.time()-start_time:.2f} seconds \n ')
 
-
-path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/python/Notebooks/tensorforce/saves'
-
-dqn_agent.save(directory=path,
-               filename='dqn_tf_trained_no_rand',
+agent_name = 'dqn_default_zero_init_64_64'
+dqn_agent.save(directory=agent_path,
+               filename=agent_name,
                format='tensorflow',
                append='timesteps')
 
