@@ -104,13 +104,20 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-              'python/saves/configs'
-agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-             'python/saves/agents'
+# config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+#               'python/saves/configs'
+# agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+#              'python/saves/agents'
 
-env_name = 'env_config_zero_init'
+config_path = '/home/student/hdd1/ppeters/saved_configs'
+agent_path = '/home/student/hdd1/ppeters/saved_agents'
+
+print('env name: ')
+env_name = input() #'env_config_zero_init'
 agent_config_name = 'default_agent'
+
+print('agent name: ')
+agent_name = input() #'dqn_default'
 
 # define motor arguments
 load_initializer = {'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
@@ -149,7 +156,7 @@ tensor_env = Environment.create(environment=gem_env_,
 
 
 agent_config = load_json(config_path + agent_config_name)
-agent_name = 'dqn_default'
+
 dqn_agent = Agent.load(directory=agent_path,
                        filename=agent_name,
                        environment=tensor_env,

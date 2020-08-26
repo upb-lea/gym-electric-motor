@@ -87,14 +87,21 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-              'python/saves/configs/'
-agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-             'python/saves/agents/'
+# config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+#               'python/saves/configs/'
+# agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+#              'python/saves/agents/'
 
-env_name = 'env_config_zero_init'
+config_path = '/home/student/hdd1/ppeters/saved_configs'
+agent_path = '/home/student/hdd1/ppeters/saved_agents'
+
+
+print('env name: ')
+env_name = input() #'env_config_zero_init'
 agent_config_name = 'default_agent'
 
+print('agent name: ')
+agent_name = input() #'dqn_default_zero_init_64_64'
 
 # define motor arguments
 sqd_current_monitor = ConstraintMonitor(external_monitor=SqdCurrentMonitor)
@@ -218,7 +225,6 @@ runner.close()
 print(f'\n Execution time of tensorforce dqn-training is:'
       f' 'f'{time.time()-start_time:.2f} seconds \n ')
 
-agent_name = 'dqn_default_zero_init_64_64'
 dqn_agent.save(directory=agent_path,
                filename=agent_name,
                format='tensorflow',
