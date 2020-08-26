@@ -28,7 +28,7 @@ const_switch_gen = rg.SwitchedReferenceGenerator(const_sub_gen,
                                                  super_episode_length=(8000, 12000))
 
 
-# the following external monitor are examples for the general use-case.
+# the following external monitors are examples for the general use-case.
 class ExternalMonitorClass:
     """
     A Class for defining a ConstraintMonitor. The general structure of the
