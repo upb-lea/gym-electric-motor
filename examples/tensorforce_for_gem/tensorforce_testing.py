@@ -17,7 +17,7 @@ from gym import ObservationWrapper
 from tensorforce.environments import Environment
 from tensorforce.agents import Agent
 
-path = input()
+#path = input()
 
 # def set_plot_params(figure_title=22, figsize=(20, 14), title_size=24,
 #                     label_size=20, tick_size=16, marker_size=10, line_width=3,
@@ -132,12 +132,12 @@ gem_env = gem.make(
                motor_parameter=motor_parameter, limit_values=limit_values,
                nominal_values=nominal_values, u_sup=u_sup, tau=tau,
                # define the starting speed and states (randomly drawn)
-               load='ConstSpeedLoad',
-               load_initializer = {'states': {'omega': 1000 * np.pi / 30,},
-                                   'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
-                                   'random_init': 'uniform',
-                   },
-               # motor_initializer = motor_init,
+               #load='ConstSpeedLoad',
+               #load_initializer = {'states': {'omega': 1000 * np.pi / 30,},
+               #                    'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
+               #                    'random_init': 'uniform',
+                   #},
+                #motor_initializer = motor_init,
                # parameterize the reward function
                reward_function=gem.reward_functions.WeightedSumOfErrors(
                    observed_states=['i_sq', 'i_sd'],
@@ -189,7 +189,7 @@ epsilon_decay = {'type': 'decaying',
 net = [
     dict(type='dense', size=64),
     dict(type='dense', size=64),
-    dict(type='linear', size=7)
+    #dict(type='linear', size=7)
 ]
 
 agent_config = {
@@ -206,11 +206,10 @@ agent_config = {
     'target_update_weight': 1.0}
 
 
-#path = '/home/pascal/Sciebo/Uni/Master/Semester_2/' \
-#        + 'Projektarbeit/python/Notebooks/tensorforce/saves' \
+path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/python/Notebooks/tensorforce/saves'
 
 dqn_agent = Agent.load(directory=path,
-                       filename='dqn_tf_trained_relu',
+                       filename='dqn_tf_trained_no_rand',
                        environment=tensor_env,
                        agent='dqn',
                        memory=200000,
@@ -223,7 +222,7 @@ dqn_agent = Agent.load(directory=path,
                        exploration=epsilon_decay,
                        target_sync_frequency=1000,
                        target_update_weight=1.0,)
-print('agent loaded')
+print('\n ... agent loaded ...\n')
 
 # test agent
 tau = 1e-5
@@ -241,10 +240,11 @@ obs_hist.append(obs)
 terminal = False
 cum_rew = 0
 step_counter = 0
+eps_rew = 0
 
 for step in tqdm(range(steps)):
     #while not terminal:
-    #gem_env_.render()
+    gem_env_.render()
     actions = dqn_agent.act(states=obs, independent=True)
 
     obs, reward, terminal, _ = gem_env_.step(action=actions)
@@ -253,24 +253,29 @@ for step in tqdm(range(steps)):
 
     # dqn_agent.observe(terminal, reward=reward)
     cum_rew += reward
+    eps_rew += reward
 
     if terminal:
-        episode_length = step_counter
+        lens.append(step_counter)
         step_counter = 0
         #print(f'Episode length: {episode_length} steps')
-        lens.append(episode_length)
         obs = gem_env_.reset()
+
         obs_hist.append(obs)
+        rewards.append(eps_rew)
+
         terminal = False
-        #cum_rew = 0
-
-print(f'Cumulated Reward over {steps} steps is {cum_rew}')
-print(f'Longest Episode: {np.amax(lens)} steps')
-obs_hist = np.asarray(obs_hist)
+        eps_rew = 0
+    step_counter += 1
 
 
-idx_isd = gem_env.physical_system.state_positions['i_sd']
-idx_isq = gem_env.physical_system.state_positions['i_sq']
+print(f' \n Cumulated Reward over {steps} steps is {cum_rew} \n')
+print(f' \n Longest Episode: {np.amax(lens)} steps \n')
+#obs_hist = np.asarray(obs_hist)
+
+
+#idx_isd = gem_env.physical_system.state_positions['i_sd']
+#idx_isq = gem_env.physical_system.state_positions['i_sq']
 
 #print('num obs', len(obs_hist))
 
