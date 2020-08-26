@@ -21,7 +21,10 @@ from gym.core import Wrapper
 from gym.spaces import Box, Tuple
 
 # This example shows how we can use GEM to train a reinforcement learning agent to control the current within
-# a permanent magnet synchronous motor three-phase drive
+# a permanent magnet synchronous motor three-phase drive.
+# It is assumed that we have direct access to signals within the flux-oriented dq coordinate system.
+# Hence, we assume to directly control the current in the dq frame.
+# The state and action space is continuous.
 # We use a deep-deterministic-policy-gradient (DDPG) agent
 # to determine which action must be taken on a continuous-control-set
 
@@ -34,8 +37,8 @@ class AppendLastActionWrapper(Wrapper):
     Therefore, for the agents it seems as if the applied action affects the environment with one step delay
     (with a dead time of one time step).
 
-    For complete observability of the system at each time step we append the last selected action to the
-    observation, because this action will be the one that is active while the agent has to make the next decision.
+    As a measure of feature engineering we append the last selected action to the observation of each time step,
+    because this action will be the one that is active while the agent has to make the next decision.
     """
     def __init__(self, environment):
         super().__init__(environment)
@@ -72,8 +75,11 @@ if __name__ == '__main__':
     window_length = 1
 
     # Define reference generators for both currents of the flux oriented dq frame
-    d_generator = ConstReferenceGenerator('i_sd', 0)  # d current reference is chosen to be constantly at zero
-    q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')  # q current changes dynamically
+    # d current reference is chosen to be constantly at zero to simplify this showcase scenario
+    d_generator = ConstReferenceGenerator('i_sd', 0)
+    # q current changes dynamically
+    q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
+
     # The MultipleReferenceGenerator allows to apply these references simultaneously
     rg = MultipleReferenceGenerator([d_generator, q_generator])
 
@@ -125,7 +131,7 @@ if __name__ == '__main__':
         # This is realistic behavior of drive applications
         dead_time=True,
 
-        # Set the supply voltage
+        # Set the DC-link supply voltage
         u_sup=400,
 
         # Pass the previously defined motor parameters
@@ -228,8 +234,8 @@ if __name__ == '__main__':
         memory_interval=2
     )
 
-    # Compile the models within the agent (making them ready for training)
-    # Note that the DDPG agent uses two models, hence we define two optimizers here
+    # Compile the function approximators within the agent (making them ready for training)
+    # Note that the DDPG agent uses two function approximators, hence we define two optimizers here
     agent.compile([Adam(lr=3e-5), Adam(lr=3e-3)])
 
     # Start training for 75 k simulation steps

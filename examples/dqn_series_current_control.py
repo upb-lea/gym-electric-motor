@@ -18,6 +18,7 @@ from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 
 # This example shows how we can use GEM to train a reinforcement learning agent to control the motor current
+# of a DC series motor. In this scenario, the state space is continuous while the action space is discrete.
 # We use a deep Q learning agent to determine which action must be taken on a finite-control-set
 
 if __name__ == '__main__':
@@ -35,6 +36,8 @@ if __name__ == '__main__':
         load_parameter=dict(a=0, b=.1, c=.1, j_load=0.04),
 
         # Defines the utilized power converter, which determines the action space
+        # 'Disc-1QC' is our notation for a discontinuous one-quadrant converter,
+        # which is a one-phase buck converter with available actions 'switch on' and 'switch off'
         converter='Disc-1QC',
 
         # Define which states will be shown in the state observation (what we can "measure")
@@ -59,7 +62,7 @@ if __name__ == '__main__':
     # Now, the environment will output states and references separately
     state, ref = env.reset()
 
-    # For data procession we sometimes want to flatten the env output,
+    # For data processing we sometimes want to flatten the env output,
     # which means that the env will only output one array that contains states and references consecutively
     env = FlattenObservation(env)
     obs = env.reset()

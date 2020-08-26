@@ -19,6 +19,7 @@ from gym_electric_motor.reference_generators import WienerProcessReferenceGenera
 from gym_electric_motor.visualization import MotorDashboard
 
 # This example shows how we can use GEM to train a reinforcement learning agent to control the motor speed
+# of a DC series motor. The state and action space is continuous.
 # We use a deep-deterministic-policy-gradient (DDPG) agent to
 # determine which action must be taken on a continuous-control-set
 
@@ -62,7 +63,7 @@ if __name__ == '__main__':
         visualization=MotorDashboard(['omega', 'torque', 'i', 'u', 'u_sup', 'reward']), visu_period=1,
     )
 
-    # For data procession we want to flatten the env output,
+    # For data processing we want to flatten the env output,
     # which means that the env will only output one array that contains states and references consecutively
     state, ref = env.reset()
     env = FlattenObservation(env)
@@ -140,8 +141,8 @@ if __name__ == '__main__':
         memory_interval=1
     )
 
-    # Compile the models within the agent (making them ready for training)
-    # Note that the DDPG agent uses two models, hence we define two optimizers here
+    # Compile the function approximators within the agent (making them ready for training)
+    # Note that the DDPG agent uses two function approximators, hence we define two optimizers here
     agent.compile((Adam(lr=1e-6), Adam(lr=1e-4)), metrics=['mae'])
 
     # Start training for 1.5 million simulation steps

@@ -11,8 +11,8 @@ import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
 
-# This example shows the behavior of GEM when using standard linear controllers
-# In the following, we use a PI controller to control the speed of a series DC motor
+# This example shows the behavior of GEM when using standard linear controllers.
+# In the following, we use a PI controller to control the speed of a series DC motor.
 
 if __name__ == '__main__':
 
