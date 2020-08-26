@@ -92,8 +92,8 @@ class EpsilonWrapper(ObservationWrapper):
 # agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
 #              'python/saves/agents/'
 
-config_path = '/home/student/hdd1/ppeters/saved_configs'
-agent_path = '/home/student/hdd1/ppeters/saved_agents'
+config_path = '/home/student/hdd1/ppeters/saved_configs/'
+agent_path = '/home/student/hdd1/ppeters/saved_agents/'
 
 
 print('env name: ')
@@ -139,11 +139,11 @@ environment_config = dict(
     nominal_values=nominal_values,
     u_sup=u_sup,
     tau=tau,
-    #load='ConstSpeedLoad',
-    #load_initializer={'states': {'omega': 1000 * np.pi / 30,},
-    #                  'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
-    #                  'random_init': 'uniform',},
-    #motor_initializer=motor_init,
+    load='ConstSpeedLoad',
+    load_initializer={'states': {'omega': 1000 * np.pi / 30,},
+                      'interval': [[-4000*2*np.pi/60, 4000*2*np.pi/60]],
+                      'random_init': 'uniform',},
+    motor_initializer=motor_init,
     ode_solver='euler',)
 
 save_to_json(environment_config, config_path + env_name)
@@ -231,49 +231,49 @@ dqn_agent.save(directory=agent_path,
                append='timesteps')
 
 # test agent
-tau = 1e-5
-steps = 100000
-
-rewards = []
-lens = []
-obs_hist = []
-
-states = []
-references = []
-
-obs = gem_env_.reset()
-obs_hist.append(obs)
-terminal = False
-cum_rew = 0
-step_counter = 0
-eps_rew = 0
-
-for step in tqdm(range(steps)):
-    #while not terminal:
-    #gem_env_.render()
-    actions = dqn_agent.act(states=obs, independent=True)
-
-    obs, reward, terminal, _ = gem_env_.step(action=actions)
-    rewards.append(cum_rew)
-    obs_hist.append(obs)
-
-    # dqn_agent.observe(terminal, reward=reward)
-    cum_rew += reward
-    eps_rew += reward
-
-    if terminal:
-        lens.append(step_counter)
-        step_counter = 0
-        #print(f'Episode length: {episode_length} steps')
-        obs = gem_env_.reset()
-
-        obs_hist.append(obs)
-        rewards.append(eps_rew)
-
-        terminal = False
-        eps_rew = 0
-    step_counter += 1
-
-
-print(f' \n Cumulated Reward over {steps} steps is {cum_rew} \n')
-print(f' \n Longest Episode: {np.amax(lens)} steps \n')
+# tau = 1e-5
+# steps = 100000
+#
+# rewards = []
+# lens = []
+# obs_hist = []
+#
+# states = []
+# references = []
+#
+# obs = gem_env_.reset()
+# obs_hist.append(obs)
+# terminal = False
+# cum_rew = 0
+# step_counter = 0
+# eps_rew = 0
+#
+# for step in tqdm(range(steps)):
+#     #while not terminal:
+#     #gem_env_.render()
+#     actions = dqn_agent.act(states=obs, independent=True)
+#
+#     obs, reward, terminal, _ = gem_env_.step(action=actions)
+#     rewards.append(cum_rew)
+#     obs_hist.append(obs)
+#
+#     # dqn_agent.observe(terminal, reward=reward)
+#     cum_rew += reward
+#     eps_rew += reward
+#
+#     if terminal:
+#         lens.append(step_counter)
+#         step_counter = 0
+#         #print(f'Episode length: {episode_length} steps')
+#         obs = gem_env_.reset()
+#
+#         obs_hist.append(obs)
+#         rewards.append(eps_rew)
+#
+#         terminal = False
+#         eps_rew = 0
+#     step_counter += 1
+#
+#
+# print(f' \n Cumulated Reward over {steps} steps is {cum_rew} \n')
+# print(f' \n Longest Episode: {np.amax(lens)} steps \n')

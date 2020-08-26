@@ -109,8 +109,8 @@ class EpsilonWrapper(ObservationWrapper):
 # agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
 #              'python/saves/agents'
 
-config_path = '/home/student/hdd1/ppeters/saved_configs'
-agent_path = '/home/student/hdd1/ppeters/saved_agents'
+config_path = '/home/student/hdd1/ppeters/saved_configs/'
+agent_path = '/home/student/hdd1/ppeters/saved_agents/'
 
 print('env name: ')
 env_name = input() #'env_config_zero_init'
