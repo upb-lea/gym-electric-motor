@@ -62,13 +62,13 @@ if __name__ == '__main__':
 
     # After the setup is done, we are ready to simulate the environment
     # We make use of a standard PI speed controller
+    controller = Controller.make('pi_controller', env)
     start = time.time()
     cum_rew = 0
 
     for j in range(10):
         state, reference = env.reset()
-        # redefine the controller for every experiment in order to reset it
-        controller = Controller.make('pi_controller', env)
+        controller.reset()
 
         # Print the initial states:
         denorm_state = state * env.limits

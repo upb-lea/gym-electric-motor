@@ -72,8 +72,7 @@ if __name__ == '__main__':
 
         if done:
             env.reset()
-            # redefine the controller upon reset in order to reset the I controller
-            controller = Controller.make('pi_controller', env)
+            controller.reset()
         cum_rew += reward
 
     print(cum_rew)

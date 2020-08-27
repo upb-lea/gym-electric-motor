@@ -119,11 +119,9 @@ if __name__ == '__main__':
         (state, reference), reward, done, _ = env.step(action)
 
         if done:
-            # Reset the env after termination
-            # The PI controller is redefined here in order to reset it as well
-            # (otherwise the I controller could disrupt the simulation)
+            # Reset the env and the controller after termination
             state, reference = env.reset()
-            controller = Controller.make('pi_controller', env)
+            controller.reset()
         cum_rew += reward
     env.close()
 
