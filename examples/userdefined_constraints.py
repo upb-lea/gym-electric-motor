@@ -10,22 +10,16 @@ import numpy as np
 import gym
 from gym.spaces import Box
 from gym_electric_motor.constraint_monitor import ConstraintMonitor
-
-rg.SwitchedReferenceGenerator(
-            sub_generators=[
-                rg.SinusoidalReferenceGenerator, rg.WienerProcessReferenceGenerator(), rg.StepReferenceGenerator()
-            ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
-        )
-
-const_sub_gen = [rg.ConstReferenceGenerator(reference_value=0.20),
-                 rg.ConstReferenceGenerator(reference_value=0.25),
-                 rg.ConstReferenceGenerator(reference_value=0.30),
-                 rg.ConstReferenceGenerator(reference_value=0.35),
-                 rg.ConstReferenceGenerator(reference_value=0.40)]
+from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
 
 
-const_switch_gen = rg.SwitchedReferenceGenerator(const_sub_gen,
-                                                 super_episode_length=(8000, 12000))
+# This code example presents how the constraint monitor can be used to define custom termination conditions.
+# This feature is interesting for e.g. three-phase drives, where the current needs to be monitored with
+# respect to the total current within all three phases , and not separately per phase.
+# In this example we will define an external constraint for the DcSeriesMotor which lies at 95 % of
+# the predefined current limit.
+#
+# For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
 
 
 # the following external monitors are examples for the general use-case.
@@ -37,18 +31,33 @@ class ExternalMonitorClass:
     constraint-conditions
     """
     def __init__(self):
-        self._constraints = Box(low=np.array([-70, -440, -70, -300, -420]),
-                                high=np.array([70, 440, 70, 300, 420]))
+        # Do some setup
+        self.upper_current_constraint = 95
+        self.lower_current_constraint = -95
 
     def __call__(self, state, observed_states, **kwargs):
 
-        return self.check_violation(state, observed_states)
+        # Read the current limit and the time since the last reset
+        physical_system = kwargs['physical_system']
+        current_limit = physical_system._limits[2]
+        time = kwargs['k'] * physical_system.tau
 
-    def check_violation(self, state, observed_states):
-        lower = self._constraints.low
-        upper = self._constraints.high
-        return float(
-            (abs(state) < lower).any() or (abs(state) > upper).any())
+        # the result of this check sets the "done" flag of the env.step() output
+        # done==True usually necessitates an env.reset()
+        return self.check_violation(denormalized_current=state[2] * current_limit, t=time)
+
+    def check_violation(self, denormalized_current, t):
+
+        # check whether the constraints are violated
+        check_violation = int(abs(denormalized_current) < self.lower_current_constraint or
+                              abs(denormalized_current) > self.upper_current_constraint)
+
+        if check_violation:
+            print(f"External current constraint was violated at t={t} s")
+            print(f"Measured current: {denormalized_current} A, constraint was at {self.upper_current_constraint} A")
+            print()
+
+        return check_violation
 
 
 def external_monitor_func(state, physical_system, k, **kwargs):
@@ -57,51 +66,64 @@ def external_monitor_func(state, physical_system, k, **kwargs):
     violation of the constraint conditions. Additional function parameters
     can be given to the ConstraintMonitor separately
     """
-    factor = 0.9
-    limits = physical_system.limits * factor
-    check = float((abs(state) > abs(limits)).any())
-    return check
+    # get the defined current limit
+    current_limit = physical_system._limits[2]
 
+    # denormalize the current value
+    denormalized_current = state[2] * current_limit
 
-# for 70% of normal limits
-discount_factor = 0.7
+    # Define an extra constraint at 95 % of the current
+    extra_constraint = 0.95 * current_limit
+
+    # check whether the constraint is violated
+    check_violation = int(abs(denormalized_current) > extra_constraint)
+
+    if check_violation:
+        print(f"External current constraint was violated at t={k * physical_system.tau} s")
+        print(f"Measured current: {denormalized_current} A, constraint was at {extra_constraint} A")
+        print()
+
+    # the result of this check sets the "done" flag of the env.step() output
+    # done==True usually necessitates an env.reset()
+    return check_violation
+
 
 if __name__ == '__main__':
     env = gem.make(
         'DcSeriesCont-v1',
-        # visualization=MotorDashboard(plotted_variables='all', visu_period=1),
-        visualization=MotorDashboard(plots=['omega', 'reward', 'i'],
-                                     dark_mode=True),
-        motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
-        # Take standard class and pass parameters (Load)
-        reward_power=0.5,
-        # choose constraint monitor
-        #constraint_monitor=ExternalMonitorClass(),
-        constraint_monitor=external_monitor_func,
-        load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
-        # Pass a string (with extra parameters)
+        visualization=MotorDashboard(plots=['omega', 'i'],
+                                     dark_mode=False,
+                                     update_cycle=10),
+        load=ConstantSpeedLoad(omega_fixed=10),
         ode_solver='scipy.solve_ivp',
-        # Pass a Class with extra parameters
-        reference_generator=rg.SwitchedReferenceGenerator(
-            sub_generators=[
-                rg.SinusoidalReferenceGenerator,
-                rg.WienerProcessReferenceGenerator(),
-                rg.StepReferenceGenerator()
-            ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
-        )
+
+        # Here, we set a reference that is within the usual current limits (99 % of the limit value)
+        reference_generator=rg.ConstReferenceGenerator(reference_state='i', reference_value=0.99),
+
+        # However, we now use the external constraint monitor to set an external constraint of 95 % of the current limit
+        # So now, the reference at 99 % of the current limit would lead the drive to
+        # violate our externally defined constraints
+        # If we comment out the constraint monitor, the simulation should run without any violation
+        constraint_monitor=ExternalMonitorClass(),
+        #constraint_monitor=external_monitor_func,
     )
 
+    # After setup, start the simulation
     controller = Controller.make('pi_controller', env)
     state, reference = env.reset()
     start = time.time()
     cum_rew = 0
-    for i in tqdm(range(50000)):
+    for i in range(10000):
         env.render()
         action = controller.control(state, reference)
         (state, reference), reward, done, _ = env.step(action)
 
         if done:
-            env.reset()
+            # Reset the env after termination
+            # The PI controller is redefined here in order to reset it as well
+            # (otherwise the I controller could disrupt the simulation)
+            state, reference = env.reset()
+            controller = Controller.make('pi_controller', env)
         cum_rew += reward
     env.close()
 

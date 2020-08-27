@@ -62,12 +62,13 @@ if __name__ == '__main__':
 
     # After the setup is done, we are ready to simulate the environment
     # We make use of a standard PI speed controller
-    controller = Controller.make('pi_controller', env)
     start = time.time()
     cum_rew = 0
 
     for j in range(10):
         state, reference = env.reset()
+        # redefine the controller for every experiment in order to reset it
+        controller = Controller.make('pi_controller', env)
 
         # Print the initial states:
         denorm_state = state * env.limits
@@ -77,7 +78,7 @@ if __name__ == '__main__':
         # Here we should have omega in the interval [60 1/s, 80 1/s] and current closely around 25 A
         print()
 
-        for i in range(50):
+        for i in range(5000):
             env.render()
             action = controller.control(state, reference)
             (state, reference), reward, done, _ = env.step(action)

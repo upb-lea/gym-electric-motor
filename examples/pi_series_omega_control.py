@@ -27,13 +27,15 @@ if __name__ == '__main__':
         # Set the parameters of the mechanical polynomial load (the default load class)
         load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
 
-        # Define a reference generator
+        # Define a reference generator for the speed ('omega')
         # In this example, we permit random switching between sinusoidal, wiener and step reference with
         # probabilities 0.1, 0.8 and 0.1 respectively.
         # super_episode_length defines minimum and maximum time steps between switching references
         reference_generator=rg.SwitchedReferenceGenerator(
             sub_generators=[
-                rg.SinusoidalReferenceGenerator, rg.WienerProcessReferenceGenerator(), rg.StepReferenceGenerator()
+                rg.SinusoidalReferenceGenerator(reference_state='omega'),
+                rg.WienerProcessReferenceGenerator(reference_state='omega'),
+                rg.StepReferenceGenerator(reference_state='omega')
             ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
         ),
 
@@ -46,7 +48,9 @@ if __name__ == '__main__':
     )
 
     # use a predefined controller for the environment
-    controller = Controller.make('pi_controller', env)  # works for 'on_off'(disc),three_point(disc),'p_controller', 'cascaded pi' too
+    # this controller reads to which state(s) the reference generator refers and
+    # will be adjusted to control the corresponding state(s)
+    controller = Controller.make('pi_controller', env)
 
     # reset the environment to an initial state (initial state is zero if not defined otherwise)
     state, reference = env.reset()
@@ -68,6 +72,8 @@ if __name__ == '__main__':
 
         if done:
             env.reset()
+            # redefine the controller upon reset in order to reset the I controller
+            controller = Controller.make('pi_controller', env)
         cum_rew += reward
 
     print(cum_rew)
