@@ -65,7 +65,6 @@ class EpsilonWrapper(ObservationWrapper):
 
 def set_env(time_limit=True):
     # define motor arguments
-    #sqd_current_monitor = ConstraintMonitor(external_monitor=SqdCurrentMonitor)
     motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                            r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
                            l_d=0.37e-3,  # [l_d] = H, d-axis inductance
