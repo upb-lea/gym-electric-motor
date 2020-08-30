@@ -107,13 +107,13 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-# config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-#               'python/saves/configs'
-# agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-#              'python/saves/agents'
+config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+              'python/saves/configs/'
+agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+             'python/saves/agents/'
 
-config_path = '/home/student/hdd1/ppeters/saved_configs/'
-agent_path = '/home/student/hdd1/ppeters/saved_agents/'
+#config_path = '/home/student/hdd1/ppeters/saved_configs/'
+#agent_path = '/home/student/hdd1/ppeters/saved_agents/'
 
 print('env name: ')
 env_name = input() #'env_config_zero_init'
@@ -134,7 +134,7 @@ rg = MultipleReferenceGenerator([q_generator, d_generator])
 max_eps_steps = 10000
 simulation_steps = 500000
 
-environment_config = load_json(config_path + env_name)
+environment_config = load_json(config_path, env_name)
 # creating gem environment
 gem_env = gem.make(
         "PMSMDisc-v1",
@@ -159,18 +159,18 @@ tensor_env = Environment.create(environment=gem_env_,
                                 max_episode_timesteps=max_eps_steps)
 
 
-agent_config = load_json(config_path + agent_config_name)
+agent_config = load_json(config_path, agent_config_name)
 
 dqn_agent = Agent.load(directory=agent_path,
                        filename=agent_name,
                        environment=tensor_env,
                        **agent_config)
-              
+
 print('\n ... agent loaded ...\n')
 
 # test agent
 tau = 1e-5
-steps = 1000000
+steps = 500000
 
 rewards = []
 lens = []

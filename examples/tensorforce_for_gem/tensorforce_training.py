@@ -87,13 +87,13 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-# config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-#               'python/saves/configs/'
-# agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
-#              'python/saves/agents/'
+config_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+               'python/saves/configs/'
+agent_path = '/home/pascal/Sciebo/Uni/Master/Semester_2/Projektarbeit/' + \
+              'python/saves/agents/'
 
-config_path = '/home/student/hdd1/ppeters/saved_configs/'
-agent_path = '/home/student/hdd1/ppeters/saved_agents/'
+#config_path = '/home/student/hdd1/ppeters/saved_configs/'
+#agent_path = '/home/student/hdd1/ppeters/saved_agents/'
 
 
 print('env name: ')
@@ -196,7 +196,7 @@ epsilon_decay = {'type': 'decaying',
 net = [
     dict(type='dense', size=64, activation='relu'),
     dict(type='dense', size=64, activation='relu'),
-    dqn_64_64_randdict(type='linear', size=7)
+    dict(type='linear', size=7)
 ]
 
 agent_config = {
