@@ -1,13 +1,10 @@
 import numpy as np
 
 import gym_electric_motor as gem
-from gym_electric_motor.constraint_monitor import ConstraintMonitor
 from gym_electric_motor.reference_generators import \
     MultipleReferenceGenerator,\
     WienerProcessReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.physical_systems import ConstantSpeedLoad
-
 from gym.spaces import Discrete, Box
 from gym.wrappers import FlattenObservation, TimeLimit
 from gym import ObservationWrapper
@@ -63,7 +60,7 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-def set_env(time_limit=True):
+def set_env(time_limit=True, gamma = 0.99):
     # define motor arguments
     motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                            r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
@@ -77,16 +74,10 @@ def set_env(time_limit=True):
                         u=u_sup
                         )
     limit_values=nominal_values.copy()
-
-    motor_init = {'random_init': 'uniform'}
-    load_initializer = {'random_init': 'uniform'}
-
-    const_random_load = ConstantSpeedLoad(load_initializer=load_initializer)
     q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
     d_generator = WienerProcessReferenceGenerator(reference_state='i_sd')
     rg = MultipleReferenceGenerator([q_generator, d_generator])
     tau = 1e-5
-    gamma = 0.99
     max_eps_steps = 10000
 
     # creating gem environment
