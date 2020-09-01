@@ -5,7 +5,7 @@ import time
 from setting_environment import set_env
 
 max_eps_steps = 10000
-simulation_steps = 1000 #500000
+simulation_steps = 500000
 gem_env = set_env()
 
 # creating tensorforce environment

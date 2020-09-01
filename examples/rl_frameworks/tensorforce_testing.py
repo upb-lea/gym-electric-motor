@@ -66,33 +66,27 @@ print('\n agent loaded \n')
 # test agent
 tau = 1e-5
 steps = 1000000
-
 rewards = []
-# obs_hist = []
 states = []
 references = []
 
 obs = gem_env.reset()
-#obs_hist.append(obs)
 terminal = False
 cum_rew = 0
 step_counter = 0
 eps_rew = 0
 
 for step in tqdm(range(steps)):
-    gem_env.render()
+    # gem_env.render()
     actions = dqn_agent.act(obs, evaluation=True)
     obs, reward, terminal, _ = gem_env.step(action=actions)
     rewards.append(cum_rew)
-    # obs_hist.append(obs)
     cum_rew += reward
     eps_rew += reward
 
     if terminal:
         step_counter = 0
-        #print(f'Episode length: {episode_length} steps')
         obs = gem_env.reset()
-        #obs_hist.append(obs)
         rewards.append(eps_rew)
         terminal = False
         eps_rew = 0
