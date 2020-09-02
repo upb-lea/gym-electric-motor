@@ -3,7 +3,6 @@ import sys
 sys.path.append(str(Path().resolve().parent.parent))
 from stable_baselines3 import DQN
 from setting_environment import set_env
-#from stable_baselines import gamma
 
 """
 This example is based on stable baselines3 0.8.0a5. Since it is still being frequently updated 
