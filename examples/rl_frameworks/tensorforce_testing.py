@@ -85,11 +85,9 @@ for step in tqdm(range(steps)):
     eps_rew += reward
 
     if terminal:
-        step_counter = 0
         obs = gem_env.reset()
         rewards.append(eps_rew)
         terminal = False
         eps_rew = 0
-    step_counter += 1
 
 print(f' \n Cumulated Reward per step is {cum_rew/steps} \n')
