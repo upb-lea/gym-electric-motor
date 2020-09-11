@@ -52,11 +52,11 @@
 }
 
 @Misc{Margolis,
-  author    = {Benjamin W. L. Margolis},
-  title     = {SimuPy 1.0.0},
-  year      = {2017},
-  publisher = {GitHub},
-  url       = {https://github.com/simupy/simupy},
+  author  = {Benjamin W. L. Margolis},
+  title   = {SimuPy 1.0.0},
+  year    = {2017},
+  journal = {GitHub repository},
+  url     = {https://github.com/simupy/simupy},
 }
 
 @Misc{ANSYS,
@@ -108,18 +108,19 @@
 }
 
 @Misc{TFAgents,
-  author    = {Sergio Guadarrama and Anoop Korattikara and Oscar Ramirez and Pablo Castro and Ethan Holly and Sam Fishman and Ke Wang and Ekaterina Gonina and Neal Wu and Efi Kokiopoulou and Luciano Sbaiz and Jamie Smith and Gábor Bartók and Jesse Berent and Chris Harris and Vincent Vanhoucke and Eugene Brevdo},
-  note      = {[Online; accessed 25-June-2019]},
-  title     = {{TF-Agents: A library for Reinforcement Learning in TensorFlow}},
-  year      = {2018},
-  publisher = {GitHub},
-  url       = {https://github.com/tensorflow/agents},
+  author  = {Sergio Guadarrama and Anoop Korattikara and Oscar Ramirez and Pablo Castro and Ethan Holly and Sam Fishman and Ke Wang and Ekaterina Gonina and Neal Wu and Efi Kokiopoulou and Luciano Sbaiz and Jamie Smith and Gábor Bartók and Jesse Berent and Chris Harris and Vincent Vanhoucke and Eugene Brevdo},
+  note    = {[Online; accessed 25-June-2019]},
+  title   = {{TF-Agents: A library for Reinforcement Learning in TensorFlow}},
+  year    = {2018},
+  journal = {GitHub repository},
+  url     = {https://github.com/tensorflow/agents},
 }
 
 @Misc{plappert2016kerasrl,
   author    = {Matthias Plappert},
   title     = {keras-rl},
   year      = {2016},
+  journal   = {GitHub repository},
   publisher = {GitHub},
   url       = {https://github.com/keras-rl/keras-rl},
 }

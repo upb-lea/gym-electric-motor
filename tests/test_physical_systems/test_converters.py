@@ -762,6 +762,23 @@ class TestDiscConverter(TestPowerElectronicConverter):
 
     class_to_test = cv.DiscConverter
 
+    @pytest.mark.parametrize("action_space", [1, 2, 3, 4])
+    def test_set_action(self, monkeypatch, action_space):
+        converter = self.class_to_test()
+        monkeypatch.setattr(converter, "action_space", Discrete(action_space))
+        time = 0
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(-1, time)
+        assert "-1" in str(assertText.value) and "Discrete(" + str(action_space) + ")" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(int(1e9), time)
+        assert str(int(1e9)) in str(assertText.value) and "Discrete(" + str(action_space) + ")" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(np.pi, time)
+        assert str(np.pi) in str(assertText.value) and "Discrete(" + str(action_space) + ")" in str(assertText.value)
+
     def test_default_init(self):
         converter = self.class_to_test()
         assert converter._tau == 1e-5
@@ -866,6 +883,20 @@ class TestDiscFourQuadrantConverter(TestDiscConverter):
             assert converter._subconverters[1].last_t == t
             assert converter._subconverters[0].last_action == action // 2 + 1
             assert converter._subconverters[1].last_action == action % 2 + 1
+
+        converter = self.class_to_test()
+        time = 0
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(-1, time)
+        assert "-1" in str(assertText.value) and "Discrete(4)" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(int(1e9), time)
+        assert str(int(1e9)) in str(assertText.value) and "Discrete(4)" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(np.pi, time)
+        assert str(np.pi) in str(assertText.value) and "Discrete(4)" in str(assertText.value)
 
     @pytest.mark.parametrize('i_out', [[-12], [0], [12]])
     def test_convert(self, converter, i_out):
@@ -1204,6 +1235,19 @@ class TestDiscB6BridgeConverter(TestDiscConverter):
             assert converter._subconverters[2].last_t == t
             subactions = [sc.last_action % 2 for sc in converter._subconverters]
             assert action == reduce(lambda x, y: 2*x+y, subactions)
+
+        time = 0
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(-1, time)
+        assert "-1" in str(assertText.value) and "Discrete(8)" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(int(1e9), time)
+        assert str(int(1e9)) in str(assertText.value) and "Discrete(8)" in str(assertText.value)
+
+        with pytest.raises(AssertionError) as assertText:
+            converter.set_action(np.pi, time)
+        assert str(np.pi) in str(assertText.value) and "Discrete(8)" in str(assertText.value)
 
     @pytest.mark.parametrize('i_out', [[-1, -1, 0], [1, 1, -2], [0, 0, 1]])
     def test_convert(self, converter, i_out):
