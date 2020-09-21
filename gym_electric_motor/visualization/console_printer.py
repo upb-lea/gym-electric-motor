@@ -32,17 +32,18 @@ class ConsolePrinter(ElectricMotorVisualization):
         np.set_printoptions(formatter={'float': '{:9.3f}'.format})
         self._reset = False
 
-    def reset(self, *_, **__):
+    def on_reset_end(self, observation):
         """Gets called on environment reset. Handles internal value reset and External reset printing"""
         self._reset = True
 
-    def set_modules(self, physical_system, *_, **__):
+    def set_env(self, env):
         """Gets the limits of the current physical system for accurate printing"""
-        self._limits = physical_system.limits
+        self._limits = env.physical_system.limits
 
-    def step(self, k, state, reference, action, reward, done):
+    def on_step_begin(self, action):
         """Gets called at each step of the environment.
         Handles per step printing as well es constraint violation printing"""
+
         if self._print_freq > 0:
             self._num_steps += 1
             self._cum_reward += reward
@@ -68,5 +69,7 @@ class ConsolePrinter(ElectricMotorVisualization):
                       f'Step {self._num_steps:08d} '
                       f'Cumulative Reward {self._cum_reward:7.3f}',
                       end='\r'
-                      )
+                )
 
+    def render(self):
+        print('')

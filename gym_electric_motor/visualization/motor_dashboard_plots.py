@@ -7,12 +7,20 @@ from gym.spaces import Box
 class MotorDashboardPlot:
     """Base Plot class that all plots in the MotorDashboard have to derive from."""
 
-    def __init__(self):
+    _default_line_cfg = {
+        'linestyle': '',
+        'linewidth': 0.75,
+        'marker': '.',
+        'markersize': .5
+    }
+
+    def __init__(self, line_config=None):
+
         self._axis = None
-        self._tau = None
-        self._x_points = None
-        self._t = 0
-        self._t_data = []
+        line_config = line_config or {}
+        assert type(line_config) is dict, f'The line_config of the plots needs to be a dict but is {type(line_config)}.'
+
+        self._line_cfg = self._default_line_cfg.update(line_config)
 
     def initialize(self, axis):
         """Initialization of the plot. Set labels, legends,... here.
@@ -22,19 +30,18 @@ class MotorDashboardPlot:
         """
         self._axis = axis
         self._axis.grid(True)
-        self._axis.set_xlim(-self.x_width, 0)
 
     def set_modules(self, ps, rg, rf):
         """Interconnection of the environments modules.
+
         Save all relevant information from other modules here (e.g. state_names, references,...)
+
         Args:
             ps(PhysicalSystem): The PhysicalSystem of the environment
             rg(ReferenceGenerator): The ReferenceGenerator of the environment.
             rf(RewardFunction): The RewardFunction of the environment
         """
-        self._tau = ps.tau
-        # Number of points on the x-axis in a plot (= x_width / tau)
-        self._x_points = int(self.x_width / self._tau)
+        pass
 
     def step(self, k, state, reference, action, reward, done):
         """Passing of current environmental information..
@@ -49,44 +56,59 @@ class MotorDashboardPlot:
         """
         raise NotImplementedError
 
-    def update(self):
-        """Called by the MotorDashboard each time before the figure is updated."""
-        # configure x-axis properties
-        if self.mode == 'continuous':
-            x_lim = self._axis.get_xlim()
-            upper_lim = max(self._t, x_lim[1])
-            lower_lim = upper_lim - self.x_width
-            self._axis.set_xlim(lower_lim, upper_lim)
-
     def reset(self):
         """Called by the MotorDashboard each time the environment is reset."""
         pass
 
 
-class StatePlot(MotorDashboardPlot):
+class StepPlot(MotorDashboardPlot):
+
+    def __init__(self, x_width=1, update_cycle=1000, **kwargs):
+        super().__init__(**kwargs)
+        self._x_points = None
+        self._t = 0
+        self._t_data = []
+        self._tau = None
+        self.x_width = x_width
+        self.update_cycle = update_cycle
+        self.y_lim = (-np.inf, np.inf)
+
+    def reset(self):
+        """Called by the MotorDashboard each time the environment is reset."""
+        pass
+
+    def step(self, k, state, reference, action, reward, done):
+        raise NotImplementedError
+
+    def set_modules(self, ps, rg, rf):
+        super().set_modules(ps, rg, rf)
+        self._axis.set_xlim(-self.x_width, 0)
+        self._tau = ps.tau
+
+        # Number of points on the x-axis in a plot (= x_width / tau)
+        self._x_points = int(self.x_width / self._tau)
+
+    def update(self):
+        """Called by the MotorDashboard each time before the figure is updated."""
+        # configure x-axis properties
+        x_lim = self._axis.get_xlim()
+        upper_lim = max(self._t, x_lim[1])
+        lower_lim = upper_lim - self.x_width
+        self._axis.set_xlim(lower_lim, upper_lim)
+
+    def initialize(self, axis):
+        super().initialize(axis)
+        if self.y_lim is None:
+            self._axis.autoscale(True, axis='Y')
+        else:
+            min_limit, max_limit = self.y_lim
+            spacing = 0.1 * (max_limit - min_limit)
+            self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
+
+
+class StatePlot(StepPlot):
     """Class to plot any motor state and its reference."""
 
-    # Width of the Plot in seconds
-    x_width = 1
-
-    # Either "continuous" or "repeating"
-    mode = 'continuous'
-
-    # Configurations of the lines
-    state_line_cfg = {
-        'color': 'blue',
-        'linestyle': '',
-        'linewidth': 0.75,
-        'marker': '.',
-        'markersize': .5
-    }
-    reference_line_cfg = {
-        'color': 'green',
-        'linewidth': 0.75,
-        'linestyle': '',
-        'marker': '.',
-        'markersize': .5
-    }
     limit_line_cfg = {
         'color': 'red',
         'linestyle': '--',
@@ -115,11 +137,15 @@ class StatePlot(MotorDashboardPlot):
         'epsilon': r'$\epsilon/rad$'
     }
 
-    def __init__(self, state):
+    def __init__(self, state, limit_line_cfg=None, **kwargs):
         """
         Args:
             state(str): Name of the state to plot
         """
+
+        limit_line_cfg = limit_line_cfg or {}
+        assert type(limit_line_cfg) is dict
+
         #: State space of the plotted variable
         self._state_space = None
         # State name of the plotted variable
@@ -141,11 +167,11 @@ class StatePlot(MotorDashboardPlot):
 
         # Flag, if the passed data is normalized
         self._normalized = True
-        super().__init__()
+        super().__init__(**kwargs)
 
     def set_modules(self, ps, rg, rf):
         # Docstring of superclass
-        super(StatePlot, self).set_modules(ps, rg, rf)
+        super().set_modules(ps, rg, rf)
         self._state_idx = ps.state_positions[self._state]
         self._limits = ps.limits[self._state_idx]
         self._state_space = ps.state_space.low[self._state_idx], ps.state_space.high[self._state_idx]
@@ -156,25 +182,24 @@ class StatePlot(MotorDashboardPlot):
     def initialize(self, axis):
         super().initialize(axis)
         if self._referenced:
-            self._reference_line, = self._axis.plot(self._t_data, self._ref_data, **self.reference_line_cfg)
-        self._state_line, = self._axis.plot(self._t_data, self._state_data, **self.state_line_cfg)
+            self._reference_line, = self._axis.plot(self._t_data, self._ref_data, **self._line_cfg)
+        self._state_line, = self._axis.plot(self._t_data, self._state_data, **self._line_cfg)
+
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
         max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
-
         if self._state_space[0] < 0:
             self._axis.axhline(min_limit, **self.limit_line_cfg)
         lim = self._axis.axhline(max_limit, **self.limit_line_cfg)
 
-        self._axis.set_ylim(min_limit - 0.1 * (max_limit - min_limit), max_limit + 0.1 * (max_limit - min_limit))
         y_label = self.state_labels.get(self._state, self._state)
         self._axis.set_ylabel(y_label)
 
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False).tolist()
         self._state_data = np.array([0.0] * self._x_points)
         self._ref_data = np.array([0.0] * self._x_points)
-        dummy_state_line = lin.Line2D([], [], color=self.state_line_cfg['color'])
+        dummy_state_line = lin.Line2D([], [], color=self._state_line.get_color())
         if self._referenced:
-            dummy_ref_line = lin.Line2D([], [], color=self.reference_line_cfg['color'])
+            dummy_ref_line = lin.Line2D([], [], color=self._reference_line.get_color())
             self._axis.legend(
                 (dummy_state_line, dummy_ref_line, lim), (y_label, y_label + '*', 'limit'), loc='upper left'
             )
@@ -186,8 +211,7 @@ class StatePlot(MotorDashboardPlot):
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]
         idx = int((self._t % self.x_width) / self._tau)
-        if self.mode == 'continuous':
-            self._t_data[idx] = self._t
+        self._t_data[idx] = self._t
         self._state_data[idx] = state_
         if self._referenced:
             self._ref_data[idx] = ref
@@ -209,19 +233,9 @@ class StatePlot(MotorDashboardPlot):
         super(StatePlot, self).update()
 
 
-class RewardPlot(MotorDashboardPlot):
+class RewardPlot(StepPlot):
     """ Class used to plot the instantaneous reward during the episode
     """
-
-    x_width = 1
-    mode = 'continuous'
-    reward_line_cfg = {
-        'color': 'gray',
-        'linestyle': '',
-        'linewidth': 0.75,
-        'marker': '.',
-        'markersize': .5
-    }
 
     def __init__(self):
         self._reward_range = None
@@ -251,8 +265,8 @@ class RewardPlot(MotorDashboardPlot):
     def step(self, k, state, reference, action, reward, done):
         self._t += self._tau
         idx = int((self._t % self.x_width) / self._tau)
-        if self.mode == 'continuous':
-            self._t_data[idx] = self._t
+
+        self._t_data[idx] = self._t
         self._reward_data[idx] = reward
         if done:
             self._axis.axvline(self._t, color='red', linewidth=1)
@@ -262,19 +276,9 @@ class RewardPlot(MotorDashboardPlot):
         super(RewardPlot, self).update()
 
 
-class ActionPlot(MotorDashboardPlot):
+class ActionPlot(StepPlot):
     """ Class to plot the instantaneous actions applied on-to the environment
     """
-
-    x_width = 1
-    mode = 'continuous'
-    action_line_cfg = {
-        'color': 'magenta',
-        'linestyle': '',
-        'linewidth': 0.75,
-        'marker': '.',
-        'markersize': .5
-    }
 
     def __init__(self, action):
         super().__init__()
@@ -300,14 +304,15 @@ class ActionPlot(MotorDashboardPlot):
         super().initialize(axis)
         self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
         self._action_data = np.zeros_like(self._t_data, dtype=float)
-        self._action_line, = self._axis.plot(self._t_data, self._action_data, **self.action_line_cfg)
+        self._action_line, = self._axis.plot(self._t_data, self._action_data, **self._line_cfg)
+
         # set the layout of the subplot
         act_min = self._action_range_min
         act_max = self._action_range_max
         spacing = (act_max - act_min) * 0.1
         self._axis.set_ylim(act_min - spacing, act_max + spacing)
         self._axis.set_ylabel(self._action)
-        base_action_line = lin.Line2D([], [], color=self.action_line_cfg['color'])
+        base_action_line = lin.Line2D([], [], color=self._action_line.get_color())
         self._axis.legend((base_action_line,), (self._action,), loc='upper left')
 
     def set_modules(self, ps, rg, rf):
@@ -333,8 +338,8 @@ class ActionPlot(MotorDashboardPlot):
     def step(self, k, state, reference, action, reward, done):
         self._t += self._tau
         idx = int((self._t % self.x_width) / self._tau)
-        if self.mode == 'continuous':
-            self._t_data[idx] = self._t
+
+        self._t_data[idx] = self._t
         # the first action at the start of the simulation is None. Add a check.
         if action is not None:
             if self._action_type == 'Discrete':
@@ -350,71 +355,22 @@ class ActionPlot(MotorDashboardPlot):
         super(ActionPlot, self).update()
 
 
-class EpisodeBasedPlot:
+class EpisodeBasedPlot(MotorDashboardPlot):
     """Base Plot class that all episode based plots ."""
 
-    def __init__(self):
-        pass
-
     def initialize(self, axis):
-        """Initialization of the plot. Set labels, legends,... here.
-
-        Args:
-            axis(matplotlib.pyplot.axis): Axis to plot in
-        """
-        pass
-
-    def set_modules(self, ps, rg, rf):
-        """Interconnection of the environments modules.
-        Save all relevant information from other modules here (e.g. state_names, references,...)
-        Args:
-            ps(PhysicalSystem): The PhysicalSystem of the environment
-            rg(ReferenceGenerator): The ReferenceGenerator of the environment.
-            rf(RewardFunction): The RewardFunction of the environment
-        """
-        pass
-
-    def step(self, k, state, reference, action, reward, done):
-        """Passing of current environmental information..
-
-        Args:
-            k(int): Current episode step.
-            state(ndarray(float)): State of the system
-            reference(ndarray(float)): Reference array of the system
-            action(ndarray(float)): Last taken action. (None after reset)
-            reward(ndarray(float)): Last received reward. (None after reset)
-            done(bool): Flag if the current state is terminal
-        """
-        raise NotImplementedError
-
-    def update(self):
-        """Called by the MotorDashboard each time before the figure is updated."""
-        pass
-
-    def reset(self):
-        """Called by the MotorDashboard each time the environment is reset."""
-        pass
+        super().initialize(axis)
+        axis.autoscale()
 
 
 class MeanEpisodeRewardPlot(EpisodeBasedPlot):
     """
     class to plot the mean episode reward
     """
-    x_width = 100
-    mode = 'continuous'
-    reward_line_cfg = {
-        'color': 'blue',
-        'linestyle': '-',
-        'linewidth': 0.75,
-        'marker': 'o',
-        'markersize': 1,
-
-    }
 
     def __init__(self):
         super().__init__()
-        # range of the rewards
-        self._reward_range = None
+
         self._reward_line = None
         # data container for mean reward
         self._reward_data = None
@@ -442,7 +398,7 @@ class MeanEpisodeRewardPlot(EpisodeBasedPlot):
         spacing = 0.1 * (max_limit - min_limit)
         self._axis.set_xlim(0, self.x_width)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-        self._axis.set_ylabel('mean episodic reward')
+        self._axis.set_ylabel('mean reward per episode')
 
     def set_modules(self, ps, rg, rf):
         # fetch reward range from reward function module

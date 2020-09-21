@@ -268,70 +268,6 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._visualization.close()
 
 
-class ElectricMotorVisualization:
-    """
-    Base class for all visualizations in the gym-electric-motor toolbox and an empty dummy visualization, if no
-    visualization is required.
-    """
-
-    def set_modules(self, physical_system, reference_generator, reward_function):
-        """
-        Args:
-            physical_system(PhysicalSystem):
-                This function is called from the environment in its initialization.
-                Settings that require the knowledge of the physical system (like setting of state variables) have to be
-                done in this function.
-            reference_generator(ReferenceGenerator):
-                This function is called from the environment in its initialization.
-                Settings that require the knowledge of the reference generator (like setting of referenced variables)
-                have to be done in this function.
-            reward_function(RewardFunction):
-                This function is called from the environment in its initialization.
-                Settings that require the knowledge of the reward function (like setting of reward ranges) have
-                to be done in this function.
-        """
-        pass
-
-    def reset(self, reference_trajectories=None, *_, **__):
-        """
-        Called when the environment is reset to clear or save plots etc.
-
-        Args:
-            reference_trajectories(dict(list/ndarray(float))): If references are known in advance by the reference
-            generator, they are passed here to the visualization as a dictionary of the state_name to a
-            list of future reference points.
-        """
-        pass
-
-    def step(self, k, state, reference, action, reward, done):
-        """
-        Called by the environment every cycle and passes the current, normalized state array,
-        the normalized references in the same shape as the state array and the received reward.
-        For non-referenced states the value in the reference array can be ignored.
-
-        Example:
-            ```state_variables = ['omega', 'torque', 'i', 'u', 'u_sup']```
-            ```state = [0.65, 0.32, 0.2, 1.0, 1.0]```
-            ```reference = [0.7, 0.0, 0.0, 0.0, 0.0]```
-            Only the first reference value is important here, because all others are not referenced.
-
-        Args:
-            k(int): Current episode step
-            state(ndarray(float)): The state of the physical system.
-            reference(ndarray(float)): The reference array of the reference generator.
-            action(ndarray(float)): The last action taken. None after reset.
-            reward(float): The reward from the reward function.
-            done(bool): Flag, if the environment is in a terminal state.
-        """
-        pass
-
-    def close(self, *_, **__):
-        """
-        Called when the environment is deleted to close or save figures, logs etc.
-        """
-        pass
-
-
 class ReferenceGenerator:
     """
     The abstract base class for reference generators in gym electric motor environments.
@@ -722,15 +658,19 @@ class PhysicalSystem:
         Close the System and all of its submodules by closing files, saving logs etc.
         """
         pass
-    
+
+
 class Callback:   
-    """
-    The abstract base class for Callbacks. Each of its functions gets called at one point in
-    the :mod:`~gym_electric_motor.core.ElectricMotorEnvironment`.
+    """The abstract base class for Callbacks in GEM.
+
+    Each of its functions gets called at one point in the :mod:`~gym_electric_motor.core.ElectricMotorEnvironment`.
 
     Attributes:
         _env: The GEM environment. Use it to have full control over the environment on runtime. 
     """
+
+    def __init__(self):
+        self._env = None
     
     def set_env(self, env):
         """Sets the environment of the motor."""
@@ -740,19 +680,24 @@ class Callback:
         """Gets called at the beginning of each reset"""
         pass
     
-    def on_reset_end(self):
+    def on_reset_end(self, observation):
         """Gets called at the end of each reset"""        
         pass
     
-    def on_step_begin(self):
+    def on_step_begin(self, action):
         """Gets called at the beginning of each step"""
         pass
     
-    def on_step_end(self):
+    def on_step_end(self, observation, reward, done):
         """Gets called at the end of each step"""        
         pass
     
     def on_close(self):
         """Gets called at the beginning on a close"""        
         pass
-    
+
+
+class ElectricMotorVisualization(Callback):
+
+    def render(self):
+        raise NotImplementedError
