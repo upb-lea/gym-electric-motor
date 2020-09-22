@@ -126,7 +126,7 @@ def set_env(time_limit=True, gamma = 0.99, N=0):
         # turn off terminations via limit violation, parameterize the rew-fct
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
-            reward_weights={'i_sq': 10, 'i_sd': 10},
+            reward_weights={'i_sq': 1, 'i_sd': 1},
             constraint_monitor=SqdCurrentMonitor(),
             gamma=gamma,
             reward_power=1),
