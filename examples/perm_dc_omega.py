@@ -62,5 +62,5 @@ if __name__ == '__main__':
             state, reference = env.reset()
             controller.reset()
         cum_rew += reward
-        
+
     print(cum_rew)
