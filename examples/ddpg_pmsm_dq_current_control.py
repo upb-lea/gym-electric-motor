@@ -70,10 +70,6 @@ class AppendLastActionWrapper(Wrapper):
 
 if __name__ == '__main__':
 
-    tf.compat.v1.disable_eager_execution()
-
-    window_length = 1
-
     # Define reference generators for both currents of the flux oriented dq frame
     # d current reference is chosen to be constantly at zero to simplify this showcase scenario
     d_generator = ConstReferenceGenerator('i_sd', 0)
@@ -168,6 +164,10 @@ if __name__ == '__main__':
     #  https://stackoverflow.com/questions/58987264/how-to-get-learning-phase-in-tensorflow-2-eager
     #  https://stackoverflow.com/questions/58279628/what-is-the-difference-between-tf-keras-and-tf-python-keras?noredirect=1&lq=1
     #  https://github.com/tensorflow/tensorflow/issues/34508
+
+    # Define how many past observations we want the control agent to process each step
+    # for this case, we assume to pass only the single most recent observation
+    window_length = 1
 
     # Define an artificial neural network to be used within the agent as actor
     # (using keras sequential)

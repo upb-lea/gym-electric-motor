@@ -25,8 +25,6 @@ from gym_electric_motor.visualization import MotorDashboard
 
 if __name__ == '__main__':
 
-    tf.compat.v1.disable_eager_execution()
-
     # Define the drive environment
     # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning results.
     env = gem.make(
@@ -81,6 +79,8 @@ if __name__ == '__main__':
     #  https://stackoverflow.com/questions/58279628/what-is-the-difference-between-tf-keras-and-tf-python-keras?noredirect=1&lq=1
     #  https://github.com/tensorflow/tensorflow/issues/34508
 
+    # Define how many past observations we want the control agent to process each step
+    # for this case, we assume to pass only the single most recent observation
     window_length = 1
 
     # Define an artificial neural network to be used within the agent as actor
