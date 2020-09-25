@@ -69,8 +69,8 @@ class AppendNLastOberservationsWrapper(Wrapper):
 
     def step(self, action):
         obs, rew, term, info = self.env.step(action)
-        self._current_step += 1
-        if self._current_step <= self._N:
+        if self._current_step < self._N:
+            self._current_step += 1
             self._obs[self._current_step*self.env.observation_space.shape[0]:(self._current_step + 1)*self.env.observation_space.shape[0]] = obs
         else:
             valid_obs = self._obs[self.env.observation_space.shape[0]:]
@@ -86,7 +86,56 @@ class AppendNLastOberservationsWrapper(Wrapper):
         return self._obs
 
 
-def set_env(time_limit=True, gamma = 0.99, N=0):
+class AppendNLastActionsWrapper(Wrapper):
+    def __init__(self, env, N):
+        super().__init__(env)
+        self._N = N
+        self._current_step = 0
+        self._obs = None
+        new_low = self.env.observation_space.low
+        new_high = self.env.observation_space.high
+        for i in range(self._N):
+            new_low = np.concatenate((new_low, [0]))
+            new_high = np.concatenate((new_high, [0]))
+        self.observation_space = Box(new_low, new_high)
+
+
+    def step(self, action):
+        obs, rew, term, info = self.env.step(action)
+        self._obs[:self.env.observation_space.shape[0]] = obs
+        if self._N > 0:
+            if self._current_step < self._N:
+                self._obs[self.env.observation_space.shape[0]+self._current_step:
+                    self.env.observation_space.shape[0]+(self._current_step+1)] = action
+                self._current_step += 1
+            else:
+                valid_actions = self._obs[self.env.observation_space.shape[0]+1:]
+                self._obs[self.env.observation_space.shape[0]:-1] = valid_actions
+                self._obs = np.concatenate((self._obs[:-1],[action]))
+        return self._obs, rew, term, info
+
+    def reset(self, **kwargs):
+        self._current_step = 0
+        obs = self.env.reset()
+        for i in range(self._N):
+            obs = np.concatenate((obs, [0]))
+        self._obs = obs
+        return self._obs
+
+class NormalizeObservation(Wrapper):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def step(self, action):
+        obs, rew, term, info = self.env.step(action)
+        return obs/np.linalg.norm(obs), rew, term, info
+
+    def reset(self, **kwargs):
+        obs = self.env.reset()
+        return obs/np.linalg.norm(obs)
+
+
+def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True):
     # define motor arguments
     motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                            r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
@@ -108,6 +157,22 @@ def set_env(time_limit=True, gamma = 0.99, N=0):
     rg = MultipleReferenceGenerator([q_generator, d_generator])
     tau = 1e-5
     max_eps_steps = 10000
+    
+    if training:
+        reward_function=gem.reward_functions.WeightedSumOfErrors(
+            observed_states=['i_sq', 'i_sd'],
+            reward_weights={'i_sq': 1, 'i_sd': 1},
+            constraint_monitor=SqdCurrentMonitor(),
+            gamma=gamma,
+            reward_power=1)
+    else:
+        reward_function=gem.reward_functions.WeightedSumOfErrors(
+            observed_states=['i_sq', 'i_sd'],
+            reward_weights={'i_sq': 0.5, 'i_sd': 0.5}, #comparable reward
+            constraint_monitor=SqdCurrentMonitor(),
+            gamma=0.99, #comparable reward
+            reward_power=1)
+   
 
     # creating gem environment
     env = gem.make(  # define a PMSM with discrete action space
@@ -121,15 +186,12 @@ def set_env(time_limit=True, gamma = 0.99, N=0):
         load='ConstSpeedLoad',
         load_initializer={'random_init': 'uniform', },
         motor_initializer={'random_init': 'gaussian'},
+        
+        reward_function=reward_function,
+
         # define the duration of one sampling step
         tau=tau, u_sup=u_sup,
         # turn off terminations via limit violation, parameterize the rew-fct
-        reward_function=gem.reward_functions.WeightedSumOfErrors(
-            observed_states=['i_sq', 'i_sd'],
-            reward_weights={'i_sq': 1, 'i_sd': 1},
-            constraint_monitor=SqdCurrentMonitor(),
-            gamma=gamma,
-            reward_power=1),
         reference_generator=rg, ode_solver='euler',
     )
 
@@ -137,8 +199,8 @@ def set_env(time_limit=True, gamma = 0.99, N=0):
     env.action_space = Discrete(7)
     eps_idx = env.physical_system.state_names.index('epsilon')
     if time_limit:
-        gem_env = TimeLimit(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx), N),
+        gem_env = TimeLimit(AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx), N), M ),
                             max_eps_steps)
     else:
-        gem_env = AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx), N)
+        gem_env = AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx), N), M)
     return gem_env
