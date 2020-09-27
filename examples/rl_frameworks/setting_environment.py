@@ -185,7 +185,7 @@ def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True):
         # define the random initialisation for load and motor
         load='ConstSpeedLoad',
         load_initializer={'random_init': 'uniform', },
-        motor_initializer={'random_init': 'gaussian'},
+        motor_initializer={'random_init': 'uniform', 'interval': [[-230,230],[-230,230],[-np.pi,np.pi]]},
         
         reward_function=reward_function,
 
