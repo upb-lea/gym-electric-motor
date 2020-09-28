@@ -105,7 +105,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             reference_generator(ReferenceGenerator): The new reference generator of the environment.
         """
         self._reference_generator = reference_generator
-        self._reset_required = True
+        self._done = True
 
     @property
     def reward_function(self):
@@ -124,7 +124,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             reward_function(RewardFunction): The new reward function of the environment.
         """
         self._reward_function = reward_function
-        self._reset_required = True
+        self._done = True
 
     @property
     def limits(self):
@@ -147,8 +147,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         return self._physical_system.nominal_state[self.state_filter]
 
-    def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None, callbacks = [],
-                 **kwargs):
+    def __init__(self, physical_system, reference_generator, reward_function, visualizations=None, state_filter=None,
+                 callbacks=(), **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -156,7 +156,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             physical_system(PhysicalSystem): The physical system of this environment.
             reference_generator(ReferenceGenerator): The reference generator of this environment.
             reward_function(RewardFunction): The reward function of this environment.
-            visualization(ElectricMotorVisualization): The visualization of this environment.
+            visualizations(iterable(ElectricMotorVisualization)): The visualizations of this environment.
             state_filter(list(str)): Selection of states that are shown in the observation.
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
@@ -164,15 +164,13 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
         self._reference_generator = instantiate(ReferenceGenerator, reference_generator, **kwargs)
         self._reward_function = instantiate(RewardFunction, reward_function, **kwargs)
-        visualization = visualization or ElectricMotorVisualization()
-        self._visualization = instantiate(ElectricMotorVisualization, visualization, **kwargs)
+        visualizations = visualizations or [ElectricMotorVisualization()]
+        self._visualizations = [instantiate(ElectricMotorVisualization, visu, **kwargs) for visu in visualizations]
 
         # Announcement of the Modules among each other
         self._reference_generator.set_modules(self.physical_system)
         self._reward_function.set_modules(self.physical_system, self._reference_generator)
-        self._visualization.set_modules(self.physical_system, self._reference_generator, self._reward_function)
-        self._reset_required = True
-        self._done = None
+        self._done = True
 
         # Initialization of properties
         self._state = np.zeros(len(self.physical_system.state_names))
@@ -181,8 +179,9 @@ class ElectricMotorEnvironment(gym.core.Env):
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
-        self.state_filter = [self._physical_system.state_names.index(s)
-                             for s in state_filter]
+        self.state_filter = [
+            self._physical_system.state_names.index(s) for s in state_filter
+        ]
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high)
@@ -195,6 +194,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._action = None
         
         self._callbacks = callbacks
+        self._callbacks += self._visualizations
         self._call_callbacks('set_env', self)
         
     def _call_callbacks(self, func_name, *args):
@@ -211,23 +211,21 @@ class ElectricMotorEnvironment(gym.core.Env):
              The initial observation consisting of the initial state and initial reference.
         """
         self._call_callbacks('on_reset_begin')
-        self._reset_required = False
+        self._done = False
         self._state = self._physical_system.reset()
         self._reference, next_ref, trajectories = self.reference_generator.reset(self._state)
-        self._visualization.reset()
         self._reward_function.reset(self._state, self._reference)
         self._reward = 0.0
         self._action = None
-        self._call_callbacks('on_reset_end')
+        self._call_callbacks('on_reset_end', self._state, self._reference)
         return self._state[self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
         Update the visualization of the motor.
         """
-        self._visualization.step(
-            self._physical_system.k, self._state, self._reference, self._action, self._reward, self._done
-        )
+        for visu in self._visualizations:
+            visu.render()
 
     def step(self, action):
         """
@@ -243,8 +241,8 @@ class ElectricMotorEnvironment(gym.core.Env):
             {}: An empty dictionary for consistency with the OpenAi Gym interface.
         """
 
-        assert not self._reset_required, 'A reset is required before the environment can perform further steps'
-        self._call_callbacks('on_step_begin')
+        assert not self._done, 'A reset is required before the environment can perform further steps'
+        self._call_callbacks('on_step_begin', self.physical_system.k, action)
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
@@ -252,10 +250,11 @@ class ElectricMotorEnvironment(gym.core.Env):
                                                                 self._reference,
                                                                 self._physical_system.k,
                                                                 action)
-        self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
-        self._call_callbacks('on_step_end')
-        return (self._state[self.state_filter], ref_next), self._reward, self._reset_required, {}
+        self._call_callbacks(
+            'on_step_end', self.physical_system.k, self._state, self._reference, self._reward, self._done
+        )
+        return (self._state[self.state_filter], ref_next), self._reward, self._done, {}
 
     def close(self):
         """
@@ -265,7 +264,6 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
-        self._visualization.close()
 
 
 class ReferenceGenerator:
@@ -680,15 +678,15 @@ class Callback:
         """Gets called at the beginning of each reset"""
         pass
     
-    def on_reset_end(self, observation):
+    def on_reset_end(self, state, reference):
         """Gets called at the end of each reset"""        
         pass
     
-    def on_step_begin(self, action):
+    def on_step_begin(self, k, action):
         """Gets called at the beginning of each step"""
         pass
     
-    def on_step_end(self, observation, reward, done):
+    def on_step_end(self, k, state, reference, reward, done):
         """Gets called at the end of each step"""        
         pass
     

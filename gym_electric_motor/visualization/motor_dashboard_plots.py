@@ -31,41 +31,53 @@ class MotorDashboardPlot:
         self._axis = axis
         self._axis.grid(True)
 
-    def set_modules(self, ps, rg, rf):
+    def set_env(self, env):
         """Interconnection of the environments modules.
 
-        Save all relevant information from other modules here (e.g. state_names, references,...)
+        Save all relevant information from the environment here (e.g. state_names, references,...)
 
         Args:
-            ps(PhysicalSystem): The PhysicalSystem of the environment
-            rg(ReferenceGenerator): The ReferenceGenerator of the environment.
-            rf(RewardFunction): The RewardFunction of the environment
+            env(ElectricMotorEnvironment): The environment to read information like state names from it.
         """
         pass
 
-    def step(self, k, state, reference, action, reward, done):
+    def on_step_begin(self, k, action):
         """Passing of current environmental information..
 
         Args:
             k(int): Current episode step.
-            state(ndarray(float)): State of the system
-            reference(ndarray(float)): Reference array of the system
             action(ndarray(float)): Last taken action. (None after reset)
-            reward(ndarray(float)): Last received reward. (None after reset)
-            done(bool): Flag if the current state is terminal
         """
         raise NotImplementedError
 
-    def reset(self):
-        """Called by the MotorDashboard each time the environment is reset."""
+    def on_step_end(self, k, state, reference, reward, done):
+        """Passing of step result information.
+
+        Args:
+            k(int): Current episode step.
+            state(ndarray(float)): The next state of the environment.
+            reference(ndarray(float)): The reference for the current timestep.
+            reward(float): The reward received for the last taken action.
+            done(bool): Indicator, if the episode has terminated due to a constraint violation.
+        """
+        raise NotImplementedError
+
+    def on_reset_begin(self):
+        """Called by the MotorDashboard each time before the environment is reset."""
         pass
+
+    def on_reset_end(self, k, state, reference):
+        raise NotImplementedError
+
+    def render(self):
+        raise NotImplementedError
 
 
 class StepPlot(MotorDashboardPlot):
 
     def __init__(self, x_width=1, update_cycle=1000, **kwargs):
         super().__init__(**kwargs)
-        self._x_points = None
+        self._no_x_points = None
         self._t = 0
         self._t_data = []
         self._tau = None
@@ -73,20 +85,20 @@ class StepPlot(MotorDashboardPlot):
         self.update_cycle = update_cycle
         self.y_lim = (-np.inf, np.inf)
 
-    def reset(self):
+    def on_reset_end(self, k, state, reference):
         """Called by the MotorDashboard each time the environment is reset."""
         pass
 
     def step(self, k, state, reference, action, reward, done):
         raise NotImplementedError
 
-    def set_modules(self, ps, rg, rf):
-        super().set_modules(ps, rg, rf)
+    def set_env(self, env):
+        super().set_env(env)
         self._axis.set_xlim(-self.x_width, 0)
-        self._tau = ps.tau
+        self._tau = env.physical_system.tau
 
         # Number of points on the x-axis in a plot (= x_width / tau)
-        self._x_points = int(self.x_width / self._tau)
+        self._no_x_points = int(self.x_width / self._tau)
 
     def update(self):
         """Called by the MotorDashboard each time before the figure is updated."""
@@ -194,9 +206,9 @@ class StatePlot(StepPlot):
         y_label = self.state_labels.get(self._state, self._state)
         self._axis.set_ylabel(y_label)
 
-        self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False).tolist()
-        self._state_data = np.array([0.0] * self._x_points)
-        self._ref_data = np.array([0.0] * self._x_points)
+        self._t_data = np.linspace(0, self.x_width, self._no_x_points, endpoint=False).tolist()
+        self._state_data = np.array([0.0] * self._no_x_points)
+        self._ref_data = np.array([0.0] * self._no_x_points)
         dummy_state_line = lin.Line2D([], [], color=self._state_line.get_color())
         if self._referenced:
             dummy_ref_line = lin.Line2D([], [], color=self._reference_line.get_color())
@@ -245,18 +257,15 @@ class RewardPlot(StepPlot):
 
     def initialize(self, axis):
         super().initialize(axis)
-        self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
+        self._t_data = np.linspace(0, self.x_width, self._no_x_points, endpoint=False)
         self._reward_data = np.zeros_like(self._t_data, dtype=float)
-        self._reward_line, = self._axis.plot(self._t_data, self._reward_data, **self.reward_line_cfg)
+        self._reward_line, = self._axis.plot(self._t_data, self._reward_data)
         min_limit = self._reward_range[0]
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
         self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
         y_label = 'reward'
         self._axis.set_ylabel(y_label)
-        # adds a constant line at 0 which is eventually updated by the plot variable values. legend can be set here.
-        dummy_rew_line = lin.Line2D([], [], color=self.reward_line_cfg['color'])
-        self._axis.legend((dummy_rew_line,), ('reward',), loc='upper left')
 
     def set_modules(self, ps, rg, rf):
         super(RewardPlot, self).set_modules(ps, rg, rf)
@@ -277,7 +286,7 @@ class RewardPlot(StepPlot):
 
 
 class ActionPlot(StepPlot):
-    """ Class to plot the instantaneous actions applied on-to the environment
+    """ Class to plot the instantaneous actions applied on the environment
     """
 
     def __init__(self, action):
@@ -302,7 +311,7 @@ class ActionPlot(StepPlot):
             axis (object): the subplot axis for plotting the action variable
         """
         super().initialize(axis)
-        self._t_data = np.linspace(0, self.x_width, self._x_points, endpoint=False)
+        self._t_data = np.linspace(0, self.x_width, self._no_x_points, endpoint=False)
         self._action_data = np.zeros_like(self._t_data, dtype=float)
         self._action_line, = self._axis.plot(self._t_data, self._action_data, **self._line_cfg)
 
