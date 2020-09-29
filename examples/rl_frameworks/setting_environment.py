@@ -30,26 +30,31 @@ class EpsilonWrapper(ObservationWrapper):
     and sin(epsilon)
     """
 
-    def __init__(self, env, epsilon_idx):
+    def __init__(self, env, epsilon_idx, i_sd_idx, i_sq_idx):
         super(EpsilonWrapper, self).__init__(env)
         self.EPSILON_IDX = epsilon_idx
+        self.I_SQ_IDX = i_sq_idx
+        self.I_SD_IDX = i_sd_idx
+        print(epsilon_idx, i_sd_idx, i_sq_idx)
         new_low = np.concatenate((self.env.observation_space.low[
                                   :self.EPSILON_IDX], np.array([-1.]),
                                   self.env.observation_space.low[
-                                  self.EPSILON_IDX:]))
+                                  self.EPSILON_IDX:], np.array([0.])))
         new_high = np.concatenate((self.env.observation_space.high[
                                    :self.EPSILON_IDX], np.array([1.]),
                                    self.env.observation_space.high[
-                                   self.EPSILON_IDX:]))
+                                   self.EPSILON_IDX:],np.array([1.])))
 
         self.observation_space = Box(new_low, new_high)
 
     def observation(self, observation):
         cos_eps = np.cos(observation[self.EPSILON_IDX] * np.pi)
         sin_eps = np.sin(observation[self.EPSILON_IDX] * np.pi)
+        currents_squared = observation[self.I_SQ_IDX]**2 + observation[self.I_SD_IDX]**2
         observation = np.concatenate((observation[:self.EPSILON_IDX],
                                       np.array([cos_eps, sin_eps]),
-                                      observation[self.EPSILON_IDX + 1:]))
+                                      observation[self.EPSILON_IDX + 1:],
+                                      np.array([currents_squared])))
         return observation
 
 class AppendNLastOberservationsWrapper(Wrapper):
@@ -159,13 +164,16 @@ def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True):
     max_eps_steps = 10000
     
     if training:
+        motor_initializer={'random_init': 'uniform', 'interval': [[-230,230],[-230,230],[-np.pi,np.pi]]}
+        #motor_initializer={'random_init': 'gaussian'}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
-            reward_weights={'i_sq': 1, 'i_sd': 1},
+            reward_weights={'i_sq': 10, 'i_sd': 10},
             constraint_monitor=SqdCurrentMonitor(),
             gamma=gamma,
             reward_power=1)
     else:
+        motor_initializer={'random_init': 'gaussian'}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
             reward_weights={'i_sq': 0.5, 'i_sd': 0.5}, #comparable reward
@@ -185,8 +193,7 @@ def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True):
         # define the random initialisation for load and motor
         load='ConstSpeedLoad',
         load_initializer={'random_init': 'uniform', },
-        motor_initializer={'random_init': 'uniform', 'interval': [[-230,230],[-230,230],[-np.pi,np.pi]]},
-        
+        motor_initializer=motor_initializer,
         reward_function=reward_function,
 
         # define the duration of one sampling step
@@ -198,9 +205,12 @@ def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True):
     # appling wrappers and modifying environment
     env.action_space = Discrete(7)
     eps_idx = env.physical_system.state_names.index('epsilon')
+    i_sd_idx = env.physical_system.state_names.index('i_sd')
+    i_sq_idx = env.physical_system.state_names.index('i_sq')
+
     if time_limit:
-        gem_env = TimeLimit(AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx), N), M ),
+        gem_env = TimeLimit(AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx, i_sd_idx, i_sq_idx), N), M),
                             max_eps_steps)
     else:
-        gem_env = AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx), N), M)
+        gem_env = AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx, i_sd_idx, i_sq_idx), N), M)
     return gem_env
