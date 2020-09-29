@@ -35,7 +35,6 @@ class EpsilonWrapper(ObservationWrapper):
         self.EPSILON_IDX = epsilon_idx
         self.I_SQ_IDX = i_sq_idx
         self.I_SD_IDX = i_sd_idx
-        print(epsilon_idx, i_sd_idx, i_sq_idx)
         new_low = np.concatenate((self.env.observation_space.low[
                                   :self.EPSILON_IDX], np.array([-1.]),
                                   self.env.observation_space.low[
@@ -140,7 +139,7 @@ class NormalizeObservation(Wrapper):
         return obs/np.linalg.norm(obs)
 
 
-def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True):
+def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True, callbacks = []):
     # define motor arguments
     motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                            r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
@@ -200,6 +199,7 @@ def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True):
         tau=tau, u_sup=u_sup,
         # turn off terminations via limit violation, parameterize the rew-fct
         reference_generator=rg, ode_solver='euler',
+        callbacks = callbacks,
     )
 
     # appling wrappers and modifying environment
