@@ -51,7 +51,8 @@ agent_config = {
     'discount': 0.99,
     'exploration': epsilon_decay,
     'target_sync_frequency': 1000,
-    'target_update_weight': 1.0}
+    'target_update_weight': 1.0,
+    'seed': 1008}
 
 # creating agent via dictionary
 dqn_agent = Agent.create(agent=agent_config, environment=tensor_env)
