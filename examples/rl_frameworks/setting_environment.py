@@ -56,6 +56,7 @@ class EpsilonWrapper(ObservationWrapper):
                                       np.array([currents_squared])))
         return observation
 
+
 class AppendNLastOberservationsWrapper(Wrapper):
 
     def __init__(self, env, N):
@@ -103,7 +104,6 @@ class AppendNLastActionsWrapper(Wrapper):
             new_high = np.concatenate((new_high, [0]))
         self.observation_space = Box(new_low, new_high)
 
-
     def step(self, action):
         obs, rew, term, info = self.env.step(action)
         self._obs[:self.env.observation_space.shape[0]] = obs
@@ -126,6 +126,7 @@ class AppendNLastActionsWrapper(Wrapper):
         self._obs = obs
         return self._obs
 
+
 class NormalizeObservation(Wrapper):
     def __init__(self, env):
         super().__init__(env)
@@ -139,7 +140,7 @@ class NormalizeObservation(Wrapper):
         return obs/np.linalg.norm(obs)
 
 
-def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True, callbacks = []):
+def set_env(time_limit=True, gamma=0.99, N=0, M=0, training=True, callbacks=[]):
     # define motor arguments
     motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                            r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
@@ -163,7 +164,7 @@ def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True, callbacks 
     max_eps_steps = 10000
     
     if training:
-        motor_initializer={'random_init': 'uniform', 'interval': [[-230,230],[-230,230],[-np.pi,np.pi]]}
+        motor_initializer={'random_init': 'uniform', 'interval': [[-230, 230], [-230, 230], [-np.pi, np.pi]]}
         #motor_initializer={'random_init': 'gaussian'}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
@@ -172,14 +173,13 @@ def set_env(time_limit=True, gamma = 0.99, N=0, M=0, training = True, callbacks 
             gamma=gamma,
             reward_power=1)
     else:
-        motor_initializer={'random_init': 'gaussian'}
+        motor_initializer = {'random_init': 'gaussian'}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
             reward_weights={'i_sq': 0.5, 'i_sd': 0.5}, #comparable reward
             constraint_monitor=SqdCurrentMonitor(),
             gamma=0.99, #comparable reward
             reward_power=1)
-   
 
     # creating gem environment
     env = gem.make(  # define a PMSM with discrete action space
