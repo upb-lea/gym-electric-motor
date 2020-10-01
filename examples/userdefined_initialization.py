@@ -5,14 +5,15 @@ from gym_electric_motor.visualization import MotorDashboard
 from agents.simple_controllers import Controller
 import time
 
-# This code example presents how the initializer interface can be used to sample random initial states for the drive.
-# This is important when using e.g. reinforcement learning, because random initialization allows for a better
-# exploration of the state space (so called "exploring starts").
-# Initializers can be applied to electric motor state (which is also decisive for the initial torque) and
-# mechanical load (which sets initial drive speed).
-#
-# For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
+'''
+This code example presents how the initializer interface can be used to sample random initial states for the drive.
+This is important when using e.g. reinforcement learning, because random initialization allows for a better
+exploration of the state space (so called "exploring starts").
+Initializers can be applied to electric motor state (which is also decisive for the initial torque) and
+mechanical load (which sets initial drive speed).
 
+For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
+'''
 
 
 # Initializers use the state names that are present for the used motor:

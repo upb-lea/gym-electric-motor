@@ -20,14 +20,15 @@ from gym_electric_motor.physical_systems import ConstantSpeedLoad
 from gym.core import Wrapper
 from gym.spaces import Box, Tuple
 
-# This example shows how we can use GEM to train a reinforcement learning agent to control the current within
-# a permanent magnet synchronous motor three-phase drive.
-# It is assumed that we have direct access to signals within the flux-oriented dq coordinate system.
-# Hence, we assume to directly control the current in the dq frame.
-# The state and action space is continuous.
-# We use a deep-deterministic-policy-gradient (DDPG) agent
-# to determine which action must be taken on a continuous-control-set
-
+'''
+This example shows how we can use GEM to train a reinforcement learning agent to control the current within
+a permanent magnet synchronous motor three-phase drive.
+It is assumed that we have direct access to signals within the flux-oriented dq coordinate system.
+Hence, we assume to directly control the current in the dq frame.
+The state and action space is continuous.
+We use a deep-deterministic-policy-gradient (DDPG) agent
+to determine which action must be taken on a continuous-control-set
+'''
 
 class AppendLastActionWrapper(Wrapper):
     """

@@ -18,10 +18,12 @@ import gym_electric_motor as gem
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
 
-# This example shows how we can use GEM to train a reinforcement learning agent to control the motor speed
-# of a DC series motor. The state and action space is continuous.
-# We use a deep-deterministic-policy-gradient (DDPG) agent to
-# determine which action must be taken on a continuous-control-set
+'''
+This example shows how we can use GEM to train a reinforcement learning agent to control the motor speed
+of a DC series motor. The state and action space is continuous.
+We use a deep-deterministic-policy-gradient (DDPG) agent to
+determine which action must be taken on a continuous-control-set
+'''
 
 if __name__ == '__main__':
 

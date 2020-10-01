@@ -12,14 +12,15 @@ from gym.spaces import Box
 from gym_electric_motor.constraint_monitor import ConstraintMonitor
 from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
 
+'''
+This code example presents how the constraint monitor can be used to define custom termination conditions.
+This feature is interesting for e.g. three-phase drives, where the current needs to be monitored with
+respect to the total current within all three phases , and not separately per phase.
+In this example we will define an external constraint for the DcSeriesMotor which lies at 95 % of
+the predefined current limit.
 
-# This code example presents how the constraint monitor can be used to define custom termination conditions.
-# This feature is interesting for e.g. three-phase drives, where the current needs to be monitored with
-# respect to the total current within all three phases , and not separately per phase.
-# In this example we will define an external constraint for the DcSeriesMotor which lies at 95 % of
-# the predefined current limit.
-#
-# For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
+For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
+'''
 
 
 # the following external monitors are examples for the general use-case.

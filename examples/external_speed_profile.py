@@ -8,13 +8,15 @@ from scipy import signal
 from gym_electric_motor.physical_systems.mechanical_loads \
     import ExternalSpeedLoad, ConstantSpeedLoad
 
-# This code example presents how the speed load classes can be used to
-# define a speed profile which the drive will then follow.
-# This is often useful when prototyping drive controllers that either
-# control purely electrical drive behavior (e.g. current controllers) or
-# drive torque with fixed speed requirements (e.g. traction applications, generator operation).
-#
-# For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
+'''
+This code example presents how the speed load classes can be used to
+define a speed profile which the drive will then follow.
+This is often useful when prototyping drive controllers that either
+control purely electrical drive behavior (e.g. current controllers) or
+drive torque with fixed speed requirements (e.g. traction applications, generator operation).
+
+For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
+'''
 
 
 # We will have a look at a current control scenario here

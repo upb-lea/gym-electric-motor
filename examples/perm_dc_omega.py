@@ -7,9 +7,11 @@ import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
 
-# This example shows how GEM can be used to test discontinuous controllers.
-# The used three point controller is only capable of three actions: full throttle forward, full throttle backward
-# and idle. These actions suffice to control the speed of a permanently excited DC motor.
+'''
+This example shows how GEM can be used to test discontinuous controllers.
+The used three point controller is only capable of three actions: full throttle forward, full throttle backward
+and idle. These actions suffice to control the speed of a permanently excited DC motor.
+'''
 
 if __name__ == '__main__':
 
