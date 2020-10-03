@@ -31,7 +31,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 action can be applied on the environment it can be selected by its index.
                 Default: () (no plotted actions).
             reward_plot(boolean): Select if the current reward is to be plotted. Default: False
-            step_plots(iterable(StepPlot)): . Default: ()
+            step_plots(iterable(StepPlot)): Additional custom step plots. Default: ()
             episodic_plots(iterable(EpisodicPlots)):
             interval_plots(iterable(IntervalPlots)):
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
@@ -43,8 +43,8 @@ class MotorDashboard(ElectricMotorVisualization):
         assert all(isinstance(sp, StepPlot) for sp in step_plots)
         assert all(isinstance(ep, EpisodicPlot) for ep in episodic_plots)
         assert all(isinstance(ip, IntervalPlot) for ip in interval_plots)
-        assert update_interval is int and update_interval > 0
-        assert style in plt.style.available
+        assert type(update_interval) is int and update_interval > 0
+        assert style in plt.style.available or style is None
 
         super().__init__()
         if style is not None:
@@ -101,9 +101,10 @@ class MotorDashboard(ElectricMotorVisualization):
         if not (self._step_plot_figure or self._episodic_plot_figure or self._interval_plot_figure) \
            and len(self._plots) > 0:
             self._initialize()
-
-        if (self._k + 1) % self._update_interval == 0:
+        self._k += 1
+        if self._k % self._update_interval == 0:
             self._update()
+
 
     def set_env(self, env):
         """Called during initialization of the environment to interconnect all modules. State_names, references,...
@@ -163,7 +164,6 @@ class MotorDashboard(ElectricMotorVisualization):
             self._episodic_plot_figure, axes_ep = plt.subplots(len(self._episodic_plots))
             axes_ep = [axes_ep] if len(self._episodic_plots) == 1 else axes_ep
             self._episodic_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
-            self._episodic_plot_figure.text(0.5, 0.04, 'episode', va='center', ha='center')
             axes_ep[-1].set_xlabel('Episode No')
             self._figures.append(self._episodic_plot_figure)
             for plot, axis in zip(self._episodic_plots, axes_ep):
@@ -173,7 +173,7 @@ class MotorDashboard(ElectricMotorVisualization):
             self._interval_plot_figure, axes_int = plt.subplots(len(self._interval_plots))
             axes_int = [axes_int] if len(self._interval_plots) == 1 else axes_int
             self._interval_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
-            axes_int.set_xlabel('Cumulative Steps')
+            axes_int[-1].set_xlabel('Cumulative Steps')
             for plot, axis in zip(self._interval_plots, axes_int):
                 plot.initialize(axis)
 
@@ -183,7 +183,7 @@ class MotorDashboard(ElectricMotorVisualization):
         """Called every {update_cycle} steps to refresh the figure.
         """
         for plot in self._plots:
-            plot.update()
+            plot.render()
         for fig in self._figures:
-            fig.draw()
-            fig.flush_events()
+            fig.canvas.draw()
+            fig.canvas.flush_events()

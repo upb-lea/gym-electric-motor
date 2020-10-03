@@ -193,8 +193,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         self.reward_range = self._reward_function.reward_range
         self._action = None
         
-        self._callbacks = callbacks
-        self._callbacks += self._visualizations
+        self._callbacks = list(callbacks)
+        self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
         
     def _call_callbacks(self, func_name, *args):
@@ -246,10 +246,9 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
-        self._reward, self._done = self._reward_function.reward(self._state,
-                                                                self._reference,
-                                                                self._physical_system.k,
-                                                                action)
+        self._reward, self._done = self._reward_function.reward(
+            self._state, self._reference, self._physical_system.k, action
+        )
         ref_next = self.reference_generator.get_reference_observation(self._state)
         self._call_callbacks(
             'on_step_end', self.physical_system.k, self._state, self._reference, self._reward, self._done
