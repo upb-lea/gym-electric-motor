@@ -24,10 +24,10 @@ class ConsolePrinter(ElectricMotorVisualization):
         """
         super().__init__()
         self._limits = None
-        self._state = None
-        self._reference = None
-        self._action = None
-        self._reward = None
+        self._state = np.nan
+        self._reference = np.nan
+        self._action = np.nan
+        self._reward = np.nan
         self._k = 0
         self._print_freq = verbose
         self._update_freq = update_freq
@@ -78,7 +78,7 @@ class ConsolePrinter(ElectricMotorVisualization):
 
             if self._print_freq == 2 and (self._k % self._update_freq) == 0:
                 print(f'Episode {self._episode} '
-                      f'Step {self._k: 8d}'
+                      f'Step {self._k: 8d} '
                       f'State {self._state * self._limits} '
                       f'Reference {self._reference * self._limits} '
                       f'Reward {self._reward:7.3f} '
