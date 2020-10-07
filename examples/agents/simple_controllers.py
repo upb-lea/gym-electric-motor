@@ -40,14 +40,16 @@ class Controller:
 class OnOffController(Controller):
     """
         The following controller is a simple OnOffController which allows the state to choose high_action when referenced_state is below
-        ref_idx and low_action otherwise.
+        ref_idx and low_action otherwise.A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the
+         constant switching and high frequency around the reference_idx.
 
-        Valid for DcPermExDisc-v1, DcSeriesDisc-v1, PMSMDisc-v1, SynRMDisc-v1 ,SCIMDisc-v1
+        Valid for Motors with Discrete Action Space
     """
 
-    def __init__(self, environment, state_idx=None, reference_idx=0):
+    def __init__(self, environment, hysteresis=0.01, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Discrete, 'Not suitable action space for On off controller'
+        self._hysteresis = hysteresis
         self._high_action = 1
         if action_space.n in [3, 4]:
             self._low_action = 2
@@ -62,7 +64,7 @@ class OnOffController(Controller):
         self._ref_idx = reference_idx
 
     def control(self, state, reference):
-        if state[self._referenced_state] < reference[self._ref_idx]:
+        if state[self._referenced_state] < reference[self._ref_idx] - self._hysteresis:
             return self._high_action
         else:
             return self._low_action
@@ -75,7 +77,7 @@ class ThreePointController(Controller):
     A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and
     high frequency around the reference_idx.
 
-    Valid for DcPermExDisc-v1, DcSeriesDisc-v1,DcShuntDisc-v1, PMSMDisc-v1, SynRMDisc-v1 ,SCIMDisc-v1
+    Valid for Motors with Discrete Action Space
 
     """
 
@@ -118,7 +120,7 @@ class PController(Controller):
     def __init__(self, environment, k_p=10, controller_no=0, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Box and type(
-            environment.physical_system), 'No suitable action space for P Controller'
+            environment.physical_system) is DcMotorSystem, 'No suitable action space for P Controller'
         self._k_p = k_p
         self._controller_no = controller_no
         self._action_min = action_space.low[controller_no]
@@ -188,6 +190,58 @@ class IController(Controller):
         self._integrated_value = 0
 
 
+class PIController(PController):
+    """
+      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
+      and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
+      It outputs a weighted sum of the input error signal and the integral of the input error signal.
+
+      Valid for DC Motor System
+    """
+
+    def __init__(self, environment, k_p=10, k_i=0.01, controller_no=0, reference_idx=0):
+        super().__init__(environment, k_p, controller_no, reference_idx)
+        action_space = environment.action_space
+        assert type(action_space) is Box and type(
+            environment.physical_system) is DcMotorSystem, 'No suitable action space for PI Controller'
+        self._k_i = k_i
+        self._ref_idx = reference_idx
+        self._tau = environment.physical_system.tau
+        self._limits = environment.physical_system.limits
+        self._integrated_value = 0
+        self._referenced_state_max = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.low[self._referenced_state]
+        self._motor_parameter = environment.physical_system.electrical_motor.motor_parameter
+
+    def control(self, state, reference):
+        diff = reference[self._ref_idx] - state[self._referenced_state]
+        self._integrated_value += diff * self._tau
+        if self._integrated_value > self._referenced_state_max:  # check upper limit
+            self._integrated_value = self._referenced_state_max
+        else:
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        if self._integrated_value < self._referenced_state_min:  # check lower limit
+            self._integrated_value = self._referenced_state_min
+        else:
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+
+        return np.array([
+            max(
+                self._action_min,
+                min(
+                    self._action_max,
+                    self._k_p * (reference[0] - state[self._referenced_state])
+                    + self._tau / self._k_i * self._integrated_value
+                )
+            )
+        ])
+
+    def reset(self, **__):
+        self._integrated_value = 0
+
+
 class DController(Controller):
 
     def __init__(self, environment, k_d=1, controller_no=0, state_idx=None, reference_idx=0):
@@ -232,69 +286,11 @@ class DController(Controller):
         self._derivative_value = 0
 
 
-class PIController(PController):
-    """
-      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
-      and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
-      It outputs a weighted sum of the input error signal and the integral of the input error signal.
-
-      Valid for DC Motor System
-    """
-
-    def __init__(self, environment, k_p=10, k_i=1, controller_no=0, reference_idx=0):
-        super().__init__(environment, k_p, controller_no, reference_idx)
-        action_space = environment.action_space
-        assert type(action_space) is Box and type(
-            environment.physical_system) is DcMotorSystem, 'No suitable action space for PI Controller'
-        self._k_i = k_i
-        self._tau = environment.physical_system.tau
-        self._limits = environment.physical_system.limits
-        self._integrated_value = 0
-        self._referenced_state_max = self._limits[self._referenced_state] \
-                                     * environment.physical_system.state_space.high[self._referenced_state]
-        self._referenced_state_min = self._limits[self._referenced_state] \
-                                     * environment.physical_system.state_space.low[self._referenced_state]
-        self._motor_parameter = environment.physical_system.electrical_motor.motor_parameter
-
-    def control(self, state, reference):
-        mp = self._motor_parameter
-        t_motor = mp['l_a'] / mp['r_a']
-        t_t = 3 / 2 * self._tau
-        t_sigma = min(t_motor, t_t)
-        a = t_sigma / t_motor
-        self._tau = a ** 2 * t_sigma  # a = 2 for Symmetric Optimum tuning method
-        diff = reference[self._ref_idx] - state[self._referenced_state]
-        self._integrated_value += diff * self._tau
-        if self._integrated_value > self._referenced_state_max:  # check upper limit
-            self._integrated_value = self._referenced_state_max
-        else:
-            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
-        if self._integrated_value < self._referenced_state_min:  # check lower limit
-            self._integrated_value = self._referenced_state_min
-        else:
-            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
-
-        return np.array([
-            max(
-                self._action_min,
-                min(
-                    self._action_max,
-                    self._k_p * (reference[self._ref_idx] - state[self._referenced_state])
-                    + self._tau / self._k_i * self._integrated_value
-                )
-            )
-        ])
-
-    def reset(self, **__):
-        self._integrated_value = 0
-
-
 class PIDController(PIController):
     """
       The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
       and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
       It outputs a weighted sum of the input error signal and the integral of the input error signal.
-
       Valid for DC Motor System
     """
 
@@ -322,7 +318,7 @@ class PIDController(PIController):
     def control(self, state, reference):
         diff = reference[self._ref_idx] - state[self._referenced_state]
         de = diff - self._prev_error
-        self._derivative_value = de / self._tau
+        self._derivative_value = de/self._tau
         diff = reference[self._ref_idx] - state[self._referenced_state]
         self._integrated_value += diff * self._tau
         if self._integrated_value > self._referenced_state_max:  # check upper limit
@@ -841,9 +837,9 @@ _controllers = {
     'three_point': ThreePointController,
     'p_controller': PController,
     'i_controller': IController,
-    'd_controller': DController,
     'pi_controller': PIController,
-    'pid_controller': PIDController,
+    'pid_controller':PIDController,
+    'd_controller':DController,
     'pmsm_on_off': PmsmOnOffController,
     'synrm_on_off': SynRmOnOffController,
     'cascaded_pi': DCCascadedPIController,
