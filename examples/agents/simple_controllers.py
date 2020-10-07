@@ -241,7 +241,7 @@ class PIController(PController):
       Valid for DC Motor System
     """
 
-    def __init__(self, environment, k_p=10, k_i= 1, controller_no=0, reference_idx=0):
+    def __init__(self, environment, k_p=10, k_i=1, controller_no=0, reference_idx=0):
         super().__init__(environment, k_p, controller_no, reference_idx)
         action_space = environment.action_space
         assert type(action_space) is Box and type(
@@ -322,7 +322,7 @@ class PIDController(PIController):
     def control(self, state, reference):
         diff = reference[self._ref_idx] - state[self._referenced_state]
         de = diff - self._prev_error
-        self._derivative_value = de/self._tau
+        self._derivative_value = de / self._tau
         diff = reference[self._ref_idx] - state[self._referenced_state]
         self._integrated_value += diff * self._tau
         if self._integrated_value > self._referenced_state_max:  # check upper limit
@@ -841,7 +841,7 @@ _controllers = {
     'three_point': ThreePointController,
     'p_controller': PController,
     'i_controller': IController,
-    'd_controller' : DController,
+    'd_controller': DController,
     'pi_controller': PIController,
     'pid_controller': PIDController,
     'pmsm_on_off': PmsmOnOffController,
