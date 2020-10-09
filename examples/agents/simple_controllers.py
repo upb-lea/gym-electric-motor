@@ -181,7 +181,7 @@ class IController(Controller):
             max(
                 self._action_min,
                 min(
-                    self._action_max, self._tau / self._k_i * self._integrated_value
+                    self._action_max, self._k_i * self._integrated_value
                 )
             )
         ])
@@ -232,8 +232,8 @@ class PIController(PController):
                 self._action_min,
                 min(
                     self._action_max,
-                    self._k_p * (reference[0] - state[self._referenced_state])
-                    + self._tau / self._k_i * self._integrated_value
+                    self._k_p * (reference[self._ref_idx] - state[self._referenced_state])
+                    + self._k_i * self._integrated_value
                 )
             )
         ])
@@ -246,8 +246,7 @@ class DController(Controller):
 
     def __init__(self, environment, k_d=1, controller_no=0, state_idx=None, reference_idx=0):
         self._derivative_value = 0
-        self._current_time = time.time()
-        self._prev_time = self._current_time
+        self._tau = environment.physical_system.tau
         self._prev_error = 0
         action_space = environment.action_space
         assert type(action_space) is Box and type(
@@ -267,20 +266,18 @@ class DController(Controller):
 
     def control(self, state, reference):
         diff = reference[self._ref_idx] - state[self._referenced_state]
-        dt = self._current_time - self._prev_time
         de = diff - self._prev_error
-        self._derivative_value = de / dt
-        if dt > 0:
-            return np.array([max(
-                self._action_min,
-                min(
-                    self._action_max,
-                    self._k_d * self._derivative_value
-                )
-            )
-            ])
-        self._prev_time = self._current_time
+        self._derivative_value = de / self._tau
         self._prev_error = diff
+        return np.array([
+               max(
+                   self._action_min,
+                   min(
+                      self._action_max,
+                      self._k_d * self._derivative_value
+                   )
+               )
+            ])
 
     def reset(self, **__):
         self._derivative_value = 0
@@ -321,6 +318,8 @@ class PIDController(PIController):
         self._derivative_value = de/self._tau
         diff = reference[self._ref_idx] - state[self._referenced_state]
         self._integrated_value += diff * self._tau
+        self._prev_error = diff
+        self._prev_time = self._current_time
         if self._integrated_value > self._referenced_state_max:  # check upper limit
             self._integrated_value = self._referenced_state_max
         else:
@@ -329,7 +328,7 @@ class PIDController(PIController):
             self._integrated_value = self._referenced_state_min
         else:
             self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
-            return np.array([
+        return np.array([
                 max(
                     self._action_min,
                     min(
@@ -339,11 +338,10 @@ class PIDController(PIController):
                     )
                 )
             ])
-        self._prev_time = self._current_time
-        self._prev_error = diff
 
     def reset(self, **__):
         self._integrated_value = 0
+
 
 
 class DCCascadedPIController(Controller):
@@ -810,8 +808,8 @@ class PmsmPController(Controller):
 
 class ThreePhaseSteadyState(Controller):
     """
-    In the below control scheme, we have chosen a parameter 'k'= - 1. With every increase of k value, we calculate the length of u_a and we
-    output the values as product of 'k' and length of u_a for each of u_a,u_b,u_c.
+    In the below control scheme, we have chosen a parameter 'k'= - 1. With every increase of k value, we calculate the length
+    of u_a and we output the values as product of 'k' and length of u_a for each of u_a,u_b,u_c.
     """
 
     def __init__(self, environment, omega_el=15):
@@ -838,8 +836,8 @@ _controllers = {
     'p_controller': PController,
     'i_controller': IController,
     'pi_controller': PIController,
-    'pid_controller':PIDController,
-    'd_controller':DController,
+    'pid_controller': PIDController,
+    'd_controller': DController,
     'pmsm_on_off': PmsmOnOffController,
     'synrm_on_off': SynRmOnOffController,
     'cascaded_pi': DCCascadedPIController,
