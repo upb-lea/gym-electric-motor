@@ -49,7 +49,6 @@ class MotorDashboard(ElectricMotorVisualization):
         super().__init__()
         if style is not None:
             plt.style.use(style)
-        plt.ioff()
         self._figures = []
         self._step_plot_figure = None
         self._episodic_plot_figure = None

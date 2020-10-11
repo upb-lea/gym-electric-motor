@@ -10,7 +10,7 @@ if __name__ == '__main__':
     env = gem.make(
         'DcPermExDisc-v1',  # replace with 'DcPermExCont-v1' for continuous mode
         # Pass an instance
-        visualization=MotorDashboard(plotted_variables=['omega', 'torque', 'i', 'u', 'u_sup'], visu_period=1),
+        visualization=MotorDashboard(state_plots=['omega', 'torque', 'i', 'u', 'u_sup']),
         # motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
         # Take standard class and pass parameters (Load)
         # load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),

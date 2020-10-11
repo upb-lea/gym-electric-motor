@@ -21,11 +21,11 @@ if __name__ == '__main__':
 
     # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning results.
     env = gem.make(
-        'emotor-dc-series-disc-v1',
+        'DcSeriesDisc-v1',
         state_filter=['omega', 'i'],
         # Pass an instance
         reward_function=WeightedSumOfErrors(observed_states='i'),
-        visualization=MotorDashboard(plots=['i','omega']),
+        visualization=MotorDashboard(state_plots=['i', 'omega']),
         converter='Disc-1QC',
         # Take standard class and pass parameters (Load)
         motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),

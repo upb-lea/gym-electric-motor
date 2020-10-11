@@ -33,10 +33,8 @@ if __name__ == '__main__':
 
             motor_initializer=gaussian_init,
             load_initializer=load_init,
-            #visualization=MotorDashboard(plots=['omega','i_sq', 'i_sd', 'reward'],
-            #                             dark_mode=True),
-            visualization=MotorDashboard(plots=['omega','i', 'reward'],
-                                         dark_mode=True),
+            visualization=MotorDashboard(state_plots=['omega', 'i'], reward_plot=True,
+                                         style='dark_background'),
             motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
             # Take standard class and pass parameters (Load)
             load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),

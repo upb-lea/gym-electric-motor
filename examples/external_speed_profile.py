@@ -17,7 +17,7 @@ const_switch_gen = rg.SwitchedReferenceGenerator(const_sub_gen,
                                                  super_episode_length=(1000, 2000))
 
 # speed profiles
-sinus_lambda = (lambda t,f,amp, b: amp * np.sin(2*np.pi*f*t) + b)
+sinus_lambda = (lambda t, f, amp, b: amp * np.sin(2*np.pi*f*t) + b)
 constant_lambda = (lambda value: value)
 triangle_lambda = (lambda t, amp, f, b: amp * signal.sawtooth(2 * np.pi * f * t,
                                                                width=0.5) + b)
@@ -34,13 +34,13 @@ if __name__ == '__main__':
     env = gem.make(
         'DcSeriesCont-v1',
         # Pass an instance
-        visualization=MotorDashboard(plots=['omega','reward', 'i'],
-                                     dark_mode=True),
+        visualization=MotorDashboard(state_plots=['omega', 'i'], reward_plot=True,
+                                     style='dark_background'),
         motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
         # Take standard class and pass parameters (Load)
         load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
         # Pass a string (with extra parameters)
-        ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
+        ode_solver='euler', solver_kwargs=dict(),
         # Pass a Class with extra parameters
         load=ext_load,
         reference_generator=const_switch_gen,

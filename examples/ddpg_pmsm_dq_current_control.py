@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
 from rl.agents import DDPGAgent
 from rl.memory import SequentialMemory
-from rl.random import OrnsteinUhlenbeckProcess, GaussianWhiteNoiseProcess
+from rl.random import OrnsteinUhlenbeckProcess
 from gym.wrappers import FlattenObservation
 import numpy as np
 import sys
@@ -16,7 +16,8 @@ import gym_electric_motor as gem
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, ConstReferenceGenerator, \
     WienerProcessReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.physical_systems import ConstantSpeedLoad
+from gym_electric_motor.visualization.motor_dashboard_plots import MeanEpisodeRewardPlot
+from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
 from gym.core import Wrapper
 from gym.spaces import Box, Tuple
 
@@ -72,9 +73,11 @@ if __name__ == '__main__':
 
     # Create the environment
     env = gem.make(
-        'emotor-pmsm-cont-v1',
+        'PMSMCont-v1',
         # Pass a class with extra parameters
-        visualization=MotorDashboard(plots=['i_sq', 'i_sd', 'action_0', 'action_1', 'mean_reward']), visu_period=1,
+        visualization=MotorDashboard(state_plots=['i_sq', 'i_sd'], action_plots='all', reward_plot=True,
+                                     episodic_plots=[MeanEpisodeRewardPlot()]),
+
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
         control_space='dq',
         # Pass a string (with extra parameters)
@@ -182,4 +185,3 @@ if __name__ == '__main__':
         visualize=True,
         nb_max_episode_steps=10000
     )
-

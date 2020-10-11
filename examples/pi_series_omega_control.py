@@ -15,8 +15,7 @@ if __name__ == '__main__':
     env = gem.make(
         'DcSeriesCont-v1',   # replace with 'DcSeriesDisc-v1' for discrete controllers
         # Pass an instance
-        #visualization=MotorDashboard(plotted_variables='all', visu_period=1),
-        visualization=MotorDashboard(plots=['i', 'reward', 'action_0', 'mean_reward'], dark_mode=False),
+        visualization=MotorDashboard(state_plots=['i', 'omega']),
         motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
         # Take standard class and pass parameters (Load)
         load_parameter=dict(a=0.01, b=.1, c=0.1, j_load=.06),
@@ -30,7 +29,9 @@ if __name__ == '__main__':
             ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
         )
     )
-    controller = Controller.make('pi_controller', env)  # works for 'on_off'(disc),three_point(disc),'p_controller', 'cascaded pi' too
+
+    # works for 'on_off'(disc),three_point(disc),'p_controller', 'cascaded pi' too
+    controller = Controller.make('pi_controller', env)  
     state, reference = env.reset()
     start = time.time()
     cum_rew = 0

@@ -177,15 +177,15 @@ class StatePlot(StepPlot):
         self._referenced = rg.referenced_states[self._state_idx]
         if self._limits == self._state_space[1]:
             self._normalized = False
+        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
+        self._state_data = np.ones(self._no_x_points) * np.nan
+        self._ref_data = np.ones(self._no_x_points) * np.nan
 
     def initialize(self, axis):
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
         max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
         self.y_lim = min_limit, max_limit
         super().initialize(axis)
-        self._state_data = np.ones(self._no_x_points) * np.nan
-        self._ref_data = np.ones(self._no_x_points) * np.nan
-        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
         self._state_line, = self._axis.plot(self._t_data, self._state_data, **self._line_cfg)
         if self._referenced:
             self._reference_line, = self._axis.plot(self._t_data, self._ref_data, **self._line_cfg)
@@ -237,17 +237,20 @@ class RewardPlot(StepPlot):
     """ Class used to plot the instantaneous reward during the episode
     """
 
-    def __init__(self):
+    def __init__(self, line_config=None):
         self._reward_range = None
         self._reward_line = None
         self._reward_data = None
+        self._reward_line_cfg = self._default_line_cfg.copy()
+        line_config = line_config or {}
+        assert type(line_config) is dict
+        self._reward_line_cfg.update(line_config)
         super().__init__()
 
     def initialize(self, axis):
         super().initialize(axis)
-        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
-        self._reward_data = np.zeros_like(self._t_data, dtype=float)
-        self._reward_line, = self._axis.plot(self._t_data, self._reward_data, color=self._colors[-1])
+        self._reward_line, = self._axis.plot(self._t_data, self._reward_data, color=self._colors[-1],
+                                             **self._reward_line_cfg)
         min_limit = self._reward_range[0]
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
@@ -258,15 +261,17 @@ class RewardPlot(StepPlot):
     def set_env(self, env):
         super().set_env(env)
         self._reward_range = env.reward_range
+        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
+        self._reward_data = np.zeros_like(self._t_data, dtype=float) * np.nan
 
     def on_step_end(self, k, state, reference, reward, done):
-        self._t += self._tau
         idx = int((self._t % self._x_width) / self._tau)
 
         self._t_data[idx] = self._t
         self._reward_data[idx] = reward
         if done:
             self._axis.axvline(self._t, color='red', linewidth=1)
+        self._t += self._tau
 
     def render(self):
         self._reward_line.set_data(self._t_data, self._reward_data)
@@ -298,8 +303,6 @@ class ActionPlot(StepPlot):
             axis (object): the subplot axis for plotting the action variable
         """
         super().initialize(axis)
-        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
-        self._action_data = np.zeros_like(self._t_data, dtype=float)
         self._action_line, = self._axis.plot(self._t_data, self._action_data, color=self._colors[-2], **self._line_cfg)
 
         # set the layout of the subplot
@@ -316,6 +319,8 @@ class ActionPlot(StepPlot):
         ps = env.physical_system
         # fetch the action space from the physical system
         self._action_space = ps.action_space
+        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
+        self._action_data = np.zeros_like(self._t_data, dtype=float)
 
         # check for the type of action space: Discrete or Continuous
         if type(self._action_space) is Box:  # for continuous action space
@@ -336,12 +341,12 @@ class ActionPlot(StepPlot):
         idx = int((self._t % self._x_width) / self._tau)
 
         self._t_data[idx] = self._t
-        # the first action at the start of the simulation is None. Add a check.
+
         if action is not None:
             if self._action_type == 'Discrete':
                 self._action_data[idx] = action
             else:
-                self._action_data[idx] = action
+                self._action_data[idx] = action[self._action]
 
     def render(self):
         self._action_line.set_data(self._t_data, self._action_data)
