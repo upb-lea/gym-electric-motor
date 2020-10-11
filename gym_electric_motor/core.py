@@ -147,7 +147,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         return self._physical_system.nominal_state[self.state_filter]
 
-    def __init__(self, physical_system, reference_generator, reward_function, visualizations=None, state_filter=None,
+    def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
                  callbacks=(), **kwargs):
         """
         Setting and initialization of all environments' modules.
@@ -156,7 +156,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             physical_system(PhysicalSystem): The physical system of this environment.
             reference_generator(ReferenceGenerator): The reference generator of this environment.
             reward_function(RewardFunction): The reward function of this environment.
-            visualizations(iterable(ElectricMotorVisualization)): The visualizations of this environment.
+            visualization(iterable(ElectricMotorVisualization)/None): The visualizations of this environment.
             state_filter(list(str)): Selection of states that are shown in the observation.
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
@@ -164,7 +164,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
         self._reference_generator = instantiate(ReferenceGenerator, reference_generator, **kwargs)
         self._reward_function = instantiate(RewardFunction, reward_function, **kwargs)
-        visualizations = visualizations or [ElectricMotorVisualization()]
+        if type(visualization) is str or isinstance(visualization, ElectricMotorVisualization):
+            visualization = [visualization]
+        if visualization is None:
+            visualization = []
+        visualizations = list(visualization)
         self._visualizations = [instantiate(ElectricMotorVisualization, visu, **kwargs) for visu in visualizations]
 
         # Announcement of the Modules among each other
