@@ -18,7 +18,7 @@ class MechanicalLoad:
     Initialization is given by initializer(dict). Can be a constant state value
     or random value in given interval.
     dict should be like:
-        { 'states'(dict): with state names and initital values
+        { 'states'(dict): with state names and initial values
           'interval'(array like): boundaries for each state
                     (only for random init), shape(num states, 2)
           'random_init'(str): 'uniform' or 'normal'
@@ -348,14 +348,14 @@ class ExternalSpeedLoad(MechanicalLoad):
                  **kwargs):
         """
         Args:
-            speed_profile(function): function or lambda expression
+            speed_profile(float -> float): function or lambda expression
                 which takes a timestep t as argument and returns speed omega
                 example:
                     (lambda t, amplitude, freq: amplitude*numpy.sin(2*pi*f)))
                     with additional parameters:
                         amplitude(float), freq(float), time(float)
             tau(float): discrete time step of the system
-            kwargs(dict): further arguments for speed_profile
+            kwargs(float): further arguments for speed_profile
         """
         super().__init__(**kwargs)
         if load_initializer is not None:

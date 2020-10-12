@@ -7,9 +7,10 @@ from gym_electric_motor.reference_generators import \
 from gym_electric_motor.visualization import MotorDashboard
 from gym.spaces import Discrete, Box
 from gym.wrappers import FlattenObservation, TimeLimit
-from gym import ObservationWrapper, Wrapper
+from gym import ObservationWrapper
 
 
+# defining the squared current as constraints for the environment
 class SqdCurrentMonitor:
     """
     monitor for squared currents:
@@ -24,14 +25,14 @@ class SqdCurrentMonitor:
         return sqd_currents > 1
 
 
-class EpsilonWrapper(ObservationWrapper):
+class FeatureWrapper(ObservationWrapper):
     """
     Changes Epsilon in a flattened observation to cos(epsilon)
-    and sin(epsilon)
+    and sin(epsilon) and adds the sum of the squared currents as features
     """
 
     def __init__(self, env, epsilon_idx, i_sd_idx, i_sq_idx):
-        super(EpsilonWrapper, self).__init__(env)
+        super(FeatureWrapper, self).__init__(env)
         self.EPSILON_IDX = epsilon_idx
         self.I_SQ_IDX = i_sq_idx
         self.I_SD_IDX = i_sd_idx
@@ -57,90 +58,7 @@ class EpsilonWrapper(ObservationWrapper):
         return observation
 
 
-class AppendNLastOberservationsWrapper(Wrapper):
-
-    def __init__(self, env, N):
-        super().__init__(env)
-        self._N = N
-        self._current_step = 0
-        self._obs = None
-        new_low = self.env.observation_space.low
-        new_high = self.env.observation_space.high
-        for i in range(self._N):
-            new_low = np.concatenate((new_low, self.env.observation_space.low))
-            new_high = np.concatenate((new_high, self.env.observation_space.high))
-        self.observation_space = Box(new_low, new_high)
-
-
-    def step(self, action):
-        obs, rew, term, info = self.env.step(action)
-        if self._current_step < self._N:
-            self._current_step += 1
-            self._obs[self._current_step*self.env.observation_space.shape[0]:(self._current_step + 1)*self.env.observation_space.shape[0]] = obs
-        else:
-            valid_obs = self._obs[self.env.observation_space.shape[0]:]
-            self._obs = np.concatenate((valid_obs, obs))
-        return self._obs, rew, term, info
-
-    def reset(self, **kwargs):
-        self._current_step = 0
-        obs = self.env.reset()
-        for i in range(self._N):
-            obs = np.concatenate((obs, np.zeros(self.env.observation_space.shape)))
-        self._obs = obs
-        return self._obs
-
-
-class AppendNLastActionsWrapper(Wrapper):
-    def __init__(self, env, N):
-        super().__init__(env)
-        self._N = N
-        self._current_step = 0
-        self._obs = None
-        new_low = self.env.observation_space.low
-        new_high = self.env.observation_space.high
-        for i in range(self._N):
-            new_low = np.concatenate((new_low, [0]))
-            new_high = np.concatenate((new_high, [0]))
-        self.observation_space = Box(new_low, new_high)
-
-    def step(self, action):
-        obs, rew, term, info = self.env.step(action)
-        self._obs[:self.env.observation_space.shape[0]] = obs
-        if self._N > 0:
-            if self._current_step < self._N:
-                self._obs[self.env.observation_space.shape[0]+self._current_step:
-                    self.env.observation_space.shape[0]+(self._current_step+1)] = action
-                self._current_step += 1
-            else:
-                valid_actions = self._obs[self.env.observation_space.shape[0]+1:]
-                self._obs[self.env.observation_space.shape[0]:-1] = valid_actions
-                self._obs = np.concatenate((self._obs[:-1],[action]))
-        return self._obs, rew, term, info
-
-    def reset(self, **kwargs):
-        self._current_step = 0
-        obs = self.env.reset()
-        for i in range(self._N):
-            obs = np.concatenate((obs, [0]))
-        self._obs = obs
-        return self._obs
-
-
-class NormalizeObservation(Wrapper):
-    def __init__(self, env):
-        super().__init__(env)
-
-    def step(self, action):
-        obs, rew, term, info = self.env.step(action)
-        return obs/np.linalg.norm(obs), rew, term, info
-
-    def reset(self, **kwargs):
-        obs = self.env.reset()
-        return obs/np.linalg.norm(obs)
-
-
-def set_env(time_limit=True, gamma=0.99, N=0, M=0, training=True, callbacks=[]):
+def set_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
     # define motor arguments
     motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                            r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
@@ -148,7 +66,9 @@ def set_env(time_limit=True, gamma=0.99, N=0, M=0, training=True, callbacks=[]):
                            l_q=1.2e-3,  # [l_q] = H, q-axis inductance
                            psi_p=65.65e-3,  # [psi_p] = Vs, magnetic flux of the permanent magnet
                            )
+    # supply voltage
     u_sup = 350
+    # nominal and absolute state limitations
     nominal_values=dict(omega=4000*2*np.pi/60,
                         i=230,
                         u=u_sup
@@ -157,15 +77,17 @@ def set_env(time_limit=True, gamma=0.99, N=0, M=0, training=True, callbacks=[]):
                         i=1.5*230,
                         u=u_sup
                         )
+    # defining reference-generators
     q_generator = WienerProcessReferenceGenerator(reference_state='i_sq')
     d_generator = WienerProcessReferenceGenerator(reference_state='i_sd')
     rg = MultipleReferenceGenerator([q_generator, d_generator])
+    # defining sampling interval
     tau = 1e-5
+    # defining maximal episode steps
     max_eps_steps = 10000
     
     if training:
         motor_initializer={'random_init': 'uniform', 'interval': [[-230, 230], [-230, 230], [-np.pi, np.pi]]}
-        #motor_initializer={'random_init': 'gaussian'}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
             reward_weights={'i_sq': 10, 'i_sd': 10},
@@ -174,11 +96,12 @@ def set_env(time_limit=True, gamma=0.99, N=0, M=0, training=True, callbacks=[]):
             reward_power=1)
     else:
         motor_initializer = {'random_init': 'gaussian'}
+        #motor_initializer={'random_init': 'uniform', 'interval': [[-230, 230], [-230, 230], [-np.pi, np.pi]]}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
-            reward_weights={'i_sq': 0.5, 'i_sd': 0.5}, #comparable reward
+            reward_weights={'i_sq': 0.5, 'i_sd': 0.5},
             constraint_monitor=SqdCurrentMonitor(),
-            gamma=0.99, #comparable reward
+            gamma=0.99,
             reward_power=1)
 
     # creating gem environment
@@ -199,18 +122,20 @@ def set_env(time_limit=True, gamma=0.99, N=0, M=0, training=True, callbacks=[]):
         tau=tau, u_sup=u_sup,
         # turn off terminations via limit violation, parameterize the rew-fct
         reference_generator=rg, ode_solver='euler',
-        callbacks = callbacks,
+        callbacks=callbacks,
     )
 
-    # appling wrappers and modifying environment
+    # applying wrappers and modifying environment
     env.action_space = Discrete(7)
     eps_idx = env.physical_system.state_names.index('epsilon')
     i_sd_idx = env.physical_system.state_names.index('i_sd')
     i_sq_idx = env.physical_system.state_names.index('i_sq')
 
     if time_limit:
-        gem_env = TimeLimit(AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx, i_sd_idx, i_sq_idx), N), M),
+        gem_env = TimeLimit(FeatureWrapper(FlattenObservation(env),
+                                           eps_idx, i_sd_idx, i_sq_idx),
                             max_eps_steps)
     else:
-        gem_env = AppendNLastActionsWrapper(AppendNLastOberservationsWrapper(EpsilonWrapper(FlattenObservation(env), eps_idx, i_sd_idx, i_sq_idx), N), M)
+        gem_env =FeatureWrapper(FlattenObservation(env),
+                                eps_idx, i_sd_idx, i_sq_idx)
     return gem_env
