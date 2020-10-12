@@ -48,7 +48,9 @@ class MultipleReferenceGenerator(ReferenceGenerator):
         ref_space_low = np.concatenate([sub_generator.reference_space.low for sub_generator in self._sub_generators])
         ref_space_high = np.concatenate([sub_generator.reference_space.high for sub_generator in self._sub_generators])
         self.reference_space = Box(ref_space_low, ref_space_high)
-        self._referenced_states = sum([sub_generator.referenced_states for sub_generator in self._sub_generators])
+        self._referenced_states = np.sum(
+            [sub_generator.referenced_states for sub_generator in self._sub_generators], dtype=bool, axis=0
+        )
 
     def reset(self, initial_state=None, initial_reference=None):
         # docstring from superclass
