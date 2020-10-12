@@ -28,7 +28,7 @@ class SqdCurrentMonitor:
 class FeatureWrapper(ObservationWrapper):
     """
     Changes Epsilon in a flattened observation to cos(epsilon)
-    and sin(epsilon) and adding the squared currents as features
+    and sin(epsilon) and adds the sum of the squared currents as features
     """
 
     def __init__(self, env, epsilon_idx, i_sd_idx, i_sq_idx):
