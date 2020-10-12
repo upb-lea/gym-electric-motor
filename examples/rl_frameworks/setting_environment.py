@@ -7,7 +7,7 @@ from gym_electric_motor.reference_generators import \
 from gym_electric_motor.visualization import MotorDashboard
 from gym.spaces import Discrete, Box
 from gym.wrappers import FlattenObservation, TimeLimit
-from gym import ObservationWrapper, Wrapper
+from gym import ObservationWrapper
 
 
 # defining the squared current as constraints for the environment
@@ -56,19 +56,6 @@ class FeatureWrapper(ObservationWrapper):
                                       observation[self.EPSILON_IDX + 1:],
                                       np.array([currents_squared])))
         return observation
-
-
-class NormalizeObservation(Wrapper):
-    def __init__(self, env):
-        super().__init__(env)
-
-    def step(self, action):
-        obs, rew, term, info = self.env.step(action)
-        return obs/np.linalg.norm(obs), rew, term, info
-
-    def reset(self, **kwargs):
-        obs = self.env.reset()
-        return obs/np.linalg.norm(obs)
 
 
 def set_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
