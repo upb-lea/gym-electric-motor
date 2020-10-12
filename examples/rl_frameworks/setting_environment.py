@@ -109,6 +109,7 @@ def set_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
             reward_power=1)
     else:
         motor_initializer = {'random_init': 'gaussian'}
+        #motor_initializer={'random_init': 'uniform', 'interval': [[-230, 230], [-230, 230], [-np.pi, np.pi]]}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
             reward_weights={'i_sq': 0.5, 'i_sd': 0.5},
