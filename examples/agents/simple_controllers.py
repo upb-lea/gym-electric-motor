@@ -110,9 +110,10 @@ class ThreePointController(Controller):
 
 class PController(Controller):
     """
-    In the below proportional control implementation, the controller output is proportional to the error signal,  which is the difference
-    between the reference_idx and the state_idx .i.e., the output of a proportional controller
-    is the multiplication product of the error signal and the proportional gain.Here kp =10 is assumed for proportionality gain.
+    In the below proportional control implementation, the controller output is proportional to the error signal,
+     which is the difference between the reference_idx and the state_idx .i.e., the output of a proportional controller
+    is the multiplication product of the error signal and the proportional gain.Here kp =10 is assumed for
+    proportionality gain.
 
     Valid for DC Motor System
     """
@@ -146,7 +147,14 @@ class PController(Controller):
 
 
 class IController(Controller):
+    """
+    In the below Integral control implementation, the controller output is proportional to the integral of error signal,
+     which is the difference between the reference_idx and the state_idx .i.e., the output of a integral controller
+    is the multiplication product of the error signal and  integral gain.
+    Here k_i =0.01 is assumed for proportionality gain.
 
+    Valid for DC Motor System
+    """
     def __init__(self, environment, k_i=0.01, controller_no=0, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Box and type(
@@ -192,9 +200,9 @@ class IController(Controller):
 
 class PIController(PController):
     """
-      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
-      and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
-      It outputs a weighted sum of the input error signal and the integral of the input error signal.
+      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and
+      proportional and integral gain inputs. The error signal is the difference between the reference_idx and the
+      referenced_state. It outputs a weighted sum of the input error signal and the integral of the input error signal.
 
       Valid for DC Motor System
     """
@@ -243,7 +251,14 @@ class PIController(PController):
 
 
 class DController(Controller):
+    """
+    In the below Derivative control implementation, the controller output is proportional to the derivative of error,
+     which is the difference between the reference_idx and the state_idx .i.e., the output of a derivative controller
+    is the multiplication product of the error signal and  derivative gain.
+    Here k_d =1 is assumed for proportionality gain.
 
+    Valid for DC Motor System
+    """
     def __init__(self, environment, k_d=1, controller_no=0, state_idx=None, reference_idx=0):
         self._derivative_value = 0
         self._tau = environment.physical_system.tau
@@ -285,9 +300,11 @@ class DController(Controller):
 
 class PIDController(PIController):
     """
-      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
-      and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
-      It outputs a weighted sum of the input error signal and the integral of the input error signal.
+      The below Discrete PID Controller performs discrete-time PID controller computation using the error signal and
+      proportional,Derivative and integral gain inputs. The error signal is the difference between the reference_idx
+      and the referenced_state.It outputs a weighted sum of the input error signal,its derivative and the integral of
+      the input error signal.
+      
       Valid for DC Motor System
     """
 
@@ -341,7 +358,6 @@ class PIDController(PIController):
 
     def reset(self, **__):
         self._integrated_value = 0
-
 
 
 class DCCascadedPIController(Controller):
@@ -555,7 +571,7 @@ class FOCController(Controller):
     FOC is used to control AC synchronous and induction motors.The stator currents of a three-phase AC electric motor are identified
     as two orthogonal components that can be visualized with a vector. One component defines the magnetic flux of the motor, the other the torque.
     The control system of the drive calculates the corresponding current component references from the flux and torque references given
-    by the drive's speed control. Here Synchronous motor is chosen as environment.
+    by the drive's speed control.
 
     """
 
@@ -723,6 +739,12 @@ class FOCController(Controller):
 
 
 class zero_voltage_injection:
+    """
+     The below class is implementation of zero voltage switching.
+     Zero Voltage Switching enables “soft switching”, avoiding the switching losses that are typically
+     incurred during conventional PWM operation and timing.Hence overall the voltage utilization is increased.
+    """
+
     def __init__(self, environment, state_idx=None, ref_idx=0):
         self._omega_idx = environment.physical_system.OMEGA_IDX
         self._currents_idx = environment.physical_system.CURRENTS_IDX
