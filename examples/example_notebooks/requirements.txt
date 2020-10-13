@@ -1,0 +1,5 @@
+gym
+gym-electric-motor
+numpy
+stable-baselines3
+
