@@ -5,32 +5,9 @@ from stable_baselines3 import DQN
 from stable_baselines3.dqn import MlpPolicy
 import time
 from setting_environment import set_env
-from gym_electric_motor.core import Callback
-import numpy as np
 
-"""
-This example is based on stable baselines3 0.8.0a5. Since it is still being frequently updated 
-some parts of this code might be broken or not the latest recommended way of working with it
-"""
-
-class RewardLogger(Callback):
-    def __init__(self):
-        self._step_rewards = []
-        self._mean_episode_rewards = []
-
-    def on_step_end(self):
-        self._step_rewards.append(self._env._reward)
-    
-    def on_reset_begin(self):
-        self._mean_episode_rewards.append(np.mean(self._step_rewards))
-        self._step_rewards = []
-        
-    def on_close(self):
-        np.save(Path(__file__).parent / "saved_agents" / "PreTrainedEpisodeRewards.npy", np.array(self._mean_episode_rewards))
 
 #Feature Engineering params
-N = 0 # N last actions will be appended to the observation
-M = 0 # M last actions will be appended to the observation
 time_limit = True # Whether the environment terminates its episodes after 10000 steps
 
 #Training parameters. 
@@ -48,8 +25,8 @@ exploration_fraction = 0.1 # Fraction of training steps the epsilon decays
 target_update_interval = 1000 # Target network gets updated each target_update_interval's step
 verbose = 1 # verbosity of stable basline's prints
 
-env = set_env(time_limit, gamma, N, M, training=True, callbacks = [RewardLogger()])
-
+#env = set_env(time_limit, gamma, training=True, callbacks = [RewardLogger()])
+env = set_env(time_limit, gamma, training=True)#, callbacks = [RewardLogger()])
 nb_steps = int(simulation_time // tau)
 
 
@@ -59,8 +36,27 @@ model = DQN(MlpPolicy, env, buffer_size=buffer_size, learning_starts=learning_st
             policy_kwargs=policy_kwargs, exploration_fraction=exploration_fraction, target_update_interval=target_update_interval,
             verbose=verbose).learn(total_timesteps=nb_steps)
 
-print(f'Execution time of stable baselines3 DQN is: {time.time()-start_time:.2f} seconds')
 
-#in case your want to save the model for further evalutation
-model.save(Path(__file__).parent / "saved_agents" / "TutorialPreTrainedAgent")
-env.close()
+
+
+env = set_env(time_limit = time_limit, gamma = gamma, training = False)
+obs = env.reset()   
+
+test_steps = int(1e6) #1 milion for stability reasons
+print(f"\nStart Evaluation for {test_steps} steps, this may take some while")
+for j in range(2):
+    episode_lengths = []
+    episode_step = 0
+    cum_rew_testing_period = 0
+    for i in range(test_steps):
+        #print(f"{i+1}", end = '\r')
+        episode_step += 1
+        action, _states = model.predict(obs, deterministic=True)
+        obs, reward, done, _ = env.step(action)
+        cum_rew_testing_period += reward
+        if done:
+            episode_lengths.append(episode_step)
+            episode_step = 0
+            obs = env.reset()
+    print(f"Reward per step for testing period {j+1} with {test_steps} steps: {cum_rew_testing_period/test_steps:.4f} ")
+    print(f"The average Episode length was: {round(np.mean(episode_lengths))} ")
