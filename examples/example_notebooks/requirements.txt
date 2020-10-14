@@ -2,4 +2,6 @@ gym
 gym-electric-motor
 numpy
 stable-baselines3
+keras-rl2
+
 
