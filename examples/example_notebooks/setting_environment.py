@@ -10,15 +10,20 @@ from gym.wrappers import FlattenObservation, TimeLimit
 from gym import ObservationWrapper
 
 
-# defining the squared current as constraints for the environment
 class SqdCurrentMonitor:
     """
-    monitor for squared currents:
+    Constraint monitor which monitors if the sum of the squared currents
+    is bigger than the nominal limit:
 
-    i_sd**2 + i_sq**2 < 1.5 * nominal_limit
+    i_sd**2 + i_sq**2 < nominal_limit
+    
+    Ends the episode and throws a high negative reward, otherwise.
     """
 
     def __call__(self, state, observed_states, k, physical_system):
+        """
+        Gets called at each step to check if the agent's trajectory is violating the above constraint
+        """
         self.I_SD_IDX = physical_system.state_names.index('i_sd')
         self.I_SQ_IDX = physical_system.state_names.index('i_sq')
         sqd_currents = state[self.I_SD_IDX] ** 2 + state[self.I_SQ_IDX] ** 2
@@ -27,11 +32,27 @@ class SqdCurrentMonitor:
 
 class FeatureWrapper(ObservationWrapper):
     """
-    Changes Epsilon in a flattened observation to cos(epsilon)
-    and sin(epsilon) and adds the sum of the squared currents as features
+    Wrapper class which wraps the environment to change its observation. Serves
+    the purpose to improve the agent's learning speed.
+    
+    For this it changes wpsilon in a flattened observation to cos(epsilon) and
+    sin(epsilon) to have epsilon's extreme values (-pi,pi) which are angles next
+    to each other have close transitions numerically.
+    
+    Additionally, this wrapper adds a new observation i_sd**2 + i_sq**2. This should
+    help the agent to easier detect incoming limit violations.
     """
 
     def __init__(self, env, epsilon_idx, i_sd_idx, i_sq_idx):
+        """
+        Changes the observation space to fit the new features
+        
+        Args:
+            env(GEM env): GEM environment to wrap
+            epsilon_idx(integer): Epsilon's index in the observation array
+            i_sd_idx(integer): I_sd's index in the observation array
+            i_sq_idx(integer): I_sq's index in the observation array
+        """
         super(FeatureWrapper, self).__init__(env)
         self.EPSILON_IDX = epsilon_idx
         self.I_SQ_IDX = i_sq_idx
@@ -48,6 +69,11 @@ class FeatureWrapper(ObservationWrapper):
         self.observation_space = Box(new_low, new_high)
 
     def observation(self, observation):
+        """
+        Gets called at each return of an observation. Adds the new features to the
+        observation and removes original epsilon.
+        
+        """
         cos_eps = np.cos(observation[self.EPSILON_IDX] * np.pi)
         sin_eps = np.sin(observation[self.EPSILON_IDX] * np.pi)
         currents_squared = observation[self.I_SQ_IDX]**2 + observation[self.I_SD_IDX]**2
@@ -59,6 +85,17 @@ class FeatureWrapper(ObservationWrapper):
 
 
 def set_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
+    """
+    Returns a fully initialized GEM environment for tutorial purposes.
+    
+    Args:
+        time_limit(bool): If true adds an upper limit of 10000 steps to the length of the environment's episodes
+        gamma(float): Gamma value for the reward function. Should be the same or higher than the agent's
+                      but smaller than 1. Decides how big the negative reward for the limit violation is
+        training(bool): If false the reward function is the MAE with a fixed gamma of 0.99 to get comparable test rewards
+        callbacks(list): List of callbacks for the environment
+    
+    """
     # define motor arguments
     motor_parameter = dict(p=3,  # [p] = 1, nb of pole pairs
                            r_s=17.932e-3,  # [r_s] = Ohm, stator resistance
@@ -96,7 +133,6 @@ def set_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
             reward_power=1)
     else:
         motor_initializer = {'random_init': 'gaussian'}
-        #motor_initializer={'random_init': 'uniform', 'interval': [[-230, 230], [-230, 230], [-np.pi, np.pi]]}
         reward_function=gem.reward_functions.WeightedSumOfErrors(
             observed_states=['i_sq', 'i_sd'],
             reward_weights={'i_sq': 0.5, 'i_sd': 0.5},
