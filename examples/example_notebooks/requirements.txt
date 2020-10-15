@@ -1,8 +1,0 @@
-gym
-gym-electric-motor
-numpy
-stable-baselines3
-keras-rl2
-tensorforce==0.5.5
-
-
