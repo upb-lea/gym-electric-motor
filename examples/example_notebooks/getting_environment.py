@@ -161,8 +161,12 @@ def get_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
         callbacks=callbacks,
     )
 
-    # applying wrappers and modifying environment
+    # remove on action from the action space to help the agent speed up its training
+    # this can be done as both switchting states (1,1,1) and (-1,-1,-1) - which are encoded
+    # by action 0 and 7 - both lead to the same zero voltage vector in alpha/beta-coordinates
     env.action_space = Discrete(7)
+    
+    # applying wrappers
     eps_idx = env.physical_system.state_names.index('epsilon')
     i_sd_idx = env.physical_system.state_names.index('i_sd')
     i_sq_idx = env.physical_system.state_names.index('i_sq')
