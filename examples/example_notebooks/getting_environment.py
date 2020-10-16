@@ -35,9 +35,9 @@ class FeatureWrapper(ObservationWrapper):
     Wrapper class which wraps the environment to change its observation. Serves
     the purpose to improve the agent's learning speed.
     
-    For this it changes wpsilon in a flattened observation to cos(epsilon) and
-    sin(epsilon) to have epsilon's extreme values (-pi,pi) which are angles next
-    to each other have close transitions numerically.
+    It changes epsilon to cos(epsilon) and sin(epsilon). This serves the purpose
+    to have the angles -pi and pi close to each other numerically without losing
+    any information on the angle.
     
     Additionally, this wrapper adds a new observation i_sd**2 + i_sq**2. This should
     help the agent to easier detect incoming limit violations.
