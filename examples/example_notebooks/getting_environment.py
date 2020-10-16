@@ -84,7 +84,7 @@ class FeatureWrapper(ObservationWrapper):
         return observation
 
 
-def set_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
+def get_env(time_limit=True, gamma=0.99, training=True, callbacks=[]):
     """
     Returns a fully initialized GEM environment for tutorial purposes.
     
