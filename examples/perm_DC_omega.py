@@ -13,7 +13,7 @@ Run this file from within the 'examples' folder:
 >> python perm_DC_omega.py
 
 Description:
-        Environment to control a Continuously Controlled DC Permanently Excited Motor.
+        Environment to control a  permanently excited DC motor.
         Controlled Quantity: 'omega'
         Limitations: Physical limitations of the motor will be Current.
         Converter : FourQuadrantConverter from converters.py
@@ -38,6 +38,8 @@ if __name__ == '__main__':
             ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
         )
     )
+
+    # Assign a simple on/off controller
     controller = Controller.make('on_off', env)
     state, reference = env.reset()
     start = time.time()
