@@ -38,7 +38,7 @@ if __name__ == '__main__':
                    # Pass an instance
                    visualization=MotorDashboard(plots=['i', 'omega']),
                    # Take standard class and pass parameters (Load)
-                   motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
+                   motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=100e-3, l_e=100e-3),
                    load_parameter=dict(a=0, b=.1, c=.1, j_load=0.04),
                    # Pass a string (with extra parameters)
                    ode_solver='scipy.solve_ivp', solver_kwargs={},
