@@ -167,4 +167,5 @@ learning context are included within the projects repository:
 - [``pi_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py): a conventional linear control algorithm applied to the speed control of a series motor
 - [``scim_ideal_grid_simulation``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/scim_ideal_grid_simulation.py): a simple motor simulation showcase of the squirrel cage induction motor that was used to create \autoref{fig:SCIM_example}
 
+
 # References
