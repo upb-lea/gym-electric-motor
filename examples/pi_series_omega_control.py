@@ -45,8 +45,8 @@ if __name__ == '__main__':
                    # Pass a Class with extra parameters
                    reference_generator=rg.WienerProcessReferenceGenerator())
 
+    # Assign a PI-controller to the speed control problem
     controller = Controller.make('pi_controller',env)
-    # The above controller can be replaced with 'on_off'(disc),three_point(disc),'p_controller', 'cascaded pi' from simple_controllers class
     state, reference = env.reset()
     start = time.time()
     cum_rew = 0
