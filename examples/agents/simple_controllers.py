@@ -39,11 +39,11 @@ class Controller:
 
 class OnOffController(Controller):
     """
-        The following controller is a simple OnOffController which allows the state to choose high_action when referenced_state is below
-        ref_idx and low_action otherwise.A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the
+        The following controller is a simple on-off controller with optional hysteresis which allows the state to choose high_action when referenced_state is below
+        ref_idx and low_action otherwise. A 'hysteresis' value should be integrated (chosen as 0.01) in this controller because of the
          constant switching and high frequency around the reference_idx.
 
-        Valid for Motors with Discrete Action Space
+        Valid for motors with discrete action space
     """
 
     def __init__(self, environment, hysteresis=0.01, state_idx=None, reference_idx=0):
@@ -74,10 +74,10 @@ class ThreePointController(Controller):
     """
     Below is an implementation of a 3 point controller: When state_idx is below the reference_idx, it choose high_action and when the
     state_idx is above the reference_idx,it choose low_action. If it is between the reference_idx values, it will choose idle_action
-    A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and
+    A 'hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and
     high frequency around the reference_idx.
 
-    Valid for Motors with Discrete Action Space
+    Valid for motors with discrete action space
 
     """
 
@@ -112,10 +112,10 @@ class PController(Controller):
     """
     In the below proportional control implementation, the controller output is proportional to the error signal,
      which is the difference between the reference_idx and the state_idx .i.e., the output of a proportional controller
-    is the multiplication product of the error signal and the proportional gain.Here kp =10 is assumed for
-    proportionality gain.
+    is the multiplication product of the error signal and the proportional gain. Here kp =10 is assumed for
+    proportionality gain by default, which is likely to require adaption to a given control plant.
 
-    Valid for DC Motor System
+    Valid for DC motor system
     """
 
     def __init__(self, environment, k_p=10, controller_no=0, state_idx=None, reference_idx=0):
@@ -148,12 +148,12 @@ class PController(Controller):
 
 class IController(Controller):
     """
-    In the below Integral control implementation, the controller output is proportional to the integral of error signal,
+    In the below integral control implementation, the controller output is proportional to the integral of error signal,
      which is the difference between the reference_idx and the state_idx .i.e., the output of a integral controller
     is the multiplication product of the error signal and  integral gain.
-    Here k_i =0.01 is assumed for proportionality gain.
+    Here k_i =0.01 is assumed for integral gain by default which is likely to require individual tuning based on the given control plant.
 
-    Valid for DC Motor System
+    Valid for DC motor system
     """
     def __init__(self, environment, k_i=0.01, controller_no=0, state_idx=None, reference_idx=0):
         action_space = environment.action_space
@@ -200,11 +200,11 @@ class IController(Controller):
 
 class PIController(PController):
     """
-      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and
+      This class performs discrete-time PI controller computation using the error signal and
       proportional and integral gain inputs. The error signal is the difference between the reference_idx and the
       referenced_state. It outputs a weighted sum of the input error signal and the integral of the input error signal.
 
-      Valid for DC Motor System
+      Valid for DC motor system
     """
 
     def __init__(self, environment, k_p=10, k_i=0.01, controller_no=0, reference_idx=0):
@@ -252,12 +252,12 @@ class PIController(PController):
 
 class DController(Controller):
     """
-    In the below Derivative control implementation, the controller output is proportional to the derivative of error,
+    In the below derivative control implementation, the controller output is proportional to the derivative of error,
      which is the difference between the reference_idx and the state_idx .i.e., the output of a derivative controller
     is the multiplication product of the error signal and  derivative gain.
-    Here k_d =1 is assumed for proportionality gain.
+    Here k_d =1 is assumed for the differential gain by default which is likely to require individual tuning based on the given control plant.
 
-    Valid for DC Motor System
+    Valid for DC motor system
     """
     def __init__(self, environment, k_d=1, controller_no=0, state_idx=None, reference_idx=0):
         self._derivative_value = 0
@@ -300,12 +300,12 @@ class DController(Controller):
 
 class PIDController(PIController):
     """
-      The below Discrete PID Controller performs discrete-time PID controller computation using the error signal and
+      This class performs discrete-time PID controller computation using the error signal and
       proportional,Derivative and integral gain inputs. The error signal is the difference between the reference_idx
       and the referenced_state.It outputs a weighted sum of the input error signal,its derivative and the integral of
       the input error signal.
       
-      Valid for DC Motor System
+      Valid for DC motor system
     """
 
     def __init__(self, environment, k_p=10, k_i=0.01, k_d=1, controller_no=0, reference_idx=0):
@@ -363,15 +363,15 @@ class PIDController(PIController):
 class DCCascadedPIController(Controller):
     """
       cascade architecture has: two controllers (an inner secondary and outer primary controller)
-      two measurement/state variable sensors (an inner PV2 and outer PV1).A primary or master controller generates a control effort
-      that serves as the reference for a secondary or slave controller.That controller in turn uses the actuator to apply its control
-      effort directly to the secondary process.The secondary process then generates a secondary process variable that serves as
+      two measurement/state variable sensors (an inner PV2 and outer PV1). A primary or master controller generates a control effort
+      that serves as the reference for a secondary or slave controller. That controller in turn uses the actuator to apply its control
+      effort directly to the secondary process. The secondary process then generates a secondary process variable that serves as
       the control effort for the primary process. The geometry of this defines an inner loop involving the current controller and
-      an outer loop involving the speed controller.The inner loop functions like a traditional feedback control system with a
+      an outer loop involving the speed controller. The inner loop functions like a traditional feedback control system with a
       reference variable, a measured variable, and a controller acting on a process by means of an actuator. The outer loop does
       the same except that it uses the entire inner loop as its actuator.
 
-      Valid for DcMotorSystem Only
+      Valid for DC motor system only
     """
 
     def __init__(self, environment, ref_idx=0):
@@ -504,71 +504,9 @@ class DCCascadedPIController(Controller):
             self._u_a_max / self._limits[self._u_a_idx])
         return np.array([duty_cycle])
 
-
-class PmsmOnOffController(Controller):
-    """
-    The following controller is a simple OnOffController which allows the state to choose u_q values as '1'' when it is below
-        reference_state and '-1' otherwise
-    """
-
-    def __init__(self, environment, state_idx=None, ref_idx=0):
-        t32 = environment.physical_system.electrical_motor.t_32
-        q = environment.physical_system.electrical_motor.q
-        t23 = environment.physical_system.electrical_motor.t_23
-        q_inv = environment.physical_system.electrical_motor.q_inv
-        self._forward_transformation = lambda quantities, eps: q_inv(t23(quantities), eps)[::-1]
-        self._backward_transformation = (
-            lambda quantities, eps: t32(q(quantities[::-1], eps))
-        )
-        self._l_q = environment.physical_system.electrical_motor.motor_parameter['l_q']
-        self._epsilon_idx = np.argmax(np.array(environment.state_names) == 'epsilon')
-        self._currents_idx = np.zeros(2, dtype=int)
-        self._currents_idx[0] = np.argmax(np.array(environment.state_names) == 'i_sq')
-        self._currents_idx[1] = np.argmax(np.array(environment.state_names) == 'i_sd')
-        self._ref_idx = ref_idx
-        self._omega_idx = np.argmax(environment.state_names == 'omega')
-        self._u_sup = environment.physical_system.supply.u_nominal
-        if state_idx is None:
-            self._referenced_state = np.argmax(
-                environment.reference_generator.referenced_states[environment.state_filter]
-            )
-        else:
-            self._referenced_state = state_idx
-        self._limits = environment.physical_system.limits[environment.state_filter]
-
-    def control(self, state, reference):
-        if state[self._referenced_state] < reference[self._ref_idx]:
-            u_q = 1
-        else:
-            u_q = -1
-        epsilon = np.pi * state[self._epsilon_idx]
-        u_d = 0
-        u_a, u_b, u_c = self._backward_transformation((u_q, u_d), epsilon)
-        return 4 * (u_a > 0) + 2 * (u_b > 0) + (u_c > 0)
-
-
-class SynRmOnOffController(PmsmOnOffController):
-    """
-     The following controller is a SynRmOnOffController which allows the state to choose u_d and u_q voltages values
-     as '1'  when it is below reference_state and '-1' otherwise
-
-    """
-
-    def control(self, state, reference):
-        if state[self._referenced_state] < reference[self._ref_idx]:
-            u_q = 1
-            u_d = 1
-        else:
-            u_q = -1
-            u_d = -1
-        epsilon = state[self._epsilon_idx]
-        u_a, u_b, u_c = self._backward_transformation((u_q, u_d), epsilon)
-        return 4 * u_a > 0 + 2 * u_b > 0 + u_c > 0
-
-
 class FOCController(Controller):
     """
-    FOC is used to control AC synchronous and induction motors.The stator currents of a three-phase AC electric motor are identified
+    The following FOC is used to control AC three-phase permanent magnet motors. The stator currents of a three-phase AC electric motor are identified
     as two orthogonal components that can be visualized with a vector. One component defines the magnetic flux of the motor, the other the torque.
     The control system of the drive calculates the corresponding current component references from the flux and torque references given
     by the drive's speed control.
@@ -784,74 +722,6 @@ class zero_voltage_injection:
         return result
 
 
-class PmsmPController(Controller):
-    """
-    In the below proportional control algorithm, the controller output is proportional to the error signal,  which is the difference
-    between the reference_idx and the state_idx .i.e., the output of a proportional controller
-    is the multiplication product of the error signal and the proportional gain
-    Here kp =1 is assumed for a proportionality gain.
-
-    """
-
-    def __init__(self, environment, state_idx=None, ref_idx=0, k_p=1):
-        self._k_p = k_p
-        t32 = environment.physical_system.electrical_motor.t_32
-        q = environment.physical_system.electrical_motor.q
-        t23 = environment.physical_system.electrical_motor.t_23
-        q_inv = environment.physical_system.electrical_motor.q_inv
-        self._forward_transformation = lambda quantities, eps: q_inv(t23(quantities), eps)[::-1]
-        self._backward_transformation = (
-            lambda quantities, eps: t32(q(quantities[::-1], eps))
-        )
-        self._epsilon_idx = np.argmax(environment.state_names == 'epsilon')
-        self._currents_idx = np.zeros(2)
-        self._currents_idx[0] = np.argmax(environment.state_names == 'i_sq')
-        self._currents_idx[1] = np.argmax(environment.state_names == 'i_sd')
-        self._ref_idx = ref_idx
-        if state_idx is None:
-            self._referenced_state = np.argmax(
-                environment.reference_generator.referenced_states[environment.state_filter]
-            )
-        else:
-            self._referenced_state = state_idx
-        self._phase = 0
-
-    def control(self, state, reference):
-        u_q = min(1, max(-1, self._k_p * reference[self._ref_idx] - state[self._referenced_state]))
-        epsilon = np.pi * state[self._epsilon_idx]
-
-        u_d = 0
-        u_a, u_b, u_c = self._backward_transformation((u_q, u_d), epsilon)
-        return [u_a, u_b, u_c]
-
-    def reset(self):
-        self._phase = 0
-
-
-class ThreePhaseSteadyState(Controller):
-    """
-    In the below control scheme, we have chosen a parameter 'k'= - 1. With every increase of k value, we calculate the length
-    of u_a and we output the values as product of 'k' and length of u_a for each of u_a,u_b,u_c.
-    """
-
-    def __init__(self, environment, omega_el=15):
-        self._omega_el = omega_el
-        self._tau = environment.physical_system.tau
-        self._k = 0
-        t = np.linspace(0, 2 * np.pi / abs(omega_el), 1 / abs(omega_el * self._tau))
-        self._u_a = np.sin(omega_el * t)
-        self._u_b = np.sin(omega_el * t - 2 / 3 * np.pi)
-        self._u_c = np.sin(omega_el * t + 2 / 3 * np.pi)
-
-    def reset(self):
-        self._k = -1
-
-    def control(self, state, reference):
-        self._k += 1
-        length = len(self._u_a)
-        return self._u_a[self._k % length], self._u_b[self._k % length], self._u_c[self._k % length],
-
-
 _controllers = {
     'on_off': OnOffController,
     'three_point': ThreePointController,
@@ -860,10 +730,6 @@ _controllers = {
     'pi_controller': PIController,
     'pid_controller': PIDController,
     'd_controller': DController,
-    'pmsm_on_off': PmsmOnOffController,
-    'synrm_on_off': SynRmOnOffController,
     'cascaded_pi': DCCascadedPIController,
     'foc_controller': FOCController,
-    'pmsm_p_controller': PmsmPController,
-    'three_phase_steadystate': ThreePhaseSteadyState
 }
