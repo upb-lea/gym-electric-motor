@@ -39,9 +39,9 @@ class Controller:
 
 class OnOffController(Controller):
     """
-        The following controller is a simple on-off controller with optional hysteresis which allows the state to choose high_action when referenced_state is below
-        ref_idx and low_action otherwise. A 'hysteresis' value should be integrated (chosen as 0.01) in this controller because of the
-         constant switching and high frequency around the reference_idx.
+        The following controller is a simple on-off controller with optional hysteresis which allows the state to choose
+        high_action when referenced_state is below ref_idx and low_action otherwise. A 'hysteresis' value should be integrated
+         (chosen as 0.01) in this controller because of the constant switching and high frequency around the reference_idx.
 
         Valid for motors with discrete action space
     """
@@ -504,6 +504,7 @@ class DCCascadedPIController(Controller):
             self._u_a_max / self._limits[self._u_a_idx])
         return np.array([duty_cycle])
 
+
 class FOCController(Controller):
     """
     The following FOC is used to control AC three-phase permanent magnet motors. The stator currents of a three-phase AC electric motor are identified
@@ -672,7 +673,6 @@ class FOCController(Controller):
 
         # normalise inputs
         result = np.clip(u_qd_des / self._limits[self._voltages_idx[0]], -1, 1)
-        print(result)
         return result
 
 
