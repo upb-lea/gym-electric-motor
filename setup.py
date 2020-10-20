@@ -19,8 +19,10 @@ setuptools.setup(
       packages=setuptools.find_packages(),
       install_requires=requirements,
       python_requires='>=3.6',
-      extras_require={'examples': 
-                      ['keras-rl2 @git+https://github.com/wau/keras-rl2.git']
+      extras_require={'examples': [
+                        'keras-rl2 @git+https://github.com/wau/keras-rl2.git',
+                        'stable-baselines3',
+                        'tensorforce==0.5.5']
                      },
       author=', '.join(sorted(AUTHORS, key=lambda n: n.split()[-1].lower())),
       long_description=long_description,
