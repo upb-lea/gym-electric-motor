@@ -15,11 +15,15 @@
 ## Overview
 The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
 
-It is built upon [OpenAI Gym Environments](https://gym.openai.com/), and, therefore, can be used for both, classical control simulation and reinforcement learning experiments. It allows you to construct a typical drive train with the usual building blocks, i.e. supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from PI-controllers to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
+It is built upon [OpenAI Gym Environments](https://gym.openai.com/), and, therefore, can be used for both, classical control simulation and r[einforcement learning](https://github.com/upb-lea/reinforcement_learning_course_materials) experiments. It allows you to construct a typical drive train with the usual building blocks, i.e. supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from PI-controllers to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
 
 ## Getting Started
 An easy way to get started with GEM is by playing around with the following interactive notebooks in Google Colaboratory. Most important features of GEM as well as application demonstrations are showcased, and give a kickstart for engineers in industry and academia.
 
+* [GEM Cookbook](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/GEM_cookbook.ipynb)
+* [Keras-rl2 Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/keras_rl2_example.ipynb)
+* [Stable-baselines3 Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/stable_baselines3_example.ipynb)
+* [Tensorforce Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/tensorforce_example.ipynb)
 
 There is a list of [standalone example scripts](examples/) as well for minimalistic demonstrations.
 
