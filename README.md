@@ -24,6 +24,7 @@ An easy way to get started with GEM is by playing around with the following inte
 * [Keras-rl2 Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/keras_rl2_example.ipynb)
 * [Stable-baselines3 Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/stable_baselines3_example.ipynb)
 * [Tensorforce Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/tensorforce_example.ipynb)
+* [MPC  Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/MPC_example.ipynb)
 
 There is a list of [standalone example scripts](examples/) as well for minimalistic demonstrations.
 
