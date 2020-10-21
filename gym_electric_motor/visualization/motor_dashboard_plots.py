@@ -185,7 +185,7 @@ class StatePlot(MotorDashboardPlot):
         self._t += self._tau
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]
-        idx = int((self._t % self.x_width) / self._tau)
+        idx = int((self._t % self.x_width) / self._tau) - 1
         if self.mode == 'continuous':
             self._t_data[idx] = self._t
         self._state_data[idx] = state_
@@ -250,7 +250,7 @@ class RewardPlot(MotorDashboardPlot):
 
     def step(self, k, state, reference, action, reward, done):
         self._t += self._tau
-        idx = int((self._t % self.x_width) / self._tau)
+        idx = int((self._t % self.x_width) / self._tau) - 1
         if self.mode == 'continuous':
             self._t_data[idx] = self._t
         self._reward_data[idx] = reward
@@ -332,7 +332,7 @@ class ActionPlot(MotorDashboardPlot):
 
     def step(self, k, state, reference, action, reward, done):
         self._t += self._tau
-        idx = int((self._t % self.x_width) / self._tau)
+        idx = int((self._t % self.x_width) / self._tau) - 1
         if self.mode == 'continuous':
             self._t_data[idx] = self._t
         # the first action at the start of the simulation is None. Add a check.
