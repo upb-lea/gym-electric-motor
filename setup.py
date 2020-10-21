@@ -3,6 +3,7 @@ import setuptools
 
 AUTHORS = [
     'Arne Traue', 'Gerrit Book', 'Praneeth Balakrishna',
+    'Pascal Peters', 'Pramod Manjunatha', 'Darius Jakobeit',
     'Max Schenke', 'Wilhelm Kirchgässner', 'Oliver Wallscheid',
 ]
 
@@ -14,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='gym_electric_motor',
-      version='0.2.1',
+      version='0.3.0',
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
