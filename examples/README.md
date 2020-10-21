@@ -13,6 +13,7 @@ or as feature showcases
 ### Classical Control
 - [pi_series_omega_control.py](pi_series_omega_control.py): a conventional linear control algorithm applied to the speed control of a series DC motor with continuous-control-set
 - [perm_dc_omega.py](perm_dc_omega.py): a conventional discontinuous control algorithm applied to the speed control of a permanently excited DC motor with finite-control-set
+- [pmsm_foc.py](pmsm_foc.py): a field-oriented control example for three-phase permanent magnet synchonous motors (PMSM) with standard PI-controllers (continuous-control-set).
 
 ### Reinforcement-Learning Control
 - [dqn_series_current_control.py](dqn_series_current_control.py): a deep Q-value network reinforcement-learning control approach for finite-control-set current control of a series DC motor
