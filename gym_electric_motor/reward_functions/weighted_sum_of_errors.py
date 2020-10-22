@@ -24,7 +24,8 @@ class WeightedSumOfErrors(RewardFunction):
     | state_length[i] = 2 for states with positive and negative values.
     """
 
-    def __init__(self, reward_weights=None, normed_reward_weights=False, gamma=0.9, reward_power=1, **kwargs):
+    def __init__(self, reward_weights=None, normed_reward_weights=False,
+                 gamma=0.9, reward_power=1, **kwargs):
         """
         Args:
             reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.

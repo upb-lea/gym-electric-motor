@@ -4,10 +4,12 @@ from gym.spaces import Discrete, Box, MultiDiscrete
 from ..utils import instantiate
 
 
+
+
 class PowerElectronicConverter:
     """
     Base class for all converters in a SCMLSystem.
-
+ 
     Properties:
         | *voltages(tuple(float, float))*: Determines which output voltage polarities the converter can generate.
         | E.g. (0, 1) - Only positive voltages / (-1, 1) Positive and negative voltages
@@ -107,7 +109,19 @@ class PowerElectronicConverter:
         """
         self._switching_pattern = [self._current_action]
         return [self._action_start_time + self._tau]
+    
+class NoConverter(PowerElectronicConverter):
+    """Dummy Converter class used to directly transfer the supply voltage to the motor"""
+    #Dummy default values for voltages and currents. No real use other than to fit the current physical system architecture
+    voltages = Box(0, 1, shape=(3,))
+    currents = Box(0, 1, shape=(3,))
+    action_space = Box(low=np.array([]), high=np.array([]))
 
+    def i_sup(self, i_out):
+        return i_out[0]
+
+    def convert(self, i_out, t):
+        return [1]
 
 class ContDynamicallyAveragedConverter(PowerElectronicConverter):
     """
@@ -173,6 +187,11 @@ class DiscConverter(PowerElectronicConverter):
     def __init__(self, tau=1e-5, **kwargs):
         # Docstring in base class
         super().__init__(tau=tau, **kwargs)
+
+    def set_action(self, action, t):
+        assert self.action_space.contains(action), \
+            f"The selected action {action} is not a valid element of the action space {self.action_space}."
+        return super().set_action(action, t)
 
     def convert(self, i_out, t):
         # Docstring in base class
@@ -319,6 +338,8 @@ class DiscFourQuadrantConverter(DiscConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
+        assert self.action_space.contains(action), \
+            f"The selected action {action} is not a valid element of the action space {self.action_space}."
         times = []
         action0 = [1, 1, 2, 2][action]
         action1 = [1, 2, 1, 2][action]
@@ -749,6 +770,8 @@ class DiscB6BridgeConverter(DiscConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
+        assert self.action_space.contains(action), \
+            f"The selected action {action} is not a valid element of the action space {self.action_space}."
         subactions = self._subactions[action]
         times = []
         times += self._subconverters[0].set_action(subactions[0], t)

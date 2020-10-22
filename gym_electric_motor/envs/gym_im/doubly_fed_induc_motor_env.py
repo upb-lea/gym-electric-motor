@@ -53,8 +53,8 @@ class DiscDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd', 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',``
-        ``'i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd', 'u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq', 'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',``
+        ``'i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq', 'u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq', 'epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
@@ -121,8 +121,8 @@ class ContDoublyFedInductionMotorEnvironment(DoublyFedInductionMotorEnvironment)
             ElectricMotorVisualization (Dummy for no Visualization)
 
     State Variables:
-        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sq', 'i_sd', 'u_sa', 'u_sb', 'u_sc', 'u_sq', 'u_sd',``
-        ``'i_ra', 'i_rb', 'i_rc', 'i_rq', 'i_rd', 'u_ra', 'u_rb', 'u_rc', 'u_rq', 'u_rd', 'epsilon', 'u_sup']``
+        ``['omega' , 'torque', 'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq', 'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',``
+        ``'i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq', 'u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq', 'epsilon', 'u_sup']``
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)

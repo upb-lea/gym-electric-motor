@@ -12,14 +12,27 @@ g_i_e = [0, 0.2, 0.5, -1, 1]
 g_u_in = [0, 400, -400, 325.2, -205.4]
 g_t_load = [0, 1, 5, -5, 4.35]
 
+# default/ global initializer
+default_test_initializer = {'states': {},
+                    'interval': None,
+                    'random_init': None,
+                    'random_params': None}
+test_initializer = {'states': {},
+                    'interval': None,
+                    'random_init': None,
+                    'random_params': None}
+
 
 # region general test functions
 
 
-def motor_testing(motor_1_default, motor_2_default, motor_1, motor_2, motor_state, limit_values, nominal_values,
-                  motor_parameter):
-    motor_reset_testing(motor_1_default, motor_2_default, motor_state)
-    motor_reset_testing(motor_1, motor_2, motor_state)
+def motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
+                  motor_state, limit_values, nominal_values, motor_parameter,
+                  state_positions, state_space):
+    motor_reset_testing(motor_1_default, motor_2_default, motor_state,
+                        state_positions, state_space, nominal_values)
+    motor_reset_testing(motor_1, motor_2, motor_state, state_positions,
+                        state_space, nominal_values)
 
     limit_nominal_testing(motor_1_default, motor_2_default, motor_1, motor_2, limit_values, nominal_values)
     motor_parameter_testing(motor_1_default, motor_2_default, motor_1, motor_2, motor_parameter)
@@ -45,31 +58,60 @@ def motor_parameter_testing(motor_1_default, motor_2_default, motor_1, motor_2, 
     assert motor_1_default.motor_parameter is not motor_1.motor_parameter, "Failed motor parameter test"
 
 
-def motor_reset_testing(motor_1, motor_2, motor_state):
+def motor_reset_testing(motor_1, motor_2, motor_state, state_positions,
+                        state_space, nominal_values):
     # tests if the reset function works correctly
-    assert (motor_1.reset() == motor_2.reset()).all()
-    assert all(motor_1.reset() == np.zeros(len(motor_state))), "Reset is not zero"
-
+    assert motor_1.initializer == motor_2.initializer
+    # test random initialization
+    if motor_1.initializer['states'] is None:
+        for idx, state in enumerate(motor_state):
+            assert np.abs(motor_1.reset(state_space, state_positions)[idx] \
+                     <= nominal_values[state])
+            assert np.abs(motor_2.reset(state_space, state_positions)[idx] \
+                     <= nominal_values[state])
+    # test constant initialization
+    else:
+        assert all(motor_1.reset(state_space, state_positions) ==
+                motor_2.reset(state_space, state_positions))
+        init_values = list(motor_1.initializer['states'].values())
+        assert all(motor_1.reset(state_space, state_positions) == init_values)
 
 # endregion
 
 # region DcSeriesMotor
-
-
-def test_dc_series_motor():
-    motor_state = ['i', 'i']  # list of state names
+@pytest.mark.parametrize(
+    'states, interval, random_init, random_params',
+    [({'i': 16}, None, None, (None, None)),
+     (None, None, 'uniform', (None, None)),
+     (None, [[10, 20]], 'uniform', (None, None)),
+     (None, None, 'gaussian', (None, None)),
+     (None, None, 'gaussian', (16, 2)),
+     (None, [[10, 20]], 'gaussian', (None, None))])
+def test_dc_series_motor(states, interval, random_init, random_params):
+    #motor_state = ['i', 'i']  # list of state names
+    motor_state = ['i']  # list of state names
     motor_parameter = test_motor_parameter['DcSeries']['motor_parameter']
     nominal_values = test_motor_parameter['DcSeries']['nominal_values']  # dict
     limit_values = test_motor_parameter['DcSeries']['limit_values']  # dict
+    # set initializer parameters
+    test_initializer['states'] = states
+    test_initializer['interval'] = interval
+    test_initializer['random_init'] = random_init
+    test_initializer['random_params'] = random_params
     # default initialization
     motor_1_default = make_module(ElectricMotor, 'DcSeries')
     motor_2_default = DcSeriesMotor()
     # initialization parameters as dicts
-    motor_1 = make_module(ElectricMotor, 'DcSeries', motor_parameter=motor_parameter, nominal_values=nominal_values,
-                          limit_values=limit_values)
-    motor_2 = DcSeriesMotor(motor_parameter, nominal_values, limit_values)
-    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2, motor_state, limit_values, nominal_values,
-                  motor_parameter)
+    motor_1 = make_module(ElectricMotor, 'DcSeries',
+                          motor_parameter=motor_parameter,
+                          nominal_values=nominal_values,
+                          limit_values=limit_values,
+                          motor_initializer=test_initializer)
+    motor_2 = DcSeriesMotor(motor_parameter, nominal_values,
+                            limit_values, test_initializer)
+    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
+                  motor_state, limit_values, nominal_values, motor_parameter,
+                  series_state_positions, series_state_space)
 
     series_motor_state_space_testing(motor_1_default, motor_2_default)
     series_motor_state_space_testing(motor_1, motor_2)
@@ -127,8 +169,15 @@ def series_motor_electrical_ode_testing(motor_1):
 
 # region DcShuntMotor
 
-
-def test_dc_shunt_motor():
+@pytest.mark.parametrize(
+    'states, interval, random_init, random_params',
+    [({'i_a': 16, 'i_e': 1.6}, None, None, (None, None)),
+     (None, None, 'uniform', (None, None)),
+     (None, [[10, 20], [1, 2]], 'uniform', (None, None)),
+     (None, None, 'gaussian', (None, None)),
+     (None, None, 'gaussian', (None, 2)),
+     (None, [[10, 20], [1, 2]], 'gaussian', (None, None))])
+def test_dc_shunt_motor(states, interval, random_init, random_params):
     """
     tests the dc shunt motor class
     :return:
@@ -138,16 +187,27 @@ def test_dc_shunt_motor():
     motor_parameter = test_motor_parameter['DcShunt']['motor_parameter']
     nominal_values = test_motor_parameter['DcShunt']['nominal_values']  # dict
     limit_values = test_motor_parameter['DcShunt']['limit_values']  # dict
+    # set initializer parameters
+    test_initializer['states'] = states
+    test_initializer['interval'] = interval
+    test_initializer['random_init'] = random_init
+    test_initializer['random_params'] = random_params
     # default initialization of electric motor
     motor_1_default = make_module(ElectricMotor, 'DcShunt')
     motor_2_default = DcShuntMotor()
 
-    motor_1 = make_module(ElectricMotor, 'DcShunt', motor_parameter=motor_parameter, nominal_values=nominal_values,
-                          limit_values=limit_values)
-    motor_2 = DcShuntMotor(motor_parameter, nominal_values, limit_values)
+    motor_1 = make_module(ElectricMotor, 'DcShunt',
+                          motor_parameter=motor_parameter,
+                          nominal_values=nominal_values,
+                          limit_values=limit_values,
+                          motor_initializer=test_initializer)
+    motor_2 = DcShuntMotor(motor_parameter, nominal_values,
+                           limit_values, test_initializer)
     # test if both initializations work correctly for limits and nominal values
-    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2, motor_state, limit_values, nominal_values,
-                  motor_parameter)
+    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
+                  motor_state, limit_values, nominal_values, motor_parameter,
+                  shunt_state_positions, shunt_state_space)
+
     shunt_motor_state_space_testing(motor_1_default, motor_2_default)
     shunt_motor_state_space_testing(motor_1, motor_2)
     # test electrical_ode function
@@ -211,22 +271,39 @@ def shunt_motor_electrical_ode_testing(motor_1):
 
 # region DcPermExMotor
 
-
-def test_dc_permex_motor():
+@pytest.mark.parametrize(
+    'states, interval, random_init, random_params',
+    [({'i': 16}, None, None, (None, None)),
+     (None, None, 'uniform', (None, None)),
+     (None, [[10, 20]], 'uniform', (None, None)),
+     (None, None, 'gaussian', (None, None)),
+     (None, None, 'gaussian', (None, 2)),
+     (None, [[10, 20]], 'gaussian', (None, None))])
+def test_dc_permex_motor(states, interval, random_init, random_params):
     motor_state = ['i']  # list of state names
     motor_parameter = test_motor_parameter['DcPermEx']['motor_parameter']
     nominal_values = test_motor_parameter['DcPermEx']['nominal_values']  # dict
     limit_values = test_motor_parameter['DcPermEx']['limit_values']  # dict
+    # set initializer parameters
+    test_initializer['states'] = states
+    test_initializer['interval'] = interval
+    test_initializer['random_init'] = random_init
+    test_initializer['random_params'] = random_params
     # default initialization without parameters
     motor_1_default = make_module(ElectricMotor, 'DcPermEx')
     motor_2_default = DcPermanentlyExcitedMotor()
     # initialization parameters as dicts
-    motor_1 = make_module(ElectricMotor, 'DcPermEx', motor_parameter=motor_parameter, nominal_values=nominal_values,
-                          limit_values=limit_values)
-    motor_2 = DcPermanentlyExcitedMotor(motor_parameter, nominal_values, limit_values)
+    motor_1 = make_module(ElectricMotor, 'DcPermEx',
+                          motor_parameter=motor_parameter,
+                          nominal_values=nominal_values,
+                          limit_values=limit_values,
+                          motor_initializer=test_initializer)
+    motor_2 = DcPermanentlyExcitedMotor(motor_parameter, nominal_values,
+                                        limit_values, test_initializer)
 
-    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2, motor_state, limit_values, nominal_values,
-                  motor_parameter)
+    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
+                  motor_state, limit_values, nominal_values, motor_parameter,
+                  permex_state_positions, permex_state_space)
 
     permex_motor_state_space_testing(motor_1_default, motor_2_default)
     permex_motor_state_space_testing(motor_1, motor_2)
@@ -283,21 +360,37 @@ def permex_motor_electrical_ode_testing(motor_1):
 
 # region DcExtExMotor
 
-
-def test_dc_extex_motor():
+@pytest.mark.parametrize(
+    'states, interval, random_init, random_params',
+    [({'i_a': 16, 'i_e': 1.6}, None, None, (None, None)),
+     (None, None, 'uniform', (None, None)),
+     (None, [[10, 20], [1, 2]], 'uniform', (None, None)),
+     (None, None, 'gaussian', (None, None)),
+     (None, None, 'gaussian', (None, 2)),
+     (None, [[10, 20], [1, 2]], 'gaussian', (None, None))])
+def test_dc_extex_motor(states, interval, random_init, random_params):
     motor_state = ['i_a', 'i_e']  # list of state names
     motor_parameter = test_motor_parameter['DcExtEx']['motor_parameter']
     nominal_values = test_motor_parameter['DcExtEx']['nominal_values']  # dict
     limit_values = test_motor_parameter['DcExtEx']['limit_values']  # dict
+    test_initializer['states'] = states
+    test_initializer['interval'] = interval
+    test_initializer['random_init'] = random_init
+    test_initializer['random_params'] = random_params
     # default initialization without parameters
     motor_1_default = make_module(ElectricMotor, 'DcExtEx')
     motor_2_default = DcExternallyExcitedMotor()
     # initialization parameters as dicts
-    motor_1 = make_module(ElectricMotor, 'DcExtEx', motor_parameter=motor_parameter, nominal_values=nominal_values,
-                          limit_values=limit_values)
-    motor_2 = DcExternallyExcitedMotor(motor_parameter, nominal_values, limit_values)
-    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2, motor_state, limit_values, nominal_values,
-                  motor_parameter)
+    motor_1 = make_module(ElectricMotor, 'DcExtEx',
+                          motor_parameter=motor_parameter,
+                          nominal_values=nominal_values,
+                          limit_values=limit_values,
+                          motor_initializer=test_initializer)
+    motor_2 = DcExternallyExcitedMotor(motor_parameter, nominal_values,
+                                       limit_values, test_initializer)
+    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
+                  motor_state, limit_values, nominal_values, motor_parameter,
+                  extex_state_positions, extex_state_space)
 
     extex_motor_state_space_testing(motor_1_default, motor_2_default)
     extex_motor_state_space_testing(motor_1, motor_2)
@@ -347,45 +440,57 @@ def extex_motor_electrical_ode_testing(motor_1):
 def torque_testing(state, mp):
     """
     use this function as benchmark for the torque
-    :param state: [i_q, i_d, epsilon]
+    :param state: [i_d, i_q, epsilon]
     :param mp: motor parameter (dict)
     :return: generated torque
     """
-    return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[1]) * state[0]
+    return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[0]) * state[1]
 
 
 def synchronous_motor_ode_testing(state, voltage, omega, mp):
     """
     use this function as benchmark for the ode
-    :param state: [i_q, i_d, epsilon]
-    :param voltage: [u_q, u_d]
+    :param state: [i_d, i_q, epsilon]
+    :param voltage: [u_d, u_q]
     :param omega: angular velocity
     :param mp: motor parameter (dict)
     :return: ode system
     """
-    u_d = voltage[1]
-    u_q = voltage[0]
-    i_d = state[1]
-    i_q = state[0]
-    return np.array([(u_q - mp['r_s'] * i_q - omega * mp['p'] * (mp['l_d'] * i_d + mp['psi_p'])) / mp['l_q'],
-                     (u_d - mp['r_s'] * i_d + mp['l_q'] * omega * mp['p'] * i_q) / mp['l_d'],
+    u_d = voltage[0]
+    u_q = voltage[1]
+    i_d = state[0]
+    i_q = state[1]
+    return np.array([(u_d - mp['r_s'] * i_d + mp['l_q'] * omega * mp['p'] * i_q) / mp['l_d'],
+                     (u_q - mp['r_s'] * i_q - omega * mp['p'] * (mp['l_d'] * i_d + mp['psi_p'])) / mp['l_q'],
                      omega * mp['p']])
 
-
+@pytest.mark.parametrize(
+    'states, interval, random_init, random_params',
+    [({'i_sd': 16, 'i_sq': 16, 'epsilon': 1.6}, None, None, (None, None)),
+     (None, None, 'uniform', (None, None)),
+     (None, [[10, 20], [10, 20], [1, 2]], 'uniform', (None, None)),
+     (None, None, 'gaussian', (None, None)),
+     (None, None, 'gaussian', (None, 2)),
+     (None, [[10, 20], [10, 20], [1, 2]], 'gaussian', (None, None))])
 @pytest.mark.parametrize("motor_type, motor_class", [('SynRM', SynchronousReluctanceMotor),
                                                      ('PMSM', PermanentMagnetSynchronousMotor)])
-def test_synchronous_motor_testing(motor_type, motor_class):
+def test_synchronous_motor_testing(motor_type, motor_class,
+                                   states, interval, random_init, random_params):
     """
     testing the synrm and pmsm
-    consider that it uses dq coordinates and the state is [i_q, i_d, epsilon]!!.
-    The same goes with the voltages u_qd and not as usual dq!!
+    consider that it uses dq coordinates and the state is [i_d, i_q, epsilon]!!.
+    voltage u_dq
     :return:
     """
     parameter = test_motor_parameter[motor_type]
-    # use this values for testing
-    state = np.array([0.5, 0.3, 0.68])  # i_q, i_d, epsilon
-    u_qd = np.array([200, 50])
+    state = np.array([0.3, 0.5, 0.68])  # i_d, i_q, epsilon
+    u_dq = np.array([50, 200])
     omega = 25
+    # set initializer parameters
+    test_initializer['states'] = states
+    test_initializer['interval'] = interval
+    test_initializer['random_init'] = random_init
+    test_initializer['random_params'] = random_params
     # test default initialization first
     default_init_1 = make_module(ElectricMotor, motor_type)
     default_init_2 = motor_class()
@@ -396,22 +501,29 @@ def test_synchronous_motor_testing(motor_type, motor_class):
     # test functions
     mp = default_init_1.motor_parameter
     if motor_type == 'SynRM':
+        state_positions = synrm_state_positions
+        state_space = synrm_state_space
         mp.update({'psi_p': 0})
+    else:
+        state_positions = pmsm_state_positions
+        state_space = pmsm_state_space
     for motor in [default_init_1, default_init_2]:
-        assert motor.torque(state) == torque_testing(state, mp)
+        assert abs(motor.torque(state) - torque_testing(state, mp)) < 1E-8
         assert all(motor.i_in(state) == state[0:2])
-        ode = motor.electrical_ode(state, u_qd, omega)
-        test_ode = synchronous_motor_ode_testing(state, u_qd, omega, mp)
+        ode = motor.electrical_ode(state, u_dq, omega)
+        test_ode = synchronous_motor_ode_testing(state, u_dq, omega, mp)
         assert sum(abs(ode - test_ode)) < 1E-8, "Motor ode is wrong: " + str([ode, test_ode])
     # test parametrized motors
     motor_init_1 = make_module(ElectricMotor, motor_type,
                                motor_parameter=parameter['motor_parameter'],
                                nominal_values=parameter['nominal_values'],
-                               limit_values=parameter['limit_values'])
+                               limit_values=parameter['limit_values'],
+                               motor_initializer = test_initializer)
 
     motor_init_2 = motor_class(motor_parameter=parameter['motor_parameter'],
                                nominal_values=parameter['nominal_values'],
-                               limit_values=parameter['limit_values'])
+                               limit_values=parameter['limit_values'],
+                               motor_initializer=test_initializer)
     for motor in [motor_init_1, motor_init_2]:
         # test motor parameter
 
@@ -449,9 +561,14 @@ def test_synchronous_motor_testing(motor_type, motor_class):
         # test functions
         assert motor.torque(state) == torque_testing(state, mp)
         assert all(motor.i_in(state) == state[0:2])
-        ode = motor.electrical_ode(state, u_qd, omega)
-        test_ode = synchronous_motor_ode_testing(state, u_qd, omega, mp)
+        ode = motor.electrical_ode(state, u_dq, omega)
+        test_ode = synchronous_motor_ode_testing(state, u_dq, omega, mp)
         assert sum(abs(ode - test_ode)) < 1E-8, "Motor ode is wrong: " + str([ode, test_ode])
+        #motor_state = ['i_sd', 'i_sq', 'epsilon']
+        motor_state = ['i', 'i', 'epsilon']
+        nominal_values = parameter['nominal_values']
+        motor_reset_testing(motor_init_1, motor_init_2, motor_state,
+                            state_positions, state_space, nominal_values)
 
 
 # endregion
@@ -472,33 +589,46 @@ class TestElectricMotor:
     _motor_parameter = test_motor_parameter['DcPermEx']['motor_parameter']
     _nominal_values = test_motor_parameter['DcPermEx']['nominal_values']
     _limits = test_motor_parameter['DcPermEx']['limit_values']
+    _initializer = test_motor_initializer['DcPermEx']
+    state_position = permex_state_positions
+    state_space = permex_state_space
 
     @pytest.mark.parametrize("motor_parameter, result_motor_parameter",
                              [(None, {}), (_motor_parameter, _motor_parameter)])
-    @pytest.mark.parametrize("nominal_values, result_nominal_values", [(None, {}), (_nominal_values, _nominal_values)])
-    @pytest.mark.parametrize("limits, result_limit_values", [(None, {}), (_limits, _limits)])
-    def test_init(self, motor_parameter, nominal_values, limits, result_motor_parameter, result_nominal_values,
-                  result_limit_values):
+    @pytest.mark.parametrize("nominal_values, result_nominal_values",
+                             [(None, {}), (_nominal_values, _nominal_values)])
+    @pytest.mark.parametrize("limits, result_limit_values",
+                             [(None, {}), (_limits, _limits)])
+    @pytest.mark.parametrize("motor_initializer, result_motor_initializer",
+                             [(None, default_test_initializer), (_initializer, _initializer)])
+    def test_init(self, motor_parameter, nominal_values, limits, motor_initializer,
+                  result_motor_parameter, result_nominal_values,
+                  result_limit_values, result_motor_initializer):
         """
         test initialization of ElectricMotor
         :param motor_parameter: possible values for motor parameter
         :param nominal_values: possible values for nominal values
         :param limits: possible values for limit values
+        :param motor_initializer: possible values for initializer
         :param result_motor_parameter: expected motor parameter
         :param result_nominal_values: expected nominal values
         :param result_limit_values: expected limit values
+        :param result_motor_initializer: expected motor initializer values
         :return:
         """
         # call function to test
         test_object = ElectricMotor(motor_parameter,
                                     nominal_values,
-                                    limits)
+                                    limits,
+                                    motor_initializer)
         # verify the expected results
         assert test_object._motor_parameter == test_object.motor_parameter == result_motor_parameter, \
             'unexpected initialization of motor parameter'
         assert test_object._limits == test_object.limits == result_limit_values, 'unexpected initialization of limits'
         assert test_object._nominal_values == test_object.nominal_values == result_nominal_values, \
             'unexpected initialization of nominal values'
+        assert test_object._initializer == test_object.initializer == result_motor_initializer, \
+            'unexpected initialization of motor initializer'
 
     def test_reset(self, monkeypatch):
         """
@@ -510,7 +640,7 @@ class TestElectricMotor:
         test_object = ElectricMotor()
         monkeypatch.setattr(ElectricMotor, "CURRENTS", self._CURRENTS)
         # call function to test
-        result = test_object.reset()
+        result = test_object.reset(self.state_space, self.state_position)
         # verify the expected results
         assert all(result == np.zeros(self._length_Currents)), 'unexpected state after reset()'
 
@@ -525,6 +655,9 @@ class TestDcMotor:
     _motor_parameter = test_motor_parameter['DcExtEx']['motor_parameter']
     _nominal_values = test_motor_parameter['DcExtEx']['nominal_values']
     _limits = test_motor_parameter['DcExtEx']['limit_values']
+    _initializer = test_motor_initializer['DcExtEx']
+    state_position = extex_state_positions
+    state_space = extex_state_space
     s_motor_parameter = test_motor_parameter['DcExtEx']['motor_parameter']
     default_motor_parameter = class_to_test._default_motor_parameter
     default_nominal_values = class_to_test._default_nominal_values
@@ -568,35 +701,44 @@ class TestDcMotor:
         """
         self.monkey_update_limits_counter += 1
 
-    def _monkey_super_init(self, motor_parameter, nominal_values, limits):
+    def _monkey_super_init(self, motor_parameter, nominal_values,
+                           limits, motor_initializer):
         """
         mock function for super().__init__()
         :param motor_parameter:
         :param nominal_values:
         :param limits:
+        :param motor_initializer:
         :return:
         """
         self.monkey_super_init_counter += 1
         assert motor_parameter == self._motor_parameter, 'motor parameter are not passed correctly'
         assert nominal_values == self._nominal_values, 'nominal values are not passed correctly'
         assert limits == self._limits, 'limits are not passed correctly'
+        assert motor_initializer == self._initializer, 'initializers are not matching'
 
     @pytest.mark.parametrize("motor_parameter, result_motor_parameter",
                              [(None, {}), (_motor_parameter, _motor_parameter)])
-    @pytest.mark.parametrize("nominal_values, result_nominal_values", [(None, {}), (_nominal_values, _nominal_values)])
-    @pytest.mark.parametrize("limits, result_limit_values", [(None, {}), (_limits, _limits)])
-    def test_init(self, monkeypatch, motor_parameter, nominal_values, limits, result_motor_parameter,
-                  result_nominal_values,
-                  result_limit_values):
+    @pytest.mark.parametrize("nominal_values, result_nominal_values",
+                             [(None, {}), (_nominal_values, _nominal_values)])
+    @pytest.mark.parametrize("limits, result_limit_values",
+                             [(None, {}), (_limits, _limits)])
+    @pytest.mark.parametrize("motor_initializer, result_motor_initializer",
+                             [(None, {}), (_initializer, _initializer)])
+    def test_init(self, monkeypatch, motor_parameter, nominal_values, limits,
+                  motor_initializer, result_motor_parameter, result_nominal_values,
+                  result_limit_values, result_motor_initializer):
         """
         test initialization of DcMotor
         :param monkeypatch:
         :param motor_parameter: possible motor parameters
         :param nominal_values: possible nominal values
         :param limits: possible limit values
+        :param motor_initializer: possible values for initializer
         :param result_motor_parameter: expected resulting motor parameter
         :param result_nominal_values: expected resulting nominal values
         :param result_limit_values: expected resulting limit values
+        :param result_motor_initializer: expected motor initializer values
         :return:
         """
         # setup test scenario
@@ -607,9 +749,11 @@ class TestDcMotor:
         self._motor_parameter = motor_parameter
         self._nominal_values = nominal_values
         self._limits = limits
+        self._initializer = motor_initializer
 
         # call function to test
-        test_object = self.class_to_test(motor_parameter, nominal_values, limits)
+        test_object = self.class_to_test(motor_parameter, nominal_values,
+                                         limits, motor_initializer)
 
         # verify the expected results
         assert test_object._model_constants is None
@@ -1231,6 +1375,7 @@ class TestThreePhaseMotor:
     _expected_quantities = None
     _expected_result = None
     _expected_parameter = None
+    #_expected_initializer = None
 
     # defined test values
     _motor_parameter = pmsm_motor_parameter['motor_parameter']
@@ -1342,7 +1487,8 @@ class TestThreePhaseMotor:
         # verify the expected results
         assert self._monkey_q_counter == 1, "q function was not called correctly"
 
-class TestSynchronousMotor:
+
+class TestSynchronousMotor(TestThreePhaseMotor):
     """
     class for testing SynchronousMotor
     """
@@ -1351,6 +1497,9 @@ class TestSynchronousMotor:
     _p = _motor_parameter['p']  # pole pair number for testing
     _nominal_values = pmsm_motor_parameter['nominal_values']
     _limit_values = pmsm_motor_parameter['limit_values']
+    _initializer = pmsm_initializer
+    state_position = pmsm_state_positions
+    state_space = pmsm_state_space
     _CURRENTS = ['i_a', 'i_b', 'i_c']
     _CURRENTS_IDX = [2, 3, 5]
     _number_states = 4
@@ -1374,23 +1523,28 @@ class TestSynchronousMotor:
         """
         self._monkey_update_limits_counter += 1
 
-    def monkey_super_init(self, motor_parameter=None, nominal_values=None, limit_values=None):
+    def monkey_super_init(self, motor_parameter=None, nominal_values=None,
+                          limit_values=None, motor_initializer=None):
         """
         mock function for super().__init__()
         :param motor_parameter:
         :param nominal_values:
         :param limit_values:
+        :param motor_initializer:
         :return:
         """
         self._monkey_super_init_counter += 1
         assert self._expected_parameter['motor_parameter'] == motor_parameter, 'unexpected motor parameter passed'
         assert self._expected_parameter['nominal_values'] == nominal_values, 'unexpected nominal values passed'
         assert self._expected_parameter['limit_values'] == limit_values, 'unexpected limit values passed'
+        assert self._expected_parameter['motor_initializer'] == motor_initializer, 'unexpected initializer'
 
     @pytest.mark.parametrize("motor_parameter", [_motor_parameter, None])
     @pytest.mark.parametrize("nominal_values, expected_nv", [(None, {}), (_nominal_values, _nominal_values)])
     @pytest.mark.parametrize("limit_values, expected_lv", [(None, {}), (_limit_values, _limit_values)])
-    def test_init(self, monkeypatch, motor_parameter, nominal_values, limit_values, expected_nv, expected_lv):
+    @pytest.mark.parametrize("motor_initializer", [_initializer, {}])
+    def test_init(self, monkeypatch, motor_parameter, nominal_values,
+                  limit_values, expected_nv, expected_lv, motor_initializer):
         """
         test initialization of SynchronousMotor
         :param monkeypatch:
@@ -1400,16 +1554,19 @@ class TestSynchronousMotor:
         :param limit_values: possible limit values
         :param expected_nv: expected nominal values
         :param expected_lv: expected limit values
+        :param motor_initializer: possible motor initializers
         :return:
         """
         # setup test scenario
         monkeypatch.setattr(SynchronousMotor, "_update_model", self.monkey_update_model)
         monkeypatch.setattr(SynchronousMotor, "_update_limits", self.monkey_update_limits)
         monkeypatch.setattr(ElectricMotor, '__init__', self.monkey_super_init)
+
         self._expected_parameter = dict(motor_parameter=motor_parameter, nominal_values=expected_nv,
-                                        limit_values=expected_lv)
+                                        limit_values=expected_lv, motor_initializer=motor_initializer)
         # call function to test
-        test_object = SynchronousMotor(motor_parameter, nominal_values, limit_values)
+        test_object = SynchronousMotor(motor_parameter, nominal_values,
+                                       limit_values, motor_initializer)
         # verify the expected results
         assert self._monkey_update_limits_counter == 1, 'update_limits() is not called once'
         assert self._monkey_super_init_counter == 1, 'super().__init__() is not called once'
@@ -1424,9 +1581,10 @@ class TestSynchronousMotor:
         # setup test scenario
         monkeypatch.setattr(SynchronousMotor, '__init__', self.monkey_update_model)
         monkeypatch.setattr(SynchronousMotor, 'CURRENTS', self._CURRENTS)
+        #monkeypatch.setattr(SynchronousMotor, '_initializer', self._initializer)
         test_object = SynchronousMotor()
         # call function to test
-        result = test_object.reset()
+        result = test_object.reset(self.state_position, self.state_space)
         # verify the expected results
         assert all(result == np.zeros(self._number_states)), 'unexpected state after reset()'
 
@@ -1503,23 +1661,19 @@ class TestSynchronousReluctanceMotor:
         test_object._update_model()
         # verify results
         expected_constants = np.array([
-            [0, -0.5 / 8E-3, 0, 1 / 8E-3, 0, 0, -3 * 70 / 8],
-            [0, 0, -0.5 / 70E-3, 0, 1 / 70E-3, 8e-3 * 3 / 70E-3, 0],
-            [3, 0, 0, 0, 0, 0, 0]
+            [0, -0.5 / 70E-3,           0, 1 / 70E-3,        0,           0, 3 * 8 / 70],
+            [0,            0, -0.5 / 8E-3,         0, 1 / 8E-3, -3 * 70 / 8,          0],
+            [3,            0,           0,         0,        0,           0,          0]
         ])
+        print(test_object._model_constants)
+        print(expected_constants)
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6, 'unexpected model constants'
 
     @pytest.mark.parametrize(
-        'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 1, 2]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([[-2.5, 0, 0], [0, -0.5, 0], [0, 0, 0]])),
-            (np.array([5, 7, -3]), [4, 8], -2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2),
-             np.array([[-1, 10, 0], [-0.4, -0.2, 0], [0, 0, 0]])),
-            (np.array([5, 7, -2]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([[-2.5, -10, 0], [0.4, -0.5, 0], [0, 0, 0]])),
+        'state,                  u_in, omega,                                  motor_parameter,                                            result',[
+        (np.array([1, 0, 2]),  [2, 0],     0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([[-0.5, 0, 0], [0, -2.5, 0], [0, 0, 0]])),
+        (np.array([7, 5, -3]), [8, 4],    -2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2), np.array([[-0.2, -0.8, 0], [20, -1, 0], [0, 0, 0]])),
+        (np.array([7, 5, -2]), [8, 4],     2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([[-0.5, 0.8, 0], [-20, -2.5, 0], [0, 0, 0]])),
         ]
     )
     def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
@@ -1530,15 +1684,9 @@ class TestSynchronousReluctanceMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([-20, 0, 2])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([0, 2, 1])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=4, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([-40, -1.6, 4])),
+            (np.array([2, 0, 0]), [2, 0], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([0, -20, 2])),
+            (np.array([0, 5, 2]), [8, 4], -2, dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([2, 0, 1])),
+            (np.array([2, -2, 9]), [4, 8], 2, dict(p=4, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([-1.6, -40, 4])),
         ]
     )
     def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
@@ -1549,15 +1697,9 @@ class TestSynchronousReluctanceMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([48, 0, 0])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([0, 45, 0])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5),
-             np.array([48, -48, 0])),
+            (np.array([2, 0, 0]), [2, 0], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([0, 48, 0])),
+            (np.array([0, 5, 2]), [8, 4], -2, dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([45, 0, 0])),
+            (np.array([2, -2, 9]), [8, 4], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5), np.array([-48, 48, 0])),
         ]
     )
     def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
@@ -1583,7 +1725,7 @@ class TestPermanentMagnetSynchronousMotor:
         _motor_parameter = pmsm_motor_parameter['motor_parameter']
         test_object = PermanentMagnetSynchronousMotor()
         monkeypatch.setattr(test_object, '_motor_parameter', _motor_parameter)
-        currents = np.array([15, 10])
+        currents = np.array([10, 15])
         # call function to test
         torque = test_object.torque(currents)
         # verify the expected results
@@ -1602,23 +1744,17 @@ class TestPermanentMagnetSynchronousMotor:
         test_object._update_model()
         # verify results
         expected_constants = np.array([
-            [-3*0.171/125E-3, -5 / 125E-3, 0, 1 / 125E-3, 0, 0, -3 * 84 / 125],
-            [0, 0, -5 / 84E-3, 0, 1 / 84E-3, 125E-3 * 3 / 84E-3, 0],
-            [3, 0, 0, 0, 0, 0, 0]
+            [                0, -5 / 84E-3,            0, 1 / 84E-3,          0,                    0, 3 * 125 / 84],
+            [-3 * 0.171/125E-3,           0, -5 / 125E-3,         0, 1 / 125E-3, -84E-3 * 3 / 125E-3,             0],
+            [                3,           0,           0,         0,          0,                   0,             0]
         ])
         assert sum(sum(abs(test_object._model_constants - expected_constants))) < 1E-6
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 1, 2]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165),
-             np.array([[-2.5, 0, 0], [0, -0.5, 0], [0, 0, 0]])),
-            (np.array([5, 7, -3]), [4, 8], -2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2, psi_p=0.165),
-             np.array([[-1, 10, 0], [-0.4, -0.2, 0], [0, 0, 0]])),
-            (np.array([5, 7, -2]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165),
-             np.array([[-2.5, -10, 0], [0.4, -0.5, 0], [0, 0, 0]])),
+            (np.array([0, 1, 2]), [0, 2], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165), np.array([[-0.5, 0, 0], [0, -2.5, 0], [0, 0, 0]])),
+            (np.array([5, 7, -3]), [4, 8], -2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=2, psi_p=0.165), np.array([[-0.2, -0.8, 0], [20, -1, 0], [0, 0, 0]])),
+            (np.array([5, 7, -2]), [4, 8], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0.165), np.array([[-0.5, 0.8, 0], [-20, -2.5, 0], [0, 0, 0]])),
         ]
     )
     def test_el_jac_0(self, state, u_in, omega, motor_parameter, result):
@@ -1629,15 +1765,9 @@ class TestPermanentMagnetSynchronousMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
-             np.array([-20, 0, 2])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([-5, 2, 1])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([-30, -0.8, 2])),
+            (np.array([2, 0, 0]), [2, 0], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0), np.array([0, -20, 2])),
+            (np.array([0, 5, 2]), [8, 4], -2, dict(p=1, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([2, -5, 1])),
+            (np.array([2, -2, 9]), [8, 4], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([-0.8, -30, 2])),
         ]
     )
     def test_el_jac_1(self, state, u_in, omega, motor_parameter, result):
@@ -1648,15 +1778,9 @@ class TestPermanentMagnetSynchronousMotor:
 
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
-            (np.array([0, 2, 0]), [0, 2], 0,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0),
-             np.array([48, 0, 0])),
-            (np.array([5, 0, 2]), [4, 8], -2,
-             dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([30, 45, 0])),
-            (np.array([-2, 2, 9]), [4, 8], 2,
-             dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10),
-             np.array([78, -48, 0])),
+            (np.array([2, 0, 0]), [0, 2], 0, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=0), np.array([0, 48, 0])),
+            (np.array([0, 5, 2]), [4, 8], -2, dict(p=2, l_d=5, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([45, 30, 0])),
+            (np.array([2, -2, 9]), [4, 8], 2, dict(p=2, l_d=10, l_q=2, j_rotor=2.45e-3, r_s=5, psi_p=10), np.array([-48, 78, 0])),
         ]
     )
     def test_el_jac_2(self, state, u_in, omega, motor_parameter, result):
@@ -1676,6 +1800,9 @@ class TestInductionMotor:
     _p = _motor_parameter['p']  # pole pair number for testing
     _nominal_values = sci_motor_parameter['nominal_values']
     _limit_values = sci_motor_parameter['limit_values']
+    _initializer = sci_initializer
+    state_position = sci_state_positions
+    state_space = sci_state_space
     _CURRENTS = ['i_salpha', 'i_sbeta']
     _CURRENTS_IDX = [2, 3, 5]
     _number_states = 5
@@ -1699,7 +1826,8 @@ class TestInductionMotor:
         """
         self._monkey_update_limits_counter += 1
 
-    def monkey_super_init(self, motor_parameter=None, nominal_values=None, limit_values=None):
+    def monkey_super_init(self, motor_parameter=None, nominal_values=None,
+                          limit_values=None, motor_initializer=None, initial_limits=None):
         """
         mock function for super().__init__()
         :param motor_parameter:
@@ -1711,11 +1839,17 @@ class TestInductionMotor:
         assert self._expected_parameter['motor_parameter'] == motor_parameter, 'unexpected motor parameter passed'
         assert self._expected_parameter['nominal_values'] == nominal_values, 'unexpected nominal values passed'
         assert self._expected_parameter['limit_values'] == limit_values, 'unexpected limit values passed'
+        assert self._expected_parameter['motor_initializer'] == motor_initializer, 'unexpected initializer'
+        assert self._expected_parameter['initial_limits'] == initial_limits
 
     @pytest.mark.parametrize("motor_parameter", [_motor_parameter, None])
     @pytest.mark.parametrize("nominal_values, expected_nv", [({}, {}), (_nominal_values, _nominal_values)])
     @pytest.mark.parametrize("limit_values, expected_lv", [({}, {}), (_limit_values, _limit_values)])
-    def test_init(self, monkeypatch, motor_parameter, nominal_values, limit_values, expected_nv, expected_lv):
+    @pytest.mark.parametrize("motor_initializer", [_initializer, {}])
+    @pytest.mark.parametrize("initial_limits", [{},{}])
+    def test_init(self, monkeypatch, motor_parameter, nominal_values,
+                  limit_values, expected_nv, expected_lv, motor_initializer,
+                  initial_limits):
         """
         test initialization of InductionMotor
         :param monkeypatch:
@@ -1725,6 +1859,7 @@ class TestInductionMotor:
         :param limit_values: possible limit values
         :param expected_nv: expected nominal values
         :param expected_lv: expected limit values
+        :param motor_initializer: possible motor initializers
         :return:
         """
         # setup test scenario
@@ -1732,9 +1867,11 @@ class TestInductionMotor:
         monkeypatch.setattr(InductionMotor, "_update_limits", self.monkey_update_limits)
         monkeypatch.setattr(ElectricMotor, '__init__', self.monkey_super_init)
         self._expected_parameter = dict(motor_parameter=motor_parameter, nominal_values=expected_nv,
-                                        limit_values=expected_lv)
+                                        limit_values=expected_lv, motor_initializer=motor_initializer,
+                                        initial_limits=initial_limits)
         # call function to test
-        test_object = InductionMotor(motor_parameter, nominal_values, limit_values)
+        test_object = InductionMotor(motor_parameter, nominal_values,
+                                     limit_values, motor_initializer, initial_limits)
         # verify the expected results
         assert self._monkey_update_limits_counter == 1, 'update_limits() is not called once'
         assert self._monkey_super_init_counter == 1, 'super().__init__() is not called once'
@@ -1751,7 +1888,7 @@ class TestInductionMotor:
         monkeypatch.setattr(InductionMotor, 'CURRENTS', self._CURRENTS)
         test_object = InductionMotor()
         # call function to test
-        result = test_object.reset()
+        result = test_object.reset(self.state_position, self.state_space)
         # verify the expected results
         assert all(result == np.zeros(self._number_states)), 'unexpected state after reset()'
 
@@ -1826,8 +1963,8 @@ class TestInductionMotor:
         sigma = (l_s * l_r - 140e-3 ** 2) / (l_s * l_r)
         tau_sig = sigma * l_s / (3 + 1.5 * (140e-3 ** 2) / (l_r ** 2))
 
-        assert abs(l_s - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_ssig'])) < 1E-6, 'unexpected stator inductance'
-        assert abs(l_r - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_rsig'])) < 1E-6, 'unexpected rotor inductance'
+        assert abs(l_s - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_sigs'])) < 1E-6, 'unexpected stator inductance'
+        assert abs(l_r - (test_object._motor_parameter['l_m'] + test_object._motor_parameter['l_sigr'])) < 1E-6, 'unexpected rotor inductance'
         assert abs(sigma - ((l_s * l_r - test_object._motor_parameter['l_m'] ** 2) / (l_s * l_r))) < 1E-6, 'unexpected leakage coefficient'
         assert abs(tau_r - (l_r / test_object._motor_parameter['r_r'])) < 1E-6, 'unexpected rotor time constant'
         assert abs(tau_sig - (sigma * l_s / (test_object._motor_parameter['r_s'] + test_object._motor_parameter['r_r'] * (test_object._motor_parameter['l_m'] ** 2) / (l_r ** 2)))) < 1E-6, 'unexpected leakage time constant'
@@ -1844,7 +1981,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3 ,j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3 ,j_rotor=4, r_s=5, r_r=6),
              np.array([[-1.9848901098901102, 0, 0.08241758241758242, 0.0, 0],
                        [0, -1.9848901098901102, 0.0, 0.08241758241758242, 0],
                        [4.615384615384616, 0, -0.46153846153846156, 0, 0],
@@ -1861,7 +1998,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([0, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3, j_rotor=4, r_s=5, r_r=6),
              np.array([10 * 2 / 56 * 3,
                        - 10 * 2 / 56 * 2,
                        - 2 * 3,
@@ -1878,7 +2015,7 @@ class TestInductionMotor:
     @pytest.mark.parametrize(
         'state, u_in, omega, motor_parameter, result',[
             (np.array([5, 1, 2, 3, 4]), [0, 1, 2, 3], 0,
-             dict(p=2, l_m=10, l_ssig=2,  l_rsig=3, j_rotor=4, r_s=5, r_r=6),
+             dict(p=2, l_m=10, l_sigs=2,  l_sigr=3, j_rotor=4, r_s=5, r_r=6),
              np.array([- 3 * 3 / 2 * 2 * 10 / 13,
                 2 * 3 / 2 * 2 * 10 / 13,
                 1 * 3 / 2 * 2 * 10 / 13,

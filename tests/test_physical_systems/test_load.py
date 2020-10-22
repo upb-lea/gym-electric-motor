@@ -12,6 +12,9 @@ def test_mechanical_load():
     :return:
     """
     state_names = load_parameter['state_names']
+    # example for one random motor
+    state_positions = permex_state_positions
+    nominal_state = permex_motor_parameter['nominal_values']
     j_load = load_parameter['j_load']
     j_rotor = load_parameter['j_rot_load']
     omega_range = load_parameter['omega_range']
@@ -24,10 +27,12 @@ def test_mechanical_load():
         load.set_j_rotor(j_rotor)
         # test state space
         state_space = load.get_state_space(omega_range)
+        reset_state_space = Box(low=0, high=1.0, shape=(1,))
         assert state_space[0]['omega'] == omega_range[0]
         assert state_space[1]['omega'] == omega_range[1]
         # test reset
-        assert 0 == load.reset()
+        assert 0 == load.reset(reset_state_space, state_positions,
+                               nominal_state)
         # test not existing mechanical ode
         with pytest.raises(NotImplementedError):
             load.mechanical_ode(0, 0, 0)
@@ -42,6 +47,9 @@ def test_polynomial_load():
     """
 
     state_names = load_parameter['state_names']
+    # example for one random motor
+    state_positions = permex_state_positions
+    nominal_state = permex_motor_parameter['nominal_values']
     j_rotor = load_parameter['j_rot_load']
     omega_range = load_parameter['omega_range']
     # initialization loads in different ways
@@ -57,8 +65,9 @@ def test_polynomial_load():
     loads = [load_default, load_init]
     for load in loads:
         load.set_j_rotor(j_rotor)
-        assert 0 == load.reset()
         state_space = load.get_state_space(omega_range)
+        reset_state_space = Box(low=0, high=1.0, shape=(len(state_names),))
+        assert 0 == load.reset(reset_state_space, state_positions, nominal_state)
         assert state_space[0]['omega'] == omega_range[0]
         assert state_space[1]['omega'] == omega_range[1]
         a = load._a

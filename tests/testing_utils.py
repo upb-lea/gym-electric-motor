@@ -11,6 +11,7 @@ from gym.spaces import Box, Discrete
 from scipy.integrate import ode
 from tests.conf import system, jacobian, permex_motor_parameter
 from gym_electric_motor.utils import instantiate
+from gym_electric_motor.core import Callback
 
 
 # region first version
@@ -189,6 +190,7 @@ class DummyRewardFunction(RewardFunction):
         self.last_state = None
         self.last_reference = None
         self.last_action = None
+        self.last_time_step = None
         self.closed = False
         self.done = False
         self.kwargs = kwargs
@@ -202,10 +204,11 @@ class DummyRewardFunction(RewardFunction):
     def set_done(self, done):
         self.done = done
 
-    def reward(self, state, reference, action=None):
+    def reward(self, state, reference, k=None, action=None):
         self.last_state = state
         self.last_reference = reference
         self.last_action = action
+        self.last_time_step = k
         return -1 if self.done else 1, self.done
 
     def close(self):
@@ -316,7 +319,7 @@ class DummyVoltageSupply(VoltageSupply):
         self.t = t
         self.args = args
         self.kwargs = kwargs
-        return self._u_nominal
+        return [self._u_nominal]
 
 
 class DummyConverter(PowerElectronicConverter):
@@ -387,9 +390,9 @@ class DummyElectricMotor(ElectricMotor):
         self.u_in = u_in
         return state - u_in
 
-    def reset(self):
+    def reset(self, state_space, state_positions):
         self.reset_counter += 1
-        return super().reset()
+        return super().reset(state_space, state_positions)
 
     def torque(self, currents):
         return np.prod(currents)
@@ -513,7 +516,7 @@ class DummyLoad(MechanicalLoad):
         self.reset_counter = 0
         super().__init__(tau=tau, **kwargs)
 
-    def reset(self, *_, **__):
+    def reset(self, state_space, state_positions, nominal_state,  *_, **__):
         self.reset_counter += 1
         return np.zeros(2)
 
@@ -560,6 +563,7 @@ class DummyOdeSolver(OdeSolver):
         super().__init__()
 
     def integrate(self, t):
+        self.last_y = self._y
         self._y = self._y + t - self._t
         self._t = t
         return self._y
@@ -727,5 +731,56 @@ class DummyRandom:
         self._monkey_random_normal_counter += 1
         result = np.array([0.1, -0.2, 0.6, 0.1, -0.5, -0.3, -1.7, 0.1, -0.2, 0.4])
         return result[:size]
+    
+class DummyElectricMotorEnvironment:
+    """Dummy environment to test pre implemented callbacks. Extend for further testing cases"""
+    
+    def __init__(self, reference_generator = None, callbacks = [], **kwargs):
+        self._reference_generator = reference_generator
+        self._callbacks = callbacks
+        self._call_callbacks(self._callbacks, 'set_env', self)
+        
+    def _call_callbacks(self, callbacks, func_name, *args):
+        """Calls each callback's func_name function with *args"""
+        for callback in callbacks:
+            func = getattr(callback, func_name)
+            func(*args)
+    
+    def step(self):
+        self._call_callbacks(self._callbacks, 'on_step_begin')
+        self._call_callbacks(self._callbacks, 'on_step_end')
+            
+    def reset(self):
+        self._call_callbacks(self._callbacks, 'on_reset_begin')
+        self._call_callbacks(self._callbacks, 'on_reset_end')
+        
+    def close(self):
+        self._call_callbacks(self._callbacks, 'on_close')
+        
+class DummyCallback(Callback):
+    
+    def __init__(self):
+        self.reset_begin = 0
+        self.reset_end = 0
+        self.step_begin = 0
+        self.step_end = 0
+        self.close = 0
+    
+    def on_reset_begin(self):
+        self.reset_begin += 1
+    def on_reset_end(self):
+        self.reset_end += 1
+    def on_step_begin(self):
+        self.step_begin += 1
+    def on_step_end(self):
+        self.step_end += 1
+    def on_close(self):
+        self.close += 1
+        
+
+
+            
+    
+    
 
 # endregion

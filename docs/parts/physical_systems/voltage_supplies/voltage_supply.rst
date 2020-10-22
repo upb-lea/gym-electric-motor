@@ -6,6 +6,10 @@ Voltage Supplies
     :caption: Available Voltage Supplies:
 
     ideal_voltage_supply
+    rc_voltage_supply
+    ac_1_phase_supply
+    ac_3_phase_supply
+
 
 Voltage Supply Base Class
 *************************************
