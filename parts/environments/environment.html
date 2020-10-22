@@ -114,6 +114,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -304,7 +305,7 @@ interfaces further reference generators, reward functions, visualizations or phy
 <img alt="../../_images/TopLevelStructure.svg" src="../../_images/TopLevelStructure.svg" /></div>
 <dl class="class">
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=None</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=None</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=[]</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Description:</dt><dd><p>The main class connecting all modules of the gym-electric-motor environments.</p>
 </dd>
@@ -368,6 +369,7 @@ The reward function can terminate an episode, if a physical limit of the motor h
 <li><p><strong>reward_function</strong> (<a class="reference internal" href="../reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction" title="gym_electric_motor.core.RewardFunction"><em>RewardFunction</em></a>) – The reward function of this environment.</p></li>
 <li><p><strong>visualization</strong> (<a class="reference internal" href="../visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization" title="gym_electric_motor.core.ElectricMotorVisualization"><em>ElectricMotorVisualization</em></a>) – The visualization of this environment.</p></li>
 <li><p><strong>state_filter</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – Selection of states that are shown in the observation.</p></li>
+<li><p><strong>callbacks</strong> (<em>list</em><em>(</em><a class="reference internal" href="../core.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks being called in the environment</p></li>
 <li><p><strong>**kwargs</strong> – Arguments to be passed to the modules.</p></li>
 </ul>
 </dd>

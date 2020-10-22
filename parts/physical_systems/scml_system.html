@@ -107,6 +107,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -197,9 +198,10 @@ derive. They only implement private methods. Therefore, the interface to the use
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem">
 <em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.physical_systems.</code><code class="sig-name descname">SCMLSystem</code><span class="sig-paren">(</span><em class="sig-param">converter</em>, <em class="sig-param">motor</em>, <em class="sig-param">load=None</em>, <em class="sig-param">supply='IdealVoltageSupply'</em>, <em class="sig-param">ode_solver='euler'</em>, <em class="sig-param">solver_kwargs=None</em>, <em class="sig-param">noise_generator=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">calc_jacobian=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of a technical setting consisting of these
-components as well as a noise generator and a solver for the electrical ODE of the motor and mechanical ODE of the
-load.</p>
+<dd><p>The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
+a technical setting consisting of these components as well as a noise
+generator and a solver for the electrical ODE of the motor and mechanical
+ODE of the load.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

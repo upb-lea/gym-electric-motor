@@ -121,6 +121,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -209,7 +210,7 @@
 \frac{\mathrm{d} \varepsilon_{el}}{\mathrm{d} t}&amp;= p \omega_{me}\end{split}\]</div>
 <p>with</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}L_s &amp;= L_m + L_{s \sigma} &amp; \quad L_r &amp;= L_m + L_{r \sigma}\\
+\[\begin{split}L_s &amp;= L_m + L_{\sigma s} &amp; \quad L_r &amp;= L_m + L_{\sigma r}\\
 \sigma &amp;= \frac{L_r L_s - L_m^2}{L_r L_s} &amp; \quad \tau_r &amp;=\frac{L_r}{R_r} &amp; \quad \tau_\sigma &amp;= \frac{\sigma L_s}{R_s + R_r \frac{L_m^2}{L_r^2}}\end{split}\]</div>
 </div>
 <div class="section" id="torque-equation">
@@ -224,6 +225,58 @@
 <em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">DoublyFedInductionMotor</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#DoublyFedInductionMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
 <colgroup>
+<col style="width: 24%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Parameter</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Default Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>r_s</p></td>
+<td><p>Ohm</p></td>
+<td><p>12e-3</p></td>
+<td><p>Stator resistance</p></td>
+</tr>
+<tr class="row-odd"><td><p>r_r</p></td>
+<td><p>Ohm</p></td>
+<td><p>21e-3</p></td>
+<td><p>Rotor resistance</p></td>
+</tr>
+<tr class="row-even"><td><p>l_m</p></td>
+<td><p>H</p></td>
+<td><p>13.5e-3</p></td>
+<td><p>Main inductance</p></td>
+</tr>
+<tr class="row-odd"><td><p>l_sigs</p></td>
+<td><p>H</p></td>
+<td><p>0.2e-3</p></td>
+<td><p>Stator-side stray inductance</p></td>
+</tr>
+<tr class="row-even"><td><p>l_sigr</p></td>
+<td><p>H</p></td>
+<td><p>0.1e-3</p></td>
+<td><p>Rotor-side stray inductance</p></td>
+</tr>
+<tr class="row-odd"><td><p>p</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>Pole pair number</p></td>
+</tr>
+<tr class="row-even"><td><p>j_rotor</p></td>
+<td><p>kg/m^2</p></td>
+<td><p>1e3</p></td>
+<td><p>Moment of inertia of the rotor</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
 <col style="width: 23%" />
 <col style="width: 9%" />
 <col style="width: 68%" />
@@ -235,13 +288,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>i_sq</p></td>
-<td><p>A</p></td>
-<td><p>Quadrature axis current</p></td>
-</tr>
-<tr class="row-odd"><td><p>i_sd</p></td>
+<tr class="row-even"><td><p>i_sd</p></td>
 <td><p>A</p></td>
 <td><p>Direct axis current</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_sq</p></td>
+<td><p>A</p></td>
+<td><p>Quadrature axis current</p></td>
 </tr>
 <tr class="row-even"><td><p>i_sa</p></td>
 <td><p>A</p></td>
@@ -278,13 +331,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>psi_rq</p></td>
-<td><p>Vs</p></td>
-<td><p>Quadrature axis of the rotor oriented flux</p></td>
-</tr>
-<tr class="row-odd"><td><p>psi_rd</p></td>
+<tr class="row-even"><td><p>psi_rd</p></td>
 <td><p>Vs</p></td>
 <td><p>Direct axis of the rotor oriented flux</p></td>
+</tr>
+<tr class="row-odd"><td><p>psi_rq</p></td>
+<td><p>Vs</p></td>
+<td><p>Quadrature axis of the rotor oriented flux</p></td>
 </tr>
 <tr class="row-even"><td><p>psi_ra</p></td>
 <td><p>Vs</p></td>
@@ -321,13 +374,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>u_sq</p></td>
-<td><p>V</p></td>
-<td><p>Quadrature axis voltage</p></td>
-</tr>
-<tr class="row-odd"><td><p>u_sd</p></td>
+<tr class="row-even"><td><p>u_sd</p></td>
 <td><p>V</p></td>
 <td><p>Direct axis voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_sq</p></td>
+<td><p>V</p></td>
+<td><p>Quadrature axis voltage</p></td>
 </tr>
 <tr class="row-even"><td><p>u_sa</p></td>
 <td><p>V</p></td>
@@ -447,9 +500,17 @@ the general limits/nominal values (e.g. i)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>motor_parameter</strong> – Motor parameter dictionary. Contents specified for each motor.</p></li>
+<li><p><strong>motor_parameter</strong> – Motor parameter dictionary. Contents specified
+for each motor.</p></li>
 <li><p><strong>nominal_values</strong> – Nominal values for the motor quantities.</p></li>
 <li><p><strong>limit_values</strong> – Limits for the motor quantities.</p></li>
+<li><p><strong>motor_initializer</strong> – <p>Initial motor states (currents)
+(‘constant’, ‘uniform’, ‘gaussian’ sampled from</p>
+<blockquote>
+<div><p>given interval or out of nominal motor values)</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>initial_limits</strong> – limits for of the initial state-value</p></li>
 </ul>
 </dd>
 </dl>
@@ -485,7 +546,7 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> – The current state of the motor. [i_salpha, i_sbeta, psi_ralpha, psi_rbeta, epsilon]</p></li>
+<li><p><strong>state</strong> – The momentary state of the motor. [i_salpha, i_sbeta, psi_ralpha, psi_rbeta, epsilon]</p></li>
 <li><p><strong>omega</strong> – The mechanical load</p></li>
 <li><p><strong>u_sr_alphabeta</strong> – The input voltages [u_salpha, u_sbeta, u_ralpha, u_rbeta]</p></li>
 </ul>
@@ -510,6 +571,40 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 <dd class="field-odd"><p>list(float)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.initial_limits">
+<em class="property">property </em><code class="sig-name descname">initial_limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.initial_limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict: nominal motor limits for choosing initial values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes given state values. Values can be given as a constant or
+sampled random out of a statistical distribution. Initial value is in
+range of the nominal values or a given interval. Values are written in
+initial_states attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries (given by
+physical system)</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states (given by physical
+system)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.initializer">
+<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.initializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict: Motor initial state and additional initializer parameter</p>
 </dd></dl>
 
 <dl class="method">
@@ -628,14 +723,20 @@ So this method calls q(quantities, -epsilon).</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">omega=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the motors state to a new initial state. (Default 0)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The initial motors state.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.ndarray(float)</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The initial motor states.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray(float)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -664,23 +765,6 @@ So this method calls q(quantities, -epsilon).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The converted quantities in the abc representation like <code class="docutils literal notranslate"><span class="pre">[u_a,</span> <span class="pre">u_b,</span> <span class="pre">u_c]</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.torque">
-<code class="sig-name descname">torque</code><span class="sig-paren">(</span><em class="sig-param">states</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.torque" title="Permalink to this definition">¶</a></dt>
-<dd><p>Torque equation of the motor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>currents</strong> (<em>numpy.ndarray</em><em>(</em><em>float</em><em>)</em>) – Motor currents to calculate the Torque.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Motor torque for the given state.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>

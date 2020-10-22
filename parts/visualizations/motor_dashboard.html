@@ -100,6 +100,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -171,241 +172,73 @@
 <h1>Motor Dashboard<a class="headerlink" href="#motor-dashboard" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard.</code><code class="sig-name descname">MotorDashboard</code><span class="sig-paren">(</span><em class="sig-param">update_period=0.05</em>, <em class="sig-param">visu_period=5</em>, <em class="sig-param">plotted_variables='all'</em>, <em class="sig-param">**_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="Permalink to this definition">¶</a></dt>
-<dd><p>Visualization of the variables of the motor in graphs. This can be the angular velocity omega, torque
-phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.</p>
-<p>In the table are all variables given that can be shown for a specific motor.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 9%" />
-<col style="width: 8%" />
-<col style="width: 8%" />
-<col style="width: 9%" />
-<col style="width: 8%" />
-<col style="width: 8%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>variable</p></th>
-<th class="head"><p>extex</p></th>
-<th class="head"><p>shunt</p></th>
-<th class="head"><p>permex</p></th>
-<th class="head"><p>series</p></th>
-<th class="head"><p>PMSM,
-SynRM</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>omega</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>mechanical angular velocity</p></td>
-</tr>
-<tr class="row-odd"><td><p>torque</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>Motor generated torque</p></td>
-</tr>
-<tr class="row-even"><td><p>u_sup</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>supply voltage of the converter</p></td>
-</tr>
-<tr class="row-odd"><td><p>i</p></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td></td>
-<td><p>current in permex and series motors</p></td>
-</tr>
-<tr class="row-even"><td><p>i_e</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>current in excitation circuit</p></td>
-</tr>
-<tr class="row-odd"><td><p>u</p></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td></td>
-<td><p>voltage at shunt, permex and series motors</p></td>
-</tr>
-<tr class="row-even"><td><p>u_e</p></td>
-<td><p>x</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>voltage at the excitation circuit</p></td>
-</tr>
-<tr class="row-odd"><td><p>u_a</p></td>
-<td><p>x</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>armature voltage or voltage of phase a</p></td>
-</tr>
-<tr class="row-even"><td><p>u_b</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>voltage of phase b</p></td>
-</tr>
-<tr class="row-odd"><td><p>u_c</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>voltage of phase c</p></td>
-</tr>
-<tr class="row-even"><td><p>u_d</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>d-axis voltage</p></td>
-</tr>
-<tr class="row-odd"><td><p>u_q</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>q-axis voltage</p></td>
-</tr>
-<tr class="row-even"><td><p>i_a</p></td>
-<td><p>x</p></td>
-<td><p>x</p></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>armature current or current in phase a</p></td>
-</tr>
-<tr class="row-odd"><td><p>i_b</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>current in phase a</p></td>
-</tr>
-<tr class="row-even"><td><p>i_c</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>current in phase b</p></td>
-</tr>
-<tr class="row-odd"><td><p>i_d</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>d-axis current</p></td>
-</tr>
-<tr class="row-even"><td><p>i_q</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>q-axis current</p></td>
-</tr>
-<tr class="row-odd"><td><p>epsilon</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>x</p></td>
-<td><p>electrical rotational angle</p></td>
-</tr>
-</tbody>
-</table>
-<p>Remark: In the current MotorDashboard version an overlap can occur in the visualization at short episodes.</p>
-<p>Constructor of the dashboard.</p>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard.</code><code class="sig-name descname">MotorDashboard</code><span class="sig-paren">(</span><em class="sig-param">plots</em>, <em class="sig-param">update_cycle=1000</em>, <em class="sig-param">dark_mode=False</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dashboard to plot the GEM states into graphs.</p>
+<p>Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
+matplotlib axis.
+The MotorDashboard is responsible for all matplotlib.figure related tasks, especially updating the figures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>plotted_variables</strong> – Names of the variables that shall be shown on the dashboard
-| Shortcut: [‘all’]/[‘none’] for all/no visualized variables</p></li>
-<li><p><strong>update_period</strong> – Number of seconds after that dashboard will be updated
-| Updating with tiny periods lead to very low speed.</p></li>
-<li><p><strong>visu_period</strong> – Time period shown on the dashboard</p></li>
+<li><p><strong>plots</strong> (<em>list</em>) – <p>A list of plots to show. Each element may either be a string or an already instantiated
+MotorDashboardPlot
+Possible strings:</p>
+<blockquote>
+<div><ul>
+<li><p>{state_name}: The corresponding state is plotted</p></li>
+<li><p>reward: The reward per step is plotted</p></li>
+<li><p>action_{i}: The i-th action is plotted. ‘action_0’ for discrete action space</p></li>
+<li><p>mean_reward: The mean episode reward</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>update_cycle</strong> (<em>int</em>) – Number after how many steps the plot shall be updated. (default 1000)</p></li>
+<li><p><strong>dark_mode</strong> (<em>Bool</em>) – Select a dark background for visualization by setting it to True</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call this function when the environment is closed to close all windows.</p>
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the environment is deleted to close or save figures, logs etc.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">reference_trajectories=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to call when a new episode has started</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>reference_trajectories</strong> – the references for the new episode</p>
-</dd>
-</dl>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the environment is reset. All subplots are reset.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules">
-<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Args:
-physical_system(PhysicalSystem):</p>
-<blockquote>
-<div><p>This function is called from the environment in its initialization.
-Settings that require the knowledge of the physical system (like setting of state variables) have to be
-done in this function.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>reference_generator(ReferenceGenerator):</dt><dd><p>This function is called from the environment in its initialization.
-Settings that require the knowledge of the reference generator (like setting of referenced variables)
-have to be done in this function.</p>
-</dd>
-<dt>reward_function(RewardFunction):</dt><dd><p>This function is called from the environment in its initialization.
-Settings that require the knowledge of the reward function (like setting of reward ranges) have
-to be done in this function.</p>
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">ps</em>, <em class="sig-param">rg</em>, <em class="sig-param">rf</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called during initialization of the environment to interconnect all modules. State_names, references,…
+might be saved here for later processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ps</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – PhysicalSystem of the environment</p></li>
+<li><p><strong>rg</strong> (<a class="reference internal" href="../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a>) – ReferenceGenerator of the environment</p></li>
+<li><p><strong>rf</strong> (<a class="reference internal" href="../reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction" title="gym_electric_motor.core.RewardFunction"><em>RewardFunction</em></a>) – RewardFunction of the environment</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference=None</em>, <em class="sig-param">reward=None</em>, <em class="sig-param">done=False</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to call in every step of the environment</p>
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">action</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called within a render() call of an environment.</p>
+<p>The information about the last environmental step is passed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> – current state to plot</p></li>
-<li><p><strong>reference</strong> – current reference in this step</p></li>
-<li><p><strong>reward</strong> – current reward in this step</p></li>
-<li><p><strong>done</strong> – Flag, if the episode has terminated</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Current episode step.</p></li>
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – State of the system</p></li>
+<li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Reference array of the system</p></li>
+<li><p><strong>action</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Last taken action. (None after reset)</p></li>
+<li><p><strong>reward</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Last received reward. (None after reset)</p></li>
+<li><p><strong>done</strong> (<em>bool</em>) – Flag if the current state is terminal</p></li>
 </ul>
 </dd>
 </dl>

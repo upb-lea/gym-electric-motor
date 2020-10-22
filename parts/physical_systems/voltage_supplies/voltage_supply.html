@@ -100,6 +100,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../electric_motors/electric_motor.html">Electric Motors</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Voltage Supplies</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ideal_voltage_supply.html">Ideal Voltage Supply</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rc_voltage_supply.html">RC Voltage Supply</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ac_1_phase_supply.html">AC 1 Phase Supply</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ac_3_phase_supply.html">AC 3 Phase Supply</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../ode_solvers/ode_solver.html">ODE-Solvers</a></li>
@@ -110,6 +113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -185,6 +189,9 @@
 <p class="caption"><span class="caption-text">Available Voltage Supplies:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ideal_voltage_supply.html">Ideal Voltage Supply</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rc_voltage_supply.html">RC Voltage Supply</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ac_1_phase_supply.html">AC 1 Phase Supply</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ac_3_phase_supply.html">AC 3 Phase Supply</a></li>
 </ul>
 </div>
 <div class="section" id="voltage-supply-base-class">
@@ -205,7 +212,7 @@ u_nominal(float): Nominal supply voltage</p>
 </dl>
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">
-<code class="sig-name descname">get_voltage</code><span class="sig-paren">(</span><em class="sig-param">i_sup</em>, <em class="sig-param">t</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply.get_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_voltage</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">i_sup</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply.get_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -215,10 +222,10 @@ u_nominal(float): Nominal supply voltage</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Supply Voltage at time t.</p>
+<dd class="field-even"><p>Supply Voltage(s) at time t.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>list(float)</p>
 </dd>
 </dl>
 </dd></dl>

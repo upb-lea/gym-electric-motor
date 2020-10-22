@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -184,7 +185,8 @@
 <span class="sd">    | state_length[i] = 2 for states with positive and negative values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normed_reward_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">reward_power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normed_reward_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">reward_power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.</span>

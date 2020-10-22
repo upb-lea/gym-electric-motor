@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -158,457 +159,146 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gym_electric_motor.visualization.motor_dashboard</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ElectricMotorVisualization</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.core</span> <span class="kn">import</span> <span class="n">ElectricMotorVisualization</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">motor_dashboard_plots</span> <span class="k">as</span> <span class="n">mdp</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 
 <div class="viewcode-block" id="MotorDashboard"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard">[docs]</a><span class="k">class</span> <span class="nc">MotorDashboard</span><span class="p">(</span><span class="n">ElectricMotorVisualization</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dashboard to plot the GEM states into graphs.</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Visualization of the variables of the motor in graphs. This can be the angular velocity omega, torque</span>
-<span class="sd">    phase voltages, phase currents, supply voltage and the rotor angle at the PMSM.</span>
-
-<span class="sd">    In the table are all variables given that can be shown for a specific motor.</span>
-
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |variable| extex | shunt | permex |series | PMSM, | Description                                |</span>
-<span class="sd">    |        |       |       |        |       | SynRM |                                            |</span>
-<span class="sd">    +========+=======+=======+========+=======+=======+============================================+</span>
-<span class="sd">    |omega   | x     | x     | x      | x     | x     | mechanical angular velocity                |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |torque  | x     | x     | x      | x     | x     | Motor generated torque                     |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u_sup   | x     | x     | x      | x     | x     | supply voltage of the converter            |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |i       |       |       | x      | x     |       | current in permex and series motors        |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |i_e     | x     | x     |        |       |       | current in excitation circuit              |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u       |       | x     | x      | x     |       | voltage at shunt, permex and series motors |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u_e     | x     |       |        |       |       | voltage at the excitation circuit          |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u_a     | x     |       |        |       | x     | armature voltage or voltage of phase a     |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u_b     |       |       |        |       | x     | voltage of phase b                         |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u_c     |       |       |        |       | x     | voltage of phase c                         |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u_d     |       |       |        |       | x     | d-axis voltage                             |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |u_q     |       |       |        |       | x     | q-axis voltage                             |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |i_a     | x     | x     |        |       | x     | armature current or current in phase a     |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |i_b     |       |       |        |       | x     | current in phase a                         |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |i_c     |       |       |        |       | x     | current in phase b                         |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |i_d     |       |       |        |       | x     | d-axis current                             |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |i_q     |       |       |        |       | x     | q-axis current                             |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-<span class="sd">    |epsilon |       |       |        |       | x     | electrical rotational angle                |</span>
-<span class="sd">    +--------+-------+-------+--------+-------+-------+--------------------------------------------+</span>
-
-
-<span class="sd">    Remark: In the current MotorDashboard version an overlap can occur in the visualization at short episodes.</span>
+<span class="sd">    Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single</span>
+<span class="sd">    matplotlib axis.</span>
+<span class="sd">    The MotorDashboard is responsible for all matplotlib.figure related tasks, especially updating the figures.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_period</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span> <span class="n">visu_period</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plotted_variables</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plots</span><span class="p">,</span> <span class="n">update_cycle</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">dark_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">              Constructor of the dashboard.</span>
-
-<span class="sd">              Args:</span>
-<span class="sd">                  plotted_variables: Names of the variables that shall be shown on the dashboard</span>
-<span class="sd">                        | Shortcut: [&#39;all&#39;]/[&#39;none&#39;] for all/no visualized variables</span>
-<span class="sd">                  update_period: Number of seconds after that dashboard will be updated</span>
-<span class="sd">                                | Updating with tiny periods lead to very low speed.</span>
-<span class="sd">                  visu_period: Time period shown on the dashboard</span>
+<span class="sd">        Args:</span>
+<span class="sd">            plots(list): A list of plots to show. Each element may either be a string or an already instantiated</span>
+<span class="sd">                MotorDashboardPlot</span>
+<span class="sd">                Possible strings:</span>
+<span class="sd">                    - {state_name}: The corresponding state is plotted</span>
+<span class="sd">                    - reward: The reward per step is plotted</span>
+<span class="sd">                    - action_{i}: The i-th action is plotted. &#39;action_0&#39; for discrete action space</span>
+<span class="sd">                    - mean_reward: The mean episode reward</span>
+<span class="sd">                    </span>
+<span class="sd">            update_cycle(int): Number after how many steps the plot shall be updated. (default 1000)</span>
+<span class="sd">            dark_mode(Bool):  Select a dark background for visualization by setting it to True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_period</span> <span class="o">=</span> <span class="n">update_period</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span> <span class="o">=</span> <span class="n">visu_period</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">=</span> <span class="n">plotted_variables</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">=</span> <span class="n">update_cycle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_observation_space</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="c1"># If available use the Qt5 Backend and the update function to update the plot (faster)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Qt5Agg&#39;</span><span class="p">)</span>
-        <span class="c1"># Otherwise stick to the default backend and use the draw function (slower)</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Cannot use Qt5Agg matplotlib backend. Plotting will be slower.&#39;</span><span class="p">)</span>
-
-<div class="viewcode-block" id="MotorDashboard.set_modules"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">physical_system</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span> <span class="o">=</span> <span class="n">reference_generator</span><span class="o">.</span><span class="n">referenced_states</span></div>
-
-<div class="viewcode-block" id="MotorDashboard.reset"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function to call when a new episode has started</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            reference_trajectories: the references for the new episode</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="n">reference_trajectories</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">:</span>
-                <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="n">reference_trajectories</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">):</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">[</span><span class="n">index</span><span class="p">]:</span>
-                    <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reference_trajectories</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dark_mode</span> <span class="o">=</span> <span class="n">dark_mode</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">plots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">plot</span> <span class="o">==</span> <span class="s1">&#39;reward&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">RewardPlot</span><span class="p">())</span>
+                <span class="k">elif</span> <span class="n">plot</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;action_&#39;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">ActionPlot</span><span class="p">(</span><span class="n">plot</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">plot</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mean_reward&#39;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">MeanEpisodeRewardPlot</span><span class="p">())</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span></div>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">StatePlot</span><span class="p">(</span><span class="n">plot</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">mdp</span><span class="o">.</span><span class="n">MotorDashboardPlot</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MotorDashboard.step"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">done</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function to call in every step of the environment</span>
+<div class="viewcode-block" id="MotorDashboard.reset"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called when the environment is reset. All subplots are reset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">:</span>  <span class="c1"># for plot in self._plots + self._episode_plots throws warning</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="p">:</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="c1"># since end of an episode can only be identified by a reset call. Episode based plot canvas updated here</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MotorDashboard.step"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Called within a render() call of an environment.</span>
+
+<span class="sd">        The information about the last environmental step is passed.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            state: current state to plot</span>
-<span class="sd">            reference: current reference in this step</span>
-<span class="sd">            reward: current reward in this step</span>
-<span class="sd">            done: Flag, if the episode has terminated</span>
+<span class="sd">            k(int): Current episode step.</span>
+<span class="sd">            state(ndarray(float)): State of the system</span>
+<span class="sd">            reference(ndarray(float)): Reference array of the system</span>
+<span class="sd">            action(ndarray(float)): Last taken action. (None after reset)</span>
+<span class="sd">            reward(ndarray(float)): Last received reward. (None after reset)</span>
+<span class="sd">            done(bool): Flag if the current state is terminal</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_update_physical_system_data</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_order_plotted_variables</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_set_up_plots</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">:</span>
-                <span class="n">var</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span>
-        <span class="n">state_denorm</span> <span class="o">=</span> <span class="n">state</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
-        <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">reference_denorm</span> <span class="o">=</span> <span class="n">reference</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
-            <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">,</span>
-                    <span class="n">state_denorm</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">],</span>
-                    <span class="n">reference_denorm</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">]</span>
-            <span class="p">):</span>
-                <span class="n">var</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">,</span> <span class="n">state_denorm</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">]):</span>
-                <span class="n">var</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_figure</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span> <span class="p">:</span>    <span class="c1"># for plot in self._plots + self._episode_plots throws warning</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="p">:</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">done</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">dashVar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span><span class="p">:</span>
-                <span class="n">dashVar</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw_idle</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span></div>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="MotorDashboard.close"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Call this function when the environment is closed to close all windows.</span>
+<div class="viewcode-block" id="MotorDashboard.set_modules"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">rg</span><span class="p">,</span> <span class="n">rf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called during initialization of the environment to interconnect all modules. State_names, references,...</span>
+<span class="sd">        might be saved here for later processing</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ps(PhysicalSystem): PhysicalSystem of the environment</span>
+<span class="sd">            rg(ReferenceGenerator): ReferenceGenerator of the environment</span>
+<span class="sd">            rf(RewardFunction): RewardFunction of the environment</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">:</span>  <span class="c1"># for plot in self._plots + self._episode_plots throws warning</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">rg</span><span class="p">,</span> <span class="n">rf</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="p">:</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">rg</span><span class="p">,</span> <span class="n">rf</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_update_physical_system_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        update the limits, nominal values and sampling time</span>
+    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called with first render() call to setup the figures and plots.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">limits</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">nominal_state</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cycle</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_period</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">labels</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\omega/(rad/s)$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="s1">&#39;$T/Nm$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="s1">&#39;$i/A$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;i_a&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{a}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;i_e&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{e}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;i_b&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{b}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;i_c&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{c}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;i_sq&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{sq}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;i_sd&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{sd}</span><span class="s1">/A$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="s1">&#39;$u/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u_a&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{a}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u_b&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{b}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u_c&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{c}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u_sq&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sq}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u_sd&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sd}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{e}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;u_sup&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sup}</span><span class="s1">/V$&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon/rad$&#39;</span>
-            <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_space</span>
-
-    <span class="k">def</span> <span class="nf">_set_up_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function handles the setup of all plots.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">axis_ep</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;no plot variable selected&quot;</span>
+        <span class="c1"># Use dark-mode, if selected</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dark_mode</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;dark_background&#39;</span><span class="p">)</span>
+        <span class="c1"># create seperate figures for time based and episode based plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span><span class="p">,</span> <span class="n">axes_ep</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_figure_ep</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="s1">&#39;episode&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Qt5Agg&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">update</span>
-            <span class="c1"># use for full screen</span>
-            <span class="n">fig_manager</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_current_fig_manager</span><span class="p">()</span>
-            <span class="n">fig_manager</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_update_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span>
-        <span class="n">low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="o">.</span><span class="n">low</span>
-        <span class="n">high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="o">.</span><span class="n">high</span>
+        <span class="c1"># adding a common x-label to all the subplots in each figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="s1">&#39;t/s&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 
-        <span class="n">low_nominal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="o">.</span><span class="n">low</span>
-        <span class="n">high_nominal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="o">.</span><span class="n">high</span>
+        <span class="c1"># plt.subplot() does not return an iterable var when the number of subplots==1</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes</span><span class="p">]</span>
+        <span class="k">if</span>  <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">axis_ep</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes_ep</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">plot</span><span class="p">,</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">,</span> <span class="n">axes</span><span class="p">):</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">_DashboardVariable</span><span class="p">(</span>
-                        <span class="n">var</span><span class="p">,</span>
-                        <span class="n">ax</span><span class="p">,</span>
-                        <span class="n">lo</span><span class="p">,</span>
-                        <span class="n">hi</span><span class="p">,</span>
-                        <span class="n">lo_nominal</span><span class="p">,</span>
-                        <span class="n">hi_nominal</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_period</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">[</span><span class="n">var</span><span class="p">],</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span><span class="p">,</span>
-                        <span class="n">with_ref</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">lo_nominal</span><span class="p">,</span> <span class="n">hi_nominal</span><span class="p">,</span> <span class="n">with_ref</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span>
-                        <span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">],</span>
-                        <span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">],</span>
-                        <span class="n">low_nominal</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">],</span>
-                        <span class="n">high_nominal</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">],</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">]</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">_DashboardVariable</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="p">,</span>
-                        <span class="n">axes</span><span class="p">,</span>
-                        <span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="n">low_nominal</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="n">high_nominal</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_period</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="p">])])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dash_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Nothing to plot&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">plot</span><span class="p">,</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_plots</span><span class="p">,</span> <span class="n">axis_ep</span><span class="p">):</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called every {update_cycle} steps to refresh the figure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">:</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">_order_plotted_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            This functions checks if the variables that should be plotted exists. The order is always as in the motor</span>
-<span class="sd">            parameter specified.</span>
-
-<span class="sd">            The value [True] is the shortcut for plotting all variables.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="p">)))</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No valid variables for visualization&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">temp</span> <span class="ow">and</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_plotted_state_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">variable</span><span class="p">))</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plotted_variables</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No valid variables for visualization&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
-
-
-<span class="k">class</span> <span class="nc">_DashboardVariable</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Class to manage a single axis for a state variable on the dashboard with trajectory (and reference)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">min_limit</span><span class="p">,</span> <span class="n">max_limit</span><span class="p">,</span> <span class="n">min_nominal</span><span class="p">,</span> <span class="n">max_nominal</span><span class="p">,</span> <span class="n">episode_length</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">update_period</span><span class="p">,</span>
-                 <span class="n">label</span><span class="p">,</span> <span class="n">visu_period</span><span class="p">,</span> <span class="n">referenced</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            name: Name of the state variable</span>
-<span class="sd">            ax: the axis generated by the Dashboard</span>
-<span class="sd">            min_limit: minimal possible value for the variable</span>
-<span class="sd">            max_limit: maximal possible value for the variable</span>
-<span class="sd">            min_nominal: minimal nominal value for the variable</span>
-<span class="sd">            max_nominal: maximal nominal value for the variable</span>
-<span class="sd">            episode_length: Episode length of the environment</span>
-<span class="sd">            tau: Sampling time of the environment</span>
-<span class="sd">            update_period: updating period of the dashboard in s</span>
-<span class="sd">            label: labels of the variables in the plots</span>
-<span class="sd">            visu_period: time period shown on the dashboard</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">=</span> <span class="n">max_limit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span> <span class="o">=</span> <span class="n">min_limit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_nominal</span> <span class="o">=</span> <span class="n">max_nominal</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_nominal</span> <span class="o">=</span> <span class="n">min_nominal</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">=</span> <span class="n">episode_length</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_period</span> <span class="o">=</span> <span class="n">update_period</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">update_period</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span> <span class="o">=</span> <span class="n">visu_period</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_visu_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">visu_period</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_past_data_dash</span> <span class="o">=</span> <span class="mf">0.75</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reference_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_point</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_steps</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">point_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reference_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="n">label</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_with_ref</span> <span class="o">=</span> <span class="n">referenced</span>
-
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reset the axis when a new episode has started</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            ref: Reference to display for the state variable</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_with_ref</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">episode_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
-            <span class="n">x_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="p">))</span>
-            <span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_ref</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">draw_artist</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="c1"># if the given reference is shorter than the specified visualization length, the visualization length is</span>
-            <span class="c1"># adapted</span>
-            <span class="c1"># self._visu_period = min(self._visu_period, self.episode_length * self._tau)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_visu_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_period</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_past_data_dash</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span> <span class="o">-</span> <span class="mf">0.1</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">),</span>
-                         <span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;t/s&#39;</span><span class="p">)</span>
-
-        <span class="c1"># set y ticks, display min and max for nominal and limit and two values between the nominal values</span>
-        <span class="n">axis_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_nominal</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_nominal</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">axis_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axis_scale</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">axis_scale</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">draw_artist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_period</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot_nominal_state</span><span class="p">()</span>  <span class="c1"># show nominal values on dashboard</span>
-        <span class="k">if</span> <span class="s1">&#39;u&#39;</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_nominal</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_nominal</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_nominal</span><span class="p">),</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">max_nominal</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_nominal</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_nominal</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plot_limits</span><span class="p">()</span>  <span class="c1"># show limits on dashboard</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">point_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reference_list</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function to call every cycle in the render function of the environment</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            data: the new data point to store</span>
-<span class="sd">            k: the current step of the environment</span>
-<span class="sd">            ref: reference value of this step</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Store the points in an array and plot them only when the update cycle is reached or the episode ends</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reference_points</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span>
-
-    <span class="k">def</span> <span class="nf">scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update function for the dashboard. Plots all the points</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            k: Current step of the environment</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_past_data_dash</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visu_period</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_ref</span><span class="p">:</span>
-            <span class="n">reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_points</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">draw_artist</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reference_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_steps</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">reference_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_cycle</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">draw_artist</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">point_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_steps</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">point_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">plot_nominal_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots a dotted line at the nominal values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_nominal</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_nominal</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_nominal</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">plot_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots a dashed read line at minimal and maximal values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_limit</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_limit</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

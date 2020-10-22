@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -159,28 +160,77 @@
             
   <h1>Source code for gym_electric_motor.visualization.console_printer</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ElectricMotorVisualization</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <div class="viewcode-block" id="ConsolePrinter"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter">[docs]</a><span class="k">class</span> <span class="nc">ConsolePrinter</span><span class="p">(</span><span class="n">ElectricMotorVisualization</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prints current training values of the environment on the console.</span>
 
-    <span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="sd">    These include environment state and reference values as well as the number of training steps, the rewards</span>
+<span class="sd">    and the cumulative reward. It also shows why an episode has terminated (external, constraint violation)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">update_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            verbose(Int):</span>
+<span class="sd">                Integer indicating whether and at which frequency the console will be printed.</span>
+<span class="sd">                Options:</span>
+<span class="sd">                    0: No Printing</span>
+<span class="sd">                    1: Printing after an episode has terminated</span>
+<span class="sd">                    2: Printing at each step of an episode</span>
+<span class="sd">            update_freq(Int):</span>
+<span class="sd">                Unsigned Integer setting the update frequency if verbose is 2.</span>
+<span class="sd">                It&#39;s value n means that each nth step the corresponding output will be printed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_freq</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_freq</span> <span class="o">=</span> <span class="n">update_freq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cum_reward</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_violation</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;float&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{:9.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="ConsolePrinter.reset"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+<div class="viewcode-block" id="ConsolePrinter.reset"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets called on environment reset. Handles internal value reset and External reset printing&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span>
+<div class="viewcode-block" id="ConsolePrinter.set_modules"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the limits of the current physical system for accurate printing&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span></div>
 
-<div class="viewcode-block" id="ConsolePrinter.step"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;State </span><span class="si">{</span><span class="n">state</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;Reference </span><span class="si">{</span><span class="n">reference</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;Reward </span><span class="si">{</span><span class="n">reward</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="p">)</span></div></div>
+<div class="viewcode-block" id="ConsolePrinter.step"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets called at each step of the environment.</span>
+<span class="sd">        Handles per step printing as well es constraint violation printing&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_print_freq</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_num_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cum_reward</span> <span class="o">+=</span> <span class="n">reward</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_violation</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_print_freq</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Episode </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;Constraint Violation! &#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_violation</span> <span class="k">else</span> <span class="s1">&#39;External Reset. &#39;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;Number of steps: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_steps</span><span class="si">:</span><span class="s1"> 8d</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;Cumulative Reward: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_cum_reward</span><span class="si">:</span><span class="s1">7.3f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_violation</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_num_steps</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_cum_reward</span> <span class="o">=</span> <span class="n">reward</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_episode</span> <span class="o">+=</span> <span class="mi">1</span>
+                
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_print_freq</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_steps</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_freq</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Episode </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode</span><span class="si">}</span><span class="s1"> &#39;</span>
+                      <span class="sa">f</span><span class="s1">&#39;State </span><span class="si">{</span><span class="n">state</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="si">}</span><span class="s1"> &#39;</span>
+                      <span class="sa">f</span><span class="s1">&#39;Reference </span><span class="si">{</span><span class="n">reference</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="si">}</span><span class="s1"> &#39;</span>
+                      <span class="sa">f</span><span class="s1">&#39;Reward </span><span class="si">{</span><span class="n">reward</span><span class="si">:</span><span class="s1">7.3f</span><span class="si">}</span><span class="s1"> &#39;</span>
+                      <span class="sa">f</span><span class="s1">&#39;Step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_steps</span><span class="si">:</span><span class="s1">08d</span><span class="si">}</span><span class="s1"> &#39;</span>
+                      <span class="sa">f</span><span class="s1">&#39;Cumulative Reward </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_cum_reward</span><span class="si">:</span><span class="s1">7.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                      <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span>
+                      <span class="p">)</span></div></div>
+
 </pre></div>
 
            </div>

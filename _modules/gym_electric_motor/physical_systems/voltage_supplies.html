@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -158,7 +159,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gym_electric_motor.physical_systems.voltage_supplies</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="VoltageSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply">[docs]</a><span></span><span class="k">class</span> <span class="nc">VoltageSupply</span><span class="p">:</span>
+<span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems.solvers</span> <span class="kn">import</span> <span class="n">EulerSolver</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="VoltageSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">VoltageSupply</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all VoltageSupplies to be used in a SCMLSystem.</span>
 
@@ -169,6 +174,8 @@
 
     <span class="c1">#: Minimum and Maximum values of the Supply Voltage.</span>
     <span class="n">supply_range</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="c1">#number of output voltages</span>
+    <span class="n">voltage_len</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">u_nominal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -195,7 +202,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="VoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="VoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</span>
 
@@ -204,7 +211,7 @@
 <span class="sd">            t(float): Current time of the system.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">             float: Supply Voltage at time t.</span>
+<span class="sd">             list(float): Supply Voltage(s) at time t.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
@@ -221,7 +228,138 @@
 
 <div class="viewcode-block" id="IdealVoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span></div></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="RCVoltageSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">RCVoltageSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;DC voltage supply modeled as RC element&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mf">600.0</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element</span>
+<span class="sd">        </span>
+<span class="sd">        Args: </span>
+<span class="sd">            supply_parameter(dict): Consists or Resistance R in Ohm and Capacitance C in Farad</span>
+<span class="sd">            </span>
+<span class="sd">        Additional notes:</span>
+<span class="sd">            If the product of R and C get too small the numerical stability of the ODE is not given anymore</span>
+<span class="sd">            typical time differences tau are only in the range of 10e-3. One might want to consider R*C as a</span>
+<span class="sd">            time constant. The resistance R can be considered as a simplified inner resistance model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_nominal</span><span class="p">)</span>
+        <span class="n">supply_parameter</span> <span class="o">=</span> <span class="n">supply_parameter</span> <span class="ow">or</span> <span class="p">{</span><span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mf">4e-3</span><span class="p">}</span>
+        <span class="c1"># Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded</span>
+        <span class="k">assert</span> <span class="s1">&#39;R&#39;</span> <span class="ow">in</span> <span class="n">supply_parameter</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;Pass key &#39;R&#39; for Resistance in your dict&quot;</span>
+        <span class="k">assert</span> <span class="s1">&#39;C&#39;</span> <span class="ow">in</span> <span class="n">supply_parameter</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;Pass key &#39;C&#39; for Capacitance in your dict&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supply_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">u_nominal</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_r</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The product of R and C might be too small for the correct calculation of the supply voltage. You might want to consider R*C as a time constant.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="p">[</span><span class="n">u_nominal</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_0</span> <span class="o">=</span> <span class="n">u_nominal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span> <span class="o">=</span> <span class="n">EulerSolver</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system_equation</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_sup</span><span class="p">,</span> <span class="n">u_0</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+        <span class="c1"># ODE for derivate of u_sup</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">u_0</span> <span class="o">-</span> <span class="n">u_sup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span><span class="o">*</span><span class="n">i_sup</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="n">c</span><span class="p">)])</span>
+
+<div class="viewcode-block" id="RCVoltageSupply.reset"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="c1"># On reset the capacitor is loaded again</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span></div>
+    
+<div class="viewcode-block" id="RCVoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span><span class="n">i_sup</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_0</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span></div></div>
+    
+<div class="viewcode-block" id="AC1PhaseSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply">[docs]</a><span class="k">class</span> <span class="nc">AC1PhaseSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;AC one phase voltage supply&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            u_nominal(float): Single phasic effective value of the voltage supply</span>
+<span class="sd">            supply_parameter(dict): Consists of frequency f in Hz and phase phi in range of [0,2*pi) in case you wish for a fixed phase</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_nominal</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">supply_parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">supply_parameter</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="s2">&quot;supply_parameter should be a dict&quot;</span>
+            <span class="k">assert</span> <span class="s1">&#39;frequency&#39;</span> <span class="ow">in</span> <span class="n">supply_parameter</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;Pass key &#39;frequency&#39; for frequency f in Hz in your dict&quot;</span>
+            <span class="k">if</span> <span class="s1">&#39;phase&#39;</span> <span class="ow">in</span> <span class="n">supply_parameter</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">assert</span> <span class="mi">0</span><span class="o">&lt;=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="s2">&quot;The phase angle has to be given in rad in range [0,2*pi)&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">supply_parameter</span> <span class="o">=</span> <span class="n">supply_parameter</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">supply_parameter</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">}</span>
+
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supply_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">]</span>
+        
+<div class="viewcode-block" id="AC1PhaseSupply.reset"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AC1PhaseSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_f</span><span class="o">*</span><span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span></div></div>
+
+<div class="viewcode-block" id="AC3PhaseSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply">[docs]</a><span class="k">class</span> <span class="nc">AC3PhaseSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;AC three phase voltage supply&quot;&quot;&quot;</span>
+    <span class="n">voltage_len</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            u_nominal(float): Three phasic effective value of the voltage supply</span>
+<span class="sd">            supply_parameter(dict): Consists of frequency f in Hz and phase phi in range of [0,2*pi) in case you wish for a fixed phase</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_nominal</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">supply_parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">supply_parameter</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="s2">&quot;supply_parameter should be a dict&quot;</span>
+            <span class="k">assert</span> <span class="s1">&#39;frequency&#39;</span> <span class="ow">in</span> <span class="n">supply_parameter</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;Pass key &#39;frequency&#39; for frequency f in Hz in your dict&quot;</span>
+            <span class="k">if</span> <span class="s1">&#39;phase&#39;</span> <span class="ow">in</span> <span class="n">supply_parameter</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">assert</span> <span class="mi">0</span><span class="o">&lt;=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="s2">&quot;The phase angle has to be given in rad in range [0,2*pi)&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">supply_parameter</span> <span class="o">=</span> <span class="n">supply_parameter</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">supply_parameter</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supply_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">]</span>
+        
+<div class="viewcode-block" id="AC3PhaseSupply.reset"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AC3PhaseSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_f</span><span class="o">*</span><span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">+</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span></div></div>
+ 
+    
 </pre></div>
 
            </div>

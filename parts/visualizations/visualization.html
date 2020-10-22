@@ -100,6 +100,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
 </ul>
 
             
@@ -224,7 +225,7 @@ to be done in this function.</p></li>
 
 <dl class="method">
 <dt id="gym_electric_motor.core.ElectricMotorVisualization.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">action</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called by the environment every cycle and passes the current, normalized state array,
 the normalized references in the same shape as the state array and the received reward.
 For non-referenced states the value in the reference array can be ignored.</p>
@@ -236,9 +237,12 @@ Only the first reference value is important here, because all others are not ref
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>int</em>) – Current episode step</p></li>
 <li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The state of the physical system.</p></li>
 <li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The reference array of the reference generator.</p></li>
+<li><p><strong>action</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The last action taken. None after reset.</p></li>
 <li><p><strong>reward</strong> (<em>float</em>) – The reward from the reward function.</p></li>
+<li><p><strong>done</strong> (<em>bool</em>) – Flag, if the environment is in a terminal state.</p></li>
 </ul>
 </dd>
 </dl>
