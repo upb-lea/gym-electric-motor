@@ -3,7 +3,7 @@ import setuptools
 
 AUTHORS = [
     'Arne Traue', 'Gerrit Book', 'Praneeth Balakrishna',
-    'Pascal Peters', 'Pramod Manjunatha', 'Darius Jakobeit',
+    'Pascal Peters', 'Pramod Manjunatha', 'Darius Jakobeit', 'Rohith Desireddy',
     'Max Schenke', 'Wilhelm Kirchgässner', 'Oliver Wallscheid',
 ]
 
@@ -23,7 +23,8 @@ setuptools.setup(
       extras_require={'examples': [
                         'keras-rl2 @git+https://github.com/wau/keras-rl2.git',
                         'stable-baselines3',
-                        'tensorforce==0.5.5']
+                        'tensorforce==0.5.5',
+                        'gekko']
                      },
       author=', '.join(sorted(AUTHORS, key=lambda n: n.split()[-1].lower())),
       long_description=long_description,
