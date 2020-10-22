@@ -20,11 +20,11 @@ It is built upon [OpenAI Gym Environments](https://gym.openai.com/), and, theref
 ## Getting Started
 An easy way to get started with GEM is by playing around with the following interactive notebooks in Google Colaboratory. Most important features of GEM as well as application demonstrations are showcased, and give a kickstart for engineers in industry and academia.
 
-* [GEM Cookbook](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/GEM_cookbook.ipynb)
-* [Keras-rl2 Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/keras_rl2_example.ipynb)
-* [Stable-baselines3 Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/stable_baselines3_example.ipynb)
-* [Tensorforce Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/tensorforce_example.ipynb)
-* [MPC  Example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/example_notebooks/MPC_example.ipynb)
+* [GEM cookbook](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master//examples/environment_features/GEM_cookbook.ipynb)
+* [Keras-rl2 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/keras_rl2_dqn_disc_pmsm_example.ipynb)
+* [Stable-baselines3 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb)
+* [Tensorforce example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/tensorforce_dqn_disc_pmsm_example.ipynb)
+* [MPC  example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/gekko_mpc_cont_pmsm_example.ipynb)
 
 There is a list of [standalone example scripts](examples/) as well for minimalistic demonstrations.
 
@@ -64,21 +64,21 @@ pip install -e .
 
 ## Building Blocks
 A GEM environment consists of following building blocks:
-- Physical Structure:
-   - Supply Voltage
+- Physical structure:
+   - Supply voltage
    - Converter
    - Electric motor
-   - Load Model
+   - Load model
 - Utility functions for reference generation, reward calculation and visualization
  
 ### Information Flow in a GEM Environment
-![](docs/plots/SCML_Overview.svg)
+![](docs/plots/SCML_Overview.png)
 
 Among various DC-motor models, the following three-phase motors - together with their power electronic counterparts - are available:
-- Permanent Magnet Synchronous Motor (PMSM), 
-- Synchronous Reluctance Motor (SynRM)
-- Squirrel Cage Induction Motor (SCIM)
-- Doubly-fed Induction Motor (DFIM)
+- Permanent magnet synchronous motor (PMSM), 
+- Synchronous reluctance motor (SynRM)
+- Squirrel cage induction motor (SCIM)
+- Doubly-fed induction motor (DFIM)
 
 The converters can be driven by means of a duty cycle (continuous mode) or switching commands (discrete mode). 
 

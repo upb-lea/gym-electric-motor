@@ -7,16 +7,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="301.44891mm"
-   height="228.78271mm"
-   viewBox="0 0 1068.126 810.64744"
+   width="301.44958mm"
+   height="228.78195mm"
+   viewBox="0 0 1068.1284 810.64474"
    id="svg2"
    version="1.1"
    inkscape:version="1.0.1 (1.0.1+r73)"
    sodipodi:docname="SCML_Overview.svg"
    inkscape:export-filename="/home/wilhelmk/dev/projects/gym-electric-motor/docs/plots/SCML_Overview.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
+   inkscape:export-xdpi="299.98346"
+   inkscape:export-ydpi="299.98346">
   <defs
      id="defs4">
     <marker
@@ -642,9 +642,9 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter28043"
-       x="-1.7761754e-05"
+       x="-1.7761755e-05"
        width="1.0000355"
-       y="-2.0891691e-05"
+       y="-2.0891692e-05"
        height="1.0000418">
       <feGaussianBlur
          inkscape:collect="always"
@@ -660,8 +660,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.67968204"
-     inkscape:cx="265.23386"
-     inkscape:cy="498.73226"
+     inkscape:cx="382.93717"
+     inkscape:cy="498.7308"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
@@ -679,8 +679,8 @@
     <inkscape:grid
        type="xygrid"
        id="grid4136"
-       originx="316.21799"
-       originy="517.54225" />
+       originx="316.21911"
+       originy="517.5409" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -698,7 +698,7 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="BG_0"
-     transform="translate(-0.9199038,-0.91943383)">
+     transform="translate(-0.91876695,-0.92080651)">
     <rect
        style="display:inline;opacity:1;mix-blend-mode:normal;fill:#fdfdfd;fill-opacity:1;stroke:#000000;stroke-width:1.875;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter28043)"
        id="rect28010"
@@ -714,8 +714,8 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="BG"
-     style="display:inline;opacity:1;mix-blend-mode:normal;"
-     transform="translate(196.21502,502.95572)">
+     style="display:inline;opacity:1;mix-blend-mode:normal"
+     transform="translate(196.21616,502.95435)">
     <rect
        style="opacity:1;fill:#a2bdee;fill-opacity:1;stroke:#15366f;stroke-width:1.875;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect3069"
@@ -1001,7 +1001,7 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(316.21803,-379.20518)"
+     transform="translate(316.21917,-379.20655)"
      style="display:inline">
     <circle
        style="opacity:0.999;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -1717,7 +1717,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Text"
-     transform="translate(316.21803,474.73181)"
+     transform="translate(316.21917,474.73044)"
      style="display:inline;opacity:1">
     <text
        xml:space="preserve"
@@ -1904,15 +1904,15 @@
        y="-219.68962" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:20px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00031;stroke-miterlimit:4;stroke-dasharray:none;text-anchor:middle;text-align:center;"
+       style="font-style:normal;font-weight:normal;font-size:20px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00031;stroke-miterlimit:4;stroke-dasharray:none"
        x="-67.460953"
        y="-193.48357"
        id="text3122"><tspan
          sodipodi:role="line"
          id="tspan3120"
-         x="-138.23244"
+         x="-67.460953"
          y="-193.48357"
-         style="font-weight:bold;fill:#ffffff;fill-opacity:1;stroke-width:1.00031;stroke-miterlimit:4;stroke-dasharray:none;text-anchor:middle;text-align:center;">Environment</tspan></text>
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:1.00031;stroke-miterlimit:4;stroke-dasharray:none">Environment</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:20px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.9375"
@@ -1926,7 +1926,7 @@
          style="font-weight:bold;text-align:center;text-anchor:middle;stroke-width:0.9375">Physical</tspan><tspan
          sodipodi:role="line"
          x="-245.93979"
-         y="157.96773"
+         y="157.96774"
          style="font-weight:bold;text-align:center;text-anchor:middle;stroke-width:0.9375"
          id="tspan19737">Structure</tspan></text>
     <text
@@ -1965,15 +1965,15 @@
        y="-446.56464" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:20px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.9375;text-anchor:middle;text-align:center;"
+       style="font-style:normal;font-weight:normal;font-size:20px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.9375"
        x="-66.621109"
        y="-420.35858"
        id="text3122-1"><tspan
          sodipodi:role="line"
          id="tspan3120-2"
-         x="-122.57326"
+         x="-66.621109"
          y="-420.35858"
-         style="font-weight:bold;fill:#ffffff;fill-opacity:1;stroke-width:0.9375;text-anchor:middle;text-align:center;">Controller</tspan></text>
+         style="font-weight:bold;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:0.9375">Controller</tspan></text>
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.875, 1.875;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker25254)"
        d="m 207.72889,-347.03615 -149.828316,-0.0572 -1.044215,336.246635 87.248101,0.357059 0.16143,85.148618"
@@ -2052,7 +2052,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Icons"
-     transform="translate(196.21502,502.95572)">
+     transform="translate(196.21616,502.95435)">
     <rect
        style="opacity:1;fill:#a2bdee;fill-opacity:1;stroke:#000000;stroke-width:1.875;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect26834"
