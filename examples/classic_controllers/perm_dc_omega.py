@@ -1,4 +1,4 @@
-from examples.agents.simple_controllers import Controller
+from simple_controllers import Controller
 import time
 import sys, os
 

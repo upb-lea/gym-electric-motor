@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from examples.agents.simple_controllers import Controller
+from simple_controllers import Controller
 sys.path.append(os.path.abspath(os.path.join('..')))
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
