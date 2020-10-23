@@ -162,8 +162,8 @@ Exemplary code snippets that demonstrate the usage of ``GEM`` within both, the c
 learning context are included within the project's [examples folder](https://github.com/upb-lea/gym-electric-motor/tree/master/examples). 
 Featured examples:
 
-- [``GEM_cookbook.ipynb``](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/GEM_cookbook.ipynb): a basic tutorial-style notebook that presents the basic interface and usage of GEM
-- [``scim_ideal_grid_simulation.py``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/scim_ideal_grid_simulation.py): a simple motor simulation showcase of the squirrel cage induction motor that was used to create \autoref{fig:SCIM_example}
+- [``GEM_cookbook.ipynb``](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/environment_features/GEM_cookbook.ipynb): a basic tutorial-style notebook that presents the basic interface and usage of GEM
+- [``scim_ideal_grid_simulation.py``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples//scim_ideal_grid_simulation.py): a simple motor simulation showcase of the squirrel cage induction motor that was used to create \autoref{fig:SCIM_example}
 
 
 
