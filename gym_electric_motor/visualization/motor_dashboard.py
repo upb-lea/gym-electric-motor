@@ -5,7 +5,7 @@ import gym
 
 
 class MotorDashboard(ElectricMotorVisualization):
-    """Dashboard to plot the GEM states into graphs.
+    """A dashboard to plot the GEM states into graphs.
 
     Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
     matplotlib axis.
@@ -18,7 +18,12 @@ class MotorDashboard(ElectricMotorVisualization):
 
     The StepPlots, EpisodicPlots and IntervalPlots each are plotted into three separate figures.
 
+    The most common StepPlots (i.e to plot the states, actions and rewards) can be plotted by just passing the
+    corresponding strings in the constructor. Additional plots (e.g. the MeanEpisodeRewardPlot) have to be instantiated
+    manually and passed to the constructor.
 
+    Furthermore, completely custom plots can be defined that have to derive from the StatePlot, EpisodicPlot or
+    IntervalPlot base classes.
     """
 
     def __init__(self, state_plots=(), action_plots=(), reward_plot=False, step_plots=(),
@@ -32,18 +37,19 @@ class MotorDashboard(ElectricMotorVisualization):
                 Default: () (no plotted actions).
             reward_plot(boolean): Select if the current reward is to be plotted. Default: False
             step_plots(iterable(StepPlot)): Additional custom step plots. Default: ()
-            episodic_plots(iterable(EpisodicPlots)):
-            interval_plots(iterable(IntervalPlots)):
+            episodic_plots(iterable(EpisodicPlot)): Additional already instantiated EpisodePlots to be shown
+            interval_plots(iterable(IntervalPlot)): Additional already instantiated IntervalPlots to be shown
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
                 performance drastically. Default: 1000
-            style(string):  Select one of the matplotlib-styles. e.g. "dark-background". Default: None
-                (the already selected style)
+            style(string): Select one of the matplotlib-styles. e.g. "dark-background".
+                Default: None (the already selected style)
         """
         assert type(reward_plot) is bool
         assert all(isinstance(sp, StepPlot) for sp in step_plots)
         assert all(isinstance(ep, EpisodicPlot) for ep in episodic_plots)
         assert all(isinstance(ip, IntervalPlot) for ip in interval_plots)
-        assert type(update_interval) is int and update_interval > 0
+        assert type(update_interval) in [int, float]
+        assert update_interval > 0
         assert style in plt.style.available or style is None
 
         super().__init__()
@@ -63,41 +69,52 @@ class MotorDashboard(ElectricMotorVisualization):
         self._step_plots = []
         self._episodic_plots = list(episodic_plots)
         self._interval_plots = list(interval_plots)
-        self._update_interval = update_interval
+        self._update_interval = int(update_interval)
         self._plots = []
         self._k = 0
 
     def on_reset_begin(self):
-        """Called when the environment is reset. All subplots are reset.
+        """Called before the environment is reset. All subplots are reset.
         """
         for plot in self._plots:
             plot.on_reset_begin()
         self._reset = True
 
     def on_reset_end(self, state, reference):
-        """Called when the environment is reset. All subplots are reset.
+        """Called after the environment is reset. The initial data is passed.
+
+        Args:
+            state(array(float)): The initial state :math:`s_0`.
+            reference(array(float)): The initial reference for the first time step :math:`s^*_0`.
         """
         for plot in self._plots:
             plot.on_reset_end(state, reference)
 
     def on_step_begin(self, k, action):
-        """
-
-        The information about the last environmental step is passed.
+        """The information about the last environmental step is passed.
 
         Args:
-            k(int): Current episode step.
-            action(ndarray(float) / int): Last taken action.
-
+            k(int): The current episode step.
+            action(ndarray(float) / int): The taken action :math:`a_k`.
         """
         for plot in self._plots:
             plot.on_step_begin(k, action)
 
     def on_step_end(self, k, state, reference, reward, done):
+        """The information after the step is passed
+
+        Args:
+            k(int): The current episode step
+            state(array(float)): The state of the env after the step :math:`s_k`.
+            reference(array(float)): The reference corresponding to the state :math:`s^*_k`.
+            reward(float): The reward that has been received for the last action on the last state :math:`r_{k-1}`.
+            done(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k-1}`.
+        """
         for plot in self._plots:
             plot.on_step_end(k, state, reference, reward, done)
 
     def render(self):
+        """Updates the plots every _update cycle_ calls of this method."""
         if not (self._step_plot_figure or self._episodic_plot_figure or self._interval_plot_figure) \
            and len(self._plots) > 0:
             self._initialize()
@@ -105,9 +122,8 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._k % self._update_interval == 0:
             self._update()
 
-
     def set_env(self, env):
-        """Called during initialization of the environment to interconnect all modules. State_names, references,...
+        """Called during initialization of the environment to interconnect all modules. State names, references,...
         might be saved here for later processing
 
         Args:
@@ -180,7 +196,7 @@ class MotorDashboard(ElectricMotorVisualization):
         plt.pause(0.1)
 
     def _update(self):
-        """Called every {update_cycle} steps to refresh the figure.
+        """Called every *update cycle* steps to refresh the figure.
         """
         for plot in self._plots:
             plot.render()
