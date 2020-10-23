@@ -247,8 +247,7 @@ class ElectricMotor:
 
             elif random_dist in ['normal', 'gaussian']:
                 # specific input or middle of interval
-                mue = random_params[0] or \
-                      (upper_bound - lower_bound) / 2 + lower_bound
+                mue = random_params[0] or (upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(a, b,
@@ -275,8 +274,7 @@ class ElectricMotor:
                      for idx, state in enumerate(self._initial_states.keys())}
                 self._initial_states.update(initial_states_)
             else:
-                raise Exception('Initialization Value have to be in nominal '
-                                'boundaries')
+                raise Exception('Initialization value has to be within nominal boundaries')
         else:
             raise Exception('No matching Initialization Case')
 
@@ -1716,7 +1714,7 @@ class InductionMotor(ThreePhaseMotor):
                         l_mr * u_rq_max
             psi_d_max /= - mp['p'] * omega * l_mr
             # clipping flux and setting nominal limit
-            psi_d_max = 0.9 * np.clip(psi_d_max, a_min=None, a_max=mp['l_m'] * i_d)
+            psi_d_max = 0.9 * np.clip(psi_d_max, a_min=0, a_max=np.abs(mp['l_m'] * i_d))
         # returning flux in alpha, beta system
         return self.q([psi_d_max, 0], eps_mag)
 
@@ -1918,9 +1916,6 @@ class SquirrelCageInductionMotor(InductionMotor):
                                self._limits[u] / self._motor_parameter['r_s']
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
                                 self._nominal_values[u] / self._motor_parameter['r_s']
-        # overwrite default limits and nominal values with func args
-        limits_agenda.update(limit_values)
-        nominal_agenda.update(nominal_values)
         super()._update_limits(limits_agenda, nominal_agenda)
 
     def _update_initial_limits(self, nominal_new={}, omega=None):
@@ -2078,9 +2073,6 @@ class DoublyFedInductionMotor(InductionMotor):
             nominal_agenda[i] = self._nominal_values.get('i', None) or \
                                 self._nominal_values[u] / \
                                 self._motor_parameter['r_r']
-        # overwrite default limits and nominal values with func args
-        limits_agenda.update(limit_values)
-        nominal_agenda.update(nominal_values)
         super()._update_limits(limits_agenda, nominal_agenda)
 
     def _update_initial_limits(self, nominal_new={}, omega=None):

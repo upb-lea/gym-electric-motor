@@ -314,9 +314,17 @@ class TestRewardFunction:
 class TestReferenceGenerator:
     test_object = None
     initial_state = np.array([1, 2, 3, 4, 5]) / 5
-    _reference = 0.5
+    _reference_value = np.array([0.5])
     _observation = np.zeros(5)
     counter_obs = 0
+
+    @pytest.fixture
+    def reference_generator(self, monkeypatch):
+        monkeypatch.setattr(ReferenceGenerator, "get_reference_observation", self.mock_get_reference_observation)
+        monkeypatch.setattr(ReferenceGenerator, "get_reference", self.mock_get_reference)
+        rg = ReferenceGenerator()
+        rg._referenced_states = np.array([True, False])
+        return rg
 
     def mock_get_reference_observation(self, initial_state):
         assert all(initial_state == self.initial_state)
@@ -325,16 +333,16 @@ class TestReferenceGenerator:
 
     def mock_get_reference(self, initial_state):
         assert all(initial_state == self.initial_state)
-        return self._reference
+        return self._reference_value
 
-    def test_reference_generator_reset(self, monkeypatch):
-        monkeypatch.setattr(ReferenceGenerator, "get_reference_observation", self.mock_get_reference_observation)
-        monkeypatch.setattr(ReferenceGenerator, "get_reference", self.mock_get_reference)
-        test_object = ReferenceGenerator()
-        reference, observation, kwargs = test_object.reset(self.initial_state)
-        assert reference == self._reference
-        assert all(observation == self._observation)
+    def test_reset(self, reference_generator):
+        reference, observation, kwargs = reference_generator.reset(self.initial_state)
+        assert all(reference == reference_generator.get_reference(self.initial_state))
+        assert all(observation == reference_generator.get_reference_observation(self.initial_state))
         assert kwargs is None
+
+    def test_referenced_states(self, reference_generator):
+        assert reference_generator.referenced_states.dtype == bool
 
 
 class TestPhysicalSystem:

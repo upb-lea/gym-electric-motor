@@ -18,7 +18,7 @@ class StepReferenceGenerator(SubepisodedReferenceGenerator):
             amplitude_range(tuple(float,float)): Lower and upper limit for the amplitude.
             frequency_range(tuple(float,float)): Lower and upper limit for the frequency.
             offset_range(tuple(float,float)): Lower and upper limit for the offset
-            kwargs(dict): Arguments passed to the superclass SubepisodedReferenceGenerator .
+            kwargs(any): Arguments passed to the superclass SubepisodedReferenceGenerator .
         """
         super().__init__(**kwargs)
         self._amplitude_range = amplitude_range or (0, np.inf)
