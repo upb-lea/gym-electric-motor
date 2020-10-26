@@ -53,7 +53,7 @@ class StepPlot(MotorDashboardPlot):
         'linestyle': '-'
     }
 
-    def __init__(self, x_width=1, violation_line_cfg=None, reset_line_cfg=None, **kwargs):
+    def __init__(self, violation_line_cfg=None, reset_line_cfg=None, **kwargs):
         super().__init__(**kwargs)
         reset_line_cfg = reset_line_cfg or {}
         violation_line_cfg = violation_line_cfg or {}
@@ -72,17 +72,17 @@ class StepPlot(MotorDashboardPlot):
         self._t_data = []
         self._y_data = []
         self._tau = None
-        self._x_width = x_width
+        self._x_width = 10000
         self.y_lim = (-np.inf, np.inf)
         self._k = 0
+
+    def set_width(self, width):
+        self._x_width = width
 
     def set_env(self, env):
         super().set_env(env)
         self._tau = env.physical_system.tau
-
-        # Number of points on the x-axis in a plot (= x_width / tau)
-        self._no_x_points = int(self._x_width / self._tau)
-        self._t_data = np.linspace(0, self._x_width, self._no_x_points)
+        self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width)
         self._y_data = np.nan * np.ones_like(self._t_data)
 
     def render(self):
@@ -90,7 +90,7 @@ class StepPlot(MotorDashboardPlot):
         # configure x-axis properties
         x_lim = self._axis.get_xlim()
         upper_lim = max(self._t, x_lim[1])
-        lower_lim = upper_lim - self._x_width
+        lower_lim = upper_lim - self._x_width * self._tau
         self._axis.set_xlim(lower_lim, upper_lim)
 
     def initialize(self, axis):
@@ -210,7 +210,7 @@ class StatePlot(StepPlot):
         self._t += self._tau
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]
-        idx = int((self._t % self._x_width) / self._tau)
+        idx = int((self._t / self._tau) % self._x_width)
         self._t_data[idx] = self._t
         self._state_data[idx] = state_
         if self._referenced:
@@ -365,9 +365,7 @@ class EpisodicPlot(MotorDashboardPlot):
 
 
 class MeanEpisodeRewardPlot(EpisodicPlot):
-    """
-    class to plot the mean episode reward
-    """
+    """Class to plot the mean episode reward"""
 
     def __init__(self):
         super().__init__()

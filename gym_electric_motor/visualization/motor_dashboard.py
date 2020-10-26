@@ -27,7 +27,7 @@ class MotorDashboard(ElectricMotorVisualization):
     """
 
     def __init__(self, state_plots=(), action_plots=(), reward_plot=False, step_plots=(),
-                 episodic_plots=(), interval_plots=(), update_interval=1000, style=None, **__):
+                 episodic_plots=(), interval_plots=(), update_interval=1000, step_plot_width=10000, style=None, **__):
         """
         Args:
             state_plots('all'/iterable(str)): An iterable of state names to be shown. If 'all' all states will be shown.
@@ -41,6 +41,8 @@ class MotorDashboard(ElectricMotorVisualization):
             interval_plots(iterable(IntervalPlot)): Additional already instantiated IntervalPlots to be shown
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
                 performance drastically. Default: 1000
+            step_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
+                (1 second for continuously controlled environments / 0.1 second for discretely controlled environments)
             style(string): Select one of the matplotlib-styles. e.g. "dark-background".
                 Default: None (the already selected style)
         """
@@ -50,6 +52,8 @@ class MotorDashboard(ElectricMotorVisualization):
         assert all(isinstance(ip, IntervalPlot) for ip in interval_plots)
         assert type(update_interval) in [int, float]
         assert update_interval > 0
+        assert type(step_plot_width) in [int, float]
+        assert step_plot_width > 0
         assert style in plt.style.available or style is None
 
         super().__init__()
@@ -70,6 +74,7 @@ class MotorDashboard(ElectricMotorVisualization):
         self._episodic_plots = list(episodic_plots)
         self._interval_plots = list(interval_plots)
         self._update_interval = int(update_interval)
+        self._step_plot_width = int(step_plot_width)
         self._plots = []
         self._k = 0
 
@@ -157,6 +162,10 @@ class MotorDashboard(ElectricMotorVisualization):
             self._step_plots.append(self._reward_plot)
 
         self._plots = self._step_plots + self._episodic_plots + self._interval_plots
+
+        for step_plot in self._step_plots:
+            step_plot.set_width(self._step_plot_width)
+
         for plot in self._plots:
             plot.set_env(env)
 
