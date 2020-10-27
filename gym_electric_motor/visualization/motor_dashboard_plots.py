@@ -67,7 +67,6 @@ class StepPlot(MotorDashboardPlot):
         self._violation_line_cfg = self._default_violation_line_cfg.copy()
         self._violation_line_cfg.update(violation_line_cfg)
 
-        self._no_x_points = None
         self._t = 0
         self._t_data = []
         self._y_data = []
@@ -177,9 +176,9 @@ class StatePlot(StepPlot):
         self._referenced = rg.referenced_states[self._state_idx]
         if self._limits == self._state_space[1]:
             self._normalized = False
-        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
-        self._state_data = np.ones(self._no_x_points) * np.nan
-        self._ref_data = np.ones(self._no_x_points) * np.nan
+        self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
+        self._state_data = np.ones(self._x_width) * np.nan
+        self._ref_data = np.ones(self._x_width) * np.nan
 
     def initialize(self, axis):
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
@@ -261,7 +260,7 @@ class RewardPlot(StepPlot):
     def set_env(self, env):
         super().set_env(env)
         self._reward_range = env.reward_range
-        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
+        self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
         self._reward_data = np.zeros_like(self._t_data, dtype=float) * np.nan
 
     def on_step_end(self, k, state, reference, reward, done):
@@ -319,7 +318,7 @@ class ActionPlot(StepPlot):
         ps = env.physical_system
         # fetch the action space from the physical system
         self._action_space = ps.action_space
-        self._t_data = np.linspace(0, self._x_width, self._no_x_points, endpoint=False)
+        self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
         self._action_data = np.zeros_like(self._t_data, dtype=float)
 
         # check for the type of action space: Discrete or Continuous
