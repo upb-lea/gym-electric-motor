@@ -26,8 +26,8 @@ class MotorDashboard(ElectricMotorVisualization):
     IntervalPlot base classes.
     """
 
-    def __init__(self, state_plots=(), action_plots=(), reward_plot=False, step_plots=(),
-                 episodic_plots=(), interval_plots=(), update_interval=1000, step_plot_width=10000, style=None, **__):
+    def __init__(self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
+                 update_interval=1000, step_plot_width=10000, style=None, **__):
         """
         Args:
             state_plots('all'/iterable(str)): An iterable of state names to be shown. If 'all' all states will be shown.
@@ -36,9 +36,8 @@ class MotorDashboard(ElectricMotorVisualization):
                 action can be applied on the environment it can be selected by its index.
                 Default: () (no plotted actions).
             reward_plot(boolean): Select if the current reward is to be plotted. Default: False
-            step_plots(iterable(StepPlot)): Additional custom step plots. Default: ()
-            episodic_plots(iterable(EpisodicPlot)): Additional already instantiated EpisodePlots to be shown
-            interval_plots(iterable(IntervalPlot)): Additional already instantiated IntervalPlots to be shown
+            additional_plots(iterable(EpisodicPlot)): Additional already instantiated plots to be shown
+
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
                 performance drastically. Default: 1000
             step_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
@@ -47,9 +46,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 Default: None (the already selected style)
         """
         assert type(reward_plot) is bool
-        assert all(isinstance(sp, StepPlot) for sp in step_plots)
-        assert all(isinstance(ep, EpisodicPlot) for ep in episodic_plots)
-        assert all(isinstance(ip, IntervalPlot) for ip in interval_plots)
+        assert all(isinstance(ap, (StepPlot, EpisodicPlot, IntervalPlot)) for ap in additional_plots)
         assert type(update_interval) in [int, float]
         assert update_interval > 0
         assert type(step_plot_width) in [int, float]
@@ -69,10 +66,10 @@ class MotorDashboard(ElectricMotorVisualization):
         self._action_plots = action_plots
         self._reward_plot = reward_plot
 
-        self._custom_step_plots = list(step_plots)
+        self._custom_step_plots = list(filter(lambda plot: isinstance(plot, StepPlot), list(additional_plots)))
+        self._episodic_plots = list(filter(lambda plot: isinstance(plot, EpisodicPlot), list(additional_plots)))
+        self._interval_plots = list(filter(lambda plot: isinstance(plot, IntervalPlot), list(additional_plots)))
         self._step_plots = []
-        self._episodic_plots = list(episodic_plots)
-        self._interval_plots = list(interval_plots)
         self._update_interval = int(update_interval)
         self._step_plot_width = int(step_plot_width)
         self._plots = []

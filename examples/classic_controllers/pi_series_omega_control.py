@@ -35,12 +35,12 @@ if __name__ == '__main__':
     env = gem.make('DcSeriesCont-v1',  # replace with 'DcSeriesDisc-v1' for discrete controllers
                    state_filter=['omega', 'i'],
                    # Pass an instance
-                   visualization=MotorDashboard(plots=['i', 'omega']),
+                   visualization=MotorDashboard(state_plots=['i', 'omega'], reward_plot=True),
                    # Take standard class and pass parameters (Load)
                    motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=100e-3, l_e=100e-3),
                    load_parameter=dict(a=0, b=.1, c=.1, j_load=0.04),
                    # Pass a string (with extra parameters)
-                   ode_solver='scipy.solve_ivp', solver_kwargs={},
+                   ode_solver='scipy.odeint', solver_kwargs={},
                    # Pass a Class with extra parameters
                    reference_generator=rg.WienerProcessReferenceGenerator())
 

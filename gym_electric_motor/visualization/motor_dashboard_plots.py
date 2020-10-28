@@ -43,13 +43,13 @@ class StepPlot(MotorDashboardPlot):
 
     _default_violation_line_cfg = {
         'color': 'red',
-        'linewidth': 0.5,
+        'linewidth': 1,
         'linestyle': '-'
     }
 
     _default_reset_line_cfg = {
         'color': 'blue',
-        'linewidth': 0.5,
+        'linewidth': 1,
         'linestyle': '-'
     }
 
@@ -71,6 +71,7 @@ class StepPlot(MotorDashboardPlot):
         self._t_data = []
         self._y_data = []
         self._tau = None
+        self._done = None
         self._x_width = 10000
         self.y_lim = (-np.inf, np.inf)
         self._k = 0
@@ -94,7 +95,7 @@ class StepPlot(MotorDashboardPlot):
 
     def initialize(self, axis):
         super().initialize(axis)
-        self._axis.set_xlim(0, self._x_width)
+        self._axis.set_xlim(0, self._x_width * self._tau)
         if self.y_lim == (-np.inf, np.inf):
             self._axis.autoscale(True, axis='Y')
         else:
@@ -215,7 +216,15 @@ class StatePlot(StepPlot):
         if self._referenced:
             self._ref_data[idx] = ref
         if done:
-            self._axis.axvline(self._t, color='red', linewidth=1)
+            self._done = True
+
+    def on_reset_begin(self):
+        if self._done is not None:
+            if self._done:
+                self._axis.axvline(self._t, **self._violation_line_cfg)
+            else:
+                self._axis.axvline(self._t, **self._reset_line_cfg)
+        self._done = False
 
     def render(self):
         state_data = self._state_data
@@ -264,7 +273,7 @@ class RewardPlot(StepPlot):
         self._reward_data = np.zeros_like(self._t_data, dtype=float) * np.nan
 
     def on_step_end(self, k, state, reference, reward, done):
-        idx = int((self._t % self._x_width) / self._tau)
+        idx = int(self._t / self._tau) % self._x_width
 
         self._t_data[idx] = self._t
         self._reward_data[idx] = reward
@@ -337,9 +346,10 @@ class ActionPlot(StepPlot):
 
     def on_step_begin(self, k, action):
         self._t += self._tau
-        idx = int((self._t % self._x_width) / self._tau)
+        idx = int((self._t / self._tau) % self._x_width)
 
         self._t_data[idx] = self._t
+
 
         if action is not None:
             if self._action_type == 'Discrete':
