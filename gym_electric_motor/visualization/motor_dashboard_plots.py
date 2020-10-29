@@ -22,8 +22,12 @@ class MotorDashboardPlot(Callback):
 
         self._line_cfg = self._default_line_cfg.copy()
         self._line_cfg.update(line_config)
-        self._lines = None
-        self._labels = None
+        self._lines = []
+        self._label = ''
+        self._t_data = []
+        self._y_data = []
+        self._x_lim = None
+        self._y_lim = None
         self._colors = [cycle['color'] for cycle in plt.rcParams['axes.prop_cycle']]
 
     def initialize(self, axis):
@@ -34,9 +38,29 @@ class MotorDashboardPlot(Callback):
         """
         self._axis = axis
         self._axis.grid(True)
+        self._axis.set_ylabel(self._label)
+        if self._y_lim is None and self._x_lim is None:
+            self._axis.autoscale(True, axis='both')
+        elif self._x_lim is None:
+            self._axis.autoscale(True, axis='X')
+            self._axis.set_ylim(self._y_lim)
+        elif self._y_lim is None:
+            self._axis.autoscale(True, axis='Y')
+            self._axis.set_xlim(self._x_lim)
+        else:
+            self._axis.autoscale(False)
 
     def render(self):
-        raise NotImplementedError
+        for line, data in zip(self._lines, self._y_data):
+            line.set_data(self._t_data, data)
+        self._scale_x_axis()
+        self._scale_y_axis()
+
+    def _scale_x_axis(self):
+        pass
+
+    def _scale_y_axis(self):
+        pass
 
 
 class StepPlot(MotorDashboardPlot):
@@ -53,6 +77,11 @@ class StepPlot(MotorDashboardPlot):
         'linestyle': '-'
     }
 
+    @property
+    def data_idx(self):
+        """Returns the current index to access the time and data arrays."""
+        return self._k % self._x_width
+
     def __init__(self, violation_line_cfg=None, reset_line_cfg=None, **kwargs):
         super().__init__(**kwargs)
         reset_line_cfg = reset_line_cfg or {}
@@ -68,12 +97,9 @@ class StepPlot(MotorDashboardPlot):
         self._violation_line_cfg.update(violation_line_cfg)
 
         self._t = 0
-        self._t_data = []
-        self._y_data = []
         self._tau = None
         self._done = None
         self._x_width = 10000
-        self.y_lim = (-np.inf, np.inf)
         self._k = 0
 
     def set_width(self, width):
@@ -90,27 +116,24 @@ class StepPlot(MotorDashboardPlot):
         self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width)
         self._y_data = np.nan * np.ones_like(self._t_data)
 
-    def render(self):
-        """Called by the MotorDashboard each time before the figure is updated."""
-        # configure x-axis properties
+    def on_reset_begin(self):
+        if self._done is not None:
+            if self._done:
+                self._axis.axvline(self._t, **self._violation_line_cfg)
+            else:
+                self._axis.axvline(self._t, **self._reset_line_cfg)
+        self._done = False
+
+    def on_step_end(self, k, state, reference, reward, done):
+        self._k += 1
+        self._t += self._tau
+        self._done = done
+
+    def _scale_x_axis(self):
         x_lim = self._axis.get_xlim()
         upper_lim = max(self._t, x_lim[1])
         lower_lim = upper_lim - self._x_width * self._tau
         self._axis.set_xlim(lower_lim, upper_lim)
-
-    def initialize(self, axis):
-        super().initialize(axis)
-        self._axis.set_xlim(0, self._x_width * self._tau)
-        if self.y_lim == (-np.inf, np.inf):
-            self._axis.autoscale(True, axis='Y')
-        else:
-            min_limit, max_limit = self.y_lim
-            spacing = 0.1 * (max_limit - min_limit)
-            self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-
-    def on_step_end(self, k, state, reference, reward, done):
-        if done:
-            self._done = True
 
 
 class StatePlot(StepPlot):
@@ -175,14 +198,6 @@ class StatePlot(StepPlot):
         # Flag, if the passed data is normalized
         self._normalized = True
 
-    def on_reset_begin(self):
-        if self._done is not None:
-            if self._done:
-                self._axis.axvline(self._t, **self._violation_line_cfg)
-            else:
-                self._axis.axvline(self._t, **self._reset_line_cfg)
-        self._done = False
-
     def set_env(self, env):
         # Docstring of superclass
         super().set_env(env)
@@ -197,24 +212,30 @@ class StatePlot(StepPlot):
         self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
         self._state_data = np.ones(self._x_width) * np.nan
         self._ref_data = np.ones(self._x_width) * np.nan
-
-    def initialize(self, axis):
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
         max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
-        self.y_lim = min_limit, max_limit
+        spacing = 0.1 * (max_limit - min_limit)
+        self._y_lim = (min_limit - spacing, max_limit + spacing)
+        self._label = self.state_labels.get(self._state, self._state)
+
+    def initialize(self, axis):
         super().initialize(axis)
         self._state_line, = self._axis.plot(self._t_data, self._state_data, **self._line_cfg)
+        self._lines = [self._state_line]
         if self._referenced:
             self._reference_line, = self._axis.plot(self._t_data, self._ref_data, **self._line_cfg)
             # Plot state line in front
             axis.lines = axis.lines[::-1]
+            self._lines.append(self._reference_line)
+        min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
+        max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
         if self._state_space[0] < 0:
             self._axis.axhline(min_limit, **self.limit_line_cfg)
         lim = self._axis.axhline(max_limit, **self.limit_line_cfg)
 
-        y_label = self.state_labels.get(self._state, self._state)
-        self._axis.set_ylabel(y_label)
+        y_label = self._label
         limit_label = y_label + r'$_{\mathrm{max}}$'
+
         if self._referenced:
             self._axis.legend(
                 (self._state_line, self._reference_line, lim), (y_label, y_label + '*', limit_label), loc='upper left',
@@ -223,30 +244,17 @@ class StatePlot(StepPlot):
         else:
             self._axis.legend((self._state_line, lim), (y_label, limit_label), loc='upper left', numpoints=20)
 
+        self._y_data = [self._state_data, self._ref_data]
+
     def on_step_end(self, k, state, reference, reward, done):
         super().on_step_end(k, state, reference, reward, done)
-        self._t += self._tau
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]
-        idx = int((self._t / self._tau) % self._x_width)
+        idx = self.data_idx
         self._t_data[idx] = self._t
-        self._state_data[idx] = state_
+        self._state_data[idx] = state_ * self._limits
         if self._referenced:
-            self._ref_data[idx] = ref
-
-    def render(self):
-        state_data = self._state_data
-        ref_data = self._ref_data
-
-        if self._normalized:
-            state_data = state_data * self._limits
-            if self._referenced:
-                ref_data = ref_data * self._limits
-        if self._referenced:
-            self._reference_line.set_data(self._t_data, ref_data)
-        self._state_line.set_data(self._t_data, state_data)
-
-        super().render()
+            self._ref_data[idx] = ref * self._limits
 
 
 class RewardPlot(StepPlot):
@@ -267,32 +275,25 @@ class RewardPlot(StepPlot):
         super().initialize(axis)
         self._reward_line, = self._axis.plot(self._t_data, self._reward_data, color=self._colors[-1],
                                              **self._reward_line_cfg)
-        min_limit = self._reward_range[0]
-        max_limit = self._reward_range[1]
-        spacing = 0.1 * (max_limit - min_limit)
-        self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
-        y_label = 'reward'
-        self._axis.set_ylabel(y_label)
+        self._lines.append(self._reward_line)
 
     def set_env(self, env):
         super().set_env(env)
         self._reward_range = env.reward_range
         self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
         self._reward_data = np.zeros_like(self._t_data, dtype=float) * np.nan
+        self._y_data = [self._reward_data]
+        min_limit = self._reward_range[0]
+        max_limit = self._reward_range[1]
+        spacing = 0.1 * (max_limit - min_limit)
+        self._y_lim = (min_limit - spacing, max_limit + spacing)
+        self._label = 'reward'
 
     def on_step_end(self, k, state, reference, reward, done):
-        super().on_step_end(k, state, reference, reward, done)
-        idx = int(self._t / self._tau) % self._x_width
-
+        idx = self.data_idx
         self._t_data[idx] = self._t
         self._reward_data[idx] = reward
-        if done:
-            self._axis.axvline(self._t, color='red', linewidth=1)
-        self._t += self._tau
-
-    def render(self):
-        self._reward_line.set_data(self._t_data, self._reward_data)
-        super().render()
+        super().on_step_end(k, state, reference, reward, done)
 
 
 class ActionPlot(StepPlot):
@@ -373,12 +374,13 @@ class ActionPlot(StepPlot):
 class EpisodicPlot(MotorDashboardPlot):
     """Base Plot class that all episode based plots ."""
 
-    def initialize(self, axis):
-        super().initialize(axis)
-        axis.autoscale(True)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._episode_no = -1
 
-    def render(self):
-        raise NotImplementedError
+    def on_reset_begin(self):
+        self._episode_no += 1
+        self._t_data.append(self._episode_no)
 
 
 class MeanEpisodeRewardPlot(EpisodicPlot):

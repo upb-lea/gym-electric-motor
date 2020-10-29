@@ -40,7 +40,7 @@ if __name__ == '__main__':
                    motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=100e-3, l_e=100e-3),
                    load_parameter=dict(a=0, b=.1, c=.1, j_load=0.04),
                    # Pass a string (with extra parameters)
-                   ode_solver='scipy.odeint', solver_kwargs={},
+                   ode_solver='euler', solver_kwargs={},
                    # Pass a Class with extra parameters
                    reference_generator=rg.WienerProcessReferenceGenerator())
 

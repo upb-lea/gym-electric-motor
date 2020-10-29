@@ -5,8 +5,8 @@ import numpy as np
 import os
 import sys
 import time
-
-from examples.agents.simple_controllers import Controller
+sys.path.append('..')
+from examples.classic_controllers.simple_controllers import Controller
 
 sys.path.append(os.path.abspath(os.path.join('..')))
 import gym_electric_motor as gem
@@ -103,7 +103,7 @@ if __name__ == '__main__':
                    load=NumbaPolynomialStaticLoad(load_parameter=dict(a=.1, b=.01, c=0, j_load=0.001),
                                             use_numba=use_numba_load),
                    # Pass a string (with extra parameters)
-                   ode_solver='scipy.solve_ivp', solver_kwargs=dict(method='LSODA'),
+                   ode_solver='euler', solver_kwargs=dict(),
                    # Pass a Class with extra parameters
                    reference_generator=rg.WienerProcessReferenceGenerator())
 

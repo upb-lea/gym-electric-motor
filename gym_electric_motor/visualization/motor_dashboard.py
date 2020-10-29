@@ -36,8 +36,8 @@ class MotorDashboard(ElectricMotorVisualization):
                 action can be applied on the environment it can be selected by its index.
                 Default: () (no plotted actions).
             reward_plot(boolean): Select if the current reward is to be plotted. Default: False
-            additional_plots(iterable(EpisodicPlot)): Additional already instantiated plots to be shown
-
+            additional_plots(iterable((StepPlot/EpisodicPlot/IntervalPlot))): Additional already instantiated plots
+                to be shown on the dashboard
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
                 performance drastically. Default: 1000
             step_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
