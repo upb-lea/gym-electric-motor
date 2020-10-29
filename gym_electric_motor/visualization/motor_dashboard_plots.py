@@ -77,6 +77,11 @@ class StepPlot(MotorDashboardPlot):
         self._k = 0
 
     def set_width(self, width):
+        """Sets the width of the plot in data points.
+
+        Args:
+            width(int > 0): The width of the plot
+        """
         self._x_width = width
 
     def set_env(self, env):
@@ -102,6 +107,10 @@ class StepPlot(MotorDashboardPlot):
             min_limit, max_limit = self.y_lim
             spacing = 0.1 * (max_limit - min_limit)
             self._axis.set_ylim(min_limit - spacing, max_limit + spacing)
+
+    def on_step_end(self, k, state, reference, reward, done):
+        if done:
+            self._done = True
 
 
 class StatePlot(StepPlot):
@@ -166,6 +175,14 @@ class StatePlot(StepPlot):
         # Flag, if the passed data is normalized
         self._normalized = True
 
+    def on_reset_begin(self):
+        if self._done is not None:
+            if self._done:
+                self._axis.axvline(self._t, **self._violation_line_cfg)
+            else:
+                self._axis.axvline(self._t, **self._reset_line_cfg)
+        self._done = False
+
     def set_env(self, env):
         # Docstring of superclass
         super().set_env(env)
@@ -207,6 +224,7 @@ class StatePlot(StepPlot):
             self._axis.legend((self._state_line, lim), (y_label, limit_label), loc='upper left', numpoints=20)
 
     def on_step_end(self, k, state, reference, reward, done):
+        super().on_step_end(k, state, reference, reward, done)
         self._t += self._tau
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]
@@ -215,16 +233,6 @@ class StatePlot(StepPlot):
         self._state_data[idx] = state_
         if self._referenced:
             self._ref_data[idx] = ref
-        if done:
-            self._done = True
-
-    def on_reset_begin(self):
-        if self._done is not None:
-            if self._done:
-                self._axis.axvline(self._t, **self._violation_line_cfg)
-            else:
-                self._axis.axvline(self._t, **self._reset_line_cfg)
-        self._done = False
 
     def render(self):
         state_data = self._state_data
@@ -273,6 +281,7 @@ class RewardPlot(StepPlot):
         self._reward_data = np.zeros_like(self._t_data, dtype=float) * np.nan
 
     def on_step_end(self, k, state, reference, reward, done):
+        super().on_step_end(k, state, reference, reward, done)
         idx = int(self._t / self._tau) % self._x_width
 
         self._t_data[idx] = self._t
@@ -349,7 +358,6 @@ class ActionPlot(StepPlot):
         idx = int((self._t / self._tau) % self._x_width)
 
         self._t_data[idx] = self._t
-
 
         if action is not None:
             if self._action_type == 'Discrete':
