@@ -95,6 +95,8 @@ class TimePlot(MotorDashboardPlot):
         self._done = None
         self._x_width = 10000
         self._k = 0
+        self._reset_memory = []
+        self._violation_memory = []
 
     def set_width(self, width):
         """Sets the width of the plot in data points.
@@ -110,17 +112,29 @@ class TimePlot(MotorDashboardPlot):
         self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
 
     def on_reset_begin(self):
+        # self._done is None at initial reset.
         if self._done is not None:
             if self._done:
-                self._axis.axvline(self._t, **self._violation_line_cfg)
+                self._violation_memory.append(self._t)
             else:
-                self._axis.axvline(self._t, **self._reset_line_cfg)
+                self._reset_memory.append(self._t)
         self._done = False
 
     def on_step_end(self, k, state, reference, reward, done):
         self._k += 1
         self._t += self._tau
         self._done = done
+
+    def render(self):
+        super().render()
+
+        for violation in self._violation_memory:
+            self._axis.axvline(violation, **self._violation_line_cfg)
+        self._violation_memory = []
+
+        for reset in self._reset_memory:
+            self._axis.axvline(reset, **self._reset_line_cfg)
+        self._reset_memory = []
 
     def _scale_x_axis(self):
         x_lim = self._axis.get_xlim()
