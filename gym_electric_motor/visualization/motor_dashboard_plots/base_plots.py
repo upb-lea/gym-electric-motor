@@ -4,7 +4,19 @@ from gym_electric_motor.core import Callback
 
 
 class MotorDashboardPlot(Callback):
-    """Base Plot class that all plots in the MotorDashboard have to derive from."""
+    """Base Plot class that all plots in the MotorDashboard have to derive from.
+
+    Attributes to set by subclasses:
+        _axis: The matplotlib.pyplot.axis that this instance plots the lines into.
+        _lines: The matplotlib lines that have to be updated.
+        _label: Write the y-label of the axis here.
+        _x_data(list/ndarray): Write the x-axis data for all lines here.
+        _y_data(list(list/ndarray)): list of all y-axis data from all lines. Write the y-values for all lines into
+            different lists here.
+        _x_lim(2-tuple(float)/None): Initial limits of the x-axis. None for matplotlib-default.
+        _y_lim(2-tuple(float)/None): Initial limits of the y-axis. None for matplotlib-default.
+
+    """
 
     def __init__(self):
         super().__init__()
@@ -14,7 +26,7 @@ class MotorDashboardPlot(Callback):
 
         self._label = ''
 
-        self._t_data = []
+        self._x_data = []
 
         self._y_data = []
 
@@ -39,19 +51,46 @@ class MotorDashboardPlot(Callback):
             self._axis.set_ylim(self._y_lim)
 
     def render(self):
+        """Update of the plots axis.
+
+        The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
+        are scaled dynamically."""
         for line, data in zip(self._lines, self._y_data):
-            line.set_data(self._t_data, data)
+            line.set_data(self._x_data, data)
         self._scale_x_axis()
         self._scale_y_axis()
 
     def _scale_x_axis(self):
+        """Override this function to dynamically scale the plots x-axis.
+
+        Call *self._axis.set_xlim(lower, upper)* within this method to set the x-axis boundaries.
+        """
         pass
 
     def _scale_y_axis(self):
+        """Override this function to dynamically scale the plots y-axis.
+
+        Call *self._axis.set_ylim(lower, upper)* within this method to set the y-axis boundaries.
+        """
         pass
 
 
 class TimePlot(MotorDashboardPlot):
+    """Base class for all MotorDashboardPlots that have the cumulative simulated time on the x-Axis.
+
+    These use fixed-size numpy-arrays as x and y data. The plot is moved along the time axis and old data is cut out.
+    Furthermore, if the environment is reset manually or a limit violation occurs, a blue or red vertical line is
+    plotted to indicate these cases in the timeline.
+
+    Attributes:
+        _t(float): The cumulative simulation time.
+        _k(int): The cumulative no of taken steps.
+        _x_width(int): The width of the x-axis plot. (Set automatically by the dashboard)
+        _colors(list(matplotlib-colors)): The list of all colors for lines in the axis from the selected mpl-style.
+            Choose one of these for the lines and the color will fit to the overall design.
+
+
+    """
 
     _default_time_line_cfg = {
         'linestyle': '',
@@ -109,7 +148,7 @@ class TimePlot(MotorDashboardPlot):
     def set_env(self, env):
         super().set_env(env)
         self._tau = env.physical_system.tau
-        self._t_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
+        self._x_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
 
     def on_reset_begin(self):
         # self._done is None at initial reset.
@@ -137,6 +176,7 @@ class TimePlot(MotorDashboardPlot):
         self._reset_memory = []
 
     def _scale_x_axis(self):
+        """The x-axis is modeled as a sliding window in this plot."""
         x_lim = self._axis.get_xlim()
         upper_lim = max(self._t, x_lim[1])
         lower_lim = upper_lim - self._x_width * self._tau
@@ -152,7 +192,7 @@ class EpisodicPlot(MotorDashboardPlot):
 
     def on_reset_begin(self):
         if self._episode_no > -1:
-            self._t_data.append(self._episode_no)
+            self._x_data.append(self._episode_no)
             self._set_y_data()
         self._episode_no += 1
 
@@ -162,16 +202,10 @@ class EpisodicPlot(MotorDashboardPlot):
 
 class StepPlot(MotorDashboardPlot):
 
-    def __init__(self, interval=10000, **kwargs):
+    def __init__(self):
         super().__init__()
-        self._interval = interval
         self._k = 0
 
     def on_step_begin(self, k, action):
         self._k += 1
-        if self._k % self._interval == 0:
-            self._t_data.append(self._k)
-            self._set_y_data()
 
-    def _set_y_data(self):
-        raise NotImplementedError

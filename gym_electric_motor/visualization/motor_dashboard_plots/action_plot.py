@@ -11,8 +11,8 @@ class ActionPlot(TimePlot):
     def __init__(self, action=0, action_line_config=None):
         """
         Args:
-            action(int): Index of the action to be plotted. Select 0, if the environment has a Discrete action space.
-                Default: 0
+            action(int): Index of the action to be plotted, if there are multiple continuous actions.
+                Select 0, if the environment has a Discrete action space. Default: 0
         """
         super().__init__()
         # the action space of the environment. can be Box() or Discrete()
@@ -39,7 +39,7 @@ class ActionPlot(TimePlot):
         # Docstring of superclass
         super().initialize(axis)
         self._action_line, = self._axis.plot(
-            self._t_data, self._action_data, **self._action_line_config,
+            self._x_data, self._action_data, **self._action_line_config,
         )
         self._lines.append(self._action_line)
 
@@ -49,7 +49,7 @@ class ActionPlot(TimePlot):
         ps = env.physical_system
         # fetch the action space from the physical system
         self._action_space = ps.action_space
-        self._action_data = np.zeros_like(self._t_data, dtype=float) * np.nan
+        self._action_data = np.zeros_like(self._x_data, dtype=float) * np.nan
         self._y_data.append(self._action_data)
 
         # check for the type of action space: Discrete or Continuous
@@ -74,7 +74,7 @@ class ActionPlot(TimePlot):
         # Docstring of superclass
         super().on_step_begin(k, action)
         idx = self.data_idx
-        self._t_data[idx] = self._t
+        self._x_data[idx] = self._t
 
         if action is not None:
             if self._action_type == 'Discrete':

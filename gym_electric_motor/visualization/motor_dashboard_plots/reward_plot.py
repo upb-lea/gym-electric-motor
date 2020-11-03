@@ -20,13 +20,13 @@ class RewardPlot(TimePlot):
 
     def initialize(self, axis):
         super().initialize(axis)
-        self._reward_line, = self._axis.plot(self._t_data, self._reward_data, **self._reward_line_cfg)
+        self._reward_line, = self._axis.plot(self._x_data, self._reward_data, **self._reward_line_cfg)
         self._lines.append(self._reward_line)
 
     def set_env(self, env):
         super().set_env(env)
         self._reward_range = env.reward_range
-        self._reward_data = np.zeros_like(self._t_data, dtype=float) * np.nan
+        self._reward_data = np.zeros_like(self._x_data, dtype=float) * np.nan
         self._y_data = [self._reward_data]
         min_limit = self._reward_range[0]
         max_limit = self._reward_range[1]
@@ -36,6 +36,6 @@ class RewardPlot(TimePlot):
 
     def on_step_end(self, k, state, reference, reward, done):
         idx = self.data_idx
-        self._t_data[idx] = self._t
+        self._x_data[idx] = self._t
         self._reward_data[idx] = reward
         super().on_step_end(k, state, reference, reward, done)

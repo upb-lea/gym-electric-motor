@@ -131,7 +131,7 @@ class MotorDashboard(ElectricMotorVisualization):
             self._update_render = True
 
     def render(self):
-        """Updates the plots every _update cycle_ calls of this method."""
+        """Updates the plots every *update cycle* calls of this method."""
         if not (self._time_plot_figure or self._episodic_plot_figure or self._interval_plot_figure) \
            and len(self._plots) > 0:
             self._initialize()

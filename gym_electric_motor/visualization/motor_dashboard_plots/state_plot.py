@@ -97,10 +97,10 @@ class StatePlot(TimePlot):
 
     def initialize(self, axis):
         super().initialize(axis)
-        self._state_line, = self._axis.plot(self._t_data, self._state_data, **self._state_line_config)
+        self._state_line, = self._axis.plot(self._x_data, self._state_data, **self._state_line_config)
         self._lines = [self._state_line]
         if self._referenced:
-            self._reference_line, = self._axis.plot(self._t_data, self._ref_data, **self._ref_line_config)
+            self._reference_line, = self._axis.plot(self._x_data, self._ref_data, **self._ref_line_config)
             # Plot state line in front
             axis.lines = axis.lines[::-1]
             self._lines.append(self._reference_line)
@@ -128,7 +128,7 @@ class StatePlot(TimePlot):
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]
         idx = self.data_idx
-        self._t_data[idx] = self._t
+        self._x_data[idx] = self._t
         self._state_data[idx] = state_ * self._limits
         if self._referenced:
             self._ref_data[idx] = ref * self._limits
