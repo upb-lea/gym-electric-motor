@@ -4,19 +4,15 @@ from .base_plots import TimePlot
 
 
 class RewardPlot(TimePlot):
-    """ Class used to plot the instantaneous reward during the episode
-    """
+    """Plot to display the instantaneous reward during the episode"""
 
-    def __init__(self, line_config=None, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self):
+        super().__init__()
         self._reward_range = None
         self._reward_line = None
         self._reward_data = None
         self._reward_line_cfg = self._default_time_line_cfg.copy()
         self._reward_line_cfg['color'] = self._colors[-1]
-        line_cfg = line_config or {}
-        assert type(line_cfg) is dict
-        self._reward_line_cfg.update(line_cfg)
 
     def initialize(self, axis):
         super().initialize(axis)

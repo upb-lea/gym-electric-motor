@@ -15,28 +15,35 @@ class MotorDashboardPlot(Callback):
             different lists here.
         _x_lim(2-tuple(float)/None): Initial limits of the x-axis. None for matplotlib-default.
         _y_lim(2-tuple(float)/None): Initial limits of the y-axis. None for matplotlib-default.
+        _colors(list(matplotlib-colors)): The list of all colors for lines in the axis from the selected mpl-style.
+            Choose one of these for the lines and the color will fit to the overall design.
 
     """
 
     def __init__(self):
         super().__init__()
+
+        # The axis to plot into
         self._axis = None
-
+        # A list of all lines in the plot
         self._lines = []
-
+        # The y-axis Label
         self._label = ''
-
+        # The x-axis data (common to all lines)
         self._x_data = []
-
+        # List of all y-axis data of the lines
         self._y_data = []
 
+        # Initial limits for the x and y axes view
         self._x_lim = None
         self._y_lim = None
 
         self._colors = [cycle['color'] for cycle in plt.rcParams['axes.prop_cycle']]
 
     def initialize(self, axis):
-        """Initialization of the plot. Set labels, legends,... here.
+        """Initialization of the plot.
+
+        It is called by the MotorDashboard. Set labels, legends... when overriding this method.
 
         Args:
             axis(matplotlib.pyplot.axis): Axis to plot in
@@ -86,9 +93,6 @@ class TimePlot(MotorDashboardPlot):
         _t(float): The cumulative simulation time.
         _k(int): The cumulative no of taken steps.
         _x_width(int): The width of the x-axis plot. (Set automatically by the dashboard)
-        _colors(list(matplotlib-colors)): The list of all colors for lines in the axis from the selected mpl-style.
-            Choose one of these for the lines and the color will fit to the overall design.
-
 
     """
 
@@ -115,19 +119,12 @@ class TimePlot(MotorDashboardPlot):
         """Returns the current index to access the time and data arrays."""
         return self._k % self._x_width
 
-    def __init__(self, violation_line_cfg=None, reset_line_cfg=None):
+    def __init__(self):
         super().__init__()
-        reset_line_cfg = reset_line_cfg or {}
-        violation_line_cfg = violation_line_cfg or {}
-
-        assert type(reset_line_cfg) is dict
-        assert type(violation_line_cfg) is dict
 
         self._reset_line_cfg = self._default_reset_line_cfg.copy()
-        self._reset_line_cfg.update(reset_line_cfg)
 
         self._violation_line_cfg = self._default_violation_line_cfg.copy()
-        self._violation_line_cfg.update(violation_line_cfg)
 
         self._t = 0
         self._tau = None
@@ -149,6 +146,7 @@ class TimePlot(MotorDashboardPlot):
         super().set_env(env)
         self._tau = env.physical_system.tau
         self._x_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
+        self._x_lim = (0, self._x_data[-1])
 
     def on_reset_begin(self):
         # self._done is None at initial reset.
@@ -183,10 +181,10 @@ class TimePlot(MotorDashboardPlot):
         self._axis.set_xlim(lower_lim, upper_lim)
 
 
-class EpisodicPlot(MotorDashboardPlot):
+class EpisodePlot(MotorDashboardPlot):
     """Base Plot class that all episode based plots ."""
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         super().__init__()
         self._episode_no = -1
 
@@ -208,4 +206,13 @@ class StepPlot(MotorDashboardPlot):
 
     def on_step_begin(self, k, action):
         self._k += 1
+
+    def _scale_x_axis(self):
+        if self._axis.get_xlim() != (-1, self._x_data[-1]):
+            self._axis.set_xlim(-1, self._x_data[-1])
+
+    def _scale_y_axis(self):
+        min_, max_ = min(self._y_data[0]), max(self._y_data[0])
+        if self._axis.get_ylim() != (min_, max_):
+            self._axis.set_ylim(min_, max_)
 

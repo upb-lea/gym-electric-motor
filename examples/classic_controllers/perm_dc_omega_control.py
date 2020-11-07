@@ -30,7 +30,7 @@ if __name__ == '__main__':
     """
     env = gem.make(
         'DcPermExDisc-v1',
-        visualization=MotorDashboard(plots=['omega', 'torque', 'i', 'u', 'u_sup'], visu_period=1),
+        visualization=MotorDashboard(state_plots=['omega', 'torque', 'i', 'u', 'u_sup']),
         ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
         reference_generator=rg.SwitchedReferenceGenerator(
             sub_generators=[

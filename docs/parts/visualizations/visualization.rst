@@ -14,3 +14,4 @@ Visualization Base Class
 
 ..  autoclass:: gym_electric_motor.core.ElectricMotorVisualization
     :members:
+    :inherited-members:

@@ -4,7 +4,7 @@ from .base_plots import TimePlot
 
 
 class StatePlot(TimePlot):
-    """Class to plot any motor state and its reference."""
+    """Plot to display the environments states and their references."""
 
     _default_limit_line_cfg = {
         'color': 'red',
@@ -34,33 +34,24 @@ class StatePlot(TimePlot):
         'epsilon': r'$\epsilon$/rad'
     }
 
-    def __init__(self, state, state_line_config=None, ref_line_config=None, limit_line_config=None, **kwargs):
+    def __init__(self, state):
         """
         Args:
             state(str): Name of the state to plot
         """
-        super().__init__(**kwargs)
-        limit_line_config = limit_line_config or {}
-        assert type(limit_line_config) is dict
-        state_line_config = state_line_config or {}
-        assert type(state_line_config) is dict
-        ref_line_config = ref_line_config or {}
-        assert type(ref_line_config) is dict
+        super().__init__()
 
         self._state_line_config = self._default_time_line_cfg.copy()
         self._ref_line_config = self._default_time_line_cfg.copy()
-        self._state_line_config.update(state_line_config)
-        self._ref_line_config.update(ref_line_config)
-        self._limit_line_config = self._default_limit_line_cfg
-        self._limit_line_config.update(limit_line_config)
+        self._limit_line_config = self._default_limit_line_cfg.copy()
 
         #: State space of the plotted variable
         self._state_space = None
-        # State name of the plotted variable
+        #: State name of the plotted variable
         self._state = state
-        # Index in the state array of the plotted variable
+        #: Index in the state array of the plotted variable
         self._state_idx = None
-        # Maximal value of the plotted variable
+        #: Maximal value of the plotted variable
         self._limits = None
         # Bool: Flag if the plotted variable is referenced.
         self._referenced = None
@@ -81,24 +72,38 @@ class StatePlot(TimePlot):
         super().set_env(env)
         ps = env.physical_system
         rg = env.reference_generator
+        # Save the index of the state.
         self._state_idx = ps.state_positions[self._state]
+        # The maximal values of the state.
         self._limits = ps.limits[self._state_idx]
         self._state_space = ps.state_space.low[self._state_idx], ps.state_space.high[self._state_idx]
+        # Bool: if the state is referenced.
         self._referenced = rg.referenced_states[self._state_idx]
         if self._limits == self._state_space[1]:
             self._normalized = False
+        # Initialize the data containers
         self._state_data = np.ones(self._x_width) * np.nan
         self._ref_data = np.ones(self._x_width) * np.nan
+
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
         max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
         spacing = 0.1 * (max_limit - min_limit)
+
+        # Set the y-axis limits to fixed initital values
         self._y_lim = (min_limit - spacing, max_limit + spacing)
+
+        # Set the y-axis label
         self._label = self.state_labels.get(self._state, self._state)
 
     def initialize(self, axis):
+        # Docstring of superclass
         super().initialize(axis)
+
+        # Line to plot the state data
         self._state_line, = self._axis.plot(self._x_data, self._state_data, **self._state_line_config)
         self._lines = [self._state_line]
+
+        # If the state is referenced plot also the reference line
         if self._referenced:
             self._reference_line, = self._axis.plot(self._x_data, self._ref_data, **self._ref_line_config)
             # Plot state line in front
@@ -111,11 +116,15 @@ class StatePlot(TimePlot):
         lim = self._axis.axhline(max_limit, **self._limit_line_config)
 
         y_label = self._label
-        limit_label = y_label + r'$_{\mathrm{max}}$'
+        unit_split = y_label.find('/')
+        if unit_split == -1:
+            unit_split = len(y_label)
+        limit_label = y_label[:unit_split] + r'$_{\mathrm{max}}$' + y_label[unit_split:]
 
         if self._referenced:
+            ref_label = y_label[:unit_split] + r'$^*$' + y_label[unit_split:]
             self._axis.legend(
-                (self._state_line, self._reference_line, lim), (y_label, y_label + '*', limit_label), loc='upper left',
+                (self._state_line, self._reference_line, lim), (y_label, ref_label, limit_label), loc='upper left',
                 numpoints=20
             )
         else:
@@ -125,6 +134,7 @@ class StatePlot(TimePlot):
 
     def on_step_end(self, k, state, reference, reward, done):
         super().on_step_end(k, state, reference, reward, done)
+        # Write the data to the data containers
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]
         idx = self.data_idx

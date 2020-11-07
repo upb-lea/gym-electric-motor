@@ -5,20 +5,21 @@ from .base_plots import TimePlot
 
 
 class ActionPlot(TimePlot):
-    """ Class to plot the instantaneous actions applied on the environment
-    """
+    """ Class to plot the instantaneous actions applied on the environment"""
 
-    def __init__(self, action=0, action_line_config=None):
+    def __init__(self, action=0):
         """
         Args:
             action(int): Index of the action to be plotted, if there are multiple continuous actions.
                 Select 0, if the environment has a Discrete action space. Default: 0
         """
         super().__init__()
+
         # the action space of the environment. can be Box() or Discrete()
         self._action_space = None
         self._action = action
 
+        # The matplotlib line object for the actions
         self._action_line = None
         # Data containers
         self._action_data = None
@@ -28,12 +29,8 @@ class ActionPlot(TimePlot):
         # the type of action space: Discrete or Continuous
         self._action_type = None
 
-        action_line_config = action_line_config or {}
-        assert type(action_line_config) is dict
         self._action_line_config = self._default_time_line_cfg.copy()
         self._action_line_config['color'] = self._colors[-2]
-
-        self._action_line_config.update(action_line_config)
 
     def initialize(self, axis):
         # Docstring of superclass

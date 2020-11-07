@@ -1,11 +1,11 @@
-from .base_plots import EpisodicPlot
+from .base_plots import EpisodePlot
 
 
-class MeanEpisodeRewardPlot(EpisodicPlot):
+class MeanEpisodeRewardPlot(EpisodePlot):
     """Class to plot the mean episode reward"""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self):
+        super().__init__()
 
         # data container for mean reward
         self._reward_data = []

@@ -1,13 +1,11 @@
-from .base_plots import EpisodicPlot
+from .base_plots import EpisodePlot
 
 
-class EpisodeLengthPlot(EpisodicPlot):
-    """
-    class to plot the mean episode reward
-    """
+class EpisodeLengthPlot(EpisodePlot):
+    """Plot to display the lengths of all episodes."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self):
+        super().__init__()
         # data container for episode lengths
         self._episode_lengths = []
         self._episode_length = 0

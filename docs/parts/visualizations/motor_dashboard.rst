@@ -46,51 +46,54 @@ __________________________
    :members:
    :inherited-members:
 
+..
+    The following section is commented out. It may serve as a little introduction on how to define
+    your own custom plots in the future.
 
-Create your own plots
-_____________________________
+    Create your own plots
+    _____________________________
+     In the following, there is
+    .. code-block:: python
 
-.. code-block:: python
+        import gym_electric_motor as gem
+        from gym_electric_motor.visualization import MotorDashboard
+        from gym_electric_motor.visualization.motor_dashboard_plots import TimePlot
 
-    import gym_electric_motor as gem
-    from gym_electric_motor.visualization import MotorDashboard
-    from gym_electric_motor.visualization.motor_dashboard_plots import TimePlot
+        # the class may also derive from EpisodePlot or StepPlot, depending on the x-axis
+        class MyPlot(TimePlot):
+        """This plot will show the current step of the episode *k* on the y-axis.
 
-    # the class may also derive from EpisodePlot or StepPlot, depending on the x-axis
-    class MyPlot(TimePlot):
-    """This plot will show the current step of the episode *k* on the y-axis.
+         As it derives from TimePlot the x-Axis is the cumulative simulated time over all episodes.
+         """
 
-     As it derives from TimePlot the x-Axis is the cumulative simulated time over all episodes.
-     """
+            def __init__(self):
+                super().__init__()
+                # Set the y-axis label
+                self._label = 'k'
 
-        def __init__(self):
-            super().__init__()
-            # Set the y-axis label
-            self._label = 'k'
+            def initialize(self, axis):
+                super().initialize(axis)
+                self._k_line, =  self._axis.plot([],[])
+                self._lines.append(self._k_line)
 
-        def initialize(self, axis):
-            super().initialize(axis)
-            self._k_line, =  self._axis.plot([],[])
-            self._lines.append(self._k_line)
+            def set_env(self, env):
+                super().set_env(env)
+                self._k_data = np.ones_like(self._x_data) * np.nan
+                self._y_data.append(self._k_data)
 
-        def set_env(self, env):
-            super().set_env(env)
-            self._k_data = np.ones_like(self._x_data) * np.nan
-            self._y_data.append(self._k_data)
+            def on_step_begin(self, k, action):
+                super().on_step_begin(k, action)
+                idx = self.data_idx
+                self._k_data[idx] = k
 
-        def on_step_begin(self, k, action):
-            super().on_step_begin(k, action)
-            idx = self.data_idx
-            self._k_data[idx] = k
+            def _scale_y_axis(self):
+                """This function can be defined to automatically scale the plots limits.
+                Here, the y limits are set such that the data fits perfectly.
+                """
+                self._axis.set_ylim(0,max(self._k_data))
 
-        def _scale_y_axis(self):
-            """This function can be defined to automatically scale the plots limits.
-            Here, the y limits are set such that the data fits perfectly.
-            """
-            self._axis.set_ylim(0,max(self._k_data))
-
-    dashboard = MotorDashboard(
-        state_plots='all',
-        additional_plots=[MyPlot()]
-    )
-    env = gem.make('my-env-id-v0', visualization=dashboard)
+        dashboard = MotorDashboard(
+            state_plots='all',
+            additional_plots=[MyPlot()]
+        )
+        env = gem.make('my-env-id-v0', visualization=dashboard)

@@ -1,5 +1,5 @@
 from gym_electric_motor.core import ElectricMotorVisualization
-from .motor_dashboard_plots import StatePlot, ActionPlot, RewardPlot, TimePlot, EpisodicPlot, StepPlot
+from .motor_dashboard_plots import StatePlot, ActionPlot, RewardPlot, TimePlot, EpisodePlot, StepPlot
 import matplotlib.pyplot as plt
 import gym
 
@@ -10,7 +10,7 @@ class MotorDashboard(ElectricMotorVisualization):
     Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
     matplotlib axis.
 
-    It handles three different types of plots: The TimePlot, EpisodicPlot and StepPlot which especially differ in
+    It handles three different types of plots: The TimePlot, EpisodePlot and StepPlot which especially differ in
     their x-Axis. The time plots plot every step and have got the time on the x-Axis. The EpisodicPlots plot statistics
     over the episodes (e.g. mean reward per step in each episode). The episode number is on their x-Axis. The
     StepPlots plot statistics over the last taken steps (e.g. mean reward over the last 1000 steps) and their x-Axis
@@ -19,10 +19,10 @@ class MotorDashboard(ElectricMotorVisualization):
     The StepPlots, EpisodicPlots and TimePlots each are plotted into three separate figures.
 
     The most common TimePlots (i.e to plot the states, actions and rewards) can be plotted by just passing the
-    corresponding strings in the constructor. Additional plots (e.g. the MeanEpisodeRewardPlot) have to be instantiated
-    manually and passed to the constructor.
+    corresponding arguments in the constructor. Additional plots (e.g. the MeanEpisodeRewardPlot) have to be
+    initialized manually and passed to the constructor.
 
-    Furthermore, completely custom plots can be defined. They have to derive from the TimePlot, EpisodicPlot or
+    Furthermore, completely custom plots can be defined. They have to derive from the TimePlot, EpisodePlot or
     StepPlot base classes.
     """
 
@@ -36,7 +36,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 action can be applied on the environment it can be selected by its index.
                 Default: () (no plotted actions).
             reward_plot(boolean): Select if the current reward is to be plotted. Default: False
-            additional_plots(iterable((TimePlot/EpisodicPlot/StepPlot))): Additional already instantiated plots
+            additional_plots(iterable((TimePlot/EpisodePlot/StepPlot))): Additional already instantiated plots
                 to be shown on the dashboard
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
                 performance drastically. Default: 1000
@@ -47,7 +47,7 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         # Basic assertions
         assert type(reward_plot) is bool
-        assert all(isinstance(ap, (TimePlot, EpisodicPlot, StepPlot)) for ap in additional_plots)
+        assert all(isinstance(ap, (TimePlot, EpisodePlot, StepPlot)) for ap in additional_plots)
         assert type(update_interval) in [int, float]
         assert update_interval > 0
         assert type(step_plot_width) in [int, float]
@@ -66,9 +66,6 @@ class MotorDashboard(ElectricMotorVisualization):
         self._episodic_plot_figure = None
         self._interval_plot_figure = None
 
-        # Flag, if the env has been reset before the render() call.
-        self._reset = False
-
         # Store the input data
         self._state_plots = state_plots
         self._action_plots = action_plots
@@ -76,7 +73,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
         # Separate the additional plots into StepPlots, EpisodicPlots and IntervalPlots
         self._custom_step_plots = list(filter(lambda plot: isinstance(plot, TimePlot), list(additional_plots)))
-        self._episodic_plots = list(filter(lambda plot: isinstance(plot, EpisodicPlot), list(additional_plots)))
+        self._episodic_plots = list(filter(lambda plot: isinstance(plot, EpisodePlot), list(additional_plots)))
         self._interval_plots = list(filter(lambda plot: isinstance(plot, StepPlot), list(additional_plots)))
 
         self._time_plots = []
@@ -91,7 +88,6 @@ class MotorDashboard(ElectricMotorVisualization):
         """
         for plot in self._plots:
             plot.on_reset_begin()
-        self._reset = True
 
     def on_reset_end(self, state, reference):
         """Called after the environment is reset. The initial data is passed.
@@ -181,8 +177,7 @@ class MotorDashboard(ElectricMotorVisualization):
             plot.set_env(env)
 
     def _initialize(self):
-        """Called with first render() call to setup the figures and plots.
-        """
+        """Called with first render() call to setup the figures and plots."""
         plt.close()
         self._figures = []
 
@@ -220,8 +215,7 @@ class MotorDashboard(ElectricMotorVisualization):
         plt.pause(0.1)
 
     def _update(self):
-        """Called every *update cycle* steps to refresh the figure.
-        """
+        """Called every *update cycle* steps to refresh the figure."""
         for plot in self._plots:
             plot.render()
         for fig in self._figures:
