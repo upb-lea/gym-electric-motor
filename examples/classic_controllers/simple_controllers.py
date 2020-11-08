@@ -1,7 +1,8 @@
+import time
+
 from gym.spaces import Discrete, Box
 import sys
 import os
-import statistics as s
 
 sys.path.append(os.path.abspath(os.path.join('..')))
 from gym_electric_motor.physical_systems.electric_motors import DcShuntMotor, DcExternallyExcitedMotor, \
@@ -38,25 +39,32 @@ class Controller:
 
 class OnOffController(Controller):
     """
-        The following controller is a simple OnOffController which allows the state to choose high_action when referenced_state is below
-        ref_idx and low_action otherwise.
+        The following controller is a simple on-off controller with optional hysteresis which allows the state to choose
+        high_action when referenced_state is below ref_idx and low_action otherwise. A 'hysteresis' value should be integrated
+         (chosen as 0.01) in this controller because of the constant switching and high frequency around the reference_idx.
 
-        Valid for DcPermExDisc-v1, DcSeriesDisc-v1, PMSMDisc-v1, SynRMDisc-v1 ,SCIMDisc-v1
+        Valid for motors with discrete action space
     """
 
-    def __init__(self, environment, state_idx=None, reference_idx=0):
+    def __init__(self, environment, hysteresis=0.01, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Discrete, 'Not suitable action space for On off controller'
+        self._hysteresis = hysteresis
         self._high_action = 1
         if action_space.n in [3, 4]:
             self._low_action = 2
         else:
             self._low_action = 0
-        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
+        if state_idx is None:
+            self._referenced_state = np.argmax(
+                environment.reference_generator.referenced_states[environment.state_filter]
+            )
+        else:
+            self._referenced_state = state_idx
         self._ref_idx = reference_idx
 
     def control(self, state, reference):
-        if state[self._referenced_state] < reference[self._ref_idx]:
+        if state[self._referenced_state] < reference[self._ref_idx] - self._hysteresis:
             return self._high_action
         else:
             return self._low_action
@@ -66,10 +74,10 @@ class ThreePointController(Controller):
     """
     Below is an implementation of a 3 point controller: When state_idx is below the reference_idx, it choose high_action and when the
     state_idx is above the reference_idx,it choose low_action. If it is between the reference_idx values, it will choose idle_action
-    A 'Hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and
+    A 'hysteresis' value should be integrated(chosen as 0.01) in this controller because of the constant switching and
     high frequency around the reference_idx.
 
-    Valid for DcPermExDisc-v1, DcSeriesDisc-v1,DcShuntDisc-v1, PMSMDisc-v1, SynRMDisc-v1 ,SCIMDisc-v1
+    Valid for motors with discrete action space
 
     """
 
@@ -84,7 +92,12 @@ class ThreePointController(Controller):
             self._low_action = 2
         else:
             self._low_action = 0
-        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
+        if state_idx is None:
+            self._referenced_state = np.argmax(
+                environment.reference_generator.referenced_states[environment.state_filter]
+            )
+        else:
+            self._referenced_state = state_idx
 
     def control(self, state, reference):
         if state[self._referenced_state] < reference[self._ref_idx] - self._hysteresis:
@@ -95,13 +108,14 @@ class ThreePointController(Controller):
             return self._idle_action
 
 
-class DCPController(Controller):
+class PController(Controller):
     """
-    In the below proportional control implementation, the controller output is proportional to the error signal,  which is the difference
-    between the reference_idx and the state_idx .i.e., the output of a proportional controller
-    is the multiplication product of the error signal and the proportional gain.Here kp =10 is assumed for proportionality gain.
+    In the below proportional control implementation, the controller output is proportional to the error signal,
+     which is the difference between the reference_idx and the state_idx .i.e., the output of a proportional controller
+    is the multiplication product of the error signal and the proportional gain. Here kp =10 is assumed for
+    proportionality gain by default, which is likely to require adaption to a given control plant.
 
-    Valid for DC Motor System
+    Valid for DC motor system
     """
 
     def __init__(self, environment, k_p=10, controller_no=0, state_idx=None, reference_idx=0):
@@ -113,7 +127,12 @@ class DCPController(Controller):
         self._action_min = action_space.low[controller_no]
         self._action_max = action_space.high[controller_no]
         self._ref_idx = reference_idx
-        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
+        if state_idx is None:
+            self._referenced_state = np.argmax(
+                environment.reference_generator.referenced_states[environment.state_filter]
+            )
+        else:
+            self._referenced_state = state_idx
 
     def control(self, state, reference):
         return np.array([
@@ -127,46 +146,50 @@ class DCPController(Controller):
         ])
 
 
-class DCPIController(DCPController):
+class IController(Controller):
     """
-      The below Discrete PI Controller performs discrete-time PI controller computation using the error signal and proportional
-      and integral gain inputs. The error signal is the difference between the reference_idx and the referenced_state.
-      It outputs a weighted sum of the input error signal and the integral of the input error signal.
+    In the below integral control implementation, the controller output is proportional to the integral of error signal,
+     which is the difference between the reference_idx and the state_idx .i.e., the output of a integral controller
+    is the multiplication product of the error signal and  integral gain.
+    Here k_i =0.01 is assumed for integral gain by default which is likely to require individual tuning based on the given control plant.
 
-      Valid for DC Motor System
+    Valid for DC motor system
     """
-
-    def __init__(self, environment, k_p=10, k_i=0.01, controller_no=0, reference_idx=0):
-        super().__init__(environment, k_p, controller_no, reference_idx)
+    def __init__(self, environment, k_i=0.01, controller_no=0, state_idx=None, reference_idx=0):
         action_space = environment.action_space
         assert type(action_space) is Box and type(
-            environment.physical_system) is DcMotorSystem, 'No suitable action space for P Controller'
+            environment.physical_system) is DcMotorSystem, 'No Suitable action Space for I controller'
         self._k_i = k_i
         self._tau = environment.physical_system.tau
-        self._limits = environment.physical_system.limits
         self._integrated_value = 0
-        self._referenced_state_max = self._limits[self._referenced_state] * \
-                                     environment.physical_system.state_space.high[self._referenced_state]
-        self._referenced_state_min = self._limits[self._referenced_state] * environment.physical_system.state_space.low[
-            self._referenced_state]
+        self._limits = environment.physical_system.limits
+        self._controller_no = controller_no
+        self._action_min = action_space.low[controller_no]
+        self._action_max = action_space.low[controller_no]
+        self._ref_idx = reference_idx
+        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
+        self._referenced_state_max = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.low[self._referenced_state]
 
     def control(self, state, reference):
         diff = reference[self._ref_idx] - state[self._referenced_state]
         self._integrated_value += diff * self._tau
-        if state[self._referenced_state] > self._referenced_state_max:  # check upper limit
-            state[self._referenced_state] = self._referenced_state_max
-            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
-        if state[self._referenced_state] < self._referenced_state_min:  # check upper limit
-            state[self._referenced_state] = self._referenced_state_min
-            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        if self._integrated_value > self._referenced_state_max:  # check upper limit
+            self._integrated_value = self._referenced_state_max
+        else:
+            self._integrated_value = self._integrated_value - diff * self._k_i  # anti-reset windup
+        if self._integrated_value < self._referenced_state_min:  # check upper limit
+            self._integrated_value = self._referenced_state_min
+        else:
+            self._integrated_value = self._integrated_value - diff * self._k_i  # anti-reset windup
 
         return np.array([
             max(
                 self._action_min,
                 min(
-                    self._action_max,
-                    self._k_p * (reference[0] - state[self._referenced_state])
-                    + self._k_i / self._tau * self._integrated_value
+                    self._action_max, self._k_i * self._integrated_value
                 )
             )
         ])
@@ -175,37 +198,199 @@ class DCPIController(DCPController):
         self._integrated_value = 0
 
 
+class PIController(PController):
+    """
+      This class performs discrete-time PI controller computation using the error signal and
+      proportional and integral gain inputs. The error signal is the difference between the reference_idx and the
+      referenced_state. It outputs a weighted sum of the input error signal and the integral of the input error signal.
+
+      Valid for DC motor system
+    """
+
+    def __init__(self, environment, k_p=10, k_i=0.01, controller_no=0, reference_idx=0):
+        super().__init__(environment, k_p, controller_no, reference_idx)
+        action_space = environment.action_space
+        assert type(action_space) is Box and type(
+            environment.physical_system) is DcMotorSystem, 'No suitable action space for PI Controller'
+        self._k_i = k_i
+        self._ref_idx = reference_idx
+        self._tau = environment.physical_system.tau
+        self._limits = environment.physical_system.limits
+        self._integrated_value = 0
+        self._referenced_state_max = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.low[self._referenced_state]
+        self._motor_parameter = environment.physical_system.electrical_motor.motor_parameter
+
+    def control(self, state, reference):
+        diff = reference[self._ref_idx] - state[self._referenced_state]
+        self._integrated_value += diff * self._tau
+        if self._integrated_value > self._referenced_state_max:  # check upper limit
+            self._integrated_value = self._referenced_state_max
+        else:
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        if self._integrated_value < self._referenced_state_min:  # check lower limit
+            self._integrated_value = self._referenced_state_min
+        else:
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+
+        return np.array([
+            max(
+                self._action_min,
+                min(
+                    self._action_max,
+                    self._k_p * (reference[self._ref_idx] - state[self._referenced_state])
+                    + self._k_i * self._integrated_value
+                )
+            )
+        ])
+
+    def reset(self, **__):
+        self._integrated_value = 0
+
+
+class DController(Controller):
+    """
+    In the below derivative control implementation, the controller output is proportional to the derivative of error,
+     which is the difference between the reference_idx and the state_idx .i.e., the output of a derivative controller
+    is the multiplication product of the error signal and  derivative gain.
+    Here k_d =1 is assumed for the differential gain by default which is likely to require individual tuning based on the given control plant.
+
+    Valid for DC motor system
+    """
+    def __init__(self, environment, k_d=1, controller_no=0, state_idx=None, reference_idx=0):
+        self._derivative_value = 0
+        self._tau = environment.physical_system.tau
+        self._prev_error = 0
+        action_space = environment.action_space
+        assert type(action_space) is Box and type(
+            environment.physical_system), 'No suitable action space for P Controller'
+        self._k_d = k_d
+        self._controller_no = controller_no
+        self._tau = environment.physical_system.tau
+        self._action_min = action_space.low[controller_no]
+        self._action_max = action_space.high[controller_no]
+        self._limits = environment.physical_system.limits
+        self._ref_idx = reference_idx
+        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
+        self._referenced_state_max = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.low[self._referenced_state]
+
+    def control(self, state, reference):
+        diff = reference[self._ref_idx] - state[self._referenced_state]
+        de = diff - self._prev_error
+        self._derivative_value = de / self._tau
+        self._prev_error = diff
+        return np.array([
+               max(
+                   self._action_min,
+                   min(
+                      self._action_max,
+                      self._k_d * self._derivative_value
+                   )
+               )
+            ])
+
+    def reset(self, **__):
+        self._derivative_value = 0
+
+
+class PIDController(PIController):
+    """
+      This class performs discrete-time PID controller computation using the error signal and
+      proportional,Derivative and integral gain inputs. The error signal is the difference between the reference_idx
+      and the referenced_state.It outputs a weighted sum of the input error signal,its derivative and the integral of
+      the input error signal.
+      
+      Valid for DC motor system
+    """
+
+    def __init__(self, environment, k_p=10, k_i=0.01, k_d=1, controller_no=0, reference_idx=0):
+        super().__init__(environment, k_p, k_i, controller_no, reference_idx)
+        self._ref_dx = reference_idx
+        action_space = environment.action_space
+        assert type(action_space) is Box and type(
+            environment.physical_system) is DcMotorSystem, 'No suitable action space for PI Controller'
+        self._k_i = k_i
+        self._k_d = k_d
+        self._k_p = k_p
+        self._tau = environment.physical_system.tau
+        self._limits = environment.physical_system.limits
+        self._integrated_value = 0
+        self._derivative_value = 0
+        self._prev_error = 0
+        self._current_time = time.time()
+        self._prev_time = self._current_time
+        self._referenced_state_max = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.high[self._referenced_state]
+        self._referenced_state_min = self._limits[self._referenced_state] \
+                                     * environment.physical_system.state_space.low[self._referenced_state]
+
+    def control(self, state, reference):
+        diff = reference[self._ref_idx] - state[self._referenced_state]
+        de = diff - self._prev_error
+        self._derivative_value = de/self._tau
+        diff = reference[self._ref_idx] - state[self._referenced_state]
+        self._integrated_value += diff * self._tau
+        self._prev_error = diff
+        self._prev_time = self._current_time
+        if self._integrated_value > self._referenced_state_max:  # check upper limit
+            self._integrated_value = self._referenced_state_max
+        else:
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        if self._integrated_value < self._referenced_state_min:  # check lower limit
+            self._integrated_value = self._referenced_state_min
+        else:
+            self._integrated_value = self._integrated_value - diff * self._tau  # anti-reset windup
+        return np.array([
+                max(
+                    self._action_min,
+                    min(
+                        self._action_max,
+                        (self._k_p * (reference[self._ref_dx] - state[self._referenced_state]))
+                        + (self._k_i * self._integrated_value) + (self._k_d * self._derivative_value)
+                    )
+                )
+            ])
+
+    def reset(self, **__):
+        self._integrated_value = 0
+
+
 class DCCascadedPIController(Controller):
     """
       cascade architecture has: two controllers (an inner secondary and outer primary controller)
-      two measurement/state variable sensors (an inner PV2 and outer PV1).A primary or master controller generates a control effort
-      that serves as the reference for a secondary or slave controller.That controller in turn uses the actuator to apply its control
-      effort directly to the secondary process.The secondary process then generates a secondary process variable that serves as
+      two measurement/state variable sensors (an inner PV2 and outer PV1). A primary or master controller generates a control effort
+      that serves as the reference for a secondary or slave controller. That controller in turn uses the actuator to apply its control
+      effort directly to the secondary process. The secondary process then generates a secondary process variable that serves as
       the control effort for the primary process. The geometry of this defines an inner loop involving the current controller and
-      an outer loop involving the speed controller.The inner loop functions like a traditional feedback control system with a
+      an outer loop involving the speed controller. The inner loop functions like a traditional feedback control system with a
       reference variable, a measured variable, and a controller acting on a process by means of an actuator. The outer loop does
       the same except that it uses the entire inner loop as its actuator.
 
-      Valid for DcMotorSystem Only
+      Valid for DC motor system only
     """
 
     def __init__(self, environment, ref_idx=0):
         assert type(environment.physical_system) is DcMotorSystem
-        self._omega_idx = environment.physical_system.OMEGA_IDX
+        self._omega_idx = np.argmax(environment.state_names == 'omega')
         self._currents_idx = environment.physical_system.CURRENTS_IDX
         self._voltages_idx = environment.physical_system.VOLTAGES_IDX
         self._u_a_idx = self._voltages_idx[0]
         self._i_a_idx = self._currents_idx[0]
         self._u_sup = environment.physical_system.supply.u_nominal
         if len(self._currents_idx) > 1:
-            self._i_e_idx = environment.physical_system.state_positions['i_e']
+            self._i_e_idx = np.argmax(np.array(environment.state_names) == 'i_e')
         else:
-            self._i_e_idx = environment.physical_system.state_positions['i']
+            self._i_e_idx = np.argmax(np.array(environment.state_names) == 'i')
         if len(self._voltages_idx) > 1:
-            self._u_e_idx = environment.physical_system.state_positions['u_e']
+            self._u_e_idx = np.argmax(np.array(environment.state_names) == 'u_e')
         else:
             self._u_e_idx = None
-        self._limits = environment.physical_system.limits
+        self._limits = environment.physical_system.limits[environment.state_filter]
         self._ref_idx = ref_idx
         self._tau = environment.physical_system.tau
         mp = environment.physical_system.electrical_motor.motor_parameter
@@ -313,75 +498,19 @@ class DCCascadedPIController(Controller):
         des_duty_cycle = u_a / self._limits[self._u_a_idx]
         # Voltage compensation
         u_sup_avg = (self._u_sup * self._tau) / self._tau
-        des_duty_cycle = des_duty_cycle * (u_sup_avg/ self._u_sup)
+        des_duty_cycle = des_duty_cycle * (u_sup_avg / self._u_sup)
         duty_cycle = min(
             max(des_duty_cycle, self._u_a_min / self._limits[self._u_a_idx]),
             self._u_a_max / self._limits[self._u_a_idx])
         return np.array([duty_cycle])
 
 
-class PmsmOnOffController(Controller):
-    """
-    The following controller is a simple OnOffController which allows the state to choose u_q values as '1'' when it is below
-        reference_state and '-1' otherwise
-    """
-
-    def __init__(self, environment, state_idx=None, ref_idx=0):
-        t32 = environment.physical_system.electrical_motor.t_32
-        q = environment.physical_system.electrical_motor.q
-        t23 = environment.physical_system.electrical_motor.t_23
-        q_inv = environment.physical_system.electrical_motor.q_inv
-        self._forward_transformation = lambda quantities, eps: q_inv(t23(quantities), eps)[::-1]
-        self._backward_transformation = (
-            lambda quantities, eps: t32(q(quantities[::-1], eps))
-        )
-        self._l_q = environment.physical_system.electrical_motor.motor_parameter['l_q']
-        self._epsilon_idx = environment.physical_system.EPSILON_IDX
-        self._currents_idx = environment.physical_system.CURRENTS_IDX
-        self._currents_idx[0] = np.argmax(environment.state_names == 'i_sq')
-        self._currents_idx[1] = np.argmax(environment.state_names == 'i_sd')
-        self._ref_idx = ref_idx
-        self._omega_idx = environment.physical_system.state_positions['omega']
-        self._u_sup = environment.physical_system.supply.u_nominal
-        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
-        self._limits = environment.physical_system.electrical_motor.limits
-
-    def control(self, state, reference):
-        if state[self._referenced_state] < reference[self._ref_idx]:
-            u_q = 1
-        else:
-            u_q = -1
-        epsilon = np.pi * state[self._epsilon_idx]
-        u_d = 0
-        u_a, u_b, u_c = self._backward_transformation((u_q, u_d), epsilon)
-        return 4 * (u_a > 0) + 2 * (u_b > 0) + (u_c > 0)
-
-
-class SynRmOnOffController(PmsmOnOffController):
-    """
-     The following controller is a SynRmOnOffController which allows the state to choose u_d and u_q voltages values as '1'  when it is below
-        reference_state and '-1' otherwise
-
-    """
-
-    def control(self, state, reference):
-        if state[self._referenced_state] < reference[self._ref_idx]:
-            u_q = 1
-            u_d = 1
-        else:
-            u_q = -1
-            u_d = -1
-        epsilon = state[self._epsilon_idx]
-        u_a, u_b, u_c = self._backward_transformation((u_q, u_d), epsilon)
-        return 4 * u_a > 0 + 2 * u_b > 0 + u_c > 0
-
-
 class FOCController(Controller):
     """
-    FOC is used to control AC synchronous and induction motors.The stator currents of a three-phase AC electric motor are identified
+    The following FOC is used to control AC three-phase permanent magnet motors. The stator currents of a three-phase AC electric motor are identified
     as two orthogonal components that can be visualized with a vector. One component defines the magnetic flux of the motor, the other the torque.
     The control system of the drive calculates the corresponding current component references from the flux and torque references given
-    by the drive's speed control. Here Synchronous motor is chosen as environment.
+    by the drive's speed control.
 
     """
 
@@ -390,13 +519,15 @@ class FOCController(Controller):
         self._dq_decoupling = dq_decoupling  # Can be turned ON
         self._ref_idx = ref_idx
         self._weight = weight
-        self._omega_idx = environment.physical_system.OMEGA_IDX
-        self._currents_idx = environment.physical_system.CURRENTS_IDX
-        self._currents_idx[0] = np.argmax(environment.state_names == 'i_sq')
-        self._currents_idx[1] = np.argmax(environment.state_names == 'i_sd')
-        self._voltages_idx = environment.physical_system.VOLTAGES_IDX
-        self._epsilon_idx = environment.physical_system.EPSILON_IDX
-        self._limits = environment.physical_system.limits
+        self._omega_idx = np.argmax(np.array(environment.state_names) == 'omega')
+        self._currents_idx = np.zeros(2, dtype=int)
+        self._currents_idx[0] = np.argmax(np.array(environment.state_names) == 'i_sq')
+        self._currents_idx[1] = np.argmax(np.array(environment.state_names) == 'i_sd')
+        self._voltages_idx = np.zeros(2, dtype=int)
+        self._voltages_idx[0] = np.argmax(np.array(environment.state_names) == 'u_sq')
+        self._voltages_idx[1] = np.argmax(np.array(environment.state_names) == 'u_sd')
+        self._epsilon_idx = np.argmax(np.array(environment.state_names) == 'epsilon')
+        self._limits = environment.physical_system.limits[environment.state_filter]
         self._tau = environment.physical_system.tau
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
@@ -461,10 +592,7 @@ class FOCController(Controller):
 
         # u = state[self._voltages_idx] * self._limits[self._voltages_idx]
         epsilon = state[self._epsilon_idx] * self._limits[self._epsilon_idx]
-        i = state[self._currents_idx] * self._limits[self._currents_idx]
-        # transformation from a/b/c to alpha/beta and d/q
-
-        i_qd = self._forward_transformation(i, epsilon)
+        i_qd = state[self._currents_idx] * self._limits[self._currents_idx]
 
         # compute u_d_0 and u_q_0
         u_d_0 = omega * mp['l_q'] * i_qd[0]
@@ -498,7 +626,7 @@ class FOCController(Controller):
 
         # test if current limits are violated
         if np.max(np.abs(currents)) > self._limits[self._currents_idx[0]]:
-            clipping = self._limits[self._currents_idx]
+            clipping = self._limits[self._currents_idx[0]]
             currents = np.clip(currents, -clipping, clipping)
             array = self._forward_transformation(currents, epsilon)
             i_sd_des = array[1]
@@ -541,89 +669,67 @@ class FOCController(Controller):
 
         # from d/q to alpha/beta and a/b/c
         u_qd_des = np.array([u_sq_des, u_sd_des])
-        voltages = self._backward_transformation(u_qd_des, epsilon_shift)
-
-        # zero voltage injection
-        u_o = 1 / 2 * (max(voltages) + min(voltages))
-        voltages[0] = voltages[0] - u_o
-        voltages[1] = voltages[1] - u_o
-        voltages[2] = voltages[2] - u_o
+        # voltages = self._backward_transformation(u_qd_des, epsilon_shift)
 
         # normalise inputs
-        result = np.clip(voltages / self._limits[self._voltages_idx[0]], -1, 1)
+        result = np.clip(u_qd_des / self._limits[self._voltages_idx[0]], -1, 1)
         return result
 
 
-class PmsmPController(Controller):
+class zero_voltage_injection:
     """
-    In the below proportional control algorithm, the controller output is proportional to the error signal,  which is the difference
-    between the reference_idx and the state_idx .i.e., the output of a proportional controller
-    is the multiplication product of the error signal and the proportional gain
-    Here kp =1 is assumed for a proportionality gain.
-
+     The below class is implementation of zero voltage switching.
+     Zero Voltage Switching enables “soft switching”, avoiding the switching losses that are typically
+     incurred during conventional PWM operation and timing.Hence overall the voltage utilization is increased.
     """
 
-    def __init__(self, environment, state_idx=None, ref_idx=0, k_p=1):
-        self._k_p = k_p
-        t32 = environment.physical_system.electrical_motor.t_32
+    def __init__(self, environment, state_idx=None, ref_idx=0):
+        self._omega_idx = environment.physical_system.OMEGA_IDX
+        self._currents_idx = environment.physical_system.CURRENTS_IDX
+        self._voltages_idx = environment.physical_system.VOLTAGES_IDX
+        self._limits = environment.physical_system.limits
+        self._tau = environment.physical_system.tau
         q = environment.physical_system.electrical_motor.q
         t23 = environment.physical_system.electrical_motor.t_23
+        self._epsilon_idx = environment.physical_system.EPSILON_IDX
+        self._limits = environment.physical_system.limits
+        t32 = environment.physical_system.electrical_motor.t_3
+        self._ref_idx = ref_idx
+        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
         q_inv = environment.physical_system.electrical_motor.q_inv
         self._forward_transformation = lambda quantities, eps: q_inv(t23(quantities), eps)[::-1]
         self._backward_transformation = (
             lambda quantities, eps: t32(q(quantities[::-1], eps))
         )
-        self._epsilon_idx = environment.physical_system.EPSILON_IDX
-        self._currents_idx = environment.physical_system.CURRENTS_IDX
-        self._ref_idx = ref_idx
-        self._referenced_state = state_idx or np.argmax(environment.reference_generator.referenced_states)
-        self._phase = 0
 
-    def control(self, state, reference):
-        u_q = min(1, max(-1, self._k_p * reference[self._ref_idx] - state[self._referenced_state]))
-        epsilon = np.pi * state[self._epsilon_idx]
+        self._motor_parameter = environment.physical_system.electrical_motor.motor_parameter
 
-        u_d = 0
-        u_a, u_b, u_c = self._backward_transformation((u_q, u_d), epsilon)
-        return [u_a, u_b, u_c]
-
-    def reset(self):
-        self._phase = 0
-
-
-class ThreePhaseSteadyState(Controller):
-    """
-    In the below control scheme, we have chosen a parameter 'k'= - 1. With every increase of k value, we calculate the length of u_a and we
-    output the values as product of 'k' and length of u_a for each of u_a,u_b,u_c.
-    """
-
-    def __init__(self, environment, omega_el=15):
-        self._omega_el = omega_el
-        self._tau = environment.physical_system.tau
-        self._k = 0
-        t = np.linspace(0, 2 * np.pi / abs(omega_el), 1 / abs(omega_el * self._tau))
-        self._u_a = np.sin(omega_el * t)
-        self._u_b = np.sin(omega_el * t - 2 / 3 * np.pi)
-        self._u_c = np.sin(omega_el * t + 2 / 3 * np.pi)
-
-    def reset(self):
-        self._k = -1
-
-    def control(self, state, reference):
-        self._k += 1
-        length = len(self._u_a)
-        return self._u_a[self._k % length], self._u_b[self._k % length], self._u_c[self._k % length],
+    def control(self, state):
+        i = state[self._currents_idx] * self._limits[self._currents_idx]
+        epsilon = state[self._epsilon_idx] * self._limits[self._epsilon_idx]
+        i_qd = self._forward_transformation(i, epsilon)
+        mp = self._motor_parameter
+        omega = state[self._omega_idx] * self._limits[self._omega_idx]
+        u_d_0 = omega * mp['l_q'] * i_qd[0]
+        u_q_0 = omega * (mp['psi_p'] + mp['l_d'] * i_qd[1])
+        u_a, u_b, u_c = self._backward_transformation((u_q_0, u_d_0), epsilon)
+        voltages = [u_a, u_b, u_c]
+        u_o = 1 / 2 * (max(voltages) + min(voltages))
+        voltages[0] = voltages[0] - u_o
+        voltages[1] = voltages[1] - u_o
+        voltages[2] = voltages[2] - u_o
+        result = np.clip(voltages / self._limits[self._voltages_idx[0]], -1, 1)
+        return result
 
 
 _controllers = {
     'on_off': OnOffController,
     'three_point': ThreePointController,
-    'p_controller': DCPController,
-    'pi_controller': DCPIController,
-    'pmsm_on_off': PmsmOnOffController,
-    'synrm_on_off': SynRmOnOffController,
+    'p_controller': PController,
+    'i_controller': IController,
+    'pi_controller': PIController,
+    'pid_controller': PIDController,
+    'd_controller': DController,
     'cascaded_pi': DCCascadedPIController,
     'foc_controller': FOCController,
-    'pmsm_p_controller': PmsmPController,
-    'three_phase_steadystate': ThreePhaseSteadyState
 }
