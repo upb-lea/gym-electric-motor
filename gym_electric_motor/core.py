@@ -147,8 +147,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         return self._physical_system.nominal_state[self.state_filter]
 
-    def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None,
-                 callbacks=(), **kwargs):
+    def __init__(self, physical_system, reference_generator, reward_function, constraints=(),
+                 visualization=None, state_filter=None, callbacks=(), **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -157,6 +157,14 @@ class ElectricMotorEnvironment(gym.core.Env):
             reference_generator(ReferenceGenerator): The reference generator of this environment.
             reward_function(RewardFunction): The reward function of this environment.
             visualization(ElectricMotorVisualization): The visualization of this environment.
+            constraints(list(Constraint/str) / ConstraintMonitor): A list of constraints or an already initialized
+                ConstraintMonitor object can be passed here.
+                    - list(Constraint/str): Pass a list with initialized Constraints and/or state names. Then,
+                    a ConstraintMonitor object with the Constraints and additional LimitConstraints on the passed names
+                    is created. Furthermore, the string 'all' inside the list will create a ConstraintMonitor that
+                    observes the limit on each state.
+                    - ConstraintMonitor: Pass an initialized ConstraintMonitor object that will be used directly as
+                        ConstraintMonitor in the environment.
             state_filter(list(str)): Selection of states that are shown in the observation.
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
@@ -166,10 +174,18 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reward_function = instantiate(RewardFunction, reward_function, **kwargs)
         visualization = visualization or ElectricMotorVisualization()
         self._visualization = instantiate(ElectricMotorVisualization, visualization, **kwargs)
+        if isinstance(constraints, ConstraintMonitor):
+            cm = constraints
+        else:
+            limit_constraints = list(filter(lambda constraint: type(constraint) is str))
+            additional_constraints = list(filter(lambda constraint: type(constraint) is Constraint))
+            cm = ConstraintMonitor(limit_constraints, additional_constraints)
+        self._constraint_monitor = cm
 
         # Announcement of the Modules among each other
         self._reference_generator.set_modules(self.physical_system)
-        self._reward_function.set_modules(self.physical_system, self._reference_generator)
+        self._constraint_monitor.set_modules(self.physical_system)
+        self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
         self._visualization.set_modules(self.physical_system, self._reference_generator, self._reward_function)
         self._reset_required = True
         self._done = None
@@ -230,8 +246,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         )
 
     def step(self, action):
-        """
-        Perform one simulation step of the environment with an action of the action space.
+        """Perform one simulation step of the environment with an action of the action space.
 
         Args:
             action: Action to play on the environment.
@@ -248,10 +263,10 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._action = action
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
-        self._reward, self._done = self._reward_function.reward(self._state,
-                                                                self._reference,
-                                                                self._physical_system.k,
-                                                                action)
+        violation_degree = self._constraint_monitor.check_constraints(self._state)
+        self._reward, self._done = self._reward_function.reward(
+            self._state, self._reference, self._physical_system.k, action, violation_degree
+        )
         self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
         self._call_callbacks('on_step_end')
@@ -472,13 +487,14 @@ class RewardFunction:
         """
         return self.reward(state, reference, k, action, violation_degree)
 
-    def set_modules(self, physical_system, reference_generator):
+    def set_modules(self, physical_system, reference_generator, constraint_monitor):
         """
         Setting of the physical system, to set state arrays fitting to the environments states
 
         Args:
             physical_system(PhysicalSystem): The physical system of the environment
             reference_generator(ReferenceGenerator): The reference generator of the environment.
+            constraint_monitor(ConstraintMonitor): The constraint monitor of the environment.
         """
         pass
 

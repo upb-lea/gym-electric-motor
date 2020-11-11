@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from gym_electric_motor.reward_functions.weighted_sum_of_errors import WeightedSumOfErrors, ShiftedWeightedSumOfErrors
+from gym_electric_motor.reward_functions.weighted_sum_of_errors import WeightedSumOfErrors
 import gym_electric_motor.reward_functions.weighted_sum_of_errors as ws
 import tests.testing_utils as tu
 
@@ -141,64 +141,3 @@ class TestWeightedSumOfErrors:
         # assert, if the correct warning is raised
         with pytest.warns(Warning, match="All reward weights sum up to zero"):
             wsoe_obj.set_modules(physical_system, reference_generator)
-
-    @pytest.mark.parametrize("reward_weights", [None, reward_list, reward_dict])
-    @pytest.mark.parametrize("normed", [True, False])
-    @pytest.mark.parametrize("power", [-1, 1, 2, 0])
-    @pytest.mark.parametrize("mock_ref_states", [[True, True], [True, False]])
-    def test_shifted_wsoe_set_modules(self, monkeypatch, reward_weights, normed, power, mock_ref_states):
-        """
-        test the set_modules function in the ShiftedWeightedSumOfErrors class
-        :param monkeypatch:
-        :param reward_weights:
-        :param normed:
-        :param power:
-        :param mock_ref_states:
-        :return:
-        """
-        expected_reward_range = (0, 3)
-        expected_reward_range_normed = (0, 1)
-        expected_reward = 1/3
-        expected_reward_normed = 1
-        expected_call_counter = 2
-
-        def mock_set_state_array(a, b):
-            """
-            mock function for set_state_array() function
-            :param a:
-            :param b:
-            :return: a fixed array [1, 1, 1] if parameter a is an array else a fixed value 2
-            """
-            self._mock_set_state_array_counter += 1
-            test_b = np.array(["dummy_state_0", "dummy_state_1"])
-            for i in range(2):
-                assert b[i] == test_b[i]
-            if type(a) is list or np.ndarray:
-                return np.array([1, 1, 1], dtype=np.float64)
-            else:
-                return 2
-
-        # create the ShiftedWeightedSumOfErrors object
-        swsoe_obj = ShiftedWeightedSumOfErrors(
-            reward_weights, normed, observed_states=None, gamma=0.9, reward_power=power
-        )
-        # setup_physical_system(motor_type, converter_type)
-        physical_system = tu.DummyPhysicalSystem(2)
-        # setup_reference_generator('SinusReference', physical_system)
-        reference_generator = tu.DummyReferenceGenerator()
-        monkeypatch.setattr(ws, "set_state_array", mock_set_state_array)
-        reference_generator._referenced_states = mock_ref_states  # parametrized to [true/false]
-        swsoe_obj.set_modules(physical_system, reference_generator)
-
-        # Test if the mock_set_state_array function is called only 2 times
-        assert self._mock_set_state_array_counter == expected_call_counter  # 2
-        # Test the reward weights and range
-        if normed:
-            assert swsoe_obj.reward_range == expected_reward_range_normed  # (0, 1)
-            for val in swsoe_obj._reward_weights:
-                assert val == expected_reward   # 1 / 3
-
-        else:
-            assert swsoe_obj.reward_range == expected_reward_range  # (0, 3)
-            for val in swsoe_obj._reward_weights:
-                assert val == expected_reward_normed  # 1

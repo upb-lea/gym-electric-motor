@@ -12,23 +12,6 @@ import pytest
 # region general setup functions
 
 
-def limits_testing(environment_state, lower_limits, upper_limits, observed_states_indices):
-    """
-    Test the limits to compare the output with the reward function
-
-    :param environment_state: current state (ndarray)
-    :param lower_limits: lower physical limits (ndarray)
-    :param upper_limits: upper physical limits (ndarray)
-    :param observed_states_indices: indices of the observed states for the limit violation
-    :return: True if limits are violated, False otherwise
-    """
-    if any(environment_state[observed_states_indices] > upper_limits[observed_states_indices]) or\
-            any(environment_state[observed_states_indices] < lower_limits[observed_states_indices]):
-        return True
-    else:
-        return False
-# endregion
-
 
 @pytest.mark.parametrize("number_reward_weights", [1, 2, 3])
 @pytest.mark.parametrize("normed", [False, True])

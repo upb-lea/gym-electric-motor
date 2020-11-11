@@ -49,8 +49,8 @@ if __name__ == '__main__':
         reward_power=0.5,
 
         # Define which state variables are to be monitored concerning limit violations
-        # None means that a limit violation will never trigger an env.reset
-        observed_states=None,
+        # () means that a limit violation will never trigger an env.reset
+        constraints=(),
 
         # Define which numerical solver is to be used for the simulation
         ode_solver='scipy.solve_ivp',

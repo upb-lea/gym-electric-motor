@@ -19,6 +19,7 @@ from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.physical_systems import ConstantSpeedLoad
 from gym.core import Wrapper
 from gym.spaces import Box, Tuple
+from gym_electric_motor.constraints import SquaredConstraint
 
 '''
 This example shows how we can use GEM to train a reinforcement learning agent to control the current within
@@ -29,6 +30,7 @@ The state and action space is continuous.
 We use a deep-deterministic-policy-gradient (DDPG) agent
 to determine which action must be taken on a continuous-control-set
 '''
+
 
 class AppendLastActionWrapper(Wrapper):
     """
@@ -121,7 +123,7 @@ if __name__ == '__main__':
 
         # Define which state variables are to be monitored concerning limit violations
         # Here, only overcurrent will lead to termination
-        observed_states=['i_sq', 'i_sd'],
+        constraints=(SquaredConstraint(('i_sq', 'i_sd')),),
 
         # Consider converter dead time within the simulation
         # This means that a given action will show effect only with one step delay

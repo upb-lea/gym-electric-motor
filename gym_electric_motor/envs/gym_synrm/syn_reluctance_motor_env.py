@@ -2,11 +2,12 @@ from gym_electric_motor.core import ElectricMotorEnvironment
 from gym_electric_motor.physical_systems.physical_systems import SynchronousMotorSystem
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
+from ...constraints import SquaredConstraint
 
 
 class SynchronousReluctanceMotorEnvironment(ElectricMotorEnvironment):
 
-    def __init__(self, motor='SynRM', reward_function=None, reference_generator=None, **kwargs):
+    def __init__(self, motor='SynRM', reward_function=None, reference_generator=None, constraints=None, **kwargs):
         """
         Args:
             motor(ElectricMotor): Electric Motor used in the PhysicalSystem
@@ -17,8 +18,11 @@ class SynchronousReluctanceMotorEnvironment(ElectricMotorEnvironment):
         physical_system = SynchronousMotorSystem(motor=motor, **kwargs)
         reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)
         reward_function = reward_function or WeightedSumOfErrors(**kwargs)
+        constraints_ = constraints if constraints is not None \
+            else ('i_a', 'i_b', 'i_c', SquaredConstraint(('i_sd', 'i_sq')))
         super().__init__(
-            physical_system, reference_generator=reference_generator, reward_function=reward_function, **kwargs
+            physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints_, **kwargs
         )
 
 
