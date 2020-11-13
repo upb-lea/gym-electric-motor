@@ -3,7 +3,7 @@ from gym_electric_motor.reference_generators import MultipleReferenceGenerator, 
     WienerProcessReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
 
-from examples.agents.simple_controllers import Controller
+from simple_controllers import Controller
 import time
 import sys, os
 
@@ -39,6 +39,7 @@ if __name__ == '__main__':
         'emotor-pmsm-cont-v1',
         visualization=MotorDashboard(plots=['u_sd', 'u_sq', 'i_sd', 'i_sq', 'omega']), visu_period=1,
         control_space='dq',
+        solver='euler'
 
     )
 

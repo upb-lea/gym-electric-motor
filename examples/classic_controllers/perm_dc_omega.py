@@ -1,4 +1,4 @@
-from examples.agents.simple_controllers import Controller
+from simple_controllers import Controller
 import time
 import sys, os
 
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     env = gem.make(
         'DcPermExDisc-v1',
         visualization=MotorDashboard(plots=['omega', 'torque', 'i', 'u', 'u_sup'], visu_period=1),
-        ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
+        ode_solver='euler', solver_kwargs=dict(),
         reference_generator=rg.SwitchedReferenceGenerator(
             sub_generators=[
                 rg.SinusoidalReferenceGenerator, rg.WienerProcessReferenceGenerator(), rg.StepReferenceGenerator()
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         ),
         # Override the observation of the current limit of 'i' which is selected per default
         # The 'on_off' Controller cannot comply to any limits.
-        constraints=()
+        #constraints=()
     )
 
     # Assign a simple on/off controller
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     for i in range(100000):
         env.render()
         action = controller.control(state, reference)
-        (state, reference), reward, done, _ = env.step(action)
+        (state, reference), reward, done, _ = env.step(1)
         if done:
             env.reset()
         cum_rew += reward

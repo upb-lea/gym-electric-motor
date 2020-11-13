@@ -177,8 +177,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         if isinstance(constraints, ConstraintMonitor):
             cm = constraints
         else:
-            limit_constraints = list(filter(lambda constraint: type(constraint) is str))
-            additional_constraints = list(filter(lambda constraint: type(constraint) is Constraint))
+            limit_constraints = list(filter(lambda constraint: type(constraint) is str, constraints))
+            additional_constraints = list(filter(lambda constraint: isinstance(constraint, Constraint), constraints))
             cm = ConstraintMonitor(limit_constraints, additional_constraints)
         self._constraint_monitor = cm
 
@@ -264,9 +264,10 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._state = self._physical_system.simulate(action)
         self._reference = self.reference_generator.get_reference(self._state)
         violation_degree = self._constraint_monitor.check_constraints(self._state)
-        self._reward, self._done = self._reward_function.reward(
+        self._reward = self._reward_function.reward(
             self._state, self._reference, self._physical_system.k, action, violation_degree
         )
+        self._done = violation_degree >= 1.0
         self._reset_required = self._done
         ref_next = self.reference_generator.get_reference_observation(self._state)
         self._call_callbacks('on_step_end')

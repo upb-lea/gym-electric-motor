@@ -78,7 +78,7 @@ class WeightedSumOfErrors(RewardFunction):
         self._violation_reward = violation_reward
 
     def set_modules(self, physical_system, reference_generator, constraint_monitor):
-        super().set_modules(physical_system, reference_generator)
+        super().set_modules(physical_system, reference_generator, constraint_monitor)
         ps = physical_system
         self._state_length = ps.state_space.high - ps.state_space.low
         self._n = set_state_array(self._n, ps.state_names)
