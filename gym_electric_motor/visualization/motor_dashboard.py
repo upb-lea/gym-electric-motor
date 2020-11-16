@@ -1,140 +1,223 @@
 from gym_electric_motor.core import ElectricMotorVisualization
-from . import motor_dashboard_plots as mdp
+from .motor_dashboard_plots import StatePlot, ActionPlot, RewardPlot, TimePlot, EpisodePlot, StepPlot
 import matplotlib.pyplot as plt
+import gym
 
 
 class MotorDashboard(ElectricMotorVisualization):
-    """Dashboard to plot the GEM states into graphs.
+    """A dashboard to plot the GEM states into graphs.
 
     Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
     matplotlib axis.
-    The MotorDashboard is responsible for all matplotlib.figure related tasks, especially updating the figures.
 
+    It handles three different types of plots: The TimePlot, EpisodePlot and StepPlot which especially differ in
+    their x-Axis. The time plots plot every step and have got the time on the x-Axis. The EpisodicPlots plot statistics
+    over the episodes (e.g. mean reward per step in each episode). The episode number is on their x-Axis. The
+    StepPlots plot statistics over the last taken steps (e.g. mean reward over the last 1000 steps) and their x-Axis
+    are the cumulative number of steps.
+
+    The StepPlots, EpisodicPlots and TimePlots each are plotted into three separate figures.
+
+    The most common TimePlots (i.e to plot the states, actions and rewards) can be plotted by just passing the
+    corresponding arguments in the constructor. Additional plots (e.g. the MeanEpisodeRewardPlot) have to be
+    initialized manually and passed to the constructor.
+
+    Furthermore, completely custom plots can be defined. They have to derive from the TimePlot, EpisodePlot or
+    StepPlot base classes.
     """
 
-    def __init__(self, plots, update_cycle=1000, dark_mode=False, **__):
+    def __init__(self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
+                 update_interval=1000, step_plot_width=10000, style=None, **__):
         """
         Args:
-            plots(list): A list of plots to show. Each element may either be a string or an already instantiated
-                MotorDashboardPlot
-                Possible strings:
-                    - {state_name}: The corresponding state is plotted
-                    - reward: The reward per step is plotted
-                    - action_{i}: The i-th action is plotted. 'action_0' for discrete action space
-                    - mean_reward: The mean episode reward
-                    
-            update_cycle(int): Number after how many steps the plot shall be updated. (default 1000)
-            dark_mode(Bool):  Select a dark background for visualization by setting it to True
+            state_plots('all'/iterable(str)): An iterable of state names to be shown. If 'all' all states will be shown.
+                Default: () (no plotted states)
+            action_plots('all'/iterable(int)): If action_plots='all', all actions will be plotted. If more than one
+                action can be applied on the environment it can be selected by its index.
+                Default: () (no plotted actions).
+            reward_plot(boolean): Select if the current reward is to be plotted. Default: False
+            additional_plots(iterable((TimePlot/EpisodePlot/StepPlot))): Additional already instantiated plots
+                to be shown on the dashboard
+            update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
+                performance drastically. Default: 1000
+            step_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
+                (1 second for continuously controlled environments / 0.1 second for discretely controlled environments)
+            style(string): Select one of the matplotlib-styles. e.g. "dark-background".
+                Default: None (the already selected style)
         """
-        self._update_cycle = update_cycle
-        self._figure = None
-        self._figure_ep = None
+        # Basic assertions
+        assert type(reward_plot) is bool
+        assert all(isinstance(ap, (TimePlot, EpisodePlot, StepPlot)) for ap in additional_plots)
+        assert type(update_interval) in [int, float]
+        assert update_interval > 0
+        assert type(step_plot_width) in [int, float]
+        assert step_plot_width > 0
+        assert style in plt.style.available or style is None
+
+        super().__init__()
+
+        # Select the matplotlib style
+        if style is not None:
+            plt.style.use(style)
+        # List of the opened figures
+        self._figures = []
+        # The figures to be opened for the step plots, episodic plots and step plots
+        self._time_plot_figure = None
+        self._episodic_plot_figure = None
+        self._step_plot_figure = None
+
+        # Store the input data
+        self._state_plots = state_plots
+        self._action_plots = action_plots
+        self._reward_plot = reward_plot
+
+        # Separate the additional plots into StepPlots, EpisodicPlots and StepPlots
+        self._custom_step_plots = [p for p in additional_plots if isinstance(p, TimePlot)]
+        self._episodic_plots = [p for p in additional_plots if isinstance(p, EpisodePlot)]
+        self._step_plots = [p for p in additional_plots if isinstance(p, StepPlot)]
+
+        self._time_plots = []
+        self._update_interval = int(update_interval)
+        self._step_plot_width = int(step_plot_width)
         self._plots = []
-        self._episode_plots = []
+        self._k = 0
+        self._update_render = False
 
-        self._dark_mode = dark_mode
-        for plot in plots:
-            if type(plot) is str:
-                if plot == 'reward':
-                    self._plots.append(mdp.RewardPlot())
-                elif plot.startswith('action_'):
-                    self._plots.append(mdp.ActionPlot(plot))
-                elif plot.startswith('mean_reward'):
-                    self._episode_plots.append(mdp.MeanEpisodeRewardPlot())
-                else:
-                    self._plots.append(mdp.StatePlot(plot))
-            else:
-                assert issubclass(plot, mdp.MotorDashboardPlot)
-                self._plots.append(plot)
-
-    def reset(self, **__):
-        """Called when the environment is reset. All subplots are reset.
+    def on_reset_begin(self):
+        """Called before the environment is reset. All subplots are reset.
         """
+        for plot in self._plots:
+            plot.on_reset_begin()
 
-        for plot in self._plots:  # for plot in self._plots + self._episode_plots throws warning
-            plot.reset()
-        for plot in self._episode_plots:
-            plot.reset()
-
-        # since end of an episode can only be identified by a reset call. Episode based plot canvas updated here
-        if self._figure_ep:
-            self._figure_ep.canvas.draw()
-            self._figure_ep.canvas.flush_events()
-
-    def step(self, k, state, reference, action, reward, done):
-        """ Called within a render() call of an environment.
-
-        The information about the last environmental step is passed.
+    def on_reset_end(self, state, reference):
+        """Called after the environment is reset. The initial data is passed.
 
         Args:
-            k(int): Current episode step.
-            state(ndarray(float)): State of the system
-            reference(ndarray(float)): Reference array of the system
-            action(ndarray(float)): Last taken action. (None after reset)
-            reward(ndarray(float)): Last received reward. (None after reset)
-            done(bool): Flag if the current state is terminal
+            state(array(float)): The initial state :math:`s_0`.
+            reference(array(float)): The initial reference for the first time step :math:`s^*_0`.
         """
-        if not (self._figure or self._figure_ep):
+        for plot in self._plots:
+            plot.on_reset_end(state, reference)
+
+    def on_step_begin(self, k, action):
+        """The information about the last environmental step is passed.
+
+        Args:
+            k(int): The current episode step.
+            action(ndarray(float) / int): The taken action :math:`a_k`.
+        """
+        for plot in self._plots:
+            plot.on_step_begin(k, action)
+
+    def on_step_end(self, k, state, reference, reward, done):
+        """The information after the step is passed
+
+        Args:
+            k(int): The current episode step
+            state(array(float)): The state of the env after the step :math:`s_k`.
+            reference(array(float)): The reference corresponding to the state :math:`s^*_k`.
+            reward(float): The reward that has been received for the last action that lead to the current state
+                :math:`r_{k}`.
+            done(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k}`.
+        """
+        for plot in self._plots:
+            plot.on_step_end(k, state, reference, reward, done)
+        self._k += 1
+        if self._k % self._update_interval == 0:
+            self._update_render = True
+
+    def render(self):
+        """Updates the plots every *update cycle* calls of this method."""
+        if not (self._time_plot_figure or self._episodic_plot_figure or self._step_plot_figure) \
+           and len(self._plots) > 0:
             self._initialize()
-        for plot in self._plots :    # for plot in self._plots + self._episode_plots throws warning
-            plot.step(k, state, reference, action, reward, done)
-        for plot in self._episode_plots:
-            plot.step(k, state, reference, action, reward, done)
-
-        if (k + 1) % self._update_cycle == 0:
+        if self._update_render:
             self._update()
+            self._update_render = False
 
-    def set_modules(self, ps, rg, rf):
-        """Called during initialization of the environment to interconnect all modules. State_names, references,...
+    def set_env(self, env):
+        """Called during initialization of the environment to interconnect all modules. State names, references,...
         might be saved here for later processing
 
         Args:
-            ps(PhysicalSystem): PhysicalSystem of the environment
-            rg(ReferenceGenerator): ReferenceGenerator of the environment
-            rf(RewardFunction): RewardFunction of the environment
+            env(ElectricMotorEnvironment): The environment.
         """
-        for plot in self._plots:  # for plot in self._plots + self._episode_plots throws warning
-            plot.set_modules(ps, rg, rf)
-        for plot in self._episode_plots:
-            plot.set_modules(ps, rg, rf)
+        state_names = env.physical_system.state_names
+        if self._state_plots == 'all':
+            self._state_plots = state_names
+        if self._action_plots == 'all':
+            if type(env.action_space) is gym.spaces.Discrete:
+                self._action_plots = [0]
+            elif type(env.action_space) is gym.spaces.Box:
+                self._action_plots = list(range(env.action_space.shape[0]))
+        self._time_plots = []
+
+        if len(self._state_plots) > 0:
+            assert all(state in state_names for state in self._state_plots)
+            for state in self._state_plots:
+                self._time_plots.append(StatePlot(state))
+
+        if len(self._action_plots) > 0:
+            assert type(env.action_space) in (gym.spaces.Box, gym.spaces.Discrete), \
+                f'Action space of type {type(env.action_space)} not supported for plotting.'
+            for action in self._action_plots:
+                ap = ActionPlot(action)
+                self._time_plots.append(ap)
+
+        if self._reward_plot:
+            self._reward_plot = RewardPlot()
+            self._time_plots.append(self._reward_plot)
+
+        self._plots = self._time_plots + self._episodic_plots + self._step_plots
+
+        for step_plot in self._time_plots:
+            step_plot.set_width(self._step_plot_width)
+
+        for plot in self._plots:
+            plot.set_env(env)
 
     def _initialize(self):
-        """Called with first render() call to setup the figures and plots.
-        """
-        axis_ep = []
+        """Called with first render() call to setup the figures and plots."""
         plt.close()
-        assert len(self._plots) > 0, "no plot variable selected"
-        # Use dark-mode, if selected
-        if self._dark_mode:
-            plt.style.use('dark_background')
-        # create seperate figures for time based and episode based plots
-        self._figure, axes = plt.subplots(len(self._plots), sharex=True)
-        if self._episode_plots:
-            self._figure_ep, axes_ep = plt.subplots(len(self._episode_plots))
-            self._figure_ep.subplots_adjust(wspace=0.0, hspace=0.02)
-            self._figure.subplots_adjust(wspace=0.0, hspace=0.2)
-            self._figure_ep.text(0.5, 0.04, 'episode', va='center', ha='center')
+        self._figures = []
 
-        # adding a common x-label to all the subplots in each figure
-        self._figure.text(0.5, 0.04, 't/s', va='center', ha='center')
+        # create separate figures for time based, step and episode based plots
+        if len(self._time_plots) > 0:
+            self._time_plot_figure, axes_step = plt.subplots(len(self._time_plots), sharex=True)
+            self._time_plot_figure.canvas.set_window_title('Step Plots')
+            axes_step = [axes_step] if len(self._time_plots) == 1 else axes_step
+            self._time_plot_figure.subplots_adjust(wspace=0.0, hspace=0.2)
+            axes_step[-1].set_xlabel('$t$/s')
+            self._figures.append(self._time_plot_figure)
+            for plot, axis in zip(self._time_plots, axes_step):
+                plot.initialize(axis)
 
-        # plt.subplot() does not return an iterable var when the number of subplots==1
-        if len(self._plots) == 1:
-            axes = [axes]
-        if  len(self._episode_plots) == 1:
-            axis_ep = [axes_ep]
-        for plot, axis in zip(self._plots, axes):
-            plot.initialize(axis)
+        if len(self._episodic_plots) > 0:
+            self._episodic_plot_figure, axes_ep = plt.subplots(len(self._episodic_plots), sharex=True)
+            axes_ep = [axes_ep] if len(self._episodic_plots) == 1 else axes_ep
+            self._episodic_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
+            self._episodic_plot_figure.canvas.set_window_title('Episodic Plots')
+            axes_ep[-1].set_xlabel('Episode No')
+            self._figures.append(self._episodic_plot_figure)
+            for plot, axis in zip(self._episodic_plots, axes_ep):
+                plot.initialize(axis)
 
-        for plot, axis in zip(self._episode_plots, axis_ep):
-            plot.initialize(axis)
+        if len(self._step_plots) > 0:
+            self._step_plot_figure, axes_int = plt.subplots(len(self._step_plots), sharex=True)
+            axes_int = [axes_int] if len(self._step_plots) == 1 else axes_int
+            self._step_plot_figure.canvas.set_window_title('Step Plots')
+            self._step_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
+            axes_int[-1].set_xlabel('Cumulative Steps')
+            self._figures.append(self._step_plot_figure)
+            for plot, axis in zip(self._step_plots, axes_int):
+                plot.initialize(axis)
+
         plt.pause(0.1)
 
     def _update(self):
-        """Called every {update_cycle} steps to refresh the figure.
-        """
+        """Called every *update cycle* steps to refresh the figure."""
         for plot in self._plots:
-            plot.update()
-
-        self._figure.canvas.draw()
-        self._figure.canvas.flush_events()
+            plot.render()
+        for fig in self._figures:
+            fig.canvas.draw()
+            fig.canvas.flush_events()

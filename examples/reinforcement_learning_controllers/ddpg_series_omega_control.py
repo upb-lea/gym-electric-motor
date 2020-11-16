@@ -32,6 +32,9 @@ if __name__ == '__main__':
     env = gem.make(
         # Define the series DC motor with continuous-control-set
         'DcSeriesCont-v1',
+        # Pass a class with extra parameters
+        visualization=MotorDashboard(state_plots=['omega', 'torque', 'i', 'u', 'u_sup'], reward_plot=True),
+
 
         # Set the parameters of the motor
         motor_parameter=dict(r_a=2.5, r_e=4.5, l_a=9.7e-3, l_e_prime=9.2e-3, l_e=9.2e-3, j_rotor=0.001),
@@ -58,9 +61,6 @@ if __name__ == '__main__':
 
         # Define and parameterize the reference generator for the speed reference
         reference_generator=WienerProcessReferenceGenerator(reference_state='omega', sigma_range=(5e-3, 1e-2)),
-
-        # Defines which variables to plot via the builtin dashboard monitor
-        visualization=MotorDashboard(['omega', 'torque', 'i', 'u', 'u_sup', 'reward']), visu_period=1,
     )
 
     # For data processing we want to flatten the env output,

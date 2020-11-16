@@ -1,8 +1,9 @@
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
-
-from agents.simple_controllers import Controller
+import sys
+sys.path.append('..')
+from classic_controllers.simple_controllers import Controller
 import time
 
 '''

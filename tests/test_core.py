@@ -20,14 +20,14 @@ class TestElectricMotorEnvironment:
         ps = DummyPhysicalSystem()
         rg = DummyReferenceGenerator()
         rf = DummyRewardFunction()
-        vs = DummyVisualization()
+        vs = ()
         cb = DummyCallback()
         env = self.test_class(
             physical_system=ps,
             reference_generator=rg,
             reward_function=rf,
             visualization=vs,
-            callbacks = [cb]
+            callbacks=[cb]
         )
         return env
 
@@ -39,14 +39,15 @@ class TestElectricMotorEnvironment:
     @pytest.mark.parametrize(
         "physical_system, reference_generator, reward_function, state_filter, visualization, callbacks, kwargs",
         [
-            (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, None, [], {}),
+            (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, (), [], {}),
             (
                     DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
-                    ConsolePrinter, [DummyCallback()], {'a': 1, 'b': 2}
+                    (), [DummyCallback()], {'a': 1, 'b': 2}
             ),
             (
                     DummyPhysicalSystem(10), DummyReferenceGenerator(),
-                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], None, [DummyCallback(), DummyCallback()],{}
+                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], (),
+                    [DummyCallback(), DummyCallback()], {}
             ),
         ]
     )
@@ -61,7 +62,7 @@ class TestElectricMotorEnvironment:
                 reward_function=reward_function,
                 visualization=visualization,
                 state_filter=state_filter,
-                callbacks = callbacks,
+                callbacks=callbacks,
                 **kwargs
             )
 
@@ -97,7 +98,6 @@ class TestElectricMotorEnvironment:
         assert physical_system != DummyPhysicalSystem or env.physical_system.kwargs == kwargs
         assert reference_generator, DummyReferenceGenerator or env.reference_generator.kwargs == kwargs
         assert reward_function != DummyRewardFunction or env.reward_function.kwargs == kwargs
-        assert visualization != DummyVisualization or env._visualization.kwargs == kwargs
         for callback in callbacks:
             assert callback._env == env
 
@@ -105,9 +105,8 @@ class TestElectricMotorEnvironment:
         ps = env.physical_system
         rg = env.reference_generator
         rf = env.reward_function
-        vs = env._visualization
         cbs = env._callbacks
-        rf.last_state = rf.last_reference = ps.state = rg.get_reference_state = vs.reference_trajectory = None
+        rf.last_state = rf.last_reference = ps.state = rg.get_reference_state = None
         # Initial amount of resets
         for callback in cbs:
             assert callback.reset_begin == 0
@@ -161,7 +160,6 @@ class TestElectricMotorEnvironment:
         ps = env.physical_system
         rg = env.reference_generator
         rf = env.reward_function
-        vs = env._visualization
         cbs = env._callbacks
         # Callback's step inital close value
         for callback in cbs:
@@ -173,7 +171,6 @@ class TestElectricMotorEnvironment:
         assert ps.closed, 'Physical System was not closed'
         assert rf.closed, 'Reward Function was not closed'
         assert rg.closed, 'Reference Generator was not closed'
-        assert vs.closed, 'Visualization was not closed'
 
     @pytest.mark.parametrize("reference_generator", (DummyReferenceGenerator(),))
     def test_reference_generator_change(self, env, reference_generator):

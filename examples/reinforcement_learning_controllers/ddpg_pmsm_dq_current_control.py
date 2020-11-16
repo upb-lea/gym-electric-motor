@@ -2,7 +2,6 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Flatten, Input, \
     Concatenate
 from tensorflow.keras import initializers, regularizers
-import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
 from rl.agents import DDPGAgent
 from rl.memory import SequentialMemory
@@ -16,7 +15,8 @@ import gym_electric_motor as gem
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, ConstReferenceGenerator, \
     WienerProcessReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.physical_systems import ConstantSpeedLoad
+from gym_electric_motor.visualization.motor_dashboard_plots import MeanEpisodeRewardPlot
+from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
 from gym.core import Wrapper
 from gym.spaces import Box, Tuple
 from gym_electric_motor.constraints import SquaredConstraint
@@ -101,7 +101,9 @@ if __name__ == '__main__':
     env = gem.make(
         # Choose the permanent magnet synchronous motor with continuous-control-set
         'PMSMCont-v1',
-
+        # Pass a class with extra parameters
+        visualization=MotorDashboard(state_plots=['i_sq', 'i_sd'], action_plots='all', reward_plot=True,
+                                     episodic_plots=[MeanEpisodeRewardPlot()]),
         # Set the mechanical load to have constant speed
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
 
@@ -142,9 +144,6 @@ if __name__ == '__main__':
 
         # Define which states will be shown in the state observation (what we can "measure")
         state_filter=['i_sd', 'i_sq', 'epsilon'],
-
-        # Defines which variables to plot via the builtin dashboard monitor
-        visualization=MotorDashboard(plots=['i_sd', 'i_sq', 'action_0', 'action_1', 'mean_reward']), visu_period=1,
     )
 
     # Now we apply the wrapper defined at the beginning of this script
