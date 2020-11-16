@@ -2,7 +2,9 @@ import numpy as np
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
-from agents.simple_controllers import Controller
+import sys
+sys.path.append('..')
+from classic_controllers.simple_controllers import Controller
 import time
 from scipy import signal
 from gym_electric_motor.physical_systems.mechanical_loads \
@@ -59,8 +61,7 @@ if __name__ == '__main__':
         ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
         tau=sampling_time,
         reference_generator=const_switch_gen,
-        visualization=MotorDashboard(plots=['omega', 'reward', 'i'],
-                                     dark_mode=False),
+        visualization=MotorDashboard(state_plots=['omega', 'i'], reward_plot=True),
 
         # define which load to use, feel free to try these examples:
 

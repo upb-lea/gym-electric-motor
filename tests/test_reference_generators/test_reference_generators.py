@@ -751,8 +751,8 @@ class TestMultipleReferenceGenerator(TestReferenceGenerator):
     @pytest.fixture
     def reference_generator(self):
         physical_system = DummyPhysicalSystem(state_length=3)
-        sub_generator_1 = DummyReferenceGenerator(np.array([False, False, True]))
-        sub_generator_2 = DummyReferenceGenerator(np.array([False, True, False]))
+        sub_generator_1 = DummyReferenceGenerator(reference_state='dummy_state_0')
+        sub_generator_2 = DummyReferenceGenerator(reference_state='dummy_state_1')
         rg = self.class_to_test([sub_generator_1, sub_generator_2])
         sub_generator_1._referenced_states = np.array([False, False, True])
         sub_generator_2._referenced_states = np.array([False, True, False])
@@ -786,8 +786,8 @@ class TestMultipleReferenceGenerator(TestReferenceGenerator):
 
     def test_set_modules(self):
         physical_system = DummyPhysicalSystem(state_length=3)
-        sub_generator_1 = DummyReferenceGenerator(np.array([False, False, True]))
-        sub_generator_2 = DummyReferenceGenerator(np.array([False, True, False]))
+        sub_generator_1 = DummyReferenceGenerator(reference_state='dummy_state_0')
+        sub_generator_2 = DummyReferenceGenerator(reference_state='dummy_state_1')
         rg = self.class_to_test([sub_generator_1, sub_generator_2])
         sub_generator_1._referenced_states = np.array([False, False, True])
         sub_generator_2._referenced_states = np.array([False, True, False])
@@ -796,7 +796,7 @@ class TestMultipleReferenceGenerator(TestReferenceGenerator):
         assert sub_generator_2.physical_system == physical_system
         assert all(rg.reference_space.low == np.array([0, 0]))
         assert all(rg.reference_space.high == np.array([1, 1]))
-        assert all(rg.referenced_states == np.array([0, 1, 1]))
+        assert all(rg.referenced_states == np.array([1, 1, 0]))
 
     def test_reset(self, reference_generator):
         ref, ref_obs, _ = reference_generator.reset()

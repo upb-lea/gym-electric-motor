@@ -12,6 +12,7 @@ __pycache__
 # setuptools
 *egg-info*
 dist/
+build/
 
 # miscellaneous
 ddpg_DcSeries-Cont-v0_weights_actor\.h5f
@@ -19,10 +20,8 @@ ddpg_DcSeries-Cont-v0_weights_critic\.h5f
 
 # notebooks
 .ipynb_checkpoints/
-
-envs/gym_dcm/__pycache__/
-
-
 examples/logs/
 
-tests/.coverage
+# unit tests
+.coverage
+

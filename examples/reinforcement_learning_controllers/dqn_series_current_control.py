@@ -58,7 +58,7 @@ if __name__ == '__main__':
         reference_generator=WienerProcessReferenceGenerator(reference_state='i', sigma_range=(3e-3, 3e-2)),
 
         # Defines which variables to plot via the builtin dashboard monitor
-        visualization=MotorDashboard(plots=['i', 'omega']),
+        visualization=MotorDashboard(state_plots=['i', 'omega']),
     )
 
     # Now, the environment will output states and references separately

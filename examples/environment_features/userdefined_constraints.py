@@ -1,15 +1,11 @@
-from agents.simple_controllers import Controller
 import time
 import sys, os
 sys.path.append(os.path.abspath(os.path.join('..')))
+sys.path.append('..')
+from classic_controllers.simple_controllers import Controller
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
-from tqdm import tqdm
-import numpy as np
-import gym
-from gym.spaces import Box
-from gym_electric_motor.constraint_monitor import ConstraintMonitor
 from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
 
 '''
@@ -92,9 +88,7 @@ def external_monitor_func(state, physical_system, k, **kwargs):
 if __name__ == '__main__':
     env = gem.make(
         'DcSeriesCont-v1',
-        visualization=MotorDashboard(plots=['omega', 'i'],
-                                     dark_mode=False,
-                                     update_cycle=10),
+        visualization=MotorDashboard(state_plots=['omega', 'i']),
         load=ConstantSpeedLoad(omega_fixed=10),
         ode_solver='scipy.solve_ivp',
 
