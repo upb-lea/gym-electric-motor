@@ -14,7 +14,7 @@ class StatePlot(TimePlot):
 
     # Labels for each state variable.
     state_labels = {
-        'omega': r'$\omega$/(rad/s)',
+        'omega': r'$\omega$/(1/s)',
         'torque': '$T$/Nm',
         'i': '$i$/A',
         'i_a': '$i_{a}$/A$',
@@ -79,8 +79,8 @@ class StatePlot(TimePlot):
         self._state_space = ps.state_space.low[self._state_idx], ps.state_space.high[self._state_idx]
         # Bool: if the state is referenced.
         self._referenced = rg.referenced_states[self._state_idx]
-        if self._limits == self._state_space[1]:
-            self._normalized = False
+        # Bool: if the data is already normalized to an interval of [-1, 1]
+        self._normalized = self._limits != self._state_space[1]
         # Initialize the data containers
         self._state_data = np.ones(self._x_width) * np.nan
         self._ref_data = np.ones(self._x_width) * np.nan
