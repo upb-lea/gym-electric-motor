@@ -694,7 +694,7 @@ class Callback:
         pass
     
     def on_close(self):
-        """Gets called at the beginning on a close"""        
+        """Gets called at the beginning of a close"""
         pass
 
 
