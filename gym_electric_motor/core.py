@@ -2,18 +2,20 @@
 On the core level the electric motor environment and the interface to its submodules are defined. By using these
 interfaces further reference generators, reward functions, visualizations or physical models can be implemented.
 
-Each ElectricMotorEnvironment contains the four following modules:
+Each ElectricMotorEnvironment contains the five following modules:
 
 * PhysicalSystem
     - Specification and simulation of the physical model. Furthermore, specifies limits and nominal values\
     for all of its ``state_variables``.
 * ReferenceGenerator
     - Calculation of reference trajectories for one or more states of the physical systems ``state_variables``.
+* ConstraintMonitor
+    - Observation of the PhysicalSystems state to comply to a set of user defined constraints.
 * RewardFunction
     - Calculation of the reward based on the physical systems state and the reference.\
-     Furthermore, observation of the physical systems limits.
 * ElectricMotorVisualization
     - Visualization of the PhysicalSystems state, reference and reward for the user.
+
 """
 from functools import reduce
 import gym
@@ -157,9 +159,9 @@ class ElectricMotorEnvironment(gym.core.Env):
             reference_generator(ReferenceGenerator): The reference generator of this environment.
             reward_function(RewardFunction): The reward function of this environment.
             visualization(ElectricMotorVisualization): The visualization of this environment.
-            constraints(list(Constraint/str) / ConstraintMonitor): A list of constraints or an already initialized
-                ConstraintMonitor object can be passed here.
-                    - list(Constraint/str): Pass a list with initialized Constraints and/or state names. Then,
+            constraints(list(Constraint/str/callable) / ConstraintMonitor): A list of constraints
+             or an already initialized  ConstraintMonitor object can be passed here.
+                    - list(Constraint/str/callable): Pass a list with initialized Constraints and/or state names. Then,
                     a ConstraintMonitor object with the Constraints and additional LimitConstraints on the passed names
                     is created. Furthermore, the string 'all' inside the list will create a ConstraintMonitor that
                     observes the limit on each state.
@@ -718,9 +720,10 @@ class ConstraintMonitor:
                         their limits.
                     - 'all': Shortcut for all states are observed to stay within the limits.
 
-            additional_constraints(list(Constraint)):
+            additional_constraints(list(Constraint/callable)):
                  Further constraints that shall be monitored. These have to be initialized first and passed to the
-                 ConstraintMonitor
+                 ConstraintMonitor. Alternatively, constraints can be defined as a function that takes the current
+                 state and returns a float within [0.0, 1.0].
             merge_violations('max'/'product'/callable(*violation_degrees) -> float): Function to merge all single
                 violation degrees to a total violation degree.
                     - 'max': Take the maximal violation degree as total violation degree.
@@ -739,8 +742,9 @@ class ConstraintMonitor:
         if merge_violations == 'max':
             self._merge_violations = max
         elif merge_violations == 'product':
-            self._merge_violations = \
-                lambda violations: 1 - reduce(lambda val, violation: val * (1 - violation), violations, 0)
+            def product_merge(*violation_degrees):
+                return 1 - np.prod([(1 - violation) for violation in violation_degrees])
+            self._merge_violations = product_merge
         elif callable(merge_violations):
             self._merge_violations = merge_violations
 
@@ -764,4 +768,4 @@ class ConstraintMonitor:
             float: The total violation degree in [0,1]
         """
         violations = (constraint(state) for constraint in self._constraints)
-        return self._merge_violations(violations)
+        return self._merge_violations(*violations)

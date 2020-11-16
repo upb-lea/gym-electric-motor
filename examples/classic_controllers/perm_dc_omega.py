@@ -39,7 +39,7 @@ if __name__ == '__main__':
         ),
         # Override the observation of the current limit of 'i' which is selected per default
         # The 'on_off' Controller cannot comply to any limits.
-        #constraints=()
+        constraints=()
     )
 
     # Assign a simple on/off controller
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     for i in range(100000):
         env.render()
         action = controller.control(state, reference)
-        (state, reference), reward, done, _ = env.step(1)
+        (state, reference), reward, done, _ = env.step(action)
         if done:
             env.reset()
         cum_rew += reward

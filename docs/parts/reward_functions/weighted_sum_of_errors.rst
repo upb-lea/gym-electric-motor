@@ -19,7 +19,7 @@ To use the weighted sum of errors, you have to import the class, initialize an o
         reward_power=2 # Squared Error
         # Alternative: reward_power=dict(i_a=1, i_e=0.5) Absolute error i_a, root error on i_e
         bias='positive' # Shift the reward range from negative to positive
-        violation_reward=250 # Self defined violation reward
+        violation_reward=-250 # Self defined violation reward
         gamma=0.9 # Ignored, if a violation_reward is defined.
         normed_reward_weights=False # Otherwise weights will be normed automatically to sum up to 1.
 

@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     """
     env = gem.make(
-        'emotor-pmsm-cont-v1',
+        'PmsmCont-v1',
         visualization=MotorDashboard(plots=['u_sd', 'u_sq', 'i_sd', 'i_sq', 'omega']), visu_period=1,
         control_space='dq',
         solver='euler'
