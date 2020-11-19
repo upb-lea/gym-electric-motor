@@ -199,11 +199,6 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._visualization.set_modules(self.physical_system, self._reference_generator, self._reward_function)
         self._done = None
 
-        # Initialization of properties
-        self._state = np.zeros(len(self.physical_system.state_names))
-        self._reference = np.zeros(len(self.physical_system.state_names))
-        self._reward = 0.0
-
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
         self.state_filter = [self._physical_system.state_names.index(s)
@@ -238,11 +233,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         self._call_callbacks('on_reset_begin')
         self._done = False
-        self._state = self._physical_system.reset()
-        self._reference, next_ref, trajectories = self.reference_generator.reset(self._state)
-        self._reward_function.reset(self._state, self._reference)
-        self._call_callbacks('on_reset_end', self._state, self._reference)
-        return self._state[self.state_filter], next_ref
+        state = self._physical_system.reset()
+        reference, next_ref, trajectories = self.reference_generator.reset(state)
+        self._reward_function.reset(state, reference)
+        self._call_callbacks('on_reset_end', state, reference)
+        return state[self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
@@ -267,22 +262,20 @@ class ElectricMotorEnvironment(gym.core.Env):
         assert not self._done, 'A reset is required before the environment can perform further steps'
         self._call_callbacks('on_step_begin', self.physical_system.k, action)
         state = self._physical_system.simulate(action)
-        reference = self.reference_generator.get_reference(self._state)
-        violation_degree = self._constraint_monitor.check_constraints(self._state)
+        reference = self.reference_generator.get_reference(state)
+        violation_degree = self._constraint_monitor.check_constraints(state)
         reward = self._reward_function.reward(
-            self._state, self._reference, self._physical_system.k, action, violation_degree
+            state, reference, self._physical_system.k, action, violation_degree
         )
         self._done = violation_degree >= 1.0
-        ref_next = self.reference_generator.get_reference_observation(self._state)
+        ref_next = self.reference_generator.get_reference_observation(state)
         self._call_callbacks(
             'on_step_end', self.physical_system.k, state, reference, reward, self._done
         )
         return (state[self.state_filter], ref_next), reward, self._done, {}
 
     def close(self):
-        """
-        Called when the environment is deleted. Closes all its modules.
-        """
+        """Called when the environment is deleted. Closes all its modules."""
         self._call_callbacks('on_close')
         self._reward_function.close()
         self._physical_system.close()
@@ -335,8 +328,7 @@ class ReferenceGenerator:
         return self._referenced_states
 
     def set_modules(self, physical_system):
-        """
-        Announcement of the PhysicalSystem to the ReferenceGenerator.
+        """Announcement of the PhysicalSystem to the ReferenceGenerator.
 
         In subclasses, store all important information from the physical system to the ReferenceGenerator here.
         The environment announces the physical system to the ReferenceGenerator during its initialization.
@@ -347,8 +339,7 @@ class ReferenceGenerator:
         self._physical_system = physical_system
 
     def get_reference(self, state, *_, **__):
-        """
-        Returns the reference array of the current time step.
+        """Returns the reference array of the current time step.
 
         The reference array needs to be in the same shape as the state variables. For referenced states the reference
         value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.
@@ -412,8 +403,7 @@ class RewardFunction:
     reward_range = (-np.inf, np.inf)
 
     def __call__(self, state, reference, k, action, violation_degree):
-        """
-        Call of the reward calculation.
+        """Call of the reward calculation.
 
         Args:
             state(numpy.ndarray(float)): State array of the environment.
@@ -625,6 +615,7 @@ class Callback:
     def on_close(self):
         """Gets called at the beginning of a close"""
         pass
+
 
 class ElectricMotorVisualization(Callback):
     """Base class for all visualizations in GEM.
