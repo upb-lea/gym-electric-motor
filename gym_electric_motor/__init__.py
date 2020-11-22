@@ -2,6 +2,7 @@ from .core import ReferenceGenerator
 from .core import PhysicalSystem
 from .core import RewardFunction
 from .core import ElectricMotorVisualization
+from .core import ConstraintMonitor
 from .constraints import Constraint, LimitConstraint
 from .utils import make, register_superclass
 

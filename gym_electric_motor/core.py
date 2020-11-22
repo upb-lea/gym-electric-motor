@@ -192,9 +192,8 @@ class ElectricMotorEnvironment(gym.core.Env):
 
         # Announcement of the Modules among each other
         self._reference_generator.set_modules(self.physical_system)
-        self._reward_function.set_modules(self.physical_system, self._reference_generator)
-        self._done = True
         self._constraint_monitor.set_modules(self.physical_system)
+        self._done = True
         self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
         self._visualization.set_modules(self.physical_system, self._reference_generator, self._reward_function)
         self._done = None
@@ -651,6 +650,11 @@ class ConstraintMonitor:
         occurs.
 
     """
+
+    @property
+    def constraints(self):
+        """Returns the list of all constraints the ConstraintMonitor observes."""
+        return self._constraints
 
     def __init__(self,  limit_constraints=(), additional_constraints=(), merge_violations='max'):
         """

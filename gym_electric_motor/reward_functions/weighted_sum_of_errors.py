@@ -103,9 +103,13 @@ class WeightedSumOfErrors(RewardFunction):
             warnings.warn("All reward weights sum up to zero", Warning, stacklevel=2)
         rw_sum = sum(self._reward_weights)
         if self._normed:
-            self._reward_weights /= rw_sum
+            if self._bias == 'positive':
+                self._bias = 1
+            self._reward_weights = self._reward_weights / rw_sum
             self.reward_range = (-1 + self._bias, self._bias)
         else:
+            if self._bias == 'positive':
+                self._bias = rw_sum
             self.reward_range = (-rw_sum + self._bias, self._bias)
         if self._violation_reward is None:
             self._violation_reward = min(self.reward_range[0] / (1.0 - self._gamma), 0)
