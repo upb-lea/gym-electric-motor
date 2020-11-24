@@ -206,15 +206,12 @@ class DummyRewardFunction(RewardFunction):
         self.last_reference = initial_reference
         super().reset(initial_state, initial_reference)
 
-    def set_done(self, done):
-        self.done = done
-
     def reward(self, state, reference, k=None, action=None, violation_degree=0.0):
         self.last_state = state
         self.last_reference = reference
         self.last_action = action
         self.last_time_step = k
-        return -1 if self.done else 1, self.done
+        return -1 if violation_degree == 1 else 1
 
     def close(self):
         self.closed = True

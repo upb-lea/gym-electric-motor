@@ -41,11 +41,11 @@ class LimitConstraint(Constraint):
 
     """
 
-    def __init__(self, observed_state_names='all'):
+    def __init__(self, observed_state_names='all_states'):
         """
         Args:
-            observed_state_names('all'/iterable(str)): The states to observe. \n
-                - 'all': Shortcut for observing all states.
+            observed_state_names('all_states'/iterable(str)): The states to observe. \n
+                - 'all_states': Shortcut for observing all states.
                 - iterable(str): Pass an iterable containing all state names of the states to observe.
         """
         self._observed_state_names = observed_state_names
@@ -53,11 +53,11 @@ class LimitConstraint(Constraint):
         self._observed_states = None
 
     def __call__(self, state):
-        return float(any(state[self._observed_states] > 1.0))
+        return float(any(abs(state[self._observed_states]) > 1.0))
 
     def set_modules(self, ps):
         self._limits = ps.limits
-        if self._observed_state_names == 'all':
+        if 'all_states' in self._observed_state_names:
             self._observed_state_names = ps.state_names
         if self._observed_state_names is None:
             self._observed_state_names = []

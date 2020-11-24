@@ -1,10 +1,9 @@
 import pytest
 import numpy as np
-from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization, DummyCallback, \
-    mock_instantiate, instantiate_dict 
+from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization,\
+    DummyCallback, DummyConstraintMonitor, mock_instantiate, instantiate_dict
 from gym.spaces import Tuple, Box
 import gym_electric_motor
-from gym_electric_motor.visualization import ConsolePrinter
 from gym_electric_motor.core import ElectricMotorEnvironment, RewardFunction, \
     ReferenceGenerator, PhysicalSystem
 import gym
@@ -22,11 +21,13 @@ class TestElectricMotorEnvironment:
         rf = DummyRewardFunction()
         vs = ()
         cb = DummyCallback()
+        cm = DummyConstraintMonitor(2)
         env = self.test_class(
             physical_system=ps,
             reference_generator=rg,
             reward_function=rf,
             visualization=vs,
+            constraints=cm,
             callbacks=[cb]
         )
         return env
@@ -129,12 +130,12 @@ class TestElectricMotorEnvironment:
         rg = env.reference_generator
         rf = env.reward_function
         cbs = env._callbacks
-
-        rf.set_done(set_done)
+        cm = env.constraint_monitor
+        cm.constraints[0].violation_degree = float(set_done)
         with pytest.raises(Exception):
             env.step(action), 'Environment goes through the step without previous reset'
         env.reset()
-        # Callback's step inital step values
+        # Callback's step initial step values
         for callback in cbs:
             assert callback.step_begin == 0
             assert callback.step_end == 0
@@ -161,7 +162,7 @@ class TestElectricMotorEnvironment:
         rg = env.reference_generator
         rf = env.reward_function
         cbs = env._callbacks
-        # Callback's step inital close value
+        # Callback's step initial close value
         for callback in cbs:
             assert callback.close == 0
         env.close()
@@ -187,7 +188,10 @@ class TestElectricMotorEnvironment:
     @pytest.mark.parametrize("reward_function", (DummyRewardFunction(),))
     def test_reward_function_change(self, env, reward_function):
         env.reset()
-        reward_function.set_modules(physical_system=env.physical_system, reference_generator=env.reference_generator)
+        reward_function.set_modules(
+            physical_system=env.physical_system, reference_generator=env.reference_generator,
+            constraint_monitor=env.constraint_monitor
+        )
         env.reward_function = reward_function
         assert env.reward_function == reward_function, 'Reward Function was not changed'
         # Without Reset an Exception has to be thrown
@@ -206,12 +210,14 @@ class TestElectricMotorEnvironment:
         rg = DummyReferenceGenerator()
         rf = DummyRewardFunction()
         vs = DummyVisualization()
+        cm = DummyConstraintMonitor(1)
         env = self.test_class(
             physical_system=ps,
             reference_generator=rg,
             reward_function=rf,
             visualization=vs,
-            state_filter=state_filter
+            state_filter=state_filter,
+            constraints=cm
         )
         assert all(env.limits == expected_result)
 

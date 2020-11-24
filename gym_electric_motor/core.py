@@ -128,6 +128,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._done = True
 
     @property
+    def constraint_monitor(self):
+        """Returns(ConstraintMonitor): The ConstraintMonitor of the environment."""
+        return self._constraint_monitor
+
+    @property
     def limits(self):
         """
         Returns a list of limits of all states in the observation (called in state_filter) in the same order
@@ -180,23 +185,18 @@ class ElectricMotorEnvironment(gym.core.Env):
             visualization = []
         visualizations = list(visualization)
         self._visualizations = [instantiate(ElectricMotorVisualization, visu, **kwargs) for visu in visualizations]
-        visualization = visualization or ElectricMotorVisualization()
-        self._visualization = instantiate(ElectricMotorVisualization, visualization, **kwargs)
         if isinstance(constraints, ConstraintMonitor):
             cm = constraints
         else:
-            limit_constraints = list(filter(lambda constraint: type(constraint) is str, constraints))
-            additional_constraints = list(filter(lambda constraint: isinstance(constraint, Constraint), constraints))
+            limit_constraints = [constraint for constraint in constraints if type(constraint) is str]
+            additional_constraints = [constraint for constraint in constraints if isinstance(constraint, Constraint)]
             cm = ConstraintMonitor(limit_constraints, additional_constraints)
         self._constraint_monitor = cm
 
         # Announcement of the Modules among each other
         self._reference_generator.set_modules(self.physical_system)
         self._constraint_monitor.set_modules(self.physical_system)
-        self._done = True
         self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
-        self._visualization.set_modules(self.physical_system, self._reference_generator, self._reward_function)
-        self._done = None
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
@@ -211,8 +211,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         ))
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
-        self._action = None
-
+        self._done = True
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
@@ -242,8 +241,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         Update the visualization of the motor.
         """
-        for visu in self._visualizations:
-            visu.render()
+        for visualization in self._visualizations:
+            visualization.render()
 
     def step(self, action):
         """Perform one simulation step of the environment with an action of the action space.
@@ -279,7 +278,6 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
-        self._visualization.close()
 
 
 class ReferenceGenerator:
@@ -659,11 +657,11 @@ class ConstraintMonitor:
     def __init__(self,  limit_constraints=(), additional_constraints=(), merge_violations='max'):
         """
         Args:
-            limit_constraints(list(str)/'all'):
+            limit_constraints(list(str)/'all_states'):
                 Shortcut parameter to pass all states that limits shall be observed.
                     - list(str): Pass a list with state_names and all of the states will be observed to stay within
                         their limits.
-                    - 'all': Shortcut for all states are observed to stay within the limits.
+                    - 'all_states': Shortcut for all states are observed to stay within the limits.
 
             additional_constraints(list(Constraint/callable)):
                  Further constraints that shall be monitored. These have to be initialized first and passed to the
@@ -682,9 +680,11 @@ class ConstraintMonitor:
 
         assert all(callable(constraint) for constraint in self._constraints)
         assert merge_violations in ['max', 'product'] or callable(merge_violations)
-        self._merge_violations = lambda state: 0.0
 
-        if merge_violations == 'max':
+        if len(self._constraints) == 0:
+            # Without any constraint, always return 0.0 as violation
+            self._merge_violations = lambda *violation_degrees: 0.0
+        elif merge_violations == 'max':
             self._merge_violations = max
         elif merge_violations == 'product':
             def product_merge(*violation_degrees):
@@ -712,5 +712,5 @@ class ConstraintMonitor:
         Returns:
             float: The total violation degree in [0,1]
         """
-        violations = (constraint(state) for constraint in self._constraints)
-        return self._merge_violations(*violations)
+        violations = [constraint(state) for constraint in self._constraints]
+        return self._merge_violations(violations)
