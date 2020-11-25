@@ -569,10 +569,17 @@ class DummyOdeSolver(OdeSolver):
 
 class DummyConstraint(Constraint):
 
-    violation_degree = 0.0
+    def __init__(self, violation_degree=0.0):
+        super().__init__()
+        self.modules_set = False
+        self.violation_degree = violation_degree
 
     def __call__(self, state):
         return self.violation_degree
+
+    def set_modules(self, ps):
+        super().set_modules(ps)
+        self.modules_set = True
 
 
 class DummyConstraintMonitor(ConstraintMonitor):

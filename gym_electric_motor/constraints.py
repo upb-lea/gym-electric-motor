@@ -35,7 +35,7 @@ class LimitConstraint(Constraint):
     This constraint observes if any of the systems state values exceeds the limit specified in the PhysicalSystem.
 
     .. math::
-        1.0 <= s_i / s_{i,max}
+        1.0 >= s_i / s_{i,max}
 
     For all :math:`i` in the set of PhysicalSystems states :math:`S`.
 
@@ -44,8 +44,8 @@ class LimitConstraint(Constraint):
     def __init__(self, observed_state_names='all_states'):
         """
         Args:
-            observed_state_names('all_states'/iterable(str)): The states to observe. \n
-                - 'all_states': Shortcut for observing all states.
+            observed_state_names(['all_states']/iterable(str)): The states to observe. \n
+                - ['all_states']: Shortcut for observing all states.
                 - iterable(str): Pass an iterable containing all state names of the states to observe.
         """
         self._observed_state_names = observed_state_names

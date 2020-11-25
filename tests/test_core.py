@@ -1,11 +1,12 @@
 import pytest
 import numpy as np
 from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization,\
-    DummyCallback, DummyConstraintMonitor, mock_instantiate, instantiate_dict
+    DummyCallback, DummyConstraintMonitor, DummyConstraint, mock_instantiate, instantiate_dict
 from gym.spaces import Tuple, Box
 import gym_electric_motor
 from gym_electric_motor.core import ElectricMotorEnvironment, RewardFunction, \
-    ReferenceGenerator, PhysicalSystem
+    ReferenceGenerator, PhysicalSystem, ConstraintMonitor, Constraint
+from gym_electric_motor.constraints import LimitConstraint
 import gym
 import gym_electric_motor as gem
 
@@ -201,10 +202,13 @@ class TestElectricMotorEnvironment:
         # No Exception raised
         env.step(env.action_space.sample())
 
-    @pytest.mark.parametrize("number_states, state_filter, expected_result",
-                             ((1, ['dummy_state_0'], [10]),
-                              (3, ['dummy_state_0', 'dummy_state_1', 'dummy_state_2'], [10, 20, 30]),
-                              (3, ['dummy_state_1'], [20])))
+    @pytest.mark.parametrize(
+        "number_states, state_filter, expected_result", (
+            (1, ['dummy_state_0'], [10]),
+            (3, ['dummy_state_0', 'dummy_state_1', 'dummy_state_2'], [10, 20, 30]),
+            (3, ['dummy_state_1'], [20])
+        )
+    )
     def test_limits(self, number_states, state_filter, expected_result):
         ps = DummyPhysicalSystem(state_length=number_states)
         rg = DummyReferenceGenerator()
@@ -269,3 +273,102 @@ class TestPhysicalSystem:
         assert ps.state_names == state_names
         assert ps.tau == tau
         assert ps.k == 0
+
+
+class TestConstraintMonitor:
+
+    @pytest.mark.parametrize(
+        ['ps', 'limit_constraints', 'expected_observed_states'], [
+            [DummyPhysicalSystem(3), ['dummy_state_0', 'dummy_state_2'], ['dummy_state_0', 'dummy_state_2']],
+            [DummyPhysicalSystem(1), ['dummy_state_0'], ['dummy_state_0']],
+            [DummyPhysicalSystem(2), ['all_states'], ['dummy_state_0', 'dummy_state_1']]
+        ]
+                             )
+    def test_limit_constraint_setting(self, ps, limit_constraints, expected_observed_states):
+        cm = ConstraintMonitor(limit_constraints=limit_constraints)
+        cm.set_modules(ps)
+        assert cm.constraints[0]._observed_state_names == expected_observed_states
+
+    @pytest.mark.parametrize('constraints', [
+        [lambda state: 0.0, DummyConstraint(), DummyConstraint()]
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_additional_constraint_setting(self, ps, constraints):
+        cm = ConstraintMonitor(additional_constraints=constraints)
+        cm.set_modules(ps)
+        assert all(constraint in cm.constraints for constraint in constraints)
+
+    @pytest.mark.parametrize('additional_constraints', [
+        [lambda state: 0.0, DummyConstraint(), DummyConstraint()]
+    ])
+    @pytest.mark.parametrize('limit_constraints', [
+        ['all_states'], ['dummy_state_0'], []
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_set_modules(self, ps, limit_constraints, additional_constraints):
+        cm = ConstraintMonitor(limit_constraints, additional_constraints)
+        cm.set_modules(ps)
+        assert all(
+            constraint.modules_set for constraint in cm.constraints if isinstance(constraint, DummyConstraint)
+        )
+        assert all(
+            constraint._observed_states is not None for constraint in cm.constraints
+            if isinstance(constraint, LimitConstraint)
+        )
+
+    @pytest.mark.parametrize(['violations', 'expected_violation_degree'], [
+        [(0.5, 0.8, 0.0, 1.0), 1.0],
+        [(0.5, 0.8, 0.0), 0.8],
+        [(0.5,), 0.5],
+        [(0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_max_merge_violations(self, ps, violations, expected_violation_degree):
+        cm = ConstraintMonitor(merge_violations='max')
+        cm.set_modules(ps)
+        cm._merge_violations(violations)
+
+    @pytest.mark.parametrize(['violations', 'expected_violation_degree'], [
+        [(0.5, 0.8, 0.0, 1.0), 1.0],
+        [(0.5, 0.8, 0.0), 0.9],
+        [(0.5,), 0.5],
+        [(0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_product_merge_violations(self, ps, violations, expected_violation_degree):
+        cm = ConstraintMonitor(merge_violations='product')
+        cm.set_modules(ps)
+        cm._merge_violations(violations)
+
+    @pytest.mark.parametrize(['merging_fct', 'violations', 'expected_violation_degree'], [
+        [lambda *violations: 1.0, (0.5, 0.8, 0.0, 1.0), 1.0],
+        [lambda *violations: 0.756, (0.5, 0.8, 0.0), 0.756],
+        [lambda *violations: 0.123, (0.5,), 0.123],
+        [lambda *violations: 0.0, (0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_callable_merge_violations(self, ps, merging_fct, violations, expected_violation_degree):
+        cm = ConstraintMonitor(merge_violations=merging_fct)
+        cm.set_modules(ps)
+        cm._merge_violations(violations)
+
+    @pytest.mark.parametrize(['violations', 'expected_violation_degree'], [
+        [(0.5, 0.8, 0.0, 1.0), 1.0],
+        [(0.5, 0.8, 0.0), 0.756],
+        [(0.5,), 0.123],
+        [(0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize(['ps', 'state'], [[DummyPhysicalSystem(1), np.array([1.0])]])
+    def test_check_constraints(self, ps, state, violations, expected_violation_degree):
+        passed_violations = []
+
+        def merge_violations(*violation_degrees):
+            passed_violations.append(violation_degrees)
+            return expected_violation_degree
+
+        constraints = [DummyConstraint(viol_degree) for viol_degree in violations]
+        cm = ConstraintMonitor(additional_constraints=constraints, merge_violations=merge_violations)
+        cm.set_modules(ps)
+        degree = cm.check_constraints(state)
+        assert degree == expected_violation_degree
+        assert all(passed == expected for passed, expected in zip(passed_violations[0][0], violations))

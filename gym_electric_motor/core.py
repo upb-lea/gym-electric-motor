@@ -693,7 +693,7 @@ class ConstraintMonitor:
         elif callable(merge_violations):
             self._merge_violations = merge_violations
 
-    def set_modules(self, ps):
+    def set_modules(self, ps: PhysicalSystem):
         """The PhysicalSystem of the environment is passed to save important parameters like the index of the states.
 
         Args:
@@ -703,7 +703,7 @@ class ConstraintMonitor:
             if isinstance(constraint, Constraint):
                 constraint.set_modules(ps)
 
-    def check_constraints(self, state):
+    def check_constraints(self, state: np.ndarray):
         """Function to check and merge all constraints.
 
         Args:
