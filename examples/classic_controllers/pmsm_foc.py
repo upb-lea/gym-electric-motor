@@ -13,7 +13,7 @@ import sys, os
 Description:
         Environment to control a continuously controlled permanent magnet synchronous motor(PMSM).
 
-        Controlled Quantity: 'omega' and 'i_sq'
+        Controlled Quantities: 'i_sd' and 'i_sq'
 
         Limitations: Physical limitations of the motor will be current
 
@@ -36,8 +36,8 @@ if __name__ == '__main__':
 
     """
     env = gem.make(
-        'PmsmCont-v1',
-        visualization=MotorDashboard(plots=['u_sd', 'u_sq', 'i_sd', 'i_sq', 'omega']), visu_period=1,
+        'PMSMCont-v1',
+        visualization=MotorDashboard(state_plots=['u_sd', 'u_sq', 'i_sd', 'i_sq', 'omega']),
         control_space='dq',
         solver='euler'
 
