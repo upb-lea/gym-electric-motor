@@ -22,15 +22,19 @@ For a more general introduction to GEM, we recommend to have a look at the "_con
 
 
 # We will have a look at a current control scenario here
-const_sub_gen = [rg.ConstReferenceGenerator(reference_state='i', reference_value=0.1),  # operation at 10 % of the current limit
-                 rg.ConstReferenceGenerator(reference_state='i', reference_value=0.9),  # operation at 90 % of the current limit
-                 rg.ConstReferenceGenerator(reference_state='i', reference_value=1.1),  # operation at 110 % of the current limit,
-                 ]
+const_sub_gen = [
+    # operation at 10 % of the current limit
+    rg.ConstReferenceGenerator(reference_state='i', reference_value=0.1),
+    # operation at 90 % of the current limit
+    rg.ConstReferenceGenerator(reference_state='i', reference_value=0.9),
+    # operation at 110 % of the current limit,
+    rg.ConstReferenceGenerator(reference_state='i', reference_value=1.1)
+]
 
 # since the case of 110 % current may lead to limit violation, we only assign a small probability of 2 % to it
-const_switch_gen = rg.SwitchedReferenceGenerator(const_sub_gen,
-                                                 p=[0.49, 0.49, 0.02],
-                                                 super_episode_length=(1000, 2000))
+const_switch_gen = rg.SwitchedReferenceGenerator(
+    const_sub_gen, p=[0.49, 0.49, 0.02], super_episode_length=(1000, 2000)
+)
 
 # The ExternalSpeedLoad class allows to pass an arbitrary function of time which will then dictate the speed profile.
 # As shown here it can also contain more parameters. Some examples:

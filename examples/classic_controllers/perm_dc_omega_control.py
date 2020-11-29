@@ -36,7 +36,10 @@ if __name__ == '__main__':
             sub_generators=[
                 rg.SinusoidalReferenceGenerator, rg.WienerProcessReferenceGenerator(), rg.StepReferenceGenerator()
             ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
-        )
+        ),
+        # Override the observation of the current limit of 'i' which is selected per default
+        # The 'on_off' Controller cannot comply to any limits.
+        constraints=()
     )
 
     # Assign a simple on/off controller

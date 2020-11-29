@@ -12,12 +12,9 @@ import gym_electric_motor.envs.gym_synrm.syn_reluctance_motor_env as synrmenv
 import gym_electric_motor.envs.gym_im.squirrel_cage_induc_motor_env as scimenv
 import gym_electric_motor.envs.gym_im.doubly_fed_induc_motor_env as dfimenv
 
-import time
-
-
 from ..testing_utils import *
 from ..conf import *
-from numpy.random import randint, seed
+from numpy.random import seed
 import pytest
 
 # region first tests
@@ -27,21 +24,25 @@ g_disc_converter = ['Disc-1QC', 'Disc-2QC', 'Disc-4QC']
 g_cont_converter = ['Cont-1QC', 'Cont-2QC', 'Cont-4QC']
 g_converter = ['Disc-1QC', 'Disc-2QC', 'Disc-4QC', 'Cont-1QC', 'Cont-2QC', 'Cont-4QC']
 g_reference_generator = ['WienerProcessReference', 'SinusReference', 'StepReference']
-g_reward_functions = ['WSE', 'SWSE']
+g_reward_functions = ['WSE']
 
 
 @pytest.mark.parametrize("converter_type", g_cont_converter)
 @pytest.mark.parametrize("reward_function_type", g_reward_functions)
 @pytest.mark.parametrize("reference_generator_type", g_reference_generator)
 @pytest.mark.parametrize("tau_test", [1E-5, 1E-4, 1E-3])
-@pytest.mark.parametrize("motor_type, state_filter, motor_class, initializer",
-                         [('DcPermEx', ['omega', 'u', 'i'], ContDcPermanentlyExcitedMotorEnvironment, permex_initializer),
-                          ('DcSeries', ['torque'], ContDcSeriesMotorEnvironment, series_initializer),
-                          ('DcShunt', ['omega'], ContDcShuntMotorEnvironment, shunt_initializer),
-                          ('DcExtEx', ['torque'], ContDcExternallyExcitedMotorEnvironment, extex_initializer)])
-def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_type,
-                                    reference_generator_type, tau_test, state_filter,
-                                    motor_class, turn_off_windows, initializer):
+@pytest.mark.parametrize(
+    "motor_type, state_filter, motor_class, initializer", [
+        ('DcPermEx', ['omega', 'u', 'i'], ContDcPermanentlyExcitedMotorEnvironment, permex_initializer),
+        ('DcSeries', ['torque'], ContDcSeriesMotorEnvironment, series_initializer),
+        ('DcShunt', ['omega'], ContDcShuntMotorEnvironment, shunt_initializer),
+        ('DcExtEx', ['torque'], ContDcExternallyExcitedMotorEnvironment, extex_initializer)
+    ]
+)
+def test_cont_dc_motor_environments(
+        motor_type, converter_type, reward_function_type, reference_generator_type, tau_test, state_filter,
+        motor_class, turn_off_windows, initializer
+):
     """
     test cont dc motor environments
 
@@ -64,10 +65,6 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
     nominal_values = test_motor_parameter[motor_type]['nominal_values']  # dict
     limit_values = test_motor_parameter[motor_type]['limit_values']  # dict
     u_sup = motor_parameter['u_sup']
-    if motor_type in ['DcExtEx', 'DcShunt']:
-        observed_states = ['omega', 'i_a']
-    else:
-        observed_states = ['omega', 'i']
     reward_weights = test_motor_parameter[motor_type]['reward_weights']
     # setup converter parameter
     kwargs = {}
@@ -95,7 +92,6 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
                         interlocking_time=conv_parameter['interlocking_time'],
                         u_sup=u_sup,
                         reward_weights=reward_weights,
-                        observed_states=observed_states,
                         motor_initializer=initializer,
                         **kwargs
                         )
@@ -103,7 +99,7 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
     _physical_system = setup_physical_system(motor_type, converter_type)
     reference_generator = make_module(ReferenceGenerator, reference_generator_type,
                                       reference_state='omega')
-    reward_function = make_module(RewardFunction, reward_function_type, observed_states=observed_states,
+    reward_function = make_module(RewardFunction, reward_function_type,
                                   reward_weights=reward_weights)
     converter = setup_dc_converter(converter_type, motor_type)  # not used so far
     voltage_supply = IdealVoltageSupply(u_sup)
@@ -115,7 +111,6 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
                         reference_generator=reference_generator,
                         reward_function=reward_function,
                         state_filter=state_filter,
-                        observed_states=None,
                         motor_initializer=initializer,)
     # test the different initializations
     envs = [env_default, env_1, env_2]
@@ -132,7 +127,7 @@ def test_cont_dc_motor_environments(motor_type, converter_type, reward_function_
                                                                                                   reward_range[1],
                                                                                                   index])
             else:
-                assert reward == env.reward_function._limit_violation_reward(None)
+                assert reward == env.reward_function._violation_reward
                 break
             env.render()
         env.close()
@@ -171,10 +166,6 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
     nominal_values = test_motor_parameter[motor_type]['nominal_values']  # dict
     limit_values = test_motor_parameter[motor_type]['limit_values']  # dict
     u_sup = motor_parameter['u_sup']
-    if motor_type in ['DcExtEx', 'DcShunt']:
-        observed_states = ['omega', 'i_a']
-    else:
-        observed_states = ['omega', 'i']
     reward_weights = test_motor_parameter[motor_type]['reward_weights']
     # setup converter parameter
     kwargs = {}
@@ -202,7 +193,6 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
                         interlocking_time=conv_parameter['interlocking_time'],
                         u_sup=u_sup,
                         reward_weights=reward_weights,
-                        observed_states=observed_states,
                         motor_initializer=initializer,
                         **kwargs
                         )
@@ -210,7 +200,7 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
     _physical_system = setup_physical_system(motor_type, converter_type)
     reference_generator = make_module(ReferenceGenerator, reference_generator_type,
                                       reference_state='omega')
-    reward_function = make_module(RewardFunction, reward_function_type, observed_states=observed_states,
+    reward_function = make_module(RewardFunction, reward_function_type,
                                   reward_weights=reward_weights)
     converter = setup_dc_converter(converter_type, motor_type)  # not used so far
     voltage_supply = IdealVoltageSupply(u_sup)
@@ -238,7 +228,7 @@ def test_disc_dc_motor_environments(motor_type, converter_type, reward_function_
                                                                                                    reward_range[1],
                                                                                                    index])
             else:
-                reward == env.reward_function._limit_violation_reward(None)
+                reward == env.reward_function._violation_reward
                 break
             env.render()
         env.close()
@@ -275,7 +265,6 @@ def test_threephase_environments(reward_function_type, reference_generator_type,
     nominal_values = test_motor_parameter[motor_type]['nominal_values']  # dict
     limit_values = test_motor_parameter[motor_type]['limit_values']  # dict
     u_sup = motor_parameter['u_sup']
-    observed_states = ['all']
     reward_weights = test_motor_parameter[motor_type]['reward_weights']
     # different initializations, using euler solver to accelerate testing
     env_default = motor_class(ode_solver='euler')
@@ -289,12 +278,12 @@ def test_threephase_environments(reward_function_type, reference_generator_type,
                         motor_parameter=motor_parameter,
                         nominal_values=nominal_values,
                         limit_values=limit_values,
+                        constraints=['all_states'],
                         load_parameter=load_parameter['parameter'],
                         dead_time=conv_parameter['dead_time'],
                         interlocking_time=conv_parameter['interlocking_time'],
                         u_sup=u_sup,
                         reward_weights=reward_weights,
-                        observed_states=observed_states,
                         motor_initializer=initializer,
                         plots=['omega'])
 
@@ -302,13 +291,14 @@ def test_threephase_environments(reward_function_type, reference_generator_type,
     _physical_system = setup_physical_system(motor_type, converter_type, three_phase=True, **kwargs)
     reference_generator = make_module(ReferenceGenerator, reference_generator_type,
                                       reference_state='omega')
-    reward_function = make_module(RewardFunction, reward_function_type, observed_states=observed_states,
+    reward_function = make_module(RewardFunction, reward_function_type,
                                   reward_weights=reward_weights)
     converter = setup_dc_converter(converter_type, motor_type, **kwargs)  # not used so far
     voltage_supply = IdealVoltageSupply(u_sup)
     load = PolynomialStaticLoad(load_parameter['parameter'])
     solver = EulerSolver()
     env_2 = motor_class(tau=tau, converter=converter,
+                        constraints=['all_states'],
                         load=load, solver=solver,
                         supply=voltage_supply,
                         reference_generator=reference_generator,
@@ -369,7 +359,9 @@ class TestEnvironments:
     motor_init_counter = 0
     reference_init_counter = 0
 
-    def monkey_super_init(self, physical_system=None, reference_generator=None, reward_function=None, **kwargs):
+    def monkey_super_init(
+            self, physical_system=None, reference_generator=None, reward_function=None, constraints = (), **kwargs
+    ):
         """
         mock function for super().__init__()
         :param physical_system: instantiated physical system
@@ -432,7 +424,7 @@ class TestEnvironments:
         return DummyRewardFunction()
 
     @pytest.mark.parametrize("reward_function, reward_init_counter",
-                             [(None, 1), ('WSE', 0), ('SWSE', 0), (DummyRewardFunction(), 0)])
+                             [(None, 1), ('WSE', 0), ('WSE', 0), (DummyRewardFunction(), 0)])
     @pytest.mark.parametrize("reference_generator, reference_init_counter",
                              [(None, 1), ('GWN', 0), (DummyReferenceGenerator(), 0)])
     @pytest.mark.parametrize("motor, motor_class, motor_file, motor_system",

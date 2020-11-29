@@ -1,7 +1,8 @@
 from .conf import *
 from gym_electric_motor.physical_systems import *
-from gym_electric_motor.utils import make_module
-from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization
+from gym_electric_motor.utils import make_module, set_state_array
+from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization, \
+    ConstraintMonitor
 from gym_electric_motor.physical_systems import PowerElectronicConverter, MechanicalLoad, ElectricMotor, OdeSolver, \
     VoltageSupply, NoiseGenerator
 import gym_electric_motor.physical_systems.converters as cv
@@ -190,7 +191,7 @@ class DummyReferenceGenerator(ReferenceGenerator):
 
 class DummyRewardFunction(RewardFunction):
 
-    def __init__(self, observed_states=None, **kwargs):
+    def __init__(self, **kwargs):
         self.last_state = None
         self.last_reference = None
         self.last_action = None
@@ -198,22 +199,19 @@ class DummyRewardFunction(RewardFunction):
         self.closed = False
         self.done = False
         self.kwargs = kwargs
-        super().__init__(observed_states)
+        super().__init__()
 
     def reset(self, initial_state=None, initial_reference=None):
         self.last_state = initial_state
         self.last_reference = initial_reference
         super().reset(initial_state, initial_reference)
 
-    def set_done(self, done):
-        self.done = done
-
-    def reward(self, state, reference, k=None, action=None):
+    def reward(self, state, reference, k=None, action=None, violation_degree=0.0):
         self.last_state = state
         self.last_reference = reference
         self.last_action = action
         self.last_time_step = k
-        return -1 if self.done else 1, self.done
+        return -1 if violation_degree == 1 else 1
 
     def close(self):
         self.closed = True
@@ -567,6 +565,28 @@ class DummyOdeSolver(OdeSolver):
         self._y = self._y + t - self._t
         self._t = t
         return self._y
+
+
+class DummyConstraint(Constraint):
+
+    def __init__(self, violation_degree=0.0):
+        super().__init__()
+        self.modules_set = False
+        self.violation_degree = violation_degree
+
+    def __call__(self, state):
+        return self.violation_degree
+
+    def set_modules(self, ps):
+        super().set_modules(ps)
+        self.modules_set = True
+
+
+class DummyConstraintMonitor(ConstraintMonitor):
+
+    def __init__(self, no_of_dummy_constraints=1):
+        constraints = [DummyConstraint() for _ in range(no_of_dummy_constraints)]
+        super().__init__(additional_constraints=constraints)
 
 
 class DummySCMLSystem(SCMLSystem):

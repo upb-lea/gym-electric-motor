@@ -3,6 +3,7 @@ from gym_electric_motor.callbacks import RampingLimitMargin
 from tests.testing_utils import DummyElectricMotorEnvironment, DummyReferenceGenerator
 import pytest
 
+
 class TestRampingLimitMargin:
     test_class = RampingLimitMargin
     key = ''
@@ -103,12 +104,3 @@ class TestRampingLimitMargin:
         with pytest.raises(AssertionError) as excinfo:
             env = DummyElectricMotorEnvironment(reference_generator=switched, callbacks=callbacks)
         assert "The RampingLimitMargin does only support" in str(excinfo.value)
-
-        
-
-
-
-
-            
-        
-        
