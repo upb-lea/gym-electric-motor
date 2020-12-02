@@ -192,10 +192,11 @@ def test_PolynomialStaticLoad_MechanicalOde(concretePolynomialLoad, omega, expec
 class TestMechanicalLoad:
     key = ''
     class_to_test = MechanicalLoad
+    kwargs = {}
 
     def test_registered(self):
         if self.key != '':
-            load = gem.utils.instantiate(MechanicalLoad, self.key)
+            load = gem.utils.instantiate(MechanicalLoad, self.key, **self.kwargs)
             assert type(load) == self.class_to_test
 
 
@@ -206,17 +207,25 @@ class TestConstSpeedLoad(TestMechanicalLoad):
 
     @pytest.fixture
     def const_speed_load(self):
-        return ConstantSpeedLoad(100)
+        return ConstantSpeedLoad(omega_fixed=60)
 
     def test_initialization(self):
-        load = ConstantSpeedLoad(omega_fixed=1000)
-        assert load.omega_fixed == 1000
+        load = ConstantSpeedLoad(omega_fixed=60)
+        assert load.omega_fixed == 60
 
     def test_mechanical_ode(self, const_speed_load):
         assert all(const_speed_load.mechanical_ode() == np.array([0]))
 
     def test_reset(self, const_speed_load):
-        assert all(const_speed_load.reset() == np.array([const_speed_load.omega_fixed]))
+        test_positions = {'omega': 0}
+        test_nominal = np.array([80])
+        # gym.Box state space with random size
+        test_space = Box(low=-1.0, high=1.0, shape=(3,))
+        reset_val = const_speed_load.reset(state_positions=test_positions,
+                                           nominal_state=test_nominal,
+                                           state_space=test_space)
+        # set additional random kwargs
+        assert all(reset_val == np.array([const_speed_load.omega_fixed]))
 
     @pytest.mark.parametrize('omega, omega_fixed, expected', [
         (-0.5, 1000, (0, 0)),
@@ -240,17 +249,24 @@ class TestExtSpeedLoad(TestMechanicalLoad):
 
     key = 'ExtSpeedLoad'
     class_to_test = ExternalSpeedLoad
+    kwargs = dict(speed_profile=test_speed_profile,
+                  amp=test_amp,
+                  bias=test_bias,
+                  freq=test_freq)
 
     @pytest.fixture
     def ext_speed_load(self):
-        return ExternalSpeedLoad(test_speed_profile, 10,
+        return ExternalSpeedLoad(speed_profile=test_speed_profile,
                                  amp=test_amp, bias=test_bias, freq=test_freq)
 
     def test_initialization(self):
-        load = ExternalSpeedLoad(test_speed_profile, 10,
+        load = ExternalSpeedLoad(speed_profile=test_speed_profile,
                                  amp=test_amp, bias=test_bias, freq=test_freq)
         assert load._speed_profile == test_speed_profile
-        assert load._omega_initial == 10
+        assert load.omega == test_speed_profile(t=0,
+                                                amp=test_amp,
+                                                bias=test_bias,
+                                                freq=test_freq)
         for key in ['amp', 'bias', 'freq']:
             assert key in load.kwargs
 
@@ -266,7 +282,14 @@ class TestExtSpeedLoad(TestMechanicalLoad):
         assert math.isclose(expected_result, output_val, abs_tol=1E-6)
 
     def test_reset(self, ext_speed_load):
-        assert all(ext_speed_load.reset() == np.array([ext_speed_load._omega_initial]))
+        test_positions = {'omega': 0}
+        test_nominal = np.array([80])
+        # gym.Box state space with random size
+        test_space = Box(low=-1.0, high=1.0, shape=(3,))
+        reset_var = ext_speed_load.reset(state_positions=test_positions,
+                                         nominal_state=test_nominal,
+                                         state_space=test_space)
+        assert all(reset_var == np.array([ext_speed_load._omega_initial]))
 
     @pytest.mark.parametrize('omega, omega_initial, expected', [
         (-0.5, 1000, (None, None)),
@@ -276,7 +299,7 @@ class TestExtSpeedLoad(TestMechanicalLoad):
     ]
     )
     def test_jacobian(self, omega, omega_initial, expected):
-        test_object = self.class_to_test(test_speed_profile, 10, amp=test_amp,
+        test_object = self.class_to_test(test_speed_profile, amp=test_amp,
                                          bias=test_bias, freq=test_freq)
 
         # 2 Runs to test independence on time and torque

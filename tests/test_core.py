@@ -310,7 +310,7 @@ class TestRewardFunction:
     def test_call(self, monkeypatch):
         rf = RewardFunction()
         monkeypatch.setattr(rf, "reward", self.mock_reward_function)
-        result = rf(1, 2)
+        result = rf(1, 2, 3)
         assert result == 'Reward Function called'
 
 
