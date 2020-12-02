@@ -1,16 +1,16 @@
 % Encoding: UTF-8
 
 @Misc{Chollet2015,
-  author       = {Chollet, Fran\c{c}ois and others},
-  howpublished = {\url{https://keras.io}},
-  title        = {Keras},
-  year         = {2015},
+  author = {Chollet, Fran\c{c}ois and others},
+  title  = {Keras},
+  year   = {2015},
+  url    = {https://keras.io},
 }
 
 @Misc{tensorflow2015-whitepaper,
   author = {Mart\'{\i}n~Abadi and Ashish~Agarwal and Paul~Barham and Eugene~Brevdo and Zhifeng~Chen and Craig~Citro and Greg~S.~Corrado and Andy~Davis and Jeffrey~Dean and Matthieu~Devin and Sanjay~Ghemawat and Ian~Goodfellow and Andrew~Harp and Geoffrey~Irving and Michael~Isard and Yangqing Jia and Rafal~Jozefowicz and Lukasz~Kaiser and Manjunath~Kudlur and Josh~Levenberg and Dandelion~Man\'{e} and Rajat~Monga and Sherry~Moore and Derek~Murray and Chris~Olah and Mike~Schuster and Jonathon~Shlens and Benoit~Steiner and Ilya~Sutskever and Kunal~Talwar and Paul~Tucker and Vincent~Vanhoucke and Vijay~Vasudevan and Fernanda~Vi\'{e}gas and Oriol~Vinyals and Pete~Warden and Martin~Wattenberg and Martin~Wicke and Yuan~Yu and Xiaoqiang~Zheng},
   note   = {Software available from tensorflow.org},
-  title  = {{TensorFlow}: Large-Scale Machine Learning on Heterogeneous Systems},
+  title  = {{TensorFlow: Large-Scale Machine Learning on Heterogeneous Systems}},
   year   = {2015},
   url    = {https://www.tensorflow.org/},
 }
@@ -24,14 +24,15 @@
 
 @Misc{gym-whitepaper,
   author = {Greg Brockman and Vicki Cheung and Ludwig Pettersson and Jonas Schneider and John Schulman and Jie Tang and Wojciech Zaremba},
-  title  = {OpenAI Gym},
+  title  = {{OpenAI Gym}},
   year   = {2016},
   eprint = {arXiv:1606.01540},
+  url    = {https://github.com/openai/gym},
 }
 
 @Misc{MathWorks,
   author = {{The MathWorks, Inc.}},
-  title  = {MATLAB - Simulink R2020a},
+  title  = {{MATLAB - Simulink R2020a}},
   year   = {2020},
   url    = {https://www.mathworks.com/products/matlab.html},
 }
@@ -60,7 +61,7 @@
 
 @Misc{ANSYS,
   author = {{ANSYS, Inc.}},
-  title  = {{ANSYS Maxwell} 2020 R1},
+  title  = {{ANSYS Maxwell 2020 R1}},
   year   = {2020},
   url    = {https://www.ansys.com/products/electronics/ansys-maxwell},
 }
@@ -90,7 +91,7 @@
   author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
   booktitle = {Advances in Neural Information Processing Systems 32},
   publisher = {Curran Associates, Inc.},
-  title     = {PyTorch: An Imperative Style, High-Performance Deep Learning Library},
+  title     = {{PyTorch: An Imperative Style, High-Performance Deep Learning Library}},
   year      = {2019},
   editor    = {H. Wallach and H. Larochelle and A. Beygelzimer and F. d\textquotesingle Alch\'{e}-Buc and E. Fox and R. Garnett},
   pages     = {8024--8035},
@@ -98,48 +99,44 @@
 }
 
 @Misc{stable-baselines3,
-  author       = {Raffin, Antonin and Hill, Ashley and Ernestus, Maximilian and Gleave, Adam and Kanervisto, Anssi and Dormann, Noah},
-  howpublished = {\url{https://github.com/DLR-RM/stable-baselines3}},
-  title        = {Stable Baselines3},
-  year         = {2019},
-  journal      = {GitHub repository},
-  publisher    = {GitHub},
+  author    = {Raffin, Antonin and Hill, Ashley and Ernestus, Maximilian and Gleave, Adam and Kanervisto, Anssi and Dormann, Noah},
+  title     = {{Stable Baselines3}},
+  year      = {2019},
+  journal   = {GitHub repository},
+  publisher = {GitHub},
+  url       = {https://github.com/DLR-RM/stable-baselines3},
 }
 
 @Misc{TFAgents,
-  author       = {{Sergio Guadarrama and Anoop Korattikara and Oscar Ramirez and Pablo Castro and Ethan Holly and Sam Fishman and Ke Wang and Ekaterina Gonina and Neal Wu and Efi Kokiopoulou and Luciano Sbaiz and Jamie Smith and Gábor Bartók and Jesse Berent and Chris Harris and Vincent Vanhoucke and Eugene Brevdo}},
-  howpublished = {\url{https://github.com/tensorflow/agents}},
-  note         = {[Online; accessed 25-June-2019]},
-  title        = {{TF-Agents}: A library for Reinforcement Learning in TensorFlow},
-  year         = {2018},
-  journal      = {GitHub repository},
-  url          = {https://github.com/tensorflow/agents},
+  author  = {Sergio Guadarrama and Anoop Korattikara and Oscar Ramirez and Pablo Castro and Ethan Holly and Sam Fishman and Ke Wang and Ekaterina Gonina and Neal Wu and Efi Kokiopoulou and Luciano Sbaiz and Jamie Smith and Gábor Bartók and Jesse Berent and Chris Harris and Vincent Vanhoucke and Eugene Brevdo},
+  note    = {[Online; accessed 25-June-2019]},
+  title   = {{TF-Agents: A library for Reinforcement Learning in TensorFlow}},
+  year    = {2018},
+  journal = {GitHub repository},
+  url     = {https://github.com/tensorflow/agents},
 }
 
 @Misc{plappert2016kerasrl,
-  author       = {Matthias Plappert},
-  howpublished = {\url{https://github.com/keras-rl/keras-rl}},
-  title        = {keras-rl},
-  year         = {2016},
-  journal      = {GitHub repository},
-  publisher    = {GitHub},
-  url          = {https://github.com/keras-rl/keras-rl},
+  author    = {Matthias Plappert},
+  title     = {keras-rl},
+  year      = {2016},
+  journal   = {GitHub repository},
+  publisher = {GitHub},
+  url       = {https://github.com/keras-rl/keras-rl},
 }
 
 @Misc{OSMC2020,
-  author       = {{Open Source Modelica Consortium}},
-  howpublished = {\url{https://openmodelica.org/}},
-  title        = {OpenModelica},
-  year         = {2020},
-  url          = {https://openmodelica.org/},
+  author = {{Open Source Modelica Consortium}},
+  title  = {OpenModelica},
+  year   = {2020},
+  url    = {https://openmodelica.org/},
 }
 
 @Misc{Scilab2020,
-  author       = {{Scilab}},
-  howpublished = {\url{https://www.scilab.org/software/xcos}},
-  title        = {Xcos (Scilab 6.1.0)},
-  year         = {2020},
-  url          = {https://www.scilab.org/software/xcos},
+  author = {{Scilab}},
+  title  = {{Xcos (Scilab 6.1.0)}},
+  year   = {2020},
+  url    = {https://www.scilab.org/software/xcos},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}

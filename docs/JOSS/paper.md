@@ -96,7 +96,7 @@ Corresponding commercial simulation environments, like ``ANSYS Maxwell`` [@ANSYS
 ``FEMM`` [@Meeker]
 are very resource and time consuming because they depend on the finite element method, 
 which is a spatial discretization and numerical integration procedure. Hence, these software packages are usually not
-considered in control development, and complement GEM at most. 
+considered in control development, and complement ``GEM`` at most. 
 This particularly applies in the early control design phase when researching new, innovative control approaches 
 (rapid control prototyping) or when students want to receive quasi-instantaneous simulation feedbacks. 
 
@@ -158,12 +158,13 @@ simplified $dq$-frame.
 
 ![Simulation of a squirrel cage induction motor connected to a rigid network at $50 \, \mathrm{Hz}$\label{fig:SCIM_example}](../plots/SCIM_Example.eps)
 
-Exemplary code snippets that demonstrate the usage of ``GEM`` within both a classical control and a reinforcement 
-learning context are included within the projects repository:
+Exemplary code snippets that demonstrate the usage of ``GEM`` within both, the classical control and the reinforcement 
+learning context are included within the project's [examples folder](https://github.com/upb-lea/gym-electric-motor/tree/master/examples). 
+Featured examples:
 
-- [``ddpg_pmsm_dq_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_pmsm_dq_current_control.py): a deep deterministic policy gradient reinforcement-learning control approach applied to the current control of a permanent magnet synchronous motor within the $dq$-frame 
-- [``ddpg_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/ddpg_series_omega_control.py): a deep deterministic policy gradient reinforcement-learning control approach applied to the speed control of a series motor
-- [``dqn_series_current_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/dqn_series_current_control.py): a deep Q-value network reinforcement-learning control approach for finite-control-set current control of a series motor
-- [``pi_series_omega_control``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/pi_series_omega_control.py): a conventional linear control algorithm applied to the speed control of a series motor
+- [``GEM_cookbook.ipynb``](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/GEM_cookbook.ipynb): a basic tutorial-style notebook that presents the basic interface and usage of GEM
+- [``scim_ideal_grid_simulation.py``](https://github.com/upb-lea/gym-electric-motor/blob/master/examples/environment_features/scim_ideal_grid_simulation.py): a simple motor simulation showcase of the squirrel cage induction motor that was used to create \autoref{fig:SCIM_example}
+
+
 
 # References

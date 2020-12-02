@@ -18,7 +18,7 @@ class MechanicalLoad:
     Initialization is given by initializer(dict). Can be a constant state value
     or random value in given interval.
     dict should be like:
-        { 'states'(dict): with state names and initital values
+        { 'states'(dict): with state names and initial values
           'interval'(array like): boundaries for each state
                     (only for random init), shape(num states, 2)
           'random_init'(str): 'uniform' or 'normal'
@@ -348,14 +348,14 @@ class ExternalSpeedLoad(MechanicalLoad):
                  **kwargs):
         """
         Args:
-            speed_profile(function): function or lambda expression
+            speed_profile(float -> float): function or lambda expression
                 which takes a timestep t as argument and returns speed omega
                 example:
                     (lambda t, amplitude, freq: amplitude*numpy.sin(2*pi*f)))
                     with additional parameters:
                         amplitude(float), freq(float), time(float)
             tau(float): discrete time step of the system
-            kwargs(dict): further arguments for speed_profile
+            kwargs(float): further arguments for speed_profile
         """
         super().__init__(**kwargs)
         if load_initializer is not None:
@@ -429,24 +429,3 @@ class ConstantSpeedLoad(MechanicalLoad):
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
         return np.array([0]), np.array([0])
-
-
-class PositionalPolyStaticLoad(PolynomialStaticLoad):
-
-    def __init__(self, load_parameter=None, limits=None):
-        load_parameter = load_parameter or {}
-        limits = limits or {}
-        limits.setdefault('position', 1)
-        load_parameter.set_default('gear_ratio', 1)
-        load_parameter.set_default('meter_per_revolution', 0.05)
-        super().__init__(load_parameter, limits)
-        self._state_names = ['omega', 'position']
-
-    def get_state_space(self, omega_range):
-        lower, upper = super().get_state_space(omega_range)
-        lower['position'] = 0
-        upper['position'] = self._limits['position']
-
-
-
-

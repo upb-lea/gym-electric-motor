@@ -247,8 +247,7 @@ class ElectricMotor:
 
             elif random_dist in ['normal', 'gaussian']:
                 # specific input or middle of interval
-                mue = random_params[0] or \
-                      (upper_bound - lower_bound) / 2 + lower_bound
+                mue = random_params[0] or (upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(a, b,
@@ -275,8 +274,7 @@ class ElectricMotor:
                      for idx, state in enumerate(self._initial_states.keys())}
                 self._initial_states.update(initial_states_)
             else:
-                raise Exception('Initialization Value have to be in nominal '
-                                'boundaries')
+                raise Exception('Initialization value has to be within nominal boundaries')
         else:
             raise Exception('No matching Initialization Case')
 

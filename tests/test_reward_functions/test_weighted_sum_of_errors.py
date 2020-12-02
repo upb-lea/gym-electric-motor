@@ -1,204 +1,120 @@
 import pytest
 import numpy as np
 
-from gym_electric_motor.reward_functions.weighted_sum_of_errors import WeightedSumOfErrors, ShiftedWeightedSumOfErrors
-import gym_electric_motor.reward_functions.weighted_sum_of_errors as ws
-import tests.testing_utils as tu
+from gym_electric_motor.reward_functions.weighted_sum_of_errors import WeightedSumOfErrors
+from .test_reward_functions import TestRewardFunction
+from ..testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyConstraintMonitor
 
 
-class TestWeightedSumOfErrors:
-    """
-    This test class consists of unit tests to verify modules in the weighted_sum_of_errors.py
-    Following modules are included:
-    WeightedSumOfErrors
-        __init__
-        set_modules
+class TestWeightedSumOfErrors(TestRewardFunction):
 
-    ShiftedWeightedSumOfErrors
-        set_modules
-    """
+    class_to_test = WeightedSumOfErrors
 
-    # Parameters used for testing
-    reward_dict = dict(omega=1, torque=1, i_a=1)
-    reward_list = [1, 1, 1]
-    # Test counter to count function calls
-    _mock_set_state_array_counter = 0
+    @pytest.fixture
+    def reward_function(self):
+        rf = WeightedSumOfErrors()
+        rf.set_modules(DummyPhysicalSystem(), DummyReferenceGenerator(), DummyConstraintMonitor())
+        return rf
 
-    @pytest.mark.parametrize("reward_weights", [None, reward_dict, reward_list])
-    @pytest.mark.parametrize("normed", [False, True])
-    @pytest.mark.parametrize("power", [-1, 1, 0])
-    def test_initialization(self, reward_weights, normed, power):
-        """
-        Tests the initialization of WeightedSumOfErrors object with defined parameters
-        :param reward_weights:
-        :param normed:
-        :param power:
-        :return:
-        """
-        test_wsoe_obj = WeightedSumOfErrors(reward_weights, normed, observed_states=None, gamma=0.9, reward_power=power)
-        # test if the correct attributes are set during init
-        assert test_wsoe_obj._n == power
-        assert test_wsoe_obj._reward_weights == reward_weights
-        assert not test_wsoe_obj._state_length
-        assert test_wsoe_obj._normed == normed
+    @pytest.mark.parametrize(['ps', 'reward_power', 'n'], [
+        [DummyPhysicalSystem(state_length=2), [1, 2], np.array([1, 2])],
+        [DummyPhysicalSystem(state_length=3), 2, np.array([2, 2, 2])],
+        [DummyPhysicalSystem(state_length=1), [1], np.array([1])],
+        [DummyPhysicalSystem(state_length=2), dict(dummy_state_0=2), np.array([2, 0])]
+    ])
+    @pytest.mark.parametrize('rg', [DummyReferenceGenerator()])
+    @pytest.mark.parametrize('cm', [DummyConstraintMonitor()])
+    def test_reward_powers(self, ps, rg, cm, reward_power, n):
+        rf = self.class_to_test(reward_power=reward_power)
+        rf.set_modules(
+            ps, rg, cm)
+        assert all(rf._n == n)
 
-    @pytest.mark.parametrize("reward_weights", [None, reward_list, reward_dict])
-    @pytest.mark.parametrize("normed", [True, False])
-    @pytest.mark.parametrize("power", [-1, 1, 2, 0])
-    @pytest.mark.parametrize("mock_ref_states", [[True, True], [True, False]])
-    def test_wsoe_set_modules(self, monkeypatch, reward_weights, normed, power, mock_ref_states):
-        """
-         test the set_modules function
-        :param monkeypatch:
-        :param reward_weights:
-        :param normed:
-        :param power:
-        :param mock_ref_states:
-        :return:
-        """
-        expected_reward_range = (-3, 0)
-        expected_reward_range_normed = (-1, 0)
-        expected_reward = 1/3
-        expected_reward_normed = 1
-        expected_call_counter = 2
+    @pytest.mark.parametrize(['ps', 'reward_weights', 'expected_rw'], [
+        [DummyPhysicalSystem(state_length=2), [1, 2], np.array([1, 2])],
+        [DummyPhysicalSystem(state_length=3), 2, np.array([2, 2, 2])],
+        [DummyPhysicalSystem(state_length=1), [1], np.array([1])],
+        [DummyPhysicalSystem(state_length=2), dict(dummy_state_0=2), np.array([2, 0])],
+        [DummyPhysicalSystem(state_length=2), None, np.array([1.0, 0.0])],
+    ])
+    @pytest.mark.parametrize('rg', [DummyReferenceGenerator()])
+    @pytest.mark.parametrize('cm', [DummyConstraintMonitor()])
+    def test_reward_weights(self, ps, rg, cm, reward_weights, expected_rw):
+        rg.set_modules(ps)
+        rf = self.class_to_test(reward_weights=reward_weights)
+        rf.set_modules(ps, rg, cm)
+        assert all(rf._reward_weights == expected_rw)
 
-        def mock_set_state_array(a, b):
-            """
-            mock function for set_state_array() function
-            :param a:
-            :param b:
-            :return: a fixed array [1, 1, 1] if parameter a is an array else a fixed value 2
-            """
-            self._mock_set_state_array_counter += 1
-            test_b = np.array(["dummy_state_0", "dummy_state_1"])
+    @pytest.mark.parametrize(['ps', 'violation_reward', 'gamma', 'expected_vr'], [
+        [DummyPhysicalSystem(state_length=2), 0.0, 0.9, 0.0],
+        [DummyPhysicalSystem(state_length=3), -100000, 0.99, -100000],
+        [DummyPhysicalSystem(state_length=1), None, 0.99, -100],
+        [DummyPhysicalSystem(state_length=2), None, 0.5, -2],
+        [DummyPhysicalSystem(state_length=2), 5000, 0.5, 5000],
+    ])
+    @pytest.mark.parametrize('rg', [DummyReferenceGenerator()])
+    @pytest.mark.parametrize('cm', [DummyConstraintMonitor()])
+    def test_violation_reward(self, ps, rg, cm, violation_reward, gamma, expected_vr):
+        rg.set_modules(ps)
+        rf = self.class_to_test(violation_reward=violation_reward, gamma=gamma)
+        rf.set_modules(ps, rg, cm)
+        assert np.isclose(rf._violation_reward, expected_vr, rtol=1e-4)
 
-            # Verify if the correct parameters are passed to the function
-            for i in range(2):
-                assert b[i] == test_b[i]
-            if type(a) is list or np.ndarray:
-                return np.array([1, 1, 1], dtype=np.float64)
-            else:
-                return 2
+    @pytest.mark.parametrize(['ps', 'reward_weights', 'normed_rw', 'expected_rw'], [
+        [DummyPhysicalSystem(state_length=2), [1, 2], False, np.array([1, 2])],
+        [DummyPhysicalSystem(state_length=2), [1, 2], True, np.array([1/3, 2/3])],
+        [DummyPhysicalSystem(state_length=3), 2, True, np.array([1/3, 1/3, 1/3])],
+        [DummyPhysicalSystem(state_length=1), [1], False, np.array([1])],
+        [DummyPhysicalSystem(state_length=2), dict(dummy_state_0=2), True, np.array([1, 0])],
+    ])
+    @pytest.mark.parametrize('rg', [DummyReferenceGenerator()])
+    @pytest.mark.parametrize('cm', [DummyConstraintMonitor()])
+    def test_normed_reward_weights(self, ps, rg, cm, reward_weights, normed_rw, expected_rw):
+        rg.set_modules(ps)
+        rf = self.class_to_test(reward_weights=reward_weights, normed_reward_weights=normed_rw)
+        rf.set_modules(ps, rg, cm)
+        assert all(rf._reward_weights == expected_rw)
 
-        wsoe_obj = WeightedSumOfErrors(reward_weights, normed, observed_states=None, gamma=0.9, reward_power=power)
-        # create a dummy physical system with 2 states
-        physical_system = tu.DummyPhysicalSystem(2)
-        # create a dummy reference generator
-        reference_generator = tu.DummyReferenceGenerator()
-        monkeypatch.setattr(ws, "set_state_array", mock_set_state_array)
-        # mocking the reference_generator._referenced_states attribute
-        reference_generator._referenced_states = mock_ref_states
-        wsoe_obj.set_modules(physical_system, reference_generator)
+    @pytest.mark.parametrize(['ps', 'rw', 'bias', 'expected_rr'], [
+        [DummyPhysicalSystem(state_length=2), [1, 2], 0.0, (-3.0, 0.0)],
+        [DummyPhysicalSystem(state_length=2), [1, 0], 1.0, (0.0, 1.0)],
+        [DummyPhysicalSystem(state_length=3), [5, 4, 3], 9, (-3.0, 9.0)],
+    ])
+    @pytest.mark.parametrize('rg', [DummyReferenceGenerator()])
+    @pytest.mark.parametrize('cm', [DummyConstraintMonitor()])
+    def test_reward_range(self, ps, rg, cm, rw, bias, expected_rr):
+        rg.set_modules(ps)
+        rf = self.class_to_test(reward_weights=rw, bias=bias)
+        rf.set_modules(ps, rg, cm)
+        assert rf.reward_range == expected_rr
 
-        # Test if the mock_set_state_array function is called only 2 times
-        assert self._mock_set_state_array_counter == expected_call_counter, \
-            'Function is not called as often as expected'
-        # Test the reward weights and range
-        if normed:
-            assert wsoe_obj.reward_range == expected_reward_range_normed  # (-1, 0)
-            for val in wsoe_obj._reward_weights:
-                assert val == expected_reward   # 1 / 3
+    @pytest.mark.parametrize(['ps', 'rw', 'bias', 'expected_bias'], [
+        [DummyPhysicalSystem(state_length=2), [2.0, 0.5], 0.9, 0.9],
+        [DummyPhysicalSystem(state_length=3), 100000, 'positive', 300000],
+        [DummyPhysicalSystem(state_length=1), [5], 0, 0],
+    ])
+    @pytest.mark.parametrize('rg', [DummyReferenceGenerator()])
+    @pytest.mark.parametrize('cm', [DummyConstraintMonitor()])
+    def test_bias(self, ps, rg, cm, rw, bias, expected_bias):
+        rg.set_modules(ps)
+        rf = self.class_to_test(reward_weights=rw, bias=bias)
+        rf.set_modules(ps, rg, cm)
+        assert rf._bias == expected_bias
 
-        else:
-            assert wsoe_obj.reward_range == expected_reward_range  # (-3, 0)
-            for val in wsoe_obj._reward_weights:
-                assert val == expected_reward_normed  # 1
-
-    @pytest.mark.parametrize("reward_weights", [None, reward_list, reward_dict])
-    @pytest.mark.parametrize("normed", [True, False])
-    @pytest.mark.parametrize("power", [-1, 0, 1, 2])
-    @pytest.mark.parametrize("mock_ref_states", [[True, True], [True, False]])
-    def test_wsoe_set_modules_warning(self, monkeypatch, reward_weights, normed, power, mock_ref_states):
-        """
-        test the warning raised in the set_module function
-        :param monkeypatch:
-        :param reward_weights:
-        :param normed:
-        :param power:
-        :param mock_ref_states:
-        :return:
-        """
-        def mock_set_state_array(a, _):
-            """
-             mock function for set_state_array() function
-            :param a:
-            :param _:
-            :return: a fixed array [0, 0, 0] if parameter a so that a warning is raised
-
-            """
-            self._mock_set_state_array_counter += 1
-            if type(a) is list or np.ndarray:
-                return np.array([0, 0, 0], dtype=np.float64)
-            else:
-                return 2
-
-        wsoe_obj = WeightedSumOfErrors(reward_weights, normed, observed_states=None, gamma=0.9, reward_power=power)
-        physical_system = tu.DummyPhysicalSystem(2)  # setup_physical_system(motor_type, converter_type)
-        reference_generator = tu.DummyReferenceGenerator()
-        monkeypatch.setattr(ws, "set_state_array", mock_set_state_array)
-        reference_generator._referenced_states = mock_ref_states  # parametrized to [true/false]
-
-        # assert, if the correct warning is raised
-        with pytest.warns(Warning, match="All reward weights sum up to zero"):
-            wsoe_obj.set_modules(physical_system, reference_generator)
-
-    @pytest.mark.parametrize("reward_weights", [None, reward_list, reward_dict])
-    @pytest.mark.parametrize("normed", [True, False])
-    @pytest.mark.parametrize("power", [-1, 1, 2, 0])
-    @pytest.mark.parametrize("mock_ref_states", [[True, True], [True, False]])
-    def test_shifted_wsoe_set_modules(self, monkeypatch, reward_weights, normed, power, mock_ref_states):
-        """
-        test the set_modules function in the ShiftedWeightedSumOfErrors class
-        :param monkeypatch:
-        :param reward_weights:
-        :param normed:
-        :param power:
-        :param mock_ref_states:
-        :return:
-        """
-        expected_reward_range = (0, 3)
-        expected_reward_range_normed = (0, 1)
-        expected_reward = 1/3
-        expected_reward_normed = 1
-        expected_call_counter = 2
-
-        def mock_set_state_array(a, b):
-            """
-            mock function for set_state_array() function
-            :param a:
-            :param b:
-            :return: a fixed array [1, 1, 1] if parameter a is an array else a fixed value 2
-            """
-            self._mock_set_state_array_counter += 1
-            test_b = np.array(["dummy_state_0", "dummy_state_1"])
-            for i in range(2):
-                assert b[i] == test_b[i]
-            if type(a) is list or np.ndarray:
-                return np.array([1, 1, 1], dtype=np.float64)
-            else:
-                return 2
-
-        # create the ShiftedWeightedSumOfErrors object
-        swsoe_obj = ShiftedWeightedSumOfErrors(
-            reward_weights, normed, observed_states=None, gamma=0.9, reward_power=power
-        )
-        # setup_physical_system(motor_type, converter_type)
-        physical_system = tu.DummyPhysicalSystem(2)
-        # setup_reference_generator('SinusReference', physical_system)
-        reference_generator = tu.DummyReferenceGenerator()
-        monkeypatch.setattr(ws, "set_state_array", mock_set_state_array)
-        reference_generator._referenced_states = mock_ref_states  # parametrized to [true/false]
-        swsoe_obj.set_modules(physical_system, reference_generator)
-
-        # Test if the mock_set_state_array function is called only 2 times
-        assert self._mock_set_state_array_counter == expected_call_counter  # 2
-        # Test the reward weights and range
-        if normed:
-            assert swsoe_obj.reward_range == expected_reward_range_normed  # (0, 1)
-            for val in swsoe_obj._reward_weights:
-                assert val == expected_reward   # 1 / 3
-
-        else:
-            assert swsoe_obj.reward_range == expected_reward_range  # (0, 3)
-            for val in swsoe_obj._reward_weights:
-                assert val == expected_reward_normed  # 1
+    @pytest.mark.parametrize(
+        ['reward_weights', 'violation_reward', 'bias', 'violation_degree', 'state', 'reference', 'expected_rw'], [
+            [[1, 2, 0], -10000, 0.0, 0.0, np.array([0, 1, 0]), np.array([0, 1, 5]), 0.0],
+            [[1, 2, 0], -10000, 10.0, 0.0, np.array([0, 1, 0]), np.array([0, 1, 5]), 10.0],
+            [[1, 2, 0], -10000, 10.0, 1.0, np.array([0, 1, 0]), np.array([0, 1, 5]), -10000.0],
+            [[1, 2, 0], -10000, 10.0, 0.5, np.array([0, 1, 0]), np.array([0, 1, 5]), -4995.0],
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(state_length=3)])
+    @pytest.mark.parametrize('rg', [DummyReferenceGenerator()])
+    @pytest.mark.parametrize('cm', [DummyConstraintMonitor()])
+    def test_reward(
+            self, ps, rg, cm, reward_weights, bias, violation_reward, violation_degree, state, reference, expected_rw
+    ):
+        rg.set_modules(ps)
+        rf = self.class_to_test(reward_weights=reward_weights, bias=bias, violation_reward=violation_reward)
+        rf.set_modules(ps, rg, cm)
+        assert rf.reward(state, reference, violation_degree=violation_degree) == expected_rw

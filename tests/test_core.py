@@ -1,12 +1,12 @@
 import pytest
 import numpy as np
-from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization, DummyCallback, \
-    mock_instantiate, instantiate_dict 
+from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization,\
+    DummyCallback, DummyConstraintMonitor, DummyConstraint, mock_instantiate, instantiate_dict
 from gym.spaces import Tuple, Box
 import gym_electric_motor
-from gym_electric_motor.visualization import ConsolePrinter
 from gym_electric_motor.core import ElectricMotorEnvironment, RewardFunction, \
-    ReferenceGenerator, PhysicalSystem
+    ReferenceGenerator, PhysicalSystem, ConstraintMonitor, Constraint
+from gym_electric_motor.constraints import LimitConstraint
 import gym
 import gym_electric_motor as gem
 
@@ -20,14 +20,16 @@ class TestElectricMotorEnvironment:
         ps = DummyPhysicalSystem()
         rg = DummyReferenceGenerator()
         rf = DummyRewardFunction()
-        vs = DummyVisualization()
+        vs = ()
         cb = DummyCallback()
+        cm = DummyConstraintMonitor(2)
         env = self.test_class(
             physical_system=ps,
             reference_generator=rg,
             reward_function=rf,
             visualization=vs,
-            callbacks = [cb]
+            constraints=cm,
+            callbacks=[cb]
         )
         return env
 
@@ -39,14 +41,15 @@ class TestElectricMotorEnvironment:
     @pytest.mark.parametrize(
         "physical_system, reference_generator, reward_function, state_filter, visualization, callbacks, kwargs",
         [
-            (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, None, [], {}),
+            (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, (), [], {}),
             (
                     DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
-                    ConsolePrinter, [DummyCallback()], {'a': 1, 'b': 2}
+                    (), [DummyCallback()], {'a': 1, 'b': 2}
             ),
             (
                     DummyPhysicalSystem(10), DummyReferenceGenerator(),
-                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], None, [DummyCallback(), DummyCallback()],{}
+                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], (),
+                    [DummyCallback(), DummyCallback()], {}
             ),
         ]
     )
@@ -61,7 +64,7 @@ class TestElectricMotorEnvironment:
                 reward_function=reward_function,
                 visualization=visualization,
                 state_filter=state_filter,
-                callbacks = callbacks,
+                callbacks=callbacks,
                 **kwargs
             )
 
@@ -97,7 +100,6 @@ class TestElectricMotorEnvironment:
         assert physical_system != DummyPhysicalSystem or env.physical_system.kwargs == kwargs
         assert reference_generator, DummyReferenceGenerator or env.reference_generator.kwargs == kwargs
         assert reward_function != DummyRewardFunction or env.reward_function.kwargs == kwargs
-        assert visualization != DummyVisualization or env._visualization.kwargs == kwargs
         for callback in callbacks:
             assert callback._env == env
 
@@ -105,9 +107,8 @@ class TestElectricMotorEnvironment:
         ps = env.physical_system
         rg = env.reference_generator
         rf = env.reward_function
-        vs = env._visualization
         cbs = env._callbacks
-        rf.last_state = rf.last_reference = ps.state = rg.get_reference_state = vs.reference_trajectory = None
+        rf.last_state = rf.last_reference = ps.state = rg.get_reference_state = None
         # Initial amount of resets
         for callback in cbs:
             assert callback.reset_begin == 0
@@ -130,12 +131,12 @@ class TestElectricMotorEnvironment:
         rg = env.reference_generator
         rf = env.reward_function
         cbs = env._callbacks
-
-        rf.set_done(set_done)
+        cm = env.constraint_monitor
+        cm.constraints[0].violation_degree = float(set_done)
         with pytest.raises(Exception):
             env.step(action), 'Environment goes through the step without previous reset'
         env.reset()
-        # Callback's step inital step values
+        # Callback's step initial step values
         for callback in cbs:
             assert callback.step_begin == 0
             assert callback.step_end == 0
@@ -161,9 +162,8 @@ class TestElectricMotorEnvironment:
         ps = env.physical_system
         rg = env.reference_generator
         rf = env.reward_function
-        vs = env._visualization
         cbs = env._callbacks
-        # Callback's step inital close value
+        # Callback's step initial close value
         for callback in cbs:
             assert callback.close == 0
         env.close()
@@ -173,7 +173,6 @@ class TestElectricMotorEnvironment:
         assert ps.closed, 'Physical System was not closed'
         assert rf.closed, 'Reward Function was not closed'
         assert rg.closed, 'Reference Generator was not closed'
-        assert vs.closed, 'Visualization was not closed'
 
     @pytest.mark.parametrize("reference_generator", (DummyReferenceGenerator(),))
     def test_reference_generator_change(self, env, reference_generator):
@@ -190,7 +189,10 @@ class TestElectricMotorEnvironment:
     @pytest.mark.parametrize("reward_function", (DummyRewardFunction(),))
     def test_reward_function_change(self, env, reward_function):
         env.reset()
-        reward_function.set_modules(physical_system=env.physical_system, reference_generator=env.reference_generator)
+        reward_function.set_modules(
+            physical_system=env.physical_system, reference_generator=env.reference_generator,
+            constraint_monitor=env.constraint_monitor
+        )
         env.reward_function = reward_function
         assert env.reward_function == reward_function, 'Reward Function was not changed'
         # Without Reset an Exception has to be thrown
@@ -200,126 +202,44 @@ class TestElectricMotorEnvironment:
         # No Exception raised
         env.step(env.action_space.sample())
 
-    @pytest.mark.parametrize("number_states, state_filter, expected_result",
-                             ((1, ['dummy_state_0'], [10]),
-                              (3, ['dummy_state_0', 'dummy_state_1', 'dummy_state_2'], [10, 20, 30]),
-                              (3, ['dummy_state_1'], [20])))
+    @pytest.mark.parametrize(
+        "number_states, state_filter, expected_result", (
+            (1, ['dummy_state_0'], [10]),
+            (3, ['dummy_state_0', 'dummy_state_1', 'dummy_state_2'], [10, 20, 30]),
+            (3, ['dummy_state_1'], [20])
+        )
+    )
     def test_limits(self, number_states, state_filter, expected_result):
         ps = DummyPhysicalSystem(state_length=number_states)
         rg = DummyReferenceGenerator()
         rf = DummyRewardFunction()
         vs = DummyVisualization()
+        cm = DummyConstraintMonitor(1)
         env = self.test_class(
             physical_system=ps,
             reference_generator=rg,
             reward_function=rf,
             visualization=vs,
-            state_filter=state_filter
+            state_filter=state_filter,
+            constraints=cm
         )
         assert all(env.limits == expected_result)
-
-
-class TestRewardFunction:
-
-    @staticmethod
-    def mock_standard_reward(*_):
-        return 1
-
-    @staticmethod
-    def mock_limit_violation_reward(*_):
-        return -1
-
-    @staticmethod
-    def mock_reward_function(*_):
-        return 'Reward Function called'
-
-    @pytest.mark.parametrize("observed_states", (['dummy_state_0'], ['dummy_state_0', 'dummy_state_1']))
-    def test_initialization(self, observed_states):
-        RewardFunction(observed_states)
-
-    @pytest.mark.parametrize("reward_function, physical_system, reference_generator, expected_observed_states", (
-            (RewardFunction('dummy_state_0'), DummyPhysicalSystem(), DummyReferenceGenerator(), ['dummy_state_0']),
-            (RewardFunction(['dummy_state_0', 'dummy_state_2']), DummyPhysicalSystem(3), DummyReferenceGenerator(),
-             ['dummy_state_0', 'dummy_state_2']),
-            (RewardFunction('all'), DummyPhysicalSystem(3), DummyReferenceGenerator(),
-             ['dummy_state_0', 'dummy_state_1', 'dummy_state_2']),
-            (RewardFunction('currents'), DummyPhysicalSystem(3, 'i'), DummyReferenceGenerator(),
-             ['i_0', 'i_1', 'i_2']),
-            (RewardFunction(['voltages']), DummyPhysicalSystem(3, 'u'), DummyReferenceGenerator(),
-             ['u_0', 'u_1', 'u_2'])
-        )
-    )
-    def test_set_modules(self, monkeypatch, reward_function, physical_system, reference_generator,
-                         expected_observed_states):
-        reward_function.set_modules(physical_system, reference_generator)
-        assert np.all(
-            reward_function._observed_states == np.isin(physical_system.state_names, expected_observed_states))
-
-    @pytest.mark.parametrize("reward_function, physical_system, reference_generator, expected_observed_states", (
-            (RewardFunction(['currents', 'voltages']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
-             ['i_a', 'i_e', 'u_a']),
-            (RewardFunction(['currents', 'omega']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
-             ['omega', 'i_a', 'i_e']),
-            (RewardFunction(['omega', 'voltages']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
-             ['omega', 'u_a']),
-            (RewardFunction(['currents', 'omega', 'voltages']), DummyPhysicalSystem(5), DummyReferenceGenerator(),
-             ['omega', 'i_a', 'i_e', 'u_a']),
-    ))
-    def test_set_modules_combined_observed_states(self, monkeypatch, reward_function, physical_system,
-                                                  reference_generator, expected_observed_states):
-        physical_states = ['i_a', 'i_e', 'u_a', 'omega', 'torque']
-        physical_system._state_names = physical_states
-        reward_function.set_modules(physical_system, reference_generator)
-        assert np.all(
-            reward_function._observed_states == np.isin(physical_system.state_names, expected_observed_states))
-
-    @pytest.mark.parametrize(
-        "physical_system, reference_generator", ((DummyPhysicalSystem(3), DummyReferenceGenerator()),)
-    )
-    @pytest.mark.parametrize("observed_state_idx, violated_state_idx", (
-            ([0, 1], [2]),
-            ([0, 1, 2], []),
-            ([2], [1, 2])
-    ))
-    def test_reward(self, monkeypatch, physical_system, reference_generator, observed_state_idx, violated_state_idx):
-        observed_states = list(np.array(physical_system.state_names)[observed_state_idx])
-        rf = RewardFunction(observed_states)
-        rf.set_modules(physical_system, reference_generator)
-        monkeypatch.setattr(rf, "_reward", self.mock_standard_reward)
-        monkeypatch.setattr(rf, "_limit_violation_reward", self.mock_limit_violation_reward)
-        state = np.ones_like(physical_system.state_names, dtype=float) * 0.5
-        state[violated_state_idx] = 1.5
-        reward, done = rf.reward(state, None)
-        if np.any(np.isin(observed_state_idx, violated_state_idx)):
-            assert reward == -1
-            assert done
-        else:
-            assert reward == 1
-            assert not done
-        # Test negative limit violations
-        state[violated_state_idx] = -1.5
-        reward, done = rf.reward(state, None)
-
-        if np.any(np.isin(observed_state_idx, violated_state_idx)):
-            assert reward == -1
-            assert done
-        else:
-            assert reward == 1
-            assert not done
-
-    def test_call(self, monkeypatch):
-        rf = RewardFunction()
-        monkeypatch.setattr(rf, "reward", self.mock_reward_function)
-        result = rf(1, 2, 3)
-        assert result == 'Reward Function called'
 
 
 class TestReferenceGenerator:
     test_object = None
     initial_state = np.array([1, 2, 3, 4, 5]) / 5
-    _reference = 0.5
+    _reference_value = np.array([0.5])
     _observation = np.zeros(5)
     counter_obs = 0
+
+    @pytest.fixture
+    def reference_generator(self, monkeypatch):
+        monkeypatch.setattr(ReferenceGenerator, "get_reference_observation", self.mock_get_reference_observation)
+        monkeypatch.setattr(ReferenceGenerator, "get_reference", self.mock_get_reference)
+        rg = ReferenceGenerator()
+        rg._referenced_states = np.array([True, False])
+        return rg
 
     def mock_get_reference_observation(self, initial_state):
         assert all(initial_state == self.initial_state)
@@ -328,16 +248,16 @@ class TestReferenceGenerator:
 
     def mock_get_reference(self, initial_state):
         assert all(initial_state == self.initial_state)
-        return self._reference
+        return self._reference_value
 
-    def test_reference_generator_reset(self, monkeypatch):
-        monkeypatch.setattr(ReferenceGenerator, "get_reference_observation", self.mock_get_reference_observation)
-        monkeypatch.setattr(ReferenceGenerator, "get_reference", self.mock_get_reference)
-        test_object = ReferenceGenerator()
-        reference, observation, kwargs = test_object.reset(self.initial_state)
-        assert reference == self._reference
-        assert all(observation == self._observation)
+    def test_reset(self, reference_generator):
+        reference, observation, kwargs = reference_generator.reset(self.initial_state)
+        assert all(reference == reference_generator.get_reference(self.initial_state))
+        assert all(observation == reference_generator.get_reference_observation(self.initial_state))
         assert kwargs is None
+
+    def test_referenced_states(self, reference_generator):
+        assert reference_generator.referenced_states.dtype == bool
 
 
 class TestPhysicalSystem:
@@ -353,3 +273,102 @@ class TestPhysicalSystem:
         assert ps.state_names == state_names
         assert ps.tau == tau
         assert ps.k == 0
+
+
+class TestConstraintMonitor:
+
+    @pytest.mark.parametrize(
+        ['ps', 'limit_constraints', 'expected_observed_states'], [
+            [DummyPhysicalSystem(3), ['dummy_state_0', 'dummy_state_2'], ['dummy_state_0', 'dummy_state_2']],
+            [DummyPhysicalSystem(1), ['dummy_state_0'], ['dummy_state_0']],
+            [DummyPhysicalSystem(2), ['all_states'], ['dummy_state_0', 'dummy_state_1']]
+        ]
+                             )
+    def test_limit_constraint_setting(self, ps, limit_constraints, expected_observed_states):
+        cm = ConstraintMonitor(limit_constraints=limit_constraints)
+        cm.set_modules(ps)
+        assert cm.constraints[0]._observed_state_names == expected_observed_states
+
+    @pytest.mark.parametrize('constraints', [
+        [lambda state: 0.0, DummyConstraint(), DummyConstraint()]
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_additional_constraint_setting(self, ps, constraints):
+        cm = ConstraintMonitor(additional_constraints=constraints)
+        cm.set_modules(ps)
+        assert all(constraint in cm.constraints for constraint in constraints)
+
+    @pytest.mark.parametrize('additional_constraints', [
+        [lambda state: 0.0, DummyConstraint(), DummyConstraint()]
+    ])
+    @pytest.mark.parametrize('limit_constraints', [
+        ['all_states'], ['dummy_state_0'], []
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_set_modules(self, ps, limit_constraints, additional_constraints):
+        cm = ConstraintMonitor(limit_constraints, additional_constraints)
+        cm.set_modules(ps)
+        assert all(
+            constraint.modules_set for constraint in cm.constraints if isinstance(constraint, DummyConstraint)
+        )
+        assert all(
+            constraint._observed_states is not None for constraint in cm.constraints
+            if isinstance(constraint, LimitConstraint)
+        )
+
+    @pytest.mark.parametrize(['violations', 'expected_violation_degree'], [
+        [(0.5, 0.8, 0.0, 1.0), 1.0],
+        [(0.5, 0.8, 0.0), 0.8],
+        [(0.5,), 0.5],
+        [(0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_max_merge_violations(self, ps, violations, expected_violation_degree):
+        cm = ConstraintMonitor(merge_violations='max')
+        cm.set_modules(ps)
+        cm._merge_violations(violations)
+
+    @pytest.mark.parametrize(['violations', 'expected_violation_degree'], [
+        [(0.5, 0.8, 0.0, 1.0), 1.0],
+        [(0.5, 0.8, 0.0), 0.9],
+        [(0.5,), 0.5],
+        [(0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_product_merge_violations(self, ps, violations, expected_violation_degree):
+        cm = ConstraintMonitor(merge_violations='product')
+        cm.set_modules(ps)
+        cm._merge_violations(violations)
+
+    @pytest.mark.parametrize(['merging_fct', 'violations', 'expected_violation_degree'], [
+        [lambda *violations: 1.0, (0.5, 0.8, 0.0, 1.0), 1.0],
+        [lambda *violations: 0.756, (0.5, 0.8, 0.0), 0.756],
+        [lambda *violations: 0.123, (0.5,), 0.123],
+        [lambda *violations: 0.0, (0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize('ps', [DummyPhysicalSystem(1)])
+    def test_callable_merge_violations(self, ps, merging_fct, violations, expected_violation_degree):
+        cm = ConstraintMonitor(merge_violations=merging_fct)
+        cm.set_modules(ps)
+        cm._merge_violations(violations)
+
+    @pytest.mark.parametrize(['violations', 'expected_violation_degree'], [
+        [(0.5, 0.8, 0.0, 1.0), 1.0],
+        [(0.5, 0.8, 0.0), 0.756],
+        [(0.5,), 0.123],
+        [(0.0,), 0.0],
+    ])
+    @pytest.mark.parametrize(['ps', 'state'], [[DummyPhysicalSystem(1), np.array([1.0])]])
+    def test_check_constraints(self, ps, state, violations, expected_violation_degree):
+        passed_violations = []
+
+        def merge_violations(*violation_degrees):
+            passed_violations.append(violation_degrees)
+            return expected_violation_degree
+
+        constraints = [DummyConstraint(viol_degree) for viol_degree in violations]
+        cm = ConstraintMonitor(additional_constraints=constraints, merge_violations=merge_violations)
+        cm.set_modules(ps)
+        degree = cm.check_constraints(state)
+        assert degree == expected_violation_degree
+        assert all(passed == expected for passed, expected in zip(passed_violations[0][0], violations))
