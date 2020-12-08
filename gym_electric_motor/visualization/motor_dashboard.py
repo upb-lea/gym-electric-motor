@@ -176,6 +176,11 @@ class MotorDashboard(ElectricMotorVisualization):
         for plot in self._plots:
             plot.set_env(env)
 
+    def create_new_figures(self):
+        for plot in self._plots:
+            plot.reset_data()
+        self._initialize()
+
     def _initialize(self):
         """Called with first render() call to setup the figures and plots."""
         plt.close()

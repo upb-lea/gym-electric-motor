@@ -81,6 +81,10 @@ class MotorDashboardPlot(Callback):
         """
         pass
 
+    def reset_data(self):
+        self._x_data = []
+        self._y_data = []
+
 
 class TimePlot(MotorDashboardPlot):
     """Base class for all MotorDashboardPlots that have the cumulative simulated time on the x-Axis.
@@ -145,6 +149,14 @@ class TimePlot(MotorDashboardPlot):
     def set_env(self, env):
         super().set_env(env)
         self._tau = env.physical_system.tau
+        self.reset_data()
+
+    def reset_data(self):
+        super().reset_data()
+        self._k = 0
+        self._t = 0
+        self._reset_memory = []
+        self._violation_memory = []
         self._x_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
         self._x_lim = (0, self._x_data[-1])
 
@@ -197,6 +209,10 @@ class EpisodePlot(MotorDashboardPlot):
     def _set_y_data(self):
         pass
 
+    def reset_data(self):
+        super().reset_data()
+        self._episode_no = -1
+
 
 class StepPlot(MotorDashboardPlot):
 
@@ -206,6 +222,10 @@ class StepPlot(MotorDashboardPlot):
 
     def on_step_begin(self, k, action):
         self._k += 1
+
+    def reset_data(self):
+        super().reset_data()
+        self._k = 0
 
     def _scale_x_axis(self):
         if self._axis.get_xlim() != (-1, self._x_data[-1]):
