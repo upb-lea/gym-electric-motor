@@ -213,6 +213,10 @@ class EpisodePlot(MotorDashboardPlot):
         super().reset_data()
         self._episode_no = -1
 
+    def _scale_x_axis(self):
+        if len(self._x_data) > 0 and self._axis.get_xlim() != (-1, self._x_data[-1]):
+            self._axis.set_xlim(-1, self._x_data[-1])
+
 
 class StepPlot(MotorDashboardPlot):
 
