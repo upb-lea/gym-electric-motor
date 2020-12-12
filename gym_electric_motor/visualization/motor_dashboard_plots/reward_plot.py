@@ -30,6 +30,10 @@ class RewardPlot(TimePlot):
         self._y_lim = (min_limit - spacing, max_limit + spacing)
         self._label = 'reward'
 
+    def reset_data(self):
+        super().reset_data()
+        self._reward_data = np.zeros_like(self._x_data, dtype=float) * np.nan
+
     def on_step_end(self, k, state, reference, reward, done):
         idx = self.data_idx
         self._x_data[idx] = self._t

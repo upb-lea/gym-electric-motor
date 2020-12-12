@@ -27,6 +27,10 @@ class MeanEpisodeRewardPlot(EpisodePlot):
         self._reward_sum += reward
         self._episode_length = k
 
+    def reset_data(self):
+        super().reset_data()
+        self._reward_data = []
+
     def _set_y_data(self):
         mean_reward = self._reward_sum / self._episode_length
         self._reward_data.append(mean_reward)

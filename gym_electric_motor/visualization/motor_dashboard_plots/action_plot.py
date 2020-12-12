@@ -41,6 +41,7 @@ class ActionPlot(TimePlot):
         self._lines.append(self._action_line)
 
     def reset_data(self):
+        super().reset_data()
         self._action_data = np.zeros_like(self._x_data, dtype=float) * np.nan
         self._y_data.append(self._action_data)
 

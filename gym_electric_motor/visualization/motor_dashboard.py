@@ -84,8 +84,7 @@ class MotorDashboard(ElectricMotorVisualization):
         self._update_render = False
 
     def on_reset_begin(self):
-        """Called before the environment is reset. All subplots are reset.
-        """
+        """Called before the environment is reset. All subplots are reset."""
         for plot in self._plots:
             plot.on_reset_begin()
 
@@ -177,6 +176,11 @@ class MotorDashboard(ElectricMotorVisualization):
             plot.set_env(env)
 
     def reset_figures(self):
+        """Method to reset the figures to the initial state.
+
+        This method can be called, when the plots shall be reset after the training and before the test, for example.
+        Another use case, that requires the call of this method by the user, is when the dashboard is executed within
+        a jupyter notebook and the figures shall be plotted below a new cell."""
         for plot in self._plots:
             plot.reset_data()
         self._episodic_plot_figure = self._time_plot_figure = self._step_plot_figure = None
@@ -200,7 +204,6 @@ class MotorDashboard(ElectricMotorVisualization):
 
         if no_of_plots == 0:
             return
-
         fig, axes = plt.subplots(no_of_plots)
         self._figures = [fig]
         axes = [axes] if no_of_plots == 1 else axes

@@ -82,6 +82,7 @@ class MotorDashboardPlot(Callback):
         pass
 
     def reset_data(self):
+        """Called by the dashboard, when the figures are reset to generate a new figure."""
         self._x_data = []
         self._y_data = []
 
