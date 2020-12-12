@@ -204,7 +204,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
         if no_of_plots == 0:
             return
-        fig, axes = plt.subplots(no_of_plots)
+        fig, axes = plt.subplots(no_of_plots, figsize=(8, 2*no_of_plots))
         self._figures = [fig]
         axes = [axes] if no_of_plots == 1 else axes
         time_axes = axes[:len(self._time_plots)]
@@ -227,7 +227,6 @@ class MotorDashboard(ElectricMotorVisualization):
             self._step_plot_figure = fig
             for plot, axis in zip(self._step_plots, step_axes):
                 plot.initialize(axis)
-        plt.tight_layout()
 
     def _initialize_figures_window(self):
         # create separate figures for time based, step and episode based plots
