@@ -27,7 +27,7 @@ class MotorDashboard(ElectricMotorVisualization):
     """
 
     def __init__(self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
-                 update_interval=1000, step_plot_width=10000, style=None, **__):
+                 update_interval=1000, time_plot_width=10000, style=None, **__):
         """
         Args:
             state_plots('all'/iterable(str)): An iterable of state names to be shown. If 'all' all states will be shown.
@@ -40,7 +40,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 to be shown on the dashboard
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
                 performance drastically. Default: 1000
-            step_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
+            time_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
                 (1 second for continuously controlled environments / 0.1 second for discretely controlled environments)
             style(string): Select one of the matplotlib-styles. e.g. "dark-background".
                 Default: None (the already selected style)
@@ -50,8 +50,8 @@ class MotorDashboard(ElectricMotorVisualization):
         assert all(isinstance(ap, (TimePlot, EpisodePlot, StepPlot)) for ap in additional_plots)
         assert type(update_interval) in [int, float]
         assert update_interval > 0
-        assert type(step_plot_width) in [int, float]
-        assert step_plot_width > 0
+        assert type(time_plot_width) in [int, float]
+        assert time_plot_width > 0
         assert style in plt.style.available or style is None
 
         super().__init__()
@@ -78,7 +78,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
         self._time_plots = []
         self._update_interval = int(update_interval)
-        self._step_plot_width = int(step_plot_width)
+        self._time_plot_width = int(time_plot_width)
         self._plots = []
         self._k = 0
         self._update_render = False
@@ -169,8 +169,8 @@ class MotorDashboard(ElectricMotorVisualization):
 
         self._plots = self._time_plots + self._episodic_plots + self._step_plots
 
-        for step_plot in self._time_plots:
-            step_plot.set_width(self._step_plot_width)
+        for time_plot in self._time_plots:
+            time_plot.set_width(self._time_plot_width)
 
         for plot in self._plots:
             plot.set_env(env)
