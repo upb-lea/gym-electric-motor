@@ -38,6 +38,7 @@ class MotorDashboardPlot(Callback):
         self._x_lim = None
         self._y_lim = None
 
+        # All colors of the current matplotlib style. It is recommended to select one of these for plotting the lines.
         self._colors = [cycle['color'] for cycle in plt.rcParams['axes.prop_cycle']]
 
     def initialize(self, axis):
@@ -48,6 +49,7 @@ class MotorDashboardPlot(Callback):
         Args:
             axis(matplotlib.pyplot.axis): Axis to plot in
         """
+        self._lines = []
         self._axis = axis
         self._axis.grid(True)
         self._axis.set_ylabel(self._label)
@@ -212,6 +214,7 @@ class EpisodePlot(MotorDashboardPlot):
 
     def reset_data(self):
         super().reset_data()
+        self._y_data = []
         self._episode_no = -1
 
     def _scale_x_axis(self):
@@ -230,6 +233,7 @@ class StepPlot(MotorDashboardPlot):
 
     def reset_data(self):
         super().reset_data()
+        self._y_data = []
         self._k = 0
 
     def _scale_x_axis(self):
@@ -240,4 +244,3 @@ class StepPlot(MotorDashboardPlot):
         min_, max_ = min(self._y_data[0]), max(self._y_data[0])
         if self._axis.get_ylim() != (min_, max_):
             self._axis.set_ylim(min_, max_)
-

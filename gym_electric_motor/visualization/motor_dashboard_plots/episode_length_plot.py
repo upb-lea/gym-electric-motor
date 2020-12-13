@@ -28,7 +28,8 @@ class EpisodeLengthPlot(EpisodePlot):
         super().reset_data()
         self._episode_lengths = []
         self._ymax = 1
-        self._update_lim = False
+        self._update_lim = True
+        self._y_data.append(self._episode_lengths)
 
     def _set_y_data(self):
         self._episode_lengths.append(self._episode_length)

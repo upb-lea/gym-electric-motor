@@ -30,6 +30,7 @@ class MeanEpisodeRewardPlot(EpisodePlot):
     def reset_data(self):
         super().reset_data()
         self._reward_data = []
+        self._reward_range = [np.inf, -np.inf]
 
     def _set_y_data(self):
         mean_reward = self._reward_sum / self._episode_length
