@@ -56,6 +56,10 @@ register(id='DFIMCont-v1',
          entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
 register(id='DFIMDisc-v1',
          entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
+register(id='SRMCont-v1',
+         entry_point=envs_path+'ContSwitchedReluctanceMotorEnvironment')
+register(id='SRMDisc-v1',
+         entry_point=envs_path+'DiscSwitchedReluctanceMotorEnvironment')
 
 # Old Ids
 

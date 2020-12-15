@@ -225,13 +225,11 @@ class ElectricMotor:
         # clip nominal boundaries to user defined
         if interval is not None:
             lower_bound = np.clip(lower_bound,
-                                  a_min=
-                                  np.asarray(interval, dtype=float).T[0],
+                                  a_min=np.asarray(interval, dtype=float).T[0],
                                   a_max=None)
             upper_bound = np.clip(upper_bound,
                                   a_min=None,
-                                  a_max=
-                                  np.asarray(interval, dtype=float).T[1])
+                                  a_max=np.asarray(interval, dtype=float).T[1])
         # random initialization for each motor state (current, epsilon)
         if random_dist is not None:
             if random_dist == 'uniform':
@@ -936,18 +934,16 @@ class SwitchedReluctanceMotor(ElectricMotor):
                                 'alpha_s': 20 * 2 * np.pi / 360,
                                 'p_r': 3,
                                 'alpha_r': 25 * 2 * np.pi / 360,
-                                'l_a': 72e-3,
-                                'l_u': 9e-3,
+                                'l_d': 72e-3,
+                                'l_q': 9e-3,
                                 'j_rotor': 0.057,
-                                'r_s': 0.9,
+                                'r_s': 0.01,
                                 }
+
+    _changing_motor_parameter = {} # will be filled in init and updated dynamically
 
     _default_nominal_values = {'i': 11, 'torque': 0, 'omega': 3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 300}
     _default_limits = {'i': 11, 'torque': 0, 'omega': 3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 300}
-    _default_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0}, ### ???
-                            'interval': None,
-                            'random_init': None,
-                            'random_params': (None, None)}
 
     def __init__(self, motor_parameter=None, nominal_values=None,
                  limit_values=None, motor_initializer=None, **kwargs):
@@ -955,94 +951,182 @@ class SwitchedReluctanceMotor(ElectricMotor):
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
         super().__init__(motor_parameter, nominal_values,
-                         limit_values, motor_initializer)
+                         limit_values, motor_initializer, **kwargs)
         self._update_model()
-        self._update_limits()
 
-        self.I_PHASE_IDX = []
+        self.CURRENTS_IDX = []
         self.CURRENTS = []
         self.VOLTAGES = []
         for i in range(self._motor_parameter['p_s']):
-            self.I_PHASE_IDX.append(i)
+            self.CURRENTS_IDX.append(i)
             self.CURRENTS.append('i_phase' + str(i))
             self.VOLTAGES.append('u_phase' + str(i))
         self.IO_CURRENTS = self.CURRENTS.copy()
         self.IO_VOLTAGES = self.VOLTAGES.copy()
-        self.EPSILON_IDX = self.I_PHASE_IDX[-1] + 1
+        self.EPSILON_IDX = self.CURRENTS_IDX[-1] + 1
+
+        self._default_initializer = {'states':  {'epsilon': 0.0},
+                                     'interval': None,
+                                     'random_init': None,
+                                     'random_params': (None, None)}
+
+        self._changing_motor_parameter["l_phase"] = np.zeros(self.motor_parameter["p_s"])
+        self._changing_motor_parameter["l_prime_phase"] = np.zeros(self.motor_parameter["p_s"])
+        for idx, key in enumerate(self.CURRENTS):
+            self._default_initializer["states"][key] = 0.0
+
+        # some additional parameters
         # angular width of aligned zone
         self._motor_parameter['alpha_a'] = np.abs(self._motor_parameter['alpha_s'] - self._motor_parameter['alpha_r'])
+
         # angular width of unaligned zone
         self._motor_parameter['alpha_u'] = np.abs(np.pi / self._motor_parameter['p_r']
-                         - self._motor_parameter['alpha_r']
-                         - self._motor_parameter['alpha_s'])
+                                                  - self._motor_parameter['alpha_r']
+                                                  - self._motor_parameter['alpha_s'])
+
         # angular width of overlapping zone (linear interval between aligned and unaligned)
         self._motor_parameter['alpha_o'] = np.min([self._motor_parameter['alpha_r'],
                                                    self._motor_parameter['alpha_s']
                                                    ])
         # angular distance of rotor poles
         self._motor_parameter['alpha_rd'] = np.pi / self._motor_parameter['p_r']
+        self._update_limits()
 
 
     def _update_model(self):
         # Docstring of superclass
 
-        mp = self._motor_parameter
-        ###                    omega, omega * L_prime * i / L,       i / L, u / L
-        _phase_dgl_constant = [    0,                      -1, - mp['r_s'],     1]
-        _model_constants = []
-        for i in mp['p_s']:
-            _model_constants.append(_phase_dgl_constant)
-        _model_constants.append([2 * mp['p_r'], 0, 0, 0])
+        # SRM is parameter variant, there is not much we can do here
+        pass
 
-        self._model_constants = np.array(_model_constants)
-
-    def electrical_ode(self, state, u_in, omega, *_):
-        # Docstring of superclass
+    def _update_changing_parameters(self, state, omega):
         mp = self._motor_parameter
-        eps = state[self.EPSILON_IDX] / 2 * mp['p_r'] # mechanic rotor angle
+        eps = state[self.EPSILON_IDX] #/ 2 * mp['p_s']  # mechanic rotor angle
 
         ### calculate the inductance of each phase
         l = []
         l_prime = []
         for i in range(mp['p_s']):
             offset = (i * np.pi / mp['p_s']) % mp['alpha_rd']
-            _eps = (eps - offset) % (2 * np.pi / (2 * mp['p_r']))
+            _eps = (eps - offset) % mp['alpha_rd']
 
+            # aligned position, maximum inductance
             if _eps < mp['alpha_a'] / 2 or (mp['alpha_rd'] - mp['alpha_a'] / 2) <= _eps:
-                l.append(mp['l_a'])
+                l.append(mp['l_d'])
                 l_prime.append(0)
-            elif mp['alpha_a'] / 2 < _eps and _eps <= (mp['alpha_a'] / 2 + mp['alpha_o']):
-                l.append((_eps - mp['alpha_a'] / 2) * (mp['l_u'] - mp['l_a']) / mp['alpha_o'] + mp['l_a'])
-                l_prime.append(- (mp['l_a'] - mp['l_u']) / mp['alpha_o'])
-            elif (mp['alpha_rd'] - mp['alpha_a'] / 2 - mp['alpha_o']) < _eps and \
-                    _eps <= (mp['alpha_rd'] - mp['alpha_a'] / 2):
+
+            # decreasing inductance
+            elif mp['alpha_a'] / 2 < _eps <= (mp['alpha_a'] / 2 + mp['alpha_o']):
+                l.append((_eps - mp['alpha_a'] / 2) * (mp['l_q'] - mp['l_d']) / mp['alpha_o'] + mp['l_d'])
+                l_prime.append(- (mp['l_d'] - mp['l_q']) / mp['alpha_o'])
+
+            # increasing inductance
+            elif (mp['alpha_rd'] - mp['alpha_a'] / 2 - mp['alpha_o']) < _eps <= (mp['alpha_rd'] - mp['alpha_a'] / 2):
                 l.append((_eps - (mp['alpha_rd'] - mp['alpha_a'] / 2 - mp['alpha_o'])) * \
-                    (mp['l_a'] - mp['l_u']) / mp['alpha_o'] + mp['l_u'])
-                l_prime.append((mp['l_a'] - mp['l_u']) / mp['alpha_o'])
+                         (mp['l_d'] - mp['l_q']) / mp['alpha_o'] + mp['l_q'])
+                l_prime.append((mp['l_d'] - mp['l_q']) / mp['alpha_o'])
+
+            # unaligned position, minimum inductance
             else:
-                l.append(mp['l_u'])
+                l.append(mp['l_q'])
                 l_prime.append(0)
+
+        self._changing_motor_parameter["l_phase"] = l
+        self._changing_motor_parameter["l_prime_phase"] = l_prime
+
+
+    def electrical_ode(self, state, u_in, omega, *_):
+        mp = self._motor_parameter
+        self._update_changing_parameters(state, omega)
+        l = self._changing_motor_parameter["l_phase"]
+        l_prime = self._changing_motor_parameter["l_prime_phase"]
+        # Docstring of superclass
 
         ### calculate di/dt in each phase and deps/dt
-        x_dot = []
-        for i in self._motor_parameter['p_s']:
-            _state_vector_phase = [0,
-                                   omega * l_prime[i] * state[self.I_PHASE_IDX[i]] / l[i],
-                                   state[self.I_PHASE_IDX[i]] / l[i],
-                                   u_in[i] / l[i]]
-            x_dot.append(np.matmul(self._model_constants[i], np.array([_state_vector_phase])))
-        x_dot.append(np.matmul(self._model_constants[-1], np.array([state[self.EPSILON_IDX], 0, 0, 0])))
+        x_dot = np.zeros(self.EPSILON_IDX + 1)  # phase currents + epsilon_el
+
+        for _phase_idx in self.CURRENTS_IDX:  # di_phase / dt
+            x_dot[_phase_idx] = - (mp['r_s'] + omega * l_prime[_phase_idx]) / l[_phase_idx] * state[self.CURRENTS_IDX[_phase_idx]] + u_in[_phase_idx] / l[_phase_idx]
+        x_dot[-1] = omega  # depsilon / dt
 
         return np.array(x_dot)
 
+    def i_in(self, state):
+        # Docstring of superclass
+        return state[self.CURRENTS_IDX]
 
-        return np.matmul(self._model_constants, np.array([
-            state[self.I_A_IDX],
-            state[self.I_E_IDX],
-            omega * state[self.I_E_IDX],
-            u_in[0],
-            u_in[1],
-        ]))
+    def torque(self, currents):
+        torque = 0
+        for i_phase, l_prime_phase in zip(currents, self._changing_motor_parameter["l_prime_phase"]):
+            torque += 1 / 2 * i_phase ** 2 * l_prime_phase
+        return torque
+
+    def torque_limit(self):
+        torque = 0
+        for _ in self.CURRENTS:
+            torque += 1 / 2 * self.limits["i"] ** 2 * (self.motor_parameter["l_d"] - self.motor_parameter["l_q"]) / self.motor_parameter["alpha_o"]
+        return torque
+
+    def get_state_space(self, input_currents, input_voltages):
+        """
+        Calculate the possible normalized state space for the motor as a tuple of dictionaries "low" and "high".
+
+        Args:
+            input_currents: Tuple of the two converters possible output currents.
+            input_voltages: Tuple of the two converters possible output voltages.
+
+        Returns:
+             tuple(dict,dict): Dictionaries defining if positive and negative values are possible for each motors state.
+        """
+        # the physicalSystem already checked that all phases are equipped with the same converter
+        # thus, checking one converter is sufficient
+        current_low = -1 if input_currents.low[0] == -1 else 0
+        voltage_low = -1 if input_voltages.low[0] == -1 else 0
+
+        low = {
+            'omega': -1 if input_voltages.low[0] == -1 or input_voltages.low[0] == -1 else 0,
+            'torque': -1 if input_currents.low[0] == -1 or input_currents.low[0] == -1 else 0,
+        }
+
+        high = {
+            'omega': 1,
+            'torque': 1,
+        }
+
+        for c_name, v_name in zip(self.CURRENTS, self.VOLTAGES):
+            low[c_name] = current_low
+            low[v_name] = voltage_low
+            high[c_name] = 1
+            high[v_name] = 1
+
+        return low, high
+
+    def _update_limits(self):
+        # Docstring of superclass
+
+        voltage_limit = self._limits['u']
+        voltage_nominal = self._nominal_values['u']
+
+        limits_agenda = {}
+        nominal_agenda = {}
+        for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
+            limits_agenda[u] = voltage_limit
+            nominal_agenda[u] = voltage_nominal
+            limits_agenda[i] = self._limits.get('i', None) or self._limits[u] / self._motor_parameter['r_s']
+            nominal_agenda[i] = self._nominal_values.get('i', None) or self._nominal_values[u] / self._motor_parameter['r_s']
+
+        super()._update_limits(limits_agenda, nominal_agenda)
+        super()._update_limits(dict(torque=self.torque_limit()))
+
+    def reset(self, state_space,
+              state_positions,
+              **__):
+        # Docstring of superclass
+        if self._initializer and self._initializer['states']:
+            self.initialize(state_space, state_positions)
+            return np.asarray(list(self._initial_states.values()))
+        else:
+            return np.zeros(len(self.CURRENTS) + 1)
 
 
 class ThreePhaseMotor(ElectricMotor):
@@ -1615,7 +1699,7 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
             i_n = self.nominal_values['i']
             _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
             _q = - i_n ** 2 / 2
-            i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
+            i_d_opt = - _p / 2 - np.sqrt((_p / 2) ** 2 - _q)
             i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
             return self.torque([i_d_opt, i_q_opt, 0])
 

@@ -1,0 +1,2 @@
+from .switched_rel_motor_env import ContSwitchedReluctanceMotorEnvironment
+from .switched_rel_motor_env import DiscSwitchedReluctanceMotorEnvironment

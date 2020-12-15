@@ -281,7 +281,7 @@ class SCMLSystem(PhysicalSystem):
         ode_state = np.concatenate((mechanical_state, motor_state))
         u_sup = self.supply.reset()
         u_in = self.converter.reset()
-        u_in = [u * u_s for u in u_in for u_s in u_sup]
+        u_in = [u * u_s for u in u_in for u_s in u_sup]  # will this throw errors if u_sup > 1?
         torque = self.electrical_motor.torque(motor_state)
         noise = self._noise_generator.reset()
         self._t = 0
@@ -326,6 +326,144 @@ class DcMotorSystem(SCMLSystem):
         low = set_state_array(low, state_names)
         high = set_state_array(high, state_names)
         return Box(low, high)
+
+class SwitchedReluctanceMotorSystem(SCMLSystem):
+
+    def __init__(self, converter, motor, **kwargs):
+
+        if "Disc" in converter:
+            control_set = "Disc"
+        elif "Cont" in converter:
+            control_set = "Cont"
+        self._electrical_motor = instantiate(em.ElectricMotor, motor, **kwargs)
+
+        if not "subconverters" in kwargs:  # this case is active when the user did not specify subconverters
+            subconverters = tuple([control_set + "-4QC" for _ in range(self._electrical_motor.motor_parameter["p_s"])])
+        else:  # if the user specifies
+            assert (len(kwargs["subconverters"]) == self._electrical_motor.motor_parameter["p_s"])
+            assert (kwargs["subconverters"].count(kwargs["subconverters"][0]) == len(kwargs["subconverters"]))
+        super().__init__(converter, motor, subconverters=subconverters, **kwargs)
+
+    def _build_state_names(self):
+        # Docstring of superclass
+        return (
+            self._mechanical_load.state_names
+            + ['torque']
+            + self._electrical_motor.CURRENTS
+            + self._electrical_motor.VOLTAGES
+            + ['epsilon', 'u_sup']
+        )
+
+    def _set_indices(self):
+        # Docstring of superclass
+        self._omega_ode_idx = self._mechanical_load.OMEGA_IDX
+        self._load_ode_idx = list(range(len(self._mechanical_load.state_names)))
+        self._ode_currents_idx = list(range(
+            self._load_ode_idx[-1] + 1, self._load_ode_idx[-1] + 1 + len(self._electrical_motor.CURRENTS)
+        ))
+        self._motor_ode_idx = self._ode_currents_idx
+        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
+        self._ode_currents_idx = self._motor_ode_idx[:-1]
+        self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
+        self.TORQUE_IDX = len(self.mechanical_load.state_names)
+        currents_lower = self.TORQUE_IDX + 1
+        currents_upper = currents_lower + len(self._electrical_motor.CURRENTS)
+        self.CURRENTS_IDX = list(range(currents_lower, currents_upper))
+        voltages_lower = currents_upper
+        voltages_upper = voltages_lower + len(self._electrical_motor.VOLTAGES)
+        self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
+        self.EPSILON_IDX = voltages_upper
+        self.U_SUP_IDX = list(range(self.EPSILON_IDX + 1, self.EPSILON_IDX + 1 + self._supply.voltage_len))
+        self._ode_epsilon_idx = self._motor_ode_idx[-1]
+
+    def _build_state_space(self, state_names):
+        # Docstring of superclass
+        low, high = self._electrical_motor.get_state_space(self._converter.currents, self._converter.voltages)
+        low_mechanical, high_mechanical = self._mechanical_load.get_state_space((low['omega'], high['omega']))
+        low.update(low_mechanical)
+        high.update(high_mechanical)
+        high["epsilon"] = 1
+        high['u_sup'] = self._supply.supply_range[1] / self._supply.u_nominal
+        if self._supply.supply_range[0] != self._supply.supply_range[1]:
+            low['u_sup'] = self._supply.supply_range[0] / self._supply.u_nominal
+        else:
+            low['u_sup'] = 0
+        low = set_state_array(low, state_names)
+        high = set_state_array(high, state_names)
+        return Box(low, high)
+
+    def simulate(self, action, *_, **__):
+        # Docstring of superclass
+        ode_state = self._ode_solver.y
+        i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
+        switching_times = self._converter.set_action(action, self._t)
+
+        for t in switching_times[:-1]:
+            i_sup = self._converter.i_sup(i_in)
+            u_sup = self._supply.get_voltage(self._t, i_sup)
+            u_phases = self._converter.convert(i_in, self._ode_solver.t)
+            u_phases = [u * u_s for u in u_phases for u_s in u_sup]
+            self._ode_solver.set_f_params(u_phases)
+            ode_state = self._ode_solver.integrate(t)
+            i_in = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
+
+        i_sup = self._converter.i_sup(i_in)
+        u_sup = self._supply.get_voltage(self._t, i_sup)
+        u_phases = self._converter.convert(i_in, self._ode_solver.t)
+        u_phases = [u * u_s for u in u_phases for u_s in u_sup]
+        self._ode_solver.set_f_params(u_phases)
+        ode_state = self._ode_solver.integrate(self._t + self._tau)
+        self._t = self._ode_solver.t
+        self._k += 1
+        torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
+        noise = self._noise_generator.noise()
+        mechanical_state = ode_state[self._load_ode_idx]
+        i_phases = ode_state[self._ode_currents_idx]
+        eps = ode_state[self._ode_epsilon_idx] % (2 * np.pi)
+        if eps > np.pi:
+            eps -= 2 * np.pi
+
+        system_state = np.concatenate((
+            mechanical_state,
+            [torque],
+            i_phases,
+            u_phases,
+            [eps],
+            u_sup
+        ))
+        return (system_state + noise) / self._limits
+
+    def reset(self, *_):
+        # Docstring of superclass
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions)
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
+        ode_state = np.concatenate((mechanical_state, motor_state))
+        u_sup = self.supply.reset()
+        eps = ode_state[self._ode_epsilon_idx]
+        if eps > np.pi:
+            eps -= 2 * np.pi
+        u_phases = self.converter.reset()
+        u_phases = [u * u_s for u in u_phases for u_s in u_sup]
+        i_phases = ode_state[self._ode_currents_idx]
+        torque = self.electrical_motor.torque(motor_state)
+        noise = self._noise_generator.reset()
+        self._t = 0
+        self._k = 0
+        self._ode_solver.set_initial_value(ode_state, self._t)
+        system_state = np.concatenate((
+            mechanical_state,
+            [torque],
+            i_phases,
+            u_phases,
+            [eps],
+            u_sup,
+        ))
+        return (system_state + noise) / self._limits
 
 
 class ThreePhaseMotorSystem(SCMLSystem):

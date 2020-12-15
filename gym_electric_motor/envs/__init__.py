@@ -22,3 +22,6 @@ from .gym_im.squirrel_cage_induc_motor_env import DiscSquirrelCageInductionMotor
 
 from .gym_im.doubly_fed_induc_motor_env import ContDoublyFedInductionMotorEnvironment
 from .gym_im.doubly_fed_induc_motor_env import DiscDoublyFedInductionMotorEnvironment
+
+from .gym_srm.switched_rel_motor_env import DiscSwitchedReluctanceMotorEnvironment
+from .gym_srm.switched_rel_motor_env import ContSwitchedReluctanceMotorEnvironment
