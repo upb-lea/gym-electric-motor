@@ -42,7 +42,7 @@ class ActionPlot(TimePlot):
 
     def reset_data(self):
         super().reset_data()
-        self._action_data = np.zeros_like(self._x_data, dtype=float) * np.nan
+        self._action_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
         self._y_data.append(self._action_data)
 
     def set_env(self, env):

@@ -96,8 +96,8 @@ class StatePlot(TimePlot):
     def reset_data(self):
         super().reset_data()
         # Initialize the data containers
-        self._state_data = np.ones(self._x_width) * np.nan
-        self._ref_data = np.ones(self._x_width) * np.nan
+        self._state_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
+        self._ref_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
 
     def initialize(self, axis):
         # Docstring of superclass
