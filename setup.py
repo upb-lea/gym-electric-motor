@@ -21,7 +21,7 @@ setuptools.setup(
       install_requires=requirements,
       python_requires='>=3.6',
       extras_require={'examples': [
-                        'keras-rl2 @git+https://github.com/wau/keras-rl2.git',
+                        'keras-rl2',
                         'stable-baselines3',
                         'tensorforce==0.5.5',
                         'gekko']
