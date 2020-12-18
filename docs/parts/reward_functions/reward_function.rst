@@ -6,7 +6,6 @@ Reward Functions
     :caption: Available Reward Functions:
 
     weighted_sum_of_errors
-    shifted_weighted_sum_of_errors
 
 Reward Function Base Class
 ''''''''''''''''''''''''''

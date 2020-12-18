@@ -6,7 +6,7 @@ from ...reward_functions import WeightedSumOfErrors
 
 class DcSeriesMotorEnvironment(ElectricMotorEnvironment):
 
-    def __init__(self, motor='DcSeries', reward_function=None, reference_generator=None, **kwargs):
+    def __init__(self, motor='DcSeries', reward_function=None, reference_generator=None, constraints=('i',), **kwargs):
         """
         Args:
             motor(ElectricMotor): Electric Motor used in the PhysicalSystem
@@ -19,7 +19,8 @@ class DcSeriesMotorEnvironment(ElectricMotorEnvironment):
         reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)
         reward_function = reward_function or WeightedSumOfErrors(**kwargs)
         super().__init__(
-            physical_system, reference_generator=reference_generator, reward_function=reward_function, **kwargs
+            physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints, **kwargs
         )
 
 

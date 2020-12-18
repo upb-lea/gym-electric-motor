@@ -2,23 +2,28 @@ from ...core import ElectricMotorEnvironment
 from ...physical_systems.physical_systems import SquirrelCageInductionMotorSystem
 from ...reference_generators import WienerProcessReferenceGenerator
 from ...reward_functions import WeightedSumOfErrors
+from ...constraints import SquaredConstraint
 
 
 class SquirrelCageInductionMotorEnvironment(ElectricMotorEnvironment):
 
-    def __init__(self, motor='SCIM', reward_function=None, reference_generator=None, **kwargs):
+    def __init__(self, motor='SCIM', reward_function=None, reference_generator=None, constraints=None, **kwargs):
         """
         Args:
             motor(ElectricMotor): Electric Motor used in the PhysicalSystem
             reward_function(RewardFunction): Reward Function for the environment
             reference_generator(ReferenceGenerator): Reference Generator for the environment
+            constraints(list(Constraints/str)): Constraints of the environment
             kwargs(dict): Further kwargs tot pass to the superclass and the submodules
         """
         physical_system = SquirrelCageInductionMotorSystem(motor=motor, **kwargs)
         reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)
         reward_function = reward_function or WeightedSumOfErrors(**kwargs)
+        constraints_ = constraints if constraints is not None \
+            else ('i_sa', 'i_sb', 'i_sc', SquaredConstraint(('i_sd', 'i_sq')))
         super().__init__(
-            physical_system, reference_generator=reference_generator, reward_function=reward_function, **kwargs
+            physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints_, **kwargs
         )
 
 
@@ -77,6 +82,7 @@ class DiscSquirrelCageInductionMotorEnvironment(SquirrelCageInductionMotorEnviro
 
     Episode Termination:
         Current limits (i_a ,i_b, i_c) are observed and the reference generation is continuous.
+
         Therefore, an episode ends only, when current limits have been violated.
 
     Limit Violation Reward:

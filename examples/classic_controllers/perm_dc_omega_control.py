@@ -30,13 +30,16 @@ if __name__ == '__main__':
     """
     env = gem.make(
         'DcPermExDisc-v1',
-        visualization=MotorDashboard(plots=['omega', 'torque', 'i', 'u', 'u_sup'], visu_period=1),
+        visualization=MotorDashboard(state_plots=['omega', 'torque', 'i', 'u', 'u_sup']),
         ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
         reference_generator=rg.SwitchedReferenceGenerator(
             sub_generators=[
                 rg.SinusoidalReferenceGenerator, rg.WienerProcessReferenceGenerator(), rg.StepReferenceGenerator()
             ], p=[0.1, 0.8, 0.1], super_episode_length=(1000, 10000)
-        )
+        ),
+        # Override the observation of the current limit of 'i' which is selected per default
+        # The 'on_off' Controller cannot comply to any limits.
+        constraints=()
     )
 
     # Assign a simple on/off controller

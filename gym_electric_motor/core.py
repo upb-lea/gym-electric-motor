@@ -2,26 +2,27 @@
 On the core level the electric motor environment and the interface to its submodules are defined. By using these
 interfaces further reference generators, reward functions, visualizations or physical models can be implemented.
 
-Each ElectricMotorEnvironment contains the four following modules:
+Each ElectricMotorEnvironment contains the five following modules:
 
 * PhysicalSystem
     - Specification and simulation of the physical model. Furthermore, specifies limits and nominal values\
     for all of its ``state_variables``.
 * ReferenceGenerator
     - Calculation of reference trajectories for one or more states of the physical systems ``state_variables``.
+* ConstraintMonitor
+    - Observation of the PhysicalSystems state to comply to a set of user defined constraints.
 * RewardFunction
     - Calculation of the reward based on the physical systems state and the reference.\
-     Furthermore, observation of the physical systems limits.
 * ElectricMotorVisualization
     - Visualization of the PhysicalSystems state, reference and reward for the user.
+
 """
 import gym
 import numpy as np
 from gym.spaces import Box
 
-from .utils import set_state_array
 from .utils import instantiate
-from .constraint_monitor import ConstraintMonitor as CM
+from .constraints import Constraint, LimitConstraint
 
 
 class ElectricMotorEnvironment(gym.core.Env):
@@ -105,7 +106,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             reference_generator(ReferenceGenerator): The new reference generator of the environment.
         """
         self._reference_generator = reference_generator
-        self._reset_required = True
+        self._done = True
 
     @property
     def reward_function(self):
@@ -124,7 +125,12 @@ class ElectricMotorEnvironment(gym.core.Env):
             reward_function(RewardFunction): The new reward function of the environment.
         """
         self._reward_function = reward_function
-        self._reset_required = True
+        self._done = True
+
+    @property
+    def constraint_monitor(self):
+        """Returns(ConstraintMonitor): The ConstraintMonitor of the environment."""
+        return self._constraint_monitor
 
     @property
     def limits(self):
@@ -147,8 +153,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         return self._physical_system.nominal_state[self.state_filter]
 
-    def __init__(self, physical_system, reference_generator, reward_function, visualization=None, state_filter=None, callbacks = [],
-                 **kwargs):
+    def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
+                 callbacks=(), constraints=(), **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -157,6 +163,15 @@ class ElectricMotorEnvironment(gym.core.Env):
             reference_generator(ReferenceGenerator): The reference generator of this environment.
             reward_function(RewardFunction): The reward function of this environment.
             visualization(ElectricMotorVisualization): The visualization of this environment.
+            constraints(list(Constraint/str/callable) / ConstraintMonitor): A list of constraints
+             or an already initialized  ConstraintMonitor object can be passed here.
+                    - list(Constraint/str/callable): Pass a list with initialized Constraints and/or state names. Then,
+                    a ConstraintMonitor object with the Constraints and additional LimitConstraints on the passed names
+                    is created. Furthermore, the string 'all' inside the list will create a ConstraintMonitor that
+                    observes the limit on each state.
+                    - ConstraintMonitor: Pass an initialized ConstraintMonitor object that will be used directly as
+                        ConstraintMonitor in the environment.
+            visualization(iterable(ElectricMotorVisualization)/None): The visualizations of this environment.
             state_filter(list(str)): Selection of states that are shown in the observation.
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
@@ -164,20 +179,24 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
         self._reference_generator = instantiate(ReferenceGenerator, reference_generator, **kwargs)
         self._reward_function = instantiate(RewardFunction, reward_function, **kwargs)
-        visualization = visualization or ElectricMotorVisualization()
-        self._visualization = instantiate(ElectricMotorVisualization, visualization, **kwargs)
+        if type(visualization) is str or isinstance(visualization, ElectricMotorVisualization):
+            visualization = [visualization]
+        if visualization is None:
+            visualization = []
+        visualizations = list(visualization)
+        self._visualizations = [instantiate(ElectricMotorVisualization, visu, **kwargs) for visu in visualizations]
+        if isinstance(constraints, ConstraintMonitor):
+            cm = constraints
+        else:
+            limit_constraints = [constraint for constraint in constraints if type(constraint) is str]
+            additional_constraints = [constraint for constraint in constraints if isinstance(constraint, Constraint)]
+            cm = ConstraintMonitor(limit_constraints, additional_constraints)
+        self._constraint_monitor = cm
 
         # Announcement of the Modules among each other
         self._reference_generator.set_modules(self.physical_system)
-        self._reward_function.set_modules(self.physical_system, self._reference_generator)
-        self._visualization.set_modules(self.physical_system, self._reference_generator, self._reward_function)
-        self._reset_required = True
-        self._done = None
-
-        # Initialization of properties
-        self._state = np.zeros(len(self.physical_system.state_names))
-        self._reference = np.zeros(len(self.physical_system.state_names))
-        self._reward = 0.0
+        self._constraint_monitor.set_modules(self.physical_system)
+        self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
@@ -192,9 +211,9 @@ class ElectricMotorEnvironment(gym.core.Env):
         ))
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
-        self._action = None
-        
-        self._callbacks = callbacks
+        self._done = True
+        self._callbacks = list(callbacks)
+        self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
         
     def _call_callbacks(self, func_name, *args):
@@ -211,27 +230,22 @@ class ElectricMotorEnvironment(gym.core.Env):
              The initial observation consisting of the initial state and initial reference.
         """
         self._call_callbacks('on_reset_begin')
-        self._reset_required = False
-        self._state = self._physical_system.reset()
-        self._reference, next_ref, trajectories = self.reference_generator.reset(self._state)
-        self._visualization.reset()
-        self._reward_function.reset(self._state, self._reference)
-        self._reward = 0.0
-        self._action = None
-        self._call_callbacks('on_reset_end')
-        return self._state[self.state_filter], next_ref
+        self._done = False
+        state = self._physical_system.reset()
+        reference, next_ref, trajectories = self.reference_generator.reset(state)
+        self._reward_function.reset(state, reference)
+        self._call_callbacks('on_reset_end', state, reference)
+        return state[self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
         Update the visualization of the motor.
         """
-        self._visualization.step(
-            self._physical_system.k, self._state, self._reference, self._action, self._reward, self._done
-        )
+        for visualization in self._visualizations:
+            visualization.render()
 
     def step(self, action):
-        """
-        Perform one simulation step of the environment with an action of the action space.
+        """Perform one simulation step of the environment with an action of the action space.
 
         Args:
             action: Action to play on the environment.
@@ -243,93 +257,27 @@ class ElectricMotorEnvironment(gym.core.Env):
             {}: An empty dictionary for consistency with the OpenAi Gym interface.
         """
 
-        assert not self._reset_required, 'A reset is required before the environment can perform further steps'
-        self._call_callbacks('on_step_begin')
-        self._action = action
-        self._state = self._physical_system.simulate(action)
-        self._reference = self.reference_generator.get_reference(self._state)
-        self._reward, self._done = self._reward_function.reward(self._state,
-                                                                self._reference,
-                                                                self._physical_system.k,
-                                                                action)
-        self._reset_required = self._done
-        ref_next = self.reference_generator.get_reference_observation(self._state)
-        self._call_callbacks('on_step_end')
-        return (self._state[self.state_filter], ref_next), self._reward, self._reset_required, {}
+        assert not self._done, 'A reset is required before the environment can perform further steps'
+        self._call_callbacks('on_step_begin', self.physical_system.k, action)
+        state = self._physical_system.simulate(action)
+        reference = self.reference_generator.get_reference(state)
+        violation_degree = self._constraint_monitor.check_constraints(state)
+        reward = self._reward_function.reward(
+            state, reference, self._physical_system.k, action, violation_degree
+        )
+        self._done = violation_degree >= 1.0
+        ref_next = self.reference_generator.get_reference_observation(state)
+        self._call_callbacks(
+            'on_step_end', self.physical_system.k, state, reference, reward, self._done
+        )
+        return (state[self.state_filter], ref_next), reward, self._done, {}
 
     def close(self):
-        """
-        Called when the environment is deleted. Closes all its modules.
-        """
+        """Called when the environment is deleted. Closes all its modules."""
         self._call_callbacks('on_close')
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
-        self._visualization.close()
-
-
-class ElectricMotorVisualization:
-    """
-    Base class for all visualizations in the gym-electric-motor toolbox and an empty dummy visualization, if no
-    visualization is required.
-    """
-
-    def set_modules(self, physical_system, reference_generator, reward_function):
-        """
-        Args:
-            physical_system(PhysicalSystem):
-                This function is called from the environment in its initialization.
-                Settings that require the knowledge of the physical system (like setting of state variables) have to be
-                done in this function.
-            reference_generator(ReferenceGenerator):
-                This function is called from the environment in its initialization.
-                Settings that require the knowledge of the reference generator (like setting of referenced variables)
-                have to be done in this function.
-            reward_function(RewardFunction):
-                This function is called from the environment in its initialization.
-                Settings that require the knowledge of the reward function (like setting of reward ranges) have
-                to be done in this function.
-        """
-        pass
-
-    def reset(self, reference_trajectories=None, *_, **__):
-        """
-        Called when the environment is reset to clear or save plots etc.
-
-        Args:
-            reference_trajectories(dict(list/ndarray(float))): If references are known in advance by the reference
-            generator, they are passed here to the visualization as a dictionary of the state_name to a
-            list of future reference points.
-        """
-        pass
-
-    def step(self, k, state, reference, action, reward, done):
-        """
-        Called by the environment every cycle and passes the current, normalized state array,
-        the normalized references in the same shape as the state array and the received reward.
-        For non-referenced states the value in the reference array can be ignored.
-
-        Example:
-            ```state_variables = ['omega', 'torque', 'i', 'u', 'u_sup']```
-            ```state = [0.65, 0.32, 0.2, 1.0, 1.0]```
-            ```reference = [0.7, 0.0, 0.0, 0.0, 0.0]```
-            Only the first reference value is important here, because all others are not referenced.
-
-        Args:
-            k(int): Current episode step
-            state(ndarray(float)): The state of the physical system.
-            reference(ndarray(float)): The reference array of the reference generator.
-            action(ndarray(float)): The last action taken. None after reset.
-            reward(float): The reward from the reward function.
-            done(bool): Flag, if the environment is in a terminal state.
-        """
-        pass
-
-    def close(self, *_, **__):
-        """
-        Called when the environment is deleted to close or save figures, logs etc.
-        """
-        pass
 
 
 class ReferenceGenerator:
@@ -377,8 +325,7 @@ class ReferenceGenerator:
         return self._referenced_states
 
     def set_modules(self, physical_system):
-        """
-        Announcement of the PhysicalSystem to the ReferenceGenerator.
+        """Announcement of the PhysicalSystem to the ReferenceGenerator.
 
         In subclasses, store all important information from the physical system to the ReferenceGenerator here.
         The environment announces the physical system to the ReferenceGenerator during its initialization.
@@ -389,8 +336,7 @@ class ReferenceGenerator:
         self._physical_system = physical_system
 
     def get_reference(self, state, *_, **__):
-        """
-        Returns the reference array of the current time step.
+        """Returns the reference array of the current time step.
 
         The reference array needs to be in the same shape as the state variables. For referenced states the reference
         value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.
@@ -445,92 +391,44 @@ class RewardFunction:
     The abstract base class for reward functions in gym electric motor environments.
 
     The reward function is called once per step and returns reward for the current time step.
-    Furthermore, the reward function includes the limit observer. If limits have been violated and the episode ended
-    a different reward for violating the limits is returned.
 
-    reward_range:
-        Tuple(float, float): Defining lowest and highest possible rewards for non limit-violating steps.
+    Attributes:
+        reward_range(Tuple(float, float)):Defining lowest and highest possible rewards.
     """
 
-    #: Tuple(int,int): Lower and upper possible reward (excluding limit violation reward)
+    #: Tuple(int,int): Lower and upper possible reward
     reward_range = (-np.inf, np.inf)
 
-    def __init__(self, observed_states='currents',
-                 constraint_monitor=None, **__):
-        """
-        Args:
-            observed_states(str/iterable(str)): Names of the observed states. 'all' for the observation of every state.
-                'currents' for all currents and 'voltages' for all voltages. Combinations of 'currents' and
-                'voltages' with other states are possible. Choose None for not observing states.
-            constraint_monitor(class instance): ConstraintMonitor for monitoring
-                states regarding defined constraints
-        """
-        self._physical_system = None
-        observed_states = observed_states or []
-        if not isinstance(observed_states, list):
-            observed_states = [observed_states]
-        self._observed_states = observed_states
-        self._reference_generator = None
-        self._monitor = CM(external_monitor=constraint_monitor) or CM()
-        self._limits = None
-
-    def __call__(self, state, reference, k):
-        """
-        Call of the reward calculation.
+    def __call__(self, state, reference, k, action, violation_degree):
+        """Call of the reward calculation.
 
         Args:
-            state: State array of the environment.
-            reference: Reference array of the environment.
-            k: Systems momentary time-step
+            state(numpy.ndarray(float)): State array of the environment.
+            reference(numpy.ndarray(float)): Reference array of the environment.
+            k(int): Systems momentary time-step
+            action(element of action-space): The taken action :a_{k-1}: at the beginning of the step.
+            violation_degree(float in [0.0, 1.0]): Degree of violation of the constraints. 0.0 indicates that all
+                constraints are complied. 1.0 indicates that the constraints have been so much violated, that a reset is
+                necessary.
 
 
         Returns:
             float: The reward for the state, reference pair
         """
-        return self.reward(state, reference, k)
+        return self.reward(state, reference, k, action, violation_degree)
 
-    def set_modules(self, physical_system, reference_generator):
+    def set_modules(self, physical_system, reference_generator, constraint_monitor):
         """
         Setting of the physical system, to set state arrays fitting to the environments states
 
         Args:
             physical_system(PhysicalSystem): The physical system of the environment
             reference_generator(ReferenceGenerator): The reference generator of the environment.
+            constraint_monitor(ConstraintMonitor): The constraint monitor of the environment.
         """
-        observed_states = {}
-        allowed_observed_states = physical_system.state_names + \
-                                  ['all', 'currents', 'voltages']
-        assert all(s in allowed_observed_states for s
-                   in self._observed_states), \
-            f'Given states to observe {self._observed_states} are not within' \
-            f' allowed states {allowed_observed_states}'
+        pass
 
-        for observed_state in self._observed_states:
-            if 'all' == observed_state:  # key 'all' observes all states
-                observed_states = dict.fromkeys(physical_system.state_names, 1)
-                break
-            elif 'currents' == observed_state:
-                observed_states.update(
-                    dict.fromkeys([k for k in physical_system.state_names
-                                   if k.startswith('i_') or
-                                   (k.startswith('i') and len(k) == 1)], 1))
-            elif 'voltages' == observed_state:
-                observed_states.update(
-                    dict.fromkeys([k for k in physical_system.state_names
-                                   if k.startswith('u_') or
-                                   (k.startswith('u') and len(k) == 1)], 1))
-            else:
-                observed_states[observed_state] = 1
-
-        self._limits = physical_system.limits / abs(physical_system.limits)
-        self._physical_system = physical_system
-        self._reference_generator = reference_generator
-        self._observed_states = set_state_array(observed_states,
-                                                physical_system.state_names)\
-                                               .astype(bool)
-        self._monitor.set_modules(physical_system, self._observed_states)
-
-    def reward(self, state, reference, k=None, action=None):
+    def reward(self, state, reference, k=None, action=None, violation_degree=0.0):
         """
         Reward calculation. If limits have been violated the reward is calculated with a separate function.
 
@@ -539,18 +437,19 @@ class RewardFunction:
             reference(ndarray(float)): Environments reference array.
             k(int): Systems momentary time-step
             action(element of action space): The previously taken action.
+            violation_degree(float in [0.0, 1.0]): Degree of violation of the constraints. 0.0 indicates that all
+                constraints are complied. 1.0 indicates that the constraints have been so much violated, that a reset is
+                necessary.
 
         Returns:
-            float: Reward for this state, reference pair.
+            float: Reward for this state, reference, action tuple.
         """
-        if not self._check_limit_violation(state, k):
-            return self._reward(state, reference, action), False
-        else:
-            return self._limit_violation_reward(state), True
+
+        raise NotImplementedError
 
     def reset(self, initial_state=None, initial_reference=None):
-        """
-        This function is called by the environment when reset.
+        """This function is called by the environment when reset.
+
         Inner states of the reward function can be reset here, if necessary.
 
         Args:
@@ -560,52 +459,8 @@ class RewardFunction:
         pass
 
     def close(self):
-        """
-        Called, when the environment is closed to store logs, close files etc.
-        """
+        """Called, when the environment is closed to store logs, close files etc."""
         pass
-
-    def _check_limit_violation(self, state, k=None):
-        """
-        Check for all observed states, if limits have been violated (i.e. any (absolute) state value is greater than
-        the limit defined by the physical system).
-
-        Args:
-            state(ndarray(float)): State array of the environment.
-            k(int): Systems momentary time-step
-
-
-        Returns:
-            bool: True, if any observed limit has been violated, False otherwise.
-        """
-        return self._monitor.check_constraint_violation(state, k)
-
-    def _limit_violation_reward(self, state):
-        """
-        Called, when limits have been violated to return a special reward for this case.
-
-        Args:
-            state(ndarray(float)): Current state array of the environment.
-
-        Returns:
-            float: The limit violation reward.
-        """
-        raise NotImplementedError
-
-    def _reward(self, state, reference, action):
-        """
-        Standard reward function. Called, when no limits have been violated to calculate the reward based on the state
-        and the reference.
-
-        Args:
-            state(ndarray(float)): State array of the environment.
-            reference(ndarray(float): Reference array of the environment.
-            action(element of action space): The previously taken action.
-
-        Returns:
-            float: Standard reward.
-        """
-        raise NotImplementedError
 
 
 class PhysicalSystem:
@@ -722,37 +577,140 @@ class PhysicalSystem:
         Close the System and all of its submodules by closing files, saving logs etc.
         """
         pass
-    
-class Callback:   
-    """
-    The abstract base class for Callbacks. Each of its functions gets called at one point in
-    the :mod:`~gym_electric_motor.core.ElectricMotorEnvironment`.
 
+
+class Callback:
+    """The abstract base class for Callbacks in GEM.
+    Each of its functions gets called at one point in the :mod:`~gym_electric_motor.core.ElectricMotorEnvironment`.
     Attributes:
-        _env: The GEM environment. Use it to have full control over the environment on runtime. 
+        _env: The GEM environment. Use it to have full control over the environment on runtime.
     """
-    
+
+    def __init__(self):
+        self._env = None
+
     def set_env(self, env):
         """Sets the environment of the motor."""
         self._env = env
-        
+
     def on_reset_begin(self):
         """Gets called at the beginning of each reset"""
         pass
-    
-    def on_reset_end(self):
-        """Gets called at the end of each reset"""        
+
+    def on_reset_end(self, state, reference):
+        """Gets called at the end of each reset"""
         pass
-    
-    def on_step_begin(self):
+
+    def on_step_begin(self, k, action):
         """Gets called at the beginning of each step"""
         pass
-    
-    def on_step_end(self):
-        """Gets called at the end of each step"""        
+
+    def on_step_end(self, k, state, reference, reward, done):
+        """Gets called at the end of each step"""
         pass
-    
+
     def on_close(self):
-        """Gets called at the beginning on a close"""        
+        """Gets called at the beginning of a close"""
         pass
-    
+
+
+class ElectricMotorVisualization(Callback):
+    """Base class for all visualizations in GEM.
+    The visualization is basically only a Callback that is extended by a render() function to update the figure.
+    With the function calls that are inherited by the Callback superclass (e.g. *on_step_end*),
+    the data is passed from the environment to the visualization. In the render() function the passed data can be
+    visualized in the desired way.
+    """
+
+    def render(self):
+        """Function to update the user interface."""
+        raise NotImplementedError
+
+
+class ConstraintMonitor:
+    """The ConstraintMonitor is used within the ElectricMotorEnvironment to monitor the states for illegal / undesired
+    values (e.g. overcurrents).
+
+    It consists of a list of multiple independent constraints. Each constraint gets the current observation of the
+    environment as input and returns a *violation degree* within :math:`[0.0, 1.0]`.
+    All these are merged together and the ConstraintMonitor returns a total violation degree.
+
+    **Soft Constraints:**
+        To enable a higher flexibility, the constraints return a violation degree (float) instead of a simple violation
+        flag (bool). So, even before the limits are violated, the reward function can take the limit violation degree
+        into account. If the violation degree is at 0.0, no states are in a dangerous region. For values between 0.0 and
+        1.0 the reward will be decreased gradually so that the agent will learn to avoid these state regions.
+        If the violation degree reaches 1.0 the episode is terminated.
+
+    **Hard Constraints:**
+        With the above concept, also hard constraints that directly terminate an episode without any "danger"-region
+        can be modeled. Then, the violation degree of the constraint directly changes from 0.0 to 1.0, if a violation
+        occurs.
+
+    """
+
+    @property
+    def constraints(self):
+        """Returns the list of all constraints the ConstraintMonitor observes."""
+        return self._constraints
+
+    def __init__(self,  limit_constraints=(), additional_constraints=(), merge_violations='max'):
+        """
+        Args:
+            limit_constraints(list(str)/'all_states'):
+                Shortcut parameter to pass all states that limits shall be observed.
+                    - list(str): Pass a list with state_names and all of the states will be observed to stay within
+                        their limits.
+                    - 'all_states': Shortcut for all states are observed to stay within the limits.
+
+            additional_constraints(list(Constraint/callable)):
+                 Further constraints that shall be monitored. These have to be initialized first and passed to the
+                 ConstraintMonitor. Alternatively, constraints can be defined as a function that takes the current
+                 state and returns a float within [0.0, 1.0].
+            merge_violations('max'/'product'/callable(*violation_degrees) -> float): Function to merge all single
+                violation degrees to a total violation degree.
+                    - 'max': Take the maximal violation degree as total violation degree.
+                    - 'product': Calculates the total violation degree as one minus the product of one minus all single
+                        violation degrees.
+                    - callable(*violation_degrees) -> float: User defined function to calculate the total violation.
+        """
+        self._constraints = list(additional_constraints)
+        if len(limit_constraints) > 0:
+            self._constraints.append(LimitConstraint(limit_constraints))
+
+        assert all(callable(constraint) for constraint in self._constraints)
+        assert merge_violations in ['max', 'product'] or callable(merge_violations)
+
+        if len(self._constraints) == 0:
+            # Without any constraint, always return 0.0 as violation
+            self._merge_violations = lambda *violation_degrees: 0.0
+        elif merge_violations == 'max':
+            self._merge_violations = max
+        elif merge_violations == 'product':
+            def product_merge(*violation_degrees):
+                return 1 - np.prod([(1 - violation) for violation in violation_degrees])
+            self._merge_violations = product_merge
+        elif callable(merge_violations):
+            self._merge_violations = merge_violations
+
+    def set_modules(self, ps: PhysicalSystem):
+        """The PhysicalSystem of the environment is passed to save important parameters like the index of the states.
+
+        Args:
+            ps(PhysicalSystem): The PhysicalSystem of the environment.
+        """
+        for constraint in self._constraints:
+            if isinstance(constraint, Constraint):
+                constraint.set_modules(ps)
+
+    def check_constraints(self, state: np.ndarray):
+        """Function to check and merge all constraints.
+
+        Args:
+            state(ndarray(float)): The current environments state.
+
+        Returns:
+            float: The total violation degree in [0,1]
+        """
+        violations = [constraint(state) for constraint in self._constraints]
+        return self._merge_violations(violations)

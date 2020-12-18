@@ -1,7 +1,8 @@
 from .conf import *
 from gym_electric_motor.physical_systems import *
-from gym_electric_motor.utils import make_module
-from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization
+from gym_electric_motor.utils import make_module, set_state_array
+from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization, \
+    ConstraintMonitor
 from gym_electric_motor.physical_systems import PowerElectronicConverter, MechanicalLoad, ElectricMotor, OdeSolver, \
     VoltageSupply, NoiseGenerator
 import gym_electric_motor.physical_systems.converters as cv
@@ -150,13 +151,14 @@ class DummyReferenceGenerator(ReferenceGenerator):
     reference_space = Box(0, 1, shape=(1,))
     _reset_counter = 0
 
-    def __init__(self, reference_observation=np.array([1]), **kwargs):
+    def __init__(self, reference_observation=np.array([1]), reference_state='dummy_state_0', **kwargs):
         self.kwargs = kwargs
         self.closed = False
         self.physical_system = None
         self.get_reference_state = None
         self.get_reference_obs_state = None
         self.trajectory = np.sin(np.linspace(0, 50, 100))
+        self._reference_state = reference_state
         self.reference_observation = reference_observation
         self.reference_array = None
         self.kwargs = kwargs
@@ -165,6 +167,9 @@ class DummyReferenceGenerator(ReferenceGenerator):
         self.physical_system = physical_system
         self.reference_array = np.ones_like(physical_system.state_names).astype(float)
         super().set_modules(physical_system)
+        self._referenced_states = set_state_array(
+            {self._reference_state: 1}, physical_system.state_names
+        ).astype(bool)
 
     def reset(self, initial_state=None, initial_reference=None):
         self._reset_counter += 1
@@ -186,7 +191,7 @@ class DummyReferenceGenerator(ReferenceGenerator):
 
 class DummyRewardFunction(RewardFunction):
 
-    def __init__(self, observed_states=None, **kwargs):
+    def __init__(self, **kwargs):
         self.last_state = None
         self.last_reference = None
         self.last_action = None
@@ -194,22 +199,19 @@ class DummyRewardFunction(RewardFunction):
         self.closed = False
         self.done = False
         self.kwargs = kwargs
-        super().__init__(observed_states)
+        super().__init__()
 
     def reset(self, initial_state=None, initial_reference=None):
         self.last_state = initial_state
         self.last_reference = initial_reference
         super().reset(initial_state, initial_reference)
 
-    def set_done(self, done):
-        self.done = done
-
-    def reward(self, state, reference, k=None, action=None):
+    def reward(self, state, reference, k=None, action=None, violation_degree=0.0):
         self.last_state = state
         self.last_reference = reference
         self.last_action = action
         self.last_time_step = k
-        return -1 if self.done else 1, self.done
+        return -1 if violation_degree == 1 else 1
 
     def close(self):
         self.closed = True
@@ -292,10 +294,6 @@ class DummyVisualization(ElectricMotorVisualization):
         self.physical_system = physical_system
         self.reference_generator = reference_generator
         self.reward_function = reward_function
-
-    def close(self):
-        self.closed = True
-        super().close()
 
 
 class DummyVoltageSupply(VoltageSupply):
@@ -569,6 +567,28 @@ class DummyOdeSolver(OdeSolver):
         return self._y
 
 
+class DummyConstraint(Constraint):
+
+    def __init__(self, violation_degree=0.0):
+        super().__init__()
+        self.modules_set = False
+        self.violation_degree = violation_degree
+
+    def __call__(self, state):
+        return self.violation_degree
+
+    def set_modules(self, ps):
+        super().set_modules(ps)
+        self.modules_set = True
+
+
+class DummyConstraintMonitor(ConstraintMonitor):
+
+    def __init__(self, no_of_dummy_constraints=1):
+        constraints = [DummyConstraint() for _ in range(no_of_dummy_constraints)]
+        super().__init__(additional_constraints=constraints)
+
+
 class DummySCMLSystem(SCMLSystem):
     """
     dummy class for SCMLSystem
@@ -731,35 +751,31 @@ class DummyRandom:
         self._monkey_random_normal_counter += 1
         result = np.array([0.1, -0.2, 0.6, 0.1, -0.5, -0.3, -1.7, 0.1, -0.2, 0.4])
         return result[:size]
-    
-class DummyElectricMotorEnvironment:
+
+
+class DummyElectricMotorEnvironment(ElectricMotorEnvironment):
     """Dummy environment to test pre implemented callbacks. Extend for further testing cases"""
     
-    def __init__(self, reference_generator = None, callbacks = [], **kwargs):
-        self._reference_generator = reference_generator
-        self._callbacks = callbacks
-        self._call_callbacks(self._callbacks, 'set_env', self)
-        
-    def _call_callbacks(self, callbacks, func_name, *args):
-        """Calls each callback's func_name function with *args"""
-        for callback in callbacks:
-            func = getattr(callback, func_name)
-            func(*args)
+    def __init__(self, reference_generator=None, callbacks=(), **kwargs):
+        reference_generator = reference_generator or DummyReferenceGenerator()
+        super().__init__(DummyPhysicalSystem(), reference_generator, DummyRewardFunction(), callbacks=callbacks)
     
     def step(self):
-        self._call_callbacks(self._callbacks, 'on_step_begin')
-        self._call_callbacks(self._callbacks, 'on_step_end')
+        self._call_callbacks('on_step_begin', 0, 0)
+        self._call_callbacks('on_step_end', 0, 0, 0, 0, 0)
             
     def reset(self):
-        self._call_callbacks(self._callbacks, 'on_reset_begin')
-        self._call_callbacks(self._callbacks, 'on_reset_end')
+        self._call_callbacks('on_reset_begin')
+        self._call_callbacks('on_reset_end', 0, 0)
         
     def close(self):
         self._call_callbacks(self._callbacks, 'on_close')
-        
+
+
 class DummyCallback(Callback):
     
     def __init__(self):
+        super().__init__()
         self.reset_begin = 0
         self.reset_end = 0
         self.step_begin = 0
@@ -768,12 +784,16 @@ class DummyCallback(Callback):
     
     def on_reset_begin(self):
         self.reset_begin += 1
-    def on_reset_end(self):
+
+    def on_reset_end(self, *_):
         self.reset_end += 1
-    def on_step_begin(self):
+
+    def on_step_begin(self, *_):
         self.step_begin += 1
-    def on_step_end(self):
+
+    def on_step_end(self, *_):
         self.step_end += 1
+
     def on_close(self):
         self.close += 1
         
