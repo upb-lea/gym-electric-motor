@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.visualization.motor_dashboard_plots.action_plot &mdash; gym-electric-motor 2020 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.visualization.motor_dashboard_plots.action_plot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.visualization.motor_dashboard_plots.action_plot</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Box</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.base_plots</span> <span class="kn">import</span> <span class="n">TimePlot</span>
+
+
+<div class="viewcode-block" id="ActionPlot"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot">[docs]</a><span class="k">class</span> <span class="nc">ActionPlot</span><span class="p">(</span><span class="n">TimePlot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class to plot the instantaneous actions applied on the environment&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            action(int): Index of the action to be plotted, if there are multiple continuous actions.</span>
+<span class="sd">                Select 0, if the environment has a Discrete action space. Default: 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># the action space of the environment. can be Box() or Discrete()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action</span> <span class="o">=</span> <span class="n">action</span>
+
+        <span class="c1"># The matplotlib line object for the actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_line</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Data containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># the range of the action values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_min</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_max</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># the type of action space: Discrete or Continuous</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_type</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_line_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_time_line_cfg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_line_config</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_colors</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ActionPlot.initialize"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_line</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_line_config</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_line</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ActionPlot.set_env"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="n">ps</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">physical_system</span>
+        <span class="c1"># fetch the action space from the physical system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">action_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_data</span><span class="p">)</span>
+
+        <span class="c1"># check for the type of action space: Discrete or Continuous</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Box</span><span class="p">:</span>  <span class="c1"># for continuous action space</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_type</span> <span class="o">=</span> <span class="s1">&#39;Continuous&#39;</span>
+            <span class="c1"># fetch the action range of continuous type actions</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_type</span> <span class="o">=</span> <span class="s1">&#39;Discrete&#39;</span>
+            <span class="c1"># lower bound of discrete action = 0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_min</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># fetch the action range of discrete type actions</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span><span class="o">.</span><span class="n">n</span>
+
+        <span class="n">spacing</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_range_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_min</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_min</span> <span class="o">-</span> <span class="n">spacing</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_range_max</span> <span class="o">+</span> <span class="n">spacing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Action </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_action</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+<div class="viewcode-block" id="ActionPlot.on_step_begin"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.on_step_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_step_begin</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_idx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span>
+
+        <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_type</span> <span class="o">==</span> <span class="s1">&#39;Discrete&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_action_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_action_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

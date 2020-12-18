@@ -93,11 +93,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reward Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="weighted_sum_of_errors.html">Weighted Sum of Errors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="shifted_weighted_sum_of_errors.html">Shifted Weighted Sum of Errors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
@@ -172,33 +172,26 @@
 <p class="caption"><span class="caption-text">Available Reward Functions:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="weighted_sum_of_errors.html">Weighted Sum of Errors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shifted_weighted_sum_of_errors.html">Shifted Weighted Sum of Errors</a></li>
 </ul>
 </div>
 <div class="section" id="reward-function-base-class">
 <h2>Reward Function Base Class<a class="headerlink" href="#reward-function-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.core.RewardFunction">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">RewardFunction</code><span class="sig-paren">(</span><em class="sig-param">observed_states='currents'</em>, <em class="sig-param">constraint_monitor=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">RewardFunction</code><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>The abstract base class for reward functions in gym electric motor environments.</p>
-<p>The reward function is called once per step and returns reward for the current time step.
-Furthermore, the reward function includes the limit observer. If limits have been violated and the episode ended
-a different reward for violating the limits is returned.</p>
-<dl class="simple">
-<dt>reward_range:</dt><dd><p>Tuple(float, float): Defining lowest and highest possible rewards for non limit-violating steps.</p>
-</dd>
-</dl>
+<p>The reward function is called once per step and returns reward for the current time step.</p>
+<dl class="attribute">
+<dt id="gym_electric_motor.core.RewardFunction.reward_range">
+<code class="sig-name descname">reward_range</code><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defining lowest and highest possible rewards.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>observed_states</strong> (<em>str/iterable</em><em>(</em><em>str</em><em>)</em>) – Names of the observed states. ‘all’ for the observation of every state.
-‘currents’ for all currents and ‘voltages’ for all voltages. Combinations of ‘currents’ and
-‘voltages’ with other states are possible. Choose None for not observing states.</p></li>
-<li><p><strong>constraint_monitor</strong> (<em>class instance</em>) – ConstraintMonitor for monitoring
-states regarding defined constraints</p></li>
-</ul>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Tuple(float, float)</p>
 </dd>
 </dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="gym_electric_motor.core.RewardFunction.close">
 <code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.close" title="Permalink to this definition">¶</a></dt>
@@ -208,8 +201,8 @@ states regarding defined constraints</p></li>
 <dl class="method">
 <dt id="gym_electric_motor.core.RewardFunction.reset">
 <code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function is called by the environment when reset.
-Inner states of the reward function can be reset here, if necessary.</p>
+<dd><p>This function is called by the environment when reset.</p>
+<p>Inner states of the reward function can be reset here, if necessary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -222,7 +215,7 @@ Inner states of the reward function can be reset here, if necessary.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.core.RewardFunction.reward">
-<code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">k=None</em>, <em class="sig-param">action=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">k=None</em>, <em class="sig-param">action=None</em>, <em class="sig-param">violation_degree=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reward calculation. If limits have been violated the reward is calculated with a separate function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -231,10 +224,13 @@ Inner states of the reward function can be reset here, if necessary.</p>
 <li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Environments reference array.</p></li>
 <li><p><strong>k</strong> (<em>int</em>) – Systems momentary time-step</p></li>
 <li><p><strong>action</strong> (<em>element of action space</em>) – The previously taken action.</p></li>
+<li><p><strong>violation_degree</strong> (<em>float in</em><em> [</em><em>0.0</em><em>, </em><em>1.0</em><em>]</em>) – Degree of violation of the constraints. 0.0 indicates that all
+constraints are complied. 1.0 indicates that the constraints have been so much violated, that a reset is
+necessary.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Reward for this state, reference pair.</p>
+<dd class="field-even"><p>Reward for this state, reference, action tuple.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
@@ -243,9 +239,9 @@ Inner states of the reward function can be reset here, if necessary.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="gym_electric_motor.core.RewardFunction.reward_range">
-<code class="sig-name descname">reward_range</code><em class="property"> = (-inf, inf)</em><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lower and upper possible reward (excluding limit violation reward)</p>
+<dt>
+<code class="sig-name descname">reward_range</code><em class="property"> = (-inf, inf)</em></dt>
+<dd><p>Lower and upper possible reward</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>Tuple(int,int)</p>
@@ -255,13 +251,14 @@ Inner states of the reward function can be reset here, if necessary.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.core.RewardFunction.set_modules">
-<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.set_modules" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">constraint_monitor</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.set_modules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setting of the physical system, to set state arrays fitting to the environments states</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment</p></li>
 <li><p><strong>reference_generator</strong> (<a class="reference internal" href="../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a>) – The reference generator of the environment.</p></li>
+<li><p><strong>constraint_monitor</strong> (<a class="reference internal" href="../core.html#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor"><em>ConstraintMonitor</em></a>) – The constraint monitor of the environment.</p></li>
 </ul>
 </dd>
 </dl>

@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.constraints &mdash; gym-electric-motor 2020 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/callbacks.html">Callbacks</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.constraints</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.constraints</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">set_state_array</span>
+
+
+<span class="k">class</span> <span class="nc">Constraint</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all constraints in the ConstraintMonitor.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function that is called to check the constraint.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(numpy.ndarray(float)): The current physical systems state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">              float in [0.0, 1.0]: Degree how much the constraint has been violated.</span>
+<span class="sd">                0.0: No violation</span>
+<span class="sd">                (0.0, 1.0): Undesired zone near to a full violation. No episode termination.</span>
+<span class="sd">                1.0: Full violation and episode termination.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called by the environment that the Constraint can read information from the PhysicalSystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ps(PhysicalSystem): PhysicalSystem of the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="LimitConstraint"><a class="viewcode-back" href="../../parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint">[docs]</a><span class="k">class</span> <span class="nc">LimitConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Constraint to observe the limits on one or more system states.</span>
+
+<span class="sd">    This constraint observes if any of the systems state values exceeds the limit specified in the PhysicalSystem.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        1.0 &gt;= s_i / s_{i,max}</span>
+
+<span class="sd">    For all :math:`i` in the set of PhysicalSystems states :math:`S`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed_state_names</span><span class="o">=</span><span class="s1">&#39;all_states&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            observed_state_names([&#39;all_states&#39;]/iterable(str)): The states to observe. \n</span>
+<span class="sd">                - [&#39;all_states&#39;]: Shortcut for observing all states.</span>
+<span class="sd">                - iterable(str): Pass an iterable containing all state names of the states to observe.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="o">=</span> <span class="n">observed_state_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">))</span>
+
+<div class="viewcode-block" id="LimitConstraint.set_modules"><a class="viewcode-back" href="../../parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span>
+        <span class="k">if</span> <span class="s1">&#39;all_states&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SquaredConstraint"><a class="viewcode-back" href="../../parts/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint">[docs]</a><span class="k">class</span> <span class="nc">SquaredConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A squared constraint on multiple states as it is required oftentimes for the dq-currents in synchronous and</span>
+<span class="sd">    asynchronous electric motors.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        1.0 &lt;= \sum_{i \in S} (s_i / s_{i,max})^2</span>
+
+<span class="sd">    :math:`S`: Set of the observed PhysicalSystems states</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            states(iterable(str)): Names of all states to be observed within the SquaredConstraint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_states</span> <span class="o">=</span> <span class="n">states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="SquaredConstraint.set_modules"><a class="viewcode-back" href="../../parts/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">ps</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">state_</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">state_</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

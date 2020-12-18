@@ -92,6 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/callbacks.html">Callbacks</a></li>
@@ -166,32 +167,45 @@
 
 
 <div class="viewcode-block" id="RampingLimitMargin"><a class="viewcode-back" href="../../parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin">[docs]</a><span class="k">class</span> <span class="nc">RampingLimitMargin</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Callback used to adapt the limit margin of a reference generator during runtime. Supports all </span>
-<span class="sd">    :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator`  </span>
-<span class="sd">    and :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SwitchedReferenceGenerator` with only </span>
-<span class="sd">    :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator` as sub generators.</span>
+    <span class="sd">&quot;&quot;&quot;Callback used to adapt the limit margin of a reference generator during runtime.</span>
+
+<span class="sd">    Supports all</span>
+<span class="sd">    :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator`</span>
+<span class="sd">    and :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SwitchedReferenceGenerator`</span>
+<span class="sd">    with only</span>
+<span class="sd">    :mod:`~gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator`</span>
+<span class="sd">    as sub generators.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="n">__CLASS_ERROR__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The RampingLimitMargin does only support the SubepisodedReferenceGenerator as reference generator or &quot;</span>
-                       <span class="s2">&quot;SwitchedReferenceGenerator with SubepisodedReferenceGenerator as all sub reference generators&quot;</span><span class="p">)</span>
+    <span class="n">__CLASS_ERROR__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;The RampingLimitMargin does only support the SubepisodedReferenceGenerator as reference generator or &quot;</span>
+        <span class="s2">&quot;SwitchedReferenceGenerator with SubepisodedReferenceGenerator as all sub reference generators&quot;</span>
+    <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_limit_margin</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">maximum_limit_margin</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">step_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">update_time</span><span class="o">=</span><span class="s1">&#39;episode&#39;</span><span class="p">,</span> <span class="n">update_freq</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_limit_margin</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="n">maximum_limit_margin</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">step_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">update_time</span><span class="o">=</span><span class="s1">&#39;episode&#39;</span><span class="p">,</span> <span class="n">update_freq</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            initial_limit_margin(tuple(floats)): The initial limit margin which gets updated by AdaptiveLimitMargin until it reaches maximum_limit_margin</span>
-<span class="sd">            maximum_limit_margin(tuple(floats)): The maximum limit margin. This will be the limit margin after AdaptiveLimitMargin&#39;s last update</span>
+<span class="sd">            initial_limit_margin(tuple(floats)): The initial limit margin which gets updated by AdaptiveLimitMargin</span>
+<span class="sd">                until it reaches maximum_limit_margin</span>
+<span class="sd">            maximum_limit_margin(tuple(floats)): The maximum limit margin. This will be the limit margin after</span>
+<span class="sd">                AdaptiveLimitMargin&#39;s last update</span>
 <span class="sd">            step_size(float): The value by which each limit gets updated at each step</span>
-<span class="sd">            update_time(string): When the update happens. &quot;step&quot; for the end of a step, &quot;episode&quot; for the end of an episode</span>
+<span class="sd">            update_time(string): When the update happens. &quot;step&quot; for the end of a step, &quot;episode&quot;</span>
+<span class="sd">                for the end of an episode</span>
 <span class="sd">            update_freq(int): After how many cumulative units of update_time an update occurs</span>
 <span class="sd">        </span>
 <span class="sd">        Additional Notes:</span>
 <span class="sd">            All limit_margins should be between -1 and 1</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="n">update_time</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="s1">&#39;episode&#39;</span><span class="p">],</span> <span class="s2">&quot;Chose an option of either &#39;step&#39; or &#39;episode&#39; for updating on cumultative steps or episodes&quot;</span>
-        <span class="k">assert</span> <span class="n">initial_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">initial_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;First element of limit margin has to be smaller than second&quot;</span>
-        <span class="k">assert</span> <span class="n">maximum_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maximum_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;First element of limit margin has to be smaller than second&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">update_time</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="s1">&#39;episode&#39;</span><span class="p">],</span> \
+            <span class="s2">&quot;Chose an option of either &#39;step&#39; or &#39;episode&#39; for updating on cumulative steps or episodes&quot;</span>
+        <span class="k">assert</span> <span class="n">initial_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">initial_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> \
+            <span class="s2">&quot;First element of limit margin has to be smaller than second&quot;</span>
+        <span class="k">assert</span> <span class="n">maximum_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maximum_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> \
+            <span class="s2">&quot;First element of limit margin has to be smaller than second&quot;</span>
         <span class="k">assert</span> <span class="n">initial_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Lower limit margin has to be bigger than or equal to -1&quot;</span>
         <span class="k">assert</span> <span class="n">maximum_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Lower limit margin has to be bigger than or equal to -1&quot;</span>
         <span class="k">assert</span> <span class="n">initial_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Upper limit margin has to be smaller than or equal to 1&quot;</span>
@@ -208,31 +222,32 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_freq</span> <span class="o">=</span> <span class="n">update_freq</span>
         
 <div class="viewcode-block" id="RampingLimitMargin.set_env"><a class="viewcode-back" href="../../parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
-        <span class="c1">#see docstring of superclass</span>
-        <span class="c1">#assertions added to check for the right reference generator </span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="p">,</span> <span class="n">SwitchedReferenceGenerator</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
+        <span class="c1"># See docstring of superclass</span>
+        <span class="c1"># Assertions added to check for the right reference generator</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">SwitchedReferenceGenerator</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
                 <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sub_generator</span><span class="p">),</span> <span class="n">SubepisodedReferenceGenerator</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__CLASS_ERROR__</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="p">),</span> <span class="n">SubepisodedReferenceGenerator</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__CLASS_ERROR__</span>
+            <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">reference_generator</span><span class="p">),</span> <span class="n">SubepisodedReferenceGenerator</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__CLASS_ERROR__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="n">env</span>
-        <span class="c1">#initial image margin added to the reference generator</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="p">,</span> <span class="n">SwitchedReferenceGenerator</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
+
+        <span class="c1">#  Initial image margin added to the reference generator</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">SwitchedReferenceGenerator</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
                 <span class="n">sub_generator</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span></div>
         
-<div class="viewcode-block" id="RampingLimitMargin.on_step_end"><a class="viewcode-back" href="../../parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#see docstring of superclass</span>
+<div class="viewcode-block" id="RampingLimitMargin.on_step_end"><a class="viewcode-back" href="../../parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
+        <span class="c1"># See docstring of superclass</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_time</span> <span class="o">==</span> <span class="s1">&#39;step&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_update_limit_margin</span><span class="p">()</span>     </div>
                 
-<div class="viewcode-block" id="RampingLimitMargin.on_reset_end"><a class="viewcode-back" href="../../parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin.on_reset_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_reset_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#see docstring of superclass</span>
+<div class="viewcode-block" id="RampingLimitMargin.on_reset_end"><a class="viewcode-back" href="../../parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin.on_reset_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_reset_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+        <span class="c1"># See docstring of superclass</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_time</span> <span class="o">==</span> <span class="s1">&#39;episode&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_episode</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -243,21 +258,17 @@
         <span class="sd">&quot;&quot;&quot;Updates the limit margin of the environments according to the step size and maximum limit margin&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">:</span>
             <span class="n">new_lower_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_size</span>
-            <span class="n">new_lower_limit</span> <span class="o">=</span> <span class="n">new_lower_limit</span> <span class="k">if</span> <span class="n">new_lower_limit</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">new_lower_limit</span> <span class="o">=</span> <span class="n">new_lower_limit</span> \
+                <span class="k">if</span> <span class="n">new_lower_limit</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">new_upper_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_size</span>
-            <span class="n">new_upper_limit</span> <span class="o">=</span> <span class="n">new_upper_limit</span> <span class="k">if</span> <span class="n">new_upper_limit</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">new_upper_limit</span> <span class="o">=</span> <span class="n">new_upper_limit</span> \
+                <span class="k">if</span> <span class="n">new_upper_limit</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximum_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_lower_limit</span><span class="p">,</span> <span class="n">new_upper_limit</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="p">,</span> <span class="n">SwitchedReferenceGenerator</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">SwitchedReferenceGenerator</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
                     <span class="n">sub_generator</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span></div>
-                
-        
-
-    
-    
-    
+                <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reference_generator</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span></div>
 </pre></div>
 
            </div>

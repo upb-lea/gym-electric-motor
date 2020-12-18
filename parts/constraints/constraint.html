@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Shifted Weighted Sum of Errors &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Constraint Base Class &mdash; gym-electric-motor 2020 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Physical Systems" href="../physical_systems/physical_system.html" />
-    <link rel="prev" title="Weighted Sum of Errors" href="weighted_sum_of_errors.html" /> 
+    <link rel="next" title="Limit Constraint" href="limit_constraint.html" />
+    <link rel="prev" title="Constraint Monitor" href="../constraint_monitor.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,13 +91,15 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="reward_function.html">Reward Functions</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="weighted_sum_of_errors.html">Weighted Sum of Errors</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Shifted Weighted Sum of Errors</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Constraint Base Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="limit_constraint.html">Limit Constraint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="squared_constraint.html">Squared Constraint</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
@@ -147,15 +149,15 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="reward_function.html">Reward Functions</a> &raquo;</li>
+          <li><a href="../constraint_monitor.html">Constraint Monitor</a> &raquo;</li>
         
-      <li>Shifted Weighted Sum of Errors</li>
+      <li>Constraint Base Class</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/parts/reward_functions/shifted_weighted_sum_of_errors.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/parts/constraints/constraint.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -168,45 +170,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="shifted-weighted-sum-of-errors">
-<h1>Shifted Weighted Sum of Errors<a class="headerlink" href="#shifted-weighted-sum-of-errors" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reward_functions.weighted_sum_of_errors.</code><code class="sig-name descname">ShiftedWeightedSumOfErrors</code><span class="sig-paren">(</span><em class="sig-param">reward_weights=None</em>, <em class="sig-param">normed_reward_weights=False</em>, <em class="sig-param">gamma=0.9</em>, <em class="sig-param">reward_power=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#ShiftedWeightedSumOfErrors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Weighted Sum of Errors shifted by the maximum negative reward to obtain rewards in the positive range.</p>
-<div class="math notranslate nohighlight">
-\[reward = max\_reward - reward\_weights * (abs(state - reference)/ state\_length)^{reward\_power}\]</div>
-<div class="math notranslate nohighlight">
-\[limit\_violation\_reward = 0\]</div>
-<p>The reward is always positive due to the shift and the lowest reward is 0. The reward function is the same as the
-‘’Weighted Sum of Errors’’ apart from the shift and the limit_violation_reward.</p>
-<div class="line-block">
-<div class="line">state_length[i] = 1 for states with positive values only.</div>
-<div class="line">state_length[i] = 2 for states with positive and negative values.</div>
+  <div class="section" id="constraint-base-class">
+<h1>Constraint Base Class<a class="headerlink" href="#constraint-base-class" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-to-define-your-own-constraints">
+<h2>How To: Define Your Own Constraints<a class="headerlink" href="#how-to-define-your-own-constraints" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="constraint-api-documentation">
+<h2>Constraint API Documentation<a class="headerlink" href="#constraint-api-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.core.RewardFunction">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">RewardFunction</code><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>The abstract base class for reward functions in gym electric motor environments.</p>
+<p>The reward function is called once per step and returns reward for the current time step.</p>
+<dl class="attribute">
+<dt id="gym_electric_motor.core.RewardFunction.reward_range">
+<code class="sig-name descname">reward_range</code><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defining lowest and highest possible rewards.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>reward_weights</strong> (<em>dict/list/ndarray</em><em>(</em><em>float</em><em>)</em>) – Dict mapping state names to reward_weights, 0 otherwise.
-Or an array with the reward_weights on the position of the state_names.</p></li>
-<li><p><strong>normed_reward_weights</strong> (<em>bool</em>) – If True, the reward weights will be normalized to 1.</p></li>
-<li><p><strong>gamma</strong> (<em>float</em>) – Discount factor for the reward punishment. Should equal agents’ discount factor gamma.</p></li>
-<li><p><strong>reward_power</strong> (<em>dict/list</em><em>(</em><em>float</em><em>)</em><em>/float</em>) – Reward power for each of the systems states.</p></li>
-<li><p><strong>kwargs</strong> – Further arguments to pass to the superclass RewardFunction</p></li>
-</ul>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Tuple(float, float)</p>
 </dd>
 </dl>
+</dd></dl>
+
 <dl class="method">
-<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.close" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.core.RewardFunction.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called, when the environment is closed to store logs, close files etc.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function is called by the environment when reset.
-Inner states of the reward function can be reset here, if necessary.</p>
+<dt id="gym_electric_motor.core.RewardFunction.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called by the environment when reset.</p>
+<p>Inner states of the reward function can be reset here, if necessary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -218,8 +215,8 @@ Inner states of the reward function can be reset here, if necessary.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reward">
-<code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">k=None</em>, <em class="sig-param">action=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reward" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.core.RewardFunction.reward">
+<code class="sig-name descname">reward</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">k=None</em>, <em class="sig-param">action=None</em>, <em class="sig-param">violation_degree=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reward calculation. If limits have been violated the reward is calculated with a separate function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,10 +225,13 @@ Inner states of the reward function can be reset here, if necessary.</p>
 <li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Environments reference array.</p></li>
 <li><p><strong>k</strong> (<em>int</em>) – Systems momentary time-step</p></li>
 <li><p><strong>action</strong> (<em>element of action space</em>) – The previously taken action.</p></li>
+<li><p><strong>violation_degree</strong> (<em>float in</em><em> [</em><em>0.0</em><em>, </em><em>1.0</em><em>]</em>) – Degree of violation of the constraints. 0.0 indicates that all
+constraints are complied. 1.0 indicates that the constraints have been so much violated, that a reset is
+necessary.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Reward for this state, reference pair.</p>
+<dd class="field-even"><p>Reward for this state, reference, action tuple.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
@@ -239,15 +239,27 @@ Inner states of the reward function can be reset here, if necessary.</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">reward_range</code><em class="property"> = (-inf, inf)</em></dt>
+<dd><p>Lower and upper possible reward</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Tuple(int,int)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
-<dt id="gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.set_modules">
-<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#ShiftedWeightedSumOfErrors.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.set_modules" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.core.RewardFunction.set_modules">
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">constraint_monitor</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.set_modules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setting of the physical system, to set state arrays fitting to the environments states</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment</p></li>
 <li><p><strong>reference_generator</strong> (<a class="reference internal" href="../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a>) – The reference generator of the environment.</p></li>
+<li><p><strong>constraint_monitor</strong> (<a class="reference internal" href="../core.html#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor"><em>ConstraintMonitor</em></a>) – The constraint monitor of the environment.</p></li>
 </ul>
 </dd>
 </dl>
@@ -255,6 +267,7 @@ Inner states of the reward function can be reset here, if necessary.</p>
 
 </dd></dl>
 
+</div>
 </div>
 
 
@@ -265,10 +278,10 @@ Inner states of the reward function can be reset here, if necessary.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../physical_systems/physical_system.html" class="btn btn-neutral float-right" title="Physical Systems" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="limit_constraint.html" class="btn btn-neutral float-right" title="Limit Constraint" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="weighted_sum_of_errors.html" class="btn btn-neutral float-left" title="Weighted Sum of Errors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../constraint_monitor.html" class="btn btn-neutral float-left" title="Constraint Monitor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

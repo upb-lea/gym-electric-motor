@@ -98,6 +98,7 @@
 <li class="toctree-l2"><a class="reference internal" href="console_printer.html">Console Printer</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
@@ -180,72 +181,51 @@
 <dl class="class">
 <dt id="gym_electric_motor.core.ElectricMotorVisualization">
 <em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorVisualization</code><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base class for all visualizations in the gym-electric-motor toolbox and an empty dummy visualization, if no
-visualization is required.</p>
+<dd><p>Base class for all visualizations in GEM.
+The visualization is basically only a Callback that is extended by a render() function to update the figure.
+With the function calls that are inherited by the Callback superclass (e.g. <em>on_step_end</em>),
+the data is passed from the environment to the visualization. In the render() function the passed data can be
+visualized in the desired way.</p>
 <dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called when the environment is deleted to close or save figures, logs etc.</p>
+<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_close">
+<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of a close</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">reference_trajectories=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called when the environment is reset to clear or save plots etc.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>reference_trajectories</strong> (<em>dict</em><em>(</em><em>list/ndarray</em><em>(</em><em>float</em><em>)</em><em>)</em>) – If references are known in advance by the reference</p></li>
-<li><p><strong>they are passed here to the visualization as a dictionary of the state_name to a</strong> (<em>generator</em><em>,</em>) – </p></li>
-<li><p><strong>of future reference points.</strong> (<em>list</em>) – </p></li>
-</ul>
-</dd>
-</dl>
+<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_reset_begin">
+<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_reset_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of each reset</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.set_modules">
-<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.set_modules" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – This function is called from the environment in its initialization.
-Settings that require the knowledge of the physical system (like setting of state variables) have to be
-done in this function.</p></li>
-<li><p><strong>reference_generator</strong> (<a class="reference internal" href="../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a>) – This function is called from the environment in its initialization.
-Settings that require the knowledge of the reference generator (like setting of referenced variables)
-have to be done in this function.</p></li>
-<li><p><strong>reward_function</strong> (<a class="reference internal" href="../reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction" title="gym_electric_motor.core.RewardFunction"><em>RewardFunction</em></a>) – This function is called from the environment in its initialization.
-Settings that require the knowledge of the reward function (like setting of reward ranges) have
-to be done in this function.</p></li>
-</ul>
-</dd>
-</dl>
+<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_reset_end">
+<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_reset_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the end of each reset</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">action</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called by the environment every cycle and passes the current, normalized state array,
-the normalized references in the same shape as the state array and the received reward.
-For non-referenced states the value in the reference array can be ignored.</p>
-<p class="rubric">Example</p>
-<p><code class="docutils literal notranslate"><span class="pre">`state_variables</span> <span class="pre">=</span> <span class="pre">['omega',</span> <span class="pre">'torque',</span> <span class="pre">'i',</span> <span class="pre">'u',</span> <span class="pre">'u_sup']`</span></code>
-<code class="docutils literal notranslate"><span class="pre">`state</span> <span class="pre">=</span> <span class="pre">[0.65,</span> <span class="pre">0.32,</span> <span class="pre">0.2,</span> <span class="pre">1.0,</span> <span class="pre">1.0]`</span></code>
-<code class="docutils literal notranslate"><span class="pre">`reference</span> <span class="pre">=</span> <span class="pre">[0.7,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]`</span></code>
-Only the first reference value is important here, because all others are not referenced.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> (<em>int</em>) – Current episode step</p></li>
-<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The state of the physical system.</p></li>
-<li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The reference array of the reference generator.</p></li>
-<li><p><strong>action</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The last action taken. None after reset.</p></li>
-<li><p><strong>reward</strong> (<em>float</em>) – The reward from the reward function.</p></li>
-<li><p><strong>done</strong> (<em>bool</em>) – Flag, if the environment is in a terminal state.</p></li>
-</ul>
-</dd>
-</dl>
+<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_step_begin">
+<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_step_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_step_end">
+<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_step_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the end of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorVisualization.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to update the user interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorVisualization.set_env">
+<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.set_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the environment of the motor.</p>
 </dd></dl>
 
 </dd></dl>

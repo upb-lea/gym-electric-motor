@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Squared Constraint &mdash; gym-electric-motor 2020 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Core" href="../core.html" />
+    <link rel="prev" title="Limit Constraint" href="limit_constraint.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="constraint.html">Constraint Base Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="limit_constraint.html">Limit Constraint</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Squared Constraint</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../constraint_monitor.html">Constraint Monitor</a> &raquo;</li>
+        
+      <li>Squared Constraint</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/parts/constraints/squared_constraint.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="squared-constraint">
+<h1>Squared Constraint<a class="headerlink" href="#squared-constraint" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.constraints.SquaredConstraint">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.constraints.</code><code class="sig-name descname">SquaredConstraint</code><span class="sig-paren">(</span><em class="sig-param">states=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#SquaredConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.constraints.SquaredConstraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>A squared constraint on multiple states as it is required oftentimes for the dq-currents in synchronous and
+asynchronous electric motors.</p>
+<div class="math notranslate nohighlight">
+\[1.0 &lt;= \sum_{i \in S} (s_i / s_{i,max})^2\]</div>
+<p><span class="math notranslate nohighlight">\(S\)</span>: Set of the observed PhysicalSystems states</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>states</strong> (<em>iterable</em><em>(</em><em>str</em><em>)</em>) – Names of all states to be observed within the SquaredConstraint.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.constraints.SquaredConstraint.set_modules">
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">ps</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#SquaredConstraint.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.constraints.SquaredConstraint.set_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the environment that the Constraint can read information from the PhysicalSystem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ps</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – PhysicalSystem of the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../core.html" class="btn btn-neutral float-right" title="Core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="limit_constraint.html" class="btn btn-neutral float-left" title="Limit Constraint" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

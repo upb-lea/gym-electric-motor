@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Episode Length Plot &mdash; gym-electric-motor 2020 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Episode Plot (Abstract)" href="episode_plots.html" />
+    <link rel="prev" title="Cumulative Constraint Violation Plot" href="cumulative_constraint_violation_plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../visualization.html">Visualization</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../motor_dashboard.html">Motor Dashboard</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="action_plot.html">Action Plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cumulative_constraint_violation_plot.html">Cumulative Constraint Violation Plot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Episode Length Plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="episode_plots.html">Episode Plot (Abstract)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mean_episode_reward_plot.html">Mean Episode Reward Plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reward_plot.html">Reward Plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state_plot.html">State Plot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="step_plot.html">Step Plot (Abstract)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time_plot.html">Time Plot (Abstract)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../console_printer.html">Console Printer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../callbacks.html">Callbacks</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../visualization.html">Visualization</a> &raquo;</li>
+        
+          <li><a href="../motor_dashboard.html">Motor Dashboard</a> &raquo;</li>
+        
+      <li>Episode Length Plot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/parts/visualizations/motor_dashboard_plots/episode_length_plot.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="episode-length-plot">
+<h1>Episode Length Plot<a class="headerlink" href="#episode-length-plot" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard_plots.</code><code class="sig-name descname">EpisodeLengthPlot</code><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/episode_length_plot.html#EpisodeLengthPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot to display the lengths of all episodes.</p>
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">axis</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/episode_length_plot.html#EpisodeLengthPlot.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axis</strong> (<em>object</em>) – the subplot axis for plotting the action variable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_close">
+<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of a close</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_reset_begin">
+<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_reset_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of each reset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_reset_end">
+<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_reset_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the end of each reset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_step_begin">
+<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_step_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_step_end">
+<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/episode_length_plot.html#EpisodeLengthPlot.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_step_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the end of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update of the plots axis.</p>
+<p>The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
+are scaled dynamically.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.set_env">
+<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.set_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the environment of the motor.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="episode_plots.html" class="btn btn-neutral float-right" title="Episode Plot (Abstract)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cumulative_constraint_violation_plot.html" class="btn btn-neutral float-left" title="Cumulative Constraint Violation Plot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

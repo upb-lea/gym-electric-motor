@@ -112,6 +112,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
@@ -270,7 +271,7 @@ Furthermore, a short introduction into the Interface of the environments is give
 <span id="electric-motor-base-environment"></span><h2>Electric Motor Base Environment<a class="headerlink" href="#module-gym_electric_motor.core" title="Permalink to this headline">¶</a></h2>
 <p>On the core level the electric motor environment and the interface to its submodules are defined. By using these
 interfaces further reference generators, reward functions, visualizations or physical models can be implemented.</p>
-<p>Each ElectricMotorEnvironment contains the four following modules:</p>
+<p>Each ElectricMotorEnvironment contains the five following modules:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>PhysicalSystem</dt><dd><ul>
@@ -287,14 +288,15 @@ interfaces further reference generators, reward functions, visualizations or phy
 </dl>
 </li>
 <li><dl class="simple">
-<dt>RewardFunction</dt><dd><ul>
-<li><p>Calculation of the reward based on the physical systems state and the reference.     Furthermore, observation of the physical systems limits.</p></li>
+<dt>ConstraintMonitor</dt><dd><ul>
+<li><p>Observation of the PhysicalSystems state to comply to a set of user defined constraints.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>ElectricMotorVisualization</dt><dd><ul>
+<dt>RewardFunction</dt><dd><ul>
+<li><p>Calculation of the reward based on the physical systems state and the reference.* ElectricMotorVisualization</p></li>
 <li><p>Visualization of the PhysicalSystems state, reference and reward for the user.</p></li>
 </ul>
 </dd>
@@ -305,7 +307,7 @@ interfaces further reference generators, reward functions, visualizations or phy
 <img alt="../../_images/TopLevelStructure.svg" src="../../_images/TopLevelStructure.svg" /></div>
 <dl class="class">
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=None</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=[]</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=()</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=()</em>, <em class="sig-param">constraints=()</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Description:</dt><dd><p>The main class connecting all modules of the gym-electric-motor environments.</p>
 </dd>
@@ -367,7 +369,23 @@ The reward function can terminate an episode, if a physical limit of the motor h
 <li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of this environment.</p></li>
 <li><p><strong>reference_generator</strong> (<a class="reference internal" href="../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a>) – The reference generator of this environment.</p></li>
 <li><p><strong>reward_function</strong> (<a class="reference internal" href="../reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction" title="gym_electric_motor.core.RewardFunction"><em>RewardFunction</em></a>) – The reward function of this environment.</p></li>
-<li><p><strong>visualization</strong> (<a class="reference internal" href="../visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization" title="gym_electric_motor.core.ElectricMotorVisualization"><em>ElectricMotorVisualization</em></a>) – The visualization of this environment.</p></li>
+<li><p><strong>visualization</strong> (<em>iterable</em><em>(</em><a class="reference internal" href="../visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization" title="gym_electric_motor.core.ElectricMotorVisualization"><em>ElectricMotorVisualization</em></a><em>)</em><em>/None</em>) – The visualization of this environment.</p></li>
+<li><p><strong>constraints</strong> (<em>list</em><em>(</em><em>Constraint/str/callable</em><em>) </em><em>/ ConstraintMonitor</em>) – <p>A list of constraints
+or an already initialized  ConstraintMonitor object can be passed here.</p>
+<blockquote>
+<div><ul>
+<li><p>list(Constraint/str/callable): Pass a list with initialized Constraints and/or state names. Then,</p></li>
+</ul>
+<p>a ConstraintMonitor object with the Constraints and additional LimitConstraints on the passed names
+is created. Furthermore, the string ‘all’ inside the list will create a ConstraintMonitor that
+observes the limit on each state.
+- ConstraintMonitor: Pass an initialized ConstraintMonitor object that will be used directly as</p>
+<blockquote>
+<div><p>ConstraintMonitor in the environment.</p>
+</div></blockquote>
+</div></blockquote>
+</p></li>
+<li><p><strong>visualization</strong> – The visualizations of this environment.</p></li>
 <li><p><strong>state_filter</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – Selection of states that are shown in the observation.</p></li>
 <li><p><strong>callbacks</strong> (<em>list</em><em>(</em><a class="reference internal" href="../core.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks being called in the environment</p></li>
 <li><p><strong>**kwargs</strong> – Arguments to be passed to the modules.</p></li>
@@ -378,6 +396,17 @@ The reward function can terminate an episode, if a physical limit of the motor h
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment.close">
 <code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called when the environment is deleted. Closes all its modules.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor">
+<em class="property">property </em><code class="sig-name descname">constraint_monitor</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ConstraintMonitor of the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Returns(<a class="reference internal" href="../core.html#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor">ConstraintMonitor</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">

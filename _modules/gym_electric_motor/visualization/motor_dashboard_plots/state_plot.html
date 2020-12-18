@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gym_electric_motor.visualization.motor_dashboard_plots.state_plot &mdash; gym-electric-motor 2020 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.visualization.motor_dashboard_plots.state_plot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.visualization.motor_dashboard_plots.state_plot</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.base_plots</span> <span class="kn">import</span> <span class="n">TimePlot</span>
+
+
+<div class="viewcode-block" id="StatePlot"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot">[docs]</a><span class="k">class</span> <span class="nc">StatePlot</span><span class="p">(</span><span class="n">TimePlot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot to display the environments states and their references.&quot;&quot;&quot;</span>
+
+    <span class="n">_default_limit_line_cfg</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;linestyle&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Labels for each state variable.</span>
+    <span class="n">state_labels</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\omega$/(1/s)&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="s1">&#39;$T$/Nm&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="s1">&#39;$i$/A&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;i_a&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{a}</span><span class="s1">$/A$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;i_e&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{e}</span><span class="s1">$/A$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;i_b&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{b}</span><span class="s1">$/A$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;i_c&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{c}</span><span class="s1">$/A&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;i_sq&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{sq}</span><span class="s1">$/A&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;i_sd&#39;</span><span class="p">:</span> <span class="s1">&#39;$i_</span><span class="si">{sd}</span><span class="s1">$/A&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="s1">&#39;$u$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u_a&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{a}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u_b&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{b}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u_c&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{c}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u_sq&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sq}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u_sd&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sd}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{e}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;u_sup&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sup}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$/rad&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            state(str): Name of the state to plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_line_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_time_line_cfg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_line_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_time_line_cfg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limit_line_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_limit_line_cfg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1">#: State space of the plotted variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: State name of the plotted variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="c1">#: Index in the state array of the plotted variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Maximal value of the plotted variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Bool: Flag if the plotted variable is referenced.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># matplotlib-Lines for the state and reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Data containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Flag, if the passed data is normalized</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="StatePlot.set_env"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="n">ps</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">physical_system</span>
+        <span class="n">rg</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reference_generator</span>
+        <span class="c1"># Save the index of the state.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">]</span>
+        <span class="c1"># The maximal values of the state.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">],</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
+        <span class="c1"># Bool: if the state is referenced.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">referenced_states</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
+        <span class="c1"># Bool: if the data is already normalized to an interval of [-1, 1]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Initialize the data containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_width</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_width</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="n">min_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">max_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">spacing</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_limit</span> <span class="o">-</span> <span class="n">min_limit</span><span class="p">)</span>
+
+        <span class="c1"># Set the y-axis limits to fixed initital values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_lim</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_limit</span> <span class="o">-</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">max_limit</span> <span class="o">+</span> <span class="n">spacing</span><span class="p">)</span>
+
+        <span class="c1"># Set the y-axis label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StatePlot.initialize"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+
+        <span class="c1"># Line to plot the state data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">]</span>
+
+        <span class="c1"># If the state is referenced plot also the reference line</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_ref_line_config</span><span class="p">)</span>
+            <span class="c1"># Plot state line in front</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="n">axis</span><span class="o">.</span><span class="n">lines</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">)</span>
+        <span class="n">min_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">max_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">min_limit</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_limit_line_config</span><span class="p">)</span>
+        <span class="n">lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">max_limit</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_limit_line_config</span><span class="p">)</span>
+
+        <span class="n">y_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span>
+        <span class="n">unit_split</span> <span class="o">=</span> <span class="n">y_label</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">unit_split</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">unit_split</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span>
+        <span class="n">limit_label</span> <span class="o">=</span> <span class="n">y_label</span><span class="p">[:</span><span class="n">unit_split</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;$_{\mathrm</span><span class="si">{max}</span><span class="s1">}$&#39;</span> <span class="o">+</span> <span class="n">y_label</span><span class="p">[</span><span class="n">unit_split</span><span class="p">:]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span><span class="p">:</span>
+            <span class="n">ref_label</span> <span class="o">=</span> <span class="n">y_label</span><span class="p">[:</span><span class="n">unit_split</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;$^*$&#39;</span> <span class="o">+</span> <span class="n">y_label</span><span class="p">[</span><span class="n">unit_split</span><span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">,</span> <span class="n">lim</span><span class="p">),</span> <span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">ref_label</span><span class="p">,</span> <span class="n">limit_label</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span>
+                <span class="n">numpoints</span><span class="o">=</span><span class="mi">20</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="n">lim</span><span class="p">),</span> <span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">limit_label</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="StatePlot.on_step_end"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_step_end</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>
+        <span class="c1"># Write the data to the data containers</span>
+        <span class="n">state_</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_idx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

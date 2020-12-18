@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/physical_systems/physical_system.html">Physical Systems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parts/constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/callbacks.html">Callbacks</a></li>
@@ -192,7 +193,13 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/core.html#gym_electric_motor.core.Callback._env">_env (gym_electric_motor.core.Callback attribute)</a>
+      <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._k">_k (gym_electric_motor.visualization.motor_dashboard_plots.TimePlot attribute)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._k">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._t">_t (gym_electric_motor.visualization.motor_dashboard_plots.TimePlot attribute)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._t">[1]</a>
+</li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._x_width">_x_width (gym_electric_motor.visualization.motor_dashboard_plots.TimePlot attribute)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._x_width">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -210,6 +217,8 @@
 </li>
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.action_space">action_space() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.action_space">[1]</a>
 </li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot">ActionPlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -218,18 +227,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/core.html#gym_electric_motor.core.Callback">Callback (class in gym_electric_motor.core)</a>
 </li>
-      <li><a href="parts/constraint_monitor.html#gym_electric_motor.constraint_monitor.ConstraintMonitor.check_constraint_violation">check_constraint_violation() (gym_electric_motor.constraint_monitor.ConstraintMonitor method)</a>
+      <li><a href="parts/constraint_monitor.html#gym_electric_motor.core.ConstraintMonitor.check_constraints">check_constraints() (gym_electric_motor.core.ConstraintMonitor method)</a>, <a href="parts/core.html#gym_electric_motor.core.ConstraintMonitor.check_constraints">[1]</a>
 </li>
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.close">close() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.close">[1]</a>
 
       <ul>
-        <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorVisualization.close">(gym_electric_motor.core.ElectricMotorVisualization method)</a>, <a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.close">[1]</a>
-</li>
         <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.close">(gym_electric_motor.core.PhysicalSystem method)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.close">[1]</a>
 </li>
         <li><a href="parts/core.html#gym_electric_motor.core.ReferenceGenerator.close">(gym_electric_motor.core.ReferenceGenerator method)</a>, <a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.close">[1]</a>
 </li>
-        <li><a href="parts/core.html#gym_electric_motor.core.RewardFunction.close">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.close">[1]</a>
+        <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.close">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.close">[1]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.close">[2]</a>
 </li>
         <li><a href="parts/reference_generators/const_reference_generator.html#gym_electric_motor.reference_generators.ConstReferenceGenerator.close">(gym_electric_motor.reference_generators.ConstReferenceGenerator method)</a>
 </li>
@@ -251,20 +258,18 @@
 </li>
         <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.close">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.close">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
-</li>
         <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
-</li>
-        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.close">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
-</li>
-        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.close">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
 </li>
       </ul></li>
       <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter">ConsolePrinter (class in gym_electric_motor.visualization.console_printer)</a>
 </li>
       <li><a href="parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad">ConstantSpeedLoad (class in gym_electric_motor.physical_systems.mechanical_loads)</a>
 </li>
-      <li><a href="parts/constraint_monitor.html#gym_electric_motor.constraint_monitor.ConstraintMonitor">ConstraintMonitor (class in gym_electric_motor.constraint_monitor)</a>
+      <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor">constraint_monitor() (gym_electric_motor.core.ElectricMotorEnvironment property)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor">[1]</a>
+</li>
+      <li><a href="parts/constraint_monitor.html#gym_electric_motor.core.ConstraintMonitor">ConstraintMonitor (class in gym_electric_motor.core)</a>, <a href="parts/core.html#gym_electric_motor.core.ConstraintMonitor">[1]</a>
+</li>
+      <li><a href="parts/constraint_monitor.html#gym_electric_motor.core.ConstraintMonitor.constraints">constraints() (gym_electric_motor.core.ConstraintMonitor property)</a>, <a href="parts/core.html#gym_electric_motor.core.ConstraintMonitor.constraints">[1]</a>
 </li>
       <li><a href="parts/reference_generators/const_reference_generator.html#gym_electric_motor.reference_generators.ConstReferenceGenerator">ConstReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
 </li>
@@ -274,12 +279,12 @@
 </li>
       <li><a href="parts/environments/dc_permex_cont.html#gym_electric_motor.envs.ContDcPermanentlyExcitedMotorEnvironment">ContDcPermanentlyExcitedMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/environments/dc_series_cont.html#gym_electric_motor.envs.ContDcSeriesMotorEnvironment">ContDcSeriesMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
       <li><a href="parts/environments/dc_shunt_cont.html#gym_electric_motor.envs.ContDcShuntMotorEnvironment">ContDcShuntMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/environments/dfim_cont.html#gym_electric_motor.envs.ContDoublyFedInductionMotorEnvironment">ContDoublyFedInductionMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
       <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter">ContDynamicallyAveragedConverter (class in gym_electric_motor.physical_systems.converters)</a>
@@ -330,6 +335,8 @@
       </ul></li>
       <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter">converter() (gym_electric_motor.physical_systems.physical_systems.SCMLSystem property)</a>
 </li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot">CumulativeConstraintViolationPlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
+</li>
       <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents">currents (gym_electric_motor.physical_systems.converters.PowerElectronicConverter attribute)</a>
 </li>
       <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS">CURRENTS (gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS">[1]</a>
@@ -342,6 +349,16 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.data_idx">data_idx() (gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot property)</a>
+
+      <ul>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.data_idx">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot property)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.data_idx">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot property)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.data_idx">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot property)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.data_idx">[1]</a>
+</li>
+      </ul></li>
       <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor">DcExternallyExcitedMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
 </li>
       <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor">DcMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
@@ -360,12 +377,12 @@
 </li>
       <li><a href="parts/environments/dc_extex_disc.html#gym_electric_motor.envs.DiscDcExternallyExcitedMotorEnvironment">DiscDcExternallyExcitedMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/environments/dc_permex_disc.html#gym_electric_motor.envs.DiscDcPermanentlyExcitedMotorEnvironment">DiscDcPermanentlyExcitedMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
       <li><a href="parts/environments/dc_series_disc.html#gym_electric_motor.envs.DiscDcSeriesMotorEnvironment">DiscDcSeriesMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/environments/dc_shunt_disc.html#gym_electric_motor.envs.DiscDcShuntMotorEnvironment">DiscDcShuntMotorEnvironment (class in gym_electric_motor.envs)</a>
 </li>
       <li><a href="parts/environments/dfim_disc.html#gym_electric_motor.envs.DiscDoublyFedInductionMotorEnvironment">DiscDoublyFedInductionMotorEnvironment (class in gym_electric_motor.envs)</a>
@@ -459,6 +476,10 @@
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment">ElectricMotorEnvironment (class in gym_electric_motor.core)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment">[1]</a>
 </li>
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorVisualization">ElectricMotorVisualization (class in gym_electric_motor.core)</a>, <a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization">[1]</a>
+</li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot">EpisodeLengthPlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
+</li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot">EpisodePlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
 </li>
       <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver">EulerSolver (class in gym_electric_motor.physical_systems.solvers)</a>
 </li>
@@ -668,8 +689,6 @@
         <li><a href="parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.initial_limits">(gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.initialize">initialize() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
 
       <ul>
@@ -705,7 +724,25 @@
 </li>
         <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.initialize">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad method)</a>
 </li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.initialize">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.initialize">[1]</a>
+</li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.initializer">initializer() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor property)</a>
 
       <ul>
@@ -786,6 +823,8 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint">LimitConstraint (class in gym_electric_motor.constraints)</a>
+</li>
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.limits">limits() (gym_electric_motor.core.ElectricMotorEnvironment property)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.limits">[1]</a>
 
       <ul>
@@ -841,6 +880,8 @@
       <li><a href="parts/utils.html#gym_electric_motor.utils.make">make() (in module gym_electric_motor.utils)</a>
 </li>
       <li><a href="parts/utils.html#gym_electric_motor.utils.make_module">make_module() (in module gym_electric_motor.utils)</a>
+</li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot">MeanEpisodeRewardPlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
 </li>
       <li><a href="parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_jacobian">mechanical_jacobian() (gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad method)</a>
 
@@ -962,8 +1003,6 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/constraint_monitor.html#gym_electric_motor.constraint_monitor.ConstraintMonitor.observed_states">observed_states() (gym_electric_motor.constraint_monitor.ConstraintMonitor property)</a>
-</li>
       <li><a href="parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver">OdeSolver (class in gym_electric_motor.physical_systems.solvers)</a>
 </li>
       <li><a href="parts/physical_systems/mechanical_loads/ext_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.omega">omega() (gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad property)</a>
@@ -971,23 +1010,139 @@
       <li><a href="parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.omega_fixed">omega_fixed() (gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad property)</a>
 </li>
       <li><a href="parts/core.html#gym_electric_motor.core.Callback.on_close">on_close() (gym_electric_motor.core.Callback method)</a>
+
+      <ul>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.on_close">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_close">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_close">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_close">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_close">[1]</a>
+</li>
+      </ul></li>
       <li><a href="parts/core.html#gym_electric_motor.core.Callback.on_reset_begin">on_reset_begin() (gym_electric_motor.core.Callback method)</a>
+
+      <ul>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.on_reset_begin">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
 </li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_begin">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_begin">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_begin">[1]</a>
+</li>
+      </ul></li>
       <li><a href="parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin.on_reset_end">on_reset_end() (gym_electric_motor.callbacks.RampingLimitMargin method)</a>
 
       <ul>
         <li><a href="parts/core.html#gym_electric_motor.core.Callback.on_reset_end">(gym_electric_motor.core.Callback method)</a>
 </li>
-      </ul></li>
-      <li><a href="parts/core.html#gym_electric_motor.core.Callback.on_step_begin">on_step_begin() (gym_electric_motor.core.Callback method)</a>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.on_reset_end">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
 </li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_end">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_reset_end">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_end">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_end">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="parts/core.html#gym_electric_motor.core.Callback.on_step_begin">on_step_begin() (gym_electric_motor.core.Callback method)</a>
+
+      <ul>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.on_step_begin">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
+</li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_begin">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_step_begin">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_begin">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_begin">[1]</a>
+</li>
+      </ul></li>
       <li><a href="parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin.on_step_end">on_step_end() (gym_electric_motor.callbacks.RampingLimitMargin method)</a>
 
       <ul>
         <li><a href="parts/core.html#gym_electric_motor.core.Callback.on_step_end">(gym_electric_motor.core.Callback method)</a>
+</li>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.on_step_end">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
+</li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_end">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_step_end">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_end">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_end">[1]</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1125,17 +1280,39 @@
       <li><a href="parts/utils.html#gym_electric_motor.utils.register_superclass">register_superclass() (in module gym_electric_motor.utils)</a>
 </li>
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.render">render() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.render">[1]</a>
+
+      <ul>
+        <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorVisualization.render">(gym_electric_motor.core.ElectricMotorVisualization method)</a>, <a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.render">[1]</a>
 </li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.render">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.render">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.render">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.render">[1]</a>
+</li>
+      </ul></li>
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.reset">reset() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reset">[1]</a>
 
       <ul>
-        <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorVisualization.reset">(gym_electric_motor.core.ElectricMotorVisualization method)</a>, <a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.reset">[1]</a>
-</li>
         <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.reset">(gym_electric_motor.core.PhysicalSystem method)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.reset">[1]</a>
 </li>
         <li><a href="parts/core.html#gym_electric_motor.core.ReferenceGenerator.reset">(gym_electric_motor.core.ReferenceGenerator method)</a>, <a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.reset">[1]</a>
 </li>
-        <li><a href="parts/core.html#gym_electric_motor.core.RewardFunction.reset">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reset">[1]</a>
+        <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.reset">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.reset">[1]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reset">[2]</a>
 </li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.reset">(gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
 </li>
@@ -1239,30 +1416,24 @@
 </li>
         <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.reset">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reset">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
-</li>
         <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
-</li>
-        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.reset">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
-</li>
-        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/core.html#gym_electric_motor.core.RewardFunction.reward">reward() (gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward">[1]</a>
+      <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.reward">reward() (gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.reward">[1]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward">[2]</a>
 
       <ul>
-        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.reward">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
-</li>
         <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
 </li>
       </ul></li>
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.reward_function">reward_function() (gym_electric_motor.core.ElectricMotorEnvironment property)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reward_function">[1]</a>
 </li>
-      <li><a href="parts/core.html#gym_electric_motor.core.RewardFunction.reward_range">reward_range (gym_electric_motor.core.RewardFunction attribute)</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward_range">[1]</a>
+      <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.reward_range">reward_range (gym_electric_motor.core.RewardFunction attribute)</a>, <a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.reward_range">[1]</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.reward_range">[2]</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.reward_range">[3]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward_range">[4]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward_range">[5]</a>
 </li>
-      <li><a href="parts/core.html#gym_electric_motor.core.RewardFunction">RewardFunction (class in gym_electric_motor.core)</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction">[1]</a>
+      <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction">RewardFunction (class in gym_electric_motor.core)</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction">[1]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction">[2]</a>
+</li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot">RewardPlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1315,6 +1486,28 @@
       <ul>
         <li><a href="parts/core.html#gym_electric_motor.core.Callback.set_env">(gym_electric_motor.core.Callback method)</a>
 </li>
+        <li><a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.set_env">(gym_electric_motor.core.ElectricMotorVisualization method)</a>
+</li>
+        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.set_env">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_env">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/mean_episode_reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_env">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_env">[1]</a>
+</li>
       </ul></li>
       <li><a href="parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.set_f_params">set_f_params() (gym_electric_motor.physical_systems.solvers.EulerSolver method)</a>
 
@@ -1350,14 +1543,16 @@
         <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.set_j_rotor">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad method)</a>
 </li>
       </ul></li>
-      <li><a href="parts/constraint_monitor.html#gym_electric_motor.constraint_monitor.ConstraintMonitor.set_modules">set_modules() (gym_electric_motor.constraint_monitor.ConstraintMonitor method)</a>
+      <li><a href="parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint.set_modules">set_modules() (gym_electric_motor.constraints.LimitConstraint method)</a>
 
       <ul>
-        <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorVisualization.set_modules">(gym_electric_motor.core.ElectricMotorVisualization method)</a>, <a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.set_modules">[1]</a>
+        <li><a href="parts/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint.set_modules">(gym_electric_motor.constraints.SquaredConstraint method)</a>
+</li>
+        <li><a href="parts/constraint_monitor.html#gym_electric_motor.core.ConstraintMonitor.set_modules">(gym_electric_motor.core.ConstraintMonitor method)</a>, <a href="parts/core.html#gym_electric_motor.core.ConstraintMonitor.set_modules">[1]</a>
 </li>
         <li><a href="parts/core.html#gym_electric_motor.core.ReferenceGenerator.set_modules">(gym_electric_motor.core.ReferenceGenerator method)</a>, <a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.set_modules">[1]</a>
 </li>
-        <li><a href="parts/core.html#gym_electric_motor.core.RewardFunction.set_modules">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.set_modules">[1]</a>
+        <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.set_modules">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.set_modules">[1]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.set_modules">[2]</a>
 </li>
         <li><a href="parts/reference_generators/const_reference_generator.html#gym_electric_motor.reference_generators.ConstReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.ConstReferenceGenerator method)</a>
 </li>
@@ -1379,13 +1574,7 @@
 </li>
         <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.set_modules">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors.set_modules">(gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors method)</a>
-</li>
         <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
-</li>
-        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.set_modules">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
-</li>
-        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_modules">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1408,8 +1597,16 @@
         <li><a href="parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_system_equation">(gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver method)</a>
 </li>
       </ul></li>
-      <li><a href="parts/reward_functions/shifted_weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.ShiftedWeightedSumOfErrors">ShiftedWeightedSumOfErrors (class in gym_electric_motor.reward_functions.weighted_sum_of_errors)</a>
+      <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot.set_width">set_width() (gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot method)</a>
+
+      <ul>
+        <li><a href="parts/visualizations/motor_dashboard_plots/reward_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.set_width">(gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot method)</a>
 </li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_width">(gym_electric_motor.visualization.motor_dashboard_plots.StatePlot method)</a>
+</li>
+        <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_width">(gym_electric_motor.visualization.motor_dashboard_plots.TimePlot method)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_width">[1]</a>
+</li>
+      </ul></li>
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.simulate">simulate() (gym_electric_motor.core.PhysicalSystem method)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.simulate">[1]</a>
 
       <ul>
@@ -1423,6 +1620,8 @@
 </li>
       </ul></li>
       <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator">SinusoidalReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
+</li>
+      <li><a href="parts/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint">SquaredConstraint (class in gym_electric_motor.constraints)</a>
 </li>
       <li><a href="parts/physical_systems/electric_motors/scim.html#gym_electric_motor.physical_systems.electric_motors.SquirrelCageInductionMotor">SquirrelCageInductionMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
 </li>
@@ -1448,16 +1647,10 @@
 </li>
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.state_space">state_space() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.state_space">[1]</a>
 </li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot">StatePlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
+</li>
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.step">step() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.step">[1]</a>
-
-      <ul>
-        <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorVisualization.step">(gym_electric_motor.core.ElectricMotorVisualization method)</a>, <a href="parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.step">[1]</a>
 </li>
-        <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.step">(gym_electric_motor.visualization.console_printer.ConsolePrinter method)</a>
-</li>
-        <li><a href="parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.step">(gym_electric_motor.visualization.motor_dashboard.MotorDashboard method)</a>
-</li>
-      </ul></li>
       <li><a href="parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator">StepReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
 </li>
       <li><a href="parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator">SubepisodedReferenceGenerator (class in gym_electric_motor.reference_generators.subepisoded_reference_generator)</a>
@@ -1529,6 +1722,8 @@
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.tau">tau() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.tau">[1]</a>
 </li>
       <li><a href="parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor">ThreePhaseMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
+</li>
+      <li><a href="parts/visualizations/motor_dashboard_plots/step_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot">TimePlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>, <a href="parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot">[1]</a>
 </li>
       <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator">TriangularReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
 </li>
