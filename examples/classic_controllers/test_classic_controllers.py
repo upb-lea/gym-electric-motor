@@ -8,6 +8,7 @@ from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
 from matplotlib import pyplot as plt
+import numpy as np
 
 
 if __name__ == '__main__':
