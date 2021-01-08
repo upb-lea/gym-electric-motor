@@ -97,8 +97,8 @@ class Controller:
                             controller_kwargs['d_gain']
 
                 elif 'omega' in ref_states:
-                    p_gain = 10
-                    i_gain = 15
+                    p_gain = 32 * environment.physical_system.tau * mp['r_a'] / (a * mp['l_a'] ** 3 * environment.physical_system.limits[cv_idx])
+                    i_gain = p_gain / (a ** 2 * mp['l_a'] / mp['r_a'])
 
                     controller_kwargs['p_gain'] = p_gain if 'p_gain' not in controller_kwargs.keys() else \
                         controller_kwargs['p_gain']
@@ -106,7 +106,7 @@ class Controller:
                         controller_kwargs['i_gain']
 
                     if _controllers[controller_type][2] == PID_Controller:
-                        d_gain = 0.00005
+                        d_gain = p_gain * environment.physical_system.tau
                         controller_kwargs['d_gain'] = d_gain if 'd_gain' not in controller_kwargs.keys() else \
                             controller_kwargs['d_gain']
 
@@ -144,7 +144,7 @@ class Controller:
 
             elif _controllers[controller_type][0] == FOC_Controller:
                 print('Berechne FOC Gain')
-
+        print(controller_kwargs)
         return controller_kwargs
 
 
@@ -298,8 +298,8 @@ class Cascaded_Controller(Controller):
         return (state[self.ref_outer_state_idx] * self.limit[self.ref_outer_state_idx] * psi_e) / self.limit[self.u_idx]
 
     def reset(self):
-        self.outer_controller.reset()
-        self.inner_controller.reset()
+        for controller in self.controller_stages:
+            controller.reset()
         self.k = 0
 
 
