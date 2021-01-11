@@ -22,13 +22,17 @@ class RewardPlot(TimePlot):
     def set_env(self, env):
         super().set_env(env)
         self._reward_range = env.reward_range
-        self._reward_data = np.zeros_like(self._x_data, dtype=float) * np.nan
+        self._reward_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
         self._y_data = [self._reward_data]
         min_limit = self._reward_range[0]
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
         self._y_lim = (min_limit - spacing, max_limit + spacing)
         self._label = 'reward'
+
+    def reset_data(self):
+        super().reset_data()
+        self._reward_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
 
     def on_step_end(self, k, state, reference, reward, done):
         idx = self.data_idx

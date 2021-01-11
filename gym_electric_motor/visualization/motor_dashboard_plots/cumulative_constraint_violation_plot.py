@@ -16,6 +16,10 @@ class CumulativeConstraintViolationPlot(StepPlot):
         self._y_data.append(self._violations)
         self._lines.append(self._axis.plot(self._x_data, self._violations)[0])
 
+    def reset_data(self):
+        super().reset_data()
+        self._violations = [0]
+
     def on_step_end(self, k, state, reference, reward, done):
         super().on_step_end(k, state, reference, reward, done)
         if done:

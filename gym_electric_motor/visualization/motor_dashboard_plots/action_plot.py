@@ -40,14 +40,18 @@ class ActionPlot(TimePlot):
         )
         self._lines.append(self._action_line)
 
+    def reset_data(self):
+        super().reset_data()
+        self._action_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
+        self._y_data.append(self._action_data)
+
     def set_env(self, env):
         # Docstring of superclass
         super().set_env(env)
         ps = env.physical_system
         # fetch the action space from the physical system
         self._action_space = ps.action_space
-        self._action_data = np.zeros_like(self._x_data, dtype=float) * np.nan
-        self._y_data.append(self._action_data)
+        self.reset_data()
 
         # check for the type of action space: Discrete or Continuous
         if type(self._action_space) is Box:  # for continuous action space
