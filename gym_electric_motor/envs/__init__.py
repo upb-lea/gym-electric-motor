@@ -1,6 +1,10 @@
 # Version 1
-from .gym_dcm.dc_permex_motor_env import ContDcPermanentlyExcitedMotorEnvironment
-from .gym_dcm.dc_permex_motor_env import DiscDcPermanentlyExcitedMotorEnvironment
+from .gym_dcm.dc_permex_motor_env import ContSpeedControlDcPermanentlyExcitedMotorEnv
+from .gym_dcm.dc_permex_motor_env import DiscSpeedControlDcPermanentlyExcitedMotorEnv
+from .gym_dcm.dc_permex_motor_env import ContTorqueControlDcPermanentlyExcitedMotorEnv
+from .gym_dcm.dc_permex_motor_env import DiscTorqueControlDcPermanentlyExcitedMotorEnv
+from .gym_dcm.dc_permex_motor_env import ContCurrentControlDcPermanentlyExcitedMotorEnv
+from .gym_dcm.dc_permex_motor_env import DiscCurrentControlDcPermanentlyExcitedMotorEnv
 
 from .gym_dcm.dc_extex_motor_env import ContDcExternallyExcitedMotorEnvironment
 from .gym_dcm.dc_extex_motor_env import DiscDcExternallyExcitedMotorEnvironment

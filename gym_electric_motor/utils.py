@@ -64,8 +64,8 @@ def initialize(base_class, arg, default_class, default_args):
     elif type(arg) is str:
         return _registry[base_class][arg]()
     elif type(arg) is dict:
-        args = default_args.update(arg)
-        return default_class(**args)
+        default_args.update(arg)
+        return default_class(**default_args)
 
 
 def instantiate(superclass, instance, **kwargs):
