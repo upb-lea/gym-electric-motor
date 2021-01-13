@@ -127,7 +127,7 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
             Environment to simulate a continuously speed controlled permanently excited DC Motor
-
+1
         Key:
             `Cont-SC-PermExDc-v0`
 
@@ -247,12 +247,12 @@ class DiscTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             `Disc-TC-PermExDc-v0`
 
         Default Components:
-            Supply: IdealVoltageSupply
-            Converter: DiscFourQuadrantConverter
-            Motor: DcPermanentlyExcitedMotor
-            Load: ConstantSpeedLoad
-            Ode-Solver: EulerSolver
-            Noise: None
+            - Supply: IdealVoltageSupply
+            - Converter: DiscFourQuadrantConverter
+            - Motor: DcPermanentlyExcitedMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
 
             Reference Generator:
                 WienerProcessReferenceGenerator
@@ -305,10 +305,10 @@ class DiscTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             reward_function(env-arg: Specification of the reward_function to be used in the environment
             reference_generator(env-arg): Specification of the reference generator to be used in the environment
             visualization(env-arg): Specification of the visualization to be used in the environment
-            constraints(iterable(str/Constraint)): All Constraints of the environment.
-                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)
-                 can be directly specified by passing the state name here (e.g. 'i', 'omega')
-                 - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
+            constraints(iterable(str/Constraint)): All Constraints of the environment. \n
+                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit) can
+                 be directly specified by passing the state name here (e.g. 'i', 'omega') \n
+                - instance of Constraint: More complex constraints (e.g. the SquaredConstraint) can be initialized and
                  passed to the environment.
             calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
                 simulation. This may lead to speed improvements. Default: True

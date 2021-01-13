@@ -68,10 +68,6 @@ register(id='DFIMDisc-v1',
 
 # Old Ids
 
-register(id='emotor-dc-permex-cont-v1',
-         entry_point=envs_path+'ContDcPermanentlyExcitedMotorEnvironment')
-register(id='emotor-dc-permex-disc-v1',
-         entry_point=envs_path+'DiscDcPermanentlyExcitedMotorEnvironment')
 register(id='emotor-dc-extex-cont-v1',
          entry_point=envs_path+'ContDcExternallyExcitedMotorEnvironment')
 register(id='emotor-dc-extex-disc-v1',
