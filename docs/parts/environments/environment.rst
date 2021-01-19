@@ -82,6 +82,11 @@ Discrete Doubly Fed Induction Motor Environment                       ``'DFIMDis
    :caption: Motor Environments:
 
    disc_tc_permex
+   cont_tc_permex
+   disc_cc_permex
+   cont_cc_permex
+   disc_sc_permex
+   cont_sc_permex
    dc_extex_cont
    dc_extex_disc
    dc_series_cont
