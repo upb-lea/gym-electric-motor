@@ -28,30 +28,22 @@ class SCMLSystem(PhysicalSystem):
 
     @property
     def supply(self):
-        """
-        The voltage supply instance in the physical system
-        """
+        """The voltage supply instance in the physical system"""
         return self._supply
 
     @property
     def converter(self):
-        """
-        The power electronic converter instance in the system
-        """
+        """The power electronic converter instance in the system"""
         return self._converter
 
     @property
     def electrical_motor(self):
-        """
-        The electrical motor instance of the system
-        """
+        """The electrical motor instance of the system"""
         return self._electrical_motor
 
     @property
     def mechanical_load(self):
-        """
-        The mechanical load instance in the system
-        """
+        """The mechanical load instance in the system"""
         return self._mechanical_load
 
     def __init__(self, converter, motor, load, supply, ode_solver, noise_generator=None, tau=1e-4, calc_jacobian=None):
