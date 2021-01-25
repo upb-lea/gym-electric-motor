@@ -500,8 +500,9 @@ class DiscMultiConverter(DiscConverter):
             kwargs(dict): Parameters to pass to the Subconverters and the superclass
         """
         super().__init__(**kwargs)
-        self._subconverters = [instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters]
-
+        self._subconverters = [
+            instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters
+        ]
         self.subsignal_current_space_dims = []
         self.subsignal_voltage_space_dims = []
         self.action_space = []
