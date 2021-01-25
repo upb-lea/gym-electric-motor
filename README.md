@@ -84,16 +84,15 @@ Among various DC-motor models, the following three-phase motors - together with 
 The converters can be driven by means of a duty cycle (continuous mode) or switching commands (discrete mode). 
 
 ### Citation
-A whitepaper for this framework is available under [arxiv.org/abs/1910.09434](https://arxiv.org/abs/1910.09434). Please use the following BibTeX entry for citing us:
+A whitepaper for this framework is available under (preprint: [arxiv.org/abs/1910.09434](https://arxiv.org/abs/1910.09434), full-paper: [IEEE-Xplore](https://ieeexplore.ieee.org/document/9241851)). Please use the following BibTeX entry for citing us:
 ```
-@misc{traue2019reinforcement,
-    title={Towards a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},
-    author={Arne Traue and Gerrit Book and Wilhelm Kirchgässner and Oliver Wallscheid},
-    year={2019},
-    eprint={1910.09434},
-    archivePrefix={arXiv},
-    primaryClass={eess.SY}
-}
+@ARTICLE{9241851,  
+author={A. {Traue} and G. {Book} and W. {Kirchgässner} and O. {Wallscheid}},  
+journal={IEEE Transactions on Neural Networks and Learning Systems},   
+title={Toward a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},   
+year={2020},  volume={},  number={},  
+pages={1-10},  
+doi={10.1109/TNNLS.2020.3029573}}
 ```
 
 ### Running Unit Tests with Pytest
