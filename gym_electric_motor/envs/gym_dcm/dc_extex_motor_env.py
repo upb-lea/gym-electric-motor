@@ -368,10 +368,10 @@ class DiscTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
 class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
     Description:
-        Environment to simulate a discretely torque controlled externally excited DC Motor
+        Environment to simulate a continuously torque controlled externally excited DC Motor
 
     Key:
-        `Disc-TC-ExtExDc-v0`
+        `Cont-TC-ExtExDc-v0`
 
     Default Components:
         - Supply: IdealVoltageSupply
@@ -395,7 +395,7 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
             Current Limit on 'i_a' and 'i_e'
 
     Control Cycle Time:
-        tau = 1e-5 seconds
+        tau = 1e-4 seconds
 
     State Variables:
         ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
@@ -410,7 +410,7 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         Box(low=[-1], high=[1])
 
     Action Space:
-        Discrete(8)
+        Box(low=[-1,0], high=[1,1])
 
     Starting State:
         Zeros on all state variables.
@@ -421,7 +421,7 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
 
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i',), calc_jacobian=True, tau=1e-4):
+                 constraints=('i_a', 'i_e',), calc_jacobian=True, tau=1e-4):
         """
         Args:
             supply(env-arg): Specification of the supply to be used in the environment
@@ -478,13 +478,13 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
+class DiscCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely torque controlled externally excited DC Motor
+            Environment to simulate a discretely current controlled externally excited DC Motor
 
         Key:
-            `Disc-TC-ExtExDc-v0`
+            `Disc-CC-ExtExDc-v0`
 
         Default Components:
             - Supply: IdealVoltageSupply
@@ -496,13 +496,13 @@ class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
 
             Reference Generator:
                 WienerProcessReferenceGenerator
-                    Reference Quantity. 'torque'
+                    Reference Quantity. 'i_a', 'i_e'
 
             Reward Function:
-                WeightedSumOfErrors: reward_weights 'torque' = 1
+                WeightedSumOfErrors: reward_weights 'i_a' = 'i_e' = 0.5
 
             Visualization:
-                MotorDashboard: torque and action plots
+                MotorDashboard: currents and action plots
 
             Constraints:
                 Current Limit on 'i_a' and 'i_e'
@@ -520,7 +520,7 @@ class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
 
         Reference Space:
-            Box(low=[-1], high=[1])
+            Box(low=[-1, -1], high=[1, 1])
 
         Action Space:
             Discrete(8)
@@ -533,7 +533,7 @@ class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i',), calc_jacobian=True, tau=1e-5):
+                 constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-5):
         """
         Args:
             supply(env-arg): Specification of the supply to be used in the environment
@@ -591,61 +591,62 @@ class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
+class ContCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled permanently excited DC Motor
+            Environment to simulate a continuously current controlled externally excited DC Motor
 
         Key:
-            `Cont-CC-DcPermEx-v0`
+            `Cont-CC-ExtExDc-v0`
 
-        Default Modules:
-
-            Physical System:
-                SCMLSystem/DcMotorSystem with:
-                    | IdealVoltageSupply
-                    | ContFourQuadrantConverter
-                    | DcPermanentlyExcitedMotor
-                    | PolynomialStaticLoad
-                    | GaussianWhiteNoiseGenerator
-                    | EulerSolver
-                    | tau=1e-4
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: ContMultiConverter(ContFourQuadrantConverter, ContOneQuadrantConverter)
+            - Motor: DcExternallyExcitedMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
 
             Reference Generator:
                 WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+                    Reference Quantity. 'i_a', 'i_e'
 
             Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+                WeightedSumOfErrors: reward_weights 'i_a' = 0.5, 'i_e' = 0.5
 
             Visualization:
-                *MotorDashboard* - Plots: omega, action
+                MotorDashboard: current and action plots
+
+            Constraints:
+                Current Limit on 'i_a' and 'i_e'
+
+        Control Cycle Time:
+            tau = 1e-4 seconds
 
         State Variables:
-            ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+            ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
 
         Observation Space:
             Type: Tuple(State_Space, Reference_Space)
 
         State Space:
-            Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+            Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
 
         Reference Space:
-            Box(low=[-1], high=[1])
+            Box(low=[-1, -1], high=[1, 1])
 
         Action Space:
-            Type: Box(low=[-1], high=[1])
+            Box(low=[-1, 0], high=[1, 1])
 
         Starting State:
             Zeros on all state variables.
 
         Episode Termination:
-            Termination if current limits are violated. The terminal reward -10 is used as reward.
-            (Have a look at the reward functions.)
-        """
+            Termination if current limits are violated.
+    """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i',), calc_jacobian=True, tau=1e-4):
+                 constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-4):
         """
         Args:
             supply(env-arg): Specification of the supply to be used in the environment
