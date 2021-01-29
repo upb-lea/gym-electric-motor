@@ -1,27 +1,28 @@
 from gym.spaces import Discrete, Box, MultiDiscrete
 from gym_electric_motor.physical_systems import SynchronousMotorSystem, DcMotorSystem, DcSeriesMotor, DcExternallyExcitedMotor
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, SwitchedReferenceGenerator
-from gym_electric_motor.envs import ContDcExternallyExcitedMotorEnvironment
+from gym_electric_motor.envs import ContDcExternallyExcitedMotorEnvironment, DiscDcExternallyExcitedMotorEnvironment
 import numpy as np
 
 
 class Controller:
 
     @classmethod
-    def make(cls, environment, controller_type=None, **controller_kwargs):
+    def make(cls, environment, stages=None, **controller_kwargs):
 
         controller_kwargs = cls.reference_states(cls, environment, **controller_kwargs)
 
-        if controller_type != None:
+        if stages != None:
+            controller_type, stages = cls.find_controller_type(cls, environment, stages)
             assert controller_type in _controllers.keys(), f'Controller {controller_type} unknown'
-            controller_kwargs = cls.automated_gain(cls, controller_type, environment, **controller_kwargs)
-            controller = _controllers[controller_type][0](controller_type, environment, **controller_kwargs)
+            stages = cls.automated_gain(cls, environment, stages, controller_type, **controller_kwargs)
+            controller = _controllers[controller_type][0](environment, stages, **controller_kwargs)
 
         else:
-            controller_type, controller_kwargs = cls.automated_controller_design(cls, environment, controller_type,
-                                                                                 **controller_kwargs)
-            controller_kwargs = cls.automated_gain(cls, controller_type, environment, **controller_kwargs)
-            controller = _controllers[controller_type][0](controller_type, environment,  **controller_kwargs)
+            controller_type, stages = cls.automated_controller_design(cls, environment, **controller_kwargs)
+            stages = cls.automated_gain(cls, environment, stages, controller_type, **controller_kwargs)
+
+            controller = _controllers[controller_type][0](environment, stages, **controller_kwargs)
 
         return controller
 
@@ -44,15 +45,41 @@ class Controller:
         controller_kwargs['ref_states'] = np.array(ref_states)
         return controller_kwargs
 
+    def find_controller_type(self, environment, stages):
+        _stages = stages
+        print(stages)
+        if type(environment.physical_system) == DcMotorSystem:
+            if type(stages) == list:
+                if len(stages) > 1:
+                    if type(stages[0]) == list:
+                        stages = stages[0]
+                    if len(stages) > 1:
+                        controller_type = 'cascaded_controller'
+                    else:
+                        controller_type = stages['controller_type']
+                else:
+                    controller_type = stages[0]['controller_type']
+            else:
+                if type(stages) == dict:
+                    controller_type = stages['controller_type']
+                    _stages = [stages]
+                else:
+                    controller_type = stages
+                    _stages = [{'controller_type': stages}]
+        elif type(environment.physical_system) == SynchronousMotorSystem:
+            controller_type = 'foc_controller'
 
-    def automated_controller_design(self, environment, controller_type, **controller_kwargs):
+        return controller_type, _stages
+
+    def automated_controller_design(self, environment, **controller_kwargs):
         action_space = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
+        stages = []
         if type(environment.physical_system) == DcMotorSystem:
 
             if 'omega' in ref_states or 'torque' in ref_states:
                 controller_type = 'cascaded_controller'
-                stages = controller_kwargs['stages'] if 'stages' in controller_kwargs.keys() else []
+
                 for i in range(len(stages), 2):
                     if i == 0:
                         if action_space == Box:
@@ -62,32 +89,28 @@ class Controller:
                     else:
                         stages.append({'controller_type': 'pi_controller'})
 
-                controller_kwargs['stages'] = stages
-
             elif 'i' in ref_states or 'i_a' in ref_states:
 
                 if action_space == Discrete or action_space == MultiDiscrete:
-                    controller_type = 'three_point'
+                    stages.append({'controller_type': 'three_point'})
                 elif action_space == Box:
-                    controller_type = 'pi_controller'
-
+                    stages.append({'controller_type': 'pi_controller'})
+                controller_type = stages[0]['controller_type']
             if type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor:
-                if action_space == Discrete or action_space == MultiDiscrete:
-                    controller_type_e = 'on_off'
-                elif action_space == Box:
-                    controller_type_e = 'pi_controller'
-                controller_kwargs['controller_e'] = {'controller_type_e': controller_type_e}
+                if action_space == Box:
+                    stages = [stages, [{'controller_type': 'pi_controller'}]]
+                else:
+                    stages = [stages, [{'controller_type': 'three_point'}]]
+
 
         elif type(environment.physical_system) == SynchronousMotorSystem:
             controller_type = 'foc_controller'
-            if 'q_controller' not in controller_kwargs.keys():
-                controller_kwargs['q_controller'] = {'controller_type': 'pi_controller'}
-            if 'd_controller' not in controller_kwargs.keys():
-                controller_kwargs['d_controller'] = {'controller_type': 'pi_controller'}
+            stages = [[{'controller_type': 'pi_controller'}], [{'controller_type': 'pi_controller'}]]
 
-        return controller_type, controller_kwargs
 
-    def automated_gain(self, controller_type, environment, **controller_kwargs):
+        return controller_type, stages
+
+    def automated_gain(self, environment, stages, controller_type, **controller_kwargs):
         ref_states = controller_kwargs['ref_states']
         mp = environment.physical_system.electrical_motor.motor_parameter
 
@@ -110,144 +133,124 @@ class Controller:
         if 'automated_gain' not in controller_kwargs.keys() or automated_gain:
 
             if type(environment) == ContDcExternallyExcitedMotorEnvironment:
+                stages_a = stages[0]
+                stages_e = stages[1]
+
                 p_gain = mp['l_e'] / (environment.physical_system.tau * a) / u_e_lim * i_e_lim
                 i_gain = p_gain / (environment.physical_system.tau * a ** 2)
 
-                controller_kwargs['controller_e']['p_gain'] = p_gain if 'p_gain' not in controller_kwargs[
-                    'controller_e'].keys() else controller_kwargs['controller_e']['p_gain']
-                controller_kwargs['controller_e']['i_gain'] = i_gain if 'i_gain' not in controller_kwargs[
-                    'controller_e'].keys() else controller_kwargs['controller_e']['i_gain']
+                stages_e[0]['p_gain'] = p_gain if 'p_gain' not in stages_e[0].keys() else stages_e[0]['p_gain']
+                stages_e[0]['i_gain'] = i_gain if 'i_gain' not in stages_e[0].keys() else stages_e[0]['i_gain']
 
-                if controller_kwargs['controller_e']['controller_type_e'] == PID_Controller:
+                if stages_e[0]['controller_type'] == PID_Controller:
                     d_gain = p_gain * environment.physical_system.tau
-                    controller_kwargs['controller_e']['d_gain'] = d_gain if 'd_gain' not in controller_kwargs[
-                        'controller_e'].keys() else controller_kwargs['controller_e']['d_gain']
+                    stages_e[0]['d_gain'] = d_gain if 'd_gain' not in stages_e[0].keys() else stages_e[0]['d_gain']
+            elif type(environment) == DiscDcExternallyExcitedMotorEnvironment:
+                stages_a = stages[0]
+                stages_e = stages[1]
+            else:
+                stages_a = stages
+                stages_e = False
 
             if _controllers[controller_type][0] == ContinuousActionController:
                 if 'i' in ref_states or 'i_a' in ref_states or 'torque' in ref_states:
                     p_gain = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
                     i_gain = p_gain / (environment.physical_system.tau * a ** 2)
 
-                    controller_kwargs['p_gain'] = p_gain if 'p_gain' not in controller_kwargs.keys() else \
-                        controller_kwargs['p_gain']
+                    stages_a[0]['p_gain'] = p_gain if 'p_gain' not in stages_a[0].keys() else stages_a[0]['p_gain']
 
-                    controller_kwargs['i_gain'] = i_gain if 'i_gain' not in controller_kwargs.keys() else \
-                        controller_kwargs['i_gain']
+                    stages_a[0]['i_gain'] = i_gain if 'i_gain' not in stages_a[0].keys() else stages_a[0]['i_gain']
 
                     if _controllers[controller_type][2] == PID_Controller:
                         d_gain = p_gain * environment.physical_system.tau
-                        controller_kwargs['d_gain'] = d_gain if 'd_gain' not in controller_kwargs.keys() else \
-                            controller_kwargs['d_gain']
+                        stages_a[0]['d_gain'] = d_gain if 'd_gain' not in stages_a[0].keys() else stages_a[0]['d_gain']
 
                 elif 'omega' in ref_states:
                     p_gain = environment.physical_system.mechanical_load.j_total * mp['r_a'] ** 2 / (
                             a * mp['l']) / u_a_lim * omega_lim
                     i_gain = p_gain / (a * mp['l'])
 
-                    controller_kwargs['p_gain'] = p_gain if 'p_gain' not in controller_kwargs.keys() else \
-                        controller_kwargs['p_gain']
-                    controller_kwargs['i_gain'] = i_gain if 'i_gain' not in controller_kwargs.keys() else \
-                        controller_kwargs['i_gain']
+                    stages_a[0]['p_gain'] = p_gain if 'p_gain' not in stages_a[0].keys() else stages_a[0]['p_gain']
+
+                    stages_a[0]['i_gain'] = i_gain if 'i_gain' not in stages_a[0].keys() else stages_a[0]['i_gain']
 
                     if _controllers[controller_type][2] == PID_Controller:
                         d_gain = p_gain * environment.physical_system.tau
-                        controller_kwargs['d_gain'] = d_gain if 'd_gain' not in controller_kwargs.keys() else \
-                            controller_kwargs['d_gain']
-
+                        stages_a[0]['d_gain'] = d_gain if 'd_gain' not in stages_a[0].keys() else stages_a[0]['d_gain']
 
             elif _controllers[controller_type][0] == Cascaded_Controller:
-                stages = controller_kwargs['stages']
+
                 for i in range(len(stages)):
 
-                    if _controllers[stages[i]['controller_type']][1] == ContinuousController:
+                    if _controllers[stages_a[i]['controller_type']][1] == ContinuousController:
 
                         if i == 0:
                             p_gain = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
-
                             i_gain = p_gain / (environment.physical_system.tau * a ** 2)
 
-                            if _controllers[stages[i]['controller_type']][
-                                2] == PID_Controller:
+                            if _controllers[stages_a[i]['controller_type']][2] == PID_Controller:
                                 d_gain = p_gain * environment.physical_system.tau
-                                stages[i]['d_gain'] = d_gain if 'd_gain' not in stages[i].keys() else stages[i][
+                                stages_a[i]['d_gain'] = d_gain if 'd_gain' not in stages_a[i].keys() else stages_a[i][
                                     'd_gain']
 
                         elif i == 1:
                             p_gain = environment.physical_system.mechanical_load.j_total / (
                                         a * (mp['l'] / mp['r_a'])) / i_a_lim * omega_lim
-
                             i_gain = p_gain / (a ** 2 * (mp['l'] / mp['r_a']))
 
-                            if _controllers[stages[i]['controller_type']][
-                                2] == PID_Controller:
+                            if _controllers[stages_a[i]['controller_type']][2] == PID_Controller:
                                 d_gain = p_gain * environment.physical_system.tau
-                                stages[i]['d_gain'] = d_gain if 'd_gain' not in stages[i].keys() else stages[i][
+                                stages_a[i]['d_gain'] = d_gain if 'd_gain' not in stages_a[i].keys() else stages_a[i][
                                     'd_gain']
-                        stages[i]['p_gain'] = p_gain if 'p_gain' not in stages[i].keys() else stages[i]['p_gain']
-                        stages[i]['i_gain'] = i_gain if 'i_gain' not in stages[i].keys() else stages[i]['i_gain']
-                controller_kwargs['stages'] = stages
+                        stages_a[i]['p_gain'] = p_gain if 'p_gain' not in stages_a[i].keys() else stages_a[i]['p_gain']
+                        stages_a[i]['i_gain'] = i_gain if 'i_gain' not in stages_a[i].keys() else stages_a[i]['i_gain']
+                if stages_e == False:
+                    stages = stages_a
+                else:
+                    stages = [stages_a, stages_e]
 
             elif _controllers[controller_type][0] == FOC_Controller:
                 print('Berechne FOC Gain')
-
-        return controller_kwargs
+        
+        return stages
 
 
 class ContinuousActionController(Controller):
-    def __init__(self, controller_type, environment, ref_states, **controller_kwargs):
-        self.ref_states = ref_states
-        print(self.ref_states)
-        self.action_space = environment.action_space
-        assert type(self.action_space) is Box and type(
+    def __init__(self, environment, stages, ref_states, **controller_kwargs):
+        assert type(environment.action_space) is Box and type(
             environment.physical_system) is DcMotorSystem, 'No suitable action space for Continuous Action Controller'
-        self.ref_state_idx = np.where(environment.reference_generator.referenced_states == True)[0][0]
-        self.ref_idx = np.where(self.ref_states != 'i_e')[0][0]
-        self.controller = _controllers[controller_type][1].make(controller_type, environment, **controller_kwargs)
-        self.mp = environment.physical_system.electrical_motor.motor_parameter
-
-        if 'psi_e' in self.mp.keys():
-            self.psi_e = self.mp['psi_e']
-        else:
-            self.l_e = self.mp['l_e_prime']
-            self.psi_e = None
-
+        self.action_space = environment.action_space
+        self.ref_idx = np.where(ref_states != 'i_e')[0][0]
+        self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
         self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
         self.u_idx = environment.physical_system.VOLTAGES_IDX[-1]
         self.limit = environment.physical_system.limits[environment.state_filter]
         self.omega_idx = environment.state_names.index('omega')
         self.action = np.zeros(self.action_space.shape[0])
-        self.control_e = False
+        self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
+        mp = environment.physical_system.electrical_motor.motor_parameter
+        self.psi_e = None if 'psi_e' not in mp.keys() else mp['psi_e']
+        self.l_e = None if 'l_e_prime' not in mp.keys() else mp['l_e_prime']
 
-        if self.action_space.shape[0] > 1:
-            if 'i_e' in self.ref_states:
-                assert len(self.ref_states) <= 2, 'Too many referenced states'
-            else:
-                assert len(self.ref_states) <= 1, 'Too many referenced states'
-            self.control_e = True
-            controller_type_e = controller_kwargs['controller_e']['controller_type_e']
-
-            self.controller_e = _controllers[controller_type_e][1].make(controller_type_e, environment, control_e=True,
-                                                                        **controller_kwargs['controller_e'])
-            if 'i_e' in self.ref_states:
-                self.ref_e_idx = np.where(self.ref_states == 'i_e')[0][0]
-                self.rg_ref_e = True
-            else:
-                self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
-                self.rg_ref_e = False
+        if self.control_e:
+            assert len(stages) == 2, 'Controller design is not completely'
+            self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
+            self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
+            self.controller_e = _controllers[stages[1][0]['controller_type']][1].make(environment, stages[1][0], **controller_kwargs)
+            self.controller = _controllers[stages[0][0]['controller_type']][1].make(environment, stages[0][0], **controller_kwargs)
         else:
-            assert len(self.ref_states) <= 1, 'Too many referenced states'
-
+            assert len(ref_states) <= 1, 'Too many referenced states'
+            self.controller = _controllers[stages[0]['controller_type']][1].make(environment, stages[0], **controller_kwargs)
 
     def control(self, state, reference):
         self.action[0] = self.controller.control(state[self.ref_state_idx], reference[self.ref_idx]) + self.feedforward(state)
         if self.action_space.low[0] <= self.action[0] <= self.action_space.high[0]:
             self.controller.integrate(state[self.ref_state_idx], reference[self.ref_idx])
         if self.control_e:
-            if self.rg_ref_e:
-                self.ref_e = reference[self.ref_e_idx]
-            self.action[1] = self.controller_e.control(state[self.i_idx], self.ref_e)
+            ref_e = self.ref_e if self.ref_e_idx == False else reference[self.ref_e_idx]
+            self.action[1] = self.controller_e.control(state[self.i_idx], ref_e)
             if self.action_space.low[1] <= self.action[1] <= self.action_space.high[1]:
-                self.controller_e.integrate(state[self.i_idx], self.ref_e)
+                self.controller_e.integrate(state[self.i_idx], ref_e)
         return np.clip(self.action, self.action_space.low, self.action_space.high)
 
     def reset(self):
@@ -261,153 +264,108 @@ class ContinuousActionController(Controller):
 
 
 class DiscreteActionController(Controller):
-    def __init__(self, controller_type, environment, ref_states, **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, **controller_kwargs):
         assert type(environment.action_space) in [Discrete, MultiDiscrete] and type(
             environment.physical_system) is DcMotorSystem, 'No suitable action space for Discrete Action Controller'
-        self.ref_states = ref_states
-        self.action_space = environment.action_space
-        self.limit = environment.physical_system.limits
-        self.u_idx = environment.physical_system.VOLTAGES_IDX[-1]
+        self.ref_idx = np.where(ref_states != 'i_e')[0][0]
+        self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
         self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
-        self.mp = environment.physical_system.electrical_motor.motor_parameter
+        self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
 
-        if self.action_space.shape != ():
-            if 'i_e' in self.ref_states:
-                assert len(self.ref_states) <= 2, 'Too many referenced states'
-            else:
-                assert len(self.ref_states) <= 1, 'Too many referenced states'
-            self.control_e = True
-            controller_type_e = controller_kwargs['controller_e']['controller_type_e']
-            self.controller_e = _controllers[controller_type_e][1].make(controller_type_e, environment, control_e=True,
-                                                                        **controller_kwargs['controller_e'])
-            if 'i_e' in self.ref_states:
-                self.ref_e_idx = np.where(self.ref_states == 'i_e')[0][0]
-                self.rg_ref_e = True
-            else:
-                self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
-                self.rg_ref_e = False
+        if self.control_e:
+            assert len(stages) == 2, 'Controller design is not completely'
+            self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
+            self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
+            self.controller_e = _controllers[stages[1][0]['controller_type']][1].make(environment, stages[1][0], control_e=True, **controller_kwargs)
+            self.controller = _controllers[stages[0][0]['controller_type']][1].make(environment, stages[0][0], **controller_kwargs)
         else:
-            assert len(self.ref_states) <= 1, 'Too many referenced states'
-
-        self.controller = _controllers[controller_type][1].make(controller_type, environment, **controller_kwargs)
-        self.ref_idx = np.where(self.ref_states != 'i_e')[0][0]
-        self.ref_state_idx = environment.state_names.index(self.ref_states[self.ref_idx])
+            assert len(ref_states) <= 1, 'Too many referenced states'
+            self.controller = _controllers[stages[0]['controller_type']][1].make(environment, stages[0], **controller_kwargs)
 
 
     def control(self, state, reference):
-        if self.action_space.shape == ():
-            return self.controller.control(state[self.ref_state_idx], reference[self.ref_idx])
-
+        if self.control_e:
+            ref_e = self.ref_e if self.ref_e_idx == False else reference[self.ref_e_idx]
+            return [self.controller.control(state[self.ref_state_idx], reference[self.ref_idx]), self.controller_e.control(state[self.i_idx], ref_e)]
         else:
-            if self.rg_ref_e:
-                self.ref_e = reference[self.ref_e_idx]
-            action_u_e = self.controller_e.control(state[self.i_idx], self.ref_e)
-            return [self.controller.control(state[self.ref_state_idx], reference[self.ref_idx]), action_u_e]
+            return self.controller.control(state[self.ref_state_idx], reference[self.ref_idx])
 
     def reset(self):
         self.controller.reset()
+        if self.control_e:
+            self.control_e.reset()
 
 
 class Cascaded_Controller(Controller):
-    def __init__(self, controller_type, environment, ref_states, **controller_kwargs):
-        self.ref_states = ref_states
+    def __init__(self, environment, stages, ref_states, **controller_kwargs):
+
         self.action_space = environment.action_space
         self.state_space = environment.physical_system.state_space
-        self.ref_idx = np.where(self.ref_states != 'i_e')[0][0]
-        self.mp = environment.physical_system.electrical_motor.motor_parameter
+
         self.i_e_idx = environment.physical_system.CURRENTS_IDX[-1]
         self.i_a_idx = environment.physical_system.CURRENTS_IDX[0]
-        self.omega_idx = environment.state_names.index('omega')
-        self.torque_idx = environment.state_names.index('torque')
-        self.phi_idx = None
         self.u_idx = environment.physical_system.VOLTAGES_IDX[-1]
+        self.omega_idx = environment.state_names.index('omega')
+        self.ref_idx = np.where(ref_states != 'i_e')[0][0]
+        self.ref_state_idx = [self.i_a_idx, environment.state_names.index(ref_states[self.ref_idx])]
+
         self.limit = environment.physical_system.limits[environment.state_filter]
-        self.stages = len(controller_kwargs['stages'])
-        self.ref_state_idx = [self.i_a_idx, self.omega_idx, self.phi_idx]
-        self.ref_state_idx[1] = self.torque_idx if 'torque' in ref_states else self.omega_idx
-        self.controller_stages = []
-        self.stage_type = []
-        self.control_e = False
+        self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
+        mp = environment.physical_system.electrical_motor.motor_parameter
+        self.psi_e = None if 'psi_e' not in mp.keys() else mp['psi_e']
+        self.l_e = None if 'l_e_prime' not in mp.keys() else mp['l_e_prime']
 
-        if 'psi_e' in self.mp.keys():
-            self.psi_e = self.mp['psi_e']
+        if self.control_e:
+            assert len(stages) == 2, 'Controller design is not completely'
+            self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
+            self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
+            self.controller_e = _controllers[stages[1][0]['controller_type']][1].make(environment, stages[1][0], control_e=True, **controller_kwargs)
+            stages = stages[0]
         else:
-            self.l_e = self.mp['l_e_prime']
-            self.psi_e = None
+            assert len(ref_states) <= 1, 'Too many referenced states'
 
-        for i in range(self.stages):
-            kwargs = controller_kwargs['stages'][i]
-            self.stage_type.append(_controllers[kwargs['controller_type']][1] == ContinuousController)
-            cascaded = 'outer' if i != 0 else 'inner'
-            self.controller_stages.append(
-                _controllers[kwargs['controller_type']][1].make(kwargs['controller_type'], environment,
-                                                                param_dict=kwargs, cascaded=cascaded))
+        self.stage_type = [_controllers[stage['controller_type']][1] == ContinuousController for stage in stages]
+        self.controller_stages = [_controllers[stage['controller_type']][1].make(environment, stage, cascaded=stages.index(stage)!=0) for stage in stages]
 
-        if self.stage_type[0]:
-            assert type(self.action_space) is Box, 'No suitable inner controller'
-        else:
-            assert type(self.action_space) in [Discrete, MultiDiscrete], 'No suitable inner controller'
-
-        if self.action_space.shape == (2,):
-            if 'i_e' in self.ref_states:
-                assert len(self.ref_states) <= 2, 'Too many referenced states'
-            else:
-                assert len(self.ref_states) <= 1, 'Too many referenced states'
-            self.control_e = True
-            controller_type_e = controller_kwargs['controller_e']['controller_type_e']
-            self.controller_e = _controllers[controller_type_e][1].make(controller_type_e, environment, control_e=True,
-                                                                        **controller_kwargs['controller_e'])
-            if 'i_e' in self.ref_states:
-                self.ref_e_idx = np.where(self.ref_states == 'i_e')[0][0]
-                self.rg_ref_e = True
-            else:
-                self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
-                self.rg_ref_e = False
-        else:
-            assert len(self.ref_states) <= 1, 'Too many referenced states'
+        assert type(self.action_space) is Box or not self.stage_type[0], 'No suitable inner controller'
+        assert type(self.action_space) in [Discrete, MultiDiscrete] or self.stage_type[0], 'No suitable inner controller'
+        self.ref = np.zeros(len(self.controller_stages))
 
     def control(self, state, reference):
-
-        psi_e = max(self.psi_e or self.l_e * state[self.i_e_idx] * self.limit[self.i_e_idx], 1e-6)
-        ref = np.zeros(self.stages)
-        ref[-1] = reference[0]
-
-        for i in range(self.stages - 1, 0, -1):
-            ref[i - 1] = self.controller_stages[i].control(state[self.ref_state_idx[i]], ref[i])
-            if (0.85 * self.state_space.low[self.ref_state_idx[i - 1]] <= ref[i - 1] <= 0.85 * self.state_space.high[
+        self.ref[-1] = reference[self.ref_idx]
+        for i in range(len(self.controller_stages) - 1, 0, -1):
+            self.ref[i - 1] = self.controller_stages[i].control(state[self.ref_state_idx[i]], self.ref[i])
+            if (0.85 * self.state_space.low[self.ref_state_idx[i - 1]] <= self.ref[i - 1] <= 0.85 * self.state_space.high[
                 self.ref_state_idx[i - 1]]) and self.stage_type[i]:
                 self.controller_stages[i].integrate(state[self.ref_state_idx[i]], reference[0])
             elif self.stage_type[i]:
-                ref[i - 1] = np.clip(ref[i - 1], 0.85 * self.state_space.low[self.ref_state_idx[i - 1]],
+                self.ref[i - 1] = np.clip(self.ref[i - 1], 0.85 * self.state_space.low[self.ref_state_idx[i - 1]],
                                      0.85 * self.state_space.high[self.ref_state_idx[i - 1]])
 
-        action = self.controller_stages[0].control(state[self.ref_state_idx[0]], ref[0])
+        action = self.controller_stages[0].control(state[self.ref_state_idx[0]], self.ref[0])
         if self.stage_type[0]:
-            action += self.feedforward(state, psi_e)
-
+            action += self.feedforward(state)
             if self.action_space.low[0] <= action.all() <= self.action_space.high[0]:
-                self.controller_stages[0].integrate(state[self.ref_state_idx[0]], ref[0])
+                self.controller_stages[0].integrate(state[self.ref_state_idx[0]], self.ref[0])
                 action = [action]
             else:
                 action = np.clip([action], self.action_space.low[0], self.action_space.high[0])
 
         if self.control_e:
-            if self.rg_ref_e:
-                self.ref_e = reference[self.ref_e_idx]
-            action_u_e = self.controller_e.control(state[self.i_e_idx], self.ref_e)
+            ref_e = self.ref_e if self.ref_e_idx == False else reference[self.ref_e_idx]
+            action_u_e = self.controller_e.control(state[self.i_e_idx], ref_e)
             if self.stage_type[0]:
                 action.append(action_u_e)
                 if self.action_space.low[1] <= action[1] <= self.action_space.high[1]:
-                    self.controller_e.integrate(state[self.i_e_idx], self.ref_e)
-
+                    self.controller_e.integrate(state[self.i_e_idx], ref_e)
                 action = np.clip(action, self.action_space.low, self.action_space.high)
-
             else:
                 action = np.array([action, action_u_e], dtype='object')
-
+                
         return action
 
-    def feedforward(self, state, psi_e):
+    def feedforward(self, state):
+        psi_e = max(self.psi_e or self.l_e * state[self.i_e_idx] * self.limit[self.i_e_idx], 1e-6)
         return (state[self.omega_idx] * self.limit[self.omega_idx] * psi_e) / self.limit[self.u_idx]
 
     def reset(self):
@@ -417,9 +375,8 @@ class Cascaded_Controller(Controller):
             self.controller_e.reset()
 
 
-
 class FOC_Controller(Controller):
-    def __init__(self, controller_type, environment, ref_states, d_controller, q_controller, **kwargs):
+    def __init__(self, environment, stages, ref_states, **controller_kwargs):
         assert type(environment.physical_system) is SynchronousMotorSystem, 'No suitable Environment for FOC Controller'
 
         t32 = environment.physical_system.electrical_motor.t_32
@@ -428,10 +385,11 @@ class FOC_Controller(Controller):
 
         self.tau = environment.physical_system.tau
         self.references = np.where(environment.reference_generator.referenced_states == True)[0]
-        self.d_idx = self.references[0]
-        self.q_idx = self.references[1]
-        self.ref_d_idx = np.where(self.references == self.d_idx)[0][0]
-        self.ref_q_idx = np.where(self.references == self.q_idx)[0][0]
+        self.ref_d_idx = np.where(ref_states == 'i_sd')[0][0]
+        self.ref_q_idx = np.where(ref_states == 'i_sq')[0][0]
+
+        self.d_idx = environment.state_names.index(ref_states[self.ref_d_idx])
+        self.q_idx = environment.state_names.index(ref_states[self.ref_q_idx])
 
         self.action_space = environment.action_space
         self.state_space = environment.physical_system.state_space
@@ -449,10 +407,10 @@ class FOC_Controller(Controller):
         self.limit = environment.physical_system.limits
         self.mp = environment.physical_system.electrical_motor.motor_parameter
 
-        self.d_controller = _controllers[d_controller['controller_type']][1].make(
-            d_controller['controller_type'], environment, param_dict=d_controller)
-        self.q_controller = _controllers[q_controller['controller_type']][1].make(
-            q_controller['controller_type'], environment, param_dict=q_controller)
+        self.d_controller = _controllers[stages[0][0]['controller_type']][1].make(
+            environment, stages[0][0], **controller_kwargs)
+        self.q_controller = _controllers[stages[1][0]['controller_type']][1].make(
+            environment, stages[1][0], **controller_kwargs)
 
     def control(self, state, reference):
         u_sd_0 = -state[self.omega_idx] * self.mp['p'] * self.mp['l_q'] * state[self.i_sq_idx] * self.limit[
@@ -482,8 +440,9 @@ class FOC_Controller(Controller):
 
 class ContinuousController:
     @classmethod
-    def make(cls, controller_type, environment, **controller_kwargs):
-        controller = _controllers[controller_type][2](environment, **controller_kwargs)
+    def make(cls, environment, stage, **controller_kwargs):
+
+        controller = _controllers[stage['controller_type']][2](environment, param_dict=stage, **controller_kwargs)
         return controller
 
     def control(self, state, reference):
@@ -551,7 +510,7 @@ class PID_Controller(PI_Controller, D_Controller):
 
 class DiscreteController:
     @classmethod
-    def make(cls, controller_type, environment, **controller_kwargs):
+    def make(cls, environment, stage, **controller_kwargs):
         if type(environment.action_space) == Discrete:
             action_space_n = environment.action_space.n
         elif type(environment.action_space) == MultiDiscrete:
@@ -559,7 +518,8 @@ class DiscreteController:
         else:
             action_space_n = 3
 
-        controller = _controllers[controller_type][2](environment, action_space=action_space_n, **controller_kwargs)
+        controller = _controllers[stage['controller_type']][2](environment, action_space=action_space_n,
+                                                               param_dict=stage, **controller_kwargs)
         return controller
 
     def control(self, state, reference):
@@ -570,13 +530,13 @@ class DiscreteController:
 
 
 class OnOff_Controller(DiscreteController):
-    def __init__(self, environment, action_space, hysteresis=0.01, param_dict=dict(), cascaded=None, control_e=False,
+    def __init__(self, environment, action_space, hysteresis=0.02, param_dict=dict(), cascaded=False, control_e=False,
                  **controller_kwargs):
         self.hysteresis = hysteresis if 'hysteresis' not in param_dict.keys() else param_dict['hysteresis']
         self.switch_on_level = 1
 
         self.switch_off_level = 2 if action_space in [3, 4] and not control_e else 0
-        if cascaded == 'outer':
+        if cascaded:
             self.switch_off_level = int(environment.physical_system.state_space.low[0])
 
         self.action = self.switch_on_level
@@ -595,9 +555,9 @@ class OnOff_Controller(DiscreteController):
 
 
 class ThreePoint_Controller(DiscreteController):
-    def __init__(self, environment, action_space, switch_to_positive_level=0.01, switch_to_negative_level=0.01,
-                 switch_to_neutral_from_positive=0.005, switch_to_neutral_from_negative=0.005, param_dict=dict(),
-                 cascaded=None, control_e=False, **controller_kwargs):
+    def __init__(self, environment, action_space, switch_to_positive_level=0.02, switch_to_negative_level=0.02,
+                 switch_to_neutral_from_positive=0.01, switch_to_neutral_from_negative=0.01, param_dict=dict(),
+                 cascaded=False, control_e=False, **controller_kwargs):
 
         self.pos = switch_to_positive_level if 'switch_to_positive_level' not in param_dict.keys() else param_dict[
             'switch_to_positive_level']
@@ -609,7 +569,7 @@ class ThreePoint_Controller(DiscreteController):
             param_dict['switch_to_neutral_from_negative']
 
         self.negative = 2 if action_space in [3, 4] and not control_e else 0
-        if cascaded == 'outer':
+        if cascaded:
             self.negative = int(environment.physical_system.state_space.low[0])
         self.positive = 1
         self.neutral = 0
