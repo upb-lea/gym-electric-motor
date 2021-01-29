@@ -6,7 +6,6 @@ from gym.spaces import Box
 from gym_electric_motor.reference_generators import StepReferenceGenerator, SinusoidalReferenceGenerator, SwitchedReferenceGenerator, MultipleReferenceGenerator, SubepisodedReferenceGenerator, WienerProcessReferenceGenerator, TriangularReferenceGenerator, ConstReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor import reference_generators as rg
-from matplotlib import pyplot as plt
 import numpy as np
 
 
@@ -25,13 +24,13 @@ if __name__ == '__main__':
         )
     else:
         ref_gen = []
-        for i in ref:
+        for r in ref:
             ref_gen.append(rg.SwitchedReferenceGenerator(
                     sub_generators=[
-                    rg.SinusoidalReferenceGenerator(reference_state=i, amplitude_range=(0, 0.3), offset_range=(0, 0.2)),
-                    rg.WienerProcessReferenceGenerator(reference_state=i, amplitude_range=(0, 0.3),
+                    rg.SinusoidalReferenceGenerator(reference_state=r, amplitude_range=(0, 0.3), offset_range=(0, 0.2)),
+                    rg.WienerProcessReferenceGenerator(reference_state=r, amplitude_range=(0, 0.3),
                                                        offset_range=(0, 0.2)),
-                    rg.StepReferenceGenerator(reference_state=i, amplitude_range=(0, 0.3), offset_range=(0, 0.2))
+                    rg.StepReferenceGenerator(reference_state=r, amplitude_range=(0, 0.3), offset_range=(0, 0.2))
                     ], p=[0.5, 0.25, 0.25], super_episode_length=(10000, 100000)
                 )
             )
@@ -73,4 +72,3 @@ if __name__ == '__main__':
         cum_rew += reward
     print(cum_rew)
     env.close()
-    plt.show(block=True)
