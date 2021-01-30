@@ -50,14 +50,32 @@ register(id='Disc-CC-ExtExDc-v0',
 register(id='Cont-CC-ExtExDc-v0',
          entry_point=envs_path+'ContCurrentControlDcExternallyExcitedMotorEnv')
 
-register(id='DcSeriesCont-v1',
-         entry_point=envs_path+'ContDcSeriesMotorEnvironment')
-register(id='DcSeriesDisc-v1',
-         entry_point=envs_path+'DiscDcSeriesMotorEnvironment')
-register(id='DcShuntCont-v1',
-         entry_point=envs_path+'ContDcShuntMotorEnvironment')
-register(id='DcShuntDisc-v1',
-         entry_point=envs_path+'DiscDcShuntMotorEnvironment')
+register(id='Disc-SC-SeriesDc-v0',
+         entry_point=envs_path+'DiscSpeedControlDcSeriesMotorEnv')
+register(id='Cont-SC-SeriesDc-v0',
+         entry_point=envs_path+'ContSpeedControlDcSeriesMotorEnv')
+register(id='Disc-TC-SeriesDc-v0',
+         entry_point=envs_path+'DiscTorqueControlDcSeriesMotorEnv')
+register(id='Cont-TC-SeriesDc-v0',
+         entry_point=envs_path+'ContTorqueControlDcSeriesMotorEnv')
+register(id='Disc-CC-SeriesDc-v0',
+         entry_point=envs_path+'DiscCurrentControlDcSeriesMotorEnv')
+register(id='Cont-CC-SeriesDc-v0',
+         entry_point=envs_path+'ContCurrentControlDcSeriesMotorEnv')
+
+register(id='Disc-SC-ShuntDc-v0',
+         entry_point=envs_path+'DiscSpeedControlDcShuntMotorEnv')
+register(id='Cont-SC-ShuntDc-v0',
+         entry_point=envs_path+'ContSpeedControlDcShuntMotorEnv')
+register(id='Disc-TC-ShuntDc-v0',
+         entry_point=envs_path+'DiscTorqueControlDcShuntMotorEnv')
+register(id='Cont-TC-ShuntDc-v0',
+         entry_point=envs_path+'ContTorqueControlDcShuntMotorEnv')
+register(id='Disc-CC-ShuntDc-v0',
+         entry_point=envs_path+'DiscCurrentControlDcShuntMotorEnv')
+register(id='Cont-CC-ShuntDc-v0',
+         entry_point=envs_path+'ContCurrentControlDcShuntMotorEnv')
+
 register(id='PMSMCont-v1',
          entry_point=envs_path+'ContPermanentMagnetSynchronousMotorEnvironment')
 register(id='PMSMDisc-v1',
@@ -74,35 +92,3 @@ register(id='DFIMCont-v1',
          entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
 register(id='DFIMDisc-v1',
          entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
-
-# Old Ids
-
-register(id='emotor-dc-extex-cont-v1',
-         entry_point=envs_path+'ContDcExternallyExcitedMotorEnvironment')
-register(id='emotor-dc-extex-disc-v1',
-         entry_point=envs_path+'DiscDcExternallyExcitedMotorEnvironment')
-register(id='emotor-dc-series-cont-v1',
-         entry_point=envs_path+'ContDcSeriesMotorEnvironment')
-register(id='emotor-dc-series-disc-v1',
-         entry_point=envs_path+'DiscDcSeriesMotorEnvironment')
-register(id='emotor-dc-shunt-cont-v1',
-         entry_point=envs_path+'ContDcShuntMotorEnvironment')
-register(id='emotor-dc-shunt-disc-v1',
-         entry_point=envs_path+'DiscDcShuntMotorEnvironment')
-register(id='emotor-pmsm-cont-v1',
-         entry_point=envs_path+'ContPermanentMagnetSynchronousMotorEnvironment')
-register(id='emotor-pmsm-disc-v1',
-         entry_point=envs_path+'DiscPermanentMagnetSynchronousMotorEnvironment')
-register(id='emotor-synrm-cont-v1',
-         entry_point=envs_path+'ContSynchronousReluctanceMotorEnvironment')
-register(id='emotor-synrm-disc-v1',
-        entry_point=envs_path+'DiscSynchronousReluctanceMotorEnvironment')
-register(id='emotor-scim-cont-v1',
-         entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
-register(id='emotor-scim-disc-v1',
-         entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
-register(id='emotor-dfim-cont-v1',
-         entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
-register(id='emotor-dfim-disc-v1',
-         entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
-

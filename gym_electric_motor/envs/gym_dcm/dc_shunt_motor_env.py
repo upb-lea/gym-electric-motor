@@ -1,139 +1,700 @@
-from ...core import ElectricMotorEnvironment
-from ...physical_systems.physical_systems import DcMotorSystem
-from ...reference_generators import WienerProcessReferenceGenerator
-from ...reward_functions import WeightedSumOfErrors
+from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
+    ElectricMotorVisualization
+from gym_electric_motor.physical_systems.physical_systems import DcMotorSystem
+from gym_electric_motor.reference_generators import MultipleReferenceGenerator
+from gym_electric_motor.visualization import MotorDashboard
+from gym_electric_motor.reference_generators.wiener_process_reference_generator import WienerProcessReferenceGenerator
+from gym_electric_motor import physical_systems as ps
+from gym_electric_motor.reward_functions import WeightedSumOfErrors
+from gym_electric_motor.utils import initialize
 
 
-class DcShuntMotorEnvironment(ElectricMotorEnvironment):
+class DiscSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
+    """
+        Description:
+            Environment to simulate a discretely speed controlled shunt DC Motor
 
-    def __init__(self, motor='DcShunt', reward_function=None, reference_generator=None, constraints=('i_a', 'i_e'),
-                 **kwargs):
+        Key:
+            `Disc-SC-ShuntDc-v0`
+
+        Default Components:
+            Supply: IdealVoltageSupply
+            Converter: DiscTwoQuadrantConverter
+            Motor: DcShuntMotor
+            Load: PolynomialStaticLoad
+            Ode-Solver: EulerSolver
+            Noise: None
+
+            Reference Generator:
+                WienerProcessReferenceGenerator
+                    Reference Quantity. 'omega'
+
+            Reward Function:
+                WeightedSumOfErrors: reward_weights 'omega' = 1
+
+            Visualization:
+                MotorDashboard: omega and action plots
+
+            Constraints:
+                Current Limit on 'i_a', 'i_e'
+
+        Control Cycle Time:
+            tau = 1e-5 seconds
+
+        State Variables:
+            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
+
+        Observation Space:
+            Type: Tuple(State_Space, Reference_Space)
+
+        State Space:
+            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
+
+        Reference Space:
+            Box(low=[-1], high=[1])
+
+        Action Space:
+            Type: Discrete(3)
+
+        Starting State:
+            Zeros on all state variables.
+
+        Episode Termination:
+            Termination if current limits are violated.
+        """
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+                 constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-5):
         """
         Args:
-            motor(ElectricMotor): Electric Motor used in the PhysicalSystem
-            reward_function(RewardFunction): Reward Function for the environment
-            reference_generator(ReferenceGenerator): Reference Generator for the environment
-            kwargs(dict): Further kwargs to pass to the superclass and the submodules
+            supply(env-arg): Specification of the supply to be used in the environment
+            converter(env-arg): Specification of the converter to be used in the environment
+            motor(env-arg): Specification of the motor to be used in the environment
+            load(env-arg): Specification of the load to be used in the environment
+            ode_solver(env-arg): Specification of the ode_solver to be used in the environment
+            noise_generator(env-arg): Specification of the noise_generator to be used in the environment
+            reward_function(env-arg: Specification of the reward_function to be used in the environment
+            reference_generator(env-arg): Specification of the reference generator to be used in the environment
+            visualization(env-arg): Specification of the visualization to be used in the environment
+            constraints(iterable(str/Constraint)): All Constraints of the environment.
+                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)
+                 can be directly specified by passing the state name here (e.g. 'i', 'omega')
+                 - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
+                 passed to the environment.
+            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
+                simulation. This may lead to speed improvements. Default: True
+            tau(float): Duration of one control step in seconds. Default: 1e-5.
+            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
+            callbacks(list(Callback)): Callbacks for user interaction.
+
+        Note on the env-arg type:
+            All parameters of type env-arg can be selected as one of the following types:
+                - instance: Pass an already instantiated object derived from the corresponding base class
+                    (e.g. reward_function=MyRewardFunction()). This is directly used in the environment.
+                - dict: Pass a dict to update the default parameters of the default type.
+                    (e.g. visualization=dict(state_plots=('omega', 'u')))
+                - str: Pass a string out of the registered classes to select a different class for the component.
+                    This class is then initialized with its default parameters.
+                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
         """
-        kwargs['load_parameter'] = kwargs.get('load_parameter', dict(a=0.01, b=0.05, c=0.1, j_load=0.1))
-        physical_system = DcMotorSystem(motor=motor, **kwargs)
-        reference_generator = reference_generator or WienerProcessReferenceGenerator(**kwargs)
-        reward_function = reward_function or WeightedSumOfErrors(**kwargs)
+
+        physical_system = DcMotorSystem(
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscTwoQuadrantConverter, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
+                load_parameter=dict(a=0.01, b=0.01, c=0.0)
+            )),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
+            calc_jacobian=calc_jacobian,
+            tau=tau
+        )
+        reference_generator = initialize(
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='omega')
+        )
+        reward_function = initialize(
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
+        )
+        visualization = initialize(
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots=(0,)))
         super().__init__(
-            physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, **kwargs
+            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
         )
 
 
-class DiscDcShuntMotorEnvironment(DcShuntMotorEnvironment):
+class ContSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
-    Description:
-        Environment to simulate a discretely controlled DC Shunt Motor.
+        Description:
+            Environment to simulate a continuously speed controlled shunt DC Motor
+1
+        Key:
+            `Cont-SC-ShuntDc-v0`
 
-    Key:
-        `DcShuntDisc-v1`
+        Default Components:
+            Supply: IdealVoltageSupply
+            Converter: ContTwoQuadrantConverter
+            Motor: DcSeriesMotor
+            Load: PolynomialStaticLoad
+            Ode-Solver: EulerSolver
+            Noise: None
 
-    Default Modules:
+            Reference Generator:
+                WienerProcessReferenceGenerator
+                    Reference Quantity. 'omega'
 
-        Physical System:
-            SCMLSystem/DcMotorSystem with:
-                | IdealVoltageSupply
-                | DiscreteTwoQuadrantConverter
-                | DcShuntMotor
-                | PolynomialStaticLoad
-                | GaussianWhiteNoiseGenerator
-                | EulerSolver
-                | tau=1e-5
+            Reward Function:
+                WeightedSumOfErrors: reward_weights 'omega' = 1
 
-        Reference Generator:
-            WienerProcessReferenceGenerator
-                Reference Quantity. 'omega'
+            Visualization:
+                MotorDashboard: omega and action plots
 
-        Reward Function:
-            WeightedSumOfErrors(reward_weights= {'omega': 1 })
+            Constraints:
+                Current Limit on 'i_a', 'i_e'
 
-        Visualization:
-            ElectricMotorVisualization (Dummy for no Visualization)
+        Control Cycle Time:
+            tau = 1e-4 seconds
 
-    State Variables:
-        ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
+        State Variables:
+            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
 
-    Observation Space:
-        Type: Tuple(State_Space, Reference_Space)
+        Observation Space:
+            Type: Tuple(State_Space, Reference_Space)
 
-    State Space:
-        Box(low=[0, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+        State Space:
+            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
 
-    Reference Space:
-        Box(low=[0], high=[1])
+        Reference Space:
+            Box(low=[-1], high=[1])
 
-    Action Space:
-        Type: Discrete(3)
+        Action Space:
+            Box(low=[-1], high=[1])
 
-    Starting State:
-        Zeros on all state variables.
+        Starting State:
+            Zeros on all state variables.
 
-    Episode Termination:
-        Termination if current limits are violated. The terminal reward -10 is used as reward.
-        (Have a look at the reward functions.)
+        Episode Termination:
+            Termination if current limits are violated.
+        """
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+                 constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-4):
+        """
+        Args:
+            supply(env-arg): Specification of the supply to be used in the environment
+            converter(env-arg): Specification of the converter to be used in the environment
+            motor(env-arg): Specification of the motor to be used in the environment
+            load(env-arg): Specification of the load to be used in the environment
+            ode_solver(env-arg): Specification of the ode_solver to be used in the environment
+            noise_generator(env-arg): Specification of the noise_generator to be used in the environment
+            reward_function(env-arg: Specification of the reward_function to be used in the environment
+            reference_generator(env-arg): Specification of the reference generator to be used in the environment
+            visualization(env-arg): Specification of the visualization to be used in the environment
+            constraints(iterable(str/Constraint)): All Constraints of the environment.
+                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)
+                 can be directly specified by passing the state name here (e.g. 'i', 'omega')
+                 - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
+                 passed to the environment.
+            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
+                simulation. This may lead to speed improvements. Default: True
+            tau(float): Duration of one control step in seconds. Default: 1e-4.
+            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
+            callbacks(list(Callback)): Callbacks for user interaction.
+
+        Note on the env-arg type:
+            All parameters of type env-arg can be selected as one of the following types:
+                - instance: Pass an already instantiated object derived from the corresponding base class
+                    (e.g. reward_function=MyRewardFunction()). This is directly used in the environment.
+                - dict: Pass a dict to update the default parameters of the default type.
+                    (e.g. visualization=dict(state_plots=('omega', 'u')))
+                - str: Pass a string out of the registered classes to select a different class for the component.
+                    This class is then initialized with its default parameters.
+                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+        """
+
+        physical_system = DcMotorSystem(
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContTwoQuadrantConverter, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
+                load_parameter=dict(a=0.01, b=0.01, c=0.0)
+            )),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
+            calc_jacobian=calc_jacobian,
+            tau=tau
+        )
+        reference_generator = initialize(
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='omega')
+        )
+        reward_function = initialize(
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
+        )
+        visualization = initialize(
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots=(0,)))
+        super().__init__(
+            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+        )
+
+
+class DiscTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
-    def __init__(self, tau=1e-5, converter='Disc-2QC', **kwargs):
-        # Docstring in Base Class
-        super().__init__(tau=tau, converter=converter, **kwargs)
+        Description:
+            Environment to simulate a discretely torque controlled shunt DC Motor
+
+        Key:
+            `Disc-TC-ShuntDc-v0`
+
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: DiscOneQuadrantConverter
+            - Motor: DcSeriesMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
+
+            Reference Generator:
+                WienerProcessReferenceGenerator
+                    Reference Quantity. 'torque'
+
+            Reward Function:
+                WeightedSumOfErrors: reward_weights 'torque' = 1
+
+            Visualization:
+                MotorDashboard: torque and action plots
+
+            Constraints:
+                Current Limit on 'i_a', 'i_e'
+
+        Control Cycle Time:
+            tau = 1e-5 seconds
+
+        State Variables:
+            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
+
+        Observation Space:
+            Type: Tuple(State_Space, Reference_Space)
+
+        State Space:
+            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
+
+        Reference Space:
+            Box(low=[-1], high=[1])
+
+        Action Space:
+            Discrete(3)
+
+        Starting State:
+            Zeros on all state variables.
+
+        Episode Termination:
+            Termination if current limits are violated.
+        """
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+                 constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-5):
+        """
+        Args:
+            supply(env-arg): Specification of the supply to be used in the environment
+            converter(env-arg): Specification of the converter to be used in the environment
+            motor(env-arg): Specification of the motor to be used in the environment
+            load(env-arg): Specification of the load to be used in the environment
+            ode_solver(env-arg): Specification of the ode_solver to be used in the environment
+            noise_generator(env-arg): Specification of the noise_generator to be used in the environment
+            reward_function(env-arg: Specification of the reward_function to be used in the environment
+            reference_generator(env-arg): Specification of the reference generator to be used in the environment
+            visualization(env-arg): Specification of the visualization to be used in the environment
+            constraints(iterable(str/Constraint)): All Constraints of the environment. \n
+                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit) can
+                 be directly specified by passing the state name here (e.g. 'i', 'omega') \n
+                - instance of Constraint: More complex constraints (e.g. the SquaredConstraint) can be initialized and
+                 passed to the environment.
+            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
+                simulation. This may lead to speed improvements. Default: True
+            tau(float): Duration of one control step in seconds. Default: 1e-5.
+            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
+            callbacks(list(Callback)): Callbacks for user interaction.
+
+        Note on the env-arg type:
+            All parameters of type env-arg can be selected as one of the following types:
+                - instance: Pass an already instantiated object derived from the corresponding base class
+                    (e.g. reward_function=MyRewardFunction()). This is directly used in the environment.
+                - dict: Pass a dict to update the default parameters of the default type.
+                    (e.g. visualization=dict(state_plots=('omega', 'u')))
+                - str: Pass a string out of the registered classes to select a different class for the component.
+                    This class is then initialized with its default parameters.
+                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+        """
+
+        physical_system = DcMotorSystem(
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscTwoQuadrantConverter, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
+            calc_jacobian=calc_jacobian,
+            tau=tau
+        )
+        reference_generator = initialize(
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='torque')
+        )
+        reward_function = initialize(
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
+        )
+        visualization = initialize(
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots=(0,)))
+        super().__init__(
+            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+        )
 
 
-class ContDcShuntMotorEnvironment(DcShuntMotorEnvironment):
+class ContTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
-    Description:
-        Environment to simulate a continuously controlled DC Shunt Motor.
+        Description:
+            Environment to simulate a continuously torque controlled shunt DC Motor
 
-    Key:
-        `DcShuntCont-v1`
+        Key:
+            `Cont-TC-ShuntDc-v0`
 
-    Default Modules:
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: ContTwoQuadrantConverter
+            - Motor: DcShuntMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
 
-        Physical System:
-            SCMLSystem/DcMotorSystem with:
-                IdealVoltageSupply
-                ContTwoQuadrantConverter
-                DcShuntMotor
-                PolynomialStaticLoad
-                GaussianWhiteNoiseGenerator
-                EulerSolver
-                tau=1e-4
+            Reference Generator:
+                WienerProcessReferenceGenerator
+                    Reference Quantity. 'torque'
 
-        Reference Generator:
-            WienerProcessReferenceGenerator
-                Reference Quantity. 'omega'
+            Reward Function:
+                WeightedSumOfErrors: reward_weights 'torque' = 1
 
-        Reward Function:
-            WeightedSumOfErrors(reward_weights= {'omega': 1 })
+            Visualization:
+                MotorDashboard: torque and action plots
 
-        Visualization:
-            ElectricMotorVisualization (Dummy for no Visualization)
+            Constraints:
+                Current Limit on 'i_a', 'i_e'
 
-    State Variables:
-        ```['omega' , 'torque', 'i', 'u', 'u_sup']```
+        Control Cycle Time:
+            tau = 1e-4 seconds
 
-    Observation Space:
-        Type: Tuple(State_Space, Reference_Space)
+        State Variables:
+            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
 
-    State Space:
-        Box(low=[0, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+        Observation Space:
+            Type: Tuple(State_Space, Reference_Space)
 
-    Reference Space:
-        Box(low=[0], high=[1])
+        State Space:
+            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
 
-    Action Space:
-        Type: Box(low=[0], high=[1])
+        Reference Space:
+            Box(low=[-1], high=[1])
 
-    Starting State:
-        Zeros on all state variables.
+        Action Space:
+            Box(low=[-1], high=[1])
 
-    Episode Termination:
-        Termination if current limits are violated. The terminal reward -10 is used as reward.
-        (Have a look at the reward functions.)
+        Starting State:
+            Zeros on all state variables.
+
+        Episode Termination:
+            Termination if current limits are violated.
+        """
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+                 constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-4):
+        """
+        Args:
+            supply(env-arg): Specification of the supply to be used in the environment
+            converter(env-arg): Specification of the converter to be used in the environment
+            motor(env-arg): Specification of the motor to be used in the environment
+            load(env-arg): Specification of the load to be used in the environment
+            ode_solver(env-arg): Specification of the ode_solver to be used in the environment
+            noise_generator(env-arg): Specification of the noise_generator to be used in the environment
+            reward_function(env-arg: Specification of the reward_function to be used in the environment
+            reference_generator(env-arg): Specification of the reference generator to be used in the environment
+            visualization(env-arg): Specification of the visualization to be used in the environment
+            constraints(iterable(str/Constraint)): All Constraints of the environment.
+                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)
+                 can be directly specified by passing the state name here (e.g. 'i', 'omega')
+                 - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
+                 passed to the environment.
+            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
+                simulation. This may lead to speed improvements. Default: True
+            tau(float): Duration of one control step in seconds. Default: 1e-5.
+            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
+            callbacks(list(Callback)): Callbacks for user interaction.
+
+        Note on the env-arg type:
+            All parameters of type env-arg can be selected as one of the following types:
+                - instance: Pass an already instantiated object derived from the corresponding base class
+                    (e.g. reward_function=MyRewardFunction()). This is directly used in the environment.
+                - dict: Pass a dict to update the default parameters of the default type.
+                    (e.g. visualization=dict(state_plots=('omega', 'u')))
+                - str: Pass a string out of the registered classes to select a different class for the component.
+                    This class is then initialized with its default parameters.
+                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+        """
+        physical_system = DcMotorSystem(
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContTwoQuadrantConverter, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
+            calc_jacobian=calc_jacobian,
+            tau=tau
+        )
+        reference_generator = initialize(
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='torque')
+        )
+        reward_function = initialize(
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
+        )
+        visualization = initialize(
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots=(0,)))
+        super().__init__(
+            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+        )
+
+
+class DiscCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
-    def __init__(self, tau=1e-4, converter='Cont-2QC', **kwargs):
-        # Docstring in Base Class
-        super().__init__(tau=tau, converter=converter, **kwargs)
+        Description:
+            Environment to simulate a discretely current controlled shunt DC Motor
+
+        Key:
+            `Disc-CC-ShuntDc-v0`
+
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: DiscTwoQuadrantConverter
+            - Motor: DcShuntMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
+
+            Reference Generator:
+                WienerProcessReferenceGenerator
+                    Reference Quantity. 'i_a', 'i_e'
+
+            Reward Function:
+                WeightedSumOfErrors: reward_weights 'i_a' = 0.5, 'i_e' = 0.5
+
+            Visualization:
+                MotorDashboard: current and action plots
+
+            Constraints:
+                Current Limit on 'i_a', 'i_e'
+
+        Control Cycle Time:
+            tau = 1e-5 seconds
+
+        State Variables:
+            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
+
+        Observation Space:
+            Type: Tuple(State_Space, Reference_Space)
+
+        State Space:
+            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
+
+        Reference Space:
+            Box(low=[-1], high=[1])
+
+        Action Space:
+            Discrete(3)
+
+        Starting State:
+            Zeros on all state variables.
+
+        Episode Termination:
+            Termination if current limits are violated.
+        """
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+                 constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-5):
+        """
+        Args:
+            supply(env-arg): Specification of the supply to be used in the environment
+            converter(env-arg): Specification of the converter to be used in the environment
+            motor(env-arg): Specification of the motor to be used in the environment
+            load(env-arg): Specification of the load to be used in the environment
+            ode_solver(env-arg): Specification of the ode_solver to be used in the environment
+            noise_generator(env-arg): Specification of the noise_generator to be used in the environment
+            reward_function(env-arg: Specification of the reward_function to be used in the environment
+            reference_generator(env-arg): Specification of the reference generator to be used in the environment
+            visualization(env-arg): Specification of the visualization to be used in the environment
+            constraints(iterable(str/Constraint)): All Constraints of the environment.
+                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)
+                 can be directly specified by passing the state name here (e.g. 'i', 'omega')
+                 - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
+                 passed to the environment.
+            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
+                simulation. This may lead to speed improvements. Default: True
+            tau(float): Duration of one control step in seconds. Default: 1e-5.
+            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
+            callbacks(list(Callback)): Callbacks for user interaction.
+
+        Note on the env-arg type:
+            All parameters of type env-arg can be selected as one of the following types:
+                - instance: Pass an already instantiated object derived from the corresponding base class
+                    (e.g. reward_function=MyRewardFunction()). This is directly used in the environment.
+                - dict: Pass a dict to update the default parameters of the default type.
+                    (e.g. visualization=dict(state_plots=('omega', 'u')))
+                - str: Pass a string out of the registered classes to select a different class for the component.
+                    This class is then initialized with its default parameters.
+                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+        """
+
+        physical_system = DcMotorSystem(
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscTwoQuadrantConverter, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
+            calc_jacobian=calc_jacobian,
+            tau=tau
+        )
+        sub_generators = (
+            WienerProcessReferenceGenerator(reference_state='i_a'),
+            WienerProcessReferenceGenerator(reference_state='i_e')
+        )
+        reference_generator = initialize(
+            ReferenceGenerator, reference_generator, MultipleReferenceGenerator, dict(sub_generators=sub_generators)
+        )
+        reward_function = initialize(
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i=1.0))
+        )
+        visualization = initialize(
+            ElectricMotorVisualization, visualization, MotorDashboard,
+            dict(state_plots=('i_a', 'i_e',), action_plots=(0,)))
+        super().__init__(
+            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+        )
+
+
+class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
+    """
+        Description:
+            Environment to simulate a continuously current controlled shunt DC Motor
+
+        Key:
+            `Cont-CC-ShuntDc-v0`
+
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: ContTwoQuadrantConverter
+            - Motor: DcShuntMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
+
+            Reference Generator:
+                WienerProcessReferenceGenerator
+                    Reference Quantity. 'i_a', 'i_e'
+
+            Reward Function:
+                WeightedSumOfErrors: reward_weights 'i_a' = 0.5, 'i_e' = 0.5
+
+            Visualization:
+                MotorDashboard: current and action plots
+
+            Constraints:
+                Current Limit on 'i_a', 'i_e
+
+        Control Cycle Time:
+            tau = 1e-4 seconds
+
+        State Variables:
+            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
+
+        Observation Space:
+            Type: Tuple(State_Space, Reference_Space)
+
+        State Space:
+            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
+
+        Reference Space:
+            Box(low=[-1, -1], high=[1, 1])
+
+        Action Space:
+            Box(low=[-1], high=[1])
+
+        Starting State:
+            Zeros on all state variables.
+
+        Episode Termination:
+            Termination if current limits are violated.
+        """
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+                 constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-4):
+        """
+        Args:
+            supply(env-arg): Specification of the supply to be used in the environment
+            converter(env-arg): Specification of the converter to be used in the environment
+            motor(env-arg): Specification of the motor to be used in the environment
+            load(env-arg): Specification of the load to be used in the environment
+            ode_solver(env-arg): Specification of the ode_solver to be used in the environment
+            noise_generator(env-arg): Specification of the noise_generator to be used in the environment
+            reward_function(env-arg: Specification of the reward_function to be used in the environment
+            reference_generator(env-arg): Specification of the reference generator to be used in the environment
+            visualization(env-arg): Specification of the visualization to be used in the environment
+            constraints(iterable(str/Constraint)): All Constraints of the environment.
+                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)
+                 can be directly specified by passing the state name here (e.g. 'i', 'omega')
+                 - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
+                 passed to the environment.
+            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
+                simulation. This may lead to speed improvements. Default: True
+            tau(float): Duration of one control step in seconds. Default: 1e-4.
+            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
+            callbacks(list(Callback)): Callbacks for user interaction.
+
+        Note on the env-arg type:
+            All parameters of type env-arg can be selected as one of the following types:
+                - instance: Pass an already instantiated object derived from the corresponding base class
+                    (e.g. reward_function=MyRewardFunction()). This is directly used in the environment.
+                - dict: Pass a dict to update the default parameters of the default type.
+                    (e.g. visualization=dict(state_plots=('omega', 'u')))
+                - str: Pass a string out of the registered classes to select a different class for the component.
+                    This class is then initialized with its default parameters.
+                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+        """
+
+        physical_system = DcMotorSystem(
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContTwoQuadrantConverter, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100)),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
+            calc_jacobian=calc_jacobian,
+            tau=tau
+        )
+        sub_gen = (
+            WienerProcessReferenceGenerator(reference_state='i_a'),
+            WienerProcessReferenceGenerator(reference_state='i_e')
+        )
+        reference_generator = initialize(
+            ReferenceGenerator, reference_generator, MultipleReferenceGenerator, dict(sub_generators=sub_gen)
+        )
+        reward_function = initialize(
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_a=0.5, ie=0.5))
+        )
+        visualization = initialize(
+            (ElectricMotorVisualization, list, tuple),
+            visualization, MotorDashboard, dict(state_plots=('i_a', 'i_e'), action_plots=(0,)))
+        super().__init__(
+            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+        )
