@@ -189,9 +189,9 @@ def test_discrete_single_power_electronic_converter(converter_type, action_space
 
 
 @pytest.mark.parametrize("convert, convert_class", [
-    ('Disc-1QC', cv.DiscOneQuadrantConverter),
-    ('Disc-2QC', cv.DiscTwoQuadrantConverter),
-    ('Disc-4QC', cv.DiscFourQuadrantConverter)
+    ('Disc-1QC', cv.FiniteOneQuadrantConverter),
+    ('Disc-2QC', cv.FiniteTwoQuadrantConverter),
+    ('Disc-4QC', cv.FiniteFourQuadrantConverter)
 ])
 @pytest.mark.parametrize("tau", g_taus)
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
@@ -473,7 +473,7 @@ def test_discrete_b6_bridge():
     tau = cf.converter_parameter['tau']
     # test default initializations
     converter_default_init_1 = make_module(cv.PowerElectronicConverter, 'Disc-B6C')
-    converter_default_init_2 = cv.DiscB6BridgeConverter()
+    converter_default_init_2 = cv.FiniteB6BridgeConverter()
     assert converter_default_init_1._tau == 1E-5
     for subconverter in converter_default_init_1._subconverters:
         assert subconverter._tau == 1E-5
@@ -511,7 +511,7 @@ def test_discrete_b6_bridge():
 
     # test parametrized converter
     converter_init_1 = make_module(cv.PowerElectronicConverter, 'Disc-B6C', **cf.converter_parameter)
-    converter_init_2 = cv.DiscB6BridgeConverter(**cf.converter_parameter)
+    converter_init_2 = cv.FiniteB6BridgeConverter(**cf.converter_parameter)
     assert converter_init_1._tau == cf.converter_parameter['tau']
     for subconverter in converter_init_1._subconverters:
         assert subconverter._tau == cf.converter_parameter['tau']
@@ -786,7 +786,7 @@ class TestDiscConverter(TestPowerElectronicConverter):
 
 class TestDiscOneQuadrantConverter(TestDiscConverter):
 
-    class_to_test = cv.DiscOneQuadrantConverter
+    class_to_test = cv.FiniteOneQuadrantConverter
     key = 'Disc-1QC'
 
     def test_convert(self, converter):
@@ -804,7 +804,7 @@ class TestDiscOneQuadrantConverter(TestDiscConverter):
 
 
 class TestDiscTwoQuadrantConverter(TestDiscConverter):
-    class_to_test = cv.DiscTwoQuadrantConverter
+    class_to_test = cv.FiniteTwoQuadrantConverter
     key = 'Disc-2QC'
 
     @pytest.mark.parametrize("interlocking_time", [0.0, 0.1])
@@ -862,7 +862,7 @@ class TestDiscTwoQuadrantConverter(TestDiscConverter):
 
 class TestDiscFourQuadrantConverter(TestDiscConverter):
 
-    class_to_test = cv.DiscFourQuadrantConverter
+    class_to_test = cv.FiniteFourQuadrantConverter
     key = 'Disc-4QC'
 
     @pytest.fixture
@@ -1025,7 +1025,7 @@ class TestContFourQuadrantConverter(TestContDynamicallyAveragedConverter):
 
 
 class TestDiscMultiConverter(TestDiscConverter):
-    class_to_test = cv.DiscMultiConverter
+    class_to_test = cv.FiniteMultiConverter
     key = 'Disc-Multi'
 
     @pytest.fixture
@@ -1196,7 +1196,7 @@ class TestContMultiConverter(TestContDynamicallyAveragedConverter):
 
 
 class TestDiscB6BridgeConverter(TestDiscConverter):
-    class_to_test = cv.DiscB6BridgeConverter
+    class_to_test = cv.FiniteB6BridgeConverter
     key = 'Disc-B6C'
 
     @pytest.fixture

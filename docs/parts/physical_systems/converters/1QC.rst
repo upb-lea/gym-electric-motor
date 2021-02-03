@@ -6,7 +6,7 @@ One Quadrant Converters
 Discrete One Quadrant Converter
 '''''''''''''''''''''''''''''''
 
-.. autoclass:: gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter
+.. autoclass:: gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter
    :members:
    :inherited-members:
 

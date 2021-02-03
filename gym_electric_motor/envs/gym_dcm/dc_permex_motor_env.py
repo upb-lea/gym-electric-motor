@@ -8,17 +8,17 @@ from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
 
 
-class DiscSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
+class FiniteSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled permanently excited DC Motor
+            Environment to simulate a finite control set speed controlled permanently excited DC Motor
 
         Key:
-            `Disc-SC-PermExDc-v0`
+            `Finite-SC-PermExDc-v0`
 
         Default Components:
             Supply: IdealVoltageSupply
-            Converter: DiscFourQuadrantConverter
+            Converter: FiniteFourQuadrantConverter
             Motor: DcPermanentlyExcitedMotor
             Load: PolynomialStaticLoad
             Ode-Solver: EulerSolver
@@ -94,12 +94,12 @@ class DiscSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                     (e.g. visualization=dict(state_plots=('omega', 'u')))
                 - str: Pass a string out of the registered classes to select a different class for the component.
                     This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscFourQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
                 load_parameter=dict(a=0.01, b=0.01, c=0.0)
@@ -209,7 +209,7 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                     (e.g. visualization=dict(state_plots=('omega', 'u')))
                 - str: Pass a string out of the registered classes to select a different class for the component.
                     This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
 
         physical_system = DcMotorSystem(
@@ -238,17 +238,17 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
+class FiniteTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely torque controlled permanently excited DC Motor
+            Environment to simulate a finite control set torque controlled permanently excited DC Motor
 
         Key:
-            `Disc-TC-PermExDc-v0`
+            `Finite-TC-PermExDc-v0`
 
         Default Components:
             - Supply: IdealVoltageSupply
-            - Converter: DiscFourQuadrantConverter
+            - Converter: FiniteFourQuadrantConverter
             - Motor: DcPermanentlyExcitedMotor
             - Load: ConstantSpeedLoad
             - Ode-Solver: EulerSolver
@@ -324,12 +324,12 @@ class DiscTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                     (e.g. visualization=dict(state_plots=('omega', 'u')))
                 - str: Pass a string out of the registered classes to select a different class for the component.
                     This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscFourQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
@@ -354,32 +354,34 @@ class DiscTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
 class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled permanently excited DC Motor
+            Environment to simulate a continuous control set torque controlled permanently excited DC Motor
 
         Key:
-            `Cont-TC-DcPermEx-v0`
+            `Cont-TC-PermExDc-v0`
 
-        Default Modules:
-
-            Physical System:
-                SCMLSystem/DcMotorSystem with:
-                    | IdealVoltageSupply
-                    | DiscFourQuadrantConverter
-                    | DcPermanentlyExcitedMotor
-                    | PolynomialStaticLoad
-                    | GaussianWhiteNoiseGenerator
-                    | EulerSolver
-                    | tau=1e-4
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: ContFourQuadrantConverter
+            - Motor: DcPermanentlyExcitedMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
 
             Reference Generator:
                 WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+                    Reference Quantity. 'torque'
 
             Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+                WeightedSumOfErrors: reward_weights 'torque' = 1
 
             Visualization:
-                *MotorDashboard* - Plots: omega, action
+                MotorDashboard: torque and action plots
+
+            Constraints:
+                Current Limit on 'i'
+
+        Control Cycle Time:
+            tau = 1e-4 seconds
 
         State Variables:
             ``['omega' , 'torque', 'i', 'u', 'u_sup']``
@@ -394,14 +396,13 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             Box(low=[-1], high=[1])
 
         Action Space:
-            Type: Box(low=[-1], high=[1])
+            Box(low=[-1], high=[1])
 
         Starting State:
             Zeros on all state variables.
 
         Episode Termination:
-            Termination if current limits are violated. The terminal reward -10 is used as reward.
-            (Have a look at the reward functions.)
+            Termination if current limits are violated.
         """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
@@ -436,7 +437,7 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                     (e.g. visualization=dict(state_plots=('omega', 'u')))
                 - str: Pass a string out of the registered classes to select a different class for the component.
                     This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
@@ -462,35 +463,37 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
+class FiniteCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled permanently excited DC Motor
+            Environment to simulate a finite control set current controlled permanently excited DC Motor
 
         Key:
-            `Disc-CC-DcPermEx-v0`
+            `Finite-CC-PermExDc-v0`
 
-        Default Modules:
-
-            Physical System:
-                SCMLSystem/DcMotorSystem with:
-                    | IdealVoltageSupply
-                    | DiscFourQuadrantConverter
-                    | DcPermanentlyExcitedMotor
-                    | PolynomialStaticLoad
-                    | GaussianWhiteNoiseGenerator
-                    | EulerSolver
-                    | tau=1e-5
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: FiniteFourQuadrantConverter
+            - Motor: DcPermanentlyExcitedMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
 
             Reference Generator:
                 WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+                    Reference Quantity. 'i'
 
             Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+                WeightedSumOfErrors: reward_weights 'i' = 1
 
             Visualization:
-                *MotorDashboard* - Plots: omega, action
+                MotorDashboard: current and action plots
+
+            Constraints:
+                Current Limit on 'i'
+
+        Control Cycle Time:
+            tau = 1e-5 seconds
 
         State Variables:
             ``['omega' , 'torque', 'i', 'u', 'u_sup']``
@@ -505,14 +508,13 @@ class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             Box(low=[-1], high=[1])
 
         Action Space:
-            Type: Box(low=[-1], high=[1])
+            Box(low=[-1], high=[1])
 
         Starting State:
             Zeros on all state variables.
 
         Episode Termination:
-            Termination if current limits are violated. The terminal reward -10 is used as reward.
-            (Have a look at the reward functions.)
+            Termination if current limits are violated.
         """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
@@ -547,12 +549,12 @@ class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                     (e.g. visualization=dict(state_plots=('omega', 'u')))
                 - str: Pass a string out of the registered classes to select a different class for the component.
                     This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscFourQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
@@ -577,32 +579,34 @@ class DiscCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
 class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled permanently excited DC Motor
+            Environment to simulate a continuous control set current controlled permanently excited DC Motor
 
         Key:
-            `Cont-CC-DcPermEx-v0`
+            `Cont-CC-PermExDc-v0`
 
-        Default Modules:
-
-            Physical System:
-                SCMLSystem/DcMotorSystem with:
-                    | IdealVoltageSupply
-                    | ContFourQuadrantConverter
-                    | DcPermanentlyExcitedMotor
-                    | PolynomialStaticLoad
-                    | GaussianWhiteNoiseGenerator
-                    | EulerSolver
-                    | tau=1e-4
+        Default Components:
+            - Supply: IdealVoltageSupply
+            - Converter: FiniteFourQuadrantConverter
+            - Motor: DcPermanentlyExcitedMotor
+            - Load: ConstantSpeedLoad
+            - Ode-Solver: EulerSolver
+            - Noise: None
 
             Reference Generator:
                 WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+                    Reference Quantity. 'i'
 
             Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+                WeightedSumOfErrors: reward_weights 'i' = 1
 
             Visualization:
-                *MotorDashboard* - Plots: omega, action
+                MotorDashboard: torque and action plots
+
+            Constraints:
+                Current Limit on 'i'
+
+        Control Cycle Time:
+            tau = 1e-4 seconds
 
         State Variables:
             ``['omega' , 'torque', 'i', 'u', 'u_sup']``
@@ -617,14 +621,13 @@ class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             Box(low=[-1], high=[1])
 
         Action Space:
-            Type: Box(low=[-1], high=[1])
+            Box(low=[-1], high=[1])
 
         Starting State:
             Zeros on all state variables.
 
         Episode Termination:
-            Termination if current limits are violated. The terminal reward -10 is used as reward.
-            (Have a look at the reward functions.)
+            Termination if current limits are violated.
         """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
@@ -659,7 +662,7 @@ class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                     (e.g. visualization=dict(state_plots=('omega', 'u')))
                 - str: Pass a string out of the registered classes to select a different class for the component.
                     This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
 
         physical_system = DcMotorSystem(

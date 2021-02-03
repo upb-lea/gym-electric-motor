@@ -39,7 +39,7 @@ class DiscSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
         Physical System:
             SCMLSystem/DcMotorSystem with:
                 | IdealVoltageSupply
-                | DiscB6BridgeConverter
+                | FiniteB6BridgeConverter
                 | SynchronousReluctanceMotor
                 | PolynomialStaticLoad
                 | GaussianWhiteNoiseGenerator
@@ -98,7 +98,7 @@ class ContSynchronousReluctanceMotorEnvironment(SynchronousReluctanceMotorEnviro
         Physical System:
             SCMLSystem/DcMotorSystem with:
                 | IdealVoltageSupply
-                | DiscB6BridgeConverter
+                | FiniteB6BridgeConverter
                 | SynchronousReluctanceMotor
                 | PolynomialStaticLoad
                 | GaussianWhiteNoiseGenerator
