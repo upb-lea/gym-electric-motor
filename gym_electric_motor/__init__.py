@@ -24,16 +24,16 @@ from gym.envs.registration import register
 envs_path = 'gym_electric_motor.envs:'
 
 # Version 1
-register(id='Disc-SC-PermExDc-v0',
-         entry_point=envs_path+'DiscSpeedControlDcPermanentlyExcitedMotorEnv')
+register(id='Finite-SC-PermExDc-v0',
+         entry_point=envs_path+'FiniteSpeedControlDcPermanentlyExcitedMotorEnv')
 register(id='Cont-SC-PermExDc-v0',
          entry_point=envs_path+'ContSpeedControlDcPermanentlyExcitedMotorEnv')
-register(id='Disc-TC-PermExDc-v0',
-         entry_point=envs_path+'DiscTorqueControlDcPermanentlyExcitedMotorEnv')
+register(id='Finite-TC-PermExDc-v0',
+         entry_point=envs_path+'FiniteTorqueControlDcPermanentlyExcitedMotorEnv')
 register(id='Cont-TC-PermExDc-v0',
          entry_point=envs_path+'ContTorqueControlDcPermanentlyExcitedMotorEnv')
-register(id='Disc-CC-PermExDc-v0',
-         entry_point=envs_path+'DiscCurrentControlDcPermanentlyExcitedMotorEnv')
+register(id='Finite-CC-PermExDc-v0',
+         entry_point=envs_path+'FiniteCurrentControlDcPermanentlyExcitedMotorEnv')
 register(id='Cont-CC-PermExDc-v0',
          entry_point=envs_path+'ContCurrentControlDcPermanentlyExcitedMotorEnv')
 
