@@ -1,11 +1,8 @@
 import numpy as np
 from gym.spaces import Box
-from scipy.stats import truncnorm
 import warnings
 from ..core import PhysicalSystem
-from ..physical_systems import electric_motors as em, mechanical_loads as ml, converters as cv, \
-    voltage_supplies as vs, noise_generators as ng, solvers as sv
-from ..utils import instantiate, set_state_array
+from ..utils import set_state_array
 
 
 class SCMLSystem(PhysicalSystem):
@@ -31,36 +28,25 @@ class SCMLSystem(PhysicalSystem):
 
     @property
     def supply(self):
-        """
-        The voltage supply instance in the physical system
-        """
+        """The voltage supply instance in the physical system"""
         return self._supply
 
     @property
     def converter(self):
-        """
-        The power electronic converter instance in the system
-        """
+        """The power electronic converter instance in the system"""
         return self._converter
 
     @property
     def electrical_motor(self):
-        """
-        The electrical motor instance of the system
-        """
+        """The electrical motor instance of the system"""
         return self._electrical_motor
 
     @property
     def mechanical_load(self):
-        """
-        The mechanical load instance in the system
-        """
+        """The mechanical load instance in the system"""
         return self._mechanical_load
 
-    def __init__(self, converter, motor,
-                 load=None, supply='IdealVoltageSupply', ode_solver='euler',
-                 solver_kwargs=None, noise_generator=None, tau=1e-4,
-                 calc_jacobian=None, **kwargs):
+    def __init__(self, converter, motor, load, supply, ode_solver, noise_generator=None, tau=1e-4, calc_jacobian=None):
         """
         Args:
             converter(PowerElectronicConverter): Converter for the physical system
@@ -68,29 +54,19 @@ class SCMLSystem(PhysicalSystem):
             load(MechanicalLoad): Mechanical Load of the System
             supply(VoltageSupply): Voltage Supply
             ode_solver(OdeSolver): Ode Solver to use in this setting
-            solver_kwargs(dict): Special keyword arguments to be passed to the solver
             noise_generator(NoiseGenerator):  Noise generator
             tau(float): discrete time step of the system
             calc_jacobian(bool): If True, the jacobian matrices will be taken into account for the ode-solvers.
                 Default: The jacobians are used, if available
-            kwargs(dict): Further arguments to pass to the modules while instantiation
         """
-        self._converter = instantiate(cv.PowerElectronicConverter, converter, tau=tau, **kwargs)
-        self._electrical_motor = instantiate(em.ElectricMotor, motor, tau=tau, **kwargs)
-        load = load or ml.PolynomialStaticLoad(tau=tau, **kwargs)
-        self._mechanical_load = instantiate(ml.MechanicalLoad, load, tau=tau, **kwargs)
-        # If no special u_sup was passed, select the voltage limit of the motor
-        if 'u_sup' in kwargs.keys():
-            u_sup = kwargs['u_sup']
-        else:
-            u_sup = self._electrical_motor.limits['u']
-        self._supply = instantiate(vs.VoltageSupply, supply, u_nominal=u_sup, tau=tau, **kwargs)
-        noise_generator = noise_generator or ng.GaussianWhiteNoiseGenerator(tau=tau, **kwargs)
-        self._noise_generator = instantiate(ng.NoiseGenerator, noise_generator, **kwargs)
+        self._converter = converter
+        self._electrical_motor = motor
+        self._mechanical_load = load
+        self._supply = supply
+        self._noise_generator = noise_generator
         state_names = self._build_state_names()
         self._noise_generator.set_state_names(state_names)
-        solver_kwargs = solver_kwargs or {}
-        self._ode_solver = instantiate(sv.OdeSolver, ode_solver, **solver_kwargs)
+        self._ode_solver = ode_solver
         if calc_jacobian is None:
             calc_jacobian = self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN
         if calc_jacobian and self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN:
@@ -98,7 +74,7 @@ class SCMLSystem(PhysicalSystem):
         else:
             jac = None
         if calc_jacobian and jac is None:
-            warnings.warn('Jacobian Matrix is not provided for either the Motor or the Load Model')
+            warnings.warn('Jacobian Matrix is not provided for either the motor or the load Model')
 
         self._ode_solver.set_system_equation(self._system_equation, jac)
         self._mechanical_load.set_j_rotor(self._electrical_motor.motor_parameter['j_rotor'])

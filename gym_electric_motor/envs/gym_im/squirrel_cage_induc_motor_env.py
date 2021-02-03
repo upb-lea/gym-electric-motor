@@ -40,7 +40,7 @@ class DiscSquirrelCageInductionMotorEnvironment(SquirrelCageInductionMotorEnviro
         Physical System:
             SCMLSystem/DcMotorSystem with:
                 | IdealVoltageSupply
-                | DiscB6BridgeConverter
+                | FiniteB6BridgeConverter
                 | PermanentMagnetSynchronousMotor
                 | PolynomialStaticLoad
                 | GaussianWhiteNoiseGenerator

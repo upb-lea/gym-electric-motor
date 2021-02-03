@@ -24,10 +24,19 @@ from gym.envs.registration import register
 envs_path = 'gym_electric_motor.envs:'
 
 # Version 1
-register(id='DcPermExCont-v1',
-         entry_point=envs_path+'ContDcPermanentlyExcitedMotorEnvironment')
-register(id='DcPermExDisc-v1',
-         entry_point=envs_path+'DiscDcPermanentlyExcitedMotorEnvironment')
+register(id='Finite-SC-PermExDc-v0',
+         entry_point=envs_path+'FiniteSpeedControlDcPermanentlyExcitedMotorEnv')
+register(id='Cont-SC-PermExDc-v0',
+         entry_point=envs_path+'ContSpeedControlDcPermanentlyExcitedMotorEnv')
+register(id='Finite-TC-PermExDc-v0',
+         entry_point=envs_path+'FiniteTorqueControlDcPermanentlyExcitedMotorEnv')
+register(id='Cont-TC-PermExDc-v0',
+         entry_point=envs_path+'ContTorqueControlDcPermanentlyExcitedMotorEnv')
+register(id='Finite-CC-PermExDc-v0',
+         entry_point=envs_path+'FiniteCurrentControlDcPermanentlyExcitedMotorEnv')
+register(id='Cont-CC-PermExDc-v0',
+         entry_point=envs_path+'ContCurrentControlDcPermanentlyExcitedMotorEnv')
+
 register(id='DcExtExCont-v1',
          entry_point=envs_path+'ContDcExternallyExcitedMotorEnvironment')
 register(id='DcExtExDisc-v1',
@@ -59,10 +68,6 @@ register(id='DFIMDisc-v1',
 
 # Old Ids
 
-register(id='emotor-dc-permex-cont-v1',
-         entry_point=envs_path+'ContDcPermanentlyExcitedMotorEnvironment')
-register(id='emotor-dc-permex-disc-v1',
-         entry_point=envs_path+'DiscDcPermanentlyExcitedMotorEnvironment')
 register(id='emotor-dc-extex-cont-v1',
          entry_point=envs_path+'ContDcExternallyExcitedMotorEnvironment')
 register(id='emotor-dc-extex-disc-v1',
