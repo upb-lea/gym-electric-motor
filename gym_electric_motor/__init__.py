@@ -37,16 +37,16 @@ register(id='Finite-CC-PermExDc-v0',
 register(id='Cont-CC-PermExDc-v0',
          entry_point=envs_path+'ContCurrentControlDcPermanentlyExcitedMotorEnv')
 
-register(id='Disc-SC-ExtExDc-v0',
-         entry_point=envs_path+'DiscSpeedControlDcExternallyExcitedMotorEnv')
+register(id='Finite-SC-ExtExDc-v0',
+         entry_point=envs_path+'FiniteSpeedControlDcExternallyExcitedMotorEnv')
 register(id='Cont-SC-ExtExDc-v0',
          entry_point=envs_path+'ContSpeedControlDcExternallyExcitedMotorEnv')
-register(id='Disc-TC-ExtExDc-v0',
-         entry_point=envs_path+'DiscTorqueControlDcExternallyExcitedMotorEnv')
+register(id='Finite-TC-ExtExDc-v0',
+         entry_point=envs_path+'FiniteTorqueControlDcExternallyExcitedMotorEnv')
 register(id='Cont-TC-ExtExDc-v0',
          entry_point=envs_path+'ContTorqueControlDcExternallyExcitedMotorEnv')
-register(id='Disc-CC-ExtExDc-v0',
-         entry_point=envs_path+'DiscCurrentControlDcExternallyExcitedMotorEnv')
+register(id='Finite-CC-ExtExDc-v0',
+         entry_point=envs_path+'FiniteCurrentControlDcExternallyExcitedMotorEnv')
 register(id='Cont-CC-ExtExDc-v0',
          entry_point=envs_path+'ContCurrentControlDcExternallyExcitedMotorEnv')
 

@@ -8,17 +8,17 @@ from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
 
 
-class DiscSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
+class FiniteSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled externally excited DC Motor
+            Environment to simulate a finite control set speed controlled externally excited DC Motor
 
         Key:
-            `Disc-SC-ExtExDc-v0`
+            `Finite-SC-ExtExDc-v0`
 
         Default Components:
             Supply: IdealVoltageSupply
-            Converter: DoubleConverter(DiscFourQuadrantConverter, DiscOneQuadrantConverter)
+            Converter: FiniteMultiConverter(FiniteFourQuadrantConverter, FiniteOneQuadrantConverter)
             Motor: DcExternallyExcitedMotor
             Load: PolynomialStaticLoad
             Ode-Solver: EulerSolver
@@ -96,14 +96,14 @@ class DiscSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                     This class is then initialized with its default parameters.
                     The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
         """
-        default_subconverters = (ps.DiscFourQuadrantConverter(), ps.DiscOneQuadrantConverter)
+        default_subconverters = (ps.FiniteFourQuadrantConverter(), ps.FiniteOneQuadrantConverter)
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
             converter=initialize(
                 ps.PowerElectronicConverter,
                 converter,
-                ps.DiscMultiConverter,
+                ps.FiniteMultiConverter,
                 dict(subconverters=default_subconverters)),
             motor=initialize(ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
@@ -247,17 +247,17 @@ class ContSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
+class FiniteTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely torque controlled externally excited DC Motor
+            Environment to simulate a finite control set torque controlled externally excited DC Motor
 
         Key:
-            `Disc-TC-ExtExDc-v0`
+            `Finite-TC-ExtExDc-v0`
 
         Default Components:
             - Supply: IdealVoltageSupply
-            - Converter: DiscMultiConverter(DiscFourQuadrantConverter, DiscOneQuadrantConverter)
+            - Converter: FiniteMultiConverter(FiniteFourQuadrantConverter, FiniteOneQuadrantConverter)
             - Motor: DcExternallyExcitedMotor
             - Load: ConstantSpeedLoad
             - Ode-Solver: EulerSolver
@@ -335,14 +335,14 @@ class DiscTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                     This class is then initialized with its default parameters.
                     The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
         """
-        default_subconverters = (ps.DiscFourQuadrantConverter(), ps.DiscOneQuadrantConverter())
+        default_subconverters = (ps.FiniteFourQuadrantConverter(), ps.FiniteOneQuadrantConverter())
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
             converter=initialize(
                 ps.PowerElectronicConverter,
                 converter,
-                ps.DiscMultiConverter,
+                ps.FiniteMultiConverter,
                 dict(subconverters=default_subconverters)),
             motor=initialize(ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
@@ -368,14 +368,14 @@ class DiscTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
 class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
     Description:
-        Environment to simulate a continuously torque controlled externally excited DC Motor
+        Environment to simulate a continuous control set torque controlled externally excited DC Motor
 
     Key:
         `Cont-TC-ExtExDc-v0`
 
     Default Components:
         - Supply: IdealVoltageSupply
-        - Converter: DiscMultiConverter(DiscFourQuadrantConverter, DiscOneQuadrantConverter)
+        - Converter: ContMultiConverter(ContFourQuadrantConverter, ContOneQuadrantConverter)
         - Motor: DcExternallyExcitedMotor
         - Load: ConstantSpeedLoad
         - Ode-Solver: EulerSolver
@@ -452,11 +452,17 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                     (e.g. visualization=dict(state_plots=('omega', 'u')))
                 - str: Pass a string out of the registered classes to select a different class for the component.
                     This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
+                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
+        default_subconverters = (ps.ContFourQuadrantConverter(), ps.ContOneQuadrantConverter())
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
+            converter=initialize(
+                ps.PowerElectronicConverter,
+                converter,
+                ps.ContMultiConverter,
+                dict(subconverters=default_subconverters)
+            ),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
@@ -478,17 +484,17 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
+class FiniteCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely current controlled externally excited DC Motor
+            Environment to simulate a finite control set current controlled externally excited DC Motor
 
         Key:
-            `Disc-CC-ExtExDc-v0`
+            `Finite-CC-ExtExDc-v0`
 
         Default Components:
             - Supply: IdealVoltageSupply
-            - Converter: DiscMultiConverter(DiscFourQuadrantConverter, DiscOneQuadrantConverter)
+            - Converter: FiniteMultiConverter(FiniteFourQuadrantConverter, FiniteOneQuadrantConverter)
             - Motor: DcExternallyExcitedMotor
             - Load: ConstantSpeedLoad
             - Ode-Solver: EulerSolver
@@ -566,10 +572,15 @@ class DiscCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                     This class is then initialized with its default parameters.
                     The available strings can be looked up in the documentation. (e.g. converter='Disc-2QC')
         """
-
+        default_subconverters = (ps.FiniteFourQuadrantConverter(), ps.FiniteOneQuadrantConverter())
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscFourQuadrantConverter, dict()),
+            converter=initialize(
+                ps.PowerElectronicConverter,
+                converter,
+                ps.FiniteMultiConverter,
+                dict(subconverters=default_subconverters)
+            ),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),

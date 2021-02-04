@@ -200,7 +200,7 @@ class FiniteConverter(PowerElectronicConverter):
         raise NotImplementedError
 
 
-class FiniteOneQuadrantConverter(FinitecConverter):
+class FiniteOneQuadrantConverter(FiniteConverter):
     """
     Key:
         'Finite-1QC'
