@@ -56,6 +56,7 @@ Hence, the built-in OpenAI ``gym`` interface allows to easily couple ``GEM`` to 
 
 Providing easy access to the non-commercial, open-source ``GEM`` library allows users from any engineering domain to include accurate drive models into their simulations, also beyond the topic of control applications.
 Considering the prevalence of commercial software like ``MATLAB`` for educational purposes, a free-of-charge simulation alternative that does not force students or institutions to pay for licenses, has great potential to support and encourage training of new talents in the field of electrical drives and neighbouring domains (e.g. power electronics or energy systems).
+``GEM`` has already been used in graduate courses on reinforcement learning [@rl-lecture].
 
 # Related software
 
