@@ -8,17 +8,17 @@ from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
 
 
-class DiscSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
+class FiniteSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled series DC Motor
+            Environment to simulate a finite control set speed controlled series DC Motor
 
         Key:
-            `Disc-SC-SeriesDc-v0`
+            `Finite-SC-SeriesDc-v0`
 
         Default Components:
             Supply: IdealVoltageSupply
-            Converter: DiscOneQuadrantConverter
+            Converter: FiniteOneQuadrantConverter
             Motor: DcSeriesMotor
             Load: PolynomialStaticLoad
             Ode-Solver: EulerSolver
@@ -99,7 +99,7 @@ class DiscSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscOneQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteOneQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
                 load_parameter=dict(a=0.01, b=0.01, c=0.0)
@@ -126,7 +126,7 @@ class DiscSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
 class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a continuously speed controlled series DC Motor
+            Environment to simulate a continuous control set speed controlled series DC Motor
 1
         Key:
             `Cont-SC-SeriesDc-v0`
@@ -238,17 +238,17 @@ class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscTorqueControlDcSeriesMotorEnv(ElectricMotorEnvironment):
+class FiniteTorqueControlDcSeriesMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely torque controlled series DC Motor
+            Environment to simulate a finite control set torque controlled series DC Motor
 
         Key:
-            `Disc-TC-SeriesDc-v0`
+            `Finite-TC-SeriesDc-v0`
 
         Default Components:
             - Supply: IdealVoltageSupply
-            - Converter: DiscOneQuadrantConverter
+            - Converter: FiniteOneQuadrantConverter
             - Motor: DcSeriesMotor
             - Load: ConstantSpeedLoad
             - Ode-Solver: EulerSolver
@@ -329,7 +329,7 @@ class DiscTorqueControlDcSeriesMotorEnv(ElectricMotorEnvironment):
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscOneQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteOneQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
@@ -463,17 +463,17 @@ class ContTorqueControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
+class FiniteCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely current controlled series DC Motor
+            Environment to simulate a finite control set current controlled series DC Motor
 
         Key:
-            `Disc-CC-SeriesDc-v0`
+            `Finite-CC-SeriesDc-v0`
 
         Default Components:
             - Supply: IdealVoltageSupply
-            - Converter: DiscOneQuadrantConverter
+            - Converter: FiniteOneQuadrantConverter
             - Motor: DcSeriesMotor
             - Load: ConstantSpeedLoad
             - Ode-Solver: EulerSolver
@@ -554,8 +554,8 @@ class DiscCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscOneQuadrantConverter, dict()),
-            motor=initialize(ps.ElectricMotor, motor, ps.DcSeiresMotor, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteOneQuadrantConverter, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),

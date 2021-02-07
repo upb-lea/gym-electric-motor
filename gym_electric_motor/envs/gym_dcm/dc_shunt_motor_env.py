@@ -9,17 +9,17 @@ from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
 
 
-class DiscSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
+class FiniteSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely speed controlled shunt DC Motor
+            Environment to simulate a finite control set speed controlled shunt DC Motor
 
         Key:
-            `Disc-SC-ShuntDc-v0`
+            `Finite-SC-ShuntDc-v0`
 
         Default Components:
             Supply: IdealVoltageSupply
-            Converter: DiscTwoQuadrantConverter
+            Converter: FiniteTwoQuadrantConverter
             Motor: DcShuntMotor
             Load: PolynomialStaticLoad
             Ode-Solver: EulerSolver
@@ -100,7 +100,7 @@ class DiscSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscTwoQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteTwoQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
                 load_parameter=dict(a=0.01, b=0.01, c=0.0)
@@ -239,13 +239,13 @@ class ContSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
+class FiniteTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a discretely torque controlled shunt DC Motor
+            Environment to simulate a finite control set torque controlled shunt DC Motor
 
         Key:
-            `Disc-TC-ShuntDc-v0`
+            `Finite-TC-ShuntDc-v0`
 
         Default Components:
             - Supply: IdealVoltageSupply
@@ -330,7 +330,7 @@ class DiscTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscTwoQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteTwoQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
@@ -464,7 +464,7 @@ class ContTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
         )
 
 
-class DiscCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
+class FiniteCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
         Description:
             Environment to simulate a discretely current controlled shunt DC Motor
@@ -555,7 +555,7 @@ class DiscCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
 
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.DiscTwoQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteTwoQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
