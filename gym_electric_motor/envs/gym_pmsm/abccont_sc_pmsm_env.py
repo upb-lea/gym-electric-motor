@@ -9,37 +9,37 @@ from gym_electric_motor.utils import initialize
 from gym_electric_motor.constraints import SquaredConstraint
 
 
-class FiniteTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
+class AbcContSpeedControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
     """
         Description:
-            Environment to simulate a finite control set torque controlled permanent magnet synchronous motor
+            Environment to simulate a abc-domain cont. control set speed controlled permanent magnet synchronous motor
 
         Key:
-            `Finite-TC-PMSM-v0`
+            `AbcCont-SC-PMSM-v0`
 
         Default Components:
             Supply: IdealVoltageSupply
-            Converter: FiniteB6BridgeConverter
+            Converter: ContB6BridgeConverter
             Motor: PermanentMagnetSynchronousMotor
-            Load: ConstantSpeedLoad
+            Load: PolynomialStaticLoad
             Ode-Solver: EulerSolver
             Noise: None
 
             Reference Generator:
                 WienerProcessReferenceGenerator
-                    Reference Quantity. 'torque'
+                    Reference Quantity. 'omega'
 
             Reward Function:
-                WeightedSumOfErrors: reward_weights 'torque' = 1
+                WeightedSumOfErrors: reward_weights 'omega' = 1
 
             Visualization:
-                MotorDashboard: torque and action plots
+                MotorDashboard: omega and action plots
 
             Constraints:
                 Squared Current Limit on 'i_sq' and 'i_sd'
 
         Control Cycle Time:
-            tau = 1e-5 seconds
+            tau = 1e-4 seconds
 
         State Variables:
             ``['omega' , 'torque', 'i_a', 'i_b', 'i_c', 'i_sd', 'i_sq',
@@ -55,7 +55,7 @@ class FiniteTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviron
             Box(low=[-1], high=[1])
 
         Action Space:
-            Type: Discrete(8)
+            Box(-1, 1, shape=(3,))
 
         Starting State:
             Zeros on all state variables.
@@ -65,7 +65,7 @@ class FiniteTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviron
         """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5):
+                 constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-4):
         """
         Args:
             supply(env-arg): Specification of the supply to be used in the environment
@@ -101,23 +101,25 @@ class FiniteTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviron
 
         physical_system = SynchronousMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteB6BridgeConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContB6BridgeConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad(omega_fixed=100.0), dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
+                load_parameter=dict(a=0.01, b=0.01, c=0.0)
+            )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
-            tau=tau
+            tau=tau,
+            control_space='abc',
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='torque')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='omega')
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots='all')
-        )
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
