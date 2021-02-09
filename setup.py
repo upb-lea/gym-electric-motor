@@ -15,13 +15,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='gym_electric_motor',
-      version='0.3.0',
+      version='0.3.1',
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
       python_requires='>=3.6',
       extras_require={'examples': [
-                        'keras-rl2 @git+https://github.com/wau/keras-rl2.git',
+                        'keras-rl2',
                         'stable-baselines3',
                         'tensorforce==0.5.5',
                         'gekko']

@@ -5,7 +5,6 @@ from gym.spaces import Box
 import numpy as np
 from scipy import signal
 import math
-from pytest_lambda import lambda_fixture
 
 # The load parameter values used in the test
 load_parameter1 = {'j_load': 0.2, 'state_names': ['omega'], 'j_rot_load': 0.25, 'omega_range': (0, 1),
@@ -23,9 +22,10 @@ test_rand_initializer = { 'interval': None,
 test_amp = 20
 test_bias = 10
 test_freq = 2
-# simple triangular profile as example
-test_speed_profile = lambda_fixture(lambda t, amp, freq, bias:
-                      amp*signal.sawtooth(2*np.pi*freq*t, width=0.5)+bias)
+
+
+def speed_profile_(t, amp, freq, bias):
+    return amp*signal.sawtooth(2*np.pi*freq*t, width=0.5)+bias
 
 
 @pytest.fixture
@@ -249,21 +249,21 @@ class TestExtSpeedLoad(TestMechanicalLoad):
 
     key = 'ExtSpeedLoad'
     class_to_test = ExternalSpeedLoad
-    kwargs = dict(speed_profile=test_speed_profile,
+    kwargs = dict(speed_profile=speed_profile_,
                   amp=test_amp,
                   bias=test_bias,
                   freq=test_freq)
 
     @pytest.fixture
     def ext_speed_load(self):
-        return ExternalSpeedLoad(speed_profile=test_speed_profile,
+        return ExternalSpeedLoad(speed_profile=speed_profile_,
                                  amp=test_amp, bias=test_bias, freq=test_freq)
 
     def test_initialization(self):
-        load = ExternalSpeedLoad(speed_profile=test_speed_profile,
+        load = ExternalSpeedLoad(speed_profile=speed_profile_,
                                  amp=test_amp, bias=test_bias, freq=test_freq)
-        assert load._speed_profile == test_speed_profile
-        assert load.omega == test_speed_profile(t=0,
+        assert load._speed_profile == speed_profile_
+        assert load.omega == speed_profile_(t=0,
                                                 amp=test_amp,
                                                 bias=test_bias,
                                                 freq=test_freq)
@@ -299,7 +299,7 @@ class TestExtSpeedLoad(TestMechanicalLoad):
     ]
     )
     def test_jacobian(self, omega, omega_initial, expected):
-        test_object = self.class_to_test(test_speed_profile, amp=test_amp,
+        test_object = self.class_to_test(speed_profile_, amp=test_amp,
                                          bias=test_bias, freq=test_freq)
 
         # 2 Runs to test independence on time and torque
