@@ -203,11 +203,44 @@ register(
     entry_point=envs_path+'DqContSpeedControlPermanentMagnetSynchronousMotorEnv'
 )
 
+# Squirrel Cage Induction Motor Environments
+register(
+    id='Finite-SC-SCIM-v0',
+    entry_point=envs_path+'FiniteSpeedControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='Finite-TC-SCIM-v0',
+    entry_point=envs_path+'FiniteTorqueControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='Finite-CC-SCIM-v0',
+    entry_point=envs_path+'FiniteCurrentControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='AbcCont-CC-SCIM-v0',
+    entry_point=envs_path+'AbcContCurrentControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='AbcCont-TC-SCIM-v0',
+    entry_point=envs_path+'AbcContTorqueControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='AbcCont-SC-SCIM-v0',
+    entry_point=envs_path+'AbcContSpeedControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='DqCont-CC-SCIM-v0',
+    entry_point=envs_path+'DqContCurrentControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='DqCont-TC-SCIM-v0',
+    entry_point=envs_path+'DqContTorqueControlSquirrelCageInductionMotorEnv'
+)
+register(
+    id='DqCont-SC-SCIM-v0',
+    entry_point=envs_path+'DqContSpeedControlSquirrelCageInductionMotorEnv'
+)
 
-register(id='SCIMCont-v1',
-         entry_point=envs_path+'ContSquirrelCageInductionMotorEnvironment')
-register(id='SCIMDisc-v1',
-         entry_point=envs_path+'DiscSquirrelCageInductionMotorEnvironment')
 register(id='DFIMCont-v1',
          entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
 register(id='DFIMDisc-v1',
