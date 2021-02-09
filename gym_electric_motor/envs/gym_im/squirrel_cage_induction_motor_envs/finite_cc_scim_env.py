@@ -117,7 +117,7 @@ class FiniteCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             ReferenceGenerator,
             reference_generator,
             MultipleReferenceGenerator,
-            dict(subgenerators=default_subgenerators)
+            dict(sub_generators=default_subgenerators)
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_sd=0.5, i_sq=0.5))
