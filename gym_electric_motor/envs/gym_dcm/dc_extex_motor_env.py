@@ -121,7 +121,7 @@ class FiniteSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -240,7 +240,7 @@ class ContSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -358,7 +358,7 @@ class FiniteTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -477,7 +477,7 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -600,7 +600,7 @@ class FiniteCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         )
         visualization = initialize(
             ElectricMotorVisualization, visualization, MotorDashboard,
-            dict(state_plots=('i_a', 'i_e',), action_plots=(0, 1)))
+            dict(state_plots=('i_a', 'i_e',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -718,7 +718,7 @@ class ContCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         )
         visualization = initialize(
             (ElectricMotorVisualization, list, tuple),
-            visualization, MotorDashboard, dict(state_plots=('i_a, i_e',), action_plots=(0, 1)))
+            visualization, MotorDashboard, dict(state_plots=('i_a, i_e',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks

@@ -117,7 +117,7 @@ class FiniteSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -232,7 +232,7 @@ class ContSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -345,7 +345,7 @@ class FiniteTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -457,7 +457,7 @@ class ContTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots=(0,)))
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('torque',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -575,7 +575,7 @@ class FiniteCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
         )
         visualization = initialize(
             ElectricMotorVisualization, visualization, MotorDashboard,
-            dict(state_plots=('i_a', 'i_e',), action_plots=(0,)))
+            dict(state_plots=('i_a', 'i_e',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
@@ -693,7 +693,7 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
         )
         visualization = initialize(
             (ElectricMotorVisualization, list, tuple),
-            visualization, MotorDashboard, dict(state_plots=('i_a', 'i_e'), action_plots=(0,)))
+            visualization, MotorDashboard, dict(state_plots=('i_a', 'i_e'), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
