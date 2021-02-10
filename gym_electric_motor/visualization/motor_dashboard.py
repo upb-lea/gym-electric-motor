@@ -148,8 +148,9 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._action_plots == 'all':
             if type(env.action_space) is gym.spaces.Discrete:
                 self._action_plots = [0]
-            elif type(env.action_space) is gym.spaces.Box:
+            elif type(env.action_space) in (gym.spaces.Box, gym.spaces.MultiDiscrete):
                 self._action_plots = list(range(env.action_space.shape[0]))
+
         self._time_plots = []
 
         if len(self._state_plots) > 0:
@@ -158,7 +159,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 self._time_plots.append(StatePlot(state))
 
         if len(self._action_plots) > 0:
-            assert type(env.action_space) in (gym.spaces.Box, gym.spaces.Discrete), \
+            assert type(env.action_space) in (gym.spaces.Box, gym.spaces.Discrete, gym.spaces.MultiDiscrete), \
                 f'Action space of type {type(env.action_space)} not supported for plotting.'
             for action in self._action_plots:
                 ap = ActionPlot(action)
