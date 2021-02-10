@@ -241,7 +241,40 @@ register(
     entry_point=envs_path+'DqContSpeedControlSquirrelCageInductionMotorEnv'
 )
 
-register(id='DFIMCont-v1',
-         entry_point=envs_path+'ContDoublyFedInductionMotorEnvironment')
-register(id='DFIMDisc-v1',
-         entry_point=envs_path+'DiscDoublyFedInductionMotorEnvironment')
+# Doubly Fed Induction Motor Environments
+register(
+    id='Finite-SC-DFIM-v0',
+    entry_point=envs_path+'FiniteSpeedControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='Finite-TC-DFIM-v0',
+    entry_point=envs_path+'FiniteTorqueControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='Finite-CC-DFIM-v0',
+    entry_point=envs_path+'FiniteCurrentControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='AbcCont-CC-DFIM-v0',
+    entry_point=envs_path+'AbcContCurrentControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='AbcCont-TC-DFIM-v0',
+    entry_point=envs_path+'AbcContTorqueControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='AbcCont-SC-DFIM-v0',
+    entry_point=envs_path+'AbcContSpeedControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='DqCont-CC-DFIM-v0',
+    entry_point=envs_path+'DqContCurrentControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='DqCont-TC-DFIM-v0',
+    entry_point=envs_path+'DqContTorqueControlDoublyFedInductionMotorEnv'
+)
+register(
+    id='DqCont-SC-DFIM-v0',
+    entry_point=envs_path+'DqContSpeedControlDoublyFedInductionMotorEnv'
+)

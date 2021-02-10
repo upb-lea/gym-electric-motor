@@ -709,13 +709,15 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
 
         self.stator_voltage_space_idx = 0
         self.stator_voltage_low_idx = 0
-        self.stator_voltage_high_idx = self.stator_voltage_low_idx + \
-                                       self._converter.subsignal_voltage_space_dims[self.stator_voltage_space_idx]
+        self.stator_voltage_high_idx = \
+            self.stator_voltage_low_idx \
+            + self._converter.subsignal_voltage_space_dims[self.stator_voltage_space_idx]
 
         self.rotor_voltage_space_idx = 1
         self.rotor_voltage_low_idx = self.stator_voltage_high_idx
-        self.rotor_voltage_high_idx = self.rotor_voltage_low_idx + \
-                                       self._converter.subsignal_voltage_space_dims[self.rotor_voltage_space_idx]
+        self.rotor_voltage_high_idx = \
+            self.rotor_voltage_low_idx \
+            + self._converter.subsignal_voltage_space_dims[self.rotor_voltage_space_idx]
 
     def _set_limits(self):
         """
@@ -736,13 +738,16 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
 
     def _build_state_names(self):
         # Docstring of superclass
-        names_l = self._mechanical_load.state_names + ['torque',
-                                                       'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',
-                                                       'i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq',
-                                                       'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',
-                                                       'u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq',
-                                                       'epsilon', 'u_sup',
-                                                       ]
+        names_l = \
+            self._mechanical_load.state_names \
+            + [
+                'torque',
+                'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',
+                'i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq',
+                'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',
+                'u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq',
+                'epsilon', 'u_sup',
+            ]
         return names_l
 
     def _set_indices(self):
@@ -787,7 +792,6 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         i_ralpha = 1 / l_r * psi_ralpha - mp['l_m'] / l_r * i_salpha
         i_rbeta = 1 / l_r * psi_rbeta - mp['l_m'] / l_r * i_sbeta
         return [i_ralpha, i_rbeta]
-
 
     def simulate(self, action, *_, **__):
         # Docstring of superclass
