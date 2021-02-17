@@ -211,7 +211,7 @@
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/keras_rl2_dqn_disc_pmsm_example.ipynb">Keras-rl2 example</a></p></li>
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb">Stable-baselines3 example</a></p></li>
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/tensorforce_dqn_disc_pmsm_example.ipynb">Tensorforce example</a></p></li>
-<li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/gekko_mpc_cont_pmsm_example.ipynb">MPC  example</a></p></li>
+<li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/pmsm_mpc_dq_current_control.ipynb.ipynb">MPC  example</a></p></li>
 </ul>
 <p>There is a list of <a class="reference external" href="examples/">standalone example scripts</a> as well for minimalistic demonstrations.</p>
 <p>A basic routine is as simple as:</p>
@@ -224,6 +224,8 @@
         <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c1"># visualize environment</span>
         <span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">references</span><span class="p">),</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span>
             <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>  <span class="c1"># pick random control actions</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">references</span><span class="p">)</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
     <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
