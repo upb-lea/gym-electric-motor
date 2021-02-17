@@ -26,7 +26,7 @@ An easy way to get started with GEM is by playing around with the following inte
 * [Keras-rl2 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/keras_rl2_dqn_disc_pmsm_example.ipynb)
 * [Stable-baselines3 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb)
 * [Tensorforce example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/tensorforce_dqn_disc_pmsm_example.ipynb)
-* [MPC  example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/pmsm_mpc_dq_current_control.ipynb.ipynb)
+* [MPC  example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/pmsm_mpc_dq_current_control.ipynb)
 
 There is a list of [standalone example scripts](examples/) as well for minimalistic demonstrations.
 
