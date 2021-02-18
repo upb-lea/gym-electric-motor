@@ -11,7 +11,7 @@
 [![codecov](https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg)](https://codecov.io/gh/upb-lea/gym-electric-motor)
 [![PyPI version shields.io](https://img.shields.io/pypi/v/gym-electric-motor.svg)](https://pypi.python.org/pypi/gym-electric-motor/)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE)
-[![DOI Zenodo](https://zenodo.org/badge/216583232.svg)](https://zenodo.org/badge/latestdoi/216583232)
+[![DOI Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.4355691.svg)](https://doi.org/10.5281/zenodo.4355691)
 [![DOI JOSS](https://joss.theoj.org/papers/10.21105/joss.02498/status.svg)](https://doi.org/10.21105/joss.02498)
 
 ## Overview
