@@ -98,11 +98,11 @@ class FiniteSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
-                load_parameter=dict(a=0.01, b=0.01, c=0.0)
+                load_parameter=dict(a=0.0, b=0.0, c=0.0, j_load=1e-3)
             )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
@@ -110,7 +110,8 @@ class FiniteSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='omega')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
+            dict(reference_state='omega', sigma_range=(5e-4, 5e-3))
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
@@ -213,11 +214,11 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
-                load_parameter=dict(a=0.01, b=0.01, c=0.0)
+                load_parameter=dict(a=0.0, b=0.0, c=0.0, j_load=1e-4)
             )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
@@ -225,7 +226,8 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='omega')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
+            dict(reference_state='omega', sigma_range=(1e-3, 5e-2))
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
@@ -328,7 +330,7 @@ class FiniteTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
@@ -338,7 +340,8 @@ class FiniteTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='torque')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
+            dict(reference_state='torque', sigma_range=(1e-2, 1e-1))
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
@@ -440,7 +443,7 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                     The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
         """
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
@@ -450,7 +453,8 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='torque')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
+            dict(reference_state='torque', sigma_range=(1e-2, 1e-1))
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
@@ -553,7 +557,7 @@ class FiniteCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment)
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
@@ -563,7 +567,8 @@ class FiniteCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment)
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='i')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
+            dict(reference_state='i', sigma_range=(1e-2, 1e-1))
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i=1.0))
@@ -666,7 +671,7 @@ class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100)),
@@ -676,7 +681,8 @@ class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='i')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
+            dict(reference_state='i', sigma_range=(1e-2, 1e-1))
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i=1.0))

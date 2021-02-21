@@ -1,7 +1,10 @@
 from gym.spaces import Discrete, Box, MultiDiscrete
 from gym_electric_motor.physical_systems import SynchronousMotorSystem, DcMotorSystem, DcSeriesMotor, DcExternallyExcitedMotor
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, SwitchedReferenceGenerator
-from gym_electric_motor.envs import ContDcExternallyExcitedMotorEnvironment, DiscDcExternallyExcitedMotorEnvironment
+from gym_electric_motor.envs.gym_dcm.dc_extex_motor_env import ContCurrentControlDcExternallyExcitedMotorEnv, \
+    ContSpeedControlDcExternallyExcitedMotorEnv, ContTorqueControlDcExternallyExcitedMotorEnv, \
+    FiniteCurrentControlDcExternallyExcitedMotorEnv, FiniteSpeedControlDcExternallyExcitedMotorEnv, \
+    FiniteTorqueControlDcExternallyExcitedMotorEnv
 import numpy as np
 
 
@@ -27,7 +30,7 @@ class Controller:
         return controller
 
     def control(self, state, reference):
-        pass
+        raise NotImplementedError
 
     def reset(self):
         pass
@@ -131,8 +134,17 @@ class Controller:
             mp['l'] = mp['l_a']
 
         if 'automated_gain' not in controller_kwargs.keys() or automated_gain:
-
-            if type(environment) == ContDcExternallyExcitedMotorEnvironment:
+            cont_extex_envs = [
+                ContTorqueControlDcExternallyExcitedMotorEnv,
+                ContCurrentControlDcExternallyExcitedMotorEnv,
+                ContSpeedControlDcExternallyExcitedMotorEnv
+            ]
+            finite_extex_envs = [
+                FiniteSpeedControlDcExternallyExcitedMotorEnv,
+                FiniteCurrentControlDcExternallyExcitedMotorEnv,
+                FiniteTorqueControlDcExternallyExcitedMotorEnv
+            ]
+            if type(environment) in cont_extex_envs:
                 stages_a = stages[0]
                 stages_e = stages[1]
 
@@ -145,7 +157,7 @@ class Controller:
                 if stages_e[0]['controller_type'] == PID_Controller:
                     d_gain = p_gain * environment.physical_system.tau
                     stages_e[0]['d_gain'] = d_gain if 'd_gain' not in stages_e[0].keys() else stages_e[0]['d_gain']
-            elif type(environment) == DiscDcExternallyExcitedMotorEnvironment:
+            elif type(environment) in finite_extex_envs:
                 stages_a = stages[0]
                 stages_e = stages[1]
             else:

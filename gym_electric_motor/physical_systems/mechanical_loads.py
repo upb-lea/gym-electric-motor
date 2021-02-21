@@ -4,8 +4,7 @@ import warnings
 
 
 class MechanicalLoad:
-    """
-    The MechanicalLoad is the base class for all the mechanical systems attached
+    """The MechanicalLoad is the base class for all the mechanical systems attached
     to the electrical motors rotor.
 
     It contains an mechanical ode system as well as the state names, limits and
@@ -75,11 +74,11 @@ class MechanicalLoad:
 
     #: Parameter indicating if the class is implementing the optional jacobian function
     HAS_JACOBIAN = False
+
     #: _default_initial_state(dict): Default initial motor-state values
     _default_initializer = {}
 
-    def __init__(self, state_names=None, j_load=0.0,
-                 load_initializer=None, **__):
+    def __init__(self, state_names=None, j_load=0.0, load_initializer=None, **__):
         """
         Args:
             state_names(list(str)): List of the names of the states in the mechanical-ODE.
@@ -97,22 +96,17 @@ class MechanicalLoad:
         except:
             self._initial_states = {state: 0.0 for state in self._state_names}
 
-    def initialize(self,
-                   state_space,
-                   state_positions,
-                   nominal_state,
-                   **__):
-        """
-        Initializes give state values. Values can be given as a constant or
-        sampled random out of a statistical distribution. Initial value is in
+    def initialize(self, state_space, state_positions, nominal_state, **__):
+        """Initializes the state of the load on an episode start.
+
+        Values can be given as a constant or sampled random out of a statistical distribution. Initial value is in
         range of the nominal values or a given interval.
+
         Args:
             nominal_state(list): nominal values for each state given from
                                   physical system
             state_space(gym.spaces.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
-        Returns:
-
         """
         # for order and organization purposes
         interval = self._initializer['interval']
@@ -186,17 +180,11 @@ class MechanicalLoad:
                      enumerate(self._initial_states.keys())}
                 self._initial_states.update(initial_states_)
             else:
-                raise Exception(
-                    'Initialization Value have to be in nominal '
-                    'boundaries')
+                raise Exception('Initialization Value have to be in nominal boundaries')
         else:
             raise Exception('No matching Initialization Case')
 
-    def reset(self,
-              state_space,
-              state_positions,
-              nominal_state,
-              **__):
+    def reset(self, state_space, state_positions, nominal_state, **__):
         """
         Reset the motors state to a new initial state. (Default 0)
 
@@ -266,9 +254,7 @@ class MechanicalLoad:
 
 
 class PolynomialStaticLoad(MechanicalLoad):
-    """
-    Mechanical system that models the Mechanical-ODE based on a static
-    polynomial load torque.
+    """ Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.
 
     Parameter dictionary entries:
         | a: Constant Load Torque coefficient (for modeling static friction)
