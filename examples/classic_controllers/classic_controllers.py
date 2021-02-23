@@ -481,7 +481,8 @@ class Cascaded_Controller(Controller):
         action = self.controller_stages[0].control(state[self.ref_state_idx[0]], self.ref[0])
         if self.stage_type[0]:
             action += self.feedforward(state)
-            if self.action_space.low[0] <= action.all() <= self.action_space.high[0]:
+
+            if self.action_space.low[0] <= action <= self.action_space.high[0]:
                 self.controller_stages[0].integrate(state[self.ref_state_idx[0]], self.ref[0])
                 action = [action]
             else:
@@ -491,7 +492,7 @@ class Cascaded_Controller(Controller):
             ref_e = self.ref_e if not self.ref_e_idx else reference[self.ref_e_idx]
             action_u_e = self.controller_e.control(state[self.i_e_idx], ref_e)
             if self.stage_type[0]:
-                action.append(action_u_e)
+                action = np.append(action, action_u_e)
                 if self.action_space.low[1] <= action[1] <= self.action_space.high[1]:
                     self.controller_e.integrate(state[self.i_e_idx], ref_e)
                 action = np.clip(action, self.action_space.low, self.action_space.high)
