@@ -242,7 +242,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         Update the visualization of the motor.
         """
         for visualization in self._visualizations:
-            visualization.render(**__)
+            visualization.render()
 
     def step(self, action):
         """Perform one simulation step of the environment with an action of the action space.
@@ -622,7 +622,7 @@ class ElectricMotorVisualization(Callback):
     visualized in the desired way.
     """
 
-    def render(self, *args):
+    def render(self):
         """Function to update the user interface."""
         raise NotImplementedError
 
