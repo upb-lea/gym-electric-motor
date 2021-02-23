@@ -40,7 +40,7 @@ class MotorDashboardPlot(Callback):
 
         self._colors = [cycle['color'] for cycle in plt.rcParams['axes.prop_cycle']]
 
-    def initialize(self, axis, **kwargs):
+    def initialize(self, axis):
         """Initialization of the plot.
 
         It is called by the MotorDashboard. Set labels, legends... when overriding this method.
@@ -57,7 +57,7 @@ class MotorDashboardPlot(Callback):
         if self._y_lim is not None:
             self._axis.set_ylim(self._y_lim)
 
-    def render(self, **kwargs):
+    def render(self):
         """Update of the plots axis.
 
         The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
@@ -162,8 +162,8 @@ class TimePlot(MotorDashboardPlot):
         self._t += self._tau
         self._done = done
 
-    def render(self, **kwargs):
-        super().render(**kwargs)
+    def render(self):
+        super().render()
 
         for violation in self._violation_memory:
             self._axis.axvline(violation, **self._violation_line_cfg)
@@ -215,3 +215,4 @@ class StepPlot(MotorDashboardPlot):
         min_, max_ = min(self._y_data[0]), max(self._y_data[0])
         if self._axis.get_ylim() != (min_, max_):
             self._axis.set_ylim(min_, max_)
+
