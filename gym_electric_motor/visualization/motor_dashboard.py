@@ -1,5 +1,5 @@
 from gym_electric_motor.core import ElectricMotorVisualization
-from .motor_dashboard_plots import StatePlot, ActionPlot, RewardPlot, TimePlot, EpisodePlot, StepPlot, StatePlotExtended
+from .motor_dashboard_plots import StatePlot, ActionPlot, RewardPlot, TimePlot, EpisodePlot, StepPlot
 import matplotlib.pyplot as plt
 import gym
 
@@ -26,7 +26,7 @@ class MotorDashboard(ElectricMotorVisualization):
     StepPlot base classes.
     """
 
-    def __init__(self, state_plots_extended=(), state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
+    def __init__(self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
                  update_interval=1000, step_plot_width=10000, style=None, **__):
         """
         Args:
@@ -70,7 +70,6 @@ class MotorDashboard(ElectricMotorVisualization):
         self._state_plots = state_plots
         self._action_plots = action_plots
         self._reward_plot = reward_plot
-        self._state_plots_extended = state_plots_extended
 
         # Separate the additional plots into StepPlots, EpisodicPlots and StepPlots
         self._custom_step_plots = [p for p in additional_plots if isinstance(p, TimePlot)]
@@ -127,18 +126,14 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._k % self._update_interval == 0:
             self._update_render = True
 
-    def render(self, **kwargs):
+    def render(self):
         """Updates the plots every *update cycle* calls of this method."""
         if not (self._time_plot_figure or self._episodic_plot_figure or self._step_plot_figure) \
            and len(self._plots) > 0:
-            self._initialize(**kwargs)
+            self._initialize()
         if self._update_render:
-            self._update(**kwargs)
+            self._update()
             self._update_render = False
-
-        for state_plot_extended in self._time_plots:
-            if type(state_plot_extended) == StatePlotExtended:
-                state_plot_extended.update_reference(**kwargs)
 
     def set_env(self, env):
         """Called during initialization of the environment to interconnect all modules. State names, references,...
@@ -174,14 +169,6 @@ class MotorDashboard(ElectricMotorVisualization):
             self._reward_plot = RewardPlot()
             self._time_plots.append(self._reward_plot)
 
-        if self._state_plots_extended == 'all':
-            self._state_plots_extended = state_names
-
-        if len(self._state_plots_extended) > 0:
-            assert all(state in state_names for state in self._state_plots_extended)
-            for state in self._state_plots_extended:
-                self._time_plots.append(StatePlotExtended(state))
-
         self._plots = self._time_plots + self._episodic_plots + self._step_plots
 
         for step_plot in self._time_plots:
@@ -190,7 +177,7 @@ class MotorDashboard(ElectricMotorVisualization):
         for plot in self._plots:
             plot.set_env(env)
 
-    def _initialize(self, **kwargs):
+    def _initialize(self):
         """Called with first render() call to setup the figures and plots."""
         plt.close()
         self._figures = []
@@ -204,7 +191,7 @@ class MotorDashboard(ElectricMotorVisualization):
             axes_step[-1].set_xlabel('$t$/s')
             self._figures.append(self._time_plot_figure)
             for plot, axis in zip(self._time_plots, axes_step):
-                plot.initialize(axis, **kwargs)
+                plot.initialize(axis)
 
         if len(self._episodic_plots) > 0:
             self._episodic_plot_figure, axes_ep = plt.subplots(len(self._episodic_plots), sharex=True)
@@ -228,10 +215,10 @@ class MotorDashboard(ElectricMotorVisualization):
 
         plt.pause(0.1)
 
-    def _update(self, **kwargs):
+    def _update(self):
         """Called every *update cycle* steps to refresh the figure."""
         for plot in self._plots:
-            plot.render(**kwargs)
+            plot.render()
         for fig in self._figures:
             fig.canvas.draw()
             fig.canvas.flush_events()
