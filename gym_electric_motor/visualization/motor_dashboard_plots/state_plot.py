@@ -34,6 +34,10 @@ class StatePlot(TimePlot):
         'epsilon': r'$\epsilon$/rad'
     }
 
+    @property
+    def state(self):
+        return self._state
+
     def __init__(self, state):
         """
         Args:
@@ -139,6 +143,6 @@ class StatePlot(TimePlot):
         ref = reference[self._state_idx]
         idx = self.data_idx
         self._x_data[idx] = self._t
-        self._state_data[idx] = state_ * self._limits
+        self._state_data[idx] = state_ * self._limits if self._normalized else state_
         if self._referenced:
-            self._ref_data[idx] = ref * self._limits
+            self._ref_data[idx] = ref * self._limits if self._normalized else ref

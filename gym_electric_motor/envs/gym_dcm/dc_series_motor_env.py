@@ -98,7 +98,7 @@ class FiniteSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteOneQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
@@ -125,57 +125,57 @@ class FiniteSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
 
 class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a continuous control set speed controlled series DC Motor
-1
-        Key:
-            `Cont-SC-SeriesDc-v0`
+    Description:
+        Environment to simulate a continuous control set speed controlled series DC Motor
 
-        Default Components:
-            Supply: IdealVoltageSupply
-            Converter: ContOneQuadrantConverter
-            Motor: DcSeriesMotor
-            Load: PolynomialStaticLoad
-            Ode-Solver: EulerSolver
-            Noise: None
+    Key:
+        `Cont-SC-SeriesDc-v0`
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+    Default Components:
+        Supply: IdealVoltageSupply
+        Converter: ContOneQuadrantConverter
+        Motor: DcSeriesMotor
+        Load: PolynomialStaticLoad
+        Ode-Solver: EulerSolver
+        Noise: None
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'omega'
 
-            Visualization:
-                MotorDashboard: omega and action plots
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'omega' = 1
 
-            Constraints:
-                Current Limit on 'i'
+        Visualization:
+            MotorDashboard: omega and action plots
 
-        Control Cycle Time:
-            tau = 1e-4 seconds
+        Constraints:
+            Current Limit on 'i'
 
-        State Variables:
-            ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    State Variables:
+        ``['omega' , 'torque', 'i', 'u', 'u_sup']``
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
 
-        Action Space:
-            Box(low=[0], high=[1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Starting State:
-            Zeros on all state variables.
+    Action Space:
+        Box(low=[0], high=[1])
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
+    Starting State:
+        Zeros on all state variables.
+
+    Episode Termination:
+        Termination if current limits are violated.
+    """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i',), calc_jacobian=True, tau=1e-4):
@@ -213,11 +213,11 @@ class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContOneQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
-                load_parameter=dict(a=0.01, b=0.01, c=0.0)
+                load_parameter=dict(a=0.05, b=0.01, c=0.0, j_load=1e-4)
             )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
@@ -666,7 +666,7 @@ class ContCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContOneQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100)),

@@ -72,7 +72,7 @@ class MotorDashboard(ElectricMotorVisualization):
         self._reward_plot = reward_plot
 
         # Separate the additional plots into StepPlots, EpisodicPlots and StepPlots
-        self._custom_step_plots = [p for p in additional_plots if isinstance(p, TimePlot)]
+        self._custom_time_plots = [p for p in additional_plots if isinstance(p, TimePlot)]
         self._episodic_plots = [p for p in additional_plots if isinstance(p, EpisodePlot)]
         self._step_plots = [p for p in additional_plots if isinstance(p, StepPlot)]
 
@@ -168,6 +168,8 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._reward_plot:
             self._reward_plot = RewardPlot()
             self._time_plots.append(self._reward_plot)
+
+        self._time_plots += self._custom_time_plots
 
         self._plots = self._time_plots + self._episodic_plots + self._step_plots
 
