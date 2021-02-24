@@ -689,7 +689,7 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
             ReferenceGenerator, reference_generator, MultipleReferenceGenerator, dict(sub_generators=sub_gen)
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_a=0.5, ie=0.5))
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_a=0.5, i_e=0.5))
         )
         visualization = initialize(
             (ElectricMotorVisualization, list, tuple),
