@@ -135,7 +135,7 @@ class ContSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
         Default Components:
             Supply: IdealVoltageSupply
             Converter: ContTwoQuadrantConverter
-            Motor: DcSeriesMotor
+            Motor: DcShuntMotor
             Load: PolynomialStaticLoad
             Ode-Solver: EulerSolver
             Noise: None
@@ -250,7 +250,7 @@ class FiniteTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
         Default Components:
             - Supply: IdealVoltageSupply
             - Converter: DiscOneQuadrantConverter
-            - Motor: DcSeriesMotor
+            - Motor: DcShuntMotor
             - Load: ConstantSpeedLoad
             - Ode-Solver: EulerSolver
             - Noise: None
