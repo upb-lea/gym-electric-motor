@@ -54,6 +54,9 @@ class DcMotor(ElectricMotor):
     CURRENTS_IDX = [0, 1]
     CURRENTS = ['i_a', 'i_e']
     VOLTAGES = ['u_a', 'u_e']
+
+    # Motor parameter, nominal values and limits are based on the following DC Motor:
+    # https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor
     _default_motor_parameter = {
         'r_a': 16e-3, 'r_e': 16e-3, 'l_a': 19e-6, 'l_e_prime': 1.7e-3, 'l_e': 5.4e-3, 'j_rotor': 0.025
     }

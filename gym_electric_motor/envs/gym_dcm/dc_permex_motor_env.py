@@ -242,57 +242,58 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
 
 class FiniteTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a finite control set torque controlled permanently excited DC Motor
+    Description:
+        Environment to simulate a finite control set torque controlled permanently excited DC Motor
 
-        Key:
-            `Finite-TC-PermExDc-v0`
+    Key:
+        `Finite-TC-PermExDc-v0`
 
-        Default Components:
-            - Supply: IdealVoltageSupply
-            - Converter: FiniteFourQuadrantConverter
-            - Motor: DcPermanentlyExcitedMotor
-            - Load: ConstantSpeedLoad
-            - Ode-Solver: EulerSolver
-            - Noise: None
+    Default Components:
+        - Supply: IdealVoltageSupply
+        - Converter: FiniteFourQuadrantConverter
+        - Motor: DcPermanentlyExcitedMotor
+        - Load: ConstantSpeedLoad
+        - Ode-Solver: EulerSolver
+        - Noise: None
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'torque'
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'torque'
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'torque' = 1
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'torque' = 1
 
-            Visualization:
-                MotorDashboard: torque and action plots
+        Visualization:
+            MotorDashboard: torque and action plots
 
-            Constraints:
-                Current Limit on 'i'
+        Constraints:
+            Current Limit on 'i'
 
-        Control Cycle Time:
-            tau = 1e-5 seconds
+    Control Cycle Time:
+        tau = 1e-5 seconds
 
-        State Variables:
-            ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+    State Variables:
+        ``['omega' , 'torque', 'i', 'u', 'u_sup']``
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Action Space:
-            Box(low=[-1], high=[1])
+    Action Space:
+        Box(low=[-1], high=[1])
 
-        Starting State:
-            Zeros on all state variables.
+    Starting State:
+        Zeros on all state variables.
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
+    Episode Termination:
+        Termination if current limits are violated.
+    """
+
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i',), calc_jacobian=True, tau=1e-5):
@@ -356,57 +357,57 @@ class FiniteTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
 
 class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a continuous control set torque controlled permanently excited DC Motor
+    Description:
+        Environment to simulate a continuous control set torque controlled permanently excited DC Motor
 
-        Key:
-            `Cont-TC-PermExDc-v0`
+    Key:
+        `Cont-TC-PermExDc-v0`
 
-        Default Components:
-            - Supply: IdealVoltageSupply
-            - Converter: ContFourQuadrantConverter
-            - Motor: DcPermanentlyExcitedMotor
-            - Load: ConstantSpeedLoad
-            - Ode-Solver: EulerSolver
-            - Noise: None
+    Default Components:
+        - Supply: IdealVoltageSupply
+        - Converter: ContFourQuadrantConverter
+        - Motor: DcPermanentlyExcitedMotor
+        - Load: ConstantSpeedLoad
+        - Ode-Solver: EulerSolver
+        - Noise: None
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'torque'
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'torque'
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'torque' = 1
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'torque' = 1
 
-            Visualization:
-                MotorDashboard: torque and action plots
+        Visualization:
+            MotorDashboard: torque and action plots
 
-            Constraints:
-                Current Limit on 'i'
+        Constraints:
+            Current Limit on 'i'
 
-        Control Cycle Time:
-            tau = 1e-4 seconds
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
-        State Variables:
-            ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+    State Variables:
+        ``['omega' , 'torque', 'i', 'u', 'u_sup']``
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Action Space:
-            Box(low=[-1], high=[1])
+    Action Space:
+        Box(low=[-1], high=[1])
 
-        Starting State:
-            Zeros on all state variables.
+    Starting State:
+        Zeros on all state variables.
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
+    Episode Termination:
+        Termination if current limits are violated.
+    """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i',), calc_jacobian=True, tau=1e-4):

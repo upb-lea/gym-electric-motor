@@ -130,57 +130,57 @@ class FiniteSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
 
 class ContSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a continuously speed controlled externally excited DC Motor
-1
-        Key:
-            `Cont-SC-ExtExDc-v0`
+    Description:
+        Environment to simulate a continuously speed controlled externally excited DC Motor
 
-        Default Components:
-            Supply: IdealVoltageSupply
-            Converter: ContMultiConverter(ContFourQuadrantConverter, ContOneQuadrantConverter)
-            Motor: DcExternallyExcitedMotor
-            Load: PolynomialStaticLoad
-            Ode-Solver: EulerSolver
-            Noise: None
+    Key:
+        `Cont-SC-ExtExDc-v0`
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+    Default Components:
+        Supply: IdealVoltageSupply
+        Converter: ContMultiConverter(ContFourQuadrantConverter, ContOneQuadrantConverter)
+        Motor: DcExternallyExcitedMotor
+        Load: PolynomialStaticLoad
+        Ode-Solver: EulerSolver
+        Noise: None
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'omega'
 
-            Visualization:
-                MotorDashboard: omega and action plots
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'omega' = 1
 
-            Constraints:
-                Current Limit on 'i_a' and 'i_e'
+        Visualization:
+            MotorDashboard: omega and action plots
 
-        Control Cycle Time:
-            tau = 1e-4 seconds
+        Constraints:
+            Current Limit on 'i_a' and 'i_e'
 
-        State Variables:
-            ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    State Variables:
+        ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
 
-        Action Space:
-            Box(low=[-1, 0], high=[1, 1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Starting State:
-            Zeros on all state variables.
+    Action Space:
+        Box(low=[-1, 0], high=[1, 1])
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
+    Starting State:
+        Zeros on all state variables.
+
+    Episode Termination:
+        Termination if current limits are violated.
+    """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-4):
@@ -249,57 +249,57 @@ class ContSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
 
 class FiniteTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a finite control set torque controlled externally excited DC Motor
+    Description:
+        Environment to simulate a finite control set torque controlled externally excited DC Motor
 
-        Key:
-            `Finite-TC-ExtExDc-v0`
+    Key:
+        `Finite-TC-ExtExDc-v0`
 
-        Default Components:
-            - Supply: IdealVoltageSupply
-            - Converter: FiniteMultiConverter(FiniteFourQuadrantConverter, FiniteOneQuadrantConverter)
-            - Motor: DcExternallyExcitedMotor
-            - Load: ConstantSpeedLoad
-            - Ode-Solver: EulerSolver
-            - Noise: None
+    Default Components:
+        - Supply: IdealVoltageSupply
+        - Converter: FiniteMultiConverter(FiniteFourQuadrantConverter, FiniteOneQuadrantConverter)
+        - Motor: DcExternallyExcitedMotor
+        - Load: ConstantSpeedLoad
+        - Ode-Solver: EulerSolver
+        - Noise: None
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'torque'
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'torque'
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'torque' = 1
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'torque' = 1
 
-            Visualization:
-                MotorDashboard: torque and action plots
+        Visualization:
+            MotorDashboard: torque and action plots
 
-            Constraints:
-                Current Limit on 'i_a' and 'i_e'
+        Constraints:
+            Current Limit on 'i_a' and 'i_e'
 
-        Control Cycle Time:
-            tau = 1e-5 seconds
+    Control Cycle Time:
+        tau = 1e-5 seconds
 
-        State Variables:
-            ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
+    State Variables:
+        ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Action Space:
-            Discrete(8)
+    Action Space:
+        Discrete(8)
 
-        Starting State:
-            Zeros on all state variables.
+    Starting State:
+        Zeros on all state variables.
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
+    Episode Termination:
+        Termination if current limits are violated.
+    """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-5):
@@ -345,7 +345,7 @@ class FiniteTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                 ps.FiniteMultiConverter,
                 dict(subconverters=default_subconverters)),
             motor=initialize(ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=300.0)),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
@@ -464,7 +464,7 @@ class ContTorqueControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                 dict(subconverters=default_subconverters)
             ),
             motor=initialize(ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=300.0)),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
@@ -583,7 +583,7 @@ class FiniteCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                 dict(subconverters=default_subconverters)
             ),
             motor=initialize(ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=300.0)),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
@@ -709,7 +709,7 @@ class ContCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
                 dict(subconverters=default_subconverters)
             ),
             motor=initialize(ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=300)),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,

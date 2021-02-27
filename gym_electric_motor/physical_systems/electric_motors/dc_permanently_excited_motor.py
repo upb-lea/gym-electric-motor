@@ -42,6 +42,8 @@ class DcPermanentlyExcitedMotor(DcMotor):
     VOLTAGES = ['u']
     HAS_JACOBIAN = True
 
+    # Motor parameter, nominal values and limits are based on the following DC Motor:
+    # https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor
     _default_motor_parameter = {
         'r_a': 16e-3, 'l_a': 19e-6, 'psi_e': 0.165, 'j_rotor': 0.025
     }
