@@ -8,6 +8,7 @@ from .sawtooth_reference_generator import SawtoothReferenceGenerator
 from .const_reference_generator import ConstReferenceGenerator
 from .multiple_reference_generator import MultipleReferenceGenerator
 from .subepisoded_reference_generator import SubepisodedReferenceGenerator
+from .laplace_process_reference_generator import LaplaceProcessReferenceGenerator
 from ..utils import register_class
 from ..core import ReferenceGenerator
 

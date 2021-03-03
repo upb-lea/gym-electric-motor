@@ -4,6 +4,7 @@ from gym_electric_motor.physical_systems.physical_systems import DcMotorSystem
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators.wiener_process_reference_generator import WienerProcessReferenceGenerator
 from gym_electric_motor import physical_systems as ps
+from gym_electric_motor.physical_systems import IdealVoltageSupply
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
 
@@ -243,55 +244,58 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
 class FiniteTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     """
     Description:
-        Environment to simulate a finite control set torque controlled permanently excited DC Motor
+    ------------
+    Environment to simulate a finite control set torque controlled permanently excited DC Motor
 
     Key:
-        `Finite-TC-PermExDc-v0`
+    ----
+    `Finite-TC-PermExDc-v0`
 
     Default Components:
-        - Supply: IdealVoltageSupply
-        - Converter: FiniteFourQuadrantConverter
-        - Motor: DcPermanentlyExcitedMotor
-        - Load: ConstantSpeedLoad
-        - Ode-Solver: EulerSolver
-        - Noise: None
+    --------------------
+    - Supply: IdealVoltageSupply
+    - Converter: FiniteFourQuadrantConverter
+    - Motor: DcPermanentlyExcitedMotor
+    - Load: ConstantSpeedLoad
+    - Ode-Solver: EulerSolver
+    - Noise: None
 
-        Reference Generator:
-            WienerProcessReferenceGenerator
-                Reference Quantity. 'torque'
+    - Reference Generator: WienerProcessReferenceGenerator
+        - Reference Quantity. 'torque'
 
-        Reward Function:
-            WeightedSumOfErrors: reward_weights 'torque' = 1
+    - Reward Function: WeightedSumOfErrors
+        - reward_weights 'torque' = 1
 
-        Visualization:
-            MotorDashboard: torque and action plots
+    - Visualization: MotorDashboard
+        - torque and action plots
 
-        Constraints:
-            Current Limit on 'i'
+    - Constraints: Current Limit on 'i'
 
-    Control Cycle Time:
-        tau = 1e-5 seconds
+    - Control Cycle Time: tau = 1e-5 seconds
 
     State Variables:
-        ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+    ----------------
+    ``['omega' , 'torque', 'i', 'u', 'u_sup']``
 
     Observation Space:
-        Type: Tuple(State_Space, Reference_Space)
+    ------------------
+    Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+    ------------
+    Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
 
     Reference Space:
-        Box(low=[-1], high=[1])
+    ----------------
+    Box(low=[-1], high=[1])
 
     Action Space:
-        Box(low=[-1], high=[1])
+    -------------
+    Box(low=[-1], high=[1])
 
-    Starting State:
-        Zeros on all state variables.
-
-    Episode Termination:
-        Termination if current limits are violated.
+    Initial State:
+    ---------------
+    Zeros on all state variables.
     """
 
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
@@ -361,34 +365,29 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         Environment to simulate a continuous control set torque controlled permanently excited DC Motor
 
     Key:
-        `Cont-TC-PermExDc-v0`
+        ``'Cont-TC-PermExDc-v0'``
 
     Default Components:
-        - Supply: IdealVoltageSupply
-        - Converter: ContFourQuadrantConverter
-        - Motor: DcPermanentlyExcitedMotor
-        - Load: ConstantSpeedLoad
-        - Ode-Solver: EulerSolver
-        - Noise: None
+        - Supply: :py:class:`.IdealVoltageSupply`
+        - Converter: :py:class:`.FiniteFourQuadrantConverter`
+        - Motor: :py:class:`.DcPermanentlyExcitedMotor`
+        - Load: :py:class:`.ConstantSpeedLoad`
+        - Ode-Solver: :py:class:`.EulerSolver`
+        - Noise: **None**
 
-        Reference Generator:
-            WienerProcessReferenceGenerator
-                Reference Quantity. 'torque'
+        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'torque'``
 
-        Reward Function:
-            WeightedSumOfErrors: reward_weights 'torque' = 1
+        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'torque' = 1``
 
-        Visualization:
-            MotorDashboard: torque and action plots
+        - Visualization: :py:class:`.MotorDashboard` torque and action plots
 
-        Constraints:
-            Current Limit on 'i'
-
-    Control Cycle Time:
-        tau = 1e-4 seconds
+        - Constraints: :py:class:`.LimitConstraint` on the current  ``'i'``
 
     State Variables:
         ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
@@ -402,11 +401,37 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     Action Space:
         Box(low=[-1], high=[1])
 
-    Starting State:
+    Initial State:
         Zeros on all state variables.
 
-    Episode Termination:
-        Termination if current limits are violated.
+    Example:
+        >>> import gym_electric_motor as gem
+        >>> from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
+        >>>
+        >>> # Select a different converter with default parameters by passing a keystring
+        >>> my_overridden_converter = 'Cont-2QC'
+        >>>
+        >>> # Update the default arguments to the voltage supply by passing a parameter dict
+        >>> my_changed_voltage_supply_args = {'u_nominal': 400.0}
+        >>>
+        >>> # Replace the reference generator by passing a new instance
+        >>> my_new_ref_gen_instance = LaplaceProcessReferenceGenerator(
+        ...     reference_state='torque',
+        ...     sigma_range=(1e-3, 1e-2)
+        ... )
+        >>> env = gem.make(
+        ...     'Cont-TC-PermExDc-v0',
+        ...     voltage_supply=my_changed_voltage_supply_args,
+        ...     converter=my_overridden_converter,
+        ...     reference_generator=my_new_ref_gen_instance
+        ... )
+        >>> state, reference = env.reset()
+        >>> for _ in range(1000):
+        >>>     env.render()
+        >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
+        >>>     if done:
+        >>>         state, reference = env.reset()
+
     """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
@@ -435,13 +460,16 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
 
         Note on the env-arg type:
             All parameters of type env-arg can be selected as one of the following types:
-                - instance: Pass an already instantiated object derived from the corresponding base class
-                    (e.g. reward_function=MyRewardFunction()). This is directly used in the environment.
-                - dict: Pass a dict to update the default parameters of the default type.
-                    (e.g. visualization=dict(state_plots=('omega', 'u')))
-                - str: Pass a string out of the registered classes to select a different class for the component.
-                    This class is then initialized with its default parameters.
-                    The available strings can be looked up in the documentation. (e.g. converter='Finite-2QC')
+
+            **instance:** Pass an already instantiated object derived from the corresponding base class
+            (e.g. ``reward_function=MyRewardFunction()``). This is directly used in the environment.
+
+            **dict:** Pass a dict to update the default parameters of the default type.
+            (e.g. ``visualization=dict(state_plots=('omega', 'u'))``)
+
+            **str:** Pass a string out of the registered classes to select a different class for the component.
+            This class is then initialized with its default parameters.
+            The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),

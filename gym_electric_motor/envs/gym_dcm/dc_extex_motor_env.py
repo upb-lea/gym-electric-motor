@@ -10,57 +10,65 @@ from gym_electric_motor.utils import initialize
 
 class FiniteSpeedControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a finite control set speed controlled externally excited DC Motor
+    Description
+    -----------
+    Environment to simulate a finite control set speed controlled externally excited DC Motor
 
-        Key:
-            `Finite-SC-ExtExDc-v0`
+    Key
+    ---
+    `Finite-SC-ExtExDc-v0`
 
-        Default Components:
-            Supply: IdealVoltageSupply
-            Converter: FiniteMultiConverter(FiniteFourQuadrantConverter, FiniteOneQuadrantConverter)
-            Motor: DcExternallyExcitedMotor
-            Load: PolynomialStaticLoad
-            Ode-Solver: EulerSolver
-            Noise: None
+    Default Components:
+    -------------------
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+    - Supply: IdealVoltageSupply
+    - Converter: FiniteMultiConverter(FiniteFourQuadrantConverter, FiniteOneQuadrantConverter)
+    - Motor: DcExternallyExcitedMotor
+    - Load: PolynomialStaticLoad
+    - Ode-Solver: EulerSolver
+    - Noise: None
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+    - Reference Generator: WienerProcessReferenceGenerator
+        - Reference Quantity: 'omega'
 
-            Visualization:
-                MotorDashboard: omega and action plots
+    - Reward Function: WeightedSumOfErrors
+        - reward_weights 'omega' = 1
 
-            Constraints:
-                Current Limit on 'i_a' and 'i_e'
+    - Visualization: MotorDashboard
+        - omega and action plots
 
-        Control Cycle Time:
-            tau = 1e-5 seconds
+    - Constraints: Current Limit on 'i_a' and 'i_e'
 
-        State Variables:
-            ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
+    **Control Cycle Time:** tau = 1e-5 seconds
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    State Variables:
+    ----------------
+    ``['omega' , 'torque', 'i_a', 'i_e', 'u_a', 'u_e', 'u_sup']``
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+    Observation Space:
+    ------------------
+    Type: Tuple(State_Space, Reference_Space)
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    State Space:
+    ------------
+    Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
 
-        Action Space:
-            Type: Discrete(8)
+    Reference Space:
+    ----------------
+    Box(low=[-1], high=[1])
 
-        Starting State:
-            Zeros on all state variables.
+    Action Space:
+    -------------
+    Type: Discrete(8)
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
+    Starting State:
+    ---------------
+    Zeros on all state variables.
+
+    Episode Termination:
+    --------------------
+    Termination if current limits are violated.
+    """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-5):
