@@ -2,7 +2,7 @@ from gym.spaces import Discrete, Box, MultiDiscrete
 from gym_electric_motor.physical_systems import SynchronousMotorSystem, DcMotorSystem, DcSeriesMotor, \
     DcExternallyExcitedMotor
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, SwitchedReferenceGenerator
-from gym_electric_motor.envs import ContDcExternallyExcitedMotorEnvironment, DiscDcExternallyExcitedMotorEnvironment, ContPermanentMagnetSynchronousMotorEnvironment
+from gym_electric_motor import envs
 import numpy as np
 
 
@@ -12,7 +12,6 @@ class Controller:
     def make(cls, environment, stages=None, **controller_kwargs):
 
         controller_kwargs = cls.reference_states(environment, **controller_kwargs)
-
         if stages is not None:
             controller_type, stages = cls.find_controller_type(environment, stages)
             assert controller_type in _controllers.keys(), f'Controller {controller_type} unknown'
@@ -30,11 +29,29 @@ class Controller:
     def control(self, state, reference):
         pass
 
-    def plot(self):
+    def set_ref(self):
         pass
 
     def reset(self):
         pass
+
+    def plot(self, external_reference_plots, state_names):
+        external_refs = self.set_ref()
+        external_ref_plots = list(external_reference_plots)
+        ref_state_idxs = external_refs['ref_state']
+        plot_state_idxs = [
+            list(state_names).index(external_ref_plot.state) for external_ref_plot in external_reference_plots
+        ]
+        ref_values = external_refs['ref_value']
+        for ref_state_idx, ref_value in zip(ref_state_idxs, ref_values):
+            try:
+                # Match the reference with the corresponding plot.
+                plot_idx = plot_state_idxs.index(ref_state_idx)
+            except ValueError:
+                # Go on, if there is no fitting plot.
+                pass
+            else:
+                external_ref_plots[plot_idx].external_reference(ref_value)
 
     @staticmethod
     def reference_states(environment, **controller_kwargs):
@@ -145,7 +162,6 @@ class Controller:
 
         ref_states = controller_kwargs['ref_states']
         mp = environment.physical_system.electrical_motor.motor_parameter
-
         limits = environment.physical_system.limits
         omega_lim = limits[environment.state_names.index('omega')]
         if type(environment.physical_system) == DcMotorSystem:
@@ -170,8 +186,17 @@ class Controller:
             mp['l'] = mp['l_a']
 
         if 'automated_gain' not in controller_kwargs.keys() or automated_gain:
-
-            if type(environment) == ContDcExternallyExcitedMotorEnvironment:
+            cont_extex_envs = (
+                envs.ContSpeedControlDcExternallyExcitedMotorEnv,
+                envs.ContCurrentControlDcExternallyExcitedMotorEnv,
+                envs.ContTorqueControlDcExternallyExcitedMotorEnv
+            )
+            finite_extex_envs = (
+                envs.FiniteTorqueControlDcExternallyExcitedMotorEnv,
+                envs.FiniteSpeedControlDcExternallyExcitedMotorEnv,
+                envs.FiniteCurrentControlDcExternallyExcitedMotorEnv
+            )
+            if type(environment) in cont_extex_envs:
                 stages_a = stages[0]
                 stages_e = stages[1]
 
@@ -184,7 +209,7 @@ class Controller:
                 if stages_e[0]['controller_type'] == PID_Controller:
                     d_gain = p_gain * environment.physical_system.tau
                     stages_e[0]['d_gain'] = d_gain if 'd_gain' not in stages_e[0].keys() else stages_e[0]['d_gain']
-            elif type(environment) == DiscDcExternallyExcitedMotorEnvironment:
+            elif type(environment) in finite_extex_envs:
                 stages_a = stages[0]
                 stages_e = stages[1]
             else:
@@ -330,10 +355,11 @@ class Controller:
 
 
 class ContinuousActionController(Controller):
-    def __init__(self, environment, stages, ref_states, **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
         assert type(environment.action_space) is Box and type(
             environment.physical_system) is DcMotorSystem, 'No suitable action space for Continuous Action Controller'
         self.action_space = environment.action_space
+        self.state_names = environment.state_names
         self.ref_idx = np.where(ref_states != 'i_e')[0][0]
         self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
         self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
@@ -341,10 +367,14 @@ class ContinuousActionController(Controller):
         self.limit = environment.physical_system.limits[environment.state_filter]
         self.omega_idx = environment.state_names.index('omega')
         self.action = np.zeros(self.action_space.shape[0])
-        self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
+        self.control_e = 'i_e' in ref_states
         mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_e = None if 'psi_e' not in mp.keys() else mp['psi_e']
         self.l_e = None if 'l_e_prime' not in mp.keys() else mp['l_e_prime']
+        self.external_ref_plots = external_ref_plots
+
+        for ext_ref_plot in self.external_ref_plots:
+            ext_ref_plot.set_reference(ref_states)
 
         if self.control_e:
             assert len(stages) == 2, 'Controller design is not completely'
@@ -369,9 +399,10 @@ class ContinuousActionController(Controller):
             self.action[1] = self.controller_e.control(state[self.i_idx], ref_e)
             if self.action_space.low[1] <= self.action[1] <= self.action_space.high[1]:
                 self.controller_e.integrate(state[self.i_idx], ref_e)
+        self.plot(self.external_ref_plots, self.state_names)
         return np.clip(self.action, self.action_space.low, self.action_space.high)
 
-    def plot(self):
+    def set_ref(self):
         return dict(ref_state=[], ref_value=[])
 
     def reset(self):
@@ -385,13 +416,17 @@ class ContinuousActionController(Controller):
 
 
 class DiscreteActionController(Controller):
-    def __init__(self, environment, stages, ref_states, **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
         assert type(environment.action_space) in [Discrete, MultiDiscrete] and type(
             environment.physical_system) is DcMotorSystem, 'No suitable action space for Discrete Action Controller'
         self.ref_idx = np.where(ref_states != 'i_e')[0][0]
         self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
         self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
         self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
+        self.state_names = environment.state_names
+        self.external_ref_plots = external_ref_plots
+        for ext_ref_plot in self.external_ref_plots:
+            ext_ref_plot.set_reference(ref_states)
 
         if self.control_e:
             assert len(stages) == 2, 'Controller design is not completely'
@@ -408,6 +443,7 @@ class DiscreteActionController(Controller):
                                                                                  **controller_kwargs)
 
     def control(self, state, reference):
+        self.plot(self.external_ref_plots, self.state_names)
         if self.control_e:
             ref_e = self.ref_e if not self.ref_e_idx else reference[self.ref_e_idx]
             return [self.controller.control(state[self.ref_state_idx], reference[self.ref_idx]),
@@ -415,7 +451,7 @@ class DiscreteActionController(Controller):
         else:
             return self.controller.control(state[self.ref_state_idx], reference[self.ref_idx])
 
-    def plot(self):
+    def set_ref(self):
         return dict(ref_state=[], ref_value=[])
 
     def reset(self):
@@ -425,10 +461,11 @@ class DiscreteActionController(Controller):
 
 
 class Cascaded_Controller(Controller):
-    def __init__(self, environment, stages, ref_states, color='g', **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
 
         self.action_space = environment.action_space
         self.state_space = environment.physical_system.state_space
+        self.state_names = environment.state_names
 
         self.i_e_idx = environment.physical_system.CURRENTS_IDX[-1]
         self.i_a_idx = environment.physical_system.CURRENTS_IDX[0]
@@ -458,13 +495,14 @@ class Cascaded_Controller(Controller):
         self.controller_stages = [
             _controllers[stage['controller_type']][1].make(environment, stage, cascaded=stages.index(stage) != 0) for
             stage in stages]
+        self.external_ref_plots = external_ref_plots
+        self.external_ref_plots.set_reference(ref_states + [environment.state_names[i] for i in self.ref_state_idx])
 
         assert type(self.action_space) is Box or not self.stage_type[0], 'No suitable inner controller'
         assert type(self.action_space) in [Discrete, MultiDiscrete] or self.stage_type[
             0], 'No suitable inner controller'
 
         self.ref = np.zeros(len(self.controller_stages))
-        self.color = color
 
     def control(self, state, reference):
         self.ref[-1] = reference[self.ref_idx]
@@ -498,15 +536,15 @@ class Cascaded_Controller(Controller):
                 action = np.clip(action, self.action_space.low, self.action_space.high)
             else:
                 action = np.array([action, action_u_e], dtype='object')
-
+        self.plot(self.external_ref_plots, self.state_names)
         return action
 
     def feedforward(self, state):
         psi_e = max(self.psi_e or self.l_e * state[self.i_e_idx] * self.limit[self.i_e_idx], 1e-6)
         return (state[self.omega_idx] * self.limit[self.omega_idx] * psi_e) / self.limit[self.u_idx]
 
-    def plot(self):
-        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1], color=self.color)
+    def set_ref(self):
+        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1])
 
     def reset(self):
         for controller in self.controller_stages:
@@ -516,7 +554,7 @@ class Cascaded_Controller(Controller):
 
 
 class FOC_Controller(Controller):
-    def __init__(self, environment, stages, ref_states, **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
         assert type(environment.physical_system) is SynchronousMotorSystem, 'No suitable Environment for FOC Controller'
 
         t32 = environment.physical_system.electrical_motor.t_32
@@ -533,6 +571,7 @@ class FOC_Controller(Controller):
 
         self.action_space = environment.action_space
         self.state_space = environment.physical_system.state_space
+        self.state_names = environment.state_names
 
         self.i_sd_idx = environment.state_names.index('i_sd')
         self.i_sq_idx = environment.state_names.index('i_sq')
@@ -549,6 +588,9 @@ class FOC_Controller(Controller):
         self.psi_p = 0 if 'psi_p' not in self.mp.keys() else self.mp['psi_p']
         self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
         self.control_type = type(self.action_space) == Box
+        self.external_ref_plots = external_ref_plots
+        for ext_ref_plot in self.external_ref_plots:
+            ext_ref_plot.set_reference(ref_states)
 
         if self.control_type:
             assert len(stages) == 2, 'Number of stages not correct'
@@ -594,9 +636,10 @@ class FOC_Controller(Controller):
             for i in range(3):
                 action += (2 ** (2 - i)) * self.abc_controller[i].control(state[self.i_abc_idx[i]], ref_abc[i])
 
+        self.plot(self.external_ref_plots, self.state_names)
         return action
 
-    def plot(self):
+    def set_ref(self):
         return dict(ref_state=[], ref_value=[])
 
     def reset(self):
@@ -604,7 +647,7 @@ class FOC_Controller(Controller):
 
 
 class Cascaded_FOC_Controller(Controller):
-    def __init__(self, environment, stages, ref_states, color='g', **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
         self.backward_transformation = (lambda quantities, eps: t32(q(quantities[::-1], eps)))
@@ -613,6 +656,7 @@ class Cascaded_FOC_Controller(Controller):
 
         self.action_space = environment.action_space
         self.state_space = environment.physical_system.state_space
+        self.state_names = environment.state_names
 
         self.i_sd_idx = environment.state_names.index('i_sd')
         self.i_sq_idx = environment.state_names.index('i_sq')
@@ -623,12 +667,20 @@ class Cascaded_FOC_Controller(Controller):
         self.u_c_idx = environment.state_names.index('u_c')
         self.omega_idx = environment.state_names.index('omega')
         self.eps_idx = environment.state_names.index('epsilon')
+        self.external_ref_plots = external_ref_plots
 
         self.ref_d_idx = np.where(ref_states == 'i_sd')[0][0]
         self.ref_idx = np.where(ref_states != 'i_sd')[0][0]
         self.ref_state_idx = [self.i_sq_idx, environment.state_names.index(ref_states[self.ref_idx])]
-        self.omega_control = 'omega' in ref_states and type(
-            environment) == ContPermanentMagnetSynchronousMotorEnvironment
+        cont_pmsm_envs = (
+            envs.DqContCurrentControlPermanentMagnetSynchronousMotorEnv,
+            envs.DqContTorqueControlSquirrelCageInductionMotorEnv,
+            envs.DqContSpeedControlPermanentMagnetSynchronousMotorEnv,
+            envs.AbcContCurrentControlPermanentMagnetSynchronousMotorEnv,
+            envs.AbcContTorqueControlPermanentMagnetSynchronousMotorEnv,
+            envs.AbcContSpeedControlPermanentMagnetSynchronousMotorEnv
+        )
+        self.omega_control = 'omega' in ref_states and type(environment) in cont_pmsm_envs
         self.controller_type = type(self.action_space) == Box
 
         self.limit = environment.physical_system.limits
@@ -660,7 +712,12 @@ class Cascaded_FOC_Controller(Controller):
             self.i_abc_idx = [environment.state_names.index(state) for state in ['i_a', 'i_b', 'i_c']]
 
         self.ref = np.zeros(len(self.overlayed_controller) + 1)
-        self.color = color
+        self.p = [environment.state_names[i] for i in self.ref_state_idx]
+
+        plot_ref = np.append(np.array([environment.state_names[i] for i in self.ref_state_idx]), ref_states)
+
+        for ext_ref_plot in self.external_ref_plots:
+            ext_ref_plot.set_reference(plot_ref)
 
     def control(self, state, reference):
         self.ref[-1] = reference[self.ref_idx]
@@ -705,17 +762,19 @@ class Cascaded_FOC_Controller(Controller):
             for i in range(3):
                 action += (2 ** (2 - i)) * self.abc_controller[i].control(state[self.i_abc_idx[i]], ref_abc[i])
 
+        self.plot(self.external_ref_plots, self.state_names)
         return action
 
-    def plot(self):
-        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1], color=self.color)
+    def set_ref(self):
+        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1])
 
     def reset(self):
-        self.overlayed_controller.reset()
+        for overlayed_controller in self.overlayed_controller:
+            overlayed_controller.reset()
         if self.controller_type:
             self.d_controller.reset()
-            for q_controller in self.q_controller:
-                q_controller.reset()
+            self.q_controller.reset()
+
         else:
             for abc_controller in self.abc_controller:
                 abc_controller.reset()
