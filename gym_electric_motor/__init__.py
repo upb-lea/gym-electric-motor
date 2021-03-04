@@ -168,39 +168,39 @@ register(
 # Synchronous Reluctance Motor Environments
 register(
     id='Finite-SC-SynRM-v0',
-    entry_point=envs_path+'FiniteSpeedControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'FiniteSpeedControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='Finite-TC-SynRM-v0',
-    entry_point=envs_path+'FiniteTorqueControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'FiniteTorqueControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='Finite-CC-SynRM-v0',
-    entry_point=envs_path+'FiniteCurrentControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'FiniteCurrentControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='AbcCont-CC-SynRM-v0',
-    entry_point=envs_path+'AbcContCurrentControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'AbcContCurrentControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='AbcCont-TC-SynRM-v0',
-    entry_point=envs_path+'AbcContTorqueControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'AbcContTorqueControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='AbcCont-SC-SynRM-v0',
-    entry_point=envs_path+'AbcContSpeedControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'AbcContSpeedControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='DqCont-CC-SynRM-v0',
-    entry_point=envs_path+'DqContCurrentControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'DqContCurrentControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='DqCont-TC-SynRM-v0',
-    entry_point=envs_path+'DqContTorqueControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'DqContTorqueControlSynchronousReluctanceMotorEnv'
 )
 register(
     id='DqCont-SC-SynRM-v0',
-    entry_point=envs_path+'DqContSpeedControlPermanentMagnetSynchronousMotorEnv'
+    entry_point=envs_path+'DqContSpeedControlSynchronousReluctanceMotorEnv'
 )
 
 # Squirrel Cage Induction Motor Environments
