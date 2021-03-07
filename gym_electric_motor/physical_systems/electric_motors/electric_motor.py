@@ -315,8 +315,7 @@ class ElectricMotor:
 
         for entry in self._limits.keys():
             if self._nominal_values.get(entry, 0) == 0:
-                self._nominal_values[entry] = nominal_d.get(entry, None) or \
-                                              self._limits[entry]
+                self._nominal_values[entry] = nominal_d.get(entry, self._limits[entry])
 
     def _update_initial_limits(self, nominal_new=None):
         """Complete initial states with further state limits

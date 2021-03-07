@@ -171,9 +171,8 @@ class SynchronousMotor(ThreePhaseMotor):
         for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
             limits_agenda[u] = voltage_limit
             nominal_agenda[u] = voltage_nominal
-            limits_agenda[i] = self._limits.get('i', None) or \
-                               self._limits[u] / self._motor_parameter['r_s']
-            nominal_agenda[i] = self._nominal_values.get('i', None) or \
-                                self._nominal_values[u] / \
-                                self._motor_parameter['r_s']
+            limits_agenda[i] = self._limits.get('i', None) \
+                or self._limits[u] / self._motor_parameter['r_s']
+            nominal_agenda[i] = self._nominal_values.get('i', None) \
+                or self._nominal_values[u] / self._motor_parameter['r_s']
         super()._update_limits(limits_agenda, nominal_agenda)

@@ -11,57 +11,57 @@ from gym_electric_motor.constraints import SquaredConstraint
 
 class AbcContCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a abc-domain cont control set torque controlled permanent magnet synchronous motor
+    Description:
+        Environment to simulate a abc-domain cont control set torque controlled permanent magnet synchronous motor
 
-        Key:
-            `AbcCont-CC-PMSM-v0`
+    Key:
+        `AbcCont-CC-PMSM-v0`
 
-        Default Components:
-            Supply: IdealVoltageSupply
-            Converter: ContB6BridgeConverter
-            Motor: PermanentMagnetSynchronousMotor
-            Load: ConstantSpeedLoad
-            Ode-Solver: EulerSolver
-            Noise: None
+    Default Components:
+        Supply: IdealVoltageSupply
+        Converter: ContB6BridgeConverter
+        Motor: PermanentMagnetSynchronousMotor
+        Load: ConstantSpeedLoad
+        Ode-Solver: EulerSolver
+        Noise: None
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'i_sq' and 'i_sd'
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'i_sq' and 'i_sd'
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'i_sd' = 0.5, 'i_sq' = 0.5
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'i_sd' = 0.5, 'i_sq' = 0.5
 
-            Visualization:
-                MotorDashboard: current and action plots
+        Visualization:
+            MotorDashboard: current and action plots
 
-            Constraints:
-                Squared Current Limit on 'i_sq' and 'i_sd'
+        Constraints:
+            Squared Current Limit on 'i_sq' and 'i_sd'
 
-        Control Cycle Time:
-            tau = 1e-4 seconds
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
-        State Variables:
-            ``['omega' , 'torque', 'i_a', 'i_b', 'i_c', 'i_sd', 'i_sq',
-             'u_a', 'u_b','u_c','u_sd','u_sq', 'u_sup', 'epsilon]``
+    State Variables:
+        ``['omega' , 'torque', 'i_a', 'i_b', 'i_c', 'i_sd', 'i_sq',
+         'u_a', 'u_b','u_c','u_sd','u_sq', 'u_sup', 'epsilon]``
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Action Space:
-            Type: Box(low=[-1,-1,-1], high=[1,1,1])
+    Action Space:
+        Type: Box(low=[-1,-1,-1], high=[1,1,1])
 
-        Starting State:
-            Zeros on all state variables.
+    Starting State:
+        Zeros on all state variables.
 
-        Episode Termination:
-            Termination if current limits are violated.
+    Episode Termination:
+        Termination if current limits are violated.
         """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
@@ -104,7 +104,7 @@ class AbcContCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvir
         )
 
         physical_system = SynchronousMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=300.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContB6BridgeConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
