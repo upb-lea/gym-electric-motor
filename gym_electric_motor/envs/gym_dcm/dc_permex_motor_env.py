@@ -4,7 +4,6 @@ from gym_electric_motor.physical_systems.physical_systems import DcMotorSystem
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators.wiener_process_reference_generator import WienerProcessReferenceGenerator
 from gym_electric_motor import physical_systems as ps
-from gym_electric_motor.physical_systems import IdealVoltageSupply
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
 
@@ -703,7 +702,7 @@ class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcPermanentlyExcitedMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100)),
+            load=initialize(ps.MechanicalLoad, load, ps.OrnsteinUhlenbeckLoad, dict(sigma=5e6, theta=100)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
