@@ -9,7 +9,7 @@ class OrnsteinUhlenbeckLoad(MechanicalLoad):
 
     HAS_JACOBIAN = False
 
-    def __init__(self, mu=0, sigma=1e-4, theta=1, tau=1e-4, **kwargs):
+    def __init__(self, mu=0, sigma=1e-4, theta=1, tau=1e-4, omega_range=(-200.0, 200.0), **kwargs):
         """
         Args:
             sigma_range(2-tuple(float)): Lower and upper bound that the
@@ -22,11 +22,15 @@ class OrnsteinUhlenbeckLoad(MechanicalLoad):
         self.mu = mu
         self.tau = tau
         self.sigma = sigma
+        self._omega_range = omega_range
 
     def mechanical_ode(self, t, mechanical_state, torque):
-        diff = self.theta * (self.mu - self._omega) * self.tau \
-               + self.sigma * np.sqrt(self.tau) * np.random.normal(size=1)
-        self._omega = self._omega + diff * self.tau
+        omega = mechanical_state
+        max_diff = (self._omega_range[1] - omega) / self.tau
+        min_diff = (self._omega_range[0] - omega) / self.tau
+        diff = self.theta * (self.mu - omega) * self.tau \
+            + self.sigma * np.sqrt(self.tau) * np.random.normal(size=1)
+        np.clip(diff, min_diff, max_diff, out=diff)
         return diff
 
     def reset(self, **kwargs):
