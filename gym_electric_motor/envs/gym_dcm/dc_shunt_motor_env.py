@@ -1,7 +1,6 @@
 from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
     ElectricMotorVisualization
 from gym_electric_motor.physical_systems.physical_systems import DcMotorSystem
-from gym_electric_motor.reference_generators import MultipleReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators.wiener_process_reference_generator import WienerProcessReferenceGenerator
 from gym_electric_motor import physical_systems as ps
@@ -11,60 +10,62 @@ from gym_electric_motor.utils import initialize
 
 class FiniteSpeedControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a finite control set speed controlled shunt DC Motor
+    Description:
+        Environment to simulate a finite control set speed controlled shunt DC Motor
 
-        Key:
-            `Finite-SC-ShuntDc-v0`
+    Key:
+        `Finite-SC-ShuntDc-v0`
 
-        Default Components:
-            Supply: IdealVoltageSupply
-            Converter: FiniteTwoQuadrantConverter
-            Motor: DcShuntMotor
-            Load: PolynomialStaticLoad
-            Ode-Solver: EulerSolver
-            Noise: None
+    Default Components:
+        Supply: IdealVoltageSupply
+        Converter: FiniteTwoQuadrantConverter
+        Motor: DcShuntMotor
+        Load: PolynomialStaticLoad
+        Ode-Solver: EulerSolver
+        Noise: None
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'omega'
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'omega'
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'omega' = 1
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'omega' = 1
 
-            Visualization:
-                MotorDashboard: omega and action plots
+        Visualization:
+            MotorDashboard: omega and action plots
 
-            Constraints:
-                Current Limit on 'i_a', 'i_e'
+        Constraints:
+            Current Limit on 'i_a', 'i_e'
 
-        Control Cycle Time:
-            tau = 1e-5 seconds
+    Control Cycle Time:
+        tau = 1e-5 seconds
 
-        State Variables:
-            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
+    State Variables:
+        ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Action Space:
-            Type: Discrete(3)
+    Action Space:
+        Type: Discrete(3)
 
-        Starting State:
-            Zeros on all state variables.
+    Starting State:
+        Zeros on all state variables.
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
-                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-5):
+    Episode Termination:
+        Termination if current limits are violated.
+    """
+    def __init__(
+        self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+        reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+        constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-5
+    ):
         """
         Args:
             supply(env-arg): Specification of the supply to be used in the environment
@@ -517,9 +518,11 @@ class FiniteCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
         Episode Termination:
             Termination if current limits are violated.
         """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
-                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-5):
+    def __init__(
+        self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+        reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
+        constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-5
+    ):
         """
         Args:
             supply(env-arg): Specification of the supply to be used in the environment
@@ -563,15 +566,11 @@ class FiniteCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
             calc_jacobian=calc_jacobian,
             tau=tau
         )
-        sub_generators = (
-            WienerProcessReferenceGenerator(reference_state='i_a'),
-            WienerProcessReferenceGenerator(reference_state='i_e')
-        )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, MultipleReferenceGenerator, dict(sub_generators=sub_generators)
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='i_a')
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i=1.0))
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_a=1.0))
         )
         visualization = initialize(
             ElectricMotorVisualization, visualization, MotorDashboard,
@@ -584,57 +583,57 @@ class FiniteCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
 
 class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a continuously current controlled shunt DC Motor
+    Description:
+        Environment to simulate a continuously current controlled shunt DC Motor
 
-        Key:
-            `Cont-CC-ShuntDc-v0`
+    Key:
+        `Cont-CC-ShuntDc-v0`
 
-        Default Components:
-            - Supply: IdealVoltageSupply
-            - Converter: ContTwoQuadrantConverter
-            - Motor: DcShuntMotor
-            - Load: ConstantSpeedLoad
-            - Ode-Solver: EulerSolver
-            - Noise: None
+    Default Components:
+        - Supply: IdealVoltageSupply
+        - Converter: ContTwoQuadrantConverter
+        - Motor: DcShuntMotor
+        - Load: ConstantSpeedLoad
+        - Ode-Solver: EulerSolver
+        - Noise: None
 
-            Reference Generator:
-                WienerProcessReferenceGenerator
-                    Reference Quantity. 'i_a', 'i_e'
+        Reference Generator:
+            WienerProcessReferenceGenerator
+                Reference Quantity. 'i_a'
 
-            Reward Function:
-                WeightedSumOfErrors: reward_weights 'i_a' = 0.5, 'i_e' = 0.5
+        Reward Function:
+            WeightedSumOfErrors: reward_weights 'i_a' = 1.0
 
-            Visualization:
-                MotorDashboard: current and action plots
+        Visualization:
+            MotorDashboard: 'i_a' and action plots
 
-            Constraints:
-                Current Limit on 'i_a', 'i_e
+        Constraints:
+            Current Limit on 'i_a', 'i_e'
 
-        Control Cycle Time:
-            tau = 1e-4 seconds
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
-        State Variables:
-            ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
+    State Variables:
+        ``['omega' , 'torque', 'i_a', 'i_e', 'u', 'u_sup']``
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1])
 
-        Reference Space:
-            Box(low=[-1, -1], high=[1, 1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Action Space:
-            Box(low=[-1], high=[1])
+    Action Space:
+        Box(low=[-1], high=[1])
 
-        Starting State:
-            Zeros on all state variables.
+    Starting State:
+        Zeros on all state variables.
 
-        Episode Termination:
-            Termination if current limits are violated.
-        """
+    Episode Termination:
+        Termination if current limits are violated.
+    """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i_a','i_e'), calc_jacobian=True, tau=1e-4):
@@ -681,19 +680,15 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
             calc_jacobian=calc_jacobian,
             tau=tau
         )
-        sub_gen = (
-            WienerProcessReferenceGenerator(reference_state='i_a'),
-            WienerProcessReferenceGenerator(reference_state='i_e')
-        )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, MultipleReferenceGenerator, dict(sub_generators=sub_gen)
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='i_a')
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_a=0.5, i_e=0.5))
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_a=1.0))
         )
         visualization = initialize(
             (ElectricMotorVisualization, list, tuple),
-            visualization, MotorDashboard, dict(state_plots=('i_a', 'i_e'), action_plots='all'))
+            visualization, MotorDashboard, dict(state_plots=('i_a',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
