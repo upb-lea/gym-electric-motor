@@ -6,13 +6,8 @@ from ..utils import instantiate
 
 
 class SwitchedReferenceGenerator(ReferenceGenerator):
+    """Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.
     """
-    Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.
-    """
-
-    reference_space = Box(-1, 1, shape=(1,))
-    _reference = None
-    _k = 0
 
     def __init__(self, sub_generators, sub_args=None, p=None, super_episode_length=(100, 10000), **kwargs):
         """
@@ -26,6 +21,9 @@ class SwitchedReferenceGenerator(ReferenceGenerator):
             kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.
         """
         super().__init__()
+        self.reference_space = Box(-1, 1, shape=(1,))
+        self._reference = None
+        self._k = 0
         if type(sub_args) is dict:
             sub_arguments = [sub_args] * len(sub_generators)
         elif hasattr(sub_args, '__iter__'):

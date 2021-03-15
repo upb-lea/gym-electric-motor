@@ -4,7 +4,7 @@ from .mechanical_load import MechanicalLoad
 
 
 class OrnsteinUhlenbeckLoad(MechanicalLoad):
-    """ External speed mechanical load system which will set the speed to a predefined speed-function/ speed-profile.
+    """The Ornstein-Uhlenbeck Load sets the speed to a torque-independent signal specified by the underlying OU-Process.
     """
 
     HAS_JACOBIAN = False
@@ -12,12 +12,15 @@ class OrnsteinUhlenbeckLoad(MechanicalLoad):
     def __init__(self, mu=0, sigma=1e-4, theta=1, tau=1e-4, omega_range=(-200.0, 200.0), **kwargs):
         """
         Args:
-            sigma_range(2-tuple(float)): Lower and upper bound that the
+            mu(float): Mean value of the underlying gaussian distribution of the OU-Process.
+            sigma(float): Standard deviation of the underlying gaussian distribution of the  OU-Process.
+            theta(float): Drift towards the mean of the OU-Process.
             tau(float): discrete time step of the system
+            omega_range(2-Tuple(float)): Minimal and maximal value for the process.
             kwargs(float): further arguments passed to the superclass :py:class:`.MechanicalLoad`
         """
         super().__init__(**kwargs)
-        self._omega = np.array([0])
+        self._omega = np.random.uniform(self._omega_range[0], self._omega_range[1], 1)
         self.theta = theta
         self.mu = mu
         self.tau = tau
@@ -35,5 +38,5 @@ class OrnsteinUhlenbeckLoad(MechanicalLoad):
 
     def reset(self, **kwargs):
         super().reset(**kwargs)
-        self._omega = np.array([0.0])
+        self._omega = np.random.uniform(self._omega_range[0], self._omega_range[1], 1)
         return self._omega

@@ -10,10 +10,6 @@ class TriangularReferenceGenerator(SubepisodedReferenceGenerator):
     The reference is generated for a certain length and then new parameters are drawn uniformly from a selectable range.
     """
 
-    _amplitude = 0
-    _frequency = 0
-    _offset = 0
-
     def __init__(self, amplitude_range=None, frequency_range=(1, 10), offset_range=None, *_, **kwargs):
         """
         Args:
@@ -23,6 +19,9 @@ class TriangularReferenceGenerator(SubepisodedReferenceGenerator):
             kwargs(dict): Arguments passed to the superclass SubepisodedReferenceGenerator .
         """
         super().__init__(**kwargs)
+        self._amplitude = 0.0
+        self._frequency = 0.0
+        self._offset = 0.0
         self._amplitude_range = amplitude_range or (0, np.inf)
         self._frequency_range = frequency_range
         self._offset_range = offset_range or (-np.inf, np.inf)

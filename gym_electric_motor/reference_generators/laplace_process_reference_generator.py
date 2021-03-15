@@ -11,7 +11,7 @@ class LaplaceProcessReferenceGenerator(SubepisodedReferenceGenerator):
 
     _current_sigma = 0
 
-    def __init__(self, sigma_range=(1e-3, 1e-1), *_, **kwargs):
+    def __init__(self, sigma_range=(1e-3, 1e-1), **kwargs):
         """
         Args:
             sigma_range(Tuple(float,float)): Lower and Upper limit for the sigma-parameter of the WienerProcess.

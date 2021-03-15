@@ -148,4 +148,3 @@ class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
         )
- 
