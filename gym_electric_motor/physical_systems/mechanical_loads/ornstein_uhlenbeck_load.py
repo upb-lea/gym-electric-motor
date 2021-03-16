@@ -17,7 +17,7 @@ class OrnsteinUhlenbeckLoad(MechanicalLoad):
             theta(float): Drift towards the mean of the OU-Process.
             tau(float): discrete time step of the system
             omega_range(2-Tuple(float)): Minimal and maximal value for the process.
-            kwargs(float): further arguments passed to the superclass :py:class:`.MechanicalLoad`
+            kwargs(dict): further arguments passed to the superclass :py:class:`.MechanicalLoad`
         """
         super().__init__(**kwargs)
         self._omega = np.random.uniform(self._omega_range[0], self._omega_range[1], 1)

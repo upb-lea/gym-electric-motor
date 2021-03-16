@@ -14,34 +14,32 @@ class FiniteSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         Environment to simulate a finite control set speed controlled permanently excited DC Motor
 
     Key:
-        `Finite-SC-PermExDc-v0`
+        ``'Finite-SC-PermExDc-v0'``
 
     Default Components:
-        Supply: IdealVoltageSupply
-        Converter: FiniteFourQuadrantConverter
-        Motor: DcPermanentlyExcitedMotor
-        Load: PolynomialStaticLoad
-        Ode-Solver: EulerSolver
-        Noise: None
+        - Supply: :py:class:`.IdealVoltageSupply`
+        - Converter: :py:class:`.FiniteFourQuadrantConverter`
+        - Motor: :py:class:`.DcPermanentlyExcitedMotor`
+        - Load: :py:class:`.PolynomialStaticLoad`
+        - Ode-Solver: :py:class:`.EulerSolver`
+        - Noise: **None**
 
-        Reference Generator:
-            WienerProcessReferenceGenerator
-                Reference Quantity. 'omega'
+        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
 
-        Reward Function:
-            WeightedSumOfErrors: reward_weights 'omega' = 1
+        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'omega' = 1``
 
-        Visualization:
-            MotorDashboard: omega and action plots
+        - Visualization: :py:class:`.MotorDashboard` omega and action plots
 
-        Constraints:
-            Current Limit on 'i'
-
-    Control Cycle Time:
-        tau = 1e-5 seconds
+        - Constraints: :py:class:`.LimitConstraint` on the current  ``'i'``
 
     State Variables:
         ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+
+    Reference Variables:
+        ``['omega']``
+
+    Control Cycle Time:
+        tau = 1e-5 seconds
 
     Observation Space:
         Type: Tuple(State_Space, Reference_Space)
@@ -53,13 +51,38 @@ class FiniteSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         Box(low=[-1], high=[1])
 
     Action Space:
-        Type: Discrete(4)
+        Box(low=[-1], high=[1])
 
-    Starting State:
+    Initial State:
         Zeros on all state variables.
 
-    Episode Termination:
-        Termination if current limits are violated.
+    Example:
+        >>> import gym_electric_motor as gem
+        >>> from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
+        >>>
+        >>> # Select a different converter with default parameters by passing a keystring
+        >>> my_overridden_converter = 'Finite-2QC'
+        >>>
+        >>> # Update the default arguments to the voltage supply by passing a parameter dict
+        >>> my_changed_voltage_supply_args = {'u_nominal': 400.0}
+        >>>
+        >>> # Replace the reference generator by passing a new instance
+        >>> my_new_ref_gen_instance = LaplaceProcessReferenceGenerator(
+        ...     reference_state='omega',
+        ...     sigma_range=(1e-3, 1e-2)
+        ... )
+        >>> env = gem.make(
+        ...     'Finite-SC-PermExDc-v0',
+        ...     voltage_supply=my_changed_voltage_supply_args,
+        ...     converter=my_overridden_converter,
+        ...     reference_generator=my_new_ref_gen_instance
+        ... )
+        >>> done = True
+        >>> for _ in range(1000):
+        >>>     if done:
+        >>>         state, reference = env.reset()
+        >>>     env.render()
+        >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
     def __init__(
         self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,

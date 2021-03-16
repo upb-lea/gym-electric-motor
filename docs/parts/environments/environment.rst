@@ -6,9 +6,9 @@ In general, all environment-ids are structured as follows:
 
 ``ControlType-ControlTask-MotorType-v0``
 
-- The ``ControlType`` is in ``\{Disc / Cont\}``
-- The ``ControlTask`` is in ``\{TC / SC / CC\}`` (Torque / Speed Current Control)
-- The ``MotorType`` is in ``\{PermExDc / ExtExDc / SeriesDc / ShuntDc / PMSM / SynRM / DFIM / SCIM \}``
+- The ``ControlType`` is in ``{Finite / Cont}`` for all DC Motors and in ``{Finite / AbcCont / DqCont}`` for all AC Motors
+- The ``ControlTask`` is in ``{TC / SC / CC}`` (Torque / Speed Current Control)
+- The ``MotorType`` is in ``{PermExDc / ExtExDc / SeriesDc / ShuntDc / PMSM / SynRM / DFIM / SCIM }``
 
 
 
@@ -51,44 +51,24 @@ Continuous Speed Control Shunt DC Motor Environment                  ``'Cont-SC-
 Discrete Current Control Shunt DC Motor Environment                  ``'Disc-CC-ShuntDc-v0'``
 Continuous Current Control Shunt DC Motor Environment                ``'Cont-CC-ShuntDc-v0'``
 
-Continuous Dc Series Motor Environment                               ``'DcSeriesCont-v1'``
-Discrete Dc Series Motor Environment                                  ``'DcSeriesDisc-v1'``
-
-Continuous Dc Shunt Motor Environment                                 ``'DcShuntCont-v1'``
-Discrete Dc Shunt Motor Environment                                   ``'DcShuntDisc-v1'``
-
-Continuous Dc Permanently Excited Motor Environment                   ``'DcPermExCont-v1'``
-Discrete Dc Permanently Excited Motor Environment                     ``'DcPermExDisc-v1'``
-
-Continuous Dc Externally Excited Motor Environment                    ``'DcExtExCont-v1'``
-Discrete Dc Externally Excited Motor Environment                      ``'DcExtExDisc-v1'``
-
-Continuous Permanent Magnet Synchronous Motor Environment             ``'PMSMCont-v1'``
-Discrete Permanent Magnet Synchronous Motor Environment               ``'PMSMDisc-v1'``
-
-Continuous Synchronous Reluctance Motor Environment                   ``'SynRMCont-v1'``
-Discrete Synchronous Reluctance Motor Environment                     ``'SynRMDisc-v1'``
-
-Continuous Squirrel Cage Induction Motor Environment                  ``'SCIMCont-v1'``
-Discrete Squirrel Cage Induction Motor Environment                    ``'SCIMDisc-v1'``
-
-Continuous Doubly Fed Induction Motor Environment                     ``'DFIMCont-v1'``
-Discrete Doubly Fed Induction Motor Environment                       ``'DFIMDisc-v1'``
-
 =================================================================== ==============================
 
 .. toctree::
    :maxdepth: 1
    :caption: Motor Environments:
 
-   disc_tc_permex
+   finite_tc_permex
    cont_tc_permex
-   disc_cc_permex
+   finite_cc_permex
    cont_cc_permex
-   disc_sc_permex
+   finite_sc_permex
    cont_sc_permex
-   dc_extex_cont
-   dc_extex_disc
+   finite_tc_extex
+   cont_tc_extex
+   finite_cc_extex
+   cont_cc_extex
+   finite_sc_extex
+   cont_sc_extex
    dc_series_cont
    dc_series_disc
    dc_shunt_cont

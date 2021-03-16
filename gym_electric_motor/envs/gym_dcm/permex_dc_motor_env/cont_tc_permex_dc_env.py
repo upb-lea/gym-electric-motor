@@ -35,7 +35,7 @@ class ContTorqueControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
     State Variables:
         ``['omega' , 'torque', 'i', 'u', 'u_sup']``
 
-    Reference Valiables:
+    Reference Variables:
         ``['torque']``
 
     Control Cycle Time:
