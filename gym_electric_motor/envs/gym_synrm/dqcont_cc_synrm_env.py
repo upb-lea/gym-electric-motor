@@ -132,7 +132,7 @@ class DqContCurrentControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContB6BridgeConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.SynchronousReluctanceMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad(omega_fixed=100.0), dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,

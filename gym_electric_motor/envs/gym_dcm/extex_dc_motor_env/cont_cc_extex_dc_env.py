@@ -153,7 +153,7 @@ class ContCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         )
         visualization = initialize(
             (ElectricMotorVisualization, list, tuple),
-            visualization, MotorDashboard, dict(state_plots=('i_a, i_e',), action_plots='all'))
+            visualization, MotorDashboard, dict(state_plots=('i_a', 'i_e',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
