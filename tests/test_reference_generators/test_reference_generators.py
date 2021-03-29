@@ -192,7 +192,7 @@ class TestSwitchedReferenceGenerator:
         # setup test scenario
         sub_generator = ['SinusReference', 'WienerProcessReference']
         reference_states = [1, 0, 0, 0, 0, 0, 0]
-        monkeypatch.setattr(ReferenceGenerator, '__init__', self.monkey_super_init)
+
         monkeypatch.setattr(ReferenceGenerator, 'set_modules', self.monkey_super_set_modules)
         monkeypatch.setattr(DummyReferenceGenerator, 'set_modules', self.monkey_dummy_set_modules)
         monkeypatch.setattr(DummyReferenceGenerator, '_referenced_states', reference_states)

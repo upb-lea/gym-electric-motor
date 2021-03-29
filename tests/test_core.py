@@ -43,18 +43,20 @@ class TestElectricMotorEnvironment:
         [
             (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, (), [], {}),
             (
-                    DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
-                    (), [DummyCallback()], {'a': 1, 'b': 2}
+                DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
+                (), [DummyCallback()], {'a': 1, 'b': 2}
             ),
             (
-                    DummyPhysicalSystem(10), DummyReferenceGenerator(),
-                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], (),
-                    [DummyCallback(), DummyCallback()], {}
+                DummyPhysicalSystem(10), DummyReferenceGenerator(),
+                DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], (),
+                [DummyCallback(), DummyCallback()], {}
             ),
         ]
     )
-    def test_initialization(self, monkeypatch, physical_system, reference_generator, reward_function,
-                            state_filter, visualization, callbacks, kwargs):
+    def test_initialization(
+            self, monkeypatch, physical_system, reference_generator, reward_function, state_filter, visualization,
+            callbacks, kwargs
+    ):
         with monkeypatch.context() as m:
             instantiate_dict.clear()
             m.setattr(gym_electric_motor.core, "instantiate", mock_instantiate)
@@ -82,9 +84,10 @@ class TestElectricMotorEnvironment:
         assert env.action_space == instantiate_dict[PhysicalSystem]['instance'].action_space, 'Wrong action space'
         if state_filter is None:
             assert Tuple(
-                (instantiate_dict[PhysicalSystem]['instance'].state_space,
-                 instantiate_dict[ReferenceGenerator]['instance'].reference_space)) \
-                   == env.observation_space, 'Wrong observation space'
+                (
+                    instantiate_dict[PhysicalSystem]['instance'].state_space,
+                    instantiate_dict[ReferenceGenerator]['instance'].reference_space)
+            ) == env.observation_space, 'Wrong observation space'
         else:
             state_idxs = np.isin(physical_system.state_names, state_filter)
             state_space = Box(

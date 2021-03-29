@@ -58,7 +58,7 @@ class DcMotor(ElectricMotor):
     # Motor parameter, nominal values and limits are based on the following DC Motor:
     # https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor
     _default_motor_parameter = {
-        'r_a': 16e-3, 'r_e': 16e-3, 'l_a': 19e-6, 'l_e_prime': 1.7e-3, 'l_e': 5.4e-3, 'j_rotor': 0.025
+        'r_a': 16e-3, 'r_e': 16e-2, 'l_a': 19e-6, 'l_e_prime': 1.7e-3, 'l_e': 5.4e-3, 'j_rotor': 0.0025
     }
     _default_nominal_values = dict(omega=300, torque=16.0, i=97, i_a=97, i_e=97, u=60, u_a=60, u_e=60)
     _default_limits = dict(omega=400, torque=38.0, i=210, i_a=210, i_e=210, u=60, u_a=60, u_e=60)
@@ -82,19 +82,18 @@ class DcMotor(ElectricMotor):
         Called internally when the motor parameters are changed or the motor is initialized.
         """
         mp = self._motor_parameter
-        self._model_constants = np.array([
-            [-mp['r_a'], 0, -mp['l_e_prime'], 1, 0],
-            [0, -mp['r_e'], 0, 0, 1]
-        ])
-        self._model_constants[self.I_A_IDX] = self._model_constants[
-                                                  self.I_A_IDX] / mp['l_a']
-        self._model_constants[self.I_E_IDX] = self._model_constants[
-                                                  self.I_E_IDX] / mp['l_e']
+        self._model_constants = np.array(
+            [
+                [-mp['r_a'], 0, -mp['l_e_prime'], 1, 0],
+                [0, -mp['r_e'], 0, 0, 1]
+            ]
+        )
+        self._model_constants[self.I_A_IDX] = self._model_constants[self.I_A_IDX] / mp['l_a']
+        self._model_constants[self.I_E_IDX] = self._model_constants[self.I_E_IDX] / mp['l_e']
 
     def torque(self, currents):
         # Docstring of superclass
-        return self._motor_parameter['l_e_prime'] * currents[self.I_A_IDX] * \
-               currents[self.I_E_IDX]
+        return self._motor_parameter['l_e_prime'] * currents[self.I_A_IDX] * currents[self.I_E_IDX]
 
     def i_in(self, currents):
         # Docstring of superclass
@@ -102,13 +101,16 @@ class DcMotor(ElectricMotor):
 
     def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
-        return np.matmul(self._model_constants, np.array([
-            state[self.I_A_IDX],
-            state[self.I_E_IDX],
-            omega * state[self.I_E_IDX],
-            u_in[0],
-            u_in[1],
-        ]))
+        return np.matmul(
+            self._model_constants,
+            np.array([
+                state[self.I_A_IDX],
+                state[self.I_E_IDX],
+                omega * state[self.I_E_IDX],
+                u_in[0],
+                u_in[1],
+            ])
+        )
 
     def get_state_space(self, input_currents, input_voltages):
         """

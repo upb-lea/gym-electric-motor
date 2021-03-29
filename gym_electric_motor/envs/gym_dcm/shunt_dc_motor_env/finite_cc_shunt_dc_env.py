@@ -125,7 +125,7 @@ class FiniteCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
         """
 
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteTwoQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),

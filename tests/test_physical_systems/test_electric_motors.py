@@ -1,5 +1,7 @@
-from gym_electric_motor.physical_systems.electric_motors import *
-from ..conf import *
+import gym_electric_motor.physical_systems.electric_motors as em
+import numpy as np
+import tests.conf as cf
+from gym.spaces import Box, Discrete
 from gym_electric_motor.utils import make_module
 import pytest
 
@@ -13,26 +15,32 @@ g_u_in = [0, 400, -400, 325.2, -205.4]
 g_t_load = [0, 1, 5, -5, 4.35]
 
 # default/ global initializer
-default_test_initializer = {'states': {},
-                    'interval': None,
-                    'random_init': None,
-                    'random_params': None}
-test_initializer = {'states': {},
-                    'interval': None,
-                    'random_init': None,
-                    'random_params': None}
-
+default_test_initializer = {
+    'states': {},
+    'interval': None,
+    'random_init': None,
+    'random_params': None
+}
+test_initializer = {
+    'states': {},
+    'interval': None,
+    'random_init': None,
+    'random_params': None
+}
 
 # region general test functions
 
 
-def motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
-                  motor_state, limit_values, nominal_values, motor_parameter,
-                  state_positions, state_space):
-    motor_reset_testing(motor_1_default, motor_2_default, motor_state,
-                        state_positions, state_space, nominal_values)
-    motor_reset_testing(motor_1, motor_2, motor_state, state_positions,
-                        state_space, nominal_values)
+def motor_testing(
+    motor_1_default, motor_2_default, motor_1, motor_2,
+    motor_state, limit_values, nominal_values, motor_parameter, state_positions, state_space
+):
+    motor_reset_testing(
+        motor_1_default, motor_2_default, motor_state, state_positions, state_space, nominal_values
+    )
+    motor_reset_testing(
+        motor_1, motor_2, motor_state, state_positions, state_space, nominal_values
+    )
 
     limit_nominal_testing(motor_1_default, motor_2_default, motor_1, motor_2, limit_values, nominal_values)
     motor_parameter_testing(motor_1_default, motor_2_default, motor_1, motor_2, motor_parameter)
@@ -44,8 +52,8 @@ def limit_nominal_testing(motor_1_default, motor_2_default, motor_1, motor_2, li
     assert motor_1.limits == motor_2.limits
     assert motor_1_default.nominal_values == motor_2_default.nominal_values
     assert motor_1_default.limits == motor_2_default.limits
-    assert motor_1.nominal_values is not motor_1_default.nominal_values, " Nominal value error, no difference between" \
-                                                                         "default and parametrized values"
+    assert motor_1.nominal_values is not motor_1_default.nominal_values, \
+        "Nominal value error, no difference between default and parametrized values"
     assert motor_1.limits is not motor_1_default.limits
     assert motor_1.limits == limit_values, "Limit Error " + str([motor_1.limits, limit_values])
     assert motor_1.nominal_values == nominal_values, "Nominal Error " + str([motor_1.nominal_values, nominal_values])
@@ -58,21 +66,17 @@ def motor_parameter_testing(motor_1_default, motor_2_default, motor_1, motor_2, 
     assert motor_1_default.motor_parameter is not motor_1.motor_parameter, "Failed motor parameter test"
 
 
-def motor_reset_testing(motor_1, motor_2, motor_state, state_positions,
-                        state_space, nominal_values):
+def motor_reset_testing(motor_1, motor_2, motor_state, state_positions, state_space, nominal_values):
     # tests if the reset function works correctly
     assert motor_1.initializer == motor_2.initializer
     # test random initialization
     if motor_1.initializer['states'] is None:
         for idx, state in enumerate(motor_state):
-            assert np.abs(motor_1.reset(state_space, state_positions)[idx] \
-                     <= nominal_values[state])
-            assert np.abs(motor_2.reset(state_space, state_positions)[idx] \
-                     <= nominal_values[state])
+            assert np.abs(motor_1.reset(state_space, state_positions)[idx] <= nominal_values[state])
+            assert np.abs(motor_2.reset(state_space, state_positions)[idx] <= nominal_values[state])
     # test constant initialization
     else:
-        assert all(motor_1.reset(state_space, state_positions) ==
-                motor_2.reset(state_space, state_positions))
+        assert all(motor_1.reset(state_space, state_positions) == motor_2.reset(state_space, state_positions))
         init_values = list(motor_1.initializer['states'].values())
         assert all(motor_1.reset(state_space, state_positions) == init_values)
 
@@ -90,28 +94,30 @@ def motor_reset_testing(motor_1, motor_2, motor_state, state_positions,
 def test_dc_series_motor(states, interval, random_init, random_params):
     #motor_state = ['i', 'i']  # list of state names
     motor_state = ['i']  # list of state names
-    motor_parameter = test_motor_parameter['DcSeries']['motor_parameter']
-    nominal_values = test_motor_parameter['DcSeries']['nominal_values']  # dict
-    limit_values = test_motor_parameter['DcSeries']['limit_values']  # dict
+    motor_parameter = cf.test_motor_parameter['DcSeries']['motor_parameter']
+    nominal_values = cf.test_motor_parameter['DcSeries']['nominal_values']  # dict
+    limit_values = cf.test_motor_parameter['DcSeries']['limit_values']  # dict
     # set initializer parameters
     test_initializer['states'] = states
     test_initializer['interval'] = interval
     test_initializer['random_init'] = random_init
     test_initializer['random_params'] = random_params
     # default initialization
-    motor_1_default = make_module(ElectricMotor, 'DcSeries')
-    motor_2_default = DcSeriesMotor()
+    motor_1_default = make_module(em.ElectricMotor, 'DcSeries')
+    motor_2_default = em.DcSeriesMotor()
     # initialization parameters as dicts
-    motor_1 = make_module(ElectricMotor, 'DcSeries',
-                          motor_parameter=motor_parameter,
-                          nominal_values=nominal_values,
-                          limit_values=limit_values,
-                          motor_initializer=test_initializer)
-    motor_2 = DcSeriesMotor(motor_parameter, nominal_values,
+    motor_1 = em.DcSeriesMotor(
+        motor_parameter=motor_parameter,
+        nominal_values=nominal_values,
+        limit_values=limit_values,
+        motor_initializer=test_initializer
+    )
+    motor_2 = em.DcSeriesMotor(motor_parameter, nominal_values,
                             limit_values, test_initializer)
-    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
-                  motor_state, limit_values, nominal_values, motor_parameter,
-                  series_state_positions, series_state_space)
+    motor_testing(
+        motor_1_default, motor_2_default, motor_1, motor_2, motor_state, limit_values, nominal_values, motor_parameter,
+        cf.series_state_positions, cf.series_state_space
+    )
 
     series_motor_state_space_testing(motor_1_default, motor_2_default)
     series_motor_state_space_testing(motor_1, motor_2)
@@ -122,28 +128,27 @@ def test_dc_series_motor(states, interval, random_init, random_params):
 
 def series_motor_state_space_testing(motor_1, motor_2):
     # u,i>0
-    state_space = ({'omega': 0, 'torque': 0, 'i': 0, 'u': 0},
-                   {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
+    state_space = (
+        {'omega': 0, 'torque': 0, 'i': 0, 'u': 0},
+        {'omega': 1, 'torque': 1, 'i': 1, 'u': 1}
+    )
     box01 = Box(0, 1, shape=(1,))
     box_11 = Box(-1, 1, shape=(1,))
     assert motor_1.get_state_space(box01, box01) == motor_2.get_state_space(box01, box01)
     assert motor_1.get_state_space(box01, box01) == state_space
 
     # u>0
-    state_space = (
-        {'omega': 0, 'torque': 0, 'i': -1, 'u': 0}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
+    state_space = ({'omega': 0, 'torque': 0, 'i': -1, 'u': 0}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
     assert motor_1.get_state_space(box_11, box01) == motor_2.get_state_space(box_11, box01)
     assert motor_1.get_state_space(box_11, box01) == state_space
 
     # i>0
-    state_space = (
-        {'omega': 0, 'torque': 0, 'i': 0, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
+    state_space = ({'omega': 0, 'torque': 0, 'i': 0, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
     assert motor_1.get_state_space(box01, box_11) == motor_2.get_state_space(box01, box_11)
     assert motor_1.get_state_space(box01, box_11) == state_space
 
     # u,i>&<0
-    state_space = (
-        {'omega': 0, 'torque': 0, 'i': -1, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
+    state_space = ({'omega': 0, 'torque': 0, 'i': -1, 'u': -1}, {'omega': 1, 'torque': 1, 'i': 1, 'u': 1})
     assert motor_1.get_state_space(box_11, box_11) == motor_2.get_state_space(box_11, box_11)
     assert motor_1.get_state_space(box_11, box_11) == state_space
 
@@ -184,29 +189,32 @@ def test_dc_shunt_motor(states, interval, random_init, random_params):
     """
     # set up test parameter
     motor_state = ['i_a', 'i_e']  # list of state names
-    motor_parameter = test_motor_parameter['DcShunt']['motor_parameter']
-    nominal_values = test_motor_parameter['DcShunt']['nominal_values']  # dict
-    limit_values = test_motor_parameter['DcShunt']['limit_values']  # dict
+    motor_parameter = cf.test_motor_parameter['DcShunt']['motor_parameter']
+    nominal_values = cf.test_motor_parameter['DcShunt']['nominal_values']  # dict
+    limit_values = cf.test_motor_parameter['DcShunt']['limit_values']  # dict
     # set initializer parameters
     test_initializer['states'] = states
     test_initializer['interval'] = interval
     test_initializer['random_init'] = random_init
     test_initializer['random_params'] = random_params
     # default initialization of electric motor
-    motor_1_default = make_module(ElectricMotor, 'DcShunt')
-    motor_2_default = DcShuntMotor()
+    motor_1_default = make_module(em.ElectricMotor, 'DcShunt')
+    motor_2_default = em.DcShuntMotor()
 
-    motor_1 = make_module(ElectricMotor, 'DcShunt',
-                          motor_parameter=motor_parameter,
-                          nominal_values=nominal_values,
-                          limit_values=limit_values,
-                          motor_initializer=test_initializer)
-    motor_2 = DcShuntMotor(motor_parameter, nominal_values,
-                           limit_values, test_initializer)
+    motor_1 = make_module(
+        em.ElectricMotor, 'DcShunt',
+        motor_parameter=motor_parameter,
+        nominal_values=nominal_values,
+        limit_values=limit_values,
+        motor_initializer=test_initializer
+    )
+    motor_2 = em.DcShuntMotor(motor_parameter, nominal_values, limit_values, test_initializer)
     # test if both initializations work correctly for limits and nominal values
-    motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
-                  motor_state, limit_values, nominal_values, motor_parameter,
-                  shunt_state_positions, shunt_state_space)
+    motor_testing(
+        motor_1_default, motor_2_default, motor_1, motor_2,
+        motor_state, limit_values, nominal_values, motor_parameter,
+        cf.shunt_state_positions, cf.shunt_state_space
+    )
 
     shunt_motor_state_space_testing(motor_1_default, motor_2_default)
     shunt_motor_state_space_testing(motor_1, motor_2)
@@ -218,8 +226,10 @@ def test_dc_shunt_motor(states, interval, random_init, random_params):
 def shunt_motor_state_space_testing(motor_1, motor_2):
     # test the motor state space for different converters
     # u,i>0
-    state_space = ({'omega': 0, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u': 0},
-                   {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
+    state_space = (
+        {'omega': 0, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u': 0},
+        {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1}
+    )
     box01 = Box(0, 1, shape=(1,))
     box_11 = Box(-1, 1, shape=(1,))
     assert motor_1.get_state_space(box01, box01) == motor_2.get_state_space(box01, box01)
@@ -227,20 +237,23 @@ def shunt_motor_state_space_testing(motor_1, motor_2):
 
     # u>0
     state_space = (
-        {'omega': 0, 'torque': -1, 'i_a': -1, 'i_e': -1, 'u': 0}, {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
+        {'omega': 0, 'torque': -1, 'i_a': -1, 'i_e': -1, 'u': 0}, {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1}
+    )
     assert motor_1.get_state_space(box_11, box01) == motor_2.get_state_space(box_11, box01)
     assert motor_1.get_state_space(box_11, box01) == state_space
 
     # i>0
     state_space = (
-        {'omega': 0, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u': -1}, {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
+        {'omega': 0, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u': -1}, {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1}
+    )
     assert motor_1.get_state_space(box01, box_11) == motor_2.get_state_space(box01, box_11)
     assert motor_1.get_state_space(box01, box_11) == state_space
 
     # u,i>&<0
     state_space = (
         {'omega': 0, 'torque': -1, 'i_a': -1, 'i_e': -1, 'u': -1},
-        {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1})
+        {'omega': 1, 'torque': 1, 'i_a': 1, 'i_e': 1, 'u': 1}
+    )
     assert motor_1.get_state_space(box_11, box_11) == motor_2.get_state_space(box_11, box_11)
     assert motor_1.get_state_space(box_11, box_11) == state_space
 
@@ -281,29 +294,29 @@ def shunt_motor_electrical_ode_testing(motor_1):
      (None, [[10, 20]], 'gaussian', (None, None))])
 def test_dc_permex_motor(states, interval, random_init, random_params):
     motor_state = ['i']  # list of state names
-    motor_parameter = test_motor_parameter['DcPermEx']['motor_parameter']
-    nominal_values = test_motor_parameter['DcPermEx']['nominal_values']  # dict
-    limit_values = test_motor_parameter['DcPermEx']['limit_values']  # dict
+    motor_parameter = cf.test_motor_parameter['DcPermEx']['motor_parameter']
+    nominal_values = cf.test_motor_parameter['DcPermEx']['nominal_values']  # dict
+    limit_values = cf.test_motor_parameter['DcPermEx']['limit_values']  # dict
     # set initializer parameters
     test_initializer['states'] = states
     test_initializer['interval'] = interval
     test_initializer['random_init'] = random_init
     test_initializer['random_params'] = random_params
     # default initialization without parameters
-    motor_1_default = make_module(ElectricMotor, 'DcPermEx')
-    motor_2_default = DcPermanentlyExcitedMotor()
+    motor_1_default = make_module(em.ElectricMotor, 'DcPermEx')
+    motor_2_default = em.DcPermanentlyExcitedMotor()
     # initialization parameters as dicts
-    motor_1 = make_module(ElectricMotor, 'DcPermEx',
+    motor_1 = make_module(em.ElectricMotor, 'DcPermEx',
                           motor_parameter=motor_parameter,
                           nominal_values=nominal_values,
                           limit_values=limit_values,
                           motor_initializer=test_initializer)
-    motor_2 = DcPermanentlyExcitedMotor(motor_parameter, nominal_values,
+    motor_2 = em.DcPermanentlyExcitedMotor(motor_parameter, nominal_values,
                                         limit_values, test_initializer)
 
     motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
                   motor_state, limit_values, nominal_values, motor_parameter,
-                  permex_state_positions, permex_state_space)
+                  cf.permex_state_positions, cf.permex_state_space)
 
     permex_motor_state_space_testing(motor_1_default, motor_2_default)
     permex_motor_state_space_testing(motor_1, motor_2)
@@ -370,27 +383,27 @@ def permex_motor_electrical_ode_testing(motor_1):
      (None, [[10, 20], [1, 2]], 'gaussian', (None, None))])
 def test_dc_extex_motor(states, interval, random_init, random_params):
     motor_state = ['i_a', 'i_e']  # list of state names
-    motor_parameter = test_motor_parameter['DcExtEx']['motor_parameter']
-    nominal_values = test_motor_parameter['DcExtEx']['nominal_values']  # dict
-    limit_values = test_motor_parameter['DcExtEx']['limit_values']  # dict
+    motor_parameter = cf.test_motor_parameter['DcExtEx']['motor_parameter']
+    nominal_values = cf.test_motor_parameter['DcExtEx']['nominal_values']  # dict
+    limit_values = cf.test_motor_parameter['DcExtEx']['limit_values']  # dict
     test_initializer['states'] = states
     test_initializer['interval'] = interval
     test_initializer['random_init'] = random_init
     test_initializer['random_params'] = random_params
     # default initialization without parameters
-    motor_1_default = make_module(ElectricMotor, 'DcExtEx')
-    motor_2_default = DcExternallyExcitedMotor()
+    motor_1_default = make_module(em.ElectricMotor, 'DcExtEx')
+    motor_2_default = em.DcExternallyExcitedMotor()
     # initialization parameters as dicts
-    motor_1 = make_module(ElectricMotor, 'DcExtEx',
+    motor_1 = make_module(em.ElectricMotor, 'DcExtEx',
                           motor_parameter=motor_parameter,
                           nominal_values=nominal_values,
                           limit_values=limit_values,
                           motor_initializer=test_initializer)
-    motor_2 = DcExternallyExcitedMotor(motor_parameter, nominal_values,
+    motor_2 = em.DcExternallyExcitedMotor(motor_parameter, nominal_values,
                                        limit_values, test_initializer)
     motor_testing(motor_1_default, motor_2_default, motor_1, motor_2,
                   motor_state, limit_values, nominal_values, motor_parameter,
-                  extex_state_positions, extex_state_space)
+                  cf.extex_state_positions, cf.extex_state_space)
 
     extex_motor_state_space_testing(motor_1_default, motor_2_default)
     extex_motor_state_space_testing(motor_1, motor_2)
@@ -472,8 +485,8 @@ def synchronous_motor_ode_testing(state, voltage, omega, mp):
      (None, None, 'gaussian', (None, None)),
      (None, None, 'gaussian', (None, 2)),
      (None, [[10, 20], [10, 20], [1, 2]], 'gaussian', (None, None))])
-@pytest.mark.parametrize("motor_type, motor_class", [('SynRM', SynchronousReluctanceMotor),
-                                                     ('PMSM', PermanentMagnetSynchronousMotor)])
+@pytest.mark.parametrize("motor_type, motor_class", [('SynRM', em.SynchronousReluctanceMotor),
+                                                     ('PMSM', em.PermanentMagnetSynchronousMotor)])
 def test_synchronous_motor_testing(motor_type, motor_class,
                                    states, interval, random_init, random_params):
     """
@@ -482,7 +495,7 @@ def test_synchronous_motor_testing(motor_type, motor_class,
     voltage u_dq
     :return:
     """
-    parameter = test_motor_parameter[motor_type]
+    parameter = cf.test_motor_parameter[motor_type]
     state = np.array([0.3, 0.5, 0.68])  # i_d, i_q, epsilon
     u_dq = np.array([50, 200])
     omega = 25
@@ -492,7 +505,7 @@ def test_synchronous_motor_testing(motor_type, motor_class,
     test_initializer['random_init'] = random_init
     test_initializer['random_params'] = random_params
     # test default initialization first
-    default_init_1 = make_module(ElectricMotor, motor_type)
+    default_init_1 = make_module(em.ElectricMotor, motor_type)
     default_init_2 = motor_class()
     # test parameters
     assert default_init_1.motor_parameter == default_init_2.motor_parameter
@@ -501,8 +514,8 @@ def test_synchronous_motor_testing(motor_type, motor_class,
     # test functions
     mp = default_init_1.motor_parameter
     if motor_type == 'SynRM':
-        state_positions = synrm_state_positions
-        state_space = synrm_state_space
+        state_positions = cf.synrm_state_positions
+        state_space = cf.synrm_state_space
         mp.update({'psi_p': 0})
     else:
         state_positions = pmsm_state_positions

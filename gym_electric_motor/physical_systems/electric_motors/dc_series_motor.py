@@ -48,7 +48,7 @@ class DcSeriesMotor(DcMotor):
     # Motor parameter, nominal values and limits are based on the following DC Motor:
     # https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor
     _default_motor_parameter = {
-        'r_a': 16e-3, 'r_e': 16e-3, 'l_a': 19e-6, 'l_e_prime': 1.7e-3, 'l_e': 5.4e-3, 'j_rotor': 0.025
+        'r_a': 16e-3, 'r_e': 48e-3, 'l_a': 19e-6, 'l_e_prime': 1.7e-3, 'l_e': 5.4e-3, 'j_rotor': 0.0025
     }
     _default_nominal_values = dict(omega=300, torque=16.0, i=97, i_a=97, i_e=97, u=60, u_a=60, u_e=60)
     _default_limits = dict(omega=400, torque=38.0, i=210, i_a=210, i_e=210, u=60, u_a=60, u_e=60)

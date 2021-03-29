@@ -491,6 +491,10 @@ class FiniteMultiConverter(FiniteConverter):
             [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])
     """
 
+    @property
+    def subconverters(self):
+        return self._subconverters
+
     def __init__(self, subconverters, **kwargs):
         """
         Args:
