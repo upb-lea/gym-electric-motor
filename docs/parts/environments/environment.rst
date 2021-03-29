@@ -7,7 +7,7 @@ In general, all environment-ids are structured as follows:
 ``ControlType-ControlTask-MotorType-v0``
 
 - The ``ControlType`` is in ``{Finite / Cont}`` for all DC Motors and in ``{Finite / AbcCont / DqCont}`` for all AC Motors
-- The ``ControlTask`` is in ``{TC / SC / CC}`` (Torque / Speed Current Control)
+- The ``ControlTask`` is in ``{TC / SC / CC}`` (Torque / Speed / Current Control)
 - The ``MotorType`` is in ``{PermExDc / ExtExDc / SeriesDc / ShuntDc / PMSM / SynRM / DFIM / SCIM }``
 
 
