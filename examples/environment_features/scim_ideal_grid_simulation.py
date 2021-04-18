@@ -16,48 +16,48 @@ import matplotlib.pyplot as plt
 
 
 def parameterize_three_phase_grid(amplitude, frequency, initial_phase):
-    '''
-    This nested function allows to create a function of time, which returns the momentary voltage of the
-    three-phase grid. The nested structure allows to parameterize the three-phase grid by
-        amplitude (as a fraction of the DC-link voltage),
-        frequency (in Hertz) and
-        initial phase (in degree).
-    '''
+    """This nested function allows to create a function of time, which returns the momentary voltage of the
+     three-phase grid.
+
+    The nested structure allows to parameterize the three-phase grid by amplitude(as a fraction of the DC-link voltage),
+    frequency (in Hertz) and initial phase (in degree).
+    """
 
     omega = frequency * 2 * np.pi  # 1/s
     phi = 2 * np.pi / 3  # phase offset
     phi_initial = initial_phase * 2 * np.pi / 360
 
     def grid_voltage(t):
-        u_abc = [amplitude * np.sin(omega * t + phi_initial),
-                 amplitude * np.sin(omega * t + phi_initial - phi),
-                 amplitude * np.sin(omega * t + phi_initial + phi)
-                 ]
+        u_abc = [
+            amplitude * np.sin(omega * t + phi_initial),
+            amplitude * np.sin(omega * t + phi_initial - phi),
+            amplitude * np.sin(omega * t + phi_initial + phi)
+         ]
         return u_abc
     return grid_voltage
 
 
 # Create the environment
 env = gem.make(
-               # Choose the squirrel cage induction motor (SCIM) with continuous-control-set
-               "SCIMCont-v1",
+    # Choose the squirrel cage induction motor (SCIM) with continuous-control-set
+    "AbcCont-CC-SCIM-v0",
 
-               # Define the numerical solver for the simulation
-               ode_solver="scipy.ode",
+    # Define the numerical solver for the simulation
+    ode_solver="scipy.ode",
 
-               # Define which state variables are to be monitored concerning limit violations
-               # "None" means, that limit violation will not necessitate an env.reset()
-               observed_states=None,
+    # Define which state variables are to be monitored concerning limit violations
+    # "()" means, that limit violation will not necessitate an env.reset()
+    constraints=(),
 
-               # Parameterize the mechanical load (we set everything to zero such that only j_rotor is significant)
-               load_parameter=dict(a=0, b=0, c=0, j_load=0),
+    # Parameterize the mechanical load (we set everything to zero such that only j_rotor is significant)
+    load=dict(load_parameter=(dict(a=0, b=0, c=0, j_load=0))),
 
-               # Set the sampling time
-               tau=1e-5
-               )
+    # Set the sampling time
+    tau=1e-5
+)
 
-tau = env._physical_system.tau
-limits = env._physical_system.limits
+tau = env.physical_system.tau
+limits = env.physical_system.limits
 
 # reset the environment such that the simulation can be started
 (state, reference) = env.reset()
@@ -70,10 +70,7 @@ TIME = np.array([0])
 # Use the previously defined function to parameterize a three-phase grid with an amplitude of
 # 80 % of the DC-link voltage and a frequency of 50 Hertz
 f_grid = 50  # Hertz
-u_abc = parameterize_three_phase_grid(amplitude=0.8,
-                                      frequency=f_grid,
-                                      initial_phase=0
-                                      )
+u_abc = parameterize_three_phase_grid(amplitude=0.8, frequency=f_grid, initial_phase=0)
 
 # Set a time horizon to simulate, in this case 60 ms
 time_horizon = 0.06
