@@ -160,6 +160,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         return self._physical_system.nominal_state[self.state_filter]
 
+    @property
+    def visualizations(self):
+        """Returns a list of all active motor visualizations."""
+        return self._visualizations
+
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
                  callbacks=(), constraints=(), **kwargs):
         """

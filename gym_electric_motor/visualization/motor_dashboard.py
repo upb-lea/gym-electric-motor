@@ -219,7 +219,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 plot.initialize(axis)
         episode_axes = axes[:len(self._episodic_plots)]
         axes = axes[len(self._episodic_plots):]
-        if len(self._time_plots) > 0:
+        if len(self._episodic_plots) > 0:
             episode_axes[-1].set_xlabel('Episode No')
             self._episodic_plot_figure = fig
             for plot, axis in zip(self._episodic_plots, episode_axes):
