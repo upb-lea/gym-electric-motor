@@ -17,9 +17,9 @@ class StatePlot(TimePlot):
         'omega': r'$\omega$/(1/s)',
         'torque': '$T$/Nm',
         'i': '$i$/A',
-        'i_a': '$i_{a}$/A$',
-        'i_e': '$i_{e}$/A$',
-        'i_b': '$i_{b}$/A$',
+        'i_a': '$i_{a}$/A',
+        'i_e': '$i_{e}$/A',
+        'i_b': '$i_{b}$/A',
         'i_c': '$i_{c}$/A',
         'i_sq': '$i_{sq}$/A',
         'i_sd': '$i_{sd}$/A',
@@ -85,9 +85,7 @@ class StatePlot(TimePlot):
         self._referenced = rg.referenced_states[self._state_idx]
         # Bool: if the data is already normalized to an interval of [-1, 1]
         self._normalized = self._limits != self._state_space[1]
-        # Initialize the data containers
-        self._state_data = np.ones(self._x_width) * np.nan
-        self._ref_data = np.ones(self._x_width) * np.nan
+        self.reset_data()
 
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
         max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
@@ -98,6 +96,12 @@ class StatePlot(TimePlot):
 
         # Set the y-axis label
         self._label = self.state_labels.get(self._state, self._state)
+
+    def reset_data(self):
+        super().reset_data()
+        # Initialize the data containers
+        self._state_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
+        self._ref_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
 
     def initialize(self, axis):
         # Docstring of superclass
