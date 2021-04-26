@@ -128,14 +128,17 @@ class ContTorqueControlDcShuntMotorEnv(ElectricMotorEnvironment):
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContTwoQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcShuntMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=230.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='torque')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(
+                reference_state='torque', limit_margin=(0, 0.8)
+            ),
+
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))

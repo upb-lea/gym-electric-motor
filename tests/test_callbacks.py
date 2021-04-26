@@ -37,7 +37,7 @@ class TestRampingLimitMargin:
 
         # Episode updates
         callback = self.test_class(
-            initial_limit_margin=(0.0,0.3), maximum_limit_margin=(0, 1), step_size=0.2, update_time='episode',
+            initial_limit_margin=(0.0, 0.3), maximum_limit_margin=(0, 1), step_size=0.2, update_time='episode',
             update_freq=20
         )
         callbacks = [callback]

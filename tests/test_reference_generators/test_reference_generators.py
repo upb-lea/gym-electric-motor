@@ -142,17 +142,25 @@ class TestSwitchedReferenceGenerator:
         assert self._kwargs == kwargs, 'Different additional arguments. Keep in mind None and {}.'
         return self._reference_observation
 
-    @pytest.mark.parametrize("sub_generator",
-                             [['SinusReference'], ['WienerProcessReference'], ['StepReference'], ['TriangleReference'],
-                              ['SawtoothReference'],
-                              ['SinusReference', 'WienerProcessReference', 'StepReference', 'TriangleReference',
-                               'SawtoothReference'],
-                              ['SinusReference', 'WienerProcessReference'],
-                              ['StepReference', 'TriangleReference', 'SawtoothReference']])
+    @pytest.mark.parametrize(
+        "sub_generator",
+        [
+            ['SinusReference'],
+            ['WienerProcessReference'],
+            ['StepReference'],
+            ['TriangleReference'],
+            ['SawtoothReference'],
+            ['SinusReference', 'WienerProcessReference', 'StepReference', 'TriangleReference', 'SawtoothReference'],
+            ['SinusReference', 'WienerProcessReference'],
+            ['StepReference', 'TriangleReference', 'SawtoothReference']
+        ]
+    )
     @pytest.mark.parametrize("sub_args", [None])
     @pytest.mark.parametrize("p", [None, [0.1, 0.2, 0.3, 0.2, 0.1]])
-    @pytest.mark.parametrize("super_episode_length, expected_sel",
-                             [((200, 500), (200, 500)), (100, (100, 101)), (500, (500, 501))])
+    @pytest.mark.parametrize(
+        "super_episode_length, expected_sel",
+        [((200, 500), (200, 500)), (100, (100, 101)), (500, (500, 501))]
+    )
     def test_init(self, monkeypatch, setup, sub_generator, sub_args, p, super_episode_length, expected_sel):
         """
         test function for the initialization of a switched reference generator with different combinations of reference
