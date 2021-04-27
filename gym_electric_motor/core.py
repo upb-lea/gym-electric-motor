@@ -212,8 +212,7 @@ class ElectricMotorEnvironment(gym.core.Env):
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
-        self.state_filter = [self._physical_system.state_names.index(s)
-                             for s in state_filter]
+        self.state_filter = [self._physical_system.state_names.index(s) for s in state_filter]
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high)

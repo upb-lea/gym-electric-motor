@@ -59,7 +59,7 @@ class TestElectricMotorEnvironment:
     )
     def test_initialization(
             self, monkeypatch, physical_system, reference_generator, reward_function, state_filter, visualization,
-            callbacks, kwargs
+            callbacks
     ):
 
         env = gym_electric_motor.core.ElectricMotorEnvironment(
@@ -69,7 +69,6 @@ class TestElectricMotorEnvironment:
             visualizations=visualization,
             state_filter=state_filter,
             callbacks=callbacks,
-            **kwargs
         )
 
         # Assertions that the Keys are passed correctly to the instantiate fct
@@ -78,26 +77,20 @@ class TestElectricMotorEnvironment:
         assert reward_function == env.reward_function
 
         if state_filter is None:
-            assert Tuple(
-                (
-                    instantiate_dict[PhysicalSystem]['instance'].state_space,
-                    instantiate_dict[ReferenceGenerator]['instance'].reference_space)
-            ) == env.observation_space, 'Wrong observation space'
+            assert Tuple((
+                    physical_system.state_space,
+                    reference_generator.reference_space
+            )) == env.observation_space, 'Wrong observation space'
         else:
             state_idxs = np.isin(physical_system.state_names, state_filter)
             state_space = Box(
-                instantiate_dict[PhysicalSystem]['instance'].state_space.low[state_idxs],
-                instantiate_dict[PhysicalSystem]['instance'].state_space.high[state_idxs],
+                physical_system.state_space.low[state_idxs],
+                physical_system.state_space.high[state_idxs],
             )
             assert Tuple(
-                (state_space, instantiate_dict[ReferenceGenerator]['instance'].reference_space)
+                (state_space, reference_generator.reference_space)
             ) == env.observation_space, 'Wrong observation space'
-        assert env.reward_range == instantiate_dict[RewardFunction]['instance'].reward_range, 'Wrong reward range'
-
-        # Test Correct passing of kwargs
-        assert physical_system != DummyPhysicalSystem or env.physical_system.kwargs == kwargs
-        assert reference_generator, DummyReferenceGenerator or env.reference_generator.kwargs == kwargs
-        assert reward_function != DummyRewardFunction or env.reward_function.kwargs == kwargs
+        assert env.reward_range == reward_function.reward_range, 'Wrong reward range'
         for callback in callbacks:
             assert callback._env == env
 

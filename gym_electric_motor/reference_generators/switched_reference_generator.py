@@ -31,8 +31,10 @@ class SwitchedReferenceGenerator(ReferenceGenerator):
             sub_arguments = sub_args
         else:
             sub_arguments = [kwargs] * len(sub_generators)
-        self._sub_generators = [instantiate(ReferenceGenerator, sub_generator, **sub_arg)
-                                for sub_generator, sub_arg in zip(sub_generators, sub_arguments)]
+        self._sub_generators = [
+            instantiate(ReferenceGenerator, sub_generator, **sub_arg)
+            for sub_generator, sub_arg in zip(sub_generators, sub_arguments)
+        ]
         self._probabilities = p or [1/len(sub_generators)] * len(sub_generators)
         self._current_episode_length = 0
         if type(super_episode_length) in [float, int]:
