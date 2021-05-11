@@ -35,7 +35,7 @@ A basic routine is as simple as:
 import gym_electric_motor as gem
 
 if __name__ == '__main__':
-    env = gem.make("PMSMDisc-v1")  # instantiate a discretely controlled PMSM
+    env = gem.make("Finite-CC-PMSM-v0")  # instantiate a discretely controlled PMSM
     env.reset()
     for _ in range(1000):
         env.render()  # visualize environment

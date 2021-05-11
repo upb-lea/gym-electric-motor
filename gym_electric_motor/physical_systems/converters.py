@@ -4,8 +4,6 @@ from gym.spaces import Discrete, Box, MultiDiscrete
 from ..utils import instantiate
 
 
-
-
 class PowerElectronicConverter:
     """
     Base class for all converters in a SCMLSystem.
@@ -172,9 +170,9 @@ class ContDynamicallyAveragedConverter(PowerElectronicConverter):
         return np.sign(i_in[0]) / self._tau * self._interlocking_time
 
 
-class DiscConverter(PowerElectronicConverter):
+class FiniteConverter(PowerElectronicConverter):
     """
-    Base class for all discrete converters.
+    Base class for all finite converters.
     """
 
     #: The switching states of the converter for the current action
@@ -202,10 +200,10 @@ class DiscConverter(PowerElectronicConverter):
         raise NotImplementedError
 
 
-class DiscOneQuadrantConverter(DiscConverter):
+class FiniteOneQuadrantConverter(FiniteConverter):
     """
     Key:
-        'Disc-1QC'
+        'Finite-1QC'
 
     Switching States / Actions:
         | 0: Transistor off.
@@ -232,10 +230,10 @@ class DiscOneQuadrantConverter(DiscConverter):
         return i_out[0] if self._current_action == 1 else 0
 
 
-class DiscTwoQuadrantConverter(DiscConverter):
+class FiniteTwoQuadrantConverter(FiniteConverter):
     """
     Key:
-        'Disc-2QC'
+        'Finite-2QC'
 
     Switching States / Actions:
         | 0: Both Transistors off.
@@ -299,10 +297,10 @@ class DiscTwoQuadrantConverter(DiscConverter):
             return [self._action_start_time + self._interlocking_time, self._action_start_time + self._tau]
 
 
-class DiscFourQuadrantConverter(DiscConverter):
+class FiniteFourQuadrantConverter(FiniteConverter):
     """
     Key:
-        'Disc-4QC'
+        'Finite-4QC'
 
     Switching States / Actions:
         | 0: T2, T4 on.
@@ -324,7 +322,7 @@ class DiscFourQuadrantConverter(DiscConverter):
     def __init__(self, **kwargs):
         # Docstring in base class
         super().__init__(**kwargs)
-        self._subconverters = [DiscTwoQuadrantConverter(**kwargs), DiscTwoQuadrantConverter(**kwargs)]
+        self._subconverters = [FiniteTwoQuadrantConverter(**kwargs), FiniteTwoQuadrantConverter(**kwargs)]
 
     def reset(self):
         # Docstring in base class
@@ -474,13 +472,13 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
         return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[0]])
 
 
-class DiscMultiConverter(DiscConverter):
+class FiniteMultiConverter(FiniteConverter):
     """
-    Converter that allows to include an arbitrary number of independent discrete subconverters.
+    Converter that allows to include an arbitrary number of independent finite subconverters.
     Subconverters must be 'elementary' and can not be MultiConverters.
 
     Key:
-        'Disc-Multi'
+        'Finite-Multi'
 
     Actions:
         Concatenation of the subconverters' action spaces
@@ -493,6 +491,10 @@ class DiscMultiConverter(DiscConverter):
             [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])
     """
 
+    @property
+    def subconverters(self):
+        return self._subconverters
+
     def __init__(self, subconverters, **kwargs):
         """
         Args:
@@ -500,8 +502,9 @@ class DiscMultiConverter(DiscConverter):
             kwargs(dict): Parameters to pass to the Subconverters and the superclass
         """
         super().__init__(**kwargs)
-        self._subconverters = [instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters]
-
+        self._subconverters = [
+            instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters
+        ]
         self.subsignal_current_space_dims = []
         self.subsignal_voltage_space_dims = []
         self.action_space = []
@@ -686,12 +689,12 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         return i_sup
 
 
-class DiscB6BridgeConverter(DiscConverter):
+class FiniteB6BridgeConverter(FiniteConverter):
     """
-    The discrete B6 bridge converters (B6C) is simulated with three discrete 2QC.
+    The finite B6 bridge converters (B6C) is simulated with three finite 2QC.
 
     Key:
-        'Disc-B6C'
+        'Finite-B6C'
 
     Actions:
         +-+-----+-----+-----+
@@ -746,9 +749,9 @@ class DiscB6BridgeConverter(DiscConverter):
         # Docstring in base class
         super().__init__(tau=tau, **kwargs)
         self._subconverters = [
-            DiscTwoQuadrantConverter(tau=tau, **kwargs),
-            DiscTwoQuadrantConverter(tau=tau, **kwargs),
-            DiscTwoQuadrantConverter(tau=tau, **kwargs),
+            FiniteTwoQuadrantConverter(tau=tau, **kwargs),
+            FiniteTwoQuadrantConverter(tau=tau, **kwargs),
+            FiniteTwoQuadrantConverter(tau=tau, **kwargs),
         ]
 
     def reset(self):

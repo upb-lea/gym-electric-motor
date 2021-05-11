@@ -1,4 +1,4 @@
-from gym.spaces import Box
+from gym.spaces import Box, Discrete, MultiDiscrete
 import numpy as np
 
 from .base_plots import TimePlot
@@ -60,12 +60,18 @@ class ActionPlot(TimePlot):
             self._action_range_min = self._action_space.low[self._action]
             self._action_range_max = self._action_space.high[self._action]
 
-        else:
+        elif type(self._action_space) is Discrete:
             self._action_type = 'Discrete'
             # lower bound of discrete action = 0
             self._action_range_min = 0
             # fetch the action range of discrete type actions
             self._action_range_max = self._action_space.n
+        elif type(self._action_space) is MultiDiscrete:
+            self._action_type = 'MultiDiscrete'
+            # lower bound of discrete action = 0
+            self._action_range_min = 0
+            # fetch the action range of discrete type actions
+            self._action_range_max = self._action_space.nvec[self._action]
 
         spacing = 0.1 * (self._action_range_max - self._action_range_min)
         self._y_lim = self._action_range_min - spacing, self._action_range_max + spacing

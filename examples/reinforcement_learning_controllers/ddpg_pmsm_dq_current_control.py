@@ -100,28 +100,30 @@ if __name__ == '__main__':
     # Create the environment
     env = gem.make(
         # Choose the permanent magnet synchronous motor with continuous-control-set
-        'PMSMCont-v1',
+        'DqCont-CC-PMSM-v0',
         # Pass a class with extra parameters
-        visualization=MotorDashboard(state_plots=['i_sq', 'i_sd'], action_plots='all', reward_plot=True,
-                                     episodic_plots=[MeanEpisodeRewardPlot()]),
+        visualization=MotorDashboard(
+            state_plots=['i_sq', 'i_sd'],
+            action_plots='all',
+            reward_plot=True,
+            episodic_plots=[MeanEpisodeRewardPlot()]
+        ),
         # Set the mechanical load to have constant speed
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
 
-        # Set the frame of control inputs, dq is the flux oriented coordinate system
-        control_space='dq',
-
         # Define which numerical solver is to be used for the simulation
-        ode_solver='scipy.solve_ivp', solver_kwargs={},
+        ode_solver='scipy.solve_ivp',
 
         # Pass the previously defined reference generator
         reference_generator=rg,
 
-        # Set weighting of different addends of the reward function
-        reward_weights={'i_sq': 1000, 'i_sd': 1000},
-
-        # Exponent of the reward function
-        # Here we use a square root function
-        reward_power=0.5,
+        reward_function=dict(
+            # Set weighting of different addends of the reward function
+            reward_weights={'i_sq': 1000, 'i_sd': 1000},
+            # Exponent of the reward function
+            # Here we use a square root function
+            reward_power=0.5,
+        ),
 
         # Define which state variables are to be monitored concerning limit violations
         # Here, only overcurrent will lead to termination
@@ -130,18 +132,22 @@ if __name__ == '__main__':
         # Consider converter dead time within the simulation
         # This means that a given action will show effect only with one step delay
         # This is realistic behavior of drive applications
-        dead_time=True,
-
+        converter=dict(
+            dead_time=True,
+        ),
         # Set the DC-link supply voltage
-        u_sup=400,
+        supply=dict(
+            u_sup=400
+        ),
 
-        # Pass the previously defined motor parameters
-        motor_parameter=motor_parameter,
+        motor=dict(
+            # Pass the previously defined motor parameters
+            motor_parameter=motor_parameter,
 
-        # Pass the updated motor limits and nominal values
-        limit_values=limit_values,
-        nominal_values=nominal_values,
-
+            # Pass the updated motor limits and nominal values
+            limit_values=limit_values,
+            nominal_values=nominal_values,
+        ),
         # Define which states will be shown in the state observation (what we can "measure")
         state_filter=['i_sd', 'i_sq', 'epsilon'],
     )
@@ -179,10 +185,12 @@ if __name__ == '__main__':
     actor.add(Dense(16, activation='relu'))
     actor.add(Dense(17, activation='relu'))
     # The network output fits the action space of the env
-    actor.add(Dense(nb_actions,
-                    kernel_initializer=initializers.RandomNormal(stddev=1e-5),
-                    activation='tanh',
-                    kernel_regularizer=regularizers.l2(1e-2)))
+    actor.add(Dense(
+        nb_actions,
+        kernel_initializer=initializers.RandomNormal(stddev=1e-5),
+        activation='tanh',
+        kernel_regularizer=regularizers.l2(1e-2))
+    )
     print(actor.summary())
 
     # Define another artificial neural network to be used within the agent as critic
@@ -251,7 +259,6 @@ if __name__ == '__main__':
         verbose=2,
         log_interval=10000,
         callbacks=[],
-
     )
     # Test the agent
     hist = agent.test(

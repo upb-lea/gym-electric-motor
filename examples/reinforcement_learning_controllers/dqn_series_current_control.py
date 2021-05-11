@@ -29,36 +29,15 @@ if __name__ == '__main__':
     # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning result
     env = gem.make(
         # Define the series DC motor with finite-control-set
-        'DcSeriesDisc-v1',
-
-        # Set the electric parameters of the motor
-        motor_parameter=dict(r_a=15e-3, r_e=15e-3, l_a=1e-3, l_e=1e-3),
-
-        # Set the parameters of the mechanical polynomial load (the default load class)
-        load_parameter=dict(a=0, b=.1, c=.1, j_load=0.04),
+        'Finite-CC-SeriesDc-v0',
 
         # Defines the utilized power converter, which determines the action space
         # 'Disc-1QC' is our notation for a discontinuous one-quadrant converter,
         # which is a one-phase buck converter with available actions 'switch on' and 'switch off'
-        converter='Disc-1QC',
+        converter='Finite-1QC',
 
         # Define which states will be shown in the state observation (what we can "measure")
         state_filter=['omega', 'i'],
-
-        # Define the reward function and to which state variable it applies
-        # Here, we define it for current control
-        reward_function=WeightedSumOfErrors(observed_states='i'),
-
-        # Defines which numerical solver is to be used for the simulation
-        # euler is fastest but not most precise
-        ode_solver='euler',
-        solver_kwargs={},
-
-        # Define and parameterize the reference generator for the current reference
-        reference_generator=WienerProcessReferenceGenerator(reference_state='i', sigma_range=(3e-3, 3e-2)),
-
-        # Defines which variables to plot via the builtin dashboard monitor
-        visualization=MotorDashboard(state_plots=['i', 'omega']),
     )
 
     # Now, the environment will output states and references separately

@@ -22,55 +22,55 @@ For a more general introduction to GEM, we recommend to have a look at the "_con
 # initializer for a specific current; e.g. DC series motor ('DcSeriesCont-v1' / 'DcSeriesDisc-v1')
 dc_series_init = {'states': {'i': 12}}
 
-# initializer for a specific current and position; e.g. permanent magnet synchronous motor ('PMSMCont-v1' / 'PMSMDisc-v1')
-pmsm_init = {'states': {'i_sd': -36.0,
-                        'i_sq': 55.0,
-                        'epsilon': 3.0}}
+# initializer for a specific current and position; e.g. permanent magnet synchronous motor
+pmsm_init = {
+    'states': {
+        'i_sd': -36.0,
+        'i_sq': 55.0,
+        'epsilon': 3.0
+    }
+}
 
 # initializer for a random initial current with gaussian distribution, parameterized with mu=25 and sigma=10
-gaussian_init = {'random_init': 'gaussian',
-                 'random_params': (25, 0.1),
-                 'states': {'i': 0}
-                 }
+gaussian_init = {
+    'random_init': 'gaussian',
+    'random_params': (25, 0.1),
+    'states': {'i': 0}
+}
 
 # initializer for a ranom initial speed with uniform distribution within the interval omega=60 to omega=80
-uniform_init = {'random_init': 'uniform',
-                'interval': [[60, 80]],
-                'states': {'omega': 0}}
+uniform_init = {
+    'random_init': 'uniform',
+    'interval': [[60, 80]],
+    'states': {'omega': 0}
+}
 
 # initializer for a specific speed
 load_init = {'states': {'omega': 20}}
 
 if __name__ == '__main__':
     env = gem.make(
-            'DcSeriesCont-v1',
-            visualization=MotorDashboard(plots=['omega', 'i'],
-                                         dark_mode=False),
-            motor_parameter=dict(j_rotor=0.001),
-            load_parameter=dict(a=0, b=0.1, c=0, j_load=0.001),
-            ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
+            'Cont-CC-SeriesDc-v0',
+            visualization=MotorDashboard(state_plots=['omega', 'i']),
+            motor=dict(motor_parameter=dict(j_rotor=0.001), motor_initializer=gaussian_init),
+            load=dict(load_parameter=dict(a=0, b=0.1, c=0, j_load=0.001), load_initializer=uniform_init),
+            ode_solver='scipy.solve_ivp',
             reference_generator=rg.SwitchedReferenceGenerator(
                 sub_generators=[
                     rg.SinusoidalReferenceGenerator(reference_state='omega'),
                     rg.WienerProcessReferenceGenerator(reference_state='omega'),
                     rg.StepReferenceGenerator(reference_state='omega')
-                ], p=[0.2, 0.6, 0.2], super_episode_length=(1000, 10000)
+                ],
+                p=[0.2, 0.6, 0.2],
+                super_episode_length=(1000, 10000)
             ),
-
-            # Pass the predefined initializers
-            motor_initializer=gaussian_init,
-            load_initializer=uniform_init,
+            constraints=(),
         )
-
-    # After the setup is done, we are ready to simulate the environment
-    # We make use of a standard PI speed controller
-    controller = Controller.make('pi_controller', env)
     start = time.time()
     cum_rew = 0
 
     for j in range(10):
         state, reference = env.reset()
-        controller.reset()
 
         # Print the initial states:
         denorm_state = state * env.limits
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
         for i in range(5000):
             env.render()
-            action = controller.control(state, reference)
+            action = env.action_space.sample()
             (state, reference), reward, done, _ = env.step(action)
 
             if done:
