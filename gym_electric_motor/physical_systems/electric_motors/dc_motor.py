@@ -76,8 +76,7 @@ class DcMotor(ElectricMotor):
         self._update_limits()
 
     def _update_model(self):
-        """
-        Update the motors model parameters with the motor parameters.
+        """Updates the motor's model parameters with the motor parameters.
 
         Called internally when the motor parameters are changed or the motor is initialized.
         """
