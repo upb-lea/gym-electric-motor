@@ -12,7 +12,7 @@ from gym_electric_motor.constraints import SquaredConstraint
 class FiniteSpeedControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
     """
     Description:
-        Environment to simulate a dq-domain continuous control set current controlled doubly fed induction motor.
+        Environment to simulate a finite control set speed controlled doubly fed induction motor.
 
     Key:
         ``'AbcCont-SC-DFIM-v0'``

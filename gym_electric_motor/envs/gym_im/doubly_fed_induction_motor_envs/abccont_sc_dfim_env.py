@@ -69,7 +69,7 @@ class AbcContSpeedControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
         >>> from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
         >>>
         >>> # Select a different ode_solver with default parameters by passing a keystring
-        >>> my_overridden_solver = 'scipy-solve_ivp'
+        >>> my_overridden_solver = 'scipy.solve_ivp'
         >>>
         >>> # Update the default arguments to the voltage supply by passing a parameter dict
         >>> my_changed_voltage_supply_args = {'u_nominal': 400.0}
