@@ -2,6 +2,7 @@ from gym.spaces import Discrete, Box, MultiDiscrete
 from gym_electric_motor.physical_systems import SynchronousMotorSystem, DcMotorSystem, DcSeriesMotor, \
     DcExternallyExcitedMotor
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, SwitchedReferenceGenerator
+from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor import envs
 import numpy as np
 from matplotlib import pyplot as plt
@@ -17,6 +18,8 @@ class Controller:
     def make(cls, environment, stages=None, **controller_kwargs):
 
         controller_kwargs = cls.reference_states(environment, **controller_kwargs)
+        cls.visualization, controller_kwargs = cls.get_visualization(environment, **controller_kwargs)
+
         if stages is not None:
             controller_type, stages = cls.find_controller_type(environment, stages)
             assert controller_type in _controllers.keys(), f'Controller {controller_type} unknown'
@@ -41,20 +44,29 @@ class Controller:
         pass
 
     def plot(self, external_reference_plots, state_names):
-        external_refs = self.set_ref()
-        external_ref_plots = list(external_reference_plots)
-        ref_state_idxs = external_refs['ref_state']
-        plot_state_idxs = [
-            list(state_names).index(external_ref_plot.state) for external_ref_plot in external_reference_plots
-        ]
-        ref_values = external_refs['ref_value']
-        for ref_state_idx, ref_value in zip(ref_state_idxs, ref_values):
-            try:
-                plot_idx = plot_state_idxs.index(ref_state_idx)
-            except ValueError:
-                pass
-            else:
-                external_ref_plots[plot_idx].external_reference(ref_value)
+        if self.visualization:
+            external_refs = self.set_ref()
+            external_ref_plots = list(external_reference_plots)
+            ref_state_idxs = external_refs['ref_state']
+            plot_state_idxs = [
+                list(state_names).index(external_ref_plot.state) for external_ref_plot in external_reference_plots
+            ]
+            ref_values = external_refs['ref_value']
+            for ref_state_idx, ref_value in zip(ref_state_idxs, ref_values):
+                try:
+                    plot_idx = plot_state_idxs.index(ref_state_idx)
+                except ValueError:
+                    pass
+                else:
+                    external_ref_plots[plot_idx].external_reference(ref_value)
+
+    @staticmethod
+    def get_visualization(environment, **controller_kwargs):
+        for visualization in environment._visualizations:
+            if type(visualization) == MotorDashboard:
+                controller_kwargs['update_interval'] = visualization._update_interval
+                return True, controller_kwargs
+        return False, controller_kwargs
 
     @staticmethod
     def reference_states(environment, **controller_kwargs):
@@ -178,6 +190,7 @@ class Controller:
             i_sq_lim = limits[environment.state_names.index('i_sq')]
             u_sd_lim = limits[environment.state_names.index('u_sd')]
             u_sq_lim = limits[environment.state_names.index('u_sq')]
+            torque_lim = limits[environment.state_names.index('torque')]
 
         a = 4 if 'a' not in controller_kwargs.keys() else controller_kwargs['a']
 
@@ -259,9 +272,10 @@ class Controller:
                                     'd_gain']
 
                         elif i == 1:
+                            t_n = p_gain / i_gain
                             p_gain = environment.physical_system.mechanical_load.j_total / (
-                                    a * (mp['l'] / mp['r_a'])) / i_a_lim * omega_lim
-                            i_gain = p_gain / (a ** 2 * (mp['l'] / mp['r_a']))
+                                    4 * t_n) / i_a_lim * omega_lim
+                            i_gain = p_gain / (4 * t_n)
 
                             if _controllers[stages_a[i]['controller_type']][2] == PID_Controller:
                                 d_gain = p_gain * environment.physical_system.tau
@@ -325,9 +339,11 @@ class Controller:
                         d_gain_q = p_gain_q * environment.physical_system.tau
                         stage_q[0]['d_gain'] = d_gain_q if 'd_gain' not in stage_q[0].keys() else stage_q[0]['d_gain']
 
-                    if ('omega' in ref_states or 'torque' in ref_states) and _controllers[stage_q[1]['controller_type']][1] == ContinuousController:
-                        p_gain = environment.physical_system.mechanical_load.j_total / (1.5 * a ** 2 * mp['p'] * np.abs(mp['l_d'] - mp['l_q'])) / i_sq_lim * omega_lim
-                        i_gain = p_gain / (1.5 * environment.physical_system.tau * a)
+                    if 'omega' in ref_states and _controllers[stage_q[1]['controller_type']][1] == ContinuousController:
+                        t_n = p_gain_d / i_gain_d
+                        p_gain = environment.physical_system.mechanical_load.j_total / (4 * t_n) / torque_lim * omega_lim
+                        i_gain = p_gain / (4 * t_n)
+
 
                         stage_q[1]['p_gain'] = p_gain if 'p_gain' not in stage_q[1].keys() else stage_q[1]['p_gain']
                         stage_q[1]['i_gain'] = i_gain if 'i_gain' not in stage_q[1].keys() else stage_q[1]['i_gain']
@@ -420,19 +436,23 @@ class ContinuousActionController(Controller):
 
 class DiscreteActionController(Controller):
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
+
         assert type(environment.action_space) in [Discrete, MultiDiscrete] and type(
             environment.physical_system) is DcMotorSystem, 'No suitable action space for Discrete Action Controller'
+
         self.ref_idx = np.where(ref_states != 'i_e')[0][0]
         self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
         self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
         self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
         self.state_names = environment.state_names
+
         self.external_ref_plots = external_ref_plots
         for ext_ref_plot in self.external_ref_plots:
             ext_ref_plot.set_reference(ref_states)
 
         if self.control_e:
             assert len(stages) == 2, 'Controller design is not completely'
+
             self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
             self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
             self.controller_e = _controllers[stages[1][0]['controller_type']][1].make(environment, stages[1][0],
@@ -498,8 +518,12 @@ class Cascaded_Controller(Controller):
         self.controller_stages = [
             _controllers[stage['controller_type']][1].make(environment, stage, cascaded=stages.index(stage) != 0) for
             stage in stages]
+
         self.external_ref_plots = external_ref_plots
-        self.external_ref_plots.set_reference(ref_states + [environment.state_names[i] for i in self.ref_state_idx])
+        internal_refs = np.array([environment.state_names[i] for i in self.ref_state_idx])
+        ref_states_plotted = np.unique(np.append(ref_states, internal_refs))
+        for external_plots in self.external_ref_plots:
+            external_plots.set_reference(ref_states_plotted)
 
         assert type(self.action_space) is Box or not self.stage_type[0], 'No suitable inner controller'
         assert type(self.action_space) in [Discrete, MultiDiscrete] or self.stage_type[
@@ -650,11 +674,10 @@ class FOC_Controller(Controller):
 
 
 class Cascaded_FOC_Controller(Controller):
-    def __init__(self, environment, stages, ref_states, external_ref_plots=[], plot_torque=True, **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], plot_torque=True, plot_modulation=False, update_interval=1000, **controller_kwargs):
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
         self.backward_transformation = (lambda quantities, eps: t32(q(quantities[::-1], eps)))
-
         self.tau = environment.physical_system.tau
 
         self.action_space = environment.action_space
@@ -672,6 +695,10 @@ class Cascaded_FOC_Controller(Controller):
         self.eps_idx = environment.state_names.index('epsilon')
         self.torque_idx = environment.state_names.index('torque')
         self.external_ref_plots = external_ref_plots
+
+        self.torque_control = 'torque' in ref_states or 'omega' in ref_states
+        self.current_control = 'i_sd' in ref_states
+        self.omega_control = 'omega' in ref_states
         if 'i_sd' in ref_states:
             self.ref_d_idx = np.where(ref_states == 'i_sd')[0][0]
             self.ref_idx = np.where(ref_states != 'i_sd')[0][0]
@@ -693,11 +720,17 @@ class Cascaded_FOC_Controller(Controller):
         self.psi_p = 0 if 'psi_p' not in self.mp.keys() else self.mp['psi_p']
         self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
         self.decoupling = True if 'decoupling' not in controller_kwargs else controller_kwargs['decoupling']
-        self.torque_control = 'torque' in ref_states
+
+        self.ref_state_idx = [self.i_sq_idx, self.i_sd_idx]
         if self.torque_control:
-            self.ref_state_idx = [self.i_sq_idx, self.i_sd_idx, self.torque_idx]
-            self.ref_idx = np.where(ref_states == 'torque')[0][0]
-            self.torque_controller = MTPC(environment, plot_torque)
+            self.ref_state_idx.append(self.torque_idx)
+
+            self.torque_controller = MTPC(environment, plot_torque, plot_modulation, update_interval)
+
+        if self.omega_control:
+            self.ref_state_idx.append(self.omega_idx)
+
+        self.ref_idx = 0
 
         if self.controller_type:
             assert len(stages) == 2, 'Number of stages not correct'
@@ -730,25 +763,24 @@ class Cascaded_FOC_Controller(Controller):
             ext_ref_plot.set_reference(plot_ref)
 
     def control(self, state, reference):
+
         self.ref[-1] = reference[self.ref_idx]
         epsilon_d = state[self.eps_idx] * self.limit[self.eps_idx] + self.dead_time * self.tau * state[self.omega_idx] * \
                     self.limit[self.omega_idx] * self.mp['p']
 
-        if not self.torque_control:
-            for i in range(len(self.overlayed_controller) - 1, -1, -1):
-                self.ref[i] = self.overlayed_controller[i].control(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+        if self.omega_control:
+            for i in range(len(self.overlayed_controller) + 1, 1, -1):
+                self.ref[i] = self.overlayed_controller[i-2].control(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+
+
                 if (0.85 * self.state_space.low[self.ref_state_idx[i]] <= self.ref[i] <= 0.85 *
-                        self.state_space.high[self.ref_state_idx[i]]) and self.overlayed_type[i]:
-                    self.overlayed_controller[i].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+                        self.state_space.high[self.ref_state_idx[i]]) and self.overlayed_type[i-2]:
+                    self.overlayed_controller[i-2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
                 else:
                     self.ref[i] = np.clip(self.ref[i], 0.85 * self.state_space.low[self.ref_state_idx[i]],
                                           0.85 * self.state_space.high[self.ref_state_idx[i]])
-            if self.omega_control:
-                self.ref[0] = 2 / (3 * self.mp['p'] * self.mp['psi_p']) * self.ref[0]
-                self.ref[0] = np.clip(self.ref[0], 0.85 * self.state_space.low[self.ref_state_idx[0]],
-                                      0.85 * self.state_space.high[self.ref_state_idx[0]])
-        else:
-            torque = self.ref[-1] * self.limit[self.torque_idx]
+        if self.torque_control:
+            torque = self.ref[2] * self.limit[self.torque_idx]
             self.ref[0], self.ref[1] = self.torque_controller.control(state, torque)
 
         if self.controller_type:
@@ -803,20 +835,41 @@ class Cascaded_FOC_Controller(Controller):
             for abc_controller in self.abc_controller:
                 abc_controller.reset()
 
+        if self.torque_control:
+            self.torque_controller.reset()
+
 class MTPC:
-    def __init__(self, environment, plot_torque=True):
+    def __init__(self, environment, plot_torque=True, plot_modulation=False, update_interval=1000):
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.limit = environment.physical_system.limits
+
+        self.q = environment.physical_system.electrical_motor.q
+        self.a_max = 2 / np.sqrt(3)
+        self.k_ = 0.95
+        d = 1.2
+        alpha = d / (d - np.sqrt(d ** 2 - 1))
+        self.i_gain = 1 / (self.mp['l_q'] / (1.25 * self.mp['r_s'])) * (alpha - 1) / alpha ** 2
+        self.integrated = 0
+        self.integrated_reset = -0.0005
+        self.u_a_idx = environment.state_names.index('u_a')
+        self.u_dc = np.sqrt(3) * self.limit[self.u_a_idx]
+        self.limited = False
+        self.psi_low = -0.04
+        self.psi_high = 0.04
 
         l_d = self.mp['l_d']
         l_q = self.mp['l_q']
         self.p = self.mp['p']
         self.psi_p = self.mp['psi_p']
+        self.tau = environment.physical_system.tau
 
         self.omega_idx = environment.state_names.index('omega')
         self.i_sd_idx = environment.state_names.index('i_sd')
         self.i_sq_idx = environment.state_names.index('i_sq')
+        self.u_sd_idx = environment.state_names.index('u_sd')
+        self.u_sq_idx = environment.state_names.index('u_sq')
         self.torque_idx = environment.state_names.index('torque')
+        self.epsilon_idx = environment.state_names.index('epsilon')
 
         def mtpc():
             def i_q_(i_d, torque):
@@ -826,24 +879,33 @@ class MTPC:
                 return -np.abs(torque / (1.5 * self.p * (l_d - l_q) * i_q))
 
             psi_p = 0 if 'psi_p' not in self.mp else self.psi_p
-            self.max_torque = 1.5 * self.p * (psi_p + (l_d - l_q) * (-self.limit[self.i_sd_idx])) * self.limit[self.i_sq_idx]
+            self.max_torque = max(1.5 * self.p * (psi_p + (l_d - l_q) * (-self.limit[self.i_sd_idx])) * self.limit[self.i_sq_idx], self.limit[self.torque_idx])
             self.t_count_mtpc = 2500
             torque = np.linspace(-self.max_torque, self.max_torque, self.t_count_mtpc)
             characteristic = []
 
             for t in torque:
                 if 'psi_p' in self.mp:
-                    i_d = np.linspace(-2*self.limit[self.i_sd_idx], 0, 1000)
+                    if l_d == l_q:
+                        i_d = 0
+                    else:
+                        i_d = np.linspace(-2.5*self.limit[self.i_sd_idx], 0, 2000)
                     i_q = i_q_(i_d, t)
                 else:
-                    i_q = np.linspace(-2*self.limit[self.i_sq_idx], 2*self.limit[self.i_sq_idx], 1000)
-                    i_d = i_d_(i_q, t)
+                    i_q = np.linspace(-2.5*self.limit[self.i_sq_idx], 2.5*self.limit[self.i_sq_idx], 2000)
+                    if l_d == l_q:
+                        i_d = 0
+                    else:
+                        i_d = i_d_(i_q, t)
 
                 i = np.power(i_d, 2) + np.power(i_q, 2)
-
                 min_idx = np.where(i == np.amin(i))[0][0]
-                i_q_ret = np.sign((l_q - l_d) * t) * np.abs(i_q[min_idx])
-                i_d_ret = i_d[min_idx]
+                if l_d == l_q:
+                    i_q_ret = i_q
+                    i_d_ret = i_d
+                else:
+                    i_q_ret = np.sign((l_q - l_d) * t) * np.abs(i_q[min_idx])
+                    i_d_ret = i_d[min_idx]
                 psi = np.sqrt((self.psi_p + l_d * i_d_ret) ** 2 + (l_q * i_q_ret) ** 2)
                 characteristic.append([t, i_d_ret, i_q_ret, psi])
             return np.array(characteristic)
@@ -851,9 +913,11 @@ class MTPC:
         def mtpf():
             psi_i_d_q = []
             self.psi_max_mtpf = np.sqrt((self.psi_p + l_d * (-self.limit[self.i_sd_idx])) ** 2 + (l_q * self.limit[self.i_sq_idx]) ** 2)
-            self.psi_count_mtpf = 4001
+            self.psi_count_mtpf = 2001
             psi = np.linspace(0, self.psi_max_mtpf, self.psi_count_mtpf)
-            i_d = np.linspace(-3 * self.limit[self.i_sd_idx], 0, 2000)
+            i_d = np.linspace(-self.limit[self.i_sd_idx], 0, 1501)
+            i_d_best = 0
+            i_q_best = 0
 
             for psi_ in psi:
                 if psi_ == 0:
@@ -888,99 +952,136 @@ class MTPC:
             return np.array(psi_i_d_q)
 
         self.mtpc = mtpc()
-
-        i_q_max = np.arange(-self.limit[self.i_sq_idx], self.limit[self.i_sq_idx] * 1.001,
-                            self.limit[self.i_sq_idx] / 1000)
-        i_d_max = -np.sqrt(self.limit[self.i_sq_idx] ** 2 - np.power(i_q_max, 2))
-
-        matplotlib.use('TkAgg')
-        plt.ion()
-
-        self.i_d_q_plot = plt.figure('i_d_q_characteristic')
-        self.i_max_plot = plt.subplot(111)
-        self.i_max_plot.plot(i_d_max, i_q_max, label='$i_{max}$')
-        self.i_max_plot.plot(self.mtpc[:, 1], self.mtpc[:, 2], label='MTPC Characteristic')
-        plt.xlabel('$i_d$ / A')
-        plt.ylabel('$i_q$ / A')
-        plt.grid(True)
-
-
         self.mtpf = mtpf()
-        self.i_max_plot.plot(self.mtpf[:, 2], self.mtpf[:, 3], label='MTPF Characteristic')
-        plt.axis('equal')
-        plt.legend()
-
-        self.torque_plot = plt.figure('torque')
         self.psi_t = np.sqrt(
             np.power(self.psi_p + l_d * self.mtpc[:, 1], 2) + np.power(l_q * self.mtpc[:, 2], 2))
         self.psi_t = np.array([self.mtpc[:, 0], self.psi_t])
+        self.i_q_max = np.arange(-self.limit[self.i_sq_idx], self.limit[self.i_sq_idx] * 1.001,
+                            self.limit[self.i_sq_idx] / 1000)
+        self.i_d_max = -np.sqrt(self.limit[self.i_sq_idx] ** 2 - np.power(self.i_q_max, 2))
 
-        self.torque_plot_ = self.torque_plot.add_subplot(1, 1, 1)
-        self.torque_plot_.plot(self.psi_t[0], self.psi_t[1], label='$\Psi^*(T^*)$')
-        plt.xlabel('T / Nm')
-        plt.ylabel('$\Psi$ / Vs')
-        plt.grid(True)
-        plt.ylim(bottom=0)
-
-        self.psi_plot = plt.figure('psi')
-        self.psi_plot_ = plt.subplot(1, 1, 1)
-        self.psi_plot_.plot(self.mtpf[:, 0], self.mtpf[:, 1], label='$T_{max}(\Psi)$')
-        plt.xlabel('$\Psi$ / Vs')
-        plt.ylabel('$T_{max}$ / Nm')
-        plt.grid(True)
-
-        i_d, i_q = np.mgrid[-self.limit[self.i_sd_idx]:0:500j, -self.limit[self.i_sq_idx]:self.limit[self.i_sq_idx]:1000j]
-
+        i_d, i_q = np.mgrid[-1.1 * self.limit[self.i_sd_idx]:0:700j, -1.1 * self.limit[self.i_sq_idx]:1.1 * self.limit[self.i_sq_idx]:1500j]
         i_d = i_d.flatten()
         i_q = i_q.flatten()
 
+
         idx = np.where(np.sign(self.psi_p + i_d * l_d) * np.power(self.psi_p + i_d * l_d, 2) + np.power(i_q * l_q, 2) > 0)
+
+
         i_d = i_d[idx]
         i_q = i_q[idx]
 
         t = self.p * 1.5 * (self.psi_p + (l_d - l_q) * i_d) * i_q
         psi = np.sqrt(np.power(l_d * i_d + self.psi_p, 2) + np.power(l_q * i_q, 2))
 
-
-
         self.t_min = np.amin(t)
         self.t_max = np.amax(t)
-        self.t_count = 1001
+        self.t_count = 2001
 
         self.psi_min = np.amin(psi)
         self.psi_max = np.amax(psi)
-        self.psi_count = 300
+        self.psi_count = 601
 
-        t_grid, psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count), self.psi_min:self.psi_max:np.complex(self.psi_count)]
+        self.t_grid, self.psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count), self.psi_min:self.psi_max:np.complex(self.psi_count)]
 
-        self.t_grid = t_grid
-        self.psi_grid = psi_grid
-
-        i_q_inter = griddata((t, psi), i_q, (t_grid, psi_grid), method='linear')
-        i_d_inter = griddata((t, psi), i_d, (t_grid, psi_grid), method='linear')
-
-        self.i_q_inter = i_q_inter
-        self.i_d_inter = i_d_inter
-
-        fig = plt.figure('i_q')
-        ax = fig.gca(projection='3d')
-        ax.plot_surface(t_grid, psi_grid, i_q_inter, cmap=cm.coolwarm, linewidth=0, vmin=np.nanmin(i_q_inter),
-                        vmax=np.nanmax(i_q_inter))
-        plt.ylabel('psi', fontsize=16)
-        plt.xlabel('t', fontsize=16)
-
-        fig2 = plt.figure('i_d')
-        ax2 = fig2.gca(projection='3d')
-        ax2.plot_surface(t_grid, psi_grid, i_d_inter, cmap=cm.coolwarm, linewidth=0, vmin=np.nanmin(i_d_inter),
-                         vmax=np.nanmax(i_d_inter))
-        plt.ylabel('psi', fontsize=16)
-        plt.xlabel('t', fontsize=16)
-
-        plt.figure()
-        plt.show()
+        self.i_q_inter = griddata((t, psi), i_q, (self.t_grid, self.psi_grid), method='linear')
+        self.i_d_inter = griddata((t, psi), i_d, (self.t_grid, self.psi_grid), method='linear')
 
         self.k = 0
+        self.update_interval = update_interval
         self.plot_torque = plot_torque
+        self.plot_modulation = plot_modulation
+        matplotlib.use('qt5agg')
+
+    def intitialize_torque_plot(self):
+        if self.plot_torque:
+            plt.ion()
+            self.fig_torque = plt.figure('Torque Controller')
+            self.i_d_q_characteristic_ = plt.subplot2grid((2, 3), (0, 0), rowspan=2)
+            self.psi_plot = plt.subplot2grid((2, 3), (0, 1))
+            self.i_d_plot = plt.subplot2grid((2, 3), (0, 2), projection='3d')
+            self.torque_plot = plt.subplot2grid((2, 3), (1, 1))
+            self.i_q_plot = plt.subplot2grid((2, 3), (1, 2), projection='3d')
+
+            self.i_d_q_characteristic_.set_title('$i_{d,q_{ref}}$')
+            self.i_d_q_characteristic_.plot(self.mtpc[:, 1], self.mtpc[:, 2], label='MTPC', c='tab:orange')
+            self.i_d_q_characteristic_.plot(self.mtpf[:, 2], self.mtpf[:, 3], label='MTPF', c='tab:green')
+            self.i_d_q_characteristic_.plot(self.i_d_max, self.i_q_max, label='$i_{max}$', c='tab:red')
+            self.i_d_q_characteristic_.plot([], [], label='$i_{d,q}$', c='tab:blue')
+            self.i_d_q_characteristic_.grid(True)
+            self.i_d_q_characteristic_.legend(loc=2)
+            self.i_d_q_characteristic_.axis('equal')
+            self.i_d_q_characteristic_.set_xlabel('$i_d$ / A')
+            self.i_d_q_characteristic_.set_ylabel('$i_q$ / A')
+
+            self.psi_plot.set_title('$\Psi^*_{max}(T^*)$')
+            self.psi_plot.plot(self.psi_t[0], self.psi_t[1], label='$\Psi^*_{max}(T^*)$', c='tab:orange')
+            self.psi_plot.plot([], [], label='$\Psi(T)$', c='tab:blue')
+            self.psi_plot.grid(True)
+            self.psi_plot.set_xlabel('T / Nm')
+            self.psi_plot.set_ylabel('$\Psi$ / Vs')
+            self.psi_plot.set_ylim(bottom=0)
+            self.psi_plot.legend(loc=2)
+
+            self.torque_plot.set_title('$T_{max}(\Psi)$')
+            self.torque_plot.plot(self.mtpf[:, 0], self.mtpf[:, 1], label='$T_{max}(\Psi)$', c='tab:orange')
+            self.torque_plot.plot([], [], label='$T(\Psi)$', c='tab:blue')
+            self.torque_plot.set_xlabel('$\Psi$ / Vs')
+            self.torque_plot.set_ylabel('$T_{max}$ / Nm')
+            self.torque_plot.grid(True)
+            self.torque_plot.legend(loc=2)
+
+
+            self.i_q_plot.plot_surface(self.t_grid, self.psi_grid, self.i_q_inter, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_q_inter),
+                            vmax=np.nanmax(self.i_q_inter))
+            self.i_q_plot.set_ylabel('$\Psi / Vs$')
+            self.i_q_plot.set_xlabel('$T / Nm$')
+            self.i_q_plot.set_title('$i_q(T, \Psi)$')
+
+
+            self.i_d_plot.plot_surface(self.t_grid, self.psi_grid, self.i_d_inter, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_d_inter),
+                             vmax=np.nanmax(self.i_d_inter))
+            self.i_d_plot.set_ylabel('$\Psi / Vs$')
+            self.i_d_plot.set_xlabel('$T / Nm$')
+            self.i_d_plot.set_title('$i_d(T, \Psi)$')
+            self.torque_list = []
+            self.psi_list = []
+            self.k_list = []
+            self.i_d_list = []
+            self.i_q_list = []
+
+
+
+    def initialize_modulation_plot(self):
+        if self.plot_modulation:
+            plt.ion()
+            self.fig_modulation = plt.figure('Modulation Controller')
+            self.a_plot = plt.subplot2grid((1, 2), (0, 0))
+            self.psi_delta_plot = plt.subplot2grid((1, 2), (0, 1))
+
+            self.a_plot.set_title('Modulation')
+            self.a_plot.axhline(self.k_ * self.a_max, c='tab:orange', label='$a^*$')
+            self.a_plot.plot([], [], c='tab:blue', label='a')
+            self.a_plot.set_xlabel('t / s')
+            self.a_plot.set_ylabel('a')
+            self.a_plot.grid(True)
+            self.a_plot.set_xlim(0, 1)
+            self.a_plot.legend(loc=2)
+
+            self.psi_delta_plot.set_title('$\Psi_{\Delta}$')
+            self.psi_delta_plot.axhline(self.psi_low, c='tab:red', linestyle='dashed', label='Limit')
+            self.psi_delta_plot.axhline(self.psi_high, c='tab:red', linestyle='dashed')
+            self.psi_delta_plot.plot([], [], c='tab:blue', label='$\Psi_{\Delta}$')
+            self.psi_delta_plot.set_xlabel('t / s')
+            self.psi_delta_plot.set_ylabel('$\Psi_{\Delta} / Vs$')
+            self.psi_delta_plot.grid(True)
+            self.psi_delta_plot.set_xlim(0, 1)
+            self.psi_delta_plot.legend(loc=2)
+
+            self.a_list = []
+            self.psi_delta_list = []
+            self.k_list_a = []
+
 
     def get_t_idx(self, torque):
         return int(round((torque - self.t_min) / (self.t_max - self.t_min) * (self.t_count - 1)))
@@ -995,11 +1096,8 @@ class MTPC:
         return int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count_mtpc - 1)))
 
     def control(self, state, torque):
-
         psi = self.mtpc[self.get_t_idx_mtpc(torque), 3]
-
-        psi_max_ = 0.95 * self.limit[-1] / (
-                    np.sqrt(3) * self.limit[self.omega_idx] * np.abs(state[self.omega_idx]) * self.p)
+        psi_max_ = self.modulation_control(state)
         psi_max = min(psi, psi_max_)
 
         psi_max_idx = self.get_psi_idx_mtpf(psi_max)
@@ -1008,24 +1106,95 @@ class MTPC:
 
         t_idx = self.get_t_idx(torque)
         psi_idx = self.get_psi_idx(psi_max)
-
         i_d = self.i_d_inter[t_idx, psi_idx]
         i_q = self.i_q_inter[t_idx, psi_idx]
 
-        if self.k % 100 == 0 and self.plot_torque:
-            self.torque_plot_.scatter(torque, psi_max, c='b')
-            self.psi_plot_.scatter(psi_max, torque, c='b')
-            self.i_max_plot.scatter(i_d, i_q, c='b')
 
-            self.i_d_q_plot.canvas.draw()
-            self.i_d_q_plot.canvas.flush_events()
+        if self.plot_torque:
+            if self.k == 0:
+                self.intitialize_torque_plot()
 
-        i_q = np.clip(i_q, -0.85 * self.limit[self.i_sq_idx], 0.85 * self.limit[self.i_sq_idx]) / self.limit[self.i_sq_idx]
-        i_d = np.clip(i_d, -0.85 * self.limit[self.i_sd_idx], 0.85 * self.limit[self.i_sd_idx]) / self.limit[self.i_sd_idx]
+            self.k_list.append(self.k / 10000)
+            self.i_d_list.append(i_d)
+            self.i_q_list.append(i_q)
+            self.torque_list.append(torque)
+            self.psi_list.append(psi_max)
+
+            if self.k % self.update_interval == 0:
+                self.psi_plot.scatter(self.torque_list, self.psi_list, c='tab:blue', s=3)
+                self.torque_plot.scatter(self.psi_list, self.torque_list, c='tab:blue', s=3)
+                self.i_d_q_characteristic_.scatter(self.i_d_list, self.i_q_list, c='tab:blue', s=3)
+
+                self.fig_torque.canvas.draw()
+                self.fig_torque.canvas.flush_events()
+                self.k_list = []
+                self.i_d_list = []
+                self.i_q_list = []
+                self.torque_list = []
+                self.psi_list = []
+
+
+        i_q = np.clip(i_q, -0.8 * self.limit[self.i_sq_idx], 0.8 * self.limit[self.i_sq_idx]) / self.limit[self.i_sq_idx]
+        i_d = np.clip(i_d, -0.8 * self.limit[self.i_sd_idx], 0.8 * self.limit[self.i_sd_idx]) / self.limit[self.i_sd_idx]
 
         self.k += 1
 
         return i_q, i_d
+
+    def modulation_control(self, state):
+        eps = state[self.epsilon_idx] * self.limit[self.epsilon_idx]
+        u_sd = state[self.u_sd_idx] * self.limit[self.u_sd_idx]
+        u_sq = state[self.u_sq_idx] * self.limit[self.u_sq_idx]
+        u_alpha, u_beta = self.q([u_sd, u_sq], eps)
+        a = 2 * np.sqrt(u_alpha ** 2 + u_beta ** 2) / self.u_dc
+
+        if a > 1.1 * self.a_max:
+            self.integrated = self.integrated_reset
+
+        a_delta = self.k_ * self.a_max - a
+        if state[self.omega_idx] > 0.0001:
+            psi_max_ = self.u_dc / (
+                np.sqrt(3) * self.limit[self.omega_idx] * np.abs(state[self.omega_idx]) * self.p)
+            k_i = 2 * self.limit[self.omega_idx] * np.abs(state[self.omega_idx]) * self.p / self.u_dc
+
+        else:
+            psi_max_ = self.u_dc / (
+                    np.sqrt(3) * self.limit[self.omega_idx] * 0.0001 * self.p)
+            k_i = 2 * self.limit[self.omega_idx] * 0.0001 * self.p / self.u_dc
+        i_gain = self.i_gain / k_i
+        psi_delta = i_gain * (a_delta * self.tau + self.integrated)
+
+        if self.psi_low <= psi_delta <= self.psi_high:
+            if self.limited:
+                self.integrated = self.integrated_reset
+                self.limited = False
+            self.integrated += a_delta * self.tau
+
+        else:
+            psi_delta = np.clip(psi_delta, self.psi_low, self.psi_high)
+            self.limited = True
+
+        psi = psi_max_ + psi_delta
+        if self.plot_modulation:
+            if self.k == 0:
+                self.initialize_modulation_plot()
+            self.k_list_a.append(self.k / 10000)
+            self.a_list.append(a)
+            self.psi_delta_list.append(psi_delta)
+
+            if self.k % self.update_interval == 0:
+                    self.a_plot.scatter(self.k_list_a, self.a_list, c='tab:blue', s=3)
+                    self.psi_delta_plot.scatter(self.k_list_a, self.psi_delta_list, c='tab:blue', s=3)
+                    self.a_plot.set_xlim(max(self.k / 10000, 1) - 1, max(self.k / 10000, 1))
+                    self.psi_delta_plot.set_xlim(max(self.k / 10000, 1) - 1, max(self.k / 10000, 1))
+                    self.k_list_a = []
+                    self.a_list = []
+                    self.psi_delta_list = []
+
+        return psi
+
+    def reset(self):
+        self.integrated = 0
 
 
 class ContinuousController:
