@@ -1,11 +1,12 @@
 import numpy as np
 from gym.spaces import Box
 
+from ..random_component import RandomComponent
 from ..core import ReferenceGenerator
 from ..utils import set_state_array
 
 
-class SubepisodedReferenceGenerator(ReferenceGenerator):
+class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
     """Base Class for Reference Generators, which change their parameters in certain ranges after a random number of
     time steps and can pre-calculate their references in these "sub episodes".
     """
@@ -22,7 +23,8 @@ class SubepisodedReferenceGenerator(ReferenceGenerator):
                 If None(default), the limit margin equals (nominal values/limits).
                 In general, the limit margin should not exceed (-1, 1)
         """
-        super().__init__()
+        ReferenceGenerator.__init__(self)
+        RandomComponent.__init__(self)
         self.reference_space = Box(-1, 1, shape=(1,))
         self._reference = None
         self._limit_margin = limit_margin
@@ -74,6 +76,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator):
             self._reference_value = initial_reference[self._referenced_states][0]
         else:
             self._reference_value = 0.0
+        self.next_generator()
         self._current_episode_length = -1
         return super().reset(initial_state)
 
@@ -98,8 +101,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator):
         """
         raise NotImplementedError
 
-    @staticmethod
-    def _get_current_value(value_range):
+    def _get_current_value(self, value_range):
         """
         Return a uniform distributed value for the next sub episode.
 
@@ -109,4 +111,4 @@ class SubepisodedReferenceGenerator(ReferenceGenerator):
         if type(value_range) in [int, float]:
             return value_range
         elif type(value_range) in [list, tuple, np.ndarray]:
-            return (value_range[1] - value_range[0]) * np.random.rand() + value_range[0]
+            return (value_range[1] - value_range[0]) * self._random_generator.uniform() + value_range[0]

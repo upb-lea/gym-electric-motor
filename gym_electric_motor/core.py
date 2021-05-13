@@ -22,6 +22,7 @@ import numpy as np
 from gym.spaces import Box
 
 from .utils import instantiate
+from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
 
 
@@ -205,7 +206,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             cm = ConstraintMonitor(limit_constraints, additional_constraints)
         self._constraint_monitor = cm
 
-        # Announcement of the Modules among each other
+        # Announcement of the modules among each other
         self._reference_generator.set_modules(self.physical_system)
         self._constraint_monitor.set_modules(self.physical_system)
         self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
@@ -226,7 +227,14 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
-        
+        self._random_components = []
+        if isinstance(self._physical_system, RandomComponent):
+            self._random_components.append(self._physical_system)
+        if isinstance(self._reference_generator, RandomComponent):
+            self._random_components.append(self._reference_generator)
+        if isinstance(self._reward_function, RandomComponent):
+            self._random_components.append(self._reward_function)
+
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
         for callback in self._callbacks:
@@ -282,6 +290,13 @@ class ElectricMotorEnvironment(gym.core.Env):
             'on_step_end', self.physical_system.k, state, reference, reward, self._done
         )
         return (state[self.state_filter], ref_next), reward, self._done, {}
+
+    def seed(self, seed=None):
+        sg = np.random.SeedSequence(seed)
+        sub_sg = sg.spawn(len(self._random_components))
+        for sub, rc in zip(sub_sg, self._random_components):
+            rc.seed(sub)
+        return [sg.entropy]
 
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
