@@ -82,6 +82,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         A reference generator might terminate an episode, if the reference has ended.
         The reward function can terminate an episode, if a physical limit of the motor has been violated.
     """
+
     @property
     def physical_system(self):
         """
@@ -106,7 +107,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         Args:
             reference_generator(ReferenceGenerator): The new reference generator of the environment.
         """
+        if self._reference_generator in self._random_components:
+            self._random_components.remove(self._reference_generator)
         self._reference_generator = reference_generator
+        if isinstance(reference_generator, RandomComponent):
+            self._random_components.append(reference_generator)
         self._done = True
 
     @property
@@ -125,7 +130,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         Args:
             reward_function(RewardFunction): The new reward function of the environment.
         """
+        if self._reward_function in self._random_components:
+            self._random_components.remove(self._reward_function)
         self._reward_function = reward_function
+        if isinstance(reward_function, RandomComponent):
+            self._random_components.append(reward_function)
         self._done = True
 
     @property
@@ -149,16 +158,12 @@ class ElectricMotorEnvironment(gym.core.Env):
 
     @property
     def reference_names(self):
-        """
-        Returns a list of state names of all states in the observation (called in state_filter) in the same order
-        """
+        """Returns a list of state names of all states in the observation (called in state_filter) in the same order"""
         return self._reference_generator.reference_names
 
     @property
     def nominal_state(self):
-        """
-        Returns a list of nominal values of all states in the observation (called in state_filter) in the same order
-        """
+        """Returns a list of nominal values of all states in the observation (called in state_filter) in that order"""
         return self._physical_system.nominal_state[self.state_filter]
 
     @property

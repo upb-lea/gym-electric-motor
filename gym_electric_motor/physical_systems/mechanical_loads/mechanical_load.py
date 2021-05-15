@@ -2,8 +2,10 @@ import numpy as np
 from scipy.stats import truncnorm
 import warnings
 
+from ...random_component import RandomComponent
 
-class MechanicalLoad:
+
+class MechanicalLoad(RandomComponent):
     """The MechanicalLoad is the base class for all the mechanical systems attached
     to the electrical motors rotor.
 
@@ -84,6 +86,7 @@ class MechanicalLoad:
             state_names(list(str)): List of the names of the states in the mechanical-ODE.
             j_load(float): Moment of inertia of the load affecting the motor shaft.
         """
+        RandomComponent.__init__(self)
         self._j_total = self._j_load = j_load
         self._state_names = list(state_names or ['omega'])
         self._limits = {}
@@ -91,10 +94,7 @@ class MechanicalLoad:
         load_initializer = load_initializer or {}
         self._initializer = self._default_initializer.copy()
         self._initializer.update(load_initializer)
-        try:
-            self._initial_states = self._initializer['states']
-        except:
-            self._initial_states = {state: 0.0 for state in self._state_names}
+        self._initial_states = self._initializer.get('states', {state: 0.0 for state in self._state_names})
 
     def initialize(self, state_space, state_positions, nominal_state, **__):
         """Initializes the state of the load on an episode start.
@@ -103,8 +103,7 @@ class MechanicalLoad:
         range of the nominal values or a given interval.
 
         Args:
-            nominal_state(list): nominal values for each state given from
-                                  physical system
+            nominal_state(list): nominal values for each state given from physical system
             state_space(gym.spaces.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
         """
@@ -115,8 +114,7 @@ class MechanicalLoad:
         if isinstance(nominal_state, (list, np.ndarray)):
             nominal_state = np.asarray(nominal_state, dtype=float)
         elif isinstance(self._nominal_values, dict):
-            nominal_state = [nominal_state[state]
-                               for state in self._initial_states.keys()]
+            nominal_state = [nominal_state[state] for state in self._initial_states.keys()]
             nominal_state = np.asarray(nominal_state)
         # setting nominal values as interval limits
         state_idx = [state_positions[state] for state in self._initial_states.keys()]
@@ -124,59 +122,43 @@ class MechanicalLoad:
         lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
-            lower_bound = np.clip(lower_bound,
-                                  a_min=
-                                  np.asarray(interval, dtype=float).T[0],
-                                  a_max=None)
-            upper_bound = np.clip(upper_bound,
-                                  a_min=None,
-                                  a_max=
-                                  np.asarray(interval, dtype=float).T[1])
+            lower_bound = np.clip(lower_bound, a_min=np.asarray(interval, dtype=float).T[0], a_max=None)
+            upper_bound = np.clip(upper_bound, a_min=None, a_max=np.asarray(interval, dtype=float).T[1])
         else:
             pass
         # random initialization for each load state (omega)
         if random_dist is not None:
             if random_dist == 'uniform':
-                initial_value = (upper_bound - lower_bound) * \
-                                np.random.random_sample(
-                                    len(self._initial_states.keys())) + \
-                                lower_bound
-                random_states = \
-                    {state: initial_value[idx]
-                     for idx, state in
-                     enumerate(self._initial_states.keys())}
+                initial_value = (upper_bound - lower_bound) \
+                    * self.random_generator.uniform(size=len(self._initial_states.keys())) \
+                    + lower_bound
+                random_states = {
+                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                }
                 self._initial_states.update(random_states)
 
             elif random_dist in ['normal', 'gaussian']:
                 # specific input or middle of interval
-                mue = random_params[0] or \
-                      (upper_bound - lower_bound) / 2 + lower_bound
+                mue = random_params[0] \
+                      or (upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a = (lower_bound - mue) / sigma
                 b = (upper_bound - mue) / sigma
-                initial_value = truncnorm.rvs(a, b,
-                                              loc=mue,
-                                              scale=sigma,
-                                              size=(len(self._initial_states.keys())))
-                random_states = \
-                    {state: initial_value[idx]
-                     for idx, state in
-                     enumerate(self._initial_states.keys())}
+                initial_value = truncnorm.rvs(a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())))
+                random_states = {
+                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                }
                 self._initial_states.update(random_states)
-
             else:
                 raise NotImplementedError
         # constant initialization for each motor state (current, epsilon)
         elif self._initial_states is not None:
-            initial_value = np.atleast_1d(
-                list(self._initial_states.values()))
+            initial_value = np.atleast_1d(list(self._initial_states.values()))
             # check init_value meets interval boundaries
-            if ((lower_bound <= initial_value).all()
-                    and (initial_value <= upper_bound).all()):
-                initial_states_ = \
-                    {state: initial_value[idx]
-                     for idx, state in
-                     enumerate(self._initial_states.keys())}
+            if (lower_bound <= initial_value).all() and (initial_value <= upper_bound).all():
+                initial_states_ = {
+                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                }
                 self._initial_states.update(initial_states_)
             else:
                 raise Exception('Initialization Value have to be in nominal boundaries')
@@ -195,6 +177,7 @@ class MechanicalLoad:
         Returns:
             numpy.ndarray(float): The initial motor states.
         """
+        self.next_generator()
         if self._initializer:
             self.initialize(state_space, state_positions, nominal_state)
             return np.asarray(list(self._initial_states.values()))
