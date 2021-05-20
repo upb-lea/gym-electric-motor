@@ -259,7 +259,6 @@ class Controller:
             elif _controllers[controller_type][0] == Cascaded_Controller:
 
                 for i in range(len(stages)):
-
                     if _controllers[stages_a[i]['controller_type']][1] == ContinuousController:
 
                         if i == 0:
@@ -272,11 +271,12 @@ class Controller:
                                     'd_gain']
 
                         elif i == 1:
-                            t_n = p_gain / i_gain
+                            p_gain_ = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
+                            i_gain_ = p_gain_ / (environment.physical_system.tau * a ** 2)
+                            t_n = p_gain_ / i_gain_
                             p_gain = environment.physical_system.mechanical_load.j_total / (
                                     4 * t_n) / i_a_lim * omega_lim
                             i_gain = p_gain / (4 * t_n)
-
                             if _controllers[stages_a[i]['controller_type']][2] == PID_Controller:
                                 d_gain = p_gain * environment.physical_system.tau
                                 stages_a[i]['d_gain'] = d_gain if 'd_gain' not in stages_a[i].keys() else stages_a[i][
@@ -385,13 +385,15 @@ class ContinuousActionController(Controller):
         self.u_idx = environment.physical_system.VOLTAGES_IDX[-1]
         self.limit = environment.physical_system.limits[environment.state_filter]
         self.nominal_values = environment.physical_system.nominal_state[environment.state_filter]
-        self.omega_idx = environment.state_names.index('omega')
+        self.omega_idx = self.state_names.index('omega')
         self.action = np.zeros(self.action_space.shape[0])
-        self.control_e = 'i_e' in ref_states
+        self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
         mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_e = None if 'psi_e' not in mp.keys() else mp['psi_e']
         self.l_e = None if 'l_e_prime' not in mp.keys() else mp['l_e_prime']
         self.external_ref_plots = external_ref_plots
+        self.action_limit_low = self.action_space.low[0] * self.nominal_values[self.u_idx] / self.limit[self.u_idx]
+        self.action_limit_high = self.action_space.high[0] * self.nominal_values[self.u_idx] / self.limit[self.u_idx]
 
         for ext_ref_plot in self.external_ref_plots:
             ext_ref_plot.set_reference(ref_states)
@@ -404,23 +406,33 @@ class ContinuousActionController(Controller):
                                                                                       **controller_kwargs)
             self.controller = _controllers[stages[0][0]['controller_type']][1].make(environment, stages[0][0],
                                                                                     **controller_kwargs)
+            u_e_idx = self.state_names.index('u_e')
+            self.action_e_limit_low = self.action_space.low[1] * self.nominal_values[u_e_idx] / self.limit[u_e_idx]
+            self.action_e_limit_high = self.action_space.high[1] * self.nominal_values[u_e_idx] / self.limit[u_e_idx]
         else:
-            assert len(ref_states) <= 1, 'Too many referenced states'
+            if 'i_e' not in ref_states:
+                assert len(ref_states) <= 1, 'Too many referenced states'
             self.controller = _controllers[stages[0]['controller_type']][1].make(environment, stages[0],
                                                                                  **controller_kwargs)
 
     def control(self, state, reference):
         self.action[0] = self.controller.control(state[self.ref_state_idx], reference[self.ref_idx]) + self.feedforward(
             state)
-        if self.action_space.low[0] <= self.action[0] <= self.action_space.high[0]:
+        if self.action_limit_low <= self.action[0] <= self.action_limit_high:
             self.controller.integrate(state[self.ref_state_idx], reference[self.ref_idx])
+        else:
+            self.action[0] = np.clip(self.action[0], self.action_limit_low, self.action_limit_high)
+
         if self.control_e:
             ref_e = self.ref_e if not self.ref_e_idx else reference[self.ref_e_idx]
             self.action[1] = self.controller_e.control(state[self.i_idx], ref_e)
-            if self.action_space.low[1] <= self.action[1] <= self.action_space.high[1]:
+            if self.action_e_limit_low <= self.action[1] <= self.action_e_limit_high:
                 self.controller_e.integrate(state[self.i_idx], ref_e)
+            else:
+                self.action[1] = np.clip(self.action[1], self.action_e_limit_low, self.action_e_limit_high)
+
         self.plot(self.external_ref_plots, self.state_names)
-        return np.clip(self.action, self.action_space.low, self.action_space.high)
+        return self.action
 
     def set_ref(self):
         return dict(ref_state=[], ref_value=[])
@@ -504,6 +516,10 @@ class Cascaded_Controller(Controller):
         mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_e = None if 'psi_e' not in mp.keys() else mp['psi_e']
         self.l_e = None if 'l_e_prime' not in mp.keys() else mp['l_e_prime']
+        self.action_limit_low = self.action_space.low[0] * self.nominal_values[self.u_idx] / self.limit[self.u_idx]
+        self.action_limit_high = self.action_space.high[0] * self.nominal_values[self.u_idx] / self.limit[self.u_idx]
+        self.state_limit_low = self.state_space.low * self.nominal_values / self.limit
+        self.state_limit_high = self.state_space.high * self.nominal_values / self.limit
 
         if self.control_e:
             assert len(stages) == 2, 'Controller design is not completely'
@@ -513,6 +529,10 @@ class Cascaded_Controller(Controller):
                                                                                       control_e=True,
                                                                                       **controller_kwargs)
             stages = stages[0]
+            u_e_idx = self.state_names.index('u_e')
+            self.action_e_limit_low = self.action_space.low[1] * self.nominal_values[u_e_idx] / self.limit[u_e_idx]
+            self.action_e_limit_high = self.action_space.high[1] * self.nominal_values[u_e_idx] / self.limit[u_e_idx]
+
         else:
             assert len(ref_states) <= 1, 'Too many referenced states'
 
@@ -537,32 +557,30 @@ class Cascaded_Controller(Controller):
         self.ref[-1] = reference[self.ref_idx]
         for i in range(len(self.controller_stages) - 1, 0, -1):
             self.ref[i - 1] = self.controller_stages[i].control(state[self.ref_state_idx[i]], self.ref[i])
-            if (0.85 * self.state_space.low[self.ref_state_idx[i - 1]] <= self.ref[i - 1] <= 0.85 *
-                self.state_space.high[
-                    self.ref_state_idx[i - 1]]) and self.stage_type[i]:
+            if (self.state_limit_low[self.ref_state_idx[i - 1]] <= self.ref[i - 1] <= self.state_limit_high[self.ref_state_idx[i - 1]]) and self.stage_type[i]:
                 self.controller_stages[i].integrate(state[self.ref_state_idx[i]], reference[0])
             elif self.stage_type[i]:
-                self.ref[i - 1] = np.clip(self.ref[i - 1], 0.85 * self.state_space.low[self.ref_state_idx[i - 1]],
-                                          0.85 * self.state_space.high[self.ref_state_idx[i - 1]])
+                self.ref[i - 1] = np.clip(self.ref[i - 1], self.state_limit_low[self.ref_state_idx[i - 1]],
+                                          self.state_limit_high[self.ref_state_idx[i - 1]])
 
         action = self.controller_stages[0].control(state[self.ref_state_idx[0]], self.ref[0])
         if self.stage_type[0]:
             action += self.feedforward(state)
 
-            if self.action_space.low[0] <= action <= self.action_space.high[0]:
+            if self.action_limit_low <= action <= self.action_limit_high:
                 self.controller_stages[0].integrate(state[self.ref_state_idx[0]], self.ref[0])
                 action = [action]
             else:
-                action = np.clip([action], self.action_space.low[0], self.action_space.high[0])
+                action = np.clip([action], self.action_limit_low, self.action_limit_high)
 
         if self.control_e:
             ref_e = self.ref_e if not self.ref_e_idx else reference[self.ref_e_idx]
             action_u_e = self.controller_e.control(state[self.i_e_idx], ref_e)
             if self.stage_type[0]:
                 action = np.append(action, action_u_e)
-                if self.action_space.low[1] <= action[1] <= self.action_space.high[1]:
+                if self.action_e_limit_low <= action[1] <= self.action_e_limit_high:
                     self.controller_e.integrate(state[self.i_e_idx], ref_e)
-                action = np.clip(action, self.action_space.low, self.action_space.high)
+                action = np.clip(action, self.action_e_limit_low, self.action_e_limit_high)
             else:
                 action = np.array([action, action_u_e], dtype='object')
         self.plot(self.external_ref_plots, self.state_names)
@@ -677,7 +695,7 @@ class FOC_Controller(Controller):
 
 
 class Cascaded_FOC_Controller(Controller):
-    def __init__(self, environment, stages, ref_states, external_ref_plots=[], plot_torque=True, plot_modulation=False, update_interval=1000, **controller_kwargs):
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], plot_torque=True, plot_modulation=False, update_interval=1000, analytical=False, **controller_kwargs):
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
         self.backward_transformation = (lambda quantities, eps: t32(q(quantities[::-1], eps)))
@@ -729,7 +747,7 @@ class Cascaded_FOC_Controller(Controller):
         if self.torque_control:
             self.ref_state_idx.append(self.torque_idx)
 
-            self.torque_controller = MTPC(environment, plot_torque, plot_modulation, update_interval)
+            self.torque_controller = MTPC(environment, plot_torque, plot_modulation, update_interval, analytical)
 
         if self.omega_control:
             self.ref_state_idx.append(self.omega_idx)
@@ -842,7 +860,7 @@ class Cascaded_FOC_Controller(Controller):
             self.torque_controller.reset()
 
 class MTPC:
-    def __init__(self, environment, plot_torque=True, plot_modulation=False, update_interval=1000):
+    def __init__(self, environment, plot_torque=True, plot_modulation=False, update_interval=1000, analytical=False):
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.limit = environment.physical_system.limits
         self.nominal_values = environment.physical_system.nominal_state
@@ -917,9 +935,10 @@ class MTPC:
         def mtpf():
             psi_i_d_q = []
             self.psi_max_mtpf = np.sqrt((self.psi_p + l_d * self.nominal_values[self.i_sd_idx]) ** 2 + (l_q * self.nominal_values[self.i_sq_idx]) ** 2)
-            self.psi_count_mtpf = 2001
+            self.psi_count_mtpf = 3000
+
             psi = np.linspace(0, self.psi_max_mtpf, self.psi_count_mtpf)
-            i_d = np.linspace(-self.nominal_values[self.i_sd_idx], 0, 1500)
+            i_d = np.linspace(-self.nominal_values[self.i_sd_idx], 0, 3000)
             i_d_best = 0
             i_q_best = 0
 
@@ -951,6 +970,7 @@ class MTPC:
                             i_q_best = i_q[i_idx]
 
                     psi_i_d_q.append([psi_, t, i_d_best, i_q_best])
+
 
             psi_i_d_q = np.array(psi_i_d_q)
             psi_i_d_q_neg = np.rot90(np.array([psi_i_d_q[:, 0], -psi_i_d_q[:, 1], psi_i_d_q[:, 2], -psi_i_d_q[:, 3]]))
@@ -984,12 +1004,40 @@ class MTPC:
 
         self.psi_min = np.amin(psi)
         self.psi_max = np.amax(psi)
-        self.psi_count = 601
+        self.psi_count = 600
 
-        self.t_grid, self.psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count), self.psi_min:self.psi_max:np.complex(self.psi_count)]
+        if analytical:
+            res = []
+            for psi in np.linspace(self.psi_min, self.psi_max, self.psi_count):
+                ret = []
+                for T in np.linspace(self.t_min, self.t_max, self.t_count):
+                    poly = [l_d ** 2 * (l_d - l_q) ** 2,
+                            2 * l_d ** 2 * (l_d - l_q) * self.psi_p + 2 * l_d * self.psi_p * (l_d - l_q) ** 2,
+                            l_d ** 2 * self.psi_p ** 2 + 4 * l_d * self.psi_p ** 2 * (l_d - l_q) + (self.psi_p ** 2 - psi ** 2) * (
+                                        l_d - l_q) ** 2,
+                            2 * l_q * self.psi_p ** 3 + 2 * (self.psi_p ** 2 - psi ** 2) * self.psi_p * (l_d - l_q),
+                            (self.psi_p ** 2 - psi ** 2) * self.psi_p ** 2 + (l_q * 2 * T / (3 * self.p)) ** 2]
 
-        self.i_q_inter = griddata((t, psi), i_q, (self.t_grid, self.psi_grid), method='linear')
-        self.i_d_inter = griddata((t, psi), i_d, (self.t_grid, self.psi_grid), method='linear')
+                    sol = np.roots(poly)
+                    i_d_ = np.real(sol[-1])
+                    i_q_ = 2 * T / (3 * self.p * (self.psi_p + (l_d - l_q) * i_d_))
+                    ret.append([T, psi, i_d_, i_q_])
+                res.append(ret)
+            res = np.array(res)
+            self.t_grid = res[:, :, 0]
+            self.psi_grid = res[:, :, 1]
+            self.i_d_inter = res[:, :, 2].T
+            self.i_q_inter = res[:, :, 3].T
+            self.i_d_inter_plot = self.i_d_inter.T
+            self.i_q_inter_plot = self.i_q_inter.T
+
+        else:
+            self.t_grid, self.psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count), self.psi_min:self.psi_max:np.complex(self.psi_count)]
+
+            self.i_q_inter = griddata((t, psi), i_q, (self.t_grid, self.psi_grid), method='linear')
+            self.i_d_inter = griddata((t, psi), i_d, (self.t_grid, self.psi_grid), method='linear')
+            self.i_d_inter_plot = self.i_d_inter
+            self.i_q_inter_plot = self.i_q_inter
 
         self.k = 0
         self.update_interval = update_interval
@@ -1006,9 +1054,10 @@ class MTPC:
             self.i_d_plot = plt.subplot2grid((2, 3), (0, 2), projection='3d')
             self.torque_plot = plt.subplot2grid((2, 3), (1, 1))
             self.i_q_plot = plt.subplot2grid((2, 3), (1, 2), projection='3d')
+            mtpc_i_idx = np.where(np.sqrt(np.power(self.mtpc[:, 1], 2) + np.power(self.mtpc[:, 2], 2)) <= self.nominal_values[self.i_sd_idx])
 
             self.i_d_q_characteristic_.set_title('$i_{d,q_{ref}}$')
-            self.i_d_q_characteristic_.plot(self.mtpc[:, 1], self.mtpc[:, 2], label='MTPC', c='tab:orange')
+            self.i_d_q_characteristic_.plot(self.mtpc[mtpc_i_idx, 1][0], self.mtpc[mtpc_i_idx, 2][0], label='MTPC', c='tab:orange')
             self.i_d_q_characteristic_.plot(self.mtpf[:, 2], self.mtpf[:, 3], label='MTPF', c='tab:green')
             self.i_d_q_characteristic_.plot(self.i_d_max, self.i_q_max, label='$i_{max}$', c='tab:red')
             self.i_d_q_characteristic_.plot([], [], label='$i_{d,q}$', c='tab:blue')
@@ -1027,7 +1076,7 @@ class MTPC:
             self.psi_plot.set_ylim(bottom=0)
             self.psi_plot.legend(loc=2)
 
-            self.torque_plot.set_title('$T_{max}(\Psi)$')
+            self.torque_plot.set_title('$T_{max}(\Psi_{max})$')
             self.torque_plot.plot(self.mtpf[:, 0], self.mtpf[:, 1], label='$T_{max}(\Psi)$', c='tab:orange')
             self.torque_plot.plot([], [], label='$T(\Psi)$', c='tab:blue')
             self.torque_plot.set_xlabel('$\Psi$ / Vs')
@@ -1036,18 +1085,19 @@ class MTPC:
             self.torque_plot.legend(loc=2)
 
 
-            self.i_q_plot.plot_surface(self.t_grid, self.psi_grid, self.i_q_inter, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_q_inter),
-                            vmax=np.nanmax(self.i_q_inter))
+            self.i_q_plot.plot_surface(self.t_grid, self.psi_grid, self.i_q_inter_plot, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_q_inter_plot),
+                            vmax=np.nanmax(self.i_q_inter_plot))
             self.i_q_plot.set_ylabel('$\Psi / Vs$')
             self.i_q_plot.set_xlabel('$T / Nm$')
             self.i_q_plot.set_title('$i_q(T, \Psi)$')
 
 
-            self.i_d_plot.plot_surface(self.t_grid, self.psi_grid, self.i_d_inter, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_d_inter),
-                             vmax=np.nanmax(self.i_d_inter))
+            self.i_d_plot.plot_surface(self.t_grid, self.psi_grid, self.i_d_inter_plot, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_d_inter_plot),
+                             vmax=np.nanmax(self.i_d_inter_plot))
             self.i_d_plot.set_ylabel('$\Psi / Vs$')
             self.i_d_plot.set_xlabel('$T / Nm$')
             self.i_d_plot.set_title('$i_d(T, \Psi)$')
+
             self.torque_list = []
             self.psi_list = []
             self.k_list = []
@@ -1100,6 +1150,7 @@ class MTPC:
         return int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count_mtpc - 1)))
 
     def control(self, state, torque):
+
         psi = self.mtpc[self.get_t_idx_mtpc(torque), 3]
         psi_max_ = self.modulation_control(state)
         psi_max = min(psi, psi_max_)
@@ -1113,8 +1164,14 @@ class MTPC:
         else:
             t_idx = self.get_t_idx(torque)
             psi_idx = self.get_psi_idx(psi_max)
-            i_d = self.i_d_inter[t_idx, psi_idx]
-            i_q = self.i_q_inter[t_idx, psi_idx]
+
+            if self.i_d_inter[t_idx, psi_idx] <= self.mtpf[psi_max_idx, 2]:
+                i_d = self.mtpf[psi_max_idx, 2]
+                i_q = np.sign(torque) * np.abs(self.mtpf[psi_max_idx, 3])
+                torque = np.sign(torque) * t_max
+            else:
+                i_d = self.i_d_inter[t_idx, psi_idx]
+                i_q = self.i_q_inter[t_idx, psi_idx]
 
         if self.plot_torque:
             if self.k == 0:
