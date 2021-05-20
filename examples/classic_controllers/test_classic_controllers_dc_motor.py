@@ -33,6 +33,8 @@ if __name__ == '__main__':
         states = ['omega', 'torque', 'i_a', 'i_e', 'u']
     elif motor_type == 'ExtExDc':
         states = ['omega', 'torque', 'i_a', 'i_e', 'u_a', 'u_e']
+    else:
+        raise KeyError(motor_type + ' is not available')
 
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
