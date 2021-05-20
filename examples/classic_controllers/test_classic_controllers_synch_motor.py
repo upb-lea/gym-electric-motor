@@ -10,59 +10,38 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    ref_states = ['torque']
+    ref_states = ['omega']
+    reference_generator = rg.SinusoidalReferenceGenerator(reference_state=ref_states[0], frequency_range=(0.4, 0.5), offset_range=(0.7, 0.75), amplitude_range=(0.2, 0.3), episode_lengths=30000)
 
-    q_generator = rg.SwitchedReferenceGenerator(
-        sub_generators=[
-            rg.TriangularReferenceGenerator(reference_state=ref_states[0], amplitude_range=(0, 0.4), offset_range=(0, 0.3)),
-            rg.WienerProcessReferenceGenerator(reference_state=ref_states[0]),
-            rg.StepReferenceGenerator(reference_state=ref_states[0], amplitude_range=(0, 0.4), offset_range=(0, 0.3)),
-            rg.SinusoidalReferenceGenerator(reference_state=ref_states[0], amplitude_range=(0, 0.4), offset_range=(0, 0.3))],
-        p=[0.3, 0.2, 0.3, 0.2], super_episode_length=(1000, 10000)
-    )
-
-    '''
-    d_generator = rg.SwitchedReferenceGenerator(
-        sub_generators=[
-            rg.TriangularReferenceGenerator(reference_state='i_sd', amplitude_range=(0, 0.3), offset_range=(0, 0.2)),
-            rg.WienerProcessReferenceGenerator(reference_state='i_sd'),
-            rg.StepReferenceGenerator(reference_state='i_sd', amplitude_range=(0, 0.3), offset_range=(0, 0.2)),
-            rg.SinusoidalReferenceGenerator(reference_state='i_sd', amplitude_range=(0, 0.3), offset_range=(0, 0.2)),
-            rg.ConstReferenceGenerator(reference_state='i_sd', value=0)],
-        p=[0.25, 0.1, 0.25, 0.2, 0.2], super_episode_length=(1000, 10000)
-    )
     
-    d_generator = rg.ConstReferenceGenerator(reference_state=ref_states[0], reference_value=0)
-    
-    reference_generator = rg.MultipleReferenceGenerator([d_generator, q_generator])
-    '''
-    reference_generator = q_generator
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']]
-    matplotlib.use('TkAgg')
+    matplotlib.use('qt5agg')
 
     env = gem.make(
         #'Finite-TC-SynRM-v0', visualization=MotorDashboard(additional_plots=external_ref_plots),
         #'Finite-TC-PMSM-v0', visualization=MotorDashboard(additional_plots=external_ref_plots),
 
         #'AbcCont-TC-SynRM-v0', visualization=MotorDashboard(additional_plots=external_ref_plots),
-        'AbcCont-TC-PMSM-v0', visualization=MotorDashboard(additional_plots=external_ref_plots),
+        'AbcCont-TC-PMSM-v0', visualization=MotorDashboard(additional_plots=external_ref_plots, update_interval=1000),
+
         ode_solver='scipy.solve_ivp',
-        motor=dict(nominal_values=dict(omega=12e3 * np.pi / 30, torque=0.0, i=240, epsilon=np.pi, u=300),
-                   motor_parameter=dict(p=3, l_d=0.37e-3, l_q=1.2e-3, j_rotor=0.3883, r_s=18e-3, psi_p=45e-3,)),
-        #load=ConstantSpeedLoad(10e3 * np.pi / 30),
-        load=ExternalSpeedLoad(lambda t: (np.sin(2 * np.pi * 5 * t) + 1) * 5e3 * np.pi / 30),
+        motor=dict(nominal_values=dict(omega=10e3 * np.pi / 30, torque=95.0, i=240, epsilon=np.pi, u=300),
+                   motor_parameter=dict(p=3, l_d=0.37e-3, l_q=1.2e-3, j_rotor=0.03883, r_s=18e-3, psi_p=45e-3),
+                   limit_values=dict(omega=12e3 * np.pi / 30, torque=100, i=280, u=320)),
+        #load=ConstantSpeedLoad(7.8e3 * np.pi / 30),
+        #load=ExternalSpeedLoad(lambda t: ((np.sin(2 * np.pi * 5 * t) + 1) * 2e3 + 5e3) * np.pi / 30),
+        load=PolynomialStaticLoad(),
         reference_generator=reference_generator,
     )
 
-    controller = Controller.make(env, external_ref_plots=external_ref_plots, plot_torque=True)
+    controller = Controller.make(env, external_ref_plots=external_ref_plots, plot_torque=True, plot_modulation=False, analytical=True)
     state, reference = env.reset()
     steps = 10001
     cum_rew = 0
 
     for i in range(steps):
-
-        action = controller.control(state, reference)
         env.render()
+        action = controller.control(state, reference)
         (state, reference), reward, done, _ = env.step(action)
         if done:
             env.reset()
@@ -70,5 +49,4 @@ if __name__ == '__main__':
         cum_rew += reward
     print(cum_rew)
     env.close()
-
     plt.show(block=True)
