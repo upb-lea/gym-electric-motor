@@ -1151,7 +1151,8 @@ class MTPC:
 
     def control(self, state, torque):
 
-        psi = self.mtpc[self.get_t_idx_mtpc(torque), 3]
+        psi_idx_ = self.get_t_idx_mtpc(torque)
+        psi = self.mtpc[psi_idx_, 3]
         psi_max_ = self.modulation_control(state)
         psi_max = min(psi, psi_max_)
 
@@ -1172,6 +1173,9 @@ class MTPC:
             else:
                 i_d = self.i_d_inter[t_idx, psi_idx]
                 i_q = self.i_q_inter[t_idx, psi_idx]
+                if i_d > self.mtpc[psi_idx_, 1]:
+                    i_d = self.mtpc[psi_idx_, 1]
+                    i_q = self.mtpc[psi_idx_, 2]
 
         if self.plot_torque:
             if self.k == 0:
