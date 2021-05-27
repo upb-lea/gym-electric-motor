@@ -34,7 +34,7 @@ if __name__ == '__main__':
         reference_generator=reference_generator,
     )
 
-    controller = Controller.make(env, external_ref_plots=external_ref_plots, plot_torque=True, plot_modulation=False, analytical=True)
+    controller = Controller.make(env, external_ref_plots=external_ref_plots, torque_control='online')
     state, reference = env.reset()
     steps = 10001
     cum_rew = 0
