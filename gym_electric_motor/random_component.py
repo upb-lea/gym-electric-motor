@@ -16,33 +16,35 @@ class RandomComponent:
     Everytime a random number is used, it has to be drawn from the ``random_generator``.
 
     Example:
-        >>>import gym_electric_motor as gem
-        >>>import numpy as np
+
+        >>> import gym_electric_motor as gem
+        >>> import numpy as np
         >>>
         >>>
-        >>>class MyRandomReferenceGenerator(gem.ReferenceGenerator, gem.RandomComponent):
+        >>> class MyRandomReferenceGenerator(gem.ReferenceGenerator, gem.RandomComponent):
         >>>
-        >>>    def __init__(self):
-        >>>        gem.ReferenceGenerator.__init__(self)
-        >>>        gem.RandomComponent.__init__(self)
-        >>>        self.my_random_var = np.array([0.0]) # Only for exemplary purpose
-        >>>        # Further custom initialization
-        >>>        # ...
+        >>>     def __init__(self):
+        >>>         gem.ReferenceGenerator.__init__(self)
+        >>>         gem.RandomComponent.__init__(self)
+        >>>         self.my_random_var = np.array([0.0]) # Only for exemplary purpose
+        >>>         # Further custom initialization
+        >>>         # ...
         >>>
-        >>>    def reset(self, initial_state=None, initial_reference=None):
-        >>>        self.next_generator()
-        >>>        # Reset further components states
+        >>>     def reset(self, initial_state=None, initial_reference=None):
+        >>>         self.next_generator()
+        >>>         # Reset further components states
         >>>
-        >>>    def get_reference(self, state, *_, **__):
-        >>>        # Draw from the classes random_generator
-        >>>        self.my_random_var = self.random_generator.normal(size=1)
-        >>>        # Do something with the random variable e.g.:
-        >>>        return np.ones_like(state) * self.my_random_var
+        >>>     def get_reference(self, state, *_, **__):
+        >>>         # Draw from the classes random_generator
+        >>>         self.my_random_var = self.random_generator.normal(size=1)
+        >>>         # Do something with the random variable e.g.:
+        >>>         return np.ones_like(state) * self.my_random_var
         >>>
-        >>>    def get_reference_observation(self, state, *_, **__):
-        >>>        # Do sth.
-        >>>        return self.my_random_var
+        >>>     def get_reference_observation(self, state, *_, **__):
+        >>>         # Do sth.
+        >>>         return self.my_random_var
         >>>
+
     """
 
     @property
@@ -71,8 +73,8 @@ class RandomComponent:
 
         Returns:
             List(int): A list containing all seeds within this RandomComponent. In general, this list has length 1.
-                If the RandomComponent holds further RandomComponent instances, the list has to contain also these
-                entropies. The entropy of this instance has to be placed always at first place.
+            If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+            entropies. The entropy of this instance has to be placed always at first place.
         """
         if seed is None:
             seed = np.random.SeedSequence()
