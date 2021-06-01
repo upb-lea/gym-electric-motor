@@ -88,8 +88,8 @@ class SynchronousReluctanceMotor(SynchronousMotor):
                                 'r_s': 0.57
                                 }
 
-    _default_nominal_values = {'i': 10, 'torque': 0, 'omega': 3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 100}
-    _default_limits = {'i': 13, 'torque': 0, 'omega': 4.3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 100}
+    _default_nominal_values = {'i': 10, 'torque': 0, 'omega': 3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 80}
+    _default_limits = {'i': 18, 'torque': 0, 'omega': 4.3e3 * np.pi / 30, 'epsilon': np.pi, 'u': 80}
     _default_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                             'interval': None,
                             'random_init': None,

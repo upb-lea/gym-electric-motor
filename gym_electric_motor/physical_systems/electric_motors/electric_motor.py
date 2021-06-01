@@ -242,13 +242,13 @@ class ElectricMotor(RandomComponent):
                 self._initial_states.update(random_states)
 
             elif random_dist in ['normal', 'gaussian']:
-                # ToDo: How to handle the tuncnorm correctly?
                 # specific input or middle of interval
                 mue = random_params[0] or (upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(
-                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys()))
+                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())),
+                    random_state=self.seed_sequence.pool[0]
                 )
                 # writing initial values in initial_states dict
                 random_states = {

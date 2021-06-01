@@ -144,7 +144,10 @@ class MechanicalLoad(RandomComponent):
                 sigma = random_params[1] or 1
                 a = (lower_bound - mue) / sigma
                 b = (upper_bound - mue) / sigma
-                initial_value = truncnorm.rvs(a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())))
+                initial_value = truncnorm.rvs(
+                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())),
+                    random_state=self.seed_sequence.pool[0]
+                )
                 random_states = {
                     state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
                 }
