@@ -125,7 +125,7 @@ class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         """
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContOneQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
                 load_parameter=dict(a=0.05, b=0.01, c=0.0, j_load=1e-4)
