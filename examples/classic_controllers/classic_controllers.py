@@ -918,7 +918,7 @@ class MTPC:
                     i_q = i_q_(i_d, t)
                 else:
                     i_q = np.linspace(-2.5*self.limit[self.i_sq_idx], 2.5*self.limit[self.i_sq_idx], 2000)
-                    if l_d == l_q:
+                    if self.l_d == self.l_q:
                         i_d = 0
                     else:
                         i_d = i_d_(i_q, t)
@@ -982,9 +982,11 @@ class MTPC:
 
         self.mtpc = mtpc()
         self.mtpf = mtpf()
+
         self.psi_t = np.sqrt(
             np.power(self.psi_p + self.l_d * self.mtpc[:, 1], 2) + np.power(self.l_q * self.mtpc[:, 2], 2))
         self.psi_t = np.array([self.mtpc[:, 0], self.psi_t])
+
         self.i_q_max = np.linspace(-self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx], 1000)
         self.i_d_max = -np.sqrt(self.nominal_values[self.i_sq_idx] ** 2 - np.power(self.i_q_max, 2))
 
@@ -1014,16 +1016,7 @@ class MTPC:
             for psi in np.linspace(self.psi_min, self.psi_max, self.psi_count):
                 ret = []
                 for T in np.linspace(self.t_min, self.t_max, self.t_count):
-                    poly = [self.l_d ** 2 * (self.l_d - self.l_q) ** 2,
-                            2 * self.l_d ** 2 * (self.l_d - self.l_q) * self.psi_p + 2 * self.l_d * self.psi_p * (self.l_d - self.l_q) ** 2,
-                            self.l_d ** 2 * self.psi_p ** 2 + 4 * self.l_d * self.psi_p ** 2 * (self.l_d - self.l_q) + (self.psi_p ** 2 - psi ** 2) * (
-                                        self.l_d - self.l_q) ** 2,
-                            2 * self.l_q * self.psi_p ** 3 + 2 * (self.psi_p ** 2 - psi ** 2) * self.psi_p * (self.l_d - self.l_q),
-                            (self.psi_p ** 2 - psi ** 2) * self.psi_p ** 2 + (self.l_q * 2 * T / (3 * self.p)) ** 2]
-
-                    sol = np.roots(poly)
-                    i_d_ = np.real(sol[-1])
-                    i_q_ = 2 * T / (3 * self.p * (self.psi_p + (self.l_d - self.l_q) * i_d_))
+                    i_d_, i_q_ = self.solve_analytical(T, psi)
                     ret.append([T, psi, i_d_, i_q_])
                 res.append(ret)
             res = np.array(res)
@@ -1117,12 +1110,12 @@ class MTPC:
             self.i_d_list = []
             self.i_q_list = []
 
-    def get_i_d_q(self, torque, psi, psi_idx):
+    def solve_analytical(self, torque, psi):
         poly = [self.l_d ** 2 * (self.l_d - self.l_q) ** 2,
                 2 * self.l_d ** 2 * (self.l_d - self.l_q) * self.psi_p + 2 * self.l_d * self.psi_p * (
-                            self.l_d - self.l_q) ** 2,
+                        self.l_d - self.l_q) ** 2,
                 self.l_d ** 2 * self.psi_p ** 2 + 4 * self.l_d * self.psi_p ** 2 * (self.l_d - self.l_q) + (
-                            self.psi_p ** 2 - psi ** 2) * (
+                        self.psi_p ** 2 - psi ** 2) * (
                         self.l_d - self.l_q) ** 2,
                 2 * self.l_q * self.psi_p ** 3 + 2 * (self.psi_p ** 2 - psi ** 2) * self.psi_p * (self.l_d - self.l_q),
                 (self.psi_p ** 2 - psi ** 2) * self.psi_p ** 2 + (self.l_q * 2 * torque / (3 * self.p)) ** 2]
@@ -1130,29 +1123,35 @@ class MTPC:
         sol = np.roots(poly)
         i_d = np.real(sol[-1])
         i_q = 2 * torque / (3 * self.p * (self.psi_p + (self.l_d - self.l_q) * i_d))
+        return i_d, i_q
+
+    def get_i_d_q(self, torque, psi, psi_idx):
+        i_d, i_q = self.solve_analytical(torque, psi)
         if i_d > self.mtpc[psi_idx, 1]:
             i_d = self.mtpc[psi_idx, 1]
             i_q = self.mtpc[psi_idx, 2]
         return i_d, i_q
 
     def get_t_idx(self, torque):
+        torque = np.clip(torque, self.t_min, self.t_max)
         return int(round((torque - self.t_min) / (self.t_max - self.t_min) * (self.t_count - 1)))
 
     def get_psi_idx(self, psi):
+        psi = np.clip(psi, self.psi_min, self.psi_max)
         return int(round((psi - self.psi_min) / (self.psi_max - self.psi_min) * (self.psi_count - 1)))
 
     def get_psi_idx_mtpf(self, psi):
-        return int((self.psi_count_mtpf - 1) - round(psi / self.psi_max_mtpf * (self.psi_count_mtpf - 1)))
+        return np.clip(int((self.psi_count_mtpf - 1) - round(psi / self.psi_max_mtpf * (self.psi_count_mtpf - 1))), 0, self.psi_count_mtpf)
 
     def get_t_idx_mtpc(self, torque):
-        return int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count_mtpc - 1)))
+        return np.clip(int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count_mtpc - 1))), 0, self.t_count_mtpc)
 
     def control(self, state, torque):
 
         psi_idx_ = self.get_t_idx_mtpc(torque)
-        psi = self.mtpc[psi_idx_, 3]
+        psi_opt = self.mtpc[psi_idx_, 3]
         psi_max_ = self.modulation_control(state)
-        psi_max = min(psi, psi_max_)
+        psi_max = min(psi_opt, psi_max_)
 
         psi_max_idx = self.get_psi_idx_mtpf(psi_max)
         t_max = np.abs(self.mtpf[psi_max_idx, 1])
