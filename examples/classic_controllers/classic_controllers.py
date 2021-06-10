@@ -13,9 +13,25 @@ from scipy.interpolate import griddata
 
 
 class Controller:
+    """
+    This is the base class for every controller along with the motor environments.
+    """
 
     @classmethod
     def make(cls, environment, stages=None, **controller_kwargs):
+        """
+
+        Args:
+            environment: gym-electric-motor environment to be controlled
+            stages: stages of the controller, if no stages are passed, the controller is automatically designed und tuned
+            **controller_kwargs: setting parameters for the controller and visualization
+
+        Returns:
+            fully designed controller for the control of the gym-electric-motor environment, which is called using the
+            control function
+            the inputs of the control function are the state and the reference, both are given by the environment
+
+        """
 
         controller_kwargs = cls.reference_states(environment, **controller_kwargs)
         cls.visualization, controller_kwargs = cls.get_visualization(environment, **controller_kwargs)
@@ -35,6 +51,16 @@ class Controller:
         return controller
 
     def control(self, state, reference):
+        """
+        Main function of the controller class, which is called by the user.
+        Args:
+            state: motor states given by the gym-electric-motor environment
+            reference: reference for the referenced states given by the gym-electric-motor environment
+
+        Returns:
+            input voltages for the environment
+
+        """
         pass
 
     def set_ref(self):
@@ -44,6 +70,20 @@ class Controller:
         pass
 
     def plot(self, external_reference_plots, state_names):
+        """
+        The function visualizes the states and the associated reference values, including the reference values
+        calculated by the stages of the controller.
+
+        Args:
+            external_reference_plots:
+                This must be a subcalss of the StatePlot class from the gym-electric-motor visualization. It needs the functions
+                set_reference(), set_env() and external_reference(). An example is given by the class ExternallyReferencedStatePlot.
+                The class must also be passed to the environment in the make function as a visualization.
+
+            state_names:
+                names of the environment states
+        """
+
         if self.visualization:
             external_refs = self.set_ref()
             external_ref_plots = list(external_reference_plots)
@@ -120,6 +160,10 @@ class Controller:
 
     @staticmethod
     def automated_controller_design(environment, **controller_kwargs):
+        """
+        This function automatically designs the controller based on the given motor environment and control task.
+        """
+
         action_space = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
         stages = []
@@ -174,6 +218,10 @@ class Controller:
 
     @staticmethod
     def automated_gain(environment, stages, controller_type, **controller_kwargs):
+        """
+        This function automatically parameterizes a given controller design if the parameter automated_gain is True
+        (default True), based on the design according to the Symmetric Optimum.
+        """
 
         ref_states = controller_kwargs['ref_states']
         mp = environment.physical_system.electrical_motor.motor_parameter
@@ -355,9 +403,9 @@ class Controller:
 
                     stages = [[stage_d], stage_q]
 
-
                 else:
                     if ('omega' in ref_states or 'torque' in ref_states) and _controllers[stages[3][0]['controller_type']][1] == ContinuousController:
+
                         p_gain = environment.physical_system.mechanical_load.j_total / (
                                     1.5 * a ** 2 * mp['p'] * np.abs(mp['l_d'] - mp['l_q'])) / i_sq_lim * omega_lim
                         i_gain = p_gain / (1.5 * environment.physical_system.tau * a)
@@ -374,6 +422,12 @@ class Controller:
 
 
 class ContinuousActionController(Controller):
+    """
+        This class performs a current-control for all continuous DC motor systems. By default, a PI controller is used
+        for current control. An EMF compensation is applied. For the Externaly Excited DC motor, the excitation current
+        is also controlled.
+    """
+
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
         assert type(environment.action_space) is Box and type(
             environment.physical_system) is DcMotorSystem, 'No suitable action space for Continuous Action Controller'
@@ -448,6 +502,11 @@ class ContinuousActionController(Controller):
 
 
 class DiscreteActionController(Controller):
+    """
+        This class is used for current control of all discrete DC motor systems. By default, a three-point controller is
+        used. For the externally excited DC motor, the excitation current is also controlled.
+    """
+
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
 
         assert type(environment.action_space) in [Discrete, MultiDiscrete] and type(
@@ -497,6 +556,13 @@ class DiscreteActionController(Controller):
 
 
 class Cascaded_Controller(Controller):
+    """
+        This class is used for cascaded torque and speed control of all DC motor environments. Each stage can contain
+        continuous or discrete controllers. For the Externally Excited DC Motor an additional controller is used for
+        the excitation current. The calculated reference values of the intermediate stages can be inserted into the
+        plots.
+    """
+
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
 
         self.action_space = environment.action_space
@@ -603,6 +669,15 @@ class Cascaded_Controller(Controller):
 
 
 class FOC_Controller(Controller):
+    """
+        This class controls the currents of synchronous motors. In the case of continuous manipulated variables, the
+        control is performed in the rotating dq-coordinates. For this purpose, the two current components are optionally
+        decoupled and two independent current controllers are used.
+        In the case of discrete manipulated variables, control takes place in stator-fixed coordinates. The reference
+        values are converted into these coordinates so that a three-point controller calculates the corresponding
+        manipulated variable for each current component.
+    """
+
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
         assert type(environment.physical_system) is SynchronousMotorSystem, 'No suitable Environment for FOC Controller'
 
@@ -697,7 +772,16 @@ class FOC_Controller(Controller):
 
 
 class Cascaded_FOC_Controller(Controller):
-    def __init__(self, environment, stages, ref_states, external_ref_plots=[], plot_torque=True, plot_modulation=False, update_interval=1000, torque_control='interpolate', **controller_kwargs):
+    """
+        This controller is used for torque or speed control of synchronous motors. The controller consists of an FOC
+        controller for current control, an efficiency-optimized torque controller and an optional speed controller. The
+        current control is equivalent to the current control of the FOC_Controller. The torque controller is based on
+        the Maximum Torque per Current (MTPC) control strategy and the speed controller is designed as a PI-controller
+        by default.
+    """
+
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], plot_torque=True, plot_modulation=False,
+                 update_interval=1000, torque_control='interpolate', **controller_kwargs):
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
         self.backward_transformation = (lambda quantities, eps: t32(q(quantities[::-1], eps)))
@@ -764,7 +848,8 @@ class Cascaded_FOC_Controller(Controller):
                 environment, stages[1][0], **controller_kwargs)
             self.overlayed_controller = [_controllers[stages[1][i]['controller_type']][1].make(
                 environment, stages[1][i], cascaded=True, **controller_kwargs) for i in range(1, len(stages[1]))]
-            self.overlayed_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in range(1, len(stages[1]))]
+            self.overlayed_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
+                                   range(1, len(stages[1]))]
             self.control_type = type(environment.action_space) == Box
             [self.u_sq_0, self.u_sd_0] = [0, 0]
 
@@ -800,8 +885,11 @@ class Cascaded_FOC_Controller(Controller):
                         self.state_space.high[self.ref_state_idx[i]]) and self.overlayed_type[i-2]:
                     self.overlayed_controller[i-2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
                 else:
-                    self.ref[i] = np.clip(self.ref[i], self.nominal_values[self.ref_state_idx[i]] / self.limit[self.ref_state_idx[i]] * self.state_space.low[self.ref_state_idx[i]],
-                                          self.nominal_values[self.ref_state_idx[i]] / self.limit[self.ref_state_idx[i]] * self.state_space.high[self.ref_state_idx[i]])
+                    self.ref[i] = np.clip(self.ref[i], self.nominal_values[self.ref_state_idx[i]] / self.limit[
+                        self.ref_state_idx[i]] * self.state_space.low[self.ref_state_idx[i]],
+                                          self.nominal_values[self.ref_state_idx[i]] / self.limit[
+                                              self.ref_state_idx[i]] * self.state_space.high[self.ref_state_idx[i]])
+
         if self.torque_control:
             torque = self.ref[2] * self.limit[self.torque_idx]
             self.ref[0], self.ref[1] = self.torque_controller.control(state, torque)
@@ -862,6 +950,21 @@ class Cascaded_FOC_Controller(Controller):
             self.torque_controller.reset()
 
 class MTPC:
+    """
+        This class represents the torque controller for cascaded control of synchronous motors.  For low speeds only the
+        current limitation of the motor is important. The current vector to set a desired torque is selected so that the
+        amount of the current vector is minimum (Maximum Torque per Current). For higher speeds, the voltage limitation
+        of the synchronous motor or the actuator must also be taken into account. This is done by converting the available
+        voltage to a speed-dependent maximum flux. An additional modulation controller is used for the flux control. By
+        limiting the flux and the maximum torque per flux (MTPF), an operating point for the flux and the torque is
+        obtained. This is then converted into a current operating point. The conversion can be done by different methods
+        (parameter torque_control). On the one hand, maps can be determined in advance by interpolation or analytically,
+        or the analytical determination can be done online.
+        For the visualization of the operating points, both for the current operating points as well as the flux and
+        torque operating points, predefined plots are available (plot_torque: default True). Also the values of the
+        modulation controller can be visualized (plot_modulation: default False).
+    """
+
     def __init__(self, environment, plot_torque=True, plot_modulation=False, update_interval=1000, torque_control='interpolate'):
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.limit = environment.physical_system.limits
@@ -1296,6 +1399,10 @@ class MTPC:
 
 
 class ContinuousController:
+    """
+        The class ContinuousController is the base for all continuous base controller (P-I-D-Controller)
+    """
+
     @classmethod
     def make(cls, environment, stage, **controller_kwargs):
         controller = _controllers[stage['controller_type']][2](environment, param_dict=stage, **controller_kwargs)
@@ -1329,6 +1436,12 @@ class D_Controller(ContinuousController):
 
 
 class PI_Controller(P_Controller, I_Controller):
+    """
+        The PI-Controller is a combination of the base P-Controller and the base I-Controller. The integrate function
+        will. The integrate function is executed after checking compliance with the limitations in the higher-level
+        controller stage in order to adjust the I-component of the controller accordingly.
+    """
+
     def __init__(self, environment, p_gain=5, i_gain=5, param_dict={}, **controller_kwargs):
         self.tau = environment.physical_system.tau
 
@@ -1345,6 +1458,9 @@ class PI_Controller(P_Controller, I_Controller):
 
 
 class PID_Controller(PI_Controller, D_Controller):
+    """
+        The PID-Controller is a combination of the PI-Controller and the base P-Controller.
+    """
     def __init__(self, environment, p_gain=5, i_gain=5, d_gain=0.005, param_dict={}, **controller_kwargs):
         p_gain = param_dict['p_gain'] if 'p_gain' in param_dict.keys() else p_gain
         i_gain = param_dict['i_gain'] if 'i_gain' in param_dict.keys() else i_gain
@@ -1365,6 +1481,10 @@ class PID_Controller(PI_Controller, D_Controller):
 
 
 class DiscreteController:
+    """
+        The DiscreteController is the base class for the base discrete controllers (OnOff controller and three-point
+        controller).
+    """
     @classmethod
     def make(cls, environment, stage, **controller_kwargs):
         if type(environment.action_space) == Discrete:
@@ -1386,6 +1506,10 @@ class DiscreteController:
 
 
 class OnOff_Controller(DiscreteController):
+    """
+        This is a hysteresis controller with two possible output states.
+    """
+
     def __init__(self, environment, action_space, hysteresis=0.02, param_dict={}, cascaded=False, control_e=False,
                  **controller_kwargs):
         self.hysteresis = hysteresis if 'hysteresis' not in param_dict.keys() else param_dict['hysteresis']
@@ -1411,6 +1535,10 @@ class OnOff_Controller(DiscreteController):
 
 
 class ThreePoint_Controller(DiscreteController):
+    """
+        This is a hysteresis controller with three possible output states.
+    """
+
     def __init__(self, environment, action_space, switch_to_positive_level=0.02, switch_to_negative_level=0.02,
                  switch_to_neutral_from_positive=0.01, switch_to_neutral_from_negative=0.01, param_dict={},
                  cascaded=False, control_e=False, **controller_kwargs):
