@@ -56,6 +56,18 @@ def set_state_array(input_values, state_names):
     return state_array
 
 
+def initialize(base_class, arg, default_class, default_args):
+    if arg is None:
+        return default_class(**default_args)
+    elif isinstance(arg, base_class):
+        return arg
+    elif type(arg) is str:
+        return _registry[base_class][arg]()
+    elif type(arg) is dict:
+        default_args.update(arg)
+        return default_class(**default_args)
+
+
 def instantiate(superclass, instance, **kwargs):
     """
     Instantiation of an instance that inherits from the passed superclass.

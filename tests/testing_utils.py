@@ -148,11 +148,13 @@ def mock_instantiate(superclass, key, **kwargs):
 
 
 class DummyReferenceGenerator(ReferenceGenerator):
-    reference_space = Box(0, 1, shape=(1,))
     _reset_counter = 0
 
     def __init__(self, reference_observation=np.array([1]), reference_state='dummy_state_0', **kwargs):
+        super().__init__()
+        self.reference_space = Box(0, 1, shape=(1,))
         self.kwargs = kwargs
+        self._reference_names = [reference_state]
         self.closed = False
         self.physical_system = None
         self.get_reference_state = None

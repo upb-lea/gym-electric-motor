@@ -11,7 +11,8 @@
 [![codecov](https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg)](https://codecov.io/gh/upb-lea/gym-electric-motor)
 [![PyPI version shields.io](https://img.shields.io/pypi/v/gym-electric-motor.svg)](https://pypi.python.org/pypi/gym-electric-motor/)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE)
-[![DOI](https://zenodo.org/badge/216583232.svg)](https://zenodo.org/badge/latestdoi/216583232)
+[![DOI Zenodo](https://zenodo.org/badge/216583232.svg)](https://zenodo.org/badge/latestdoi/216583232)
+[![DOI JOSS](https://joss.theoj.org/papers/10.21105/joss.02498/status.svg)](https://doi.org/10.21105/joss.02498)
 
 ## Overview
 The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
@@ -34,7 +35,7 @@ A basic routine is as simple as:
 import gym_electric_motor as gem
 
 if __name__ == '__main__':
-    env = gem.make("PMSMDisc-v1")  # instantiate a discretely controlled PMSM
+    env = gem.make("Finite-CC-PMSM-v0")  # instantiate a discretely controlled PMSM
     env.reset()
     for _ in range(1000):
         env.render()  # visualize environment
@@ -84,16 +85,15 @@ Among various DC-motor models, the following three-phase motors - together with 
 The converters can be driven by means of a duty cycle (continuous mode) or switching commands (discrete mode). 
 
 ### Citation
-A whitepaper for this framework is available under [arxiv.org/abs/1910.09434](https://arxiv.org/abs/1910.09434). Please use the following BibTeX entry for citing us:
+A whitepaper for this framework is available under (preprint: [arxiv.org/abs/1910.09434](https://arxiv.org/abs/1910.09434), full-paper: [IEEE-Xplore](https://ieeexplore.ieee.org/document/9241851)). Please use the following BibTeX entry for citing us:
 ```
-@misc{traue2019reinforcement,
-    title={Towards a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},
-    author={Arne Traue and Gerrit Book and Wilhelm Kirchgässner and Oliver Wallscheid},
-    year={2019},
-    eprint={1910.09434},
-    archivePrefix={arXiv},
-    primaryClass={eess.SY}
-}
+@ARTICLE{9241851,  
+author={A. {Traue} and G. {Book} and W. {Kirchgässner} and O. {Wallscheid}},  
+journal={IEEE Transactions on Neural Networks and Learning Systems},   
+title={Toward a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},   
+year={2020},  volume={},  number={},  
+pages={1-10},  
+doi={10.1109/TNNLS.2020.3029573}}
 ```
 
 ### Running Unit Tests with Pytest

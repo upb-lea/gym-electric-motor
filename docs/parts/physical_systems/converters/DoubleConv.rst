@@ -8,7 +8,7 @@ Subconverters must be 'elementary' and can not be Multi Converters.
 Discrete Multi Converter
 '''''''''''''''''''''''''''''''
 
-.. autoclass:: gym_electric_motor.physical_systems.converters.DiscMultiConverter
+.. autoclass:: gym_electric_motor.physical_systems.converters.FiniteMultiConverter
    :members:
    :inherited-members:
 

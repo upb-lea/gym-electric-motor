@@ -6,7 +6,7 @@ Two Quadrant Converters
 Discrete Two Quadrant Converter
 '''''''''''''''''''''''''''''''
 
-.. autoclass:: gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter
+.. autoclass:: gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter
    :members:
    :inherited-members:
 

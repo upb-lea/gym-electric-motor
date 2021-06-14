@@ -38,9 +38,10 @@ class MotorDashboardPlot(Callback):
         self._x_lim = None
         self._y_lim = None
 
+        # All colors of the current matplotlib style. It is recommended to select one of these for plotting the lines.
         self._colors = [cycle['color'] for cycle in plt.rcParams['axes.prop_cycle']]
 
-    def initialize(self, axis, **kwargs):
+    def initialize(self, axis):
         """Initialization of the plot.
 
         It is called by the MotorDashboard. Set labels, legends... when overriding this method.
@@ -48,6 +49,7 @@ class MotorDashboardPlot(Callback):
         Args:
             axis(matplotlib.pyplot.axis): Axis to plot in
         """
+        self._lines = []
         self._axis = axis
         self._axis.grid(True)
         self._axis.set_ylabel(self._label)
@@ -57,7 +59,7 @@ class MotorDashboardPlot(Callback):
         if self._y_lim is not None:
             self._axis.set_ylim(self._y_lim)
 
-    def render(self, **kwargs):
+    def render(self):
         """Update of the plots axis.
 
         The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
@@ -80,6 +82,11 @@ class MotorDashboardPlot(Callback):
         Call *self._axis.set_ylim(lower, upper)* within this method to set the y-axis boundaries.
         """
         pass
+
+    def reset_data(self):
+        """Called by the dashboard, when the figures are reset to generate a new figure."""
+        self._x_data = []
+        self._y_data = []
 
 
 class TimePlot(MotorDashboardPlot):
@@ -145,6 +152,14 @@ class TimePlot(MotorDashboardPlot):
     def set_env(self, env):
         super().set_env(env)
         self._tau = env.physical_system.tau
+        self.reset_data()
+
+    def reset_data(self):
+        super().reset_data()
+        self._k = 0
+        self._t = 0
+        self._reset_memory = []
+        self._violation_memory = []
         self._x_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
         self._x_lim = (0, self._x_data[-1])
 
@@ -162,8 +177,8 @@ class TimePlot(MotorDashboardPlot):
         self._t += self._tau
         self._done = done
 
-    def render(self, **kwargs):
-        super().render(**kwargs)
+    def render(self):
+        super().render()
 
         for violation in self._violation_memory:
             self._axis.axvline(violation, **self._violation_line_cfg)
@@ -197,6 +212,15 @@ class EpisodePlot(MotorDashboardPlot):
     def _set_y_data(self):
         pass
 
+    def reset_data(self):
+        super().reset_data()
+        self._y_data = []
+        self._episode_no = -1
+
+    def _scale_x_axis(self):
+        if len(self._x_data) > 0 and self._axis.get_xlim() != (-1, self._x_data[-1]):
+            self._axis.set_xlim(-1, self._x_data[-1])
+
 
 class StepPlot(MotorDashboardPlot):
 
@@ -206,6 +230,11 @@ class StepPlot(MotorDashboardPlot):
 
     def on_step_begin(self, k, action):
         self._k += 1
+
+    def reset_data(self):
+        super().reset_data()
+        self._y_data = []
+        self._k = 0
 
     def _scale_x_axis(self):
         if self._axis.get_xlim() != (-1, self._x_data[-1]):
