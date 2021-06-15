@@ -1142,7 +1142,6 @@ class MTPC:
         self.update_interval = update_interval
         self.plot_torque = plot_torque
         self.plot_modulation = plot_modulation
-        matplotlib.use('qt5agg')
 
     def intitialize_torque_plot(self):
         if self.plot_torque:
