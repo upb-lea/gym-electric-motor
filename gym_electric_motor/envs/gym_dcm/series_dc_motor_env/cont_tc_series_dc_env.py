@@ -125,7 +125,7 @@ class ContTorqueControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         """
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContOneQuadrantConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),

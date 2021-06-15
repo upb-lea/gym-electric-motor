@@ -123,8 +123,8 @@ class ContCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
         default_subconverters = (
-            ps.ContFourQuadrantConverter,
-            ps.ContFourQuadrantConverter
+            ps.ContFourQuadrantConverter(),
+            ps.ContFourQuadrantConverter()
         )
         physical_system = DcMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
