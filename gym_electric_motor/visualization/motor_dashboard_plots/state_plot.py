@@ -9,7 +9,7 @@ class StatePlot(TimePlot):
     _default_limit_line_cfg = {
         'color': 'red',
         'linestyle': '--',
-        'linewidth': 1
+        'linewidth': .75
     }
 
     # Labels for each state variable.
