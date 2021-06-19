@@ -106,7 +106,7 @@ class TimePlot(MotorDashboardPlot):
     _default_time_line_cfg = {
         'linestyle': '',
         'marker': 'o',
-        'markersize': .5
+        'markersize': 0.75
     }
 
     _default_violation_line_cfg = {

@@ -128,7 +128,7 @@ class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
-                load_parameter=dict(a=0.05, b=0.01, c=0.0, j_load=1e-4)
+                load_parameter=dict(a=0.15, b=0.05, c=0.0, j_load=1e-4)
             )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
@@ -136,7 +136,8 @@ class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             tau=tau
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='omega')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
+            dict(reference_state='omega', sigma_range=(1e-3, 2e-2))
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
