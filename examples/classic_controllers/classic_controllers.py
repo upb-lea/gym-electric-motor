@@ -20,6 +20,7 @@ class Controller:
     @classmethod
     def make(cls, environment, stages=None, **controller_kwargs):
         """
+        This function creates the controller structure and optionally tunes the controller.
 
         Args:
             environment: gym-electric-motor environment to be controlled
@@ -160,49 +161,48 @@ class Controller:
 
     @staticmethod
     def automated_controller_design(environment, **controller_kwargs):
-        """
-        This function automatically designs the controller based on the given motor environment and control task.
-        """
+        """This function automatically designs the controller based on the given motor environment and control task."""
 
         action_space = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
         stages = []
-        if type(environment.physical_system) == DcMotorSystem:
+        if type(environment.physical_system) == DcMotorSystem:  # Checking type of motor
 
-            if 'omega' in ref_states or 'torque' in ref_states:
+            if 'omega' in ref_states or 'torque' in ref_states:  # Checking control task
                 controller_type = 'cascaded_controller'
 
                 for i in range(len(stages), 2):
                     if i == 0:
-                        if action_space == Box:
+                        if action_space == Box:  # Checking type of output stage (finite / cont)
                             stages.append({'controller_type': 'pi_controller'})
                         else:
                             stages.append({'controller_type': 'three_point'})
                     else:
-                        stages.append({'controller_type': 'pi_controller'})
+                        stages.append({'controller_type': 'pi_controller'})  # Adding PI-Controller for overlaid stages
 
             elif 'i' in ref_states or 'i_a' in ref_states:
 
-                if action_space == Discrete or action_space == MultiDiscrete:
+                if action_space == Discrete or action_space == MultiDiscrete:  # Checking type of output stage (finite / cont)
                     stages.append({'controller_type': 'three_point'})
                 elif action_space == Box:
                     stages.append({'controller_type': 'pi_controller'})
                 controller_type = stages[0]['controller_type']
-            if type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor:
+            if type(
+                    environment.physical_system.electrical_motor) == DcExternallyExcitedMotor:  # Add stage for i_e current of the ExtExDC
                 if action_space == Box:
                     stages = [stages, [{'controller_type': 'pi_controller'}]]
                 else:
                     stages = [stages, [{'controller_type': 'three_point'}]]
 
         elif type(environment.physical_system) == SynchronousMotorSystem:
-            if 'i_sq' in ref_states:
-                controller_type = 'foc_controller'
+            if 'i_sq' in ref_states or 'torque' in ref_states:  # Checking control task
+                controller_type = 'foc_controller' if 'i_sq' in ref_states else 'cascaded_foc_controller'
                 if type(environment.action_space) == Discrete:
                     stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
                               [{'controller_type': 'on_off'}]]
                 else:
                     stages = [[{'controller_type': 'pi_controller'}], [{'controller_type': 'pi_controller'}]]
-            elif 'omega' in ref_states or 'torque' in ref_states:
+            elif 'omega' in ref_states:
                 controller_type = 'cascaded_foc_controller'
                 if type(environment.action_space) == Discrete:
                     stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
@@ -210,7 +210,6 @@ class Controller:
                 else:
                     stages = [[{'controller_type': 'pi_controller'}],
                               [{'controller_type': 'pi_controller'}, {'controller_type': 'pi_controller'}]]
-
         else:
             controller_type = 'foc_controller'
 
@@ -220,7 +219,8 @@ class Controller:
     def automated_gain(environment, stages, controller_type, **controller_kwargs):
         """
         This function automatically parameterizes a given controller design if the parameter automated_gain is True
-        (default True), based on the design according to the Symmetric Optimum.
+        (default True), based on the design according to the Symmetric Optimum (SO). Further information about the design
+        according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
         """
 
         ref_states = controller_kwargs['ref_states']
@@ -240,10 +240,11 @@ class Controller:
             u_sq_lim = limits[environment.state_names.index('u_sq')]
             torque_lim = limits[environment.state_names.index('torque')]
 
+        # The parameter a is a design parameter when designing a controller according to the SO
         a = 4 if 'a' not in controller_kwargs.keys() else controller_kwargs['a']
-
         automated_gain = True if 'automated_gain' not in controller_kwargs.keys() else controller_kwargs[
             'automated_gain']
+
         if type(environment.physical_system.electrical_motor) == DcSeriesMotor:
             mp['l'] = mp['l_a'] + mp['l_e']
         elif type(environment.physical_system) == DcMotorSystem:
@@ -304,7 +305,7 @@ class Controller:
                         d_gain = p_gain * environment.physical_system.tau
                         stages_a[0]['d_gain'] = d_gain if 'd_gain' not in stages_a[0].keys() else stages_a[0]['d_gain']
 
-            elif _controllers[controller_type][0] == Cascaded_Controller:
+            elif _controllers[controller_type][0] == CascadedController:
 
                 for i in range(len(stages)):
                     if _controllers[stages_a[i]['controller_type']][1] == ContinuousController:
@@ -319,12 +320,10 @@ class Controller:
                                     'd_gain']
 
                         elif i == 1:
-                            p_gain_ = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
-                            i_gain_ = p_gain_ / (environment.physical_system.tau * a ** 2)
-                            t_n = p_gain_ / i_gain_
+                            t_n = environment.physical_system.tau * a ** 2
                             p_gain = environment.physical_system.mechanical_load.j_total / (
-                                    4 * t_n) / i_a_lim * omega_lim
-                            i_gain = p_gain / (4 * t_n)
+                                    a * t_n) / i_a_lim * omega_lim
+                            i_gain = p_gain / (a * t_n)
                             if _controllers[stages_a[i]['controller_type']][2] == PID_Controller:
                                 d_gain = p_gain * environment.physical_system.tau
                                 stages_a[i]['d_gain'] = d_gain if 'd_gain' not in stages_a[i].keys() else stages_a[i][
@@ -332,12 +331,11 @@ class Controller:
 
                         stages_a[i]['p_gain'] = p_gain if 'p_gain' not in stages_a[i].keys() else stages_a[i]['p_gain']
                         stages_a[i]['i_gain'] = i_gain if 'i_gain' not in stages_a[i].keys() else stages_a[i]['i_gain']
-                if not stages_e:
-                    stages = stages_a
-                else:
-                    stages = [stages_a, stages_e]
 
-            elif _controllers[controller_type][0] == FOC_Controller:
+                stages = stages_a if not stages_e else [stages_a, stages_e]
+
+
+            elif _controllers[controller_type][0] == FieldOrientedController:
                 stage_d = stages[0][0]
                 stage_q = stages[1][0]
                 if 'i_sq' in ref_states and _controllers[stage_q['controller_type']][1] == ContinuousController:
@@ -362,7 +360,7 @@ class Controller:
                         stage_q['d_gain'] = d_gain_q if 'd_gain' not in stage_q.keys() else stage_q['d_gain']
                     stages = [[stage_d], [stage_q]]
 
-            elif _controllers[controller_type][0] == Cascaded_FOC_Controller:
+            elif _controllers[controller_type][0] == CascadedFieldOrientedController:
                 if type(environment.action_space) == Box:
                     stage_d = stages[0][0]
                     stage_q = stages[1]
@@ -389,9 +387,9 @@ class Controller:
 
                     if 'omega' in ref_states and _controllers[stage_q[1]['controller_type']][1] == ContinuousController:
                         t_n = p_gain_d / i_gain_d
-                        p_gain = environment.physical_system.mechanical_load.j_total / (4 * t_n) / torque_lim * omega_lim
-                        i_gain = p_gain / (4 * t_n)
-
+                        p_gain = environment.physical_system.mechanical_load.j_total / (
+                                    a ** 2 * t_n) / torque_lim * omega_lim
+                        i_gain = p_gain / (a * t_n)
 
                         stage_q[1]['p_gain'] = p_gain if 'p_gain' not in stage_q[1].keys() else stage_q[1]['p_gain']
                         stage_q[1]['i_gain'] = i_gain if 'i_gain' not in stage_q[1].keys() else stage_q[1]['i_gain']
@@ -404,14 +402,17 @@ class Controller:
                     stages = [[stage_d], stage_q]
 
                 else:
-                    if ('omega' in ref_states or 'torque' in ref_states) and _controllers[stages[3][0]['controller_type']][1] == ContinuousController:
+                    if 'omega' in ref_states and _controllers[stages[3][0]['controller_type']][
+                        1] == ContinuousController:
 
                         p_gain = environment.physical_system.mechanical_load.j_total / (
-                                    1.5 * a ** 2 * mp['p'] * np.abs(mp['l_d'] - mp['l_q'])) / i_sq_lim * omega_lim
+                                1.5 * a ** 2 * mp['p'] * np.abs(mp['l_d'] - mp['l_q'])) / i_sq_lim * omega_lim
                         i_gain = p_gain / (1.5 * environment.physical_system.tau * a)
 
-                        stages[3][0]['p_gain'] = p_gain if 'p_gain' not in stages[3][0].keys() else stages[3][0]['p_gain']
-                        stages[3][0]['i_gain'] = i_gain if 'i_gain' not in stages[3][0].keys() else stages[3][0]['i_gain']
+                        stages[3][0]['p_gain'] = p_gain if 'p_gain' not in stages[3][0].keys() else stages[3][0][
+                            'p_gain']
+                        stages[3][0]['i_gain'] = i_gain if 'i_gain' not in stages[3][0].keys() else stages[3][0][
+                            'i_gain']
 
                         if _controllers[stages[3][0]['controller_type']][2] == PID_Controller:
                             d_gain = p_gain * environment.physical_system.tau
@@ -424,7 +425,7 @@ class Controller:
 class ContinuousActionController(Controller):
     """
         This class performs a current-control for all continuous DC motor systems. By default, a PI controller is used
-        for current control. An EMF compensation is applied. For the Externaly Excited DC motor, the excitation current
+        for current control. An EMF compensation is applied. For the externaly excited dc motor, the excitation current
         is also controlled.
     """
 
@@ -453,7 +454,7 @@ class ContinuousActionController(Controller):
             ext_ref_plot.set_reference(ref_states)
 
         if self.control_e:
-            assert len(stages) == 2, 'Controller design is not completely'
+            assert len(stages) == 2, 'Controller design is incomplete'
             self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
             self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
             self.controller_e = _controllers[stages[1][0]['controller_type']][1].make(environment, stages[1][0],
@@ -504,7 +505,7 @@ class ContinuousActionController(Controller):
 class DiscreteActionController(Controller):
     """
         This class is used for current control of all discrete DC motor systems. By default, a three-point controller is
-        used. For the externally excited DC motor, the excitation current is also controlled.
+        used. For the externally excited dc motor, the excitation current is also controlled.
     """
 
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
@@ -523,7 +524,7 @@ class DiscreteActionController(Controller):
             ext_ref_plot.set_reference(ref_states)
 
         if self.control_e:
-            assert len(stages) == 2, 'Controller design is not completely'
+            assert len(stages) == 2, 'Controller design is incomplete'
 
             self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
             self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
@@ -555,10 +556,10 @@ class DiscreteActionController(Controller):
             self.control_e.reset()
 
 
-class Cascaded_Controller(Controller):
+class CascadedController(Controller):
     """
-        This class is used for cascaded torque and speed control of all DC motor environments. Each stage can contain
-        continuous or discrete controllers. For the Externally Excited DC Motor an additional controller is used for
+        This class is used for cascaded torque and speed control of all dc motor environments. Each stage can contain
+        continuous or discrete controllers. For the externally excited dc motor an additional controller is used for
         the excitation current. The calculated reference values of the intermediate stages can be inserted into the
         plots.
     """
@@ -589,9 +590,11 @@ class Cascaded_Controller(Controller):
         self.state_limit_high = self.state_space.high * self.nominal_values / self.limit
 
         if self.control_e:
-            assert len(stages) == 2, 'Controller design is not completely'
+            assert len(stages) == 2, 'Controller design is incomplete'
             self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
             self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
+            self.control_e_idx = 1
+            self.ref_state_idx.append(self.i_e_idx)
             self.controller_e = _controllers[stages[1][0]['controller_type']][1].make(environment, stages[1][0],
                                                                                       control_e=True,
                                                                                       **controller_kwargs)
@@ -602,6 +605,7 @@ class Cascaded_Controller(Controller):
                 self.action_e_limit_high = self.action_space.high[1] * self.nominal_values[u_e_idx] / self.limit[u_e_idx]
 
         else:
+            self.control_e_idx = 0
             assert len(ref_states) <= 1, 'Too many referenced states'
 
         self.stage_type = [_controllers[stage['controller_type']][1] == ContinuousController for stage in stages]
@@ -619,10 +623,10 @@ class Cascaded_Controller(Controller):
         assert type(self.action_space) in [Discrete, MultiDiscrete] or self.stage_type[
             0], 'No suitable inner controller'
 
-        self.ref = np.zeros(len(self.controller_stages))
+        self.ref = np.zeros(len(self.controller_stages) + self.control_e_idx)
 
     def control(self, state, reference):
-        self.ref[-1] = reference[self.ref_idx]
+        self.ref[-1-self.control_e_idx] = reference[self.ref_idx]
         for i in range(len(self.controller_stages) - 1, 0, -1):
             self.ref[i - 1] = self.controller_stages[i].control(state[self.ref_state_idx[i]], self.ref[i])
             if (self.state_limit_low[self.ref_state_idx[i - 1]] <= self.ref[i - 1] <= self.state_limit_high[self.ref_state_idx[i - 1]]) and self.stage_type[i]:
@@ -642,12 +646,12 @@ class Cascaded_Controller(Controller):
                 action = np.clip([action], self.action_limit_low, self.action_limit_high)
 
         if self.control_e:
-            ref_e = self.ref_e if not self.ref_e_idx else reference[self.ref_e_idx]
-            action_u_e = self.controller_e.control(state[self.i_e_idx], ref_e)
+            self.ref[-1] = self.ref_e if not self.ref_e_idx else reference[self.ref_e_idx]
+            action_u_e = self.controller_e.control(state[self.i_e_idx], self.ref[-1])
             if self.stage_type[0]:
                 action = np.append(action, action_u_e)
                 if self.action_e_limit_low <= action[1] <= self.action_e_limit_high:
-                    self.controller_e.integrate(state[self.i_e_idx], ref_e)
+                    self.controller_e.integrate(state[self.i_e_idx], self.ref[-1])
                 action = np.clip(action, self.action_e_limit_low, self.action_e_limit_high)
             else:
                 action = np.array([action, action_u_e], dtype='object')
@@ -659,7 +663,7 @@ class Cascaded_Controller(Controller):
         return (state[self.omega_idx] * self.nominal_values[self.omega_idx] * psi_e) / self.nominal_values[self.u_idx]
 
     def set_ref(self):
-        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1])
+        return dict(ref_state=self.ref_state_idx, ref_value=self.ref)
 
     def reset(self):
         for controller in self.controller_stages:
@@ -668,7 +672,7 @@ class Cascaded_Controller(Controller):
             self.controller_e.reset()
 
 
-class FOC_Controller(Controller):
+class FieldOrientedController(Controller):
     """
         This class controls the currents of synchronous motors. In the case of continuous manipulated variables, the
         control is performed in the rotating dq-coordinates. For this purpose, the two current components are optionally
@@ -767,11 +771,12 @@ class FOC_Controller(Controller):
         return dict(ref_state=[], ref_value=[])
 
     def reset(self):
-        self.d_controller.reset()
-        self.q_controller.reset()
+        if self.control_type:
+            self.d_controller.reset()
+            self.q_controller.reset()
 
 
-class Cascaded_FOC_Controller(Controller):
+class CascadedFieldOrientedController(Controller):
     """
         This controller is used for torque or speed control of synchronous motors. The controller consists of an FOC
         controller for current control, an efficiency-optimized torque controller and an optional speed controller. The
@@ -813,7 +818,7 @@ class Cascaded_FOC_Controller(Controller):
 
         cont_pmsm_envs = (
             envs.DqContCurrentControlPermanentMagnetSynchronousMotorEnv,
-            envs.DqContTorqueControlSquirrelCageInductionMotorEnv,
+            envs.DqContTorqueControlPermanentMagnetSynchronousMotorEnv,
             envs.DqContSpeedControlPermanentMagnetSynchronousMotorEnv,
             envs.AbcContCurrentControlPermanentMagnetSynchronousMotorEnv,
             envs.AbcContTorqueControlPermanentMagnetSynchronousMotorEnv,
@@ -846,18 +851,18 @@ class Cascaded_FOC_Controller(Controller):
                 environment, stages[0][0], **controller_kwargs)
             self.q_controller = _controllers[stages[1][0]['controller_type']][1].make(
                 environment, stages[1][0], **controller_kwargs)
-            self.overlayed_controller = [_controllers[stages[1][i]['controller_type']][1].make(
+            self.overlaid_controller = [_controllers[stages[1][i]['controller_type']][1].make(
                 environment, stages[1][i], cascaded=True, **controller_kwargs) for i in range(1, len(stages[1]))]
-            self.overlayed_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
+            self.overlaid_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
                                    range(1, len(stages[1]))]
             self.control_type = type(environment.action_space) == Box
             [self.u_sq_0, self.u_sd_0] = [0, 0]
 
         else:
             assert len(stages) == 4, 'Number of stages not correct'
-            self.overlayed_controller = [_controllers[stages[3][i]['controller_type']][1].make(
+            self.overlaid_controller = [_controllers[stages[3][i]['controller_type']][1].make(
                 environment, stages[3][i], cascaded=True, **controller_kwargs) for i in range(len(stages[3]))]
-            self.overlayed_type = [_controllers[stages[3][i]['controller_type']][1] == ContinuousController for i in
+            self.overlaid_type = [_controllers[stages[3][i]['controller_type']][1] == ContinuousController for i in
                                    range(len(stages[3]))]
             self.abc_controller = [_controllers[stages[0][0]['controller_type']][1].make(
                 environment, stages[i][0], **controller_kwargs) for i in range(3)]
@@ -878,12 +883,12 @@ class Cascaded_FOC_Controller(Controller):
                     self.limit[self.omega_idx] * self.mp['p']
 
         if self.omega_control:
-            for i in range(len(self.overlayed_controller) + 1, 1, -1):
-                self.ref[i] = self.overlayed_controller[i-2].control(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+            for i in range(len(self.overlaid_controller) + 1, 1, -1):
+                self.ref[i] = self.overlaid_controller[i-2].control(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
 
                 if (0.85 * self.state_space.low[self.ref_state_idx[i]] <= self.ref[i] <= 0.85 *
-                        self.state_space.high[self.ref_state_idx[i]]) and self.overlayed_type[i-2]:
-                    self.overlayed_controller[i-2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+                        self.state_space.high[self.ref_state_idx[i]]) and self.overlaid_type[i-2]:
+                    self.overlaid_controller[i-2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
                 else:
                     self.ref[i] = np.clip(self.ref[i], self.nominal_values[self.ref_state_idx[i]] / self.limit[
                         self.ref_state_idx[i]] * self.state_space.low[self.ref_state_idx[i]],
@@ -936,8 +941,8 @@ class Cascaded_FOC_Controller(Controller):
         return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1])
 
     def reset(self):
-        for overlayed_controller in self.overlayed_controller:
-            overlayed_controller.reset()
+        for overlaid_controller in self.overlaid_controller:
+            overlaid_controller.reset()
         if self.controller_type:
             self.d_controller.reset()
             self.q_controller.reset()
@@ -971,20 +976,6 @@ class MTPC:
         self.nominal_values = environment.physical_system.nominal_state
         self.torque_control = torque_control
 
-        self.q = environment.physical_system.electrical_motor.q
-        self.a_max = 2 / np.sqrt(3)
-        self.k_ = 0.95
-        d = 1.2
-        alpha = d / (d - np.sqrt(d ** 2 - 1))
-        self.i_gain = 1 / (self.mp['l_q'] / (1.25 * self.mp['r_s'])) * (alpha - 1) / alpha ** 2
-        self.integrated = 0
-        self.integrated_reset = -0.0005
-        self.u_a_idx = environment.state_names.index('u_a')
-        self.u_dc = np.sqrt(3) * self.limit[self.u_a_idx]
-        self.limited = False
-        self.psi_low = -0.04
-        self.psi_high = 0.04
-
         self.l_d = self.mp['l_d']
         self.l_q = self.mp['l_q']
         self.p = self.mp['p']
@@ -999,6 +990,26 @@ class MTPC:
         self.torque_idx = environment.state_names.index('torque')
         self.epsilon_idx = environment.state_names.index('epsilon')
 
+        self.q = environment.physical_system.electrical_motor.q
+        self.a_max = 2 / np.sqrt(3)     # maximum modulation level
+        self.k_ = 0.95
+        d = 1.2    # damping of the modulation controller
+        alpha = d / (d - np.sqrt(d ** 2 - 1))
+        self.i_gain = 1 / (self.mp['l_q'] / (1.25 * self.mp['r_s'])) * (alpha - 1) / alpha ** 2
+
+        self.u_a_idx = environment.state_names.index('u_a')
+        self.u_dc = np.sqrt(3) * self.limit[self.u_a_idx]
+        self.limited = False
+        self.integrated = 0
+        self.psi_high = 0.2 * np.sqrt((self.psi_p + self.l_d * self.nominal_values[self.i_sd_idx]) ** 2 + (
+                    self.l_q * self.nominal_values[self.i_sq_idx]) ** 2)
+        self.psi_low = -self.psi_high
+        self.integrated_reset = 0.01 * self.psi_low  # Reset value of the modulation controller
+
+        self.t_count = 250
+        self.psi_count = 250
+        self.i_count = 500
+
         def mtpc():
             def i_q_(i_d, torque):
                 return torque / (i_d * (self.l_d - self.l_q) + self.psi_p) / (1.5 * self.p)
@@ -1006,26 +1017,28 @@ class MTPC:
             def i_d_(i_q, torque):
                 return -np.abs(torque / (1.5 * self.p * (self.l_d - self.l_q) * i_q))
 
-            psi_p = 0 if 'psi_p' not in self.mp else self.psi_p
-            self.max_torque = max(1.5 * self.p * (psi_p + (self.l_d - self.l_q) * (-self.limit[self.i_sd_idx])) * self.limit[self.i_sq_idx], self.limit[self.torque_idx])
-            self.t_count_mtpc = 2500
-            torque = np.linspace(-self.max_torque, self.max_torque, self.t_count_mtpc)
+            # calculate the maximum torque
+            self.max_torque = max(
+                1.5 * self.p * (self.psi_p + (self.l_d - self.l_q) * (-self.limit[self.i_sd_idx])) * self.limit[
+                    self.i_sq_idx], self.limit[self.torque_idx])
+            torque = np.linspace(-self.max_torque, self.max_torque, self.t_count)
             characteristic = []
 
             for t in torque:
-                if 'psi_p' in self.mp:
+                if self.psi_p != 0:
                     if self.l_d == self.l_q:
                         i_d = 0
                     else:
-                        i_d = np.linspace(-2.5*self.limit[self.i_sd_idx], 0, 2000)
+                        i_d = np.linspace(-2.5*self.limit[self.i_sd_idx], 0, self.i_count)
                     i_q = i_q_(i_d, t)
                 else:
-                    i_q = np.linspace(-2.5*self.limit[self.i_sq_idx], 2.5*self.limit[self.i_sq_idx], 2000)
+                    i_q = np.linspace(-2.5*self.limit[self.i_sq_idx], 2.5*self.limit[self.i_sq_idx], self.i_count)
                     if self.l_d == self.l_q:
                         i_d = 0
                     else:
                         i_d = i_d_(i_q, t)
 
+                # Different current vectors are determined for each torque and the smallest magnitude is selected
                 i = np.power(i_d, 2) + np.power(i_q, 2)
                 min_idx = np.where(i == np.amin(i))[0][0]
                 if self.l_d == self.l_q:
@@ -1034,20 +1047,22 @@ class MTPC:
                 else:
                     i_q_ret = np.sign((self.l_q - self.l_d) * t) * np.abs(i_q[min_idx])
                     i_d_ret = i_d[min_idx]
+
+                # The flow is finally calculated from the currents
                 psi = np.sqrt((self.psi_p + self.l_d * i_d_ret) ** 2 + (self.l_q * i_q_ret) ** 2)
                 characteristic.append([t, i_d_ret, i_q_ret, psi])
             return np.array(characteristic)
 
         def mtpf():
-            psi_i_d_q = []
+            # maximum flux is calculated
             self.psi_max_mtpf = np.sqrt((self.psi_p + self.l_d * self.nominal_values[self.i_sd_idx]) ** 2 + (self.l_q * self.nominal_values[self.i_sq_idx]) ** 2)
-            self.psi_count_mtpf = 3000
-
-            psi = np.linspace(0, self.psi_max_mtpf, self.psi_count_mtpf)
-            i_d = np.linspace(-self.nominal_values[self.i_sd_idx], 0, 3000)
+            psi = np.linspace(0, self.psi_max_mtpf, self.psi_count)
+            i_d = np.linspace(-self.nominal_values[self.i_sd_idx], 0, self.i_count)
             i_d_best = 0
             i_q_best = 0
+            psi_i_d_q = []
 
+            # Iterates through all flux values to determine the maximum torque
             for psi_ in psi:
                 if psi_ == 0:
                     i_d_ = -self.psi_p / self.l_d
@@ -1063,12 +1078,16 @@ class MTPC:
                     else:
                         i_d_idx = np.where(psi_ ** 2 - np.power(self.psi_p + self.l_d * i_d, 2) >= 0)
                         i_d_ = i_d[i_d_idx]
+
+                        # calculate all possible i_q currents for i_d currents
                         i_q = np.sqrt(psi_ ** 2 - np.power(self.psi_p + self.l_d * i_d_, 2)) / self.l_q
-                        i_idx = np.where(np.sqrt(np.power(i_q / self.nominal_values[self.i_sq_idx], 2) + np.power(i_d_ / self.nominal_values[self.i_sd_idx], 2)) <= 1)
+                        i_idx = np.where(np.sqrt(np.power(i_q / self.nominal_values[self.i_sq_idx], 2) + np.power(
+                            i_d_ / self.nominal_values[self.i_sd_idx], 2)) <= 1)
                         i_d_ = i_d_[i_idx]
                         i_q = i_q[i_idx]
                         torque = 1.5 * self.p * (self.psi_p + (self.l_d - self.l_q) * i_d_) * i_q
 
+                        # choose the maximum torque
                         if np.size(torque) > 0:
                             t = np.amax(torque)
                             i_idx = np.where(torque == t)[0][0]
@@ -1090,14 +1109,16 @@ class MTPC:
             np.power(self.psi_p + self.l_d * self.mtpc[:, 1], 2) + np.power(self.l_q * self.mtpc[:, 2], 2))
         self.psi_t = np.array([self.mtpc[:, 0], self.psi_t])
 
-        self.i_q_max = np.linspace(-self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx], 1000)
+        self.i_q_max = np.linspace(-self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx], self.i_count)
         self.i_d_max = -np.sqrt(self.nominal_values[self.i_sq_idx] ** 2 - np.power(self.i_q_max, 2))
-
-        i_d, i_q = np.mgrid[-1.3 * self.limit[self.i_sd_idx]:0:700j, -1.3 * self.limit[self.i_sq_idx]:1.3 * self.limit[self.i_sq_idx]:1500j]
+        i_count_mgrid = 200j
+        i_d, i_q = np.mgrid[-self.limit[self.i_sd_idx]:0:i_count_mgrid,
+                   -self.limit[self.i_sq_idx]:self.limit[self.i_sq_idx]:i_count_mgrid / 2]
         i_d = i_d.flatten()
         i_q = i_q.flatten()
         if self.l_d != self.l_q:
-            idx = np.where(np.sign(self.psi_p + i_d * self.l_d) * np.power(self.psi_p + i_d * self.l_d, 2) + np.power(i_q * self.l_q, 2) > 0)
+            idx = np.where(np.sign(self.psi_p + i_d * self.l_d) * np.power(self.psi_p + i_d * self.l_d, 2) + np.power(
+                i_q * self.l_q, 2) > 0)
         else:
             idx = np.where(self.psi_p + i_d * self.l_d > 0)
         i_d = i_d[idx]
@@ -1108,11 +1129,9 @@ class MTPC:
 
         self.t_min = np.amin(t)
         self.t_max = np.amax(t)
-        self.t_count = 2001
 
         self.psi_min = np.amin(psi)
         self.psi_max = np.amax(psi)
-        self.psi_count = 600
 
         if torque_control == 'analytical':
             res = []
@@ -1131,7 +1150,8 @@ class MTPC:
             self.i_q_inter_plot = self.i_q_inter.T
 
         elif torque_control == 'interpolate':
-            self.t_grid, self.psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count), self.psi_min:self.psi_max:np.complex(self.psi_count)]
+            self.t_grid, self.psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count),
+                                         self.psi_min:self.psi_max:np.complex(self.psi_count)]
 
             self.i_q_inter = griddata((t, psi), i_q, (self.t_grid, self.psi_grid), method='linear')
             self.i_d_inter = griddata((t, psi), i_d, (self.t_grid, self.psi_grid), method='linear')
@@ -1163,48 +1183,48 @@ class MTPC:
 
             self.i_d_q_characteristic_.set_title('$i_{d,q_{ref}}$')
             self.i_d_q_characteristic_.plot(self.mtpc[mtpc_i_idx, 1][0], self.mtpc[mtpc_i_idx, 2][0], label='MTPC', c='tab:orange')
-            self.i_d_q_characteristic_.plot(self.mtpf[:, 2], self.mtpf[:, 3], label='MTPF', c='tab:green')
-            self.i_d_q_characteristic_.plot(self.i_d_max, self.i_q_max, label='$i_{max}$', c='tab:red')
-            self.i_d_q_characteristic_.plot([], [], label='$i_{d,q}$', c='tab:blue')
+            self.i_d_q_characteristic_.plot(self.mtpf[:, 2], self.mtpf[:, 3], label=r'MTPF', c='tab:green')
+            self.i_d_q_characteristic_.plot(self.i_d_max, self.i_q_max, label=r'$i_{max}$', c='tab:red')
+            self.i_d_q_characteristic_.plot([], [], label=r'$i_{d,q}$', c='tab:blue')
             self.i_d_q_characteristic_.grid(True)
             self.i_d_q_characteristic_.legend(loc=2)
             self.i_d_q_characteristic_.axis('equal')
-            self.i_d_q_characteristic_.set_xlabel('$i_d$ / A')
-            self.i_d_q_characteristic_.set_ylabel('$i_q$ / A')
+            self.i_d_q_characteristic_.set_xlabel(r'$i_d$ / A')
+            self.i_d_q_characteristic_.set_ylabel(r'$i_q$ / A')
 
-            self.psi_plot.set_title('$\Psi^*_{max}(T^*)$')
-            self.psi_plot.plot(self.psi_t[0], self.psi_t[1], label='$\Psi^*_{max}(T^*)$', c='tab:orange')
-            self.psi_plot.plot([], [], label='$\Psi(T)$', c='tab:blue')
+            self.psi_plot.set_title(r'$\Psi^*_{max}(T^*)$')
+            self.psi_plot.plot(self.psi_t[0], self.psi_t[1], label=r'$\Psi^*_{max}(T^*)$', c='tab:orange')
+            self.psi_plot.plot([], [], label=r'$\Psi(T)$', c='tab:blue')
             self.psi_plot.grid(True)
-            self.psi_plot.set_xlabel('T / Nm')
-            self.psi_plot.set_ylabel('$\Psi$ / Vs')
+            self.psi_plot.set_xlabel(r'T / Nm')
+            self.psi_plot.set_ylabel(r'$\Psi$ / Vs')
             self.psi_plot.set_ylim(bottom=0)
             self.psi_plot.legend(loc=2)
 
             torque = self.mtpf[:, 1]
             torque[0:np.where(torque == np.min(torque))[0][0]] = np.min(torque)
             torque[np.where(torque == np.max(torque))[0][0]:] = np.max(torque)
-            self.torque_plot.set_title('$T_{max}(\Psi_{max})$')
-            self.torque_plot.plot(self.mtpf[:, 0], torque, label='$T_{max}(\Psi)$', c='tab:orange')
-            self.torque_plot.plot([], [], label='$T(\Psi)$', c='tab:blue')
-            self.torque_plot.set_xlabel('$\Psi$ / Vs')
-            self.torque_plot.set_ylabel('$T_{max}$ / Nm')
+            self.torque_plot.set_title(r'$T_{max}(\Psi_{max})$')
+            self.torque_plot.plot(self.mtpf[:, 0], torque, label=r'$T_{max}(\Psi)$', c='tab:orange')
+            self.torque_plot.plot([], [], label=r'$T(\Psi)$', c='tab:blue')
+            self.torque_plot.set_xlabel(r'$\Psi$ / Vs')
+            self.torque_plot.set_ylabel(r'$T_{max}$ / Nm')
             self.torque_plot.grid(True)
             self.torque_plot.legend(loc=2)
 
             if self.torque_control in ['interpolate', 'analytical']:
                 self.i_q_plot.plot_surface(self.t_grid, self.psi_grid, self.i_q_inter_plot, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_q_inter_plot),
                                 vmax=np.nanmax(self.i_q_inter_plot))
-                self.i_q_plot.set_ylabel('$\Psi / Vs$')
-                self.i_q_plot.set_xlabel('$T / Nm$')
-                self.i_q_plot.set_title('$i_q(T, \Psi)$')
+                self.i_q_plot.set_ylabel(r'$\Psi / Vs$')
+                self.i_q_plot.set_xlabel(r'$T / Nm$')
+                self.i_q_plot.set_title(r'$i_q(T, \Psi)$')
 
 
                 self.i_d_plot.plot_surface(self.t_grid, self.psi_grid, self.i_d_inter_plot, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_d_inter_plot),
                                  vmax=np.nanmax(self.i_d_inter_plot))
-                self.i_d_plot.set_ylabel('$\Psi / Vs$')
-                self.i_d_plot.set_xlabel('$T / Nm$')
-                self.i_d_plot.set_title('$i_d(T, \Psi)$')
+                self.i_d_plot.set_ylabel(r'$\Psi / Vs$')
+                self.i_d_plot.set_xlabel(r'$T / Nm$')
+                self.i_d_plot.set_title(r'$i_d(T, \Psi)$')
 
             self.torque_list = []
             self.psi_list = []
@@ -1243,10 +1263,10 @@ class MTPC:
         return int(round((psi - self.psi_min) / (self.psi_max - self.psi_min) * (self.psi_count - 1)))
 
     def get_psi_idx_mtpf(self, psi):
-        return np.clip(int((self.psi_count_mtpf - 1) - round(psi / self.psi_max_mtpf * (self.psi_count_mtpf - 1))), 0, self.psi_count_mtpf)
+        return np.clip(int((self.psi_count - 1) - round(psi / self.psi_max_mtpf * (self.psi_count - 1))), 0, self.psi_count)
 
     def get_t_idx_mtpc(self, torque):
-        return np.clip(int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count_mtpc - 1))), 0, self.t_count_mtpc)
+        return np.clip(int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count - 1))), 0, self.t_count)
 
     def control(self, state, torque):
 
@@ -1370,7 +1390,7 @@ class MTPC:
             self.psi_delta_plot = plt.subplot2grid((1, 2), (0, 1))
 
             self.a_plot.set_title('Modulation')
-            self.a_plot.axhline(self.k_ * self.a_max, c='tab:orange', label='$a^*$')
+            self.a_plot.axhline(self.k_ * self.a_max, c='tab:orange', label=r'$a^*$')
             self.a_plot.plot([], [], c='tab:blue', label='a')
             self.a_plot.set_xlabel('t / s')
             self.a_plot.set_ylabel('a')
@@ -1378,12 +1398,12 @@ class MTPC:
             self.a_plot.set_xlim(0, 1)
             self.a_plot.legend(loc=2)
 
-            self.psi_delta_plot.set_title('$\Psi_{\Delta}$')
+            self.psi_delta_plot.set_title(r'$\Psi_{\Delta}$')
             self.psi_delta_plot.axhline(self.psi_low, c='tab:red', linestyle='dashed', label='Limit')
             self.psi_delta_plot.axhline(self.psi_high, c='tab:red', linestyle='dashed')
-            self.psi_delta_plot.plot([], [], c='tab:blue', label='$\Psi_{\Delta}$')
+            self.psi_delta_plot.plot([], [], c='tab:blue', label=r'$\Psi_{\Delta}$')
             self.psi_delta_plot.set_xlabel('t / s')
-            self.psi_delta_plot.set_ylabel('$\Psi_{\Delta} / Vs$')
+            self.psi_delta_plot.set_ylabel(r'$\Psi_{\Delta} / Vs$')
             self.psi_delta_plot.grid(True)
             self.psi_delta_plot.set_xlim(0, 1)
             self.psi_delta_plot.legend(loc=2)
@@ -1398,9 +1418,7 @@ class MTPC:
 
 
 class ContinuousController:
-    """
-        The class ContinuousController is the base for all continuous base controller (P-I-D-Controller)
-    """
+    """The class ContinuousController is the base for all continuous base controller (P-I-D-Controller)"""
 
     @classmethod
     def make(cls, environment, stage, **controller_kwargs):
@@ -1457,9 +1475,7 @@ class PI_Controller(P_Controller, I_Controller):
 
 
 class PID_Controller(PI_Controller, D_Controller):
-    """
-        The PID-Controller is a combination of the PI-Controller and the base P-Controller.
-    """
+    """The PID-Controller is a combination of the PI-Controller and the base P-Controller."""
     def __init__(self, environment, p_gain=5, i_gain=5, d_gain=0.005, param_dict={}, **controller_kwargs):
         p_gain = param_dict['p_gain'] if 'p_gain' in param_dict.keys() else p_gain
         i_gain = param_dict['i_gain'] if 'i_gain' in param_dict.keys() else i_gain
@@ -1505,9 +1521,7 @@ class DiscreteController:
 
 
 class OnOff_Controller(DiscreteController):
-    """
-        This is a hysteresis controller with two possible output states.
-    """
+    """This is a hysteresis controller with two possible output states."""
 
     def __init__(self, environment, action_space, hysteresis=0.02, param_dict={}, cascaded=False, control_e=False,
                  **controller_kwargs):
@@ -1534,9 +1548,7 @@ class OnOff_Controller(DiscreteController):
 
 
 class ThreePoint_Controller(DiscreteController):
-    """
-        This is a hysteresis controller with three possible output states.
-    """
+    """This is a hysteresis controller with three possible output states."""
 
     def __init__(self, environment, action_space, switch_to_positive_level=0.02, switch_to_negative_level=0.02,
                  switch_to_neutral_from_positive=0.01, switch_to_neutral_from_negative=0.01, param_dict={},
@@ -1584,8 +1596,8 @@ _controllers = {
     'pid_controller': [ContinuousActionController, ContinuousController, PID_Controller],
     'on_off': [DiscreteActionController, DiscreteController, OnOff_Controller],
     'three_point': [DiscreteActionController, DiscreteController, ThreePoint_Controller],
-    'cascaded_controller': [Cascaded_Controller],
-    'foc_controller': [FOC_Controller],
-    'cascaded_foc_controller': [Cascaded_FOC_Controller],
+    'cascaded_controller': [CascadedController],
+    'foc_controller': [FieldOrientedController],
+    'cascaded_foc_controller': [CascadedFieldOrientedController],
     #    'foc_rotor_flux_observer': FOC_Rotor_Flux_Observer
 }
