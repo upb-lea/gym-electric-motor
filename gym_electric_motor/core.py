@@ -502,10 +502,8 @@ class RewardFunction:
 
 
 class PhysicalSystem:
-    """
-    The Physical System module encapsulates the physical model of the system as well as the simulation from one step to
-    the next.
-    """
+    """The Physical System module encapsulates the physical model of the system as well as the simulation from one step
+    to the next."""
 
     @property
     def k(self):

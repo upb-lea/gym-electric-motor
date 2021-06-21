@@ -4,7 +4,7 @@ from ..random_component import RandomComponent
 from .subepisoded_reference_generator import SubepisodedReferenceGenerator
 
 
-class LaplaceProcessReferenceGenerator(SubepisodedReferenceGenerator, RandomComponent):
+class LaplaceProcessReferenceGenerator(SubepisodedReferenceGenerator):
     """
     Reference Generator that generates a reference for one state by a Laplace Process with the changing parameter sigma
     and mean = 0.
@@ -19,7 +19,6 @@ class LaplaceProcessReferenceGenerator(SubepisodedReferenceGenerator, RandomComp
             kwargs: Further arguments to pass to SubepisodedReferenceGenerator
         """
         SubepisodedReferenceGenerator.__init__(**kwargs)
-        RandomComponent.__init__(self)
         self._sigma_range = sigma_range
 
     def _reset_reference(self):
