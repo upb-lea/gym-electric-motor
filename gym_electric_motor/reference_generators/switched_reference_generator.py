@@ -92,4 +92,4 @@ class SwitchedReferenceGenerator(ReferenceGenerator, RandomComponent):
         for sub_generator in self._sub_generators:
             if isinstance(sub_generator, RandomComponent):
                 seed = self._seed_sequence.spawn(1)[0]
-                sub_generator.seed(seed.entropy)
+                sub_generator.seed(seed)

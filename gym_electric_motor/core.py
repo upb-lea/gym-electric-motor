@@ -21,9 +21,11 @@ import gym
 import numpy as np
 from gym.spaces import Box
 
+import gym_electric_motor
 from .utils import instantiate
 from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
+import gym_electric_motor as gem
 
 
 class ElectricMotorEnvironment(gym.core.Env):
@@ -107,11 +109,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         Args:
             reference_generator(ReferenceGenerator): The new reference generator of the environment.
         """
-        if self._reference_generator in self._random_components:
-            self._random_components.remove(self._reference_generator)
         self._reference_generator = reference_generator
-        if isinstance(reference_generator, RandomComponent):
-            self._random_components.append(reference_generator)
         self._done = True
 
     @property
@@ -130,11 +128,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         Args:
             reward_function(RewardFunction): The new reward function of the environment.
         """
-        if self._reward_function in self._random_components:
-            self._random_components.remove(self._reward_function)
         self._reward_function = reward_function
-        if isinstance(reward_function, RandomComponent):
-            self._random_components.append(reward_function)
         self._done = True
 
     @property
@@ -232,13 +226,6 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
-        self._random_components = []
-        if isinstance(self._physical_system, RandomComponent):
-            self._random_components.append(self._physical_system)
-        if isinstance(self._reference_generator, RandomComponent):
-            self._random_components.append(self._reference_generator)
-        if isinstance(self._reward_function, RandomComponent):
-            self._random_components.append(self._reward_function)
 
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
@@ -298,9 +285,16 @@ class ElectricMotorEnvironment(gym.core.Env):
 
     def seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
-        sub_sg = sg.spawn(len(self._random_components))
-        for sub, rc in zip(sub_sg, self._random_components):
-            rc.seed(sub)
+        components = [
+            self._physical_system,
+            self._reference_generator,
+            self._reward_function,
+            self._constraint_monitor
+        ] + list(self._callbacks)
+        sub_sg = sg.spawn(len(components))
+        for sub, rc in zip(sub_sg, components):
+            if isinstance(rc, gem.RandomComponent):
+                rc.seed(sub)
         return [sg.entropy]
 
     def close(self):

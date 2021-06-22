@@ -33,3 +33,4 @@ def test_execution(dc_motor, control_task, action_type, version, no_of_steps):
         # This happens if limits are violated or if some states are not observed to lay within their limits.
         assert observation[0].shape == env.observation_space[0].shape, 'The shape of the state is incorrect.'
         assert observation[1].shape == env.observation_space[1].shape, 'The shape of the reference is incorrect.'
+
