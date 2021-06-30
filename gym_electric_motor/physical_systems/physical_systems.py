@@ -2,6 +2,7 @@ import numpy as np
 from gym.spaces import Box
 import warnings
 
+import gym_electric_motor as gem
 from ..random_component import RandomComponent
 from ..core import PhysicalSystem
 from ..utils import set_state_array
@@ -94,11 +95,10 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self._system_eq_placeholder = None
         self._motor_deriv_size = None
         self._load_deriv_size = None
-        components = [
-            self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver, self._supply,
+        self._components = [
+            self._supply, self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver,
             self._noise_generator
         ]
-        self._random_components = [component for component in components if isinstance(component, RandomComponent)]
 
     def _set_limits(self):
         """
@@ -158,9 +158,10 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
 
     def seed(self, seed=None):
         RandomComponent.seed(self, seed)
-        sub_seeds = self.seed_sequence.spawn(len(self._random_components))
-        for rc, sub_seed in zip(self._random_components, sub_seeds):
-            rc.seed(sub_seed)
+        sub_seeds = self.seed_sequence.spawn(len(self._components))
+        for component, sub_seed in zip(self._components, sub_seeds):
+            if isinstance(component, gem.RandomComponent):
+                component.seed(sub_seed)
 
     def simulate(self, action, *_, **__):
         # Docstring of superclass

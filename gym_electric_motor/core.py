@@ -21,7 +21,6 @@ import gym
 import numpy as np
 from gym.spaces import Box
 
-import gym_electric_motor
 from .utils import instantiate
 from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
