@@ -218,9 +218,9 @@ class Controller:
     @staticmethod
     def automated_gain(environment, stages, controller_type, **controller_kwargs):
         """
-        This function automatically parameterizes a given controller design if the parameter automated_gain is True
-        (default True), based on the design according to the Symmetric Optimum (SO). Further information about the design
-        according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
+            This function automatically parameterizes a given controller design if the parameter automated_gain is True
+            (default True), based on the design according to the Symmetric Optimum (SO). Further information about the
+            design according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
         """
 
         ref_states = controller_kwargs['ref_states']
@@ -333,7 +333,6 @@ class Controller:
                         stages_a[i]['i_gain'] = i_gain if 'i_gain' not in stages_a[i].keys() else stages_a[i]['i_gain']
 
                 stages = stages_a if not stages_e else [stages_a, stages_e]
-
 
             elif _controllers[controller_type][0] == FieldOrientedController:
                 stage_d = stages[0][0]
@@ -574,15 +573,19 @@ class CascadedController(Controller):
         self.i_a_idx = environment.physical_system.CURRENTS_IDX[0]
         self.u_idx = environment.physical_system.VOLTAGES_IDX[-1]
         self.omega_idx = environment.state_names.index('omega')
+        self.torque_idx = environment.state_names.index('torque')
         self.ref_idx = np.where(ref_states != 'i_e')[0][0]
         self.ref_state_idx = [self.i_a_idx, environment.state_names.index(ref_states[self.ref_idx])]
 
         self.limit = environment.physical_system.limits[environment.state_filter]
         self.nominal_values = environment.physical_system.nominal_state[environment.state_filter]
         self.control_e = type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor
+        self.control_omega = 0
         mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_e = None if 'psi_e' not in mp.keys() else mp['psi_e']
         self.l_e = None if 'l_e_prime' not in mp.keys() else mp['l_e_prime']
+        self.r_e = None if 'r_e' not in mp.keys() else mp['r_e']
+        self.r_a = None if 'r_a' not in mp.keys() else mp['r_a']
         if type(self.action_space) == Box:
             self.action_limit_low = self.action_space.low[0] * self.nominal_values[self.u_idx] / self.limit[self.u_idx]
             self.action_limit_high = self.action_space.high[0] * self.nominal_values[self.u_idx] / self.limit[self.u_idx]
@@ -592,8 +595,10 @@ class CascadedController(Controller):
         if self.control_e:
             assert len(stages) == 2, 'Controller design is incomplete'
             self.ref_e_idx = False if 'i_e' not in ref_states else np.where(ref_states == 'i_e')[0][0]
-            self.ref_e = 0.1 if 'ref_e' not in controller_kwargs.keys() else controller_kwargs['ref_e']
             self.control_e_idx = 1
+            if self.omega_idx in self.ref_state_idx:
+                self.ref_state_idx.insert(1, self.torque_idx)
+                self.control_omega = 1
             self.ref_state_idx.append(self.i_e_idx)
             self.controller_e = _controllers[stages[1][0]['controller_type']][1].make(environment, stages[1][0],
                                                                                       control_e=True,
@@ -623,19 +628,27 @@ class CascadedController(Controller):
         assert type(self.action_space) in [Discrete, MultiDiscrete] or self.stage_type[
             0], 'No suitable inner controller'
 
-        self.ref = np.zeros(len(self.controller_stages) + self.control_e_idx)
+        self.ref = np.zeros(len(self.controller_stages) + self.control_e_idx + self.control_omega)
 
     def control(self, state, reference):
         self.ref[-1-self.control_e_idx] = reference[self.ref_idx]
-        for i in range(len(self.controller_stages) - 1, 0, -1):
-            self.ref[i - 1] = self.controller_stages[i].control(state[self.ref_state_idx[i]], self.ref[i])
-            if (self.state_limit_low[self.ref_state_idx[i - 1]] <= self.ref[i - 1] <= self.state_limit_high[self.ref_state_idx[i - 1]]) and self.stage_type[i]:
-                self.controller_stages[i].integrate(state[self.ref_state_idx[i]], reference[0])
+
+        for i in range(len(self.controller_stages) - 1, 0 + self.control_e_idx - self.control_omega, -1):
+            self.ref[i - 1 + self.control_omega] = self.controller_stages[i].control(state[self.ref_state_idx[i + self.control_omega]], self.ref[i + self.control_omega])
+            if (self.state_limit_low[self.ref_state_idx[i - 1 + self.control_omega]] <= self.ref[i - 1 + self.control_omega] <= self.state_limit_high[self.ref_state_idx[i - 1 + self.control_omega]]) and self.stage_type[i]:
+                self.controller_stages[i].integrate(state[self.ref_state_idx[i + self.control_omega]], reference[0])
             elif self.stage_type[i]:
-                self.ref[i - 1] = np.clip(self.ref[i - 1], self.state_limit_low[self.ref_state_idx[i - 1]],
-                                          self.state_limit_high[self.ref_state_idx[i - 1]])
+                self.ref[i - 1 + self.control_omega] = np.clip(self.ref[i - 1 + self.control_omega], self.state_limit_low[self.ref_state_idx[i - 1 + self.control_omega]],
+                                          self.state_limit_high[self.ref_state_idx[i - 1 + self.control_omega]])
+
+        if self.control_e:
+            i_e = np.clip(np.power(self.r_a * (self.ref[1] * self.limit[self.torque_idx])**2 / (self.r_e * self.l_e**2), 1/4), self.action_space.low[1]*self.limit[self.i_e_idx], self.action_space.high[1]*self.limit[self.i_e_idx])
+            i_a = np.clip(self.ref[1]*self.limit[self.torque_idx] / (self.l_e * i_e), self.action_space.low[0]*self.limit[self.i_a_idx], self.action_space.high[0]*self.limit[self.i_a_idx])
+            self.ref[-1] = i_e / self.limit[self.i_e_idx]
+            self.ref[0] = i_a / self.limit[self.i_a_idx]
 
         action = self.controller_stages[0].control(state[self.ref_state_idx[0]], self.ref[0])
+
         if self.stage_type[0]:
             action += self.feedforward(state)
 
@@ -646,7 +659,8 @@ class CascadedController(Controller):
                 action = np.clip([action], self.action_limit_low, self.action_limit_high)
 
         if self.control_e:
-            self.ref[-1] = self.ref_e if not self.ref_e_idx else reference[self.ref_e_idx]
+            if self.ref_e_idx:
+                self.ref[-1] = reference[self.ref_e_idx]
             action_u_e = self.controller_e.control(state[self.i_e_idx], self.ref[-1])
             if self.stage_type[0]:
                 action = np.append(action, action_u_e)
