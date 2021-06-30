@@ -4,18 +4,17 @@ from gym_electric_motor.physical_systems import SynchronousMotorSystem, DcMotorS
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, SwitchedReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor import envs
+
 import numpy as np
+
 from matplotlib import pyplot as plt
-import matplotlib
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.interpolate import griddata
 
 
 class Controller:
-    """
-    This is the base class for every controller along with the motor environments.
-    """
+    """This is the base class for every controller along with the motor environments."""
 
     @classmethod
     def make(cls, environment, stages=None, **controller_kwargs):
@@ -111,6 +110,7 @@ class Controller:
 
     @staticmethod
     def reference_states(environment, **controller_kwargs):
+        """This method searches the environment for all referenced states and writes them to an array."""
         ref_states = []
         if type(environment.reference_generator) == MultipleReferenceGenerator:
 
@@ -678,7 +678,7 @@ class FieldOrientedController(Controller):
         control is performed in the rotating dq-coordinates. For this purpose, the two current components are optionally
         decoupled and two independent current controllers are used.
         In the case of discrete manipulated variables, control takes place in stator-fixed coordinates. The reference
-        values are converted into these coordinates so that a three-point controller calculates the corresponding
+        values are converted into these coordinates so that a on-off controller calculates the corresponding
         manipulated variable for each current component.
     """
 
@@ -838,7 +838,7 @@ class CascadedFieldOrientedController(Controller):
         if self.torque_control:
             self.ref_state_idx.append(self.torque_idx)
 
-            self.torque_controller = MTPC(environment, plot_torque, plot_modulation, update_interval, torque_control)
+            self.torque_controller = TorqueToCurrentConversion(environment, plot_torque, plot_modulation, update_interval, torque_control)
 
         if self.omega_control:
             self.ref_state_idx.append(self.omega_idx)
@@ -859,11 +859,14 @@ class CascadedFieldOrientedController(Controller):
             [self.u_sq_0, self.u_sd_0] = [0, 0]
 
         else:
-            assert len(stages) == 4, 'Number of stages not correct'
-            self.overlaid_controller = [_controllers[stages[3][i]['controller_type']][1].make(
-                environment, stages[3][i], cascaded=True, **controller_kwargs) for i in range(len(stages[3]))]
-            self.overlaid_type = [_controllers[stages[3][i]['controller_type']][1] == ContinuousController for i in
-                                   range(len(stages[3]))]
+            if self.omega_control:
+                assert len(stages) == 4 , 'Number of stages not correct'
+                self.overlaid_controller = [_controllers[stages[3][i]['controller_type']][1].make(
+                    environment, stages[3][i], cascaded=True, **controller_kwargs) for i in range(len(stages[3]))]
+                self.overlaid_type = [_controllers[stages[3][i]['controller_type']][1] == ContinuousController for i in
+                                       range(len(stages[3]))]
+            else:
+                assert len(stages) == 3, 'Number of stages not correct'
             self.abc_controller = [_controllers[stages[0][0]['controller_type']][1].make(
                 environment, stages[i][0], **controller_kwargs) for i in range(3)]
             self.i_abc_idx = [environment.state_names.index(state) for state in ['i_a', 'i_b', 'i_c']]
@@ -954,7 +957,7 @@ class CascadedFieldOrientedController(Controller):
         if self.torque_control:
             self.torque_controller.reset()
 
-class MTPC:
+class TorqueToCurrentConversion:
     """
         This class represents the torque controller for cascaded control of synchronous motors.  For low speeds only the
         current limitation of the motor is important. The current vector to set a desired torque is selected so that the
@@ -990,7 +993,6 @@ class MTPC:
         self.torque_idx = environment.state_names.index('torque')
         self.epsilon_idx = environment.state_names.index('epsilon')
 
-        self.q = environment.physical_system.electrical_motor.q
         self.a_max = 2 / np.sqrt(3)     # maximum modulation level
         self.k_ = 0.95
         d = 1.2    # damping of the modulation controller
@@ -1181,19 +1183,19 @@ class MTPC:
 
             mtpc_i_idx = np.where(np.sqrt(np.power(self.mtpc[:, 1], 2) + np.power(self.mtpc[:, 2], 2)) <= self.nominal_values[self.i_sd_idx])
 
-            self.i_d_q_characteristic_.set_title('$i_{d,q_{ref}}$')
+            self.i_d_q_characteristic_.set_title('$i_\mathrm{d,q_{ref}}$')
             self.i_d_q_characteristic_.plot(self.mtpc[mtpc_i_idx, 1][0], self.mtpc[mtpc_i_idx, 2][0], label='MTPC', c='tab:orange')
             self.i_d_q_characteristic_.plot(self.mtpf[:, 2], self.mtpf[:, 3], label=r'MTPF', c='tab:green')
-            self.i_d_q_characteristic_.plot(self.i_d_max, self.i_q_max, label=r'$i_{max}$', c='tab:red')
-            self.i_d_q_characteristic_.plot([], [], label=r'$i_{d,q}$', c='tab:blue')
+            self.i_d_q_characteristic_.plot(self.i_d_max, self.i_q_max, label=r'$i_\mathrm{max}$', c='tab:red')
+            self.i_d_q_characteristic_.plot([], [], label=r'$i_\mathrm{d,q}$', c='tab:blue')
             self.i_d_q_characteristic_.grid(True)
             self.i_d_q_characteristic_.legend(loc=2)
             self.i_d_q_characteristic_.axis('equal')
-            self.i_d_q_characteristic_.set_xlabel(r'$i_d$ / A')
-            self.i_d_q_characteristic_.set_ylabel(r'$i_q$ / A')
+            self.i_d_q_characteristic_.set_xlabel(r'$i_\mathrm{d}$ / A')
+            self.i_d_q_characteristic_.set_ylabel(r'$i_\mathrm{q}$ / A')
 
-            self.psi_plot.set_title(r'$\Psi^*_{max}(T^*)$')
-            self.psi_plot.plot(self.psi_t[0], self.psi_t[1], label=r'$\Psi^*_{max}(T^*)$', c='tab:orange')
+            self.psi_plot.set_title(r'$\Psi^*_\mathrm{max}(T^*)$')
+            self.psi_plot.plot(self.psi_t[0], self.psi_t[1], label=r'$\Psi^*_\mathrm{max}(T^*)$', c='tab:orange')
             self.psi_plot.plot([], [], label=r'$\Psi(T)$', c='tab:blue')
             self.psi_plot.grid(True)
             self.psi_plot.set_xlabel(r'T / Nm')
@@ -1204,11 +1206,11 @@ class MTPC:
             torque = self.mtpf[:, 1]
             torque[0:np.where(torque == np.min(torque))[0][0]] = np.min(torque)
             torque[np.where(torque == np.max(torque))[0][0]:] = np.max(torque)
-            self.torque_plot.set_title(r'$T_{max}(\Psi_{max})$')
-            self.torque_plot.plot(self.mtpf[:, 0], torque, label=r'$T_{max}(\Psi)$', c='tab:orange')
+            self.torque_plot.set_title(r'$T_\mathrm{max}(\Psi_\mathrm{max})$')
+            self.torque_plot.plot(self.mtpf[:, 0], torque, label=r'$T_\mathrm{max}(\Psi)$', c='tab:orange')
             self.torque_plot.plot([], [], label=r'$T(\Psi)$', c='tab:blue')
             self.torque_plot.set_xlabel(r'$\Psi$ / Vs')
-            self.torque_plot.set_ylabel(r'$T_{max}$ / Nm')
+            self.torque_plot.set_ylabel(r'$T_\mathrm{max}$ / Nm')
             self.torque_plot.grid(True)
             self.torque_plot.legend(loc=2)
 
@@ -1217,14 +1219,14 @@ class MTPC:
                                 vmax=np.nanmax(self.i_q_inter_plot))
                 self.i_q_plot.set_ylabel(r'$\Psi / Vs$')
                 self.i_q_plot.set_xlabel(r'$T / Nm$')
-                self.i_q_plot.set_title(r'$i_q(T, \Psi)$')
+                self.i_q_plot.set_title(r'$i_\mathrm{q}(T, \Psi)$')
 
 
                 self.i_d_plot.plot_surface(self.t_grid, self.psi_grid, self.i_d_inter_plot, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_d_inter_plot),
                                  vmax=np.nanmax(self.i_d_inter_plot))
                 self.i_d_plot.set_ylabel(r'$\Psi / Vs$')
                 self.i_d_plot.set_xlabel(r'$T / Nm$')
-                self.i_d_plot.set_title(r'$i_d(T, \Psi)$')
+                self.i_d_plot.set_title(r'$i_\mathrm{d}(T, \Psi)$')
 
             self.torque_list = []
             self.psi_list = []
@@ -1304,7 +1306,7 @@ class MTPC:
             if self.k == 0:
                 self.intitialize_torque_plot()
 
-            self.k_list.append(self.k / 10000)
+            self.k_list.append(self.k * self.tau)
             self.i_d_list.append(i_d)
             self.i_q_list.append(i_q)
             self.torque_list.append(torque)
@@ -1331,25 +1333,23 @@ class MTPC:
         return i_q, i_d
 
     def modulation_control(self, state):
-        eps = state[self.epsilon_idx] * self.limit[self.epsilon_idx]
-        u_sd = state[self.u_sd_idx] * self.limit[self.u_sd_idx]
-        u_sq = state[self.u_sq_idx] * self.limit[self.u_sq_idx]
-        u_alpha, u_beta = self.q([u_sd, u_sq], eps)
-        a = 2 * np.sqrt(u_alpha ** 2 + u_beta ** 2) / self.u_dc
+        """
+        To ensure the functionality of the current control, a small dynamic manipulated variable reserve to the voltage
+        limitation must be kept available. This control is performed by this modulation controller. Further information
+        can be found at https://ieeexplore.ieee.org/document/7409195.
+        """
+
+        a = 2 * np.sqrt((state[self.u_sd_idx] * self.limit[self.u_sd_idx]) ** 2 + (
+                    state[self.u_sq_idx] * self.limit[self.u_sq_idx]) ** 2) / self.u_dc
 
         if a > 1.1 * self.a_max:
             self.integrated = self.integrated_reset
 
         a_delta = self.k_ * self.a_max - a
-        if state[self.omega_idx] > 0.0001:
-            psi_max_ = self.u_dc / (
-                np.sqrt(3) * self.limit[self.omega_idx] * np.abs(state[self.omega_idx]) * self.p)
-            k_i = 2 * self.limit[self.omega_idx] * np.abs(state[self.omega_idx]) * self.p / self.u_dc
+        omega = max(np.abs(state[self.omega_idx]) * self.limit[self.omega_idx], 0.0001)
+        psi_max_ = self.u_dc / (np.sqrt(3) * omega * self.p)
+        k_i = 2 * omega * self.p / self.u_dc
 
-        else:
-            psi_max_ = self.u_dc / (
-                    np.sqrt(3) * self.limit[self.omega_idx] * 0.0001 * self.p)
-            k_i = 2 * self.limit[self.omega_idx] * 0.0001 * self.p / self.u_dc
         i_gain = self.i_gain / k_i
         psi_delta = i_gain * (a_delta * self.tau + self.integrated)
 
@@ -1367,15 +1367,15 @@ class MTPC:
         if self.plot_modulation:
             if self.k == 0:
                 self.initialize_modulation_plot()
-            self.k_list_a.append(self.k / 10000)
+            self.k_list_a.append(self.k * self.tau)
             self.a_list.append(a)
             self.psi_delta_list.append(psi_delta)
 
             if self.k % self.update_interval == 0:
                     self.a_plot.scatter(self.k_list_a, self.a_list, c='tab:blue', s=3)
                     self.psi_delta_plot.scatter(self.k_list_a, self.psi_delta_list, c='tab:blue', s=3)
-                    self.a_plot.set_xlim(max(self.k / 10000, 1) - 1, max(self.k / 10000, 1))
-                    self.psi_delta_plot.set_xlim(max(self.k / 10000, 1) - 1, max(self.k / 10000, 1))
+                    self.a_plot.set_xlim(max(self.k * self.tau, 1) - 1, max(self.k * self.tau, 1))
+                    self.psi_delta_plot.set_xlim(max(self.k * self.tau, 1) - 1, max(self.k * self.tau, 1))
                     self.k_list_a = []
                     self.a_list = []
                     self.psi_delta_list = []
@@ -1398,12 +1398,12 @@ class MTPC:
             self.a_plot.set_xlim(0, 1)
             self.a_plot.legend(loc=2)
 
-            self.psi_delta_plot.set_title(r'$\Psi_{\Delta}$')
+            self.psi_delta_plot.set_title(r'$\Psi_\mathrm{\Delta}$')
             self.psi_delta_plot.axhline(self.psi_low, c='tab:red', linestyle='dashed', label='Limit')
             self.psi_delta_plot.axhline(self.psi_high, c='tab:red', linestyle='dashed')
-            self.psi_delta_plot.plot([], [], c='tab:blue', label=r'$\Psi_{\Delta}$')
+            self.psi_delta_plot.plot([], [], c='tab:blue', label=r'$\Psi_\mathrm{\Delta}$')
             self.psi_delta_plot.set_xlabel('t / s')
-            self.psi_delta_plot.set_ylabel(r'$\Psi_{\Delta} / Vs$')
+            self.psi_delta_plot.set_ylabel(r'$\Psi_\mathrm{\Delta} / Vs$')
             self.psi_delta_plot.grid(True)
             self.psi_delta_plot.set_xlim(0, 1)
             self.psi_delta_plot.legend(loc=2)
