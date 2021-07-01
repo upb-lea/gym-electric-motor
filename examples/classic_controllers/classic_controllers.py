@@ -37,7 +37,7 @@ class Controller:
         cls.visualization, controller_kwargs = cls.get_visualization(environment, **controller_kwargs)
 
         if stages is not None:
-            controller_type, stages = cls.find_controller_type(environment, stages)
+            controller_type, stages = cls.find_controller_type(environment, stages, **controller_kwargs)
             assert controller_type in _controllers.keys(), f'Controller {controller_type} unknown'
             stages = cls.automated_gain(environment, stages, controller_type, **controller_kwargs)
             controller = _controllers[controller_type][0](environment, stages, **controller_kwargs)
@@ -128,8 +128,9 @@ class Controller:
         return controller_kwargs
 
     @staticmethod
-    def find_controller_type(environment, stages):
+    def find_controller_type(environment, stages, **controller_kwargs):
         _stages = stages
+
         if type(environment.physical_system) == DcMotorSystem:
             if type(stages) == list:
                 if len(stages) > 1:
@@ -150,7 +151,7 @@ class Controller:
                     _stages = [{'controller_type': stages}]
         elif type(environment.physical_system) == SynchronousMotorSystem:
             if len(stages) == 2:
-                if len(stages[1]) == 1:
+                if len(stages[1]) == 1 and 'i_sq' in controller_kwargs['ref_states']:
                     controller_type = 'foc_controller'
                 else:
                     controller_type = 'cascaded_foc_controller'
@@ -201,15 +202,15 @@ class Controller:
                     stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
                               [{'controller_type': 'on_off'}]]
                 else:
-                    stages = [[{'controller_type': 'pi_controller'}], [{'controller_type': 'pi_controller'}]]
+                    stages = [[{'controller_type': 'pi_controller'}, {'controller_type': 'pi_controller'}]]
             elif 'omega' in ref_states:
                 controller_type = 'cascaded_foc_controller'
                 if type(environment.action_space) == Discrete:
                     stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
                               [{'controller_type': 'on_off'}], [{'controller_type': 'pi_controller'}]]
                 else:
-                    stages = [[{'controller_type': 'pi_controller'}],
-                              [{'controller_type': 'pi_controller'}, {'controller_type': 'pi_controller'}]]
+                    stages = [[{'controller_type': 'pi_controller'},
+                              {'controller_type': 'pi_controller'}], [{'controller_type': 'pi_controller'}]]
         else:
             controller_type = 'foc_controller'
 
@@ -336,7 +337,7 @@ class Controller:
 
             elif _controllers[controller_type][0] == FieldOrientedController:
                 stage_d = stages[0][0]
-                stage_q = stages[1][0]
+                stage_q = stages[0][1]
                 if 'i_sq' in ref_states and _controllers[stage_q['controller_type']][1] == ContinuousController:
                     p_gain_d = mp['l_d'] / (1.5 * environment.physical_system.tau * a) / u_sd_lim * i_sd_lim
                     i_gain_d = p_gain_d / (1.5 * environment.physical_system.tau * a ** 2)
@@ -357,12 +358,14 @@ class Controller:
                     if _controllers[stage_q['controller_type']][2] == PID_Controller:
                         d_gain_q = p_gain_q * environment.physical_system.tau
                         stage_q['d_gain'] = d_gain_q if 'd_gain' not in stage_q.keys() else stage_q['d_gain']
-                    stages = [[stage_d], [stage_q]]
+                    stages = [[stage_d, stage_q]]
 
             elif _controllers[controller_type][0] == CascadedFieldOrientedController:
                 if type(environment.action_space) == Box:
                     stage_d = stages[0][0]
-                    stage_q = stages[1]
+                    stage_q = stages[0][1]
+                    if 'torque' not in controller_kwargs['ref_states']:
+                        overlaid = stages[1]
 
                     p_gain_d = mp['l_d'] / (1.5 * environment.physical_system.tau * a) / u_sd_lim * i_sd_lim
                     i_gain_d = p_gain_d / (1.5 * environment.physical_system.tau * a ** 2)
@@ -373,32 +376,35 @@ class Controller:
                     stage_d['p_gain'] = p_gain_d if 'p_gain' not in stage_d.keys() else stage_d['p_gain']
                     stage_d['i_gain'] = i_gain_d if 'i_gain' not in stage_d.keys() else stage_d['i_gain']
 
-                    stage_q[0]['p_gain'] = p_gain_q if 'p_gain' not in stage_q[0].keys() else stage_q[0]['p_gain']
-                    stage_q[0]['i_gain'] = i_gain_q if 'i_gain' not in stage_q[0].keys() else stage_q[0]['i_gain']
+                    stage_q['p_gain'] = p_gain_q if 'p_gain' not in stage_q.keys() else stage_q['p_gain']
+                    stage_q['i_gain'] = i_gain_q if 'i_gain' not in stage_q.keys() else stage_q['i_gain']
 
                     if _controllers[stage_d['controller_type']][2] == PID_Controller:
                         d_gain_d = p_gain_d * environment.physical_system.tau
                         stage_d['d_gain'] = d_gain_d if 'd_gain' not in stage_d.keys() else stage_d['d_gain']
 
-                    if _controllers[stage_q[0]['controller_type']][2] == PID_Controller:
+                    if _controllers[stage_q['controller_type']][2] == PID_Controller:
                         d_gain_q = p_gain_q * environment.physical_system.tau
-                        stage_q[0]['d_gain'] = d_gain_q if 'd_gain' not in stage_q[0].keys() else stage_q[0]['d_gain']
+                        stage_q['d_gain'] = d_gain_q if 'd_gain' not in stage_q.keys() else stage_q['d_gain']
 
-                    if 'omega' in ref_states and _controllers[stage_q[1]['controller_type']][1] == ContinuousController:
+                    if 'torque' not in controller_kwargs['ref_states'] and _controllers[overlaid[0]['controller_type']][1] == ContinuousController:
                         t_n = p_gain_d / i_gain_d
                         p_gain = environment.physical_system.mechanical_load.j_total / (
                                     a ** 2 * t_n) / torque_lim * omega_lim
                         i_gain = p_gain / (a * t_n)
 
-                        stage_q[1]['p_gain'] = p_gain if 'p_gain' not in stage_q[1].keys() else stage_q[1]['p_gain']
-                        stage_q[1]['i_gain'] = i_gain if 'i_gain' not in stage_q[1].keys() else stage_q[1]['i_gain']
+                        overlaid[0]['p_gain'] = p_gain if 'p_gain' not in overlaid[0].keys() else overlaid[0]['p_gain']
+                        overlaid[0]['i_gain'] = i_gain if 'i_gain' not in overlaid[0].keys() else overlaid[0]['i_gain']
 
-                        if _controllers[stage_q[1]['controller_type']][2] == PID_Controller:
+                        if _controllers[overlaid[0]['controller_type']][2] == PID_Controller:
                             d_gain = p_gain * environment.physical_system.tau
-                            stage_q[1]['d_gain'] = d_gain if 'd_gain' not in stage_q[1].keys() else stage_q[1][
+                            overlaid[0]['d_gain'] = d_gain if 'd_gain' not in overlaid[0].keys() else overlaid[0][
                                 'd_gain']
 
-                    stages = [[stage_d], stage_q]
+                        stages = [[stage_d, stage_q], overlaid]
+
+                    else:
+                        stages = [[stage_d, stage_q]]
 
                 else:
                     if 'omega' in ref_states and _controllers[stages[3][0]['controller_type']][
@@ -735,14 +741,14 @@ class FieldOrientedController(Controller):
             ext_ref_plot.set_reference(ref_states)
 
         if self.control_type:
-            assert len(stages) == 2, 'Number of stages not correct'
+            assert len(stages[0]) == 2, 'Number of stages not correct'
             self.decoupling = True if 'decoupling' not in controller_kwargs else controller_kwargs['decoupling']
             [self.u_sq_0, self.u_sd_0] = [0, 0]
 
             self.d_controller = _controllers[stages[0][0]['controller_type']][1].make(
                 environment, stages[0][0], **controller_kwargs)
-            self.q_controller = _controllers[stages[1][0]['controller_type']][1].make(
-                environment, stages[1][0], **controller_kwargs)
+            self.q_controller = _controllers[stages[0][1]['controller_type']][1].make(
+                environment, stages[0][1], **controller_kwargs)
 
         else:
             assert len(stages) == 3, 'Number of stages not correct'
@@ -860,21 +866,22 @@ class CascadedFieldOrientedController(Controller):
         self.ref_idx = 0
 
         if self.controller_type:
-            assert len(stages) == 2, 'Number of stages not correct'
+            assert len(stages[0]) == 2, 'Number of stages not correct'
             self.d_controller = _controllers[stages[0][0]['controller_type']][1].make(
                 environment, stages[0][0], **controller_kwargs)
-            self.q_controller = _controllers[stages[1][0]['controller_type']][1].make(
-                environment, stages[1][0], **controller_kwargs)
-            self.overlaid_controller = [_controllers[stages[1][i]['controller_type']][1].make(
-                environment, stages[1][i], cascaded=True, **controller_kwargs) for i in range(1, len(stages[1]))]
-            self.overlaid_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
-                                   range(1, len(stages[1]))]
+            self.q_controller = _controllers[stages[0][1]['controller_type']][1].make(
+                environment, stages[0][1], **controller_kwargs)
             self.control_type = type(environment.action_space) == Box
             [self.u_sq_0, self.u_sd_0] = [0, 0]
+            if self.omega_control:
+                self.overlaid_controller = [_controllers[stages[1][i]['controller_type']][1].make(
+                    environment, stages[1][i], cascaded=True, **controller_kwargs) for i in range(0, len(stages[1]))]
+                self.overlaid_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
+                                       range(0, len(stages[1]))]
 
         else:
             if self.omega_control:
-                assert len(stages) == 4 , 'Number of stages not correct'
+                assert len(stages) == 4, 'Number of stages not correct'
                 self.overlaid_controller = [_controllers[stages[3][i]['controller_type']][1].make(
                     environment, stages[3][i], cascaded=True, **controller_kwargs) for i in range(len(stages[3]))]
                 self.overlaid_type = [_controllers[stages[3][i]['controller_type']][1] == ContinuousController for i in
@@ -904,8 +911,8 @@ class CascadedFieldOrientedController(Controller):
                 self.ref[i] = self.overlaid_controller[i-2].control(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
 
                 if (0.85 * self.state_space.low[self.ref_state_idx[i]] <= self.ref[i] <= 0.85 *
-                        self.state_space.high[self.ref_state_idx[i]]) and self.overlaid_type[i-2]:
-                    self.overlaid_controller[i-2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+                        self.state_space.high[self.ref_state_idx[i]]) and self.overlaid_type[i - 2]:
+                    self.overlaid_controller[i - 2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
                 else:
                     self.ref[i] = np.clip(self.ref[i], self.nominal_values[self.ref_state_idx[i]] / self.limit[
                         self.ref_state_idx[i]] * self.state_space.low[self.ref_state_idx[i]],
