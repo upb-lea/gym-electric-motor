@@ -4,7 +4,6 @@ import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
 import numpy as np
 
-
 if __name__ == '__main__':
 
     """

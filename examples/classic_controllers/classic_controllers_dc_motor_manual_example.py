@@ -2,9 +2,9 @@ from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
-import matplotlib
+
 if __name__ == '__main__':
-    matplotlib.use('TkAgg')
+
     """
     motor type:     'PermExDc'  Permanently Excited DC Motor
                     'ExtExDc'   Externally Excited MC Motor
