@@ -6,7 +6,6 @@ from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor import envs
 
 import numpy as np
-
 from matplotlib import pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
@@ -76,9 +75,10 @@ class Controller:
 
         Args:
             external_reference_plots:
-                This must be a subcalss of the StatePlot class from the gym-electric-motor visualization. It needs the functions
-                set_reference(), set_env() and external_reference(). An example is given by the class ExternallyReferencedStatePlot.
-                The class must also be passed to the environment in the make function as a visualization.
+                This must be a subcalss of the StatePlot class from the gym-electric-motor visualization. It needs the
+                functions set_reference(), set_env() and external_reference(). An example is given by the class
+                ExternallyReferencedStatePlot. The class must also be passed to the environment in the make function as
+                a visualization.
 
             state_names:
                 names of the environment states
@@ -182,14 +182,15 @@ class Controller:
                         stages.append({'controller_type': 'pi_controller'})  # Adding PI-Controller for overlaid stages
 
             elif 'i' in ref_states or 'i_a' in ref_states:
-
-                if action_space == Discrete or action_space == MultiDiscrete:  # Checking type of output stage (finite / cont)
+                # Checking type of output stage (finite / cont)
+                if action_space == Discrete or action_space == MultiDiscrete:
                     stages.append({'controller_type': 'three_point'})
                 elif action_space == Box:
                     stages.append({'controller_type': 'pi_controller'})
                 controller_type = stages[0]['controller_type']
-            if type(
-                    environment.physical_system.electrical_motor) == DcExternallyExcitedMotor:  # Add stage for i_e current of the ExtExDC
+
+            # Add stage for i_e current of the ExtExDC
+            if type(environment.physical_system.electrical_motor) == DcExternallyExcitedMotor:
                 if action_space == Box:
                     stages = [stages, [{'controller_type': 'pi_controller'}]]
                 else:
@@ -387,7 +388,8 @@ class Controller:
                         d_gain_q = p_gain_q * environment.physical_system.tau
                         stage_q['d_gain'] = d_gain_q if 'd_gain' not in stage_q.keys() else stage_q['d_gain']
 
-                    if 'torque' not in controller_kwargs['ref_states'] and _controllers[overlaid[0]['controller_type']][1] == ContinuousController:
+                    if 'torque' not in controller_kwargs['ref_states'] and \
+                            _controllers[overlaid[0]['controller_type']][1] == ContinuousController:
                         t_n = p_gain_d / i_gain_d
                         p_gain = environment.physical_system.mechanical_load.j_total / (
                                     a ** 2 * t_n) / torque_lim * omega_lim
@@ -640,16 +642,30 @@ class CascadedController(Controller):
         self.ref[-1-self.control_e_idx] = reference[self.ref_idx]
 
         for i in range(len(self.controller_stages) - 1, 0 + self.control_e_idx - self.control_omega, -1):
-            self.ref[i - 1 + self.control_omega] = self.controller_stages[i].control(state[self.ref_state_idx[i + self.control_omega]], self.ref[i + self.control_omega])
-            if (self.state_limit_low[self.ref_state_idx[i - 1 + self.control_omega]] <= self.ref[i - 1 + self.control_omega] <= self.state_limit_high[self.ref_state_idx[i - 1 + self.control_omega]]) and self.stage_type[i]:
+            self.ref[i - 1 + self.control_omega] = self.controller_stages[i].control(
+                state[self.ref_state_idx[i + self.control_omega]], self.ref[i + self.control_omega])
+
+            if (self.state_limit_low[self.ref_state_idx[i - 1 + self.control_omega]] <= self.ref[
+                i - 1 + self.control_omega] <= self.state_limit_high[
+                    self.ref_state_idx[i - 1 + self.control_omega]]) and self.stage_type[i]:
+
                 self.controller_stages[i].integrate(state[self.ref_state_idx[i + self.control_omega]], reference[0])
+
             elif self.stage_type[i]:
-                self.ref[i - 1 + self.control_omega] = np.clip(self.ref[i - 1 + self.control_omega], self.state_limit_low[self.ref_state_idx[i - 1 + self.control_omega]],
-                                          self.state_limit_high[self.ref_state_idx[i - 1 + self.control_omega]])
+                self.ref[i - 1 + self.control_omega] = np.clip(self.ref[i - 1 + self.control_omega],
+                                                               self.state_limit_low[
+                                                                   self.ref_state_idx[i - 1 + self.control_omega]],
+                                                               self.state_limit_high[
+                                                                   self.ref_state_idx[i - 1 + self.control_omega]])
 
         if self.control_e:
-            i_e = np.clip(np.power(self.r_a * (self.ref[1] * self.limit[self.torque_idx])**2 / (self.r_e * self.l_e**2), 1/4), self.action_space.low[1]*self.limit[self.i_e_idx], self.action_space.high[1]*self.limit[self.i_e_idx])
-            i_a = np.clip(self.ref[1]*self.limit[self.torque_idx] / (self.l_e * i_e), self.action_space.low[0]*self.limit[self.i_a_idx], self.action_space.high[0]*self.limit[self.i_a_idx])
+            i_e = np.clip(
+                np.power(self.r_a * (self.ref[1] * self.limit[self.torque_idx]) ** 2 / (self.r_e * self.l_e ** 2),
+                         1 / 4), self.action_space.low[1] * self.limit[self.i_e_idx],
+                self.action_space.high[1] * self.limit[self.i_e_idx])
+            i_a = np.clip(self.ref[1] * self.limit[self.torque_idx] / (self.l_e * i_e),
+                          self.action_space.low[0] * self.limit[self.i_a_idx],
+                          self.action_space.high[0] * self.limit[self.i_a_idx])
             self.ref[-1] = i_e / self.limit[self.i_e_idx]
             self.ref[0] = i_a / self.limit[self.i_a_idx]
 
@@ -798,11 +814,12 @@ class FieldOrientedController(Controller):
 
 class CascadedFieldOrientedController(Controller):
     """
-        This controller is used for torque or speed control of synchronous motors. The controller consists of an FOC
-        controller for current control, an efficiency-optimized torque controller and an optional speed controller. The
-        current control is equivalent to the current control of the FOC_Controller. The torque controller is based on
-        the Maximum Torque per Current (MTPC) control strategy and the speed controller is designed as a PI-controller
-        by default.
+        This controller is used for torque or speed control of synchronous motors. The controller consists of a field
+        oriented controller for current control, an efficiency-optimized torque controller and an optional speed
+        controller. The current control is equivalent to the current control of the FOC_Controller. The torque
+        controller is based on the Maximum Torque per Current (MTPC) control strategy in the voltage control range and
+        the Maximum Torque per Flux (MTPF) control strategy with an additional modulation controller in the flux
+        weakening range. The speed controller is designed as a PI-controller by default.
     """
 
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], plot_torque=True, plot_modulation=False,
@@ -853,13 +870,12 @@ class CascadedFieldOrientedController(Controller):
         self.psi_p = 0 if 'psi_p' not in self.mp.keys() else self.mp['psi_p']
         self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
         self.decoupling = True if 'decoupling' not in controller_kwargs else controller_kwargs['decoupling']
-
         self.ref_state_idx = [self.i_sq_idx, self.i_sd_idx]
+
         if self.torque_control:
             self.ref_state_idx.append(self.torque_idx)
-
-            self.torque_controller = TorqueToCurrentConversion(environment, plot_torque, plot_modulation, update_interval, torque_control)
-
+            self.torque_controller = TorqueToCurrentConversion(environment, plot_torque, plot_modulation,
+                                                               update_interval, torque_control)
         if self.omega_control:
             self.ref_state_idx.append(self.omega_idx)
 
@@ -925,8 +941,8 @@ class CascadedFieldOrientedController(Controller):
 
         if self.controller_type:
             if self.decoupling:
-                self.u_sd_0 = -state[self.omega_idx] * self.mp['p'] * self.mp['l_q'] * state[self.i_sq_idx] * self.limit[
-                    self.i_sq_idx] / self.limit[self.u_sd_idx] * self.limit[self.omega_idx]
+                self.u_sd_0 = -state[self.omega_idx] * self.mp['p'] * self.mp['l_q'] * state[self.i_sq_idx]\
+                              * self.limit[self.i_sq_idx] / self.limit[self.u_sd_idx] * self.limit[self.omega_idx]
                 self.u_sq_0 = state[self.omega_idx] * self.mp['p'] * (
                         state[self.i_sd_idx] * self.mp['l_d'] * self.limit[self.u_sd_idx] + self.psi_p) / self.limit[
                          self.u_sq_idx] * self.limit[self.omega_idx]
@@ -978,23 +994,26 @@ class CascadedFieldOrientedController(Controller):
         if self.torque_control:
             self.torque_controller.reset()
 
+
 class TorqueToCurrentConversion:
     """
         This class represents the torque controller for cascaded control of synchronous motors.  For low speeds only the
         current limitation of the motor is important. The current vector to set a desired torque is selected so that the
         amount of the current vector is minimum (Maximum Torque per Current). For higher speeds, the voltage limitation
-        of the synchronous motor or the actuator must also be taken into account. This is done by converting the available
-        voltage to a speed-dependent maximum flux. An additional modulation controller is used for the flux control. By
-        limiting the flux and the maximum torque per flux (MTPF), an operating point for the flux and the torque is
-        obtained. This is then converted into a current operating point. The conversion can be done by different methods
-        (parameter torque_control). On the one hand, maps can be determined in advance by interpolation or analytically,
-        or the analytical determination can be done online.
+        of the synchronous motor or the actuator must also be taken into account. This is done by converting the
+        available voltage to a speed-dependent maximum flux. An additional modulation controller is used for the flux
+        control. By limiting the flux and the maximum torque per flux (MTPF), an operating point for the flux and the
+        torque is obtained. This is then converted into a current operating point. The conversion can be done by
+        different methods (parameter torque_control). On the one hand, maps can be determined in advance by
+        interpolation or analytically, or the analytical determination can be done online.
         For the visualization of the operating points, both for the current operating points as well as the flux and
         torque operating points, predefined plots are available (plot_torque: default True). Also the values of the
         modulation controller can be visualized (plot_modulation: default False).
     """
 
-    def __init__(self, environment, plot_torque=True, plot_modulation=False, update_interval=1000, torque_control='interpolate'):
+    def __init__(self, environment, plot_torque=True, plot_modulation=False, update_interval=1000,
+                 torque_control='interpolate'):
+
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.limit = environment.physical_system.limits
         self.nominal_values = environment.physical_system.nominal_state
@@ -1032,6 +1051,12 @@ class TorqueToCurrentConversion:
         self.t_count = 250
         self.psi_count = 250
         self.i_count = 500
+
+        self.torque_list = []
+        self.psi_list = []
+        self.k_list = []
+        self.i_d_list = []
+        self.i_q_list = []
 
         def mtpc():
             def i_q_(i_d, torque):
@@ -1078,7 +1103,8 @@ class TorqueToCurrentConversion:
 
         def mtpf():
             # maximum flux is calculated
-            self.psi_max_mtpf = np.sqrt((self.psi_p + self.l_d * self.nominal_values[self.i_sd_idx]) ** 2 + (self.l_q * self.nominal_values[self.i_sq_idx]) ** 2)
+            self.psi_max_mtpf = np.sqrt((self.psi_p + self.l_d * self.nominal_values[self.i_sd_idx]) ** 2 + (
+                        self.l_q * self.nominal_values[self.i_sq_idx]) ** 2)
             psi = np.linspace(0, self.psi_max_mtpf, self.psi_count)
             i_d = np.linspace(-self.nominal_values[self.i_sd_idx], 0, self.i_count)
             i_d_best = 0
@@ -1136,7 +1162,7 @@ class TorqueToCurrentConversion:
         self.i_d_max = -np.sqrt(self.nominal_values[self.i_sq_idx] ** 2 - np.power(self.i_q_max, 2))
         i_count_mgrid = 200j
         i_d, i_q = np.mgrid[-self.limit[self.i_sd_idx]:0:i_count_mgrid,
-                   -self.limit[self.i_sq_idx]:self.limit[self.i_sq_idx]:i_count_mgrid / 2]
+                            -self.limit[self.i_sq_idx]:self.limit[self.i_sq_idx]:i_count_mgrid / 2]
         i_d = i_d.flatten()
         i_q = i_q.flatten()
         if self.l_d != self.l_q:
@@ -1174,8 +1200,7 @@ class TorqueToCurrentConversion:
 
         elif torque_control == 'interpolate':
             self.t_grid, self.psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count),
-                                         self.psi_min:self.psi_max:np.complex(self.psi_count)]
-
+                                                  self.psi_min:self.psi_max:np.complex(self.psi_count)]
             self.i_q_inter = griddata((t, psi), i_q, (self.t_grid, self.psi_grid), method='linear')
             self.i_d_inter = griddata((t, psi), i_d, (self.t_grid, self.psi_grid), method='linear')
             self.i_d_inter_plot = self.i_d_inter
@@ -1202,7 +1227,9 @@ class TorqueToCurrentConversion:
                 self.psi_plot = plt.subplot2grid((2, 2), (0, 1))
                 self.torque_plot = plt.subplot2grid((2, 2), (1, 1))
 
-            mtpc_i_idx = np.where(np.sqrt(np.power(self.mtpc[:, 1], 2) + np.power(self.mtpc[:, 2], 2)) <= self.nominal_values[self.i_sd_idx])
+            mtpc_i_idx = np.where(
+                np.sqrt(np.power(self.mtpc[:, 1], 2) + np.power(self.mtpc[:, 2], 2)) <= self.nominal_values[
+                    self.i_sd_idx])
 
             self.i_d_q_characteristic_.set_title('$i_\mathrm{d,q_{ref}}$')
             self.i_d_q_characteristic_.plot(self.mtpc[mtpc_i_idx, 1][0], self.mtpc[mtpc_i_idx, 2][0], label='MTPC', c='tab:orange')
@@ -1236,26 +1263,28 @@ class TorqueToCurrentConversion:
             self.torque_plot.legend(loc=2)
 
             if self.torque_control in ['interpolate', 'analytical']:
-                self.i_q_plot.plot_surface(self.t_grid, self.psi_grid, self.i_q_inter_plot, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_q_inter_plot),
-                                vmax=np.nanmax(self.i_q_inter_plot))
+                self.i_q_plot.plot_surface(self.t_grid, self.psi_grid, self.i_q_inter_plot, cmap=cm.jet, linewidth=0,
+                                           vmin=np.nanmin(self.i_q_inter_plot), vmax=np.nanmax(self.i_q_inter_plot))
                 self.i_q_plot.set_ylabel(r'$\Psi / Vs$')
                 self.i_q_plot.set_xlabel(r'$T / Nm$')
                 self.i_q_plot.set_title(r'$i_\mathrm{q}(T, \Psi)$')
 
-
-                self.i_d_plot.plot_surface(self.t_grid, self.psi_grid, self.i_d_inter_plot, cmap=cm.jet, linewidth=0, vmin=np.nanmin(self.i_d_inter_plot),
-                                 vmax=np.nanmax(self.i_d_inter_plot))
+                self.i_d_plot.plot_surface(self.t_grid, self.psi_grid, self.i_d_inter_plot, cmap=cm.jet, linewidth=0,
+                                           vmin=np.nanmin(self.i_d_inter_plot), vmax=np.nanmax(self.i_d_inter_plot))
                 self.i_d_plot.set_ylabel(r'$\Psi / Vs$')
                 self.i_d_plot.set_xlabel(r'$T / Nm$')
                 self.i_d_plot.set_title(r'$i_\mathrm{d}(T, \Psi)$')
 
-            self.torque_list = []
-            self.psi_list = []
-            self.k_list = []
-            self.i_d_list = []
-            self.i_q_list = []
-
     def solve_analytical(self, torque, psi):
+        """
+           Assuming linear magnetization characteristics, the optimal currents for given torque and flux can be obtained
+           by solving the torque and flux equations. These lead to a fourth degree polynomial which can be solved
+           analytically.  There are two ways to use this analytical solution for control. On the one hand, the currents
+           can be determined in advance as in the case of interpolation for different torques and fluxes and stored in a
+           LUT (torque_control='analytical'). On the other hand, the solution can be calculated at runtime with the
+           given torque and flux (torque_control='online').
+        """
+
         poly = [self.l_d ** 2 * (self.l_d - self.l_q) ** 2,
                 2 * self.l_d ** 2 * (self.l_d - self.l_q) * self.psi_p + 2 * self.l_d * self.psi_p * (
                         self.l_d - self.l_q) ** 2,
@@ -1286,10 +1315,12 @@ class TorqueToCurrentConversion:
         return int(round((psi - self.psi_min) / (self.psi_max - self.psi_min) * (self.psi_count - 1)))
 
     def get_psi_idx_mtpf(self, psi):
-        return np.clip(int((self.psi_count - 1) - round(psi / self.psi_max_mtpf * (self.psi_count - 1))), 0, self.psi_count)
+        return np.clip(int((self.psi_count - 1) - round(psi / self.psi_max_mtpf * (self.psi_count - 1))), 0,
+                       self.psi_count)
 
     def get_t_idx_mtpc(self, torque):
-        return np.clip(int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count - 1))), 0, self.t_count)
+        return np.clip(int(round((torque + self.max_torque) / (2 * self.max_torque) * (self.t_count - 1))), 0,
+                       self.t_count)
 
     def control(self, state, torque):
 
@@ -1355,9 +1386,9 @@ class TorqueToCurrentConversion:
 
     def modulation_control(self, state):
         """
-        To ensure the functionality of the current control, a small dynamic manipulated variable reserve to the voltage
-        limitation must be kept available. This control is performed by this modulation controller. Further information
-        can be found at https://ieeexplore.ieee.org/document/7409195.
+            To ensure the functionality of the current control, a small dynamic manipulated variable reserve to the
+            voltage limitation must be kept available. This control is performed by this modulation controller. Further
+            information can be found at https://ieeexplore.ieee.org/document/7409195.
         """
 
         a = 2 * np.sqrt((state[self.u_sd_idx] * self.limit[self.u_sd_idx]) ** 2 + (
