@@ -966,10 +966,8 @@ class CascadedFieldOrientedController(Controller):
                 self.q_controller.integrate(state[self.i_sq_idx], self.ref[0])
 
         else:
-            if self.torque_control:
-                ref_abc = self.backward_transformation((self.ref[0], self.ref[1]), epsilon_d)
-            else:
-                ref_abc = self.backward_transformation((self.ref[0], reference[self.ref_d_idx]), epsilon_d)
+            r = self.ref[1] if self.torque_control else reference[self.ref_d_idx]
+            ref_abc = self.backward_transformation((self.ref[0], r), epsilon_d)
             action = 0
             for i in range(3):
                 action += (2 ** (2 - i)) * self.abc_controller[i].control(state[self.i_abc_idx[i]], ref_abc[i])
