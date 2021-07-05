@@ -305,7 +305,7 @@ class Controller:
 
                     if _controllers[controller_type][2] == PID_Controller:
                         d_gain = p_gain * environment.physical_system.tau
-                        stages_a[0]['d_gain'] = d_gain if 'd_gain' not in stages_a[0].keys() else stages_a[0]['d_gain']
+                        stages_a[0]['d_gain'] = stages_a[0].get('d_gain', d_gain)
 
             elif _controllers[controller_type][0] == CascadedController:
 
