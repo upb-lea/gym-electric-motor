@@ -1,3 +1,5 @@
+import numpy as np
+
 from .base_plots import EpisodePlot
 
 
@@ -12,13 +14,9 @@ class MeanEpisodeRewardPlot(EpisodePlot):
         self._reward_sum = 0
         self._episode_length = 0
         self._label = 'Mean Reward Per Step'
+        self._reward_range = [np.inf, -np.inf]
 
     def initialize(self, axis):
-        """
-            Args:
-             axis (object): the subplot axis for plotting the action variable
-        """
-
         super().initialize(axis)
         self._reward_data = []
         self._y_data.append(self._reward_data)
@@ -29,8 +27,23 @@ class MeanEpisodeRewardPlot(EpisodePlot):
         self._reward_sum += reward
         self._episode_length = k
 
+    def reset_data(self):
+        super().reset_data()
+        self._reward_data = []
+        self._reward_range = [np.inf, -np.inf]
+
     def _set_y_data(self):
-        self._reward_data.append(self._reward_sum / self._episode_length)
+        mean_reward = self._reward_sum / self._episode_length
+        self._reward_data.append(mean_reward)
+        if self._reward_range[0] > mean_reward:
+            self._reward_range[0] = mean_reward
+        if self._reward_range[1] < mean_reward:
+            self._reward_range[1] = mean_reward
         self._reward_sum = 0
         self._episode_length = 0
         self._reset = True
+
+    def _scale_y_axis(self):
+        if len(self._reward_data) > 1 and self._axis.get_ylim() != tuple(self._reward_range):
+            spacing = 0.1 * (self._reward_range[1] - self._reward_range[0])
+            self._axis.set_ylim(self._reward_range[0]-spacing, self._reward_range[1]+spacing)

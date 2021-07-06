@@ -4,12 +4,9 @@ from .subepisoded_reference_generator import SubepisodedReferenceGenerator
 
 
 class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
+    """Reference Generator that generates a reference for one state by a Wiener Process with the changing parameter
+    sigma and mean = 0.
     """
-    Reference Generator that generates a reference for one state by a Wiener Process with the changing parameter sigma
-    and mean = 0.
-    """
-
-    _current_sigma = 0
 
     def __init__(self, sigma_range=(1e-3, 1e-1), *_, **kwargs):
         """
@@ -18,6 +15,7 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
             kwargs: Further arguments to pass to SubepisodedReferenceGenerator
         """
         super().__init__(**kwargs)
+        self._current_sigma = 0
         self._sigma_range = sigma_range
 
     def _reset_reference(self):

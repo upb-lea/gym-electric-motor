@@ -21,6 +21,7 @@ class ConstReferenceGenerator(ReferenceGenerator):
         self._reference_value = reference_value
         self._reference_state = reference_state.lower()
         self.reference_space = Box(np.array([reference_value]), np.array([reference_value]))
+        self._reference_names = self._reference_state
 
     def set_modules(self, physical_system):
         # docstring from superclass

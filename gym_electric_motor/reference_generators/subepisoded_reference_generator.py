@@ -6,13 +6,9 @@ from ..utils import set_state_array
 
 
 class SubepisodedReferenceGenerator(ReferenceGenerator):
-    """
-    Base Class for Reference Generators, which change their parameters in certain ranges after a random number of
+    """Base Class for Reference Generators, which change their parameters in certain ranges after a random number of
     time steps and can pre-calculate their references in these "sub episodes".
     """
-
-    reference_space = Box(-1, 1, shape=(1,))
-    _reference = None
 
     def __init__(self, reference_state='omega', episode_lengths=(500, 2000), limit_margin=None, *_, **__):
         """
@@ -27,12 +23,15 @@ class SubepisodedReferenceGenerator(ReferenceGenerator):
                 In general, the limit margin should not exceed (-1, 1)
         """
         super().__init__()
+        self.reference_space = Box(-1, 1, shape=(1,))
+        self._reference = None
         self._limit_margin = limit_margin
         self._reference_value = 0.0
         self._reference_state = reference_state.lower()
         self._episode_len_range = episode_lengths
         self._current_episode_length = int(self._get_current_value(episode_lengths))
         self._k = 0
+        self._reference_names = [self._reference_state]
 
     def set_modules(self, physical_system):
         super().set_modules(physical_system)

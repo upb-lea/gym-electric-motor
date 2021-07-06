@@ -1,13 +1,14 @@
 from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem
-from .converters import PowerElectronicConverter, DiscOneQuadrantConverter, DiscTwoQuadrantConverter, \
-    DiscFourQuadrantConverter, DiscMultiConverter, DiscB6BridgeConverter, ContOneQuadrantConverter, \
+from .converters import PowerElectronicConverter, FiniteOneQuadrantConverter, FiniteTwoQuadrantConverter, \
+    FiniteFourQuadrantConverter, FiniteMultiConverter, FiniteB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter, NoConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
     DoublyFedInductionMotor
 
-from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad
+from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad, \
+    OrnsteinUhlenbeckLoad
 
 from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSolver, ScipyOdeSolver
 
@@ -32,15 +33,15 @@ register_class(SynchronousMotorSystem, PhysicalSystem, 'SyncMotorSystem')
 register_class(SquirrelCageInductionMotorSystem, PhysicalSystem, 'SquirrelCageInductionMotorSystem')
 register_class(DoublyFedInductionMotorSystem, PhysicalSystem, 'DoublyFedInductionMotorSystem')
 
-register_class(DiscOneQuadrantConverter, PowerElectronicConverter, 'Disc-1QC')
+register_class(FiniteOneQuadrantConverter, PowerElectronicConverter, 'Finite-1QC')
 register_class(ContOneQuadrantConverter, PowerElectronicConverter, 'Cont-1QC')
-register_class(DiscTwoQuadrantConverter, PowerElectronicConverter, 'Disc-2QC')
+register_class(FiniteTwoQuadrantConverter, PowerElectronicConverter, 'Finite-2QC')
 register_class(ContTwoQuadrantConverter, PowerElectronicConverter, 'Cont-2QC')
-register_class(DiscFourQuadrantConverter, PowerElectronicConverter, 'Disc-4QC')
+register_class(FiniteFourQuadrantConverter, PowerElectronicConverter, 'Finite-4QC')
 register_class(ContFourQuadrantConverter, PowerElectronicConverter, 'Cont-4QC')
-register_class(DiscMultiConverter, PowerElectronicConverter, 'Disc-Multi')
+register_class(FiniteMultiConverter, PowerElectronicConverter, 'Finite-Multi')
 register_class(ContMultiConverter, PowerElectronicConverter, 'Cont-Multi')
-register_class(DiscB6BridgeConverter, PowerElectronicConverter, 'Disc-B6C')
+register_class(FiniteB6BridgeConverter, PowerElectronicConverter, 'Finite-B6C')
 register_class(ContB6BridgeConverter, PowerElectronicConverter, 'Cont-B6C')
 register_class(NoConverter, PowerElectronicConverter, 'NoConverter')
 

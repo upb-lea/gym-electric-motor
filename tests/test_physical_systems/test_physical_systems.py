@@ -36,7 +36,6 @@ class TestSCMLSystem:
             lambda _:
             DummyLoad.state_names + ['torque'] + DummyElectricMotor.CURRENTS + DummyElectricMotor.VOLTAGES + ['u_sup']
         )
-        monkeypatch.setattr(ps, 'instantiate', mock_instantiate)
         monkeypatch.setattr(
             self.class_to_test,
             '_build_state_space',
@@ -54,81 +53,6 @@ class TestSCMLSystem:
             noise_generator=DummyNoise()
         )
 
-    @pytest.mark.parametrize(
-        "tau, solver_kwargs, kwargs", [
-            (1e-3, {'a': 0.1, 'b': 0.2}, {'c': 0.3}),
-            (1e-3, {'a': 0.1, 'bcd': '2'}, {'e': 0.4})
-        ]
-    )
-    def test_initialization(self, monkeypatch, tau, solver_kwargs, kwargs):
-        """Tests for the init-function of the SCMLSystem"""
-        instantiate_dict.clear()
-        monkeypatch.setattr(ps, 'instantiate', mock_instantiate)
-
-        # Mock the abstract build state_space function
-        monkeypatch.setattr(
-            self.class_to_test,
-            '_build_state_space',
-            lambda _, state_names: Box(
-                low=np.zeros_like(state_names, dtype=float),
-                high=np.ones_like(state_names, dtype=float)
-            )
-        )
-        # Mock the abstract build state_names function
-        monkeypatch.setattr(
-            self.class_to_test,
-            '_build_state_names',
-            lambda _: DummyLoad.state_names + ['torque'] + DummyElectricMotor.CURRENTS + ['u_sup']
-        )
-        # Create the SCMLSystem
-        system = self.class_to_test(
-            converter=DummyConverter,
-            motor=DummyElectricMotor,
-            load=DummyLoad,
-            supply=DummyVoltageSupply,
-            ode_solver=DummyOdeSolver,
-            noise_generator=DummyNoise,
-            tau=tau,
-            solver_kwargs=solver_kwargs,
-            **kwargs
-        )
-        assert system.tau == tau
-
-        # assert correct instantiate calls
-        assert DummyElectricMotor == instantiate_dict[em.ElectricMotor]['key'], 'electric motor instantiated falsely'
-        assert DummyConverter == instantiate_dict[cv.PowerElectronicConverter]['key'], 'converter instantiated falsely'
-        assert DummyLoad == instantiate_dict[ml.MechanicalLoad]['key'], 'mechanical load instantiated falsely'
-        assert DummyOdeSolver == instantiate_dict[sv.OdeSolver]['key'], 'ode solver instantiated falsely'
-        assert DummyVoltageSupply == instantiate_dict[vs.VoltageSupply]['key'], 'voltage supply instantiated falsely'
-
-        # assert components are set correctly in the physical system
-        assert system.converter == instantiate_dict[cv.PowerElectronicConverter]['instance'],'el. motor set falsely'
-        assert system.electrical_motor == instantiate_dict[em.ElectricMotor]['instance'], 'converter set falsely'
-        assert system.mechanical_load == instantiate_dict[ml.MechanicalLoad]['instance'], 'mech. load set falsely'
-        assert system._ode_solver == instantiate_dict[sv.OdeSolver]['instance'], 'ode solver set falsely'
-        assert system.supply == instantiate_dict[vs.VoltageSupply]['instance'], 'voltage supply set falsely'
-
-        # Assert correct kwargs-passing to subcomponents
-        assert system.converter.kwargs == kwargs, 'False kwargs passed to converter'
-        assert system.electrical_motor.kwargs == kwargs, 'False kwargs passed to electric motor'
-        assert system.mechanical_load.kwargs == kwargs, 'False kwargs passed to mechanical load'
-        assert system._ode_solver.kwargs == solver_kwargs, 'False kwargs passed to ode_solver'
-        assert system.supply.kwargs == kwargs, 'False kwargs passed to voltage supply'
-
-        # Assertions for correct spaces
-        assert system.action_space == instantiate_dict[cv.PowerElectronicConverter]['instance'].action_space,\
-            'Wrong action space'
-
-        # Check the correct state position dictionary, limits, and nominal state
-        assert system.state_positions == {
-            'omega': 0, 'position': 1, 'torque': 2, 'i_0': 3, 'i_1': 4, 'u_sup': 5
-        }, 'State Position dictionary is set false'
-        assert all(system.limits == np.array([15, 10, 26, 26, 21, 15])), 'System limits are incorrect'
-        assert all(system.nominal_state == np.array([14, 10, 20, 22, 20, 15])), 'System nominal values are incorrect'
-        assert system.state_space == Box(
-            low=np.zeros_like(system.state_names, dtype=float), high=np.ones_like(system.state_names, dtype=float)
-        ), 'Incorrect systems state space'
-
     def test_reset(self, scml_system):
         """Test the reset function in the physical system"""
         scml_system._t = 12
@@ -136,10 +60,8 @@ class TestSCMLSystem:
         state_space = scml_system.state_space
         state_positions = scml_system.state_positions
         initial_state = scml_system.reset()
-        assert all(
-            initial_state == (np.array([0, 0, 0, 0, 0, 0, 560]) + scml_system._noise_generator.reset())
-            / scml_system.limits
-        ), 'Initial states of the system are incorrect'
+        target = (np.array([0, 0, 0, 0, 0, 0, 560]) + scml_system._noise_generator.reset()) / scml_system.limits
+        assert np.all(initial_state == target), 'Initial states of the system are incorrect'
         assert scml_system._t == 0, 'Time of the system was not set to zero after reset'
         assert scml_system._k == 0, 'Episode step of the system was not set to zero after reset'
         assert scml_system.converter.reset_counter == scml_system.electrical_motor.reset_counter \
@@ -162,7 +84,7 @@ class TestSCMLSystem:
             derivative == np.array([torque, -torque, currents[0] - u_in[0], currents[1] - u_in[1]])
         ), 'The system equation return differs from the expected'
         assert scml_system.mechanical_load.t == t, 'The time t was not passed through to the mech. load equation'
-        assert all(scml_system.mechanical_load.mechanical_state == state[:2]),\
+        assert np.all(scml_system.mechanical_load.mechanical_state == state[:2]),\
             'The mech. state was not returned correctly'
 
     def test_simulate(self, scml_system):

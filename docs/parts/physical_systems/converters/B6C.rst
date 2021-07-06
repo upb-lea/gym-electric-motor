@@ -6,7 +6,7 @@ Three Phase Converters
 Discrete B6 Bridge Converter
 '''''''''''''''''''''''''''''''
 
-.. autoclass:: gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter
+.. autoclass:: gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter
    :members:
    :inherited-members:
 

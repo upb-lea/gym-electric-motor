@@ -28,39 +28,9 @@ determine which action must be taken on a continuous-control-set
 if __name__ == '__main__':
 
     # Define the drive environment
-    # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning results.
     env = gem.make(
-        # Define the series DC motor with continuous-control-set
-        'DcSeriesCont-v1',
-        # Pass a class with extra parameters
-        visualization=MotorDashboard(state_plots=['omega', 'torque', 'i', 'u', 'u_sup'], reward_plot=True),
-
-
-        # Set the parameters of the motor
-        motor_parameter=dict(r_a=2.5, r_e=4.5, l_a=9.7e-3, l_e_prime=9.2e-3, l_e=9.2e-3, j_rotor=0.001),
-
-        # Set the parameters of the mechanical polynomial load (the default load class)
-        load_parameter=dict(a=0, b=.0, c=0.01, j_load=.001),
-
-        # Weighting of different addends of the reward function
-        # This can be used to assign higher or lower priorities to different states
-        # As only one state is weighted here, the value does not make a major difference
-        reward_weights={'omega': 1000},
-
-        # Exponent of the reward function
-        # Here we use a square root function
-        reward_power=0.5,
-
-        # Define which state variables are to be monitored concerning limit violations
-        # () means that a limit violation will never trigger an env.reset
-        constraints=(),
-
-        # Define which numerical solver is to be used for the simulation
-        ode_solver='scipy.solve_ivp',
-        solver_kwargs=dict(method='BDF'),
-
-        # Define and parameterize the reference generator for the speed reference
-        reference_generator=WienerProcessReferenceGenerator(reference_state='omega', sigma_range=(5e-3, 1e-2)),
+        # Define the speed control series DC motor environment with continuous-control-set
+        'Cont-SC-SeriesDc-v0',
     )
 
     # For data processing we want to flatten the env output,

@@ -27,7 +27,7 @@ class TestElectricMotorEnvironment:
             physical_system=ps,
             reference_generator=rg,
             reward_function=rf,
-            visualization=vs,
+            visualizations=vs,
             constraints=cm,
             callbacks=[cb]
         )
@@ -39,67 +39,58 @@ class TestElectricMotorEnvironment:
             assert type(env) == self.test_class
 
     @pytest.mark.parametrize(
-        "physical_system, reference_generator, reward_function, state_filter, visualization, callbacks, kwargs",
+        "physical_system, reference_generator, reward_function, state_filter, visualization, callbacks",
         [
-            (DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, None, (), [], {}),
             (
-                    DummyPhysicalSystem(2), DummyReferenceGenerator, DummyRewardFunction(), ['dummy_state_0'],
-                    (), [DummyCallback()], {'a': 1, 'b': 2}
+                DummyPhysicalSystem(), DummyReferenceGenerator(), DummyRewardFunction(), None, (), []
             ),
             (
-                    DummyPhysicalSystem(10), DummyReferenceGenerator(),
-                    DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'], (),
-                    [DummyCallback(), DummyCallback()], {}
+                DummyPhysicalSystem(2), DummyReferenceGenerator(), DummyRewardFunction(), ['dummy_state_0'],
+                (), [DummyCallback()]
+            ),
+            (
+                DummyPhysicalSystem(10),
+                DummyReferenceGenerator(),
+                DummyRewardFunction(observed_states=['dummy_state_0']), ['dummy_state_0', 'dummy_state_2'],
+                (),
+                [DummyCallback(), DummyCallback()],
             ),
         ]
     )
-    def test_initialization(self, monkeypatch, physical_system, reference_generator, reward_function,
-                            state_filter, visualization, callbacks, kwargs):
-        with monkeypatch.context() as m:
-            instantiate_dict.clear()
-            m.setattr(gym_electric_motor.core, "instantiate", mock_instantiate)
-            env = gym_electric_motor.core.ElectricMotorEnvironment(
-                physical_system=physical_system,
-                reference_generator=reference_generator,
-                reward_function=reward_function,
-                visualization=visualization,
-                state_filter=state_filter,
-                callbacks=callbacks,
-                **kwargs
-            )
+    def test_initialization(
+            self, monkeypatch, physical_system, reference_generator, reward_function, state_filter, visualization,
+            callbacks
+    ):
+
+        env = gym_electric_motor.core.ElectricMotorEnvironment(
+            physical_system=physical_system,
+            reference_generator=reference_generator,
+            reward_function=reward_function,
+            visualizations=visualization,
+            state_filter=state_filter,
+            callbacks=callbacks,
+        )
 
         # Assertions that the Keys are passed correctly to the instantiate fct
-        assert physical_system == instantiate_dict[PhysicalSystem]['key']
-        assert reference_generator == instantiate_dict[ReferenceGenerator]['key']
-        assert reward_function == instantiate_dict[RewardFunction]['key']
+        assert physical_system == env.physical_system
+        assert reference_generator == env.reference_generator
+        assert reward_function == env.reward_function
 
-        # Assertions that the modules that the instantiate functions returns are set correctly to the properties
-        assert env.physical_system == instantiate_dict[PhysicalSystem]['instance']
-        assert env.reference_generator == instantiate_dict[ReferenceGenerator]['instance']
-        assert env.reward_function == instantiate_dict[RewardFunction]['instance']
-
-        # Assertions for correct spaces
-        assert env.action_space == instantiate_dict[PhysicalSystem]['instance'].action_space, 'Wrong action space'
         if state_filter is None:
-            assert Tuple(
-                (instantiate_dict[PhysicalSystem]['instance'].state_space,
-                 instantiate_dict[ReferenceGenerator]['instance'].reference_space)) \
-                   == env.observation_space, 'Wrong observation space'
+            assert Tuple((
+                    physical_system.state_space,
+                    reference_generator.reference_space
+            )) == env.observation_space, 'Wrong observation space'
         else:
             state_idxs = np.isin(physical_system.state_names, state_filter)
             state_space = Box(
-                instantiate_dict[PhysicalSystem]['instance'].state_space.low[state_idxs],
-                instantiate_dict[PhysicalSystem]['instance'].state_space.high[state_idxs],
+                physical_system.state_space.low[state_idxs],
+                physical_system.state_space.high[state_idxs],
             )
             assert Tuple(
-                (state_space, instantiate_dict[ReferenceGenerator]['instance'].reference_space)
+                (state_space, reference_generator.reference_space)
             ) == env.observation_space, 'Wrong observation space'
-        assert env.reward_range == instantiate_dict[RewardFunction]['instance'].reward_range, 'Wrong reward range'
-
-        # Test Correct passing of kwargs
-        assert physical_system != DummyPhysicalSystem or env.physical_system.kwargs == kwargs
-        assert reference_generator, DummyReferenceGenerator or env.reference_generator.kwargs == kwargs
-        assert reward_function != DummyRewardFunction or env.reward_function.kwargs == kwargs
+        assert env.reward_range == reward_function.reward_range, 'Wrong reward range'
         for callback in callbacks:
             assert callback._env == env
 

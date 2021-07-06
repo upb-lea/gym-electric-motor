@@ -61,27 +61,15 @@ sampling_time = 1e-4
 if __name__ == '__main__':
     # Create the environment
     env = gem.make(
-        'DcSeriesCont-v1',
-        ode_solver='scipy.solve_ivp', solver_kwargs=dict(),
+        'Cont-CC-SeriesDc-v0',
+        ode_solver='scipy.solve_ivp',
         tau=sampling_time,
         reference_generator=const_switch_gen,
         visualization=MotorDashboard(state_plots=['omega', 'i'], reward_plot=True),
-
-        # define which load to use, feel free to try these examples:
-
+        constraints=(),
         # using ExternalSpeedLoad:
-        #load=ExternalSpeedLoad(speed_profile=sinus_lambda, tau=sampling_time, amplitude=10, frequency=2, bias=4)
         load=ExternalSpeedLoad(speed_profile=saw_lambda, tau=sampling_time, amplitude=40, frequency=5, bias=40)
-        #load=ExternalSpeedLoad(speed_profile=constant_lambda, value=3, load_initializer={'random_init': 'uniform', 'interval': [[20, 80]]})
-        #(ExternalSpeedLoad will not use the passed initializer and print a corresponding warning instead)
-
-        # using ConstantSpeedLoad (this class also accepts an initializer):
-        #load=ConstantSpeedLoad(omega_fixed=42, load_initializer={'random_init': 'uniform', 'interval': [[20, 80]]})
     )
-
-    # After the setup is done, we are ready to simulate the environment
-    # We make use of a standard PI current controller
-    controller = Controller.make('pi_controller', env)
 
     episode_duration = 0.2  # episode duration in seconds
     steps_per_episode = int(episode_duration / sampling_time)
@@ -94,12 +82,11 @@ if __name__ == '__main__':
 
         for i in range(5000):
             env.render()
-            action = controller.control(state, reference)
+            action = env.action_space.sample()
             (state, reference), reward, done, _ = env.step(action)
 
             if done:
                 state, _ = env.reset()
-                controller.reset()
             cum_rew += reward
 
         print(cum_rew)
