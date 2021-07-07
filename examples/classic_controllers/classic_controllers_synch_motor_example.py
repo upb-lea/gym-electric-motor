@@ -14,15 +14,15 @@ if __name__ == '__main__':
                         'T'         Torque Control
                         'C'         Current Control
 
-        modelling:      'AbcCont'   Continuous Action Space in ABC-Coordinates
+        action_type:    'AbcCont'   Continuous Action Space in ABC-Coordinates
                         'Finite'    Discrete Action Space
     """
 
     motor_type = 'PMSM'
-    control_type = 'T'
-    modelling = 'AbcCont'
+    control_type = 'S'
+    action_type = 'AbcCont'
 
-    env_id = modelling + '-' + control_type + 'C-' + motor_type + '-v0'
+    env_id = action_type + '-' + control_type + 'C-' + motor_type + '-v0'
 
     # definition of the motor parameters
     limit_values = dict(omega=12e3 * np.pi / 30, torque=100, i=280, u=320)

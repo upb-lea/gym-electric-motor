@@ -15,15 +15,15 @@ if __name__ == '__main__':
                     'T'         Torque Control
                     'C'         Current Control
                     
-    modelling:      'Cont'      Continuous Action Space
+    action_type:    'Cont'      Continuous Action Space
                     'Finite'    Discrete Action Space
     """
 
-    motor_type = 'ExtExDc'
-    control_type = 'T'
-    modelling = 'Cont'
+    motor_type = 'PermExDc'
+    control_type = 'S'
+    action_type = 'Cont'
 
-    motor = modelling + '-' + control_type + 'C-' + motor_type + '-v0'
+    motor = action_type + '-' + control_type + 'C-' + motor_type + '-v0'
 
     if motor_type in ['PermExDc', 'SeriesDc']:
         states = ['omega', 'torque', 'i', 'u']
@@ -48,7 +48,7 @@ if __name__ == '__main__':
             external_ref_plots (optional)   plots of the environment, to plot all reference values
             stages (optional)               structure of the controller
             automated_gain (optional)       if True (default), the controller will be tune automatically
-            a (optional)                    tuning parameter of the Symmetrical Optimum (default: 4)
+            a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
     
     """
     controller = Controller.make(env, external_ref_plots=external_ref_plots)

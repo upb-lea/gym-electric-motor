@@ -15,15 +15,16 @@ if __name__ == '__main__':
                     'T'         Torque Control
                     'C'         Current Control
                     
-    modelling:      'Cont'      Continuous Action Space
+    action_type:    'Cont'      Continuous Action Space
                     'Finite'    Discrete Action Space
     """
 
+    # following manual controller design addresses an ExtExDc. Other motor types require different controller stages
     motor_type = 'ExtExDc'
-    control_type = 'S'
-    modelling = 'Cont'
+    control_type = 'C'
+    action_type = 'Cont'
 
-    motor = modelling + '-' + control_type + 'C-' + motor_type + '-v0'
+    motor = action_type + '-' + control_type + 'C-' + motor_type + '-v0'
 
     if motor_type in ['PermExDc', 'SeriesDc']:
         states = ['omega', 'torque', 'i', 'u']
@@ -47,11 +48,11 @@ if __name__ == '__main__':
             environment                     gym-electric-motor environment
             external_ref_plots (optional)   plots of the environment, to plot all reference values
             automated_gain (optional)       if True (default), the controller will be tune automatically
-            a (optional)                    tuning parameter of the Symmetrical Optimum (default: 4)
+            a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
             
             stages (optional)               Each controller stage is defined in a dict. The key controller_type
                                             specifies which type of controller is used for the stage.  In addition,
-                                            parameters of the controller can be passed like e.g. the p-gain and i-gain
+                                            parameters of the controller can be passed like, e.g., the P-gain and I-gain
                                             for the PI controller. The stages are grouped in an array in ascending
                                             order. For the ExtExDc an additional current controller is needed, which is
                                             added in a separate array.
