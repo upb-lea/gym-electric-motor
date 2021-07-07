@@ -3,6 +3,7 @@ from .core import PhysicalSystem
 from .core import RewardFunction
 from .core import ElectricMotorVisualization
 from .core import ConstraintMonitor
+from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
 from .utils import make, register_superclass
 

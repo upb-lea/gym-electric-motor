@@ -1,11 +1,14 @@
 import numpy as np
 from gym.spaces import Box
 import warnings
+
+import gym_electric_motor as gem
+from ..random_component import RandomComponent
 from ..core import PhysicalSystem
 from ..utils import set_state_array
 
 
-class SCMLSystem(PhysicalSystem):
+class SCMLSystem(PhysicalSystem, RandomComponent):
     """
     The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
     a technical setting consisting of these components as well as a noise
@@ -59,6 +62,7 @@ class SCMLSystem(PhysicalSystem):
             calc_jacobian(bool): If True, the jacobian matrices will be taken into account for the ode-solvers.
                 Default: The jacobians are used, if available
         """
+        RandomComponent.__init__(self)
         self._converter = converter
         self._electrical_motor = motor
         self._mechanical_load = load
@@ -91,6 +95,10 @@ class SCMLSystem(PhysicalSystem):
         self._system_eq_placeholder = None
         self._motor_deriv_size = None
         self._load_deriv_size = None
+        self._components = [
+            self._supply, self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver,
+            self._noise_generator
+        ]
 
     def _set_limits(self):
         """
@@ -147,6 +155,13 @@ class SCMLSystem(PhysicalSystem):
         voltages_upper = voltages_lower + len(self._electrical_motor.VOLTAGES)
         self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
         self.U_SUP_IDX = list(range(voltages_upper, voltages_upper + self._supply.voltage_len))
+
+    def seed(self, seed=None):
+        RandomComponent.seed(self, seed)
+        sub_seeds = self.seed_sequence.spawn(len(self._components))
+        for component, sub_seed in zip(self._components, sub_seeds):
+            if isinstance(component, gem.RandomComponent):
+                component.seed(sub_seed)
 
     def simulate(self, action, *_, **__):
         # Docstring of superclass
@@ -247,6 +262,7 @@ class SCMLSystem(PhysicalSystem):
         Returns:
              The new state of the system.
         """
+        self.next_generator()
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)

@@ -1,10 +1,11 @@
 import numpy as np
 import warnings
 
+from ..random_component import RandomComponent
 from ..utils import set_state_array
 
 
-class NoiseGenerator:
+class NoiseGenerator(RandomComponent):
     """
     The noise generator generates noise added to the state for the observation.
     """
@@ -19,6 +20,7 @@ class NoiseGenerator:
         Returns:
              Noise for the initial observation at time 0.
         """
+        self.next_generator()
         return self.noise()
 
     def noise(self, *_, **__):
@@ -63,6 +65,7 @@ class GaussianWhiteNoiseGenerator(NoiseGenerator):
             noise_levels(dict/list/ndarray(float)): Fraction of noise power over the signal powers.
             noise_length(float): Length of simultaneously generated noise points for speed up.
         """
+        RandomComponent.__init__(self)
         self._noise_levels = noise_levels
         self._noise_length = noise_length
         self._noise_pointer = noise_length
@@ -85,7 +88,7 @@ class GaussianWhiteNoiseGenerator(NoiseGenerator):
         Helper function to generate noise in batches of self._noise_length steps to avoid calculating every steps and
         to speed up the computation.
         """
-        self._noise = np.random.normal(
+        self._noise = self._random_generator.normal(
             0, self._noise_levels * self._signal_powers, (self._noise_length, len(self._signal_powers))
         )
         self._noise_pointer = 0

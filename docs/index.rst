@@ -48,6 +48,7 @@ documentation specifies the basic interfaces inside a physical system.
     parts/core
     parts/utils
     parts/callbacks
+    parts/random_component
 
 Indices and tables
 ==================

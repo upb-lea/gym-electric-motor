@@ -1,5 +1,6 @@
 import numpy as np
 
+from ..random_component import RandomComponent
 from .subepisoded_reference_generator import SubepisodedReferenceGenerator
 
 
@@ -17,12 +18,12 @@ class LaplaceProcessReferenceGenerator(SubepisodedReferenceGenerator):
             sigma_range(Tuple(float,float)): Lower and Upper limit for the sigma-parameter of the WienerProcess.
             kwargs: Further arguments to pass to SubepisodedReferenceGenerator
         """
-        super().__init__(**kwargs)
+        SubepisodedReferenceGenerator.__init__(self, **kwargs)
         self._sigma_range = sigma_range
 
     def _reset_reference(self):
         self._current_sigma = 10 ** self._get_current_value(np.log10(self._sigma_range))
-        random_values = np.random.laplace(0, self._current_sigma, self._current_episode_length)
+        random_values = self.random_generator.laplace(0, self._current_sigma, self._current_episode_length)
         self._reference = np.zeros_like(random_values)
         reference_value = self._reference_value
         for i in range(self._current_episode_length):

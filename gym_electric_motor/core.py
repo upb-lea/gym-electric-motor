@@ -22,7 +22,9 @@ import numpy as np
 from gym.spaces import Box
 
 from .utils import instantiate
+from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
+import gym_electric_motor as gem
 
 
 class ElectricMotorEnvironment(gym.core.Env):
@@ -81,6 +83,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         A reference generator might terminate an episode, if the reference has ended.
         The reward function can terminate an episode, if a physical limit of the motor has been violated.
     """
+
     @property
     def physical_system(self):
         """
@@ -148,16 +151,12 @@ class ElectricMotorEnvironment(gym.core.Env):
 
     @property
     def reference_names(self):
-        """
-        Returns a list of state names of all states in the observation (called in state_filter) in the same order
-        """
+        """Returns a list of state names of all states in the observation (called in state_filter) in the same order"""
         return self._reference_generator.reference_names
 
     @property
     def nominal_state(self):
-        """
-        Returns a list of nominal values of all states in the observation (called in state_filter) in the same order
-        """
+        """Returns a list of nominal values of all states in the observation (called in state_filter) in that order"""
         return self._physical_system.nominal_state[self.state_filter]
 
     @property
@@ -205,7 +204,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             cm = ConstraintMonitor(limit_constraints, additional_constraints)
         self._constraint_monitor = cm
 
-        # Announcement of the Modules among each other
+        # Announcement of the modules among each other
         self._reference_generator.set_modules(self.physical_system)
         self._constraint_monitor.set_modules(self.physical_system)
         self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
@@ -226,7 +225,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
-        
+
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
         for callback in self._callbacks:
@@ -282,6 +281,20 @@ class ElectricMotorEnvironment(gym.core.Env):
             'on_step_end', self.physical_system.k, state, reference, reward, self._done
         )
         return (state[self.state_filter], ref_next), reward, self._done, {}
+
+    def seed(self, seed=None):
+        sg = np.random.SeedSequence(seed)
+        components = [
+            self._physical_system,
+            self._reference_generator,
+            self._reward_function,
+            self._constraint_monitor
+        ] + list(self._callbacks)
+        sub_sg = sg.spawn(len(components))
+        for sub, rc in zip(sub_sg, components):
+            if isinstance(rc, gem.RandomComponent):
+                rc.seed(sub)
+        return [sg.entropy]
 
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
@@ -482,10 +495,8 @@ class RewardFunction:
 
 
 class PhysicalSystem:
-    """
-    The Physical System module encapsulates the physical model of the system as well as the simulation from one step to
-    the next.
-    """
+    """The Physical System module encapsulates the physical model of the system as well as the simulation from one step
+    to the next."""
 
     @property
     def k(self):

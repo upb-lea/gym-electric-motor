@@ -1,11 +1,12 @@
 import numpy as np
 from gym.spaces import Box
 
+from ..random_component import RandomComponent
 from ..core import ReferenceGenerator
 from ..utils import instantiate
 
 
-class SwitchedReferenceGenerator(ReferenceGenerator):
+class SwitchedReferenceGenerator(ReferenceGenerator, RandomComponent):
     """Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.
     """
 
@@ -20,7 +21,8 @@ class SwitchedReferenceGenerator(ReferenceGenerator):
             super_episode_length(Tuple(int, int): Minimum and maximum number of time steps a sub_generator is used.
             kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.
         """
-        super().__init__()
+        ReferenceGenerator.__init__(self)
+        RandomComponent.__init__(self)
         self.reference_space = Box(-1, 1, shape=(1,))
         self._reference = None
         self._k = 0
@@ -61,6 +63,7 @@ class SwitchedReferenceGenerator(ReferenceGenerator):
                 'Reference Generators have differently shaped reference spaces'
 
     def reset(self, initial_state=None, initial_reference=None):
+        self.next_generator()
         self._reset_reference()
         return self._current_ref_generator.reset(initial_state, initial_reference)
 
@@ -78,6 +81,15 @@ class SwitchedReferenceGenerator(ReferenceGenerator):
         return obs
 
     def _reset_reference(self):
-        self._current_episode_length = np.random.randint(self._super_episode_length[0], self._super_episode_length[1])
+        self._current_episode_length = self.random_generator.integers(
+            self._super_episode_length[0], self._super_episode_length[1]
+        )
         self._k = 0
-        self._current_ref_generator = np.random.choice(self._sub_generators, p=self._probabilities)
+        self._current_ref_generator = self.random_generator.choice(self._sub_generators, p=self._probabilities)
+
+    def seed(self, seed=None):
+        super().seed(seed)
+        for sub_generator in self._sub_generators:
+            if isinstance(sub_generator, RandomComponent):
+                seed = self._seed_sequence.spawn(1)[0]
+                sub_generator.seed(seed)

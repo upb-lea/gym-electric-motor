@@ -1,8 +1,10 @@
 import numpy as np
 from scipy.stats import truncnorm
 
+from ...random_component import RandomComponent
 
-class ElectricMotor:
+
+class ElectricMotor(RandomComponent):
     """Base class for all technical electrical motor models.
 
         A motor consists of the ode-state. These are the dynamic quantities of its ODE.
@@ -100,9 +102,10 @@ class ElectricMotor:
         """
         return self._initial_limits
 
-    def __init__(self, motor_parameter=None, nominal_values=None,
-                 limit_values=None, motor_initializer=None, initial_limits=None,
-                 **__):
+    def __init__(
+            self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None,
+            initial_limits=None, **__
+    ):
         """
         :param  motor_parameter: Motor parameter dictionary. Contents specified
                 for each motor.
@@ -113,6 +116,7 @@ class ElectricMotor:
                              given interval or out of nominal motor values)
         :param initial_limits: limits for of the initial state-value
         """
+        RandomComponent.__init__(self)
         motor_parameter = motor_parameter or {}
         self._motor_parameter = self._default_motor_parameter.copy()
         self._motor_parameter.update(motor_parameter)
@@ -127,7 +131,7 @@ class ElectricMotor:
         self._initializer.update(motor_initializer)
         self._initial_states = {}
         if self._initializer['states'] is not None:
-             self._initial_states.update(self._initializer['states'])
+            self._initial_states.update(self._initializer['states'])
         # intialize limits, in general they're not needed to be changed
         # during  training or episodes
         initial_limits = initial_limits or {}
@@ -137,8 +141,7 @@ class ElectricMotor:
         assert isinstance(self._initializer, dict), 'wrong initializer'
 
     def electrical_ode(self, state, u_in, omega, *_):
-        """
-        Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.
+        """Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.
 
         Args:
             state(ndarray(float)): The motors state.
@@ -197,7 +200,7 @@ class ElectricMotor:
             upper_bound = np.asarray(np.abs(nominal_values_), dtype=float)
             # state space for Induction Envs based on documentation
             # ['i_salpha', 'i_sbeta', 'psi_ralpha', 'psi_rbeta', 'epsilon']
-            # hardcoded for Inductionmotors currently given in the toolbox
+            # hardcoded for induction motors currently given in the toolbox
             state_space_low = np.array([-1, -1, -1, -1, -1])
             lower_bound = upper_bound * state_space_low
         else:
@@ -208,33 +211,34 @@ class ElectricMotor:
             else:
                 nominal_values_ = np.asarray(self._nominal_values)
 
-            state_space_idx = [state_positions[state] for state in
-                         self._initial_states.keys()]
+            state_space_idx = [
+                state_positions[state] for state in self._initial_states.keys()
+            ]
 
             upper_bound = np.asarray(nominal_values_, dtype=float)
-            lower_bound = upper_bound * \
-                          np.asarray(state_space.low, dtype=float)[state_space_idx]
+            lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_space_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
-            lower_bound = np.clip(lower_bound,
-                                  a_min=
-                                  np.asarray(interval, dtype=float).T[0],
-                                  a_max=None)
-            upper_bound = np.clip(upper_bound,
-                                  a_min=None,
-                                  a_max=
-                                  np.asarray(interval, dtype=float).T[1])
+            lower_bound = np.clip(
+                lower_bound,
+                a_min=np.asarray(interval, dtype=float).T[0],
+                a_max=None
+            )
+            upper_bound = np.clip(
+                upper_bound,
+                a_min=None,
+                a_max=np.asarray(interval, dtype=float).T[1]
+            )
         # random initialization for each motor state (current, epsilon)
         if random_dist is not None:
             if random_dist == 'uniform':
-                initial_value = (upper_bound - lower_bound) * \
-                                np.random.random_sample(
-                                    len(self._initial_states.keys())) + \
-                                lower_bound
+                initial_value = (upper_bound - lower_bound) \
+                    * self._random_generator.uniform(size=len(self._initial_states.keys())) \
+                    + lower_bound
                 # writing initial values in initial_states dict
-                random_states = \
-                    {state: initial_value[idx]
-                     for idx, state in enumerate(self._initial_states.keys())}
+                random_states = {
+                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                }
                 self._initial_states.update(random_states)
 
             elif random_dist in ['normal', 'gaussian']:
@@ -242,18 +246,17 @@ class ElectricMotor:
                 mue = random_params[0] or (upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
-                initial_value = truncnorm.rvs(a, b,
-                                              loc=mue,
-                                              scale=sigma,
-                                              size=(len(self._initial_states.keys())))
+                initial_value = truncnorm.rvs(
+                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())),
+                    random_state=self.seed_sequence.pool[0]
+                )
                 # writing initial values in initial_states dict
-                random_states = \
-                    {state: initial_value[idx]
-                     for idx, state in enumerate(self._initial_states.keys())}
+                random_states = {
+                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                }
                 self._initial_states.update(random_states)
 
             else:
-                # todo implement other distribution
                 raise NotImplementedError
         # constant initialization for each motor state (current, epsilon)
         elif self._initial_states is not None:
@@ -280,6 +283,7 @@ class ElectricMotor:
             numpy.ndarray(float): The initial motor states.
         """
         # check for valid initializer
+        self.next_generator()
         if self._initializer and self._initializer['states']:
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))

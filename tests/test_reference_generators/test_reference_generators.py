@@ -40,7 +40,6 @@ class TestSwitchedReferenceGenerator:
     _initial_reference = 0.8
 
     # counter
-    _monkey_super_init_counter = 0
     _monkey_instantiate_counter = 0
     _monkey_super_set_modules_counter = 0
     _monkey_dummy_set_modules_counter = 0
@@ -54,13 +53,6 @@ class TestSwitchedReferenceGenerator:
         :return:
         """
         self._reference_generator = []
-
-    def monkey_super_init(self):
-        """
-        mock function for super().__init__()
-        :return:
-        """
-        self._monkey_super_init_counter += 1
 
     def monkey_instantiate(self, superclass, instance, **kwargs):
         """
@@ -175,7 +167,6 @@ class TestSwitchedReferenceGenerator:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(ReferenceGenerator, '__init__', self.monkey_super_init)
         monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
         self._sub_generator = sub_generator
         self._kwargs = sub_args
@@ -297,16 +288,13 @@ class TestSwitchedReferenceGenerator:
         sub_reference_generators = [DummyReferenceGenerator(), DummyReferenceGenerator(), DummyReferenceGenerator()]
         probabilities = [0.2, 0.5, 0.3]
         super_episode_length = (1, 10)
-        dummy_random = DummyRandom(exp_values=sub_reference_generators, exp_probabilities=probabilities,
-                                   exp_low=super_episode_length[0], exp_high=super_episode_length[1])
-        monkeypatch.setattr(swrg.np.random, 'randint', dummy_random.monkey_random_randint)
-        monkeypatch.setattr(swrg.np.random, 'choice', dummy_random.monkey_random_choice)
-        test_object = SwitchedReferenceGenerator(sub_generators=sub_reference_generators,
-                                                 super_episode_length=super_episode_length,
-                                                 p=probabilities)
+        test_object = SwitchedReferenceGenerator(
+            sub_generators=sub_reference_generators, super_episode_length=super_episode_length, p=probabilities
+        )
+        test_object.seed(np.random.SeedSequence(123))
         test_object._reset_reference()
         assert test_object._k == 0
-        assert test_object._current_episode_length == 7
+        assert test_object._current_episode_length == 1
         assert test_object._current_ref_generator == sub_reference_generators[0]
 
 
@@ -318,15 +306,7 @@ class TestWienerProcessReferenceGenerator:
     _current_value = None
 
     # counter
-    _monkey_super_init_counter = 0
     _monkey_get_current_value_counter = 0
-
-    def monkey_super_init(self, **kwargs):
-        """
-        mock function for super().__init__()
-        """
-        self._monkey_super_init_counter += 1
-        assert self._kwargs == kwargs, 'Different additional arguments. Keep in mind None and {}.'
 
     def monkey_get_current_value(self, value):
         if self._current_value is not None:
@@ -346,12 +326,12 @@ class TestWienerProcessReferenceGenerator:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(SubepisodedReferenceGenerator, '__init__', self.monkey_super_init)
+
         self._kwargs = kwargs
         # call function to test
         test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range, **self._kwargs)
         # verify the expected results
-        assert self._monkey_super_init_counter == 1, 'super().__init__() is not called once'
+
         assert test_object._sigma_range == sigma_range, 'sigma range is not passed correctly'
 
     def test_reset_reference(self, monkeypatch):
@@ -360,11 +340,18 @@ class TestWienerProcessReferenceGenerator:
         limit_margin = (-1, 1)
         reference_value = 0.5
         expected_reference = np.array([0.6, 0.4, 1, 1, 0.5, 0.2, -1, -0.9, -1, -0.6])
-        monkeypatch.setattr(wrg.np.random, 'normal',
-                            DummyRandom(exp_loc=0, exp_scale=sigma_range, exp_size=episode_length).monkey_random_normal)
+
+        class MonkeyRandomGenerator:
+            _rg = DummyRandom(exp_loc=0, exp_scale=sigma_range, exp_size=episode_length)
+
+            def normal(self, loc=0, scale=1, size=1):
+                return self._rg.monkey_random_normal(loc, scale, size)
+
         monkeypatch.setattr(SubepisodedReferenceGenerator, '_get_current_value', self.monkey_get_current_value)
         test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range, episode_lengths=episode_length,
                                                       limit_margin=limit_margin)
+        monkeypatch.setattr(test_object, '_random_generator', MonkeyRandomGenerator())
+
         test_object._reference_value = reference_value
         self._monkey_get_current_value_counter = 0
         self._current_value = np.log10(sigma_range)
@@ -384,18 +371,8 @@ class TestFurtherReferenceGenerator:
     _limit_margin = (0.0, 0.9)
 
     # counter
-    _monkey_super_init_counter = 0
     _monkey_super_set_modules_counter = 0
     _monkey_get_current_value_counter = 0
-
-    def monkey_super_init(self, **kwargs):
-        """
-        mock function for super().__init()__
-        :param kwargs:
-        :return:
-        """
-        assert self._kwargs == kwargs, 'Different additional arguments. Keep in mind None and {}.'
-        self._monkey_super_init_counter += 1
 
     def monkey_super_set_modules(self, physical_system):
         """
@@ -429,7 +406,7 @@ class TestFurtherReferenceGenerator:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(SubepisodedReferenceGenerator, '__init__', self.monkey_super_init)
+
         self._kwargs = kwargs
         # call function to test
         test_object = reference_class(amplitude_range=amplitude_range, frequency_range=frequency_range,
@@ -438,7 +415,6 @@ class TestFurtherReferenceGenerator:
         assert test_object._amplitude_range == amplitude_range, 'amplitude range is not passed correctly'
         assert test_object._frequency_range == frequency_range, 'frequency range is not passed correctly'
         assert test_object._offset_range == offset_range, 'offset range is not passed correctly'
-        assert self._monkey_super_init_counter == 1, 'super().__init__() is not called once'
 
     @pytest.mark.parametrize("reference_class",
                              [SawtoothReferenceGenerator, SinusoidalReferenceGenerator, StepReferenceGenerator,
@@ -485,11 +461,22 @@ class TestFurtherReferenceGenerator:
         episode_length = 10
         dummy_physical_system = DummyPhysicalSystem()
         monkeypatch.setattr(SubepisodedReferenceGenerator, '_get_current_value', self.monkey_get_current_value)
-        monkeypatch.setattr(sawrg.np.random, 'rand', DummyRandom().monkey_random_rand)
-        monkeypatch.setattr(sawrg.np.random, 'triangular', DummyRandom().monkey_random_triangular)
-        test_object = reference_class(amplitude_range=amplitude_range, frequency_range=frequency_range,
-                                      offset_range=offset_range, limit_margin=limit_margin,
-                                      episode_lengths=episode_length, reference_state='dummy_state_0')
+
+        class MonkeyRandomGenerator:
+            _rg = DummyRandom()
+
+            def uniform(self, mu=0, sigma=1):
+                return self._rg.monkey_random_rand()
+
+            def triangular(self, left=-1, mode=0, right=1):
+                return self._rg.monkey_random_triangular(left, mode, right)
+
+        test_object = reference_class(
+            amplitude_range=amplitude_range, frequency_range=frequency_range,
+            offset_range=offset_range, limit_margin=limit_margin,
+            episode_lengths=episode_length, reference_state='dummy_state_0'
+        )
+        monkeypatch.setattr(test_object, '_random_generator', MonkeyRandomGenerator())
         test_object.set_modules(dummy_physical_system)
         # call function to test
         test_object._reset_reference()
@@ -525,17 +512,9 @@ class TestSubepisodedReferenceGenerator:
     _length_state = 3
 
     # counter
-    _monkey_super_init_counter = 0
     _monkey_super_set_modules_counter = 0
     _monkey_super_reset_counter = 0
     _monkey_reset_reference_counter = 0
-
-    def monkey_super_init(self):
-        """
-        mock function for super().__init__()
-        :return:
-        """
-        self._monkey_super_init_counter += 1
 
     def monkey_get_current_value(self, value_range):
         """
@@ -594,13 +573,12 @@ class TestSubepisodedReferenceGenerator:
         """
         # setup test scenario
         self._value_range = self._episode_length
-        monkeypatch.setattr(ReferenceGenerator, '__init__', self.monkey_super_init)
+
         monkeypatch.setattr(SubepisodedReferenceGenerator, '_get_current_value', self.monkey_get_current_value)
         # call function to test
         test_object = SubepisodedReferenceGenerator(reference_state=self._reference_state,
                                                     episode_lengths=self._episode_length, limit_margin=limit_margin)
         # verify the expected results
-        assert self._monkey_super_init_counter == 1, 'super().__init__() is not called once'
         assert test_object._limit_margin == limit_margin, 'limit margin is not passed correctly'
         assert test_object._reference_value == 0.0, 'the reference value is not 0'
         assert test_object._reference_state == self._reference_state, 'reference state is not passed correctly'
@@ -698,16 +676,24 @@ class TestSubepisodedReferenceGenerator:
         assert self._monkey_reset_reference_counter == expected_parameter[1], \
             'unexpected number of calls of reset_reference, depends on the setting'
 
-    @pytest.mark.parametrize('value_range, expected_value', [(12, 12),
-                                                             (1.0365, 1.0365),
-                                                             ([0, 1.6], 0.4),
-                                                             ((-0.12, 0.4), 0.01),
-                                                             (np.array([-0.5, 0.6]), -0.225)])
+    @pytest.mark.parametrize(
+        'value_range, expected_value',
+        [(12, 12), (1.0365, 1.0365), ([0, 1.6], 0.4), ((-0.12, 0.4), 0.01), (np.array([-0.5, 0.6]), -0.225)]
+    )
     def test_get_current_value(self, monkeypatch, value_range, expected_value):
         # setup test scenario
-        monkeypatch.setattr(srg.np.random, 'rand', DummyRandom().monkey_random_rand)
+
         # call function to test
-        val = SubepisodedReferenceGenerator._get_current_value(value_range)
+        test_object = SubepisodedReferenceGenerator()
+
+        class MonkeyUniformGenerator:
+            _rg = DummyRandom()
+
+            def uniform(self, mu=0, sigma=1):
+                return self._rg.monkey_random_rand()
+
+        monkeypatch.setattr(test_object, '_random_generator', MonkeyUniformGenerator())
+        val = test_object._get_current_value(value_range)
         # verify expected results
         assert abs(val - expected_value) < 1E-6, 'unexpected value from get_current_value().'
 
