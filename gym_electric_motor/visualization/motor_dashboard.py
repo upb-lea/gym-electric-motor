@@ -237,7 +237,7 @@ class MotorDashboard(ElectricMotorVisualization):
             self._episodic_plot_figure, axes_ep = plt.subplots(len(self._episodic_plots), sharex=True)
             axes_ep = [axes_ep] if len(self._episodic_plots) == 1 else axes_ep
             self._episodic_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
-            self._episodic_plot_figure.canvas.set_window_title('Episodic Plots')
+            self._episodic_plot_figure.canvas.manager.set_window_title('Episodic Plots')
             axes_ep[-1].set_xlabel('Episode No')
             self._figures.append(self._episodic_plot_figure)
             for plot, axis in zip(self._episodic_plots, axes_ep):
@@ -246,7 +246,7 @@ class MotorDashboard(ElectricMotorVisualization):
         if len(self._step_plots) > 0:
             self._step_plot_figure, axes_int = plt.subplots(len(self._step_plots), sharex=True)
             axes_int = [axes_int] if len(self._step_plots) == 1 else axes_int
-            self._step_plot_figure.canvas.set_window_title('Step Plots')
+            self._step_plot_figure.canvas.manager.set_window_title('Step Plots')
             self._step_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
             axes_int[-1].set_xlabel('Cumulative Steps')
             self._figures.append(self._step_plot_figure)
@@ -255,7 +255,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
         if len(self._time_plots) > 0:
             self._time_plot_figure, axes_step = plt.subplots(len(self._time_plots), sharex=True)
-            self._time_plot_figure.canvas.set_window_title('Time Plots')
+            self._time_plot_figure.canvas.manager.set_window_title('Time Plots')
             axes_step = [axes_step] if len(self._time_plots) == 1 else axes_step
             self._time_plot_figure.subplots_adjust(wspace=0.0, hspace=0.2)
             axes_step[-1].set_xlabel('$t$/s')

@@ -11,7 +11,7 @@
 [![codecov](https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg)](https://codecov.io/gh/upb-lea/gym-electric-motor)
 [![PyPI version shields.io](https://img.shields.io/pypi/v/gym-electric-motor.svg)](https://pypi.python.org/pypi/gym-electric-motor/)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE)
-[![DOI Zenodo](https://zenodo.org/badge/216583232.svg)](https://zenodo.org/badge/latestdoi/216583232)
+[![DOI Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.4355691.svg)](https://doi.org/10.5281/zenodo.4355691)
 [![DOI JOSS](https://joss.theoj.org/papers/10.21105/joss.02498/status.svg)](https://doi.org/10.21105/joss.02498)
 
 ## Overview
@@ -26,7 +26,7 @@ An easy way to get started with GEM is by playing around with the following inte
 * [Keras-rl2 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/keras_rl2_dqn_disc_pmsm_example.ipynb)
 * [Stable-baselines3 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb)
 * [Tensorforce example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/tensorforce_dqn_disc_pmsm_example.ipynb)
-* [MPC  example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/gekko_mpc_cont_pmsm_example.ipynb)
+* [MPC  example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/pmsm_mpc_dq_current_control.ipynb)
 
 There is a list of [standalone example scripts](examples/) as well for minimalistic demonstrations.
 
@@ -41,6 +41,8 @@ if __name__ == '__main__':
         env.render()  # visualize environment
         (states, references), rewards, done, _ =\ 
         	env.step(env.action_space.sample())  # pick random control actions
+        if done:
+            (states, references) = env.reset()
     env.close()
 ```
 
