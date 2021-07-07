@@ -76,7 +76,7 @@ class Controller:
 
         Args:
             external_reference_plots:
-                This must be a subcalss of the StatePlot class from the gym-electric-motor visualization. It needs the
+                This must be a subclass of the StatePlot class from the gym-electric-motor visualization. It needs the
                 functions set_reference(), set_env() and external_reference(). An example is given by the class
                 ExternallyReferencedStatePlot. The class must also be passed to the environment in the make function as
                 a visualization.
@@ -222,7 +222,7 @@ class Controller:
     def automated_gain(environment, stages, controller_type, **controller_kwargs):
         """
             This function automatically parameterizes a given controller design if the parameter automated_gain is True
-            (default True), based on the design according to the Symmetric Optimum (SO). Further information about the
+            (default True), based on the design according to the symmetric optimum (SO). Further information about the
             design according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
         """
 
@@ -425,7 +425,7 @@ class Controller:
 class ContinuousActionController(Controller):
     """
         This class performs a current-control for all continuous DC motor systems. By default, a PI controller is used
-        for current control. An EMF compensation is applied. For the externaly excited dc motor, the excitation current
+        for current control. An EMF compensation is applied. For the externally excited dc motor, the excitation current
         is also controlled.
     """
 
@@ -504,8 +504,8 @@ class ContinuousActionController(Controller):
 
 class DiscreteActionController(Controller):
     """
-        This class is used for current control of all discrete DC motor systems. By default, a three-point controller is
-        used. For the externally excited dc motor, the excitation current is also controlled.
+        This class is used for current control of all DC motor systems with discrete actions. By default, a three-point
+        controller is used. For the externally excited dc motor, the excitation current is also controlled.
     """
 
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
@@ -802,8 +802,8 @@ class CascadedFieldOrientedController(Controller):
         This controller is used for torque or speed control of synchronous motors. The controller consists of a field
         oriented controller for current control, an efficiency-optimized torque controller and an optional speed
         controller. The current control is equivalent to the current control of the FOC_Controller. The torque
-        controller is based on the Maximum Torque per Current (MTPC) control strategy in the voltage control range and
-        the Maximum Torque per Flux (MTPF) control strategy with an additional modulation controller in the flux
+        controller is based on the maximum torque per current (MTPC) control strategy in the voltage control range and
+        the maximum torque per flux (MTPF) control strategy with an additional modulation controller in the flux
         weakening range. The speed controller is designed as a PI-controller by default.
     """
 
@@ -1514,6 +1514,7 @@ class PI_Controller(P_Controller, I_Controller):
 
 class PID_Controller(PI_Controller, D_Controller):
     """The PID-Controller is a combination of the PI-Controller and the base P-Controller."""
+
     def __init__(self, environment, p_gain=5, i_gain=5, d_gain=0.005, param_dict={}, **controller_kwargs):
         p_gain = param_dict.get('p_gain', p_gain)
         i_gain = param_dict.get('i_gain', i_gain)
@@ -1538,6 +1539,7 @@ class DiscreteController:
         The DiscreteController is the base class for the base discrete controllers (OnOff controller and three-point
         controller).
     """
+
     @classmethod
     def make(cls, environment, stage, **controller_kwargs):
         if type(environment.action_space) is Discrete:
