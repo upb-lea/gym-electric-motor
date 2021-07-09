@@ -2,7 +2,6 @@ from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
-import numpy as np
 
 if __name__ == '__main__':
 
@@ -24,17 +23,13 @@ if __name__ == '__main__':
 
     env_id = action_type + '-' + control_type + 'C-' + motor_type + '-v0'
 
-    # definition of the motor parameters
-    limit_values = dict(omega=12e3 * np.pi / 30, torque=100, i=280, u=320)
-    nominal_values = dict(omega=10e3 * np.pi / 30, torque=95.0, i=240, epsilon=np.pi, u=300)
-    motor_parameter = dict(p=3, l_d=0.37e-3, l_q=1.2e-3, j_rotor=0.03883, r_s=18e-3, psi_p=45e-3)
 
     # definition of the plotted variables
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']]
 
     # initialize the gym-electric-motor environment
-    env = gem.make(env_id, visualization=MotorDashboard(additional_plots=external_ref_plots),
-                   motor=dict(limit_values=limit_values, nominal_values=nominal_values, motor_parameter=motor_parameter))
+    env = gem.make(env_id, visualization=MotorDashboard(additional_plots=external_ref_plots))
+
 
     """
     initialize the controller

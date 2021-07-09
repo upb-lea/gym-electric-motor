@@ -959,8 +959,9 @@ class CascadedFieldOrientedController(Controller):
         return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1])
 
     def reset(self):
-        for overlaid_controller in self.overlaid_controller:
-            overlaid_controller.reset()
+        if self.omega_control:
+            for overlaid_controller in self.overlaid_controller:
+                overlaid_controller.reset()
         if self.has_cont_action_space:
             self.d_controller.reset()
             self.q_controller.reset()
@@ -1001,6 +1002,7 @@ class TorqueToCurrentConversion:
         self.l_q = self.mp['l_q']
         self.p = self.mp['p']
         self.psi_p = self.mp.get('psi_p', 0)
+        self.invert = -1 if (self.psi_p == 0 and self.l_q < self.l_d) else 1
         self.tau = environment.physical_system.tau
 
         self.omega_idx = environment.state_names.index('omega')
@@ -1120,13 +1122,14 @@ class TorqueToCurrentConversion:
                             i_idx = np.where(torque == t)[0][0]
                             i_d_best = i_d_[i_idx]
                             i_q_best = i_q[i_idx]
-
-                    psi_i_d_q.append([psi_, t, i_d_best, i_q_best])
-
+                    if np.sqrt(i_d_best**2 + i_q_best**2) <= self.nominal_values[self.i_sq_idx]:
+                        psi_i_d_q.append([psi_, t, i_d_best, i_q_best])
 
             psi_i_d_q = np.array(psi_i_d_q)
+            self.psi_max_mtpf = np.max(psi_i_d_q[:, 0])
             psi_i_d_q_neg = np.rot90(np.array([psi_i_d_q[:, 0], -psi_i_d_q[:, 1], psi_i_d_q[:, 2], -psi_i_d_q[:, 3]]))
             psi_i_d_q = np.append(psi_i_d_q_neg, psi_i_d_q, axis=0)
+
             return np.array(psi_i_d_q)
 
         self.mtpc = mtpc()
@@ -1334,6 +1337,8 @@ class TorqueToCurrentConversion:
         if i_d < self.mtpf[psi_max_idx, 2]:
             i_d = self.mtpf[psi_max_idx, 2]
             i_q = np.sign(torque) * np.abs(self.mtpf[psi_max_idx, 3])
+
+        i_q = self.invert * i_q
 
         if self.plot_torque:
             if self.k == 0:
