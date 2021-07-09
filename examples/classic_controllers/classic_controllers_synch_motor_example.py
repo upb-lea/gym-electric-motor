@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     """
         motor type:     'PMSM'      Permanent Magnet Synchronous Motor
-                        'SynRm'     Synchronous Reluctance Motor
+                        'SynRM'     Synchronous Reluctance Motor
                         
         control type:   'S'         Speed Control
                         'T'         Torque Control
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     """
 
     motor_type = 'PMSM'
-    control_type = 'S'
+    control_type = 'T'
     action_type = 'AbcCont'
 
     env_id = action_type + '-' + control_type + 'C-' + motor_type + '-v0'

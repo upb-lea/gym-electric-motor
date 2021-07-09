@@ -335,29 +335,30 @@ class Controller:
                 stages = stages_a if not stages_e else [stages_a, stages_e]
 
             elif _controllers[controller_type][0] == FieldOrientedController:
-                stage_d = stages[0][0]
-                stage_q = stages[0][1]
-                if 'i_sq' in ref_states and _controllers[stage_q['controller_type']][1] == ContinuousController:
-                    p_gain_d = mp['l_d'] / (1.5 * environment.physical_system.tau * a) / u_sd_lim * i_sd_lim
-                    i_gain_d = p_gain_d / (1.5 * environment.physical_system.tau * a ** 2)
+                if type(environment.action_space) == Box:
+                    stage_d = stages[0][0]
+                    stage_q = stages[0][1]
+                    if 'i_sq' in ref_states and _controllers[stage_q['controller_type']][1] == ContinuousController:
+                        p_gain_d = mp['l_d'] / (1.5 * environment.physical_system.tau * a) / u_sd_lim * i_sd_lim
+                        i_gain_d = p_gain_d / (1.5 * environment.physical_system.tau * a ** 2)
 
-                    p_gain_q = mp['l_q'] / (1.5 * environment.physical_system.tau * a) / u_sq_lim * i_sq_lim
-                    i_gain_q = p_gain_q / (1.5 * environment.physical_system.tau * a ** 2)
+                        p_gain_q = mp['l_q'] / (1.5 * environment.physical_system.tau * a) / u_sq_lim * i_sq_lim
+                        i_gain_q = p_gain_q / (1.5 * environment.physical_system.tau * a ** 2)
 
-                    stage_d['p_gain'] = stage_d.get('p_gain', p_gain_d)
-                    stage_d['i_gain'] = stage_d.get('i_gain', i_gain_d)
+                        stage_d['p_gain'] = stage_d.get('p_gain', p_gain_d)
+                        stage_d['i_gain'] = stage_d.get('i_gain', i_gain_d)
 
-                    stage_q['p_gain'] = stage_q.get('p_gain', p_gain_q)
-                    stage_q['i_gain'] = stage_q.get('i_gain', i_gain_q)
+                        stage_q['p_gain'] = stage_q.get('p_gain', p_gain_q)
+                        stage_q['i_gain'] = stage_q.get('i_gain', i_gain_q)
 
-                    if _controllers[stage_d['controller_type']][2] == PID_Controller:
-                        d_gain_d = p_gain_d * environment.physical_system.tau
-                        stage_d['d_gain'] = stage_d.get('d_gain', d_gain_d)
+                        if _controllers[stage_d['controller_type']][2] == PID_Controller:
+                            d_gain_d = p_gain_d * environment.physical_system.tau
+                            stage_d['d_gain'] = stage_d.get('d_gain', d_gain_d)
 
-                    if _controllers[stage_q['controller_type']][2] == PID_Controller:
-                        d_gain_q = p_gain_q * environment.physical_system.tau
-                        stage_q['d_gain'] = stage_q.get('d_gain', d_gain_q)
-                    stages = [[stage_d, stage_q]]
+                        if _controllers[stage_q['controller_type']][2] == PID_Controller:
+                            d_gain_q = p_gain_q * environment.physical_system.tau
+                            stage_q['d_gain'] = stage_q.get('d_gain', d_gain_q)
+                        stages = [[stage_d, stage_q]]
 
             elif _controllers[controller_type][0] == CascadedFieldOrientedController:
                 if type(environment.action_space) is Box:
@@ -838,15 +839,8 @@ class CascadedFieldOrientedController(Controller):
             self.ref_idx = np.where(ref_states != 'i_sd')[0][0]
             self.ref_state_idx = [self.i_sq_idx, environment.state_names.index(ref_states[self.ref_idx])]
 
-        cont_pmsm_envs = (
-            envs.DqContCurrentControlPermanentMagnetSynchronousMotorEnv,
-            envs.DqContTorqueControlPermanentMagnetSynchronousMotorEnv,
-            envs.DqContSpeedControlPermanentMagnetSynchronousMotorEnv,
-            envs.AbcContCurrentControlPermanentMagnetSynchronousMotorEnv,
-            envs.AbcContTorqueControlPermanentMagnetSynchronousMotorEnv,
-            envs.AbcContSpeedControlPermanentMagnetSynchronousMotorEnv
-        )
-        self.omega_control = 'omega' in ref_states and type(environment) in cont_pmsm_envs
+
+        self.omega_control = 'omega' in ref_states and type(environment)
         self.has_cont_action_space = type(self.action_space) is Box
 
         self.limit = environment.physical_system.limits
@@ -881,6 +875,7 @@ class CascadedFieldOrientedController(Controller):
                                        range(0, len(stages[1]))]
 
         else:
+
             if self.omega_control:
                 assert len(stages) == 4, 'Number of stages not correct'
                 self.overlaid_controller = [_controllers[stages[3][i]['controller_type']][1].make(

@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     """
         motor type:     'PMSM'      Permanent Magnet Synchronous Motor
-                        'SynRm'     Synchronous Reluctance Motor
+                        'SynRM'     Synchronous Reluctance Motor
                         
         control type:   'S'         Speed Control
                         'T'         Torque Control
