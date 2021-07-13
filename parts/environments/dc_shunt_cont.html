@@ -190,6 +190,64 @@
             
   <div class="section" id="continuous-dc-shunt-motor-environment">
 <h1>Continuous DC Shunt Motor Environment<a class="headerlink" href="#continuous-dc-shunt-motor-environment" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.envs.ContDcShuntMotorEnvironment">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.envs.</code><code class="sig-name descname">ContDcShuntMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">tau=0.0001</em>, <em class="sig-param">converter='Cont-2QC'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/envs/gym_dcm/dc_shunt_motor_env.html#ContDcShuntMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.ContDcShuntMotorEnvironment" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Description:</dt><dd><p>Environment to simulate a continuously controlled DC Shunt Motor.</p>
+</dd>
+<dt>Key:</dt><dd><p><cite>DcShuntCont-v1</cite></p>
+</dd>
+</dl>
+<p>Default Modules:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Physical System:</dt><dd><dl class="simple">
+<dt>SCMLSystem/DcMotorSystem with:</dt><dd><p>IdealVoltageSupply
+ContTwoQuadrantConverter
+DcShuntMotor
+PolynomialStaticLoad
+GaussianWhiteNoiseGenerator
+EulerSolver
+tau=1e-4</p>
+</dd>
+</dl>
+</dd>
+<dt>Reference Generator:</dt><dd><dl class="simple">
+<dt>WienerProcessReferenceGenerator</dt><dd><p>Reference Quantity. ‘omega’</p>
+</dd>
+</dl>
+</dd>
+<dt>Reward Function:</dt><dd><p>WeightedSumOfErrors(reward_weights= {‘omega’: 1 })</p>
+</dd>
+<dt>Visualization:</dt><dd><p>ElectricMotorVisualization (Dummy for no Visualization)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>State Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i',</span> <span class="pre">'u',</span> <span class="pre">'u_sup']`</span></code></p>
+</dd>
+<dt>Observation Space:</dt><dd><p>Type: Tuple(State_Space, Reference_Space)</p>
+</dd>
+<dt>State Space:</dt><dd><p>Box(low=[0, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])</p>
+</dd>
+<dt>Reference Space:</dt><dd><p>Box(low=[0], high=[1])</p>
+</dd>
+<dt>Action Space:</dt><dd><p>Type: Box(low=[0], high=[1])</p>
+</dd>
+<dt>Starting State:</dt><dd><p>Zeros on all state variables.</p>
+</dd>
+<dt>Episode Termination:</dt><dd><p>Termination if current limits are violated. The terminal reward -10 is used as reward.
+(Have a look at the reward functions.)</p>
+</dd>
+</dl>
+<p>Args:
+motor(ElectricMotor): Electric Motor used in the PhysicalSystem
+reward_function(RewardFunction): Reward Function for the environment
+reference_generator(ReferenceGenerator): Reference Generator for the environment
+kwargs(dict): Further kwargs to pass to the superclass and the submodules</p>
+</dd></dl>
+
 </div>
 
 

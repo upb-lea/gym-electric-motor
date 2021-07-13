@@ -194,6 +194,174 @@
 <h1>Constant Speed Load<a class="headerlink" href="#constant-speed-load" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="class-description">
 <h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">ConstantSpeedLoad</code><span class="sig-paren">(</span><em class="sig-param">omega_fixed=0</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#ConstantSpeedLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constant speed mechanical load system which will always set the speed
+to a predefined value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>omega_fixed</strong> (<em>float</em><em>)</em>) – Fix value for the speed in rad/s.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.get_state_space">
+<code class="sig-name descname">get_state_space</code><span class="sig-paren">(</span><em class="sig-param">omega_range</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.get_state_space" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>omega_range</strong> (<em>Tuple</em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em>) – Lower and upper values the motor can generate for omega normalized to (-1, 1)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Lowest and highest possible values for all states normalized to (-1, 1)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(dict,dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">nominal_state</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes give state values. Values can be given as a constant or
+sampled random out of a statistical distribution. Initial value is in
+range of the nominal values or a given interval.
+:param nominal_state: nominal values for each state given from</p>
+<blockquote>
+<div><p>physical system</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_space</strong> (<em>gym.spaces.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.initializer">
+<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.initializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict: The motors initial state and additional initializer parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.j_total">
+<em class="property">property </em><code class="sig-name descname">j_total</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.j_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+float: Total moment of inertia affecting the motor shaft.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict(float): Mapping of the motor states to their limit values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_jacobian">
+<code class="sig-name descname">mechanical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#ConstantSpeedLoad.mechanical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the jacobians of the mechanical-ODE for each of the mechanical state.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>mechanical_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state of the mechanical system.</p></li>
+<li><p><strong>torque</strong> (<em>float</em>) – Generated input torque by the electrical motor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of the mechanical_state-odes over the mechanical_states shape:(states x states)
+[1]: Derivatives of the mechanical_state-odes over the torque shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_ode">
+<code class="sig-name descname">mechanical_ode</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#ConstantSpeedLoad.mechanical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_ode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the derivatives of the mechanical-ODE for each of the mechanical states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>mechanical_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state of the mechanical system.</p></li>
+<li><p><strong>torque</strong> (<em>float</em>) – Generated input torque by the electrical motor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Derivatives of the mechanical state for the given input torque.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.nominal_values">
+<em class="property">property </em><code class="sig-name descname">nominal_values</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.nominal_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict(float): Mapping of the motor states to their nominal values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.omega_fixed">
+<em class="property">property </em><code class="sig-name descname">omega_fixed</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.omega_fixed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+float: Constant value for omega in rad/s.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">nominal_state</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the motors state to a new initial state. (Default 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nominal_state</strong> (<em>list</em>) – nominal values for each state given from
+physical system</p></li>
+<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The initial motor states.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.set_j_rotor">
+<code class="sig-name descname">set_j_rotor</code><span class="sig-paren">(</span><em class="sig-param">j_rotor</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.set_j_rotor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>j_rotor</strong> (<em>float</em>) – The moment of inertia of the rotor shaft of the motor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.state_names">
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.state_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+list(str): Names of the states in the mechanical-ODE.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 

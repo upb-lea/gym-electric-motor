@@ -200,6 +200,202 @@
 </div>
 <div class="section" id="mechanicalload-base-class">
 <h2>MechanicalLoad Base Class<a class="headerlink" href="#mechanicalload-base-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">MechanicalLoad</code><span class="sig-paren">(</span><em class="sig-param">state_names=None</em>, <em class="sig-param">j_load=0.0</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#MechanicalLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>The MechanicalLoad is the base class for all the mechanical systems attached
+to the electrical motors rotor.</p>
+<p>It contains an mechanical ode system as well as the state names, limits and
+nominal values of the mechanical quantities. The only required state is
+‘omega’ as the rotational speed of the motor shaft in rad/s.
+ConstantSpeedLoad can be initialized with the initializer as an
+class parameter by instantiation. ExternalSpeedLoad takes the first value
+of the SpeedProfile as initial value.</p>
+<p>Initialization is given by initializer(dict). Can be a constant state value
+or random value in given interval.
+dict should be like:</p>
+<blockquote>
+<div><dl>
+<dt>{ ‘states’(dict): with state names and initial values</dt><dd><dl class="simple">
+<dt>‘interval’(array like): boundaries for each state</dt><dd><p>(only for random init), shape(num states, 2)</p>
+</dd>
+</dl>
+<p>‘random_init’(str): ‘uniform’ or ‘normal’
+‘random_params(tuple): mue(float), sigma(int)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Example initializer(dict) for constant initialization:</dt><dd><p>{ ‘states’: {‘omega’: 16.0}}</p>
+</dd>
+<dt>Example  initializer(dict) for random initialization:</dt><dd><p>{ ‘random_init’: ‘normal’}</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_names</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of the names of the states in the mechanical-ODE.</p></li>
+<li><p><strong>j_load</strong> (<em>float</em>) – Moment of inertia of the load affecting the motor shaft.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.HAS_JACOBIAN">
+<code class="sig-name descname">HAS_JACOBIAN</code><em class="property"> = False</em><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.HAS_JACOBIAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter indicating if the class is implementing the optional jacobian function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.get_state_space">
+<code class="sig-name descname">get_state_space</code><span class="sig-paren">(</span><em class="sig-param">omega_range</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#MechanicalLoad.get_state_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.get_state_space" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>omega_range</strong> (<em>Tuple</em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em>) – Lower and upper values the motor can generate for omega normalized to (-1, 1)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Lowest and highest possible values for all states normalized to (-1, 1)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(dict,dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">nominal_state</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#MechanicalLoad.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes give state values. Values can be given as a constant or
+sampled random out of a statistical distribution. Initial value is in
+range of the nominal values or a given interval.
+:param nominal_state: nominal values for each state given from</p>
+<blockquote>
+<div><p>physical system</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_space</strong> (<em>gym.spaces.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.initializer">
+<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.initializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict: The motors initial state and additional initializer parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.j_total">
+<em class="property">property </em><code class="sig-name descname">j_total</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.j_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+float: Total moment of inertia affecting the motor shaft.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict(float): Mapping of the motor states to their limit values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.mechanical_jacobian">
+<code class="sig-name descname">mechanical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#MechanicalLoad.mechanical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.mechanical_jacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the jacobians of the mechanical-ODE for each of the mechanical state.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>mechanical_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state of the mechanical system.</p></li>
+<li><p><strong>torque</strong> (<em>float</em>) – Generated input torque by the electrical motor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of the mechanical_state-odes over the mechanical_states shape:(states x states)
+[1]: Derivatives of the mechanical_state-odes over the torque shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.mechanical_ode">
+<code class="sig-name descname">mechanical_ode</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#MechanicalLoad.mechanical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.mechanical_ode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the derivatives of the mechanical-ODE for each of the mechanical states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>mechanical_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state of the mechanical system.</p></li>
+<li><p><strong>torque</strong> (<em>float</em>) – Generated input torque by the electrical motor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Derivatives of the mechanical state for the given input torque.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.nominal_values">
+<em class="property">property </em><code class="sig-name descname">nominal_values</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.nominal_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+dict(float): Mapping of the motor states to their nominal values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">nominal_state</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#MechanicalLoad.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the motors state to a new initial state. (Default 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nominal_state</strong> (<em>list</em>) – nominal values for each state given from
+physical system</p></li>
+<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The initial motor states.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.set_j_rotor">
+<code class="sig-name descname">set_j_rotor</code><span class="sig-paren">(</span><em class="sig-param">j_rotor</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads.html#MechanicalLoad.set_j_rotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.set_j_rotor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>j_rotor</strong> (<em>float</em>) – The moment of inertia of the rotor shaft of the motor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.state_names">
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad.state_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+list(str): Names of the states in the mechanical-ODE.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 

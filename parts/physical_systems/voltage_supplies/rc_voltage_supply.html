@@ -193,6 +193,66 @@
             
   <div class="section" id="rc-voltage-supply">
 <h1>RC Voltage Supply<a class="headerlink" href="#rc-voltage-supply" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.voltage_supplies.</code><code class="sig-name descname">RCVoltageSupply</code><span class="sig-paren">(</span><em class="sig-param">u_nominal=600.0</em>, <em class="sig-param">supply_parameter=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#RCVoltageSupply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply" title="Permalink to this definition">¶</a></dt>
+<dd><p>DC voltage supply modeled as RC element</p>
+<p>This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>supply_parameter</strong> (<em>dict</em>) – Consists or Resistance R in Ohm and Capacitance C in Farad</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Additional notes:</dt><dd><p>If the product of R and C get too small the numerical stability of the ODE is not given anymore
+typical time differences tau are only in the range of 10e-3. One might want to consider R*C as a
+time constant. The resistance R can be considered as a simplified inner resistance model.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.get_voltage">
+<code class="sig-name descname">get_voltage</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">i_sup</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#RCVoltageSupply.get_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.get_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_sup</strong> (<em>float</em>) – Supply current floating into the system.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Supply Voltage(s) at time t.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#RCVoltageSupply.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the voltage supply to an initial state.
+This method is called at every reset of the physical system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The initial supply voltage.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.u_nominal">
+<em class="property">property </em><code class="sig-name descname">u_nominal</code><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.u_nominal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+float: Nominal Voltage of the Voltage Supply</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

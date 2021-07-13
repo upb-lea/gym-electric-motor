@@ -176,6 +176,73 @@
             
   <div class="section" id="console-printer">
 <h1>Console Printer<a class="headerlink" href="#console-printer" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.console_printer.</code><code class="sig-name descname">ConsolePrinter</code><span class="sig-paren">(</span><em class="sig-param">verbose=0</em>, <em class="sig-param">update_freq=1</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints current training values of the environment on the console.</p>
+<p>These include environment state and reference values as well as the number of training steps, the rewards
+and the cumulative reward. It also shows why an episode has terminated (external, constraint violation)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>verbose</strong> (<em>Int</em>) – <p>Integer indicating whether and at which frequency the console will be printed.
+Options:</p>
+<blockquote>
+<div><p>0: No Printing
+1: Printing after an episode has terminated
+2: Printing at each step of an episode</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>update_freq</strong> (<em>Int</em>) – Unsigned Integer setting the update frequency if verbose is 2.
+It’s value n means that each nth step the corresponding output will be printed</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_close">
+<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of a close</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_begin">
+<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_reset_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called on environment reset. Handles internal value reset and External reset printing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_end">
+<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_reset_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the end of each reset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_begin">
+<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_step_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at the beginning of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_end">
+<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called at each step of the environment.
+Handles per step printing as well es constraint violation printing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to update the user interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.console_printer.ConsolePrinter.set_env">
+<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.set_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.set_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the limits of the current physical system for accurate printing</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

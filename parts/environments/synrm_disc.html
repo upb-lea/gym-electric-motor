@@ -190,6 +190,68 @@
             
   <div class="section" id="discrete-synchronous-reluctance-motor-environment">
 <h1>Discrete Synchronous Reluctance Motor Environment<a class="headerlink" href="#discrete-synchronous-reluctance-motor-environment" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.envs.DiscSynchronousReluctanceMotorEnvironment">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.envs.</code><code class="sig-name descname">DiscSynchronousReluctanceMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">tau=1e-05</em>, <em class="sig-param">converter='Disc-B6C'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/envs/gym_synrm/syn_reluctance_motor_env.html#DiscSynchronousReluctanceMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.DiscSynchronousReluctanceMotorEnvironment" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Description:</dt><dd><p>Environment to simulate a discretely controlled Synchronous Reluctance Motor (SynRM).</p>
+</dd>
+<dt>Key:</dt><dd><p><cite>SynRMDisc-v1</cite></p>
+</dd>
+</dl>
+<p>Default Modules:</p>
+<blockquote>
+<div><dl>
+<dt>Physical System:</dt><dd><dl>
+<dt>SCMLSystem/DcMotorSystem with:</dt><dd><div class="line-block">
+<div class="line">IdealVoltageSupply</div>
+<div class="line">DiscB6BridgeConverter</div>
+<div class="line">SynchronousReluctanceMotor</div>
+<div class="line">PolynomialStaticLoad</div>
+<div class="line">GaussianWhiteNoiseGenerator</div>
+<div class="line">EulerSolver</div>
+<div class="line">tau=1e-5</div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt>Reference Generator:</dt><dd><dl class="simple">
+<dt>WienerProcessReferenceGenerator</dt><dd><p>Reference Quantity. ‘omega’</p>
+</dd>
+</dl>
+</dd>
+<dt>Reward Function:</dt><dd><p>WeightedSumOfErrors(reward_weights= {‘omega’: 1 })</p>
+</dd>
+<dt>Visualization:</dt><dd><p>ElectricMotorVisualization (Dummy for no Visualization)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>State Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i_sa',</span> <span class="pre">'i_sb',</span> <span class="pre">'i_sc',</span> <span class="pre">'i_sd',</span> <span class="pre">'i_sq',</span></code>
+<code class="docutils literal notranslate"><span class="pre">'u_sa',</span> <span class="pre">'u_sb',</span> <span class="pre">'u_sc',</span> <span class="pre">'u_sd',</span> <span class="pre">'u_sq','epsilon',</span> <span class="pre">'u_sup']</span></code></p>
+</dd>
+<dt>Observation Space:</dt><dd><p>Type: Tuple(State_Space, Reference_Space)</p>
+</dd>
+<dt>State Space:</dt><dd><p>Box(low=[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])</p>
+</dd>
+<dt>Reference Space:</dt><dd><p>Box(low=[-1], high=[1])</p>
+</dd>
+<dt>Action Space:</dt><dd><p>Type: Discrete(8)</p>
+</dd>
+<dt>Starting State:</dt><dd><p>Zeros on all state variables.</p>
+</dd>
+<dt>Episode Termination:</dt><dd><p>Termination if current limits are violated. The terminal reward -10 is used as reward.
+(Have a look at the reward functions.)</p>
+</dd>
+</dl>
+<p>u_sup and u_nominal must be the same</p>
+<p>Args:
+motor(ElectricMotor): Electric Motor used in the PhysicalSystem
+reward_function(RewardFunction): Reward Function for the environment
+reference_generator(ReferenceGenerator): Reference Generator for the environment
+kwargs(dict): Further kwargs tot pass to the superclass and the submodules</p>
+</dd></dl>
+
 </div>
 
 
