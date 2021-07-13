@@ -183,58 +183,6 @@
 </div>
 <div class="section" id="visualization-base-class">
 <h2>Visualization Base Class<a class="headerlink" href="#visualization-base-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorVisualization</code><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base class for all visualizations in GEM.
-The visualization is basically only a Callback that is extended by a render() function to update the figure.
-With the function calls that are inherited by the Callback superclass (e.g. <em>on_step_end</em>),
-the data is passed from the environment to the visualization. In the render() function the passed data can be
-visualized in the desired way.</p>
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_close">
-<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets called at the beginning of a close</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_reset_begin">
-<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_reset_begin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets called at the beginning of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_reset_end">
-<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_reset_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets called at the end of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_step_begin">
-<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_step_begin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets called at the beginning of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_step_end">
-<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_step_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets called at the end of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.render">
-<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.render" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to update the user interface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.set_env">
-<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.set_env" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the environment of the motor.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 </div>
 

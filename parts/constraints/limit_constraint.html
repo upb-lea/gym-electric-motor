@@ -177,37 +177,6 @@
             
   <div class="section" id="limit-constraint">
 <h1>Limit Constraint<a class="headerlink" href="#limit-constraint" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="gym_electric_motor.constraints.LimitConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.constraints.</code><code class="sig-name descname">LimitConstraint</code><span class="sig-paren">(</span><em class="sig-param">observed_state_names='all_states'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#LimitConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.constraints.LimitConstraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constraint to observe the limits on one or more system states.</p>
-<p>This constraint observes if any of the systems state values exceeds the limit specified in the PhysicalSystem.</p>
-<div class="math notranslate nohighlight">
-\[1.0 &gt;= s_i / s_{i,max}\]</div>
-<p>For all <span class="math notranslate nohighlight">\(i\)</span> in the set of PhysicalSystems states <span class="math notranslate nohighlight">\(S\)</span>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>observed_state_names</strong> (<em>[</em><em>'all_states'</em><em>]</em><em>/iterable</em><em>(</em><em>str</em><em>)</em>) – <p>The states to observe.</p>
-<ul class="simple">
-<li><p>[‘all_states’]: Shortcut for observing all states.</p></li>
-<li><p>iterable(str): Pass an iterable containing all state names of the states to observe.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="gym_electric_motor.constraints.LimitConstraint.set_modules">
-<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">ps</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#LimitConstraint.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.constraints.LimitConstraint.set_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called by the environment that the Constraint can read information from the PhysicalSystem.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ps</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – PhysicalSystem of the environment.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
