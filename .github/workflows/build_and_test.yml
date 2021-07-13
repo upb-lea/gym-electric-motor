@@ -37,12 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    #- name: Set up Python 3.7
-    #  uses: actions/setup-python@v2
-    #  with:
-    #    python-version: 3.7
-    #- name: Install dependencies
-    #  run: pip install sphinx==2.4.4 m2r sphinx_rtd_theme
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: python -m pip install sphinx==2.4.4 m2r sphinx_rtd_theme
     - name: Build Sphinx documentation
       uses: ammaraskar/sphinx-action@master
       with:
