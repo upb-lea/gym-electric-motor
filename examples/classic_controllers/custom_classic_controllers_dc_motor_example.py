@@ -11,9 +11,9 @@ if __name__ == '__main__':
                     'SeriesDc'  DC Series Motor
                     'ShuntDc'   DC Shunt Motor
                     
-    control type:   'S'         Speed Control
-                    'T'         Torque Control
-                    'C'         Current Control
+    control type:   'SC'         Speed Control
+                    'TC'         Torque Control
+                    'CC'         Current Control
                     
     action_type:    'Cont'      Continuous Action Space
                     'Finite'    Discrete Action Space
@@ -21,10 +21,10 @@ if __name__ == '__main__':
 
     # following manual controller design addresses an ExtExDc. Other motor types require different controller stages
     motor_type = 'ExtExDc'
-    control_type = 'C'
+    control_type = 'CC'
     action_type = 'Cont'
 
-    motor = action_type + '-' + control_type + 'C-' + motor_type + '-v0'
+    motor = action_type + '-' + control_type + '-' + motor_type + '-v0'
 
     if motor_type in ['PermExDc', 'SeriesDc']:
         states = ['omega', 'torque', 'i', 'u']
@@ -81,4 +81,3 @@ if __name__ == '__main__':
             controller.reset()
 
     env.close()
-

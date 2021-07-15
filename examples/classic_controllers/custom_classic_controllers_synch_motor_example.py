@@ -10,19 +10,19 @@ if __name__ == '__main__':
         motor type:     'PMSM'      Permanent Magnet Synchronous Motor
                         'SynRM'     Synchronous Reluctance Motor
                         
-        control type:   'S'         Speed Control
-                        'T'         Torque Control
-                        'C'         Current Control
+        control type:   'SC'         Speed Control
+                        'TC'         Torque Control
+                        'CC'         Current Control
 
         action_type:    'AbcCont'   Continuous Action Space in ABC-Coordinates
                         'Finite'    Discrete Action Space
     """
 
     motor_type = 'PMSM'
-    control_type = 'S'
+    control_type = 'SC'
     action_type = 'AbcCont'
 
-    env_id = action_type + '-' + control_type + 'C-' + motor_type + '-v0'
+    env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
 
     # definition of the motor parameters
     psi_p = 0 if motor_type == 'SynRM' else 45e-3

@@ -9,19 +9,19 @@ if __name__ == '__main__':
         motor type:     'PMSM'      Permanent Magnet Synchronous Motor
                         'SynRM'     Synchronous Reluctance Motor
                         
-        control type:   'S'         Speed Control
-                        'T'         Torque Control
-                        'C'         Current Control
+        control type:   'SC'         Speed Control
+                        'TC'         Torque Control
+                        'CC'         Current Control
 
         action_type:    'AbcCont'   Continuous Action Space in ABC-Coordinates
                         'Finite'    Discrete Action Space
     """
 
     motor_type = 'PMSM'
-    control_type = 'T'
+    control_type = 'TC'
     action_type = 'AbcCont'
 
-    env_id = action_type + '-' + control_type + 'C-' + motor_type + '-v0'
+    env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
 
 
     # definition of the plotted variables
@@ -29,7 +29,6 @@ if __name__ == '__main__':
 
     # initialize the gym-electric-motor environment
     env = gem.make(env_id, visualization=MotorDashboard(additional_plots=external_ref_plots))
-
 
     """
     initialize the controller

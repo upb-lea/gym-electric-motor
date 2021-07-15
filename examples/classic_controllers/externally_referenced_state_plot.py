@@ -35,4 +35,5 @@ class ExternallyReferencedStatePlot(StatePlot):
         super().set_env(env)
 
     def external_reference(self, value):
+        """Method to pass the externally generated reference."""
         self._ref_data[self.data_idx] = value * self._limits

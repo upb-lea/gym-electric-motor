@@ -50,13 +50,15 @@ class Controller:
 
     def control(self, state, reference):
         """
-        Main function of the controller class, which is called by the user.
+        Calculation of the next control action for the environment based on the last environments states and references.
+        This is the main method of the controller class which is called every control cycle.
+
         Args:
             state: motor states given by the gym-electric-motor environment
             reference: reference for the referenced states given by the gym-electric-motor environment
 
         Returns:
-            input voltages for the environment
+            control actions
 
         """
         pass
@@ -66,23 +68,22 @@ class Controller:
         pass
 
     def reset(self):
-        """Function to reset the controller."""
+        """
+        Method to reset the controllers internal states (e.g. integrators) to initial values before each control episode
+        of the environment starts.
+        """
         pass
 
     def plot(self, external_reference_plots, state_names):
         """
-        The function visualizes the states and the associated reference values, including the reference values
-        calculated by the stages of the controller.
+        This method passes the latest internally generated references of the controller the ExternalReferencePlots. The
+        GEM-Environment uses this data to plot these references with the according states within its MotorDashboard.
 
         Args:
-            external_reference_plots:
-                This must be a subclass of the StatePlot class from the gym-electric-motor visualization. It needs the
-                functions set_reference(), set_env() and external_reference(). An example is given by the class
-                ExternallyReferencedStatePlot. The class must also be passed to the environment in the make function as
-                a visualization.
-
+            external_reference_plots(Iterable[ExternalReferencedPlot]):
+                The External Reference Plots that the internal reference data shall be passed to.
             state_names:
-                names of the environment states
+                The list of all environment state names.
         """
 
         if self.visualization:
@@ -163,9 +164,9 @@ class Controller:
 
     @staticmethod
     def automated_controller_design(environment, **controller_kwargs):
-        """This function automatically designs the controller based on the given motor environment and control task."""
+        """This methode automatically designs the controller based on the given motor environment and control task."""
 
-        action_space = type(environment.action_space)
+        action_space_type = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
         stages = []
         if isinstance(environment.physical_system, DcMotorSystem):  # Checking type of motor
@@ -175,7 +176,7 @@ class Controller:
 
                 for i in range(len(stages), 2):
                     if i == 0:
-                        if action_space is Box:  # Checking type of output stage (finite / cont)
+                        if action_space_type is Box:  # Checking type of output stage (finite / cont)
                             stages.append({'controller_type': 'pi_controller'})
                         else:
                             stages.append({'controller_type': 'three_point'})
@@ -184,15 +185,15 @@ class Controller:
 
             elif 'i' in ref_states or 'i_a' in ref_states:
                 # Checking type of output stage (finite / cont)
-                if action_space is Discrete or action_space is MultiDiscrete:
+                if action_space_type is Discrete or action_space_type is MultiDiscrete:
                     stages.append({'controller_type': 'three_point'})
-                elif action_space is Box:
+                elif action_space_type is Box:
                     stages.append({'controller_type': 'pi_controller'})
                 controller_type = stages[0]['controller_type']
 
             # Add stage for i_e current of the ExtExDC
             if isinstance(environment.physical_system.electrical_motor, DcExternallyExcitedMotor):
-                if action_space is Box:
+                if action_space_type is Box:
                     stages = [stages, [{'controller_type': 'pi_controller'}]]
                 else:
                     stages = [stages, [{'controller_type': 'three_point'}]]
@@ -200,14 +201,14 @@ class Controller:
         elif isinstance(environment.physical_system, SynchronousMotorSystem):
             if 'i_sq' in ref_states or 'torque' in ref_states:  # Checking control task
                 controller_type = 'foc_controller' if 'i_sq' in ref_states else 'cascaded_foc_controller'
-                if type(environment.action_space) is Discrete:
+                if action_space_type is Discrete:
                     stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
                               [{'controller_type': 'on_off'}]]
                 else:
                     stages = [[{'controller_type': 'pi_controller'}, {'controller_type': 'pi_controller'}]]
             elif 'omega' in ref_states:
                 controller_type = 'cascaded_foc_controller'
-                if type(environment.action_space) is Discrete:
+                if action_space_type is Discrete:
                     stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
                               [{'controller_type': 'on_off'}], [{'controller_type': 'pi_controller'}]]
                 else:
@@ -221,7 +222,7 @@ class Controller:
     @staticmethod
     def automated_gain(environment, stages, controller_type, **controller_kwargs):
         """
-            This function automatically parameterizes a given controller design if the parameter automated_gain is True
+            This methode automatically parameterizes a given controller design if the parameter automated_gain is True
             (default True), based on the design according to the symmetric optimum (SO). Further information about the
             design according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
         """
@@ -273,7 +274,7 @@ class Controller:
                 stages_e[0]['p_gain'] = stages_e[0].get('p_gain', p_gain)
                 stages_e[0]['i_gain'] = stages_e[0].get('i_gain', i_gain)
 
-                if stages_e[0]['controller_type'] == PID_Controller:
+                if stages_e[0]['controller_type'] == PIDController:
                     d_gain = p_gain * environment.physical_system.tau
                     stages_e[0]['d_gain'] = stages_e[0].get('d_gain', d_gain)
             elif type(environment) in finite_extex_envs:
@@ -291,7 +292,7 @@ class Controller:
                     stages_a[0]['p_gain'] = stages_a[0].get('p_gain', p_gain)
                     stages_a[0]['i_gain'] = stages_a[0].get('i_gain', i_gain)
 
-                    if _controllers[controller_type][2] == PID_Controller:
+                    if _controllers[controller_type][2] == PIDController:
                         d_gain = p_gain * environment.physical_system.tau
                         stages_a[0]['d_gain'] = stages_a[0].get('d_gain', d_gain)
 
@@ -303,7 +304,7 @@ class Controller:
                     stages_a[0]['p_gain'] = stages_a[0].get('p_gain', p_gain)
                     stages_a[0]['i_gain'] = stages_a[0].get('i_gain', i_gain)
 
-                    if _controllers[controller_type][2] == PID_Controller:
+                    if _controllers[controller_type][2] == PIDController:
                         d_gain = p_gain * environment.physical_system.tau
                         stages_a[0]['d_gain'] = stages_a[0].get('d_gain', d_gain)
 
@@ -316,7 +317,7 @@ class Controller:
                             p_gain = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
                             i_gain = p_gain / (environment.physical_system.tau * a ** 2)
 
-                            if _controllers[stages_a[i]['controller_type']][2] == PID_Controller:
+                            if _controllers[stages_a[i]['controller_type']][2] == PIDController:
                                 d_gain = p_gain * environment.physical_system.tau
                                 stages_a[i]['d_gain'] = stages_a[i].get('d_gain', d_gain)
 
@@ -325,7 +326,7 @@ class Controller:
                             p_gain = environment.physical_system.mechanical_load.j_total / (
                                     a * t_n) / i_a_lim * omega_lim
                             i_gain = p_gain / (a * t_n)
-                            if _controllers[stages_a[i]['controller_type']][2] == PID_Controller:
+                            if _controllers[stages_a[i]['controller_type']][2] == PIDController:
                                 d_gain = p_gain * environment.physical_system.tau
                                 stages_a[i]['d_gain'] = stages_a[i].get('d_gain', d_gain)
 
@@ -351,11 +352,11 @@ class Controller:
                         stage_q['p_gain'] = stage_q.get('p_gain', p_gain_q)
                         stage_q['i_gain'] = stage_q.get('i_gain', i_gain_q)
 
-                        if _controllers[stage_d['controller_type']][2] == PID_Controller:
+                        if _controllers[stage_d['controller_type']][2] == PIDController:
                             d_gain_d = p_gain_d * environment.physical_system.tau
                             stage_d['d_gain'] = stage_d.get('d_gain', d_gain_d)
 
-                        if _controllers[stage_q['controller_type']][2] == PID_Controller:
+                        if _controllers[stage_q['controller_type']][2] == PIDController:
                             d_gain_q = p_gain_q * environment.physical_system.tau
                             stage_q['d_gain'] = stage_q.get('d_gain', d_gain_q)
                         stages = [[stage_d, stage_q]]
@@ -379,25 +380,25 @@ class Controller:
                     stage_q['p_gain'] = stage_q.get('p_gain', p_gain_q)
                     stage_q['i_gain'] = stage_q.get('i_gain', i_gain_q)
 
-                    if _controllers[stage_d['controller_type']][2] == PID_Controller:
+                    if _controllers[stage_d['controller_type']][2] == PIDController:
                         d_gain_d = p_gain_d * environment.physical_system.tau
                         stage_d['d_gain'] = stage_d.get('d_gain', d_gain_d)
 
-                    if _controllers[stage_q['controller_type']][2] == PID_Controller:
+                    if _controllers[stage_q['controller_type']][2] == PIDController:
                         d_gain_q = p_gain_q * environment.physical_system.tau
                         stage_q['d_gain'] = stage_q.get('d_gain', d_gain_q)
 
                     if 'torque' not in controller_kwargs['ref_states'] and \
                             _controllers[overlaid[0]['controller_type']][1] == ContinuousController:
                         t_n = p_gain_d / i_gain_d
-                        p_gain = environment.physical_system.mechanical_load.j_total / (
-                                    a ** 2 * t_n) / torque_lim * omega_lim
+                        j_total = environment.physical_system.mechanical_load.j_total
+                        p_gain = j_total / (a ** 2 * t_n) / torque_lim * omega_lim
                         i_gain = p_gain / (a * t_n)
 
                         overlaid[0]['p_gain'] = overlaid[0].get('p_gain', p_gain)
                         overlaid[0]['i_gain'] = overlaid[0].get('i_gain', i_gain)
 
-                        if _controllers[overlaid[0]['controller_type']][2] == PID_Controller:
+                        if _controllers[overlaid[0]['controller_type']][2] == PIDController:
                             d_gain = p_gain * environment.physical_system.tau
                             overlaid[0]['d_gain'] = overlaid[0].get('d_gain', d_gain)
 
@@ -416,7 +417,7 @@ class Controller:
                         stages[3][0]['p_gain'] = stages[3][0].get('p_gain', p_gain)
                         stages[3][0]['i_gain'] = stages[3][0].get('i_gain', i_gain)
 
-                        if _controllers[stages[3][0]['controller_type']][2] == PID_Controller:
+                        if _controllers[stages[3][0]['controller_type']][2] == PIDController:
                             d_gain = p_gain * environment.physical_system.tau
                             stages[3][0]['d_gain'] = stages[3][0].get('d_gain', d_gain)
 
@@ -802,7 +803,7 @@ class CascadedFieldOrientedController(Controller):
     """
         This controller is used for torque or speed control of synchronous motors. The controller consists of a field
         oriented controller for current control, an efficiency-optimized torque controller and an optional speed
-        controller. The current control is equivalent to the current control of the FOC_Controller. The torque
+        controller. The current control is equivalent to the current control of the FieldOrientedController. The torque
         controller is based on the maximum torque per current (MTPC) control strategy in the voltage control range and
         the maximum torque per flux (MTPF) control strategy with an additional modulation controller in the flux
         weakening range. The speed controller is designed as a PI-controller by default.
@@ -839,7 +840,6 @@ class CascadedFieldOrientedController(Controller):
             self.ref_idx = np.where(ref_states != 'i_sd')[0][0]
             self.ref_state_idx = [self.i_sq_idx, environment.state_names.index(ref_states[self.ref_idx])]
 
-
         self.omega_control = 'omega' in ref_states and type(environment)
         self.has_cont_action_space = type(self.action_space) is Box
 
@@ -872,7 +872,7 @@ class CascadedFieldOrientedController(Controller):
                 self.overlaid_controller = [_controllers[stages[1][i]['controller_type']][1].make(
                     environment, stages[1][i], cascaded=True, **controller_kwargs) for i in range(0, len(stages[1]))]
                 self.overlaid_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
-                                       range(0, len(stages[1]))]
+                                      range(0, len(stages[1]))]
 
         else:
 
@@ -881,7 +881,7 @@ class CascadedFieldOrientedController(Controller):
                 self.overlaid_controller = [_controllers[stages[3][i]['controller_type']][1].make(
                     environment, stages[3][i], cascaded=True, **controller_kwargs) for i in range(len(stages[3]))]
                 self.overlaid_type = [_controllers[stages[3][i]['controller_type']][1] == ContinuousController for i in
-                                       range(len(stages[3]))]
+                                      range(len(stages[3]))]
             else:
                 assert len(stages) == 3, 'Number of stages not correct'
             self.abc_controller = [_controllers[stages[0][0]['controller_type']][1].make(
@@ -1307,19 +1307,30 @@ class TorqueToCurrentConversion:
                        self.t_count)
 
     def control(self, state, torque):
+        """
+            This main method is called by the CascadedFieldOrientedController to calculate reference values for the i_d
+            and i_q currents from a given torque reference.
+        """
 
+        # get the optimal psi for a given torque from the mtpc characteristic
         psi_idx_ = self.get_t_idx_mtpc(torque)
         psi_opt = self.mtpc[psi_idx_, 3]
+
+        # limit the flux to keep the voltage limit using the modulation controller
         psi_max_ = self.modulation_control(state)
         psi_max = min(psi_opt, psi_max_)
 
+        # get the maximum torque for a given flux from the mtpf characteristic
         psi_max_idx = self.get_psi_idx_mtpf(psi_max)
         t_max = np.abs(self.mtpf[psi_max_idx, 1])
         if np.abs(torque) > t_max:
             torque = np.sign(torque) * t_max
 
+        # calculate the currents online
         if self.torque_control == 'online':
             i_d, i_q = self.get_i_d_q(torque, psi_max, psi_idx_)
+
+        # get the currents from a LUT
         else:
             t_idx = self.get_t_idx(torque)
             psi_idx = self.get_psi_idx(psi_max)
@@ -1334,12 +1345,16 @@ class TorqueToCurrentConversion:
                 if i_d > self.mtpc[psi_idx_, 1]:
                     i_d = self.mtpc[psi_idx_, 1]
                     i_q = np.sign(torque) * np.abs(self.mtpc[psi_idx_, 2])
+
+        # ensure that the mtpf characteristic curve is observed
         if i_d < self.mtpf[psi_max_idx, 2]:
             i_d = self.mtpf[psi_max_idx, 2]
             i_q = np.sign(torque) * np.abs(self.mtpf[psi_max_idx, 3])
 
+        # invert the i_q if necessary
         i_q = self.invert * i_q
 
+        # plot all calculated quantities
         if self.plot_torque:
             if self.k == 0:
                 self.intitialize_torque_plot()
@@ -1363,6 +1378,7 @@ class TorqueToCurrentConversion:
                 self.torque_list = []
                 self.psi_list = []
 
+        # clipping and normalizing the currents
         i_q = np.clip(i_q, -self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx]) / self.limit[self.i_sq_idx]
         i_d = np.clip(i_d, -self.nominal_values[self.i_sd_idx], self.nominal_values[self.i_sd_idx]) / self.limit[self.i_sd_idx]
 
@@ -1470,12 +1486,12 @@ class ContinuousController:
         pass
 
 
-class P_Controller(ContinuousController):
+class PController(ContinuousController):
     def __init__(self, p_gain=5):
         self.p_gain = p_gain
 
 
-class I_Controller(ContinuousController):
+class IController(ContinuousController):
     def __init__(self, i_gain=10):
         self.i_gain = i_gain
         self.integrated = 0
@@ -1484,13 +1500,13 @@ class I_Controller(ContinuousController):
         self.integrated += (reference - state) * self.tau
 
 
-class D_Controller(ContinuousController):
+class DController(ContinuousController):
     def __init__(self, d_gain=0.05):
         self.d_gain = d_gain
         self.e_old = 0
 
 
-class PI_Controller(P_Controller, I_Controller):
+class PIController(PController, IController):
     """
         The PI-Controller is a combination of the base P-Controller and the base I-Controller. The integrate function is
         executed after checking compliance with the limitations in the higher-level controller stage in order to adjust
@@ -1502,8 +1518,8 @@ class PI_Controller(P_Controller, I_Controller):
 
         p_gain = param_dict.get('p_gain', p_gain)
         i_gain = param_dict.get('i_gain', i_gain)
-        P_Controller.__init__(self, p_gain)
-        I_Controller.__init__(self, i_gain)
+        PController.__init__(self, p_gain)
+        IController.__init__(self, i_gain)
 
     def control(self, state, reference):
         return self.p_gain * (reference - state) + self.i_gain * (self.integrated + (reference - state) * self.tau)
@@ -1512,7 +1528,7 @@ class PI_Controller(P_Controller, I_Controller):
         self.integrated = 0
 
 
-class PID_Controller(PI_Controller, D_Controller):
+class PIDController(PIController, DController):
     """The PID-Controller is a combination of the PI-Controller and the base P-Controller."""
 
     def __init__(self, environment, p_gain=5, i_gain=5, d_gain=0.005, param_dict={}, **controller_kwargs):
@@ -1520,17 +1536,17 @@ class PID_Controller(PI_Controller, D_Controller):
         i_gain = param_dict.get('i_gain', i_gain)
         d_gain = param_dict.get('d_gain', d_gain)
 
-        PI_Controller.__init__(self, environment, p_gain, i_gain)
-        D_Controller.__init__(self, d_gain)
+        PIController.__init__(self, environment, p_gain, i_gain)
+        DController.__init__(self, d_gain)
 
     def control(self, state, reference):
-        action = PI_Controller.control(self, state, reference) + self.d_gain * (
+        action = PIController.control(self, state, reference) + self.d_gain * (
                 reference - state - self.e_old) / self.tau
         self.e_old = reference - state
         return action
 
     def reset(self):
-        PI_Controller.reset(self)
+        PIController.reset(self)
         self.e_old = 0
 
 
@@ -1560,7 +1576,7 @@ class DiscreteController:
         pass
 
 
-class OnOff_Controller(DiscreteController):
+class OnOffController(DiscreteController):
     """This is a hysteresis controller with two possible output states."""
 
     def __init__(self, environment, action_space, hysteresis=0.02, param_dict={}, cascaded=False, control_e=False,
@@ -1587,7 +1603,7 @@ class OnOff_Controller(DiscreteController):
         self.action = self.switch_on_level
 
 
-class ThreePoint_Controller(DiscreteController):
+class ThreePointController(DiscreteController):
     """This is a hysteresis controller with three possible output states."""
 
     def __init__(self, environment, action_space, switch_to_positive_level=0.02, switch_to_negative_level=0.02,
@@ -1628,10 +1644,10 @@ class ThreePoint_Controller(DiscreteController):
 
 
 _controllers = {
-    'pi_controller': [ContinuousActionController, ContinuousController, PI_Controller],
-    'pid_controller': [ContinuousActionController, ContinuousController, PID_Controller],
-    'on_off': [DiscreteActionController, DiscreteController, OnOff_Controller],
-    'three_point': [DiscreteActionController, DiscreteController, ThreePoint_Controller],
+    'pi_controller': [ContinuousActionController, ContinuousController, PIController],
+    'pid_controller': [ContinuousActionController, ContinuousController, PIDController],
+    'on_off': [DiscreteActionController, DiscreteController, OnOffController],
+    'three_point': [DiscreteActionController, DiscreteController, ThreePointController],
     'cascaded_controller': [CascadedController],
     'foc_controller': [FieldOrientedController],
     'cascaded_foc_controller': [CascadedFieldOrientedController],
