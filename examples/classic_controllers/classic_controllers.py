@@ -164,7 +164,7 @@ class Controller:
 
     @staticmethod
     def automated_controller_design(environment, **controller_kwargs):
-        """This methode automatically designs the controller based on the given motor environment and control task."""
+        """This method automatically designs the controller based on the given motor environment and control task."""
 
         action_space_type = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
@@ -222,7 +222,7 @@ class Controller:
     @staticmethod
     def automated_gain(environment, stages, controller_type, **controller_kwargs):
         """
-            This methode automatically parameterizes a given controller design if the parameter automated_gain is True
+            This method automatically parameterizes a given controller design if the parameter automated_gain is True
             (default True), based on the design according to the symmetric optimum (SO). Further information about the
             design according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
         """
