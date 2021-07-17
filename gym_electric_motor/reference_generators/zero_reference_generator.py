@@ -8,6 +8,7 @@ class ZeroReferenceGenerator(ReferenceGenerator):
     """Dummy Reference Generator that does not generate any reference but zeros for all states."""
 
     def __init__(self):
+        super().__init__()
         self.reference_space = Box(0, 0, (0,))
         self._reference_names = []
 

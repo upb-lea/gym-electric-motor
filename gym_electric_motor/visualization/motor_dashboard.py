@@ -26,8 +26,10 @@ class MotorDashboard(ElectricMotorVisualization):
     StepPlot base classes.
     """
 
-    def __init__(self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
-                 update_interval=1000, time_plot_width=10000, style=None, **__):
+    def __init__(
+        self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
+        update_interval=1000, time_plot_width=10000, style=None
+    ):
         """
         Args:
             state_plots('all'/iterable(str)): An iterable of state names to be shown. If 'all' all states will be shown.

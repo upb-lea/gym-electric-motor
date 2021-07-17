@@ -19,9 +19,9 @@ class SwitchedReferenceGenerator(ReferenceGenerator, RandomComponent):
             p(list(float)/None): (Optional) Probabilities for each sub_generator. If None a uniform
                 probability for each sub_converter is used.
             super_episode_length(Tuple(int, int): Minimum and maximum number of time steps a sub_generator is used.
-            kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.
+            kwargs: Arguments to be passed to the base class ReferenceGenerator
         """
-        ReferenceGenerator.__init__(self)
+        ReferenceGenerator.__init__(self, **kwargs)
         RandomComponent.__init__(self)
         self.reference_space = Box(-1, 1, shape=(1,))
         self._reference = None
@@ -32,7 +32,7 @@ class SwitchedReferenceGenerator(ReferenceGenerator, RandomComponent):
             assert len(sub_args) == len(sub_generators)
             sub_arguments = sub_args
         else:
-            sub_arguments = [kwargs] * len(sub_generators)
+            sub_arguments = [dict()] * len(sub_generators)
         self._sub_generators = [
             instantiate(ReferenceGenerator, sub_generator, **sub_arg)
             for sub_generator, sub_arg in zip(sub_generators, sub_arguments)

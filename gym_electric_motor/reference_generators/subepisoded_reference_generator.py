@@ -11,7 +11,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
     time steps and can pre-calculate their references in these "sub episodes".
     """
 
-    def __init__(self, reference_state='omega', episode_lengths=(500, 2000), limit_margin=None, *_, **__):
+    def __init__(self, reference_state='omega', episode_lengths=(500, 2000), limit_margin=None, **kwargs):
         """
         Args:
             reference_state(str): Name of the state that this reference generator is referencing.
@@ -22,8 +22,9 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
                 If a float is passed, both margins are equal.
                 If None(default), the limit margin equals (nominal values/limits).
                 In general, the limit margin should not exceed (-1, 1)
+            kwargs(dict): Keyword arguments to be passed to the base class ReferenceGenerator
         """
-        ReferenceGenerator.__init__(self)
+        ReferenceGenerator.__init__(self, **kwargs)
         RandomComponent.__init__(self)
         self.reference_space = Box(-1, 1, shape=(1,))
         self._reference = None

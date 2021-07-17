@@ -314,9 +314,8 @@ class TestWienerProcessReferenceGenerator:
         self._monkey_get_current_value_counter += 1
         return value
 
-    @pytest.mark.parametrize('kwargs, expected_result', [({}, {}), ({'test': 42}, {'test': 42})])
     @pytest.mark.parametrize('sigma_range', [(2e-3, 2e-1)])
-    def test_init(self, monkeypatch, kwargs, expected_result, sigma_range):
+    def test_init(self, monkeypatch, sigma_range):
         """
         test init()
         :param monkeypatch:
@@ -325,13 +324,9 @@ class TestWienerProcessReferenceGenerator:
         :param sigma_range: used range of sigma
         :return:
         """
-        # setup test scenario
+        test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range)
 
-        self._kwargs = kwargs
-        # call function to test
-        test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range, **self._kwargs)
         # verify the expected results
-
         assert test_object._sigma_range == sigma_range, 'sigma range is not passed correctly'
 
     def test_reset_reference(self, monkeypatch):
@@ -758,10 +753,8 @@ class TestMultipleReferenceGenerator(TestReferenceGenerator):
         return rg
 
     def test_initialization(self):
-        # Test with no sub_args
-        kwargs = {'dummy_arg': 'test'}
-        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], **kwargs)
-        assert all([sg.kwargs == kwargs for sg in rg._sub_generators])
+        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator])
+        assert all([sg.kwargs == {} for sg in rg._sub_generators])
 
         # Test single sub_args
         kwargs = {'dummy_arg': 'test'}

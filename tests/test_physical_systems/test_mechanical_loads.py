@@ -247,23 +247,31 @@ class TestExtSpeedLoad(TestMechanicalLoad):
 
     key = 'ExtSpeedLoad'
     class_to_test = ExternalSpeedLoad
-    kwargs = dict(speed_profile=speed_profile_)
+    kwargs = dict(
+        speed_profile=speed_profile_,
+        speed_profile_kwargs=dict(
+            amp=test_amp,
+            bias=test_bias,
+            freq=test_freq
+        )
+    )
 
     @pytest.fixture
     def ext_speed_load(self):
-        return ExternalSpeedLoad(speed_profile=speed_profile_,
-                                 amp=test_amp, bias=test_bias, freq=test_freq)
+        return ExternalSpeedLoad(
+            speed_profile=speed_profile_,
+            speed_profile_kwargs=dict(amp=test_amp, bias=test_bias, freq=test_freq)
+        )
 
     def test_initialization(self):
-        load = ExternalSpeedLoad(speed_profile=speed_profile_,
-                                 amp=test_amp, bias=test_bias, freq=test_freq)
+        load = ExternalSpeedLoad(
+            speed_profile=speed_profile_,
+            speed_profile_kwargs=dict(amp=test_amp, bias=test_bias, freq=test_freq)
+        )
         assert load._speed_profile == speed_profile_
-        assert load.omega == speed_profile_(t=0,
-                                                amp=test_amp,
-                                                bias=test_bias,
-                                                freq=test_freq)
+        assert load.omega == speed_profile_(t=0, amp=test_amp, bias=test_bias, freq=test_freq)
         for key in ['amp', 'bias', 'freq']:
-            assert key in load.kwargs
+            assert key in load.speed_profile_kwargs
 
     # to verify all 3 branches
     @pytest.mark.parametrize("omega, expected_result", [(-3, -69840.),
@@ -294,8 +302,9 @@ class TestExtSpeedLoad(TestMechanicalLoad):
     ]
     )
     def test_jacobian(self, omega, omega_initial, expected):
-        test_object = self.class_to_test(speed_profile_, amp=test_amp,
-                                         bias=test_bias, freq=test_freq)
+        test_object = self.class_to_test(
+            speed_profile_, speed_profile_kwargs=dict(amp=test_amp, bias=test_bias, freq=test_freq)
+        )
 
         # 2 Runs to test independence on time and torque
         result0 = test_object.mechanical_jacobian(0.456, np.array([omega]), 0.385)
