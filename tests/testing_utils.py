@@ -798,11 +798,3 @@ class DummyCallback(Callback):
 
     def on_close(self):
         self.close += 1
-        
-
-
-            
-    
-    
-
-# endregion

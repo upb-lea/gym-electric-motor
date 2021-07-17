@@ -294,8 +294,8 @@ class TestSwitchedReferenceGenerator:
         test_object.seed(np.random.SeedSequence(123))
         test_object._reset_reference()
         assert test_object._k == 0
-        assert test_object._current_episode_length == 1
-        assert test_object._current_ref_generator == sub_reference_generators[0]
+        assert test_object._current_episode_length == 9
+        assert test_object._current_ref_generator == sub_reference_generators[2]
 
 
 class TestWienerProcessReferenceGenerator:

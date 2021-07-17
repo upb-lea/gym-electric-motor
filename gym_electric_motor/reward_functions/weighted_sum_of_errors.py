@@ -45,7 +45,7 @@ class WeightedSumOfErrors(RewardFunction):
     """
 
     def __init__(self, reward_weights=None, normed_reward_weights=False, violation_reward=None,
-                 gamma=0.9, reward_power=1, bias=0.0, **__):
+                 gamma=0.9, reward_power=1, bias=0.0):
         """
         Args:
             reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.

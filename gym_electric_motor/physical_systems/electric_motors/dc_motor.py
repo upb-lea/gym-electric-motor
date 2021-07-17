@@ -67,7 +67,7 @@ class DcMotor(ElectricMotor):
                             'random_init': None,
                             'random_params': (None, None)}
 
-    def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None, **__):
+    def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None):
         # Docstring of superclass
         super().__init__(motor_parameter, nominal_values, limit_values, motor_initializer)
         #: Matrix that contains the constant parameters of the systems equation for faster computation
