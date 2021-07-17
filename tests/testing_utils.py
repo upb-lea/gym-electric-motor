@@ -384,7 +384,7 @@ class DummyElectricMotor(ElectricMotor):
         self.kwargs = kwargs
         self.reset_counter = 0
         self.u_in = None
-        super().__init__(tau=tau, **kwargs)
+        super().__init__(**kwargs)
 
     def electrical_ode(self, state, u_in, omega, *_):
         self.u_in = u_in

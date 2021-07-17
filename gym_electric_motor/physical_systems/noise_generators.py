@@ -59,7 +59,7 @@ class GaussianWhiteNoiseGenerator(NoiseGenerator):
     """
     _noise = None
 
-    def __init__(self, noise_levels=0.0, noise_length=10000, **__):
+    def __init__(self, noise_levels=0.0, noise_length=10000):
         """
         Args:
             noise_levels(dict/list/ndarray(float)): Fraction of noise power over the signal powers.

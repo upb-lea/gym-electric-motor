@@ -47,8 +47,7 @@ def concreteMechanicalLoad():
     state_names = load_parameter1['state_names']
     j_load = load_parameter1['j_load']
     test_initializer = test_const_initializer
-    return MechanicalLoad(state_names, j_load, a=2, b=6,
-                          load_initializer=test_initializer)
+    return MechanicalLoad(state_names, j_load, load_initializer=test_initializer)
 
 
 @pytest.fixture
@@ -70,8 +69,7 @@ def concretePolynomialLoad():
     test_load_params = dict(a=0.01, b=0.05, c=0.1, j_load=0.1, p=0.5, q = 0.98, r= 2678.88)
     test_initializer = test_const_initializer
     # x, y are random kwargs
-    return PolynomialStaticLoad(load_parameter=test_load_params, x=3, y=76.,
-                                load_initializer=test_initializer)
+    return PolynomialStaticLoad(load_parameter=test_load_params, load_initializer=test_initializer)
 
 
 def test_InitMechanicalLoad(defaultMechanicalLoad, concreteMechanicalLoad):
@@ -249,10 +247,7 @@ class TestExtSpeedLoad(TestMechanicalLoad):
 
     key = 'ExtSpeedLoad'
     class_to_test = ExternalSpeedLoad
-    kwargs = dict(speed_profile=speed_profile_,
-                  amp=test_amp,
-                  bias=test_bias,
-                  freq=test_freq)
+    kwargs = dict(speed_profile=speed_profile_)
 
     @pytest.fixture
     def ext_speed_load(self):

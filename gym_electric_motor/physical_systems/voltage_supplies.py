@@ -24,7 +24,7 @@ class VoltageSupply:
         """
         return self._u_nominal
 
-    def __init__(self, u_nominal, **__):
+    def __init__(self, u_nominal):
         """
         Args:
             u_nominal(float): Nominal voltage of the Voltage Supply.
