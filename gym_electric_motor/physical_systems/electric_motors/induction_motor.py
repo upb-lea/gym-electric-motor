@@ -137,7 +137,6 @@ class InductionMotor(ThreePhaseMotor):
 
     def __init__(
         self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None,initial_limits=None,
-        **__
     ):
         # Docstring of superclass
         # convert placeholder i and u to actual IO quantities

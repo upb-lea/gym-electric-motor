@@ -63,9 +63,7 @@ class DcSeriesMotor(DcMotor):
         self._model_constants = np.array([
             [-mp['r_a'] - mp['r_e'], -mp['l_e_prime'], 1]
         ])
-        self._model_constants[self.I_IDX] = self._model_constants[
-                                                self.I_IDX] / (
-                                                    mp['l_a'] + mp['l_e'])
+        self._model_constants[self.I_IDX] = self._model_constants[self.I_IDX] / (mp['l_a'] + mp['l_e'])
 
     def torque(self, currents):
         # Docstring of superclass

@@ -31,7 +31,7 @@ class PolynomialStaticLoad(MechanicalLoad):
         return self._load_parameter
 
     def __init__(self, load_parameter=(), limits=None,
-                 load_initializer=None, **__):
+                 load_initializer=None):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.

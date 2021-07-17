@@ -104,7 +104,7 @@ class ElectricMotor(RandomComponent):
 
     def __init__(
             self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None,
-            initial_limits=None, **__
+            initial_limits=None
     ):
         """
         :param  motor_parameter: Motor parameter dictionary. Contents specified
