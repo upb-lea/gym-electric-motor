@@ -31,6 +31,6 @@ Torque Equation
 Code Documentation
 ******************
 
-.. autoclass:: gym_electric_\mathrm{m}otor.physical_\mathrm{s}ystems.electric_\mathrm{m}otors.DoublyFedInductionMotor
+.. autoclass:: gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor
    :members:
    :inherited-members:
