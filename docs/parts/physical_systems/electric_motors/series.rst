@@ -10,13 +10,13 @@ Electrical ODE
 **************
 
 .. math::
-    \frac{\mathrm{d} i}{\mathrm{d} t} &= \frac{u - L_e^\prime \omega_{me} i - (R_a + R_e) i}{L_a + L_e} \\
+    \frac{\mathrm{d} i}{\mathrm{d} t} &= \frac{u - L_\mathrm{e}^\prime i \omega_\mathrm{me} - (R_\mathrm{a} + R_\mathrm{e}) i}{L_\mathrm{a} + L_\mathrm{e}} \\
 
 
 Torque Equation
 ***************
 .. math::
-    T = L_e^\prime i^2
+    T = L_\mathrm{e}^\prime i^2
 
 Code Documentation
 ******************

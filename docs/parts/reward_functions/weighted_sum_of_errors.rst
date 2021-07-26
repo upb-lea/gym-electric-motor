@@ -2,7 +2,7 @@ Weighted Sum of Errors
 ######################
 
 Usage Guide
-___________
+***********
 
 To use the weighted sum of errors, you have to import the class, initialize an object and pass it to the environment.
 
@@ -29,7 +29,7 @@ To use the weighted sum of errors, you have to import the class, initialize an o
     env = gem.make('my-env-id-v0', reward_function=wse)
 
 API Documentation
-__________________
+*****************
 
 .. autoclass:: gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors
    :members:

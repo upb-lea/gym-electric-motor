@@ -10,27 +10,27 @@ Electrical ODE
 **************
 
 .. math::
-    \frac{\mathrm{d} i_{s \alpha}}{\mathrm{d} t}&= -\frac{1}{\tau_\sigma} i_{s \alpha} + \frac{R_r L_m}{\sigma L_r^2 L_s} \psi_{r \alpha} + p \omega_{\text{me}} \frac{L_m}{\sigma L_r L_s}  \psi_{r \beta} + \frac{1}{\sigma L_s} u_{s \alpha} - \frac{L_m}{\sigma L_r L_s} u_{r \alpha}\\
-    \frac{\mathrm{d} i_{s \beta}}{\mathrm{d} t}&= -\frac{1}{\tau_\sigma} i_{s \beta} - p \omega_{\text{me}} \frac{L_m}{\sigma L_r L_s}  \psi_{r \alpha}  + \frac{R_r L_m}{\sigma L_r^2 L_s} \psi_{r \beta} + \frac{1}{\sigma L_s} u_{s \beta} - \frac{L_m}{\sigma L_r L_s} u_{r \beta}\\
-    \frac{\mathrm{d} \psi_{r \alpha}}{\mathrm{d} t}&= \frac{L_m}{\tau_r} i_{s \alpha} - \frac{1}{\tau_r} \psi_{r \alpha} - p \omega_{\text{me}} \psi_{r \beta} + u_{r \alpha}\\
-    \frac{\mathrm{d} \psi_{r \beta}}{\mathrm{d} t}&= \frac{L_m}{\tau_r} i_{s \beta} + p \omega_{\text{me}} \psi_{r \alpha} - \frac{1}{\tau_r} \psi_{r \beta} + u_{r \beta}\\
-    \frac{\mathrm{d} \varepsilon_{el}}{\mathrm{d} t}&= p \omega_{me}
+    \frac{\mathrm{d} i_\mathrm{s \alpha}}{\mathrm{d} t}&= -\frac{1}{\tau_\sigma} i_\mathrm{s \alpha} + \frac{R_\mathrm{r} L_\mathrm{m}}{\sigma L_\mathrm{r}^2 L_\mathrm{s}} \psi_\mathrm{r \alpha} + p \omega_\mathrm{\text{me}} \frac{L_\mathrm{m}}{\sigma L_\mathrm{r} L_\mathrm{s}}  \psi_\mathrm{r \beta} + \frac{1}{\sigma L_\mathrm{s}} u_\mathrm{s \alpha} - \frac{L_\mathrm{m}}{\sigma L_\mathrm{r} L_\mathrm{s}} u_\mathrm{r \alpha}\\
+    \frac{\mathrm{d} i_\mathrm{s \beta}}{\mathrm{d} t}&= -\frac{1}{\tau_\sigma} i_\mathrm{s \beta} - p \omega_\mathrm{\text{me}} \frac{L_\mathrm{m}}{\sigma L_\mathrm{r} L_\mathrm{s}}  \psi_\mathrm{r \alpha}  + \frac{R_\mathrm{r} L_\mathrm{m}}{\sigma L_\mathrm{r}^2 L_\mathrm{s}} \psi_\mathrm{r \beta} + \frac{1}{\sigma L_\mathrm{s}} u_\mathrm{s \beta} - \frac{L_\mathrm{m}}{\sigma L_\mathrm{r} L_\mathrm{s}} u_\mathrm{r \beta}\\
+    \frac{\mathrm{d} \psi_\mathrm{r \alpha}}{\mathrm{d} t}&= \frac{L_\mathrm{m}}{\tau_\mathrm{r}} i_\mathrm{s \alpha} - \frac{1}{\tau_\mathrm{r}} \psi_\mathrm{r \alpha} - p \omega_\mathrm{\text{me}} \psi_\mathrm{r \beta} + u_\mathrm{r \alpha}\\
+    \frac{\mathrm{d} \psi_\mathrm{r \beta}}{\mathrm{d} t}&= \frac{L_\mathrm{m}}{\tau_\mathrm{r}} i_\mathrm{s \beta} + p \omega_\mathrm{\text{me}} \psi_\mathrm{r \alpha} - \frac{1}{\tau_\mathrm{r}} \psi_\mathrm{r \beta} + u_\mathrm{r \beta}\\
+    \frac{\mathrm{d} \varepsilon_\mathrm{el}}{\mathrm{d} t}&= p \omega_\mathrm{me}
 
 with
 
 .. math::
-    L_s &= L_m + L_{\sigma s} & \quad L_r &= L_m + L_{\sigma r}\\
-    \sigma &= \frac{L_r L_s - L_m^2}{L_r L_s} & \quad \tau_r &=\frac{L_r}{R_r} & \quad \tau_\sigma &= \frac{\sigma L_s}{R_s + R_r \frac{L_m^2}{L_r^2}}
+    L_\mathrm{s} &= L_\mathrm{m} + L_\mathrm{\sigma s} & \quad L_\mathrm{r} &= L_\mathrm{m} + L_\mathrm{\sigma r}\\
+    \sigma &= \frac{L_\mathrm{r} L_\mathrm{s} - L_\mathrm{m}^2}{L_\mathrm{r} L_\mathrm{s}} & \quad \tau_\mathrm{r} &=\frac{L_\mathrm{r}}{R_\mathrm{r}} & \quad \tau_\sigma &= \frac{\sigma L_\mathrm{s}}{R_\mathrm{s} + R_\mathrm{r} \frac{L_\mathrm{m}^2}{L_\mathrm{r}^2}}
 
 
 Torque Equation
 ***************
 
-.. math:: T=\frac{3}{2} p \frac{L_m}{L_r} (\psi_{r \alpha} i_{s \beta} - \psi_{r \beta} i_{s \alpha})
+.. math:: T=\frac{3}{2} p \frac{L_\mathrm{m}}{L_\mathrm{r}} (\psi_\mathrm{r \alpha} i_\mathrm{s \beta} - \psi_\mathrm{r \beta} i_\mathrm{s \alpha})
 
 Code Documentation
 ******************
 
-.. autoclass:: gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor
+.. autoclass:: gym_electric_\mathrm{m}otor.physical_\mathrm{s}ystems.electric_\mathrm{m}otors.DoublyFedInductionMotor
    :members:
    :inherited-members:
