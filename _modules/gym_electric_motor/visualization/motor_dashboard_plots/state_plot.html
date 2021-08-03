@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -176,7 +177,7 @@
     <span class="n">_default_limit_line_cfg</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
         <span class="s1">&#39;linestyle&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">75</span>
     <span class="p">}</span>
 
     <span class="c1"># Labels for each state variable.</span>
@@ -200,6 +201,10 @@
         <span class="s1">&#39;u_sup&#39;</span><span class="p">:</span> <span class="s1">&#39;$u_</span><span class="si">{sup}</span><span class="s1">$/V&#39;</span><span class="p">,</span>
         <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$/rad&#39;</span>
     <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -248,9 +253,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">referenced_states</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
         <span class="c1"># Bool: if the data is already normalized to an interval of [-1, 1]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="c1"># Initialize the data containers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_width</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_width</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span>
 
         <span class="n">min_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">max_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -261,6 +264,12 @@
 
         <span class="c1"># Set the y-axis label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StatePlot.reset_data"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.reset_data">[docs]</a>    <span class="k">def</span> <span class="nf">reset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span>
+        <span class="c1"># Initialize the data containers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StatePlot.initialize"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
@@ -306,9 +315,9 @@
         <span class="n">ref</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_idx</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="n">state_</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="n">ref</span></div></div>
 </pre></div>
 
            </div>

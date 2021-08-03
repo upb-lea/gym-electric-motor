@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -220,7 +221,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">observed</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span><span class="p">]</span>
+        <span class="n">violation</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">observed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">violation</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LimitConstraint.set_modules"><a class="viewcode-back" href="../../parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span>

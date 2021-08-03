@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -188,6 +189,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_value</span> <span class="o">=</span> <span class="n">reference_value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_state</span> <span class="o">=</span> <span class="n">reference_state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">reference_value</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">reference_value</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_state</span>
 
 <div class="viewcode-block" id="ConstReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/const_reference_generator.html#gym_electric_motor.reference_generators.ConstReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="c1"># docstring from superclass</span>

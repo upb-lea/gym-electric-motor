@@ -120,6 +120,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -200,10 +201,10 @@
 <div class="section" id="discrete-two-quadrant-converter">
 <h2>Discrete Two Quadrant Converter<a class="headerlink" href="#discrete-two-quadrant-converter" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">DiscTwoQuadrantConverter</code><span class="sig-paren">(</span><em class="sig-param">tau=1e-05</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscTwoQuadrantConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">FiniteTwoQuadrantConverter</code><span class="sig-paren">(</span><em class="sig-param">tau=1e-05</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#FiniteTwoQuadrantConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter" title="Permalink to this definition">¶</a></dt>
 <dd><dl>
-<dt>Key:</dt><dd><p>‘Disc-2QC’</p>
+<dt>Key:</dt><dd><p>‘Finite-2QC’</p>
 </dd>
 <dt>Switching States / Actions:</dt><dd><div class="line-block">
 <div class="line">0: Both Transistors off.</div>
@@ -229,8 +230,8 @@
 </dd>
 </dl>
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.convert">
-<code class="sig-name descname">convert</code><span class="sig-paren">(</span><em class="sig-param">i_out</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscTwoQuadrantConverter.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.convert" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.convert">
+<code class="sig-name descname">convert</code><span class="sig-paren">(</span><em class="sig-param">i_out</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#FiniteTwoQuadrantConverter.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>The conversion function that converts the previously set action to an input voltage for the motor.
 This function has to be called at least at every previously defined switching time, because the input voltage
 for the motor might change at these times.</p>
@@ -251,8 +252,8 @@ for the motor might change at these times.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.i_sup">
-<code class="sig-name descname">i_sup</code><span class="sig-paren">(</span><em class="sig-param">i_out</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#DiscTwoQuadrantConverter.i_sup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.i_sup" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.i_sup">
+<code class="sig-name descname">i_sup</code><span class="sig-paren">(</span><em class="sig-param">i_out</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#FiniteTwoQuadrantConverter.i_sup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.i_sup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the current, the converter takes from the supply for the given output currents and the current
 switching state.</p>
 <dl class="field-list simple">
@@ -269,8 +270,8 @@ switching state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset all converter states to a default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -283,8 +284,8 @@ switching state.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.set_action">
-<code class="sig-name descname">set_action</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.set_action" title="Permalink to this definition">¶</a></dt>
+<dt id="gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.set_action">
+<code class="sig-name descname">set_action</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.set_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the next action of the converter at the beginning of a simulation step in the system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

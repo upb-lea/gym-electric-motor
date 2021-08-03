@@ -126,6 +126,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -220,7 +221,7 @@
 <h2>Electric Motor Base Class<a class="headerlink" href="#electric-motor-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">ElectricMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">initial_limits=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">ElectricMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">initial_limits=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all technical electrical motor models.</p>
 <p>A motor consists of the ode-state. These are the dynamic quantities of its ODE.
 For example:</p>
@@ -235,7 +236,7 @@ For example:</p>
 </div></blockquote>
 <p>Each electric motor can be parametrized by a dictionary of motor parameters,
 the nominal state dictionary and the limit dictionary.</p>
-<p>Initialization is given by initializer(dict). Can be constant state value
+<p>Initialization is given by initializer(dict). It can be constant state value
 or random value in given interval.
 dict should be like:
 { ‘states’(dict): with state names and initital values</p>
@@ -311,7 +312,7 @@ for each motor.</p></li>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian">
-<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</p>
 <p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
 be set to True. Otherwise, the jacobian will not be called.</p>
@@ -336,7 +337,7 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">
-<code class="sig-name descname">electrical_ode</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.electrical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">electrical_ode</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.electrical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -357,7 +358,7 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">
-<code class="sig-name descname">i_in</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.i_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">i_in</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.i_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – ODE state of the motor</p>
@@ -380,7 +381,7 @@ dict: nominal motor limits for choosing initial values</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes given state values. Values can be given as a constant or
 sampled random out of a statistical distribution. Initial value is in
 range of the nominal values or a given interval. Values are written in
@@ -388,14 +389,11 @@ initial_states attribute</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries (given by
-physical system)</p></li>
-<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states (given by physical
-system)</p></li>
+<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries (given by physical system)</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indices of system states (given by physical system)</p></li>
 </ul>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="method">
@@ -443,7 +441,7 @@ dict(float): The motors parameter dictionary</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#ElectricMotor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the motors state to a new initial state. (Default 0)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

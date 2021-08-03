@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -169,8 +170,6 @@
 <span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Discrete</span><span class="p">,</span> <span class="n">Box</span><span class="p">,</span> <span class="n">MultiDiscrete</span>
 
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">instantiate</span>
-
-
 
 
 <div class="viewcode-block" id="PowerElectronicConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter">[docs]</a><span class="k">class</span> <span class="nc">PowerElectronicConverter</span><span class="p">:</span>
@@ -339,9 +338,9 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_in</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span></div>
 
 
-<div class="viewcode-block" id="DiscConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscConverter</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">FiniteConverter</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Base class for all discrete converters.</span>
+<span class="sd">    Base class for all finite converters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">#: The switching states of the converter for the current action</span>
@@ -355,24 +354,24 @@
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DiscConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">action</span><span class="p">),</span> \
             <span class="sa">f</span><span class="s2">&quot;The selected action </span><span class="si">{action}</span><span class="s2"> is not a valid element of the action space </span><span class="si">{self.action_space}</span><span class="s2">.&quot;</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DiscConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="DiscConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.DiscConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 
-<div class="viewcode-block" id="DiscOneQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscOneQuadrantConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteOneQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteOneQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Disc-1QC&#39;</span>
+<span class="sd">        &#39;Finite-1QC&#39;</span>
 
 <span class="sd">    Switching States / Actions:</span>
 <span class="sd">        | 0: Transistor off.</span>
@@ -390,19 +389,19 @@
     <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DiscOneQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteOneQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="DiscOneQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.DiscOneQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteOneQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">return</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span></div></div>
 
 
-<div class="viewcode-block" id="DiscTwoQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteTwoQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Disc-2QC&#39;</span>
+<span class="sd">        &#39;Finite-2QC&#39;</span>
 
 <span class="sd">    Switching States / Actions:</span>
 <span class="sd">        | 0: Both Transistors off.</span>
@@ -421,7 +420,7 @@
     <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DiscTwoQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteTwoQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="c1"># Converter switches slightly (tau / 1000 seconds) before interlocking time due to inaccuracy of the solvers.</span>
         <span class="k">if</span> <span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">:</span>
@@ -440,7 +439,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid switching state of the converter&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DiscTwoQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.DiscTwoQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteTwoQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
@@ -466,10 +465,10 @@
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="DiscFourQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscFourQuadrantConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteFourQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteFourQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Disc-4QC&#39;</span>
+<span class="sd">        &#39;Finite-4QC&#39;</span>
 
 <span class="sd">    Switching States / Actions:</span>
 <span class="sd">        | 0: T2, T4 on.</span>
@@ -491,19 +490,19 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span>
 
-<div class="viewcode-block" id="DiscFourQuadrantConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteFourQuadrantConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="DiscFourQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteFourQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">([</span><span class="o">-</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span></div>
 
-<div class="viewcode-block" id="DiscFourQuadrantConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteFourQuadrantConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">action</span><span class="p">),</span> \
             <span class="sa">f</span><span class="s2">&quot;The selected action </span><span class="si">{action}</span><span class="s2"> is not a valid element of the action space </span><span class="si">{self.action_space}</span><span class="s2">.&quot;</span>
@@ -514,7 +513,7 @@
         <span class="n">times</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">action1</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">times</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="DiscFourQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteFourQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">(</span><span class="n">i_out</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="o">-</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span></div></div>
 
@@ -641,13 +640,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">(</span><span class="n">i_out</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="o">-</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span></div></div>
 
 
-<div class="viewcode-block" id="DiscMultiConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscMultiConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteMultiConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteMultiConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converter that allows to include an arbitrary number of independent discrete subconverters.</span>
+<span class="sd">    Converter that allows to include an arbitrary number of independent finite subconverters.</span>
 <span class="sd">    Subconverters must be &#39;elementary&#39; and can not be MultiConverters.</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Disc-Multi&#39;</span>
+<span class="sd">        &#39;Finite-Multi&#39;</span>
 
 <span class="sd">    Actions:</span>
 <span class="sd">        Concatenation of the subconverters&#39; action spaces</span>
@@ -660,6 +659,10 @@
 <span class="sd">            [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">subconverters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subconverters</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -667,8 +670,9 @@
 <span class="sd">            kwargs(dict): Parameters to pass to the Subconverters and the superclass</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="n">subconverters</span><span class="p">]</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">instantiate</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">subconverter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="n">subconverters</span>
+        <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_current_space_dims</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="p">[]</span>
@@ -705,7 +709,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">currents_low</span><span class="p">,</span> <span class="n">currents_high</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">voltages_low</span><span class="p">,</span> <span class="n">voltages_high</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DiscMultiConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteMultiConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">u_in</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="mi">0</span>
@@ -715,21 +719,21 @@
             <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="n">subsignal_idx_high</span>
         <span class="k">return</span> <span class="n">u_in</span></div>
 
-<div class="viewcode-block" id="DiscMultiConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteMultiConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">u_in</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subconverter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">:</span>
             <span class="n">u_in</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">u_in</span></div>
 
-<div class="viewcode-block" id="DiscMultiConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteMultiConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">sub_action</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
             <span class="n">times</span> <span class="o">+=</span> <span class="n">subconverter</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">sub_action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">times</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="DiscMultiConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.DiscMultiConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteMultiConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">i_sup</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">subsignal_idx_low</span> <span class="o">=</span> <span class="mi">0</span>
@@ -853,12 +857,12 @@
         <span class="k">return</span> <span class="n">i_sup</span></div></div>
 
 
-<div class="viewcode-block" id="DiscB6BridgeConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter">[docs]</a><span class="k">class</span> <span class="nc">DiscB6BridgeConverter</span><span class="p">(</span><span class="n">DiscConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteB6BridgeConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteB6BridgeConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The discrete B6 bridge converters (B6C) is simulated with three discrete 2QC.</span>
+<span class="sd">    The finite B6 bridge converters (B6C) is simulated with three finite 2QC.</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Disc-B6C&#39;</span>
+<span class="sd">        &#39;Finite-B6C&#39;</span>
 
 <span class="sd">    Actions:</span>
 <span class="sd">        +-+-----+-----+-----+</span>
@@ -913,12 +917,12 @@
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">DiscTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
         <span class="p">]</span>
 
-<div class="viewcode-block" id="DiscB6BridgeConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteB6BridgeConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reset</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -926,7 +930,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reset</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="p">]</span></div>
 
-<div class="viewcode-block" id="DiscB6BridgeConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteB6BridgeConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">u_out</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">convert</span><span class="p">([</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -935,7 +939,7 @@
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">u_out</span></div>
 
-<div class="viewcode-block" id="DiscB6BridgeConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteB6BridgeConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">action</span><span class="p">),</span> \
             <span class="sa">f</span><span class="s2">&quot;The selected action </span><span class="si">{action}</span><span class="s2"> is not a valid element of the action space </span><span class="si">{self.action_space}</span><span class="s2">.&quot;</span>
@@ -946,7 +950,7 @@
         <span class="n">times</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">subactions</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">times</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="DiscB6BridgeConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.DiscB6BridgeConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteB6BridgeConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">subconverter</span><span class="o">.</span><span class="n">i_sup</span><span class="p">([</span><span class="n">i_out_</span><span class="p">])</span> <span class="k">for</span> <span class="n">subconverter</span><span class="p">,</span> <span class="n">i_out_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span><span class="p">,</span> <span class="n">i_out</span><span class="p">)])</span></div></div>
 

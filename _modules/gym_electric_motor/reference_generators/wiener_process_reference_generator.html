@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -171,12 +172,9 @@
 
 
 <div class="viewcode-block" id="WienerProcessReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">WienerProcessReferenceGenerator</span><span class="p">(</span><span class="n">SubepisodedReferenceGenerator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Reference Generator that generates a reference for one state by a Wiener Process with the changing parameter sigma</span>
-<span class="sd">    and mean = 0.</span>
+    <span class="sd">&quot;&quot;&quot;Reference Generator that generates a reference for one state by a Wiener Process with the changing parameter</span>
+<span class="sd">    sigma and mean = 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">_current_sigma</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sigma_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -185,11 +183,13 @@
 <span class="sd">            kwargs: Further arguments to pass to SubepisodedReferenceGenerator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_sigma</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sigma_range</span> <span class="o">=</span> <span class="n">sigma_range</span>
 
     <span class="k">def</span> <span class="nf">_reset_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_sigma</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_value</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigma_range</span><span class="p">))</span>
-        <span class="n">random_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_sigma</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span><span class="p">)</span>
+        <span class="n">random_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_sigma</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">random_values</span><span class="p">)</span>
         <span class="n">reference_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_value</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span><span class="p">):</span>
@@ -199,7 +199,6 @@
             <span class="k">if</span> <span class="n">reference_value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">reference_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_value</span></div>
-
 </pre></div>
 
            </div>

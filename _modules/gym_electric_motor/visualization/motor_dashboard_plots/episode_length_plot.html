@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -176,28 +177,38 @@
         <span class="c1"># data container for episode lengths</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_episode_lengths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_no</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="s1">&#39;Episode Length&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Flag, that is true, if an episode has ended before the rendering.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ymax</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_lim</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_lengths</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EpisodeLengthPlot.initialize"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Args:</span>
-<span class="sd">             axis (object): the subplot axis for plotting the action variable</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_lengths</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EpisodeLengthPlot.on_step_end"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="n">k</span></div>
 
+<div class="viewcode-block" id="EpisodeLengthPlot.reset_data"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/episode_length_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodeLengthPlot.reset_data">[docs]</a>    <span class="k">def</span> <span class="nf">reset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_lengths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ymax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_lim</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_lengths</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">_set_y_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_episode_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="mi">0</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ymax</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ymax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_lim</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_length</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">_scale_y_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_lim</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ymax</span><span class="p">,</span> <span class="mf">1.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ymax</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

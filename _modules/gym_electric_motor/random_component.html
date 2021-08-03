@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>gym_electric_motor.random_component &mdash; gym-electric-motor 2020 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gym-electric-motor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts/random_component.html">Random Component</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gym_electric_motor.random_component</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gym_electric_motor.random_component</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="RandomComponent"><a class="viewcode-back" href="../../parts/random_component.html#gym_electric_motor.physical_systems.electric_motors.RandomComponent">[docs]</a><span class="k">class</span> <span class="nc">RandomComponent</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all random components in the environment.</span>
+
+<span class="sd">    Every component (e.g. ReferenceGenerator or ElectricMotor) that has any kind of random behavior has to derive from</span>
+<span class="sd">    the RandomComponent class directly or indirectly via its own base class.</span>
+
+<span class="sd">    During the seeding of the environment, the random components &#39;seed&#39; function is called and a sub-seed is passed</span>
+<span class="sd">    for every random component. From this sub-seed, further new seeds and reference generators</span>
+<span class="sd">    are generated at the beginning of each episode. This ensures a reproducible random behavior for each new episode</span>
+<span class="sd">    no matter how long the previous episodes have been. Therefore, each random environment component has to call the</span>
+<span class="sd">    &#39;next_generator()&#39; method during reset.</span>
+
+<span class="sd">    Everytime a random number is used, it has to be drawn from the ``random_generator``.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; import gym_electric_motor as gem</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; class MyRandomReferenceGenerator(gem.ReferenceGenerator, gem.RandomComponent):</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;     def __init__(self):</span>
+<span class="sd">        &gt;&gt;&gt;         gem.ReferenceGenerator.__init__(self)</span>
+<span class="sd">        &gt;&gt;&gt;         gem.RandomComponent.__init__(self)</span>
+<span class="sd">        &gt;&gt;&gt;         self.my_random_var = np.array([0.0]) # Only for exemplary purpose</span>
+<span class="sd">        &gt;&gt;&gt;         # Further custom initialization</span>
+<span class="sd">        &gt;&gt;&gt;         # ...</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;     def reset(self, initial_state=None, initial_reference=None):</span>
+<span class="sd">        &gt;&gt;&gt;         self.next_generator()</span>
+<span class="sd">        &gt;&gt;&gt;         # Reset further components states</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;     def get_reference(self, state, *_, **__):</span>
+<span class="sd">        &gt;&gt;&gt;         # Draw from the classes random_generator</span>
+<span class="sd">        &gt;&gt;&gt;         self.my_random_var = self.random_generator.normal(size=1)</span>
+<span class="sd">        &gt;&gt;&gt;         # Do something with the random variable e.g.:</span>
+<span class="sd">        &gt;&gt;&gt;         return np.ones_like(state) * self.my_random_var</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;     def get_reference_observation(self, state, *_, **__):</span>
+<span class="sd">        &gt;&gt;&gt;         # Do sth.</span>
+<span class="sd">        &gt;&gt;&gt;         return self.my_random_var</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">random_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The random generator that has to be used to draw the random numbers.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">seed_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The base seed sequence that generates the sub generators and sub seeds at every environment reset.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">SeedSequence</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+<div class="viewcode-block" id="RandomComponent.seed"><a class="viewcode-back" href="../../parts/random_component.html#gym_electric_motor.physical_systems.electric_motors.RandomComponent.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The function to set the seed.</span>
+
+<span class="sd">        This function is called by within the global seed call of the environment. The environment passes the sub-seed</span>
+<span class="sd">        to this component that is generated based on the source-seed of the env.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seed((np.random.SeedSequence, None)): Seed sequence to derive new seeds and reference generators at every</span>
+<span class="sd">                episode start. Default: None (a new SeedSequence is generated).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(int): A list containing all seeds within this RandomComponent. In general, this list has length 1.</span>
+<span class="sd">            If the RandomComponent holds further RandomComponent instances, the list has to contain also these</span>
+<span class="sd">            entropies. The entropy of this instance has to be placed always at first place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">SeedSequence</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span><span class="o">.</span><span class="n">entropy</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="RandomComponent.next_generator"><a class="viewcode-back" href="../../parts/random_component.html#gym_electric_motor.physical_systems.electric_motors.RandomComponent.next_generator">[docs]</a>    <span class="k">def</span> <span class="nf">next_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets a new reference generator for a new episode.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

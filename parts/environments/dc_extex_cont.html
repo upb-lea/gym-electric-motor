@@ -39,9 +39,7 @@
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Discrete DC Externally Excited Motor Environment" href="dc_extex_disc.html" />
-    <link rel="prev" title="Environments" href="environment.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,26 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
 </ul>
 <p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="environment.html">Environments</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Continuous DC Externally Excited Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dc_extex_disc.html">Discrete DC Externally Excited Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dc_permex_cont.html">Continuous DC Permanently Excited Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dc_permex_disc.html">Discrete DC Permanently Excited Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dc_series_cont.html">Continuous DC Series Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dc_series_disc.html">Discrete DC Series Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dc_shunt_cont.html">Continuous DC Shunt Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dc_shunt_disc.html">Discrete DC Shunt Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pmsm_cont.html">Continuous Permanent Magnet Synchronous Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pmsm_disc.html">Discrete Permanent Magnet Synchronous Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="synrm_cont.html">Continuous Synchronous Reluctance Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="synrm_disc.html">Discrete Synchronous Reluctance Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scim_cont.html">Continuous Squirrel Cage Induction Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scim_disc.html">Discrete Squirrel Cage Induction Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dfim_cont.html">Continuous Doubly Fed Induction Motor Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dfim_disc.html">Discrete Doubly Fed Induction Motor Environment</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
@@ -119,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -167,8 +148,6 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="environment.html">Environments</a> &raquo;</li>
-        
       <li>Continuous DC Externally Excited Motor Environment</li>
     
     
@@ -190,66 +169,6 @@
             
   <div class="section" id="continuous-dc-externally-excited-motor-environment">
 <h1>Continuous DC Externally Excited Motor Environment<a class="headerlink" href="#continuous-dc-externally-excited-motor-environment" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="gym_electric_motor.envs.ContDcExternallyExcitedMotorEnvironment">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.envs.</code><code class="sig-name descname">ContDcExternallyExcitedMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">tau=0.0001</em>, <em class="sig-param">converter='Cont-Multi'</em>, <em class="sig-param">subconverters=('Cont-4QC'</em>, <em class="sig-param">'Cont-1QC')</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/envs/gym_dcm/dc_extex_motor_env.html#ContDcExternallyExcitedMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.ContDcExternallyExcitedMotorEnvironment" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Description:</dt><dd><p>Environment to simulate a continuously controlled externally excited DC Motor</p>
-</dd>
-<dt>Key:</dt><dd><p><cite>DcExtExCont-v1</cite></p>
-</dd>
-</dl>
-<p>Default Modules:</p>
-<blockquote>
-<div><dl>
-<dt>Physical System:</dt><dd><dl>
-<dt>SCMLSystem/DcMotorSystem with:</dt><dd><div class="line-block">
-<div class="line">IdealVoltageSupply</div>
-<div class="line">ContDoubleConverter(subconverters=(‘Cont-4QC’, ‘Cont-1QC’))</div>
-<div class="line">DcExternallyExcitedMotor</div>
-<div class="line">PolynomialStaticLoad</div>
-<div class="line">GaussianWhiteNoiseGenerator</div>
-<div class="line">EulerSolver.</div>
-<div class="line">tau=1e-4</div>
-</div>
-</dd>
-</dl>
-</dd>
-<dt>Reference Generator:</dt><dd><dl class="simple">
-<dt>WienerProcessReferenceGenerator</dt><dd><p>Reference Quantity. ‘omega’</p>
-</dd>
-</dl>
-</dd>
-<dt>Reward Function:</dt><dd><p>WeightedSumOfErrors(reward_weights= {‘omega’: 1 })</p>
-</dd>
-<dt>Visualization:</dt><dd><p>ElectricMotorVisualization (Dummy for no Visualization)</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="simple">
-<dt>State Names:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i_a',</span> <span class="pre">'i_e',</span> <span class="pre">'u_a',</span> <span class="pre">'u_e',</span> <span class="pre">'u_sup']</span></code></p>
-</dd>
-<dt>Observation Space:</dt><dd><p>Type: Tuple(State_Space, Reference_Space)</p>
-</dd>
-<dt>State Space:</dt><dd><p>Box(low=[-1, -1, -1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1, 1, 1])</p>
-</dd>
-<dt>Reference Space:</dt><dd><p>Box(low=[-1], high=[1])</p>
-</dd>
-<dt>Action Space:</dt><dd><p>Type: Box(low=[-1,0], high=[1,1])</p>
-</dd>
-<dt>Starting State:</dt><dd><p>Zeros on all state variables.</p>
-</dd>
-<dt>Episode Termination:</dt><dd><p>Termination if current limits are violated. The terminal reward -10 is used as reward.
-(Have a look at the reward functions.)</p>
-</dd>
-</dl>
-<p>Args:
-motor(ElectricMotor): Electric Motor used in the PhysicalSystem
-reward_function(RewardFunction): Reward Function for the environment
-reference_generator(ReferenceGenerator): Reference Generator for the environment
-kwargs(dict): Further kwargs to pass to the superclass and the submodules</p>
-</dd></dl>
-
 </div>
 
 
@@ -257,10 +176,6 @@ kwargs(dict): Further kwargs to pass to the superclass and the submodules</p>
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="dc_extex_disc.html" class="btn btn-neutral float-right" title="Discrete DC Externally Excited Motor Environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="environment.html" class="btn btn-neutral float-left" title="Environments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 

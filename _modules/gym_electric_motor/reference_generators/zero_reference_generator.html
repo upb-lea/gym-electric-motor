@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -172,10 +173,11 @@
 
 
 <div class="viewcode-block" id="ZeroReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">ZeroReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Dummy Reference Generator that does not generate any reference but zeros for all states.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
+    <span class="sd">&quot;&quot;&quot;Dummy Reference Generator that does not generate any reference but zeros for all states.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="ZeroReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>

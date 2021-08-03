@@ -116,6 +116,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -196,9 +197,11 @@
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.initialize">
 <code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">axis</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/mean_episode_reward_plot.html#MeanEpisodeRewardPlot.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initialization of the plot.</p>
+<p>It is called by the MotorDashboard. Set labels, legends… when overriding this method.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis</strong> (<em>object</em>) – the subplot axis for plotting the action variable</p>
+<dd class="field-odd"><p><strong>axis</strong> (<em>matplotlib.pyplot.axis</em>) – Axis to plot in</p>
 </dd>
 </dl>
 </dd></dl>
@@ -239,6 +242,12 @@
 <dd><p>Update of the plots axis.</p>
 <p>The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
 are scaled dynamically.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.reset_data">
+<code class="sig-name descname">reset_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/mean_episode_reward_plot.html#MeanEpisodeRewardPlot.reset_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.MeanEpisodeRewardPlot.reset_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the dashboard, when the figures are reset to generate a new figure.</p>
 </dd></dl>
 
 <dl class="method">

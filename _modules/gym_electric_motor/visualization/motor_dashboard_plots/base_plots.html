@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -205,6 +206,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_x_lim</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_y_lim</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="c1"># All colors of the current matplotlib style. It is recommended to select one of these for plotting the lines.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">cycle</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]]</span>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
@@ -215,6 +217,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            axis(matplotlib.pyplot.axis): Axis to plot in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span> <span class="o">=</span> <span class="n">axis</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">)</span>
@@ -248,6 +251,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
+    <span class="k">def</span> <span class="nf">reset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called by the dashboard, when the figures are reset to generate a new figure.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span> <span class="o">=</span> <span class="p">[]</span>
+
 
 <div class="viewcode-block" id="TimePlot"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot">[docs]</a><span class="k">class</span> <span class="nc">TimePlot</span><span class="p">(</span><span class="n">MotorDashboardPlot</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for all MotorDashboardPlots that have the cumulative simulated time on the x-Axis.</span>
@@ -265,8 +273,8 @@
 
     <span class="n">_default_time_line_cfg</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;linestyle&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;markersize&#39;</span><span class="p">:</span> <span class="mf">0.25</span>
+        <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;markersize&#39;</span><span class="p">:</span> <span class="mf">0.75</span>
     <span class="p">}</span>
 
     <span class="n">_default_violation_line_cfg</span> <span class="o">=</span> <span class="p">{</span>
@@ -312,6 +320,14 @@
 <div class="viewcode-block" id="TimePlot.set_env"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TimePlot.reset_data"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.reset_data">[docs]</a>    <span class="k">def</span> <span class="nf">reset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_memory</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_violation_memory</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_width</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x_lim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
 
@@ -362,7 +378,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_episode_no</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
     <span class="k">def</span> <span class="nf">_set_y_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="EpisodePlot.reset_data"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/episode_plots.html#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.reset_data">[docs]</a>    <span class="k">def</span> <span class="nf">reset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episode_no</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span></div>
+
+    <span class="k">def</span> <span class="nf">_scale_x_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span> <span class="o">!=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
 
 
 <span class="k">class</span> <span class="nc">StepPlot</span><span class="p">(</span><span class="n">MotorDashboardPlot</span><span class="p">):</span>
@@ -374,6 +399,11 @@
     <span class="k">def</span> <span class="nf">on_step_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
 
+    <span class="k">def</span> <span class="nf">reset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+
     <span class="k">def</span> <span class="nf">_scale_x_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span> <span class="o">!=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -382,7 +412,6 @@
         <span class="n">min_</span><span class="p">,</span> <span class="n">max_</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span> <span class="o">!=</span> <span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">)</span>
-
 </pre></div>
 
            </div>

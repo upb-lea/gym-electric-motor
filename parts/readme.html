@@ -115,6 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -218,7 +219,7 @@
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;PMSMDisc-v1&quot;</span><span class="p">)</span>  <span class="c1"># instantiate a discretely controlled PMSM</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Finite-CC-PMSM-v0&quot;</span><span class="p">)</span>  <span class="c1"># instantiate a discretely controlled PMSM</span>
     <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
         <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c1"># visualize environment</span>

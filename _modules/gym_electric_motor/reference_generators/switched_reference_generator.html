@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -168,18 +169,14 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Box</span>
 
+<span class="kn">from</span> <span class="nn">..random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ReferenceGenerator</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">instantiate</span>
 
 
-<div class="viewcode-block" id="SwitchedReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">SwitchedReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.</span>
+<div class="viewcode-block" id="SwitchedReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">SwitchedReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
-    <span class="n">_reference</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">super_episode_length</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -192,7 +189,11 @@
 <span class="sd">            super_episode_length(Tuple(int, int): Minimum and maximum number of time steps a sub_generator is used.</span>
 <span class="sd">            kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">ReferenceGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sub_args</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
             <span class="n">sub_arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">sub_args</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sub_args</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">):</span>
@@ -200,8 +201,10 @@
             <span class="n">sub_arguments</span> <span class="o">=</span> <span class="n">sub_args</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sub_arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span> <span class="o">=</span> <span class="p">[</span><span class="n">instantiate</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="o">**</span><span class="n">sub_arg</span><span class="p">)</span>
-                                <span class="k">for</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="n">sub_arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_arguments</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">instantiate</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="o">**</span><span class="n">sub_arg</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="n">sub_arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_arguments</span><span class="p">)</span>
+        <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_probabilities</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">super_episode_length</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
@@ -228,6 +231,7 @@
                 <span class="s1">&#39;Reference Generators have differently shaped reference spaces&#39;</span></div>
 
 <div class="viewcode-block" id="SwitchedReferenceGenerator.reset"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_generator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset_reference</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_ref_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">initial_reference</span><span class="p">)</span></div>
 
@@ -245,9 +249,18 @@
         <span class="k">return</span> <span class="n">obs</span></div>
 
     <span class="k">def</span> <span class="nf">_reset_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_super_episode_length</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_super_episode_length</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_super_episode_length</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_super_episode_length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_ref_generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_probabilities</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_ref_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_probabilities</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SwitchedReferenceGenerator.seed"><a class="viewcode-back" href="../../../parts/reference_generators/switched_reference_generator.html#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_generator</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+                <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">sub_generator</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

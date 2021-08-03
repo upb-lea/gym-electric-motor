@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -168,18 +169,15 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Box</span>
 
+<span class="kn">from</span> <span class="nn">..random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ReferenceGenerator</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">set_state_array</span>
 
 
-<div class="viewcode-block" id="SubepisodedReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.SubepisodedReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">SubepisodedReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Base Class for Reference Generators, which change their parameters in certain ranges after a random number of</span>
+<div class="viewcode-block" id="SubepisodedReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.SubepisodedReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">SubepisodedReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base Class for Reference Generators, which change their parameters in certain ranges after a random number of</span>
 <span class="sd">    time steps and can pre-calculate their references in these &quot;sub episodes&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
-    <span class="n">_reference</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="n">episode_lengths</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">),</span> <span class="n">limit_margin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -193,13 +191,17 @@
 <span class="sd">                If None(default), the limit margin equals (nominal values/limits).</span>
 <span class="sd">                In general, the limit margin should not exceed (-1, 1)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">ReferenceGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span> <span class="o">=</span> <span class="n">limit_margin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_value</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_state</span> <span class="o">=</span> <span class="n">reference_state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_episode_len_range</span> <span class="o">=</span> <span class="n">episode_lengths</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_current_value</span><span class="p">(</span><span class="n">episode_lengths</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_state</span><span class="p">]</span>
 
 <div class="viewcode-block" id="SubepisodedReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.SubepisodedReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
@@ -242,6 +244,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_reference_value</span> <span class="o">=</span> <span class="n">initial_reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_reference_value</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_generator</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">initial_state</span><span class="p">)</span></div>
 
@@ -266,8 +269,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_current_value</span><span class="p">(</span><span class="n">value_range</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_current_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_range</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a uniform distributed value for the next sub episode.</span>
 
@@ -277,7 +279,7 @@
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_range</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">value_range</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_range</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">value_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">value_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">+</span> <span class="n">value_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+            <span class="k">return</span> <span class="p">(</span><span class="n">value_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">value_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">+</span> <span class="n">value_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 </pre></div>
 
            </div>

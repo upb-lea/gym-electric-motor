@@ -116,6 +116,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -239,7 +240,7 @@ Further plots like a <em>MeanEpisodeRewardPlot</em> or self-defined ones have to
 <h2><a class="toc-backref" href="#id3">Motor Dashboard API</a><a class="headerlink" href="#motor-dashboard-api" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard.</code><code class="sig-name descname">MotorDashboard</code><span class="sig-paren">(</span><em class="sig-param">state_plots=()</em>, <em class="sig-param">action_plots=()</em>, <em class="sig-param">reward_plot=False</em>, <em class="sig-param">additional_plots=()</em>, <em class="sig-param">update_interval=1000</em>, <em class="sig-param">step_plot_width=10000</em>, <em class="sig-param">style=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard.</code><code class="sig-name descname">MotorDashboard</code><span class="sig-paren">(</span><em class="sig-param">state_plots=()</em>, <em class="sig-param">action_plots=()</em>, <em class="sig-param">reward_plot=False</em>, <em class="sig-param">additional_plots=()</em>, <em class="sig-param">update_interval=1000</em>, <em class="sig-param">time_plot_width=10000</em>, <em class="sig-param">style=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dashboard to plot the GEM states into graphs.</p>
 <p>Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
 matplotlib axis.</p>
@@ -267,7 +268,7 @@ Default: () (no plotted actions).</p></li>
 to be shown on the dashboard</p></li>
 <li><p><strong>update_interval</strong> (<em>int &gt; 0</em>) – Amount of steps after which the plots are updated. Updating each step reduces the
 performance drastically. Default: 1000</p></li>
-<li><p><strong>step_plot_width</strong> (<em>int &gt; 0</em>) – Width of the step plots in steps. Default: 10000 steps
+<li><p><strong>time_plot_width</strong> (<em>int &gt; 0</em>) – Width of the step plots in steps. Default: 10000 steps
 (1 second for continuously controlled environments / 0.1 second for discretely controlled environments)</p></li>
 <li><p><strong>style</strong> (<em>string</em>) – Select one of the matplotlib-styles. e.g. “dark-background”.
 Default: None (the already selected style)</p></li>
@@ -336,6 +337,15 @@ Default: None (the already selected style)</p></li>
 <dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.render">
 <code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the plots every <em>update cycle</em> calls of this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset_figures">
+<code class="sig-name descname">reset_figures</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.reset_figures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.reset_figures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to reset the figures to the initial state.</p>
+<p>This method can be called, when the plots shall be reset after the training and before the test, for example.
+Another use case, that requires the call of this method by the user, is when the dashboard is executed within
+a jupyter notebook and the figures shall be plotted below a new cell.</p>
 </dd></dl>
 
 <dl class="method">

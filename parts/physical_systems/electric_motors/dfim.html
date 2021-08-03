@@ -126,6 +126,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -228,7 +229,7 @@
 <h2>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">DoublyFedInductionMotor</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors.html#DoublyFedInductionMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">DoublyFedInductionMotor</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/doubly_fed_induction_motor.html#DoublyFedInductionMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
 <colgroup>
 <col style="width: 24%" />
@@ -495,11 +496,11 @@
 <p class="admonition-title">Note</p>
 <p>The voltage limits should be the amplitude of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
 Typically the rms value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given.
-<span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span></p>
-<p>The current limits should be the amplitude of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
+<span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span>
+The current limits should be the amplitude of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
 Typically the rms value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given.
-<span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span></p>
-<p>If not specified, nominal values are equal to their corresponding limit values.
+<span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span>
+If not specified, nominal values are equal to their corresponding limit values.
 Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
 the general limits/nominal values (e.g. i)</p>
 </div>
@@ -596,14 +597,11 @@ initial_states attribute</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries (given by
-physical system)</p></li>
-<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states (given by physical
-system)</p></li>
+<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries (given by physical system)</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indices of system states (given by physical system)</p></li>
 </ul>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="method">
@@ -633,6 +631,12 @@ in case of unspecified limits.</p>
 <em class="property">property </em><code class="sig-name descname">motor_parameter</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.motor_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 dict(float): The motors parameter dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.next_generator">
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.next_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
 </dd></dl>
 
 <dl class="method">
@@ -728,6 +732,12 @@ So this method calls q(quantities, -epsilon).</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.random_generator">
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.random_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.reset">
 <code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">omega=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the motors state to a new initial state. (Default 0)</p>
@@ -745,6 +755,34 @@ So this method calls q(quantities, -epsilon).</p>
 <dd class="field-odd"><p>numpy.ndarray(float)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.seed_sequence">
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor.seed_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
 </dd></dl>
 
 <dl class="method">

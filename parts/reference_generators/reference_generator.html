@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Subepisoded Reference Generator" href="subepisoded_reference_generator.html" />
-    <link rel="prev" title="Discrete Doubly Fed Induction Motor Environment" href="../environments/dfim_disc.html" /> 
+    <link rel="prev" title="Continuous Speed Control DC Externally Excited Motor Environment" href="../environments/cont_sc_extex.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -113,6 +113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -272,10 +273,12 @@ value is passed. For unreferenced states a default value (e.g. Zero) can be set 
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="gym_electric_motor.core.ReferenceGenerator.reference_space">
-<code class="sig-name descname">reference_space</code><em class="property"> = None</em><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.reference_space" title="Permalink to this definition">¶</a></dt>
-<dd><p>The gym.space the references are in.</p>
+<dl class="method">
+<dt id="gym_electric_motor.core.ReferenceGenerator.reference_names">
+<em class="property">property </em><code class="sig-name descname">reference_names</code><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.reference_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+reference_names(list(str)): A list containing all names of the referenced states in the reference
+observation.</p>
 </dd></dl>
 
 <dl class="method">
@@ -333,7 +336,7 @@ The environment announces the physical system to the ReferenceGenerator during i
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="subepisoded_reference_generator.html" class="btn btn-neutral float-right" title="Subepisoded Reference Generator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../environments/dfim_disc.html" class="btn btn-neutral float-left" title="Discrete Doubly Fed Induction Motor Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../environments/cont_sc_extex.html" class="btn btn-neutral float-left" title="Continuous Speed Control DC Externally Excited Motor Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

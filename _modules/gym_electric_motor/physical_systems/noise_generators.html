@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
             
@@ -168,10 +169,11 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
+<span class="kn">from</span> <span class="nn">..random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">set_state_array</span>
 
 
-<div class="viewcode-block" id="NoiseGenerator"><a class="viewcode-back" href="../../../parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator">[docs]</a><span class="k">class</span> <span class="nc">NoiseGenerator</span><span class="p">:</span>
+<div class="viewcode-block" id="NoiseGenerator"><a class="viewcode-back" href="../../../parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator">[docs]</a><span class="k">class</span> <span class="nc">NoiseGenerator</span><span class="p">(</span><span class="n">RandomComponent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The noise generator generates noise added to the state for the observation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -186,6 +188,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">             Noise for the initial observation at time 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_generator</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="NoiseGenerator.noise"><a class="viewcode-back" href="../../../parts/physical_systems/noise_generators/noise_generator.html#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.noise">[docs]</a>    <span class="k">def</span> <span class="nf">noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
@@ -230,6 +233,7 @@
 <span class="sd">            noise_levels(dict/list/ndarray(float)): Fraction of noise power over the signal powers.</span>
 <span class="sd">            noise_length(float): Length of simultaneously generated noise points for speed up.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_noise_levels</span> <span class="o">=</span> <span class="n">noise_levels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_noise_length</span> <span class="o">=</span> <span class="n">noise_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_noise_pointer</span> <span class="o">=</span> <span class="n">noise_length</span>
@@ -252,7 +256,7 @@
 <span class="sd">        Helper function to generate noise in batches of self._noise_length steps to avoid calculating every steps and</span>
 <span class="sd">        to speed up the computation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
             <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_levels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signal_powers</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_noise_length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_signal_powers</span><span class="p">))</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_noise_pointer</span> <span class="o">=</span> <span class="mi">0</span>
