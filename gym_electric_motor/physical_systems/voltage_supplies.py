@@ -41,7 +41,7 @@ class VoltageSupply:
         """
         return self.get_voltage(0, 0)
 
-    def get_voltage(self, t, i_sup, *args, **kwargs):
+    def get_voltage(self, t, i_sup):
         """
         Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.
 
@@ -60,7 +60,7 @@ class IdealVoltageSupply(VoltageSupply):
     Ideal Voltage Supply that supplies with u_nominal independent of the time and the supply current.
     """
 
-    def __init__(self, u_nominal=600.0, **__):
+    def __init__(self, u_nominal=600.0):
         # Docstring of superclass
         super().__init__(u_nominal)
         self.supply_range = (u_nominal, u_nominal)
@@ -73,9 +73,9 @@ class IdealVoltageSupply(VoltageSupply):
 class RCVoltageSupply(VoltageSupply):
     """DC voltage supply modeled as RC element"""
     
-    def __init__(self, u_nominal=600.0, supply_parameter=None, **__):
-        """
-        This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element
+    def __init__(self, u_nominal=600.0, supply_parameter=None):
+        """This Voltage Supply is a model of a non ideal voltage supply.
+        The ideal voltage source U_0 is part of an RC element.
         
         Args: 
             supply_parameter(dict): Consists or Resistance R in Ohm and Capacitance C in Farad
@@ -124,7 +124,7 @@ class RCVoltageSupply(VoltageSupply):
 class AC1PhaseSupply(VoltageSupply):
     """AC one phase voltage supply"""
 
-    def __init__(self, u_nominal=230, supply_parameter=None, **__):
+    def __init__(self, u_nominal=230, supply_parameter=None):
         """
         Args:
             u_nominal(float): Single phasic effective value of the voltage supply
@@ -146,7 +146,6 @@ class AC1PhaseSupply(VoltageSupply):
         else:
             supply_parameter = {'frequency': 50, 'phase': np.random.rand()*2*np.pi}
 
-    
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
         self._max_amp = self._u_nominal*np.sqrt(2)
@@ -167,7 +166,7 @@ class AC3PhaseSupply(VoltageSupply):
     """AC three phase voltage supply"""
     voltage_len = 3
 
-    def __init__(self, u_nominal=400, supply_parameter=None, **__):
+    def __init__(self, u_nominal=400, supply_parameter=None):
         """
         Args:
             u_nominal(float): Three phasic effective value of the voltage supply
