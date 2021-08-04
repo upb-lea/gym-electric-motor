@@ -3,7 +3,7 @@ import setuptools
 
 AUTHORS = [
     'Arne Traue', 'Gerrit Book', 'Praneeth Balakrishna',
-    'Pascal Peters', 'Pramod Manjunatha', 'Darius Jakobeit', 'Felix Book', 'Rohith Desireddy',
+    'Pascal Peters', 'Pramod Manjunatha', 'Darius Jakobeit', 'Felix Book', 
     'Max Schenke', 'Wilhelm Kirchgässner', 'Oliver Wallscheid',
 ]
 
