@@ -17,7 +17,7 @@
 ## Overview
 The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
 
-It is built upon [OpenAI Gym Environments](https://gym.openai.com/), and, therefore, can be used for both, classical control simulation and r[einforcement learning](https://github.com/upb-lea/reinforcement_learning_course_materials) experiments. It allows you to construct a typical drive train with the usual building blocks, i.e. supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from PI-controllers to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
+It is built upon [OpenAI Gym Environments](https://gym.openai.com/), and, therefore, can be used for both, classical control simulation and [reinforcement learning](https://github.com/upb-lea/reinforcement_learning_course_materials) experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
 
 ## Getting Started
 An easy way to get started with GEM is by playing around with the following interactive notebooks in Google Colaboratory. Most important features of GEM as well as application demonstrations are showcased, and give a kickstart for engineers in industry and academia.
@@ -87,7 +87,7 @@ Among various DC-motor models, the following three-phase motors - together with 
 The converters can be driven by means of a duty cycle (continuous mode) or switching commands (discrete mode). 
 
 ### Citation
-A whitepaper for this framework is available under (preprint: [arxiv.org/abs/1910.09434](https://arxiv.org/abs/1910.09434), full-paper: [IEEE-Xplore](https://ieeexplore.ieee.org/document/9241851)). Please use the following BibTeX entry for citing us:
+A white paper for this framework is available under (preprint: [arxiv.org/abs/1910.09434](https://arxiv.org/abs/1910.09434), full-paper: [IEEE-Xplore](https://ieeexplore.ieee.org/document/9241851)). Please use the following BibTeX entry for citing us:
 ```
 @ARTICLE{9241851,  
 author={A. {Traue} and G. {Book} and W. {Kirchgässner} and O. {Wallscheid}},  
