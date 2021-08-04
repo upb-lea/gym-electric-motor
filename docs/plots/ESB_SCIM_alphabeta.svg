@@ -13,7 +13,7 @@
    xml:space="preserve"
    id="svg2"
    version="1.1"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    sodipodi:docname="ESB_SCIM_alphabeta.svg"><sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -28,12 +28,13 @@
      id="namedview592"
      showgrid="true"
      inkscape:zoom="1.4142136"
-     inkscape:cx="180.52139"
-     inkscape:cy="256.997"
-     inkscape:window-x="1912"
+     inkscape:cx="221.16872"
+     inkscape:cy="153.80668"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g1180"><inkscape:grid
+     inkscape:current-layer="g1180"
+     inkscape:document-rotation="0"><inkscape:grid
        type="xygrid"
        id="grid1366" /></sodipodi:namedview><metadata
      id="metadata8"><rdf:RDF><cc:Work
@@ -577,7 +578,7 @@
        clip-path="url(#clipPath82)"
        id="g586"><text
    transform="matrix(1,0,0,-1,164.12,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text424"><tspan
      x="0"
      y="0"
@@ -586,7 +587,7 @@
 
 <text
    transform="matrix(1,0,0,-1,124.02,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text428"><tspan
      x="0 3.7247076"
      y="0"
@@ -595,7 +596,7 @@
 
 <text
    transform="matrix(1,0,0,-1,116.93,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text432"><tspan
      x="0"
      y="0"
@@ -604,7 +605,7 @@
 
 <text
    transform="matrix(1,0,0,-1,82.179,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text436"><tspan
      x="0 3.7247076"
      y="0"
@@ -613,7 +614,7 @@
 
 <text
    transform="matrix(1,0,0,-1,75.117,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text440"><tspan
      x="0"
      y="0"
@@ -622,7 +623,7 @@
 
 <text
    transform="matrix(1,0,0,-1,47.498,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text444"><tspan
      x="0 3.7247076"
      y="0"
@@ -631,7 +632,7 @@
 
 <text
    transform="matrix(1,0,0,-1,36.906,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text448"><tspan
      x="0"
      y="0"
@@ -640,7 +641,7 @@
 
 <text
    transform="matrix(1,0,0,-1,7.7632,4.0525)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text452"><tspan
      x="0 3.7247076"
      y="0"
@@ -649,7 +650,7 @@
 
 <text
    transform="matrix(1,0,0,-1,125.98,43.444)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text456"><tspan
      x="0 3.7247076"
      y="0"
@@ -658,7 +659,7 @@
 
 <text
    transform="matrix(1,0,0,-1,118.92,43.444)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text460"><tspan
      x="0"
      y="0"
@@ -667,7 +668,7 @@
 
 <text
    transform="matrix(1,0,0,-1,83.63,43.444)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text464"><tspan
      x="0 3.7247076"
      y="0"
@@ -676,7 +677,7 @@
 
 <text
    transform="matrix(1,0,0,-1,76.544,43.444)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text468"><tspan
      x="0"
      y="0"
@@ -685,7 +686,7 @@
 
 <text
    transform="matrix(1,0,0,-1,48.224,43.444)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text472"><tspan
      x="0 3.7247076"
      y="0"
@@ -694,7 +695,7 @@
 
 <text
    transform="matrix(1,0,0,-1,37.631,43.444)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text476"><tspan
      x="0"
      y="0"
@@ -703,7 +704,7 @@
 
 <text
    transform="matrix(1,0,0,-1,7.7632,43.444)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.11750031px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.1175px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text480"><tspan
      x="0 3.7247076"
      y="0"
@@ -712,7 +713,7 @@
 
 <text
    transform="matrix(1,0,0,-1,120.75,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text484"><tspan
      x="0"
      y="0"
@@ -721,7 +722,7 @@
 
 <text
    transform="matrix(1,0,0,-1,110.57,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text488"><tspan
      x="0"
      y="0"
@@ -730,7 +731,7 @@
 
 <text
    transform="matrix(1,0,0,-1,78.938,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text492"><tspan
      x="0"
      y="0"
@@ -739,7 +740,7 @@
 
 <text
    transform="matrix(1,0,0,-1,68.756,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text496"><tspan
      x="0"
      y="0"
@@ -748,7 +749,7 @@
 
 <text
    transform="matrix(1,0,0,-1,44.233,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text500"><tspan
      x="0"
      y="0"
@@ -757,7 +758,7 @@
 
 <text
    transform="matrix(1,0,0,-1,29.844,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text504"><tspan
      x="0"
      y="0"
@@ -766,7 +767,7 @@
 
 <text
    transform="matrix(1,0,0,-1,1.4511,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text508"><tspan
      x="0"
      y="0"
@@ -775,7 +776,7 @@
 
 <text
    transform="matrix(1,0,0,-1,122.74,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text512"><tspan
      x="0"
      y="0"
@@ -784,7 +785,7 @@
 
 <text
    transform="matrix(1,0,0,-1,112.55,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text516"><tspan
      x="0"
      y="0"
@@ -793,7 +794,7 @@
 
 <text
    transform="matrix(1,0,0,-1,80.365,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text520"><tspan
      x="0"
      y="0"
@@ -802,7 +803,7 @@
 
 <text
    transform="matrix(1,0,0,-1,70.183,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text524"><tspan
      x="0"
      y="0"
@@ -811,7 +812,7 @@
 
 <text
    transform="matrix(1,0,0,-1,44.959,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text528"><tspan
      x="0"
      y="0"
@@ -820,7 +821,7 @@
 
 <text
    transform="matrix(1,0,0,-1,30.569,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text532"><tspan
      x="0"
      y="0"
@@ -829,7 +830,7 @@
 
 <text
    transform="matrix(1,0,0,-1,1.4511,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text536"><tspan
      x="0"
      y="0"
@@ -838,7 +839,7 @@
 
 <text
    transform="matrix(0.94869278,0,-0.31619931,-0.94869278,144.87,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text540"><tspan
      x="0 8.947813"
      y="0"
@@ -847,7 +848,7 @@
 
 <text
    transform="matrix(0.94869278,0,-0.31619931,-0.94869278,102.32,7.0919)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text544"><tspan
      x="0"
      y="0"
@@ -856,7 +857,7 @@
 
 <text
    transform="matrix(0.94869278,0,-0.31619931,-0.94869278,104.28,46.483)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text548"><tspan
      x="0"
      y="0"
@@ -865,7 +866,7 @@
 
 <text
    transform="matrix(1,0,0,-1,136.4,7.0919)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text552"><tspan
      x="0"
      y="0"
@@ -874,7 +875,7 @@
 
 <text
    transform="matrix(1,0,0,-1,93.86,7.0919)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text556"><tspan
      x="0"
      y="0"
@@ -883,7 +884,7 @@
 
 <text
    transform="matrix(1,0,0,-1,59.179,7.0919)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text560"><tspan
      x="0"
      y="0"
@@ -892,7 +893,7 @@
 
 <text
    transform="matrix(1,0,0,-1,19.952,7.0919)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text564"><tspan
      x="0"
      y="0"
@@ -901,7 +902,7 @@
 
 <text
    transform="matrix(1,0,0,-1,96.012,46.483)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text568"><tspan
      x="0"
      y="0"
@@ -910,7 +911,7 @@
 
 <text
    transform="matrix(1,0,0,-1,60.606,46.483)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text572"><tspan
      x="0"
      y="0"
@@ -919,7 +920,7 @@
 
 <text
    transform="matrix(1,0,0,-1,20.654,46.483)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:Symbol;-inkscape-font-specification:Symbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text576"><tspan
      x="0"
      y="0"
@@ -928,7 +929,7 @@
 
 <text
    transform="matrix(1,0,0,-1,79.785,9.697)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'MT Extra';-inkscape-font-specification:'MT Extra';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'MT Extra';-inkscape-font-specification:'MT Extra';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text580"><tspan
      x="0"
      y="0"
@@ -937,7 +938,7 @@
 
 <text
    transform="matrix(1,0,0,-1,81.211,49.088)"
-   style="font-variant:normal;font-weight:normal;font-size:12.14099979px;line-height:0%;font-family:'MT Extra';-inkscape-font-specification:'MT Extra';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   style="font-variant:normal;font-weight:normal;font-size:12.141px;line-height:0%;font-family:'MT Extra';-inkscape-font-specification:'MT Extra';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="text584"><tspan
      x="0"
      y="0"
@@ -1027,26 +1028,26 @@
          clip-path="url(#clipPath186)"
          id="g748" /></g></g></g><text
    id="text898"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44494px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="315.10342"
    y="-574.3385"><tspan
      id="tspan896"
      y="-574.3385"
      x="315.10342"
-     style="stroke-width:1">σs</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">σs</tspan></text>
 
 
 <text
    id="text902"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="309.75735"
    y="-576.80713"><tspan
      id="tspan900"
      y="-576.80713"
      x="309.75735"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
 
 
 <path
@@ -1100,24 +1101,24 @@
    style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    id="path942" /><text
    id="text946"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45541906px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45542px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.99870459,-1.0012971)"
    x="197.17352"
    y="-533.74646"><tspan
      id="tspan944"
-     style="stroke-width:1">sα</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">sα</tspan></text>
 
 
 <text
    id="text950"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.99870459,-1.0012971)"
    x="191.81996"
    y="-536.21851"><tspan
      id="tspan948"
      y="-536.21851"
      x="191.81996"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
 
 
 <path
@@ -1130,26 +1131,26 @@
    style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    id="path960" /><text
    id="text964"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45536041px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45536px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.9986968,-1.0013049)"
    x="231.67635"
    y="-573.96619"><tspan
      id="tspan962"
      y="-573.96619"
      x="231.67635"
-     style="stroke-width:1">sα</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">sα</tspan></text>
 
 
 <text
    id="text968"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.9986968,-1.0013049)"
    x="228.88062"
    y="-576.43829"><tspan
      id="tspan966"
      y="-576.43829"
      x="228.88062"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">i</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">i</tspan></text>
 
 
 
@@ -1178,26 +1179,26 @@
 
 <text
    id="text1168"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44494px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="267.8367"
    y="-574.3385"><tspan
      id="tspan1166"
      y="-574.3385"
      x="267.8367"
-     style="stroke-width:1">s</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">s</tspan></text>
 
 
 <text
    id="text1172"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="260.81641"
    y="-576.80707"><tspan
      id="tspan1170"
      y="-576.80707"
      x="260.81641"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">R</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">R</tspan></text>
 
 
 <g
@@ -1306,25 +1307,25 @@
    style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
    id="path912-4" /><text
    id="text1168-8"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493484px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="429.97638"
    y="-574.47809"><tspan
-     style="stroke-width:1.00000012"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1"
      id="tspan1166-6"
      y="-574.47809"
      x="429.97638">r</tspan></text>
 
 <text
    id="text1172-3"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="422.95609"
    y="-576.94666"><tspan
      id="tspan1170-0"
      y="-576.94666"
      x="422.95609"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">R</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">R</tspan></text>
 
 <path
    inkscape:connector-curvature="0"
@@ -1365,47 +1366,47 @@
    id="path930-9-9-8-5-1"
    sodipodi:nodetypes="cc" /><text
    id="text898-6"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493484px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="376.40057"
    y="-574.74017"><tspan
-     style="stroke-width:1.00000012"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1"
      id="tspan896-0"
      y="-574.74017"
      x="376.40057">σr</tspan></text>
 
 <text
    id="text902-4"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="371.05453"
    y="-577.2088"><tspan
      id="tspan900-0"
      y="-577.2088"
      x="371.05453"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
 
 <text
    id="text898-6-5"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44494px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="359.69858"
    y="-529.05609"><tspan
-     style="stroke-width:1.00000012"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1"
      id="tspan896-0-3"
      y="-529.05609"
      x="359.69858">m</tspan></text>
 
 <text
    id="text902-4-8"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="354.35254"
    y="-531.52472"><tspan
      id="tspan900-0-6"
      y="-531.52472"
      x="354.35254"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
 
 <path
    inkscape:connector-curvature="0"
@@ -1417,14 +1418,14 @@
    transform="matrix(0.82895349,-2.0807341e-8,-1.1821462e-7,0.82093832,382.73866,472.37378)"
    style="stroke-width:1.20234871"><text
    transform="scale(1,-1)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.0934px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.20234871"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.0934px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.20235"
    id="text1054-5"
    x="59.548306"
    y="-2.5262849"><tspan
      x="59.548306"
      y="-2.5262849"
      id="tspan1052-9"
-     style="stroke-width:1.20234871">rβ</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1.20235">rβ</tspan></text>
 
 
 
@@ -1433,14 +1434,14 @@
 t&gt;
 <text
    transform="matrix(1,0,-0.33330001,-1,0,0)"
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.85616112px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14065957"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8562px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14066"
    id="text1074-8"
    x="42.105907"
    y="-7.8252225"><tspan
      x="42.105907 50.594635"
      y="-7.8252225"
      id="tspan1072-0"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.85616112px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.14065957">ωψ</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8562px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.14066">ωψ</tspan></text>
 
 </g><g
    id="g746"><g
@@ -1705,36 +1706,36 @@ t&gt;
          clip-path="url(#clipPath266)"
          id="g888" /></g></g></g><text
    id="text1172-3-8"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="416.9942"
    y="-478.25241"><tspan
      id="tspan1170-0-7"
      y="-478.25241"
      x="416.9942"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120003px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">-</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">-</tspan></text>
 
 <text
    id="text898-61"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44494px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="315.10342"
    y="-453.3967"><tspan
      id="tspan896-1"
      y="-453.3967"
      x="315.10342"
-     style="stroke-width:0.99999988">σs</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">σs</tspan></text>
 
 <text
    id="text902-6"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="309.75735"
    y="-455.86533"><tspan
      id="tspan900-5"
      y="-455.86533"
      x="309.75735"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.99999988">L</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
 
 <path
    inkscape:connector-curvature="0"
@@ -1781,23 +1782,23 @@ t&gt;
    style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    id="path942-2" /><text
    id="text946-3"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45541906px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45542px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.99870458,-1.0012971)"
    x="197.17354"
    y="-412.97351"><tspan
      id="tspan944-4"
-     style="stroke-width:1">sβ</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">sβ</tspan></text>
 
 <text
    id="text950-7"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.99870458,-1.0012971)"
    x="191.81996"
    y="-415.44553"><tspan
      id="tspan948-3"
      y="-415.44553"
      x="191.81996"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">u</tspan></text>
 
 <path
    inkscape:connector-curvature="0"
@@ -1809,47 +1810,47 @@ t&gt;
    style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    id="path960-5" /><text
    id="text964-5"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45535994px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.45536px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.9986968,-1.0013049)"
    x="231.67632"
    y="-453.19424"><tspan
      id="tspan962-9"
      y="-453.19424"
      x="231.67632"
-     style="stroke-width:0.99999988">sβ</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">sβ</tspan></text>
 
 <text
    id="text968-8"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(0.9986968,-1.0013049)"
    x="228.8806"
    y="-455.66638"><tspan
      id="tspan966-7"
      y="-455.66638"
      x="228.8806"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.99999988">i</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">i</tspan></text>
 
 <text
    id="text1168-89"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44494px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="267.8367"
    y="-453.3967"><tspan
      id="tspan1166-5"
      y="-453.3967"
      x="267.8367"
-     style="stroke-width:0.99999988">s</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1">s</tspan></text>
 
 <text
    id="text1172-5"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999988"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="260.81638"
    y="-455.86526"><tspan
      id="tspan1170-5"
      y="-455.86526"
      x="260.81638"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.99999988">R</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">R</tspan></text>
 
 <g
    id="g1396-2"
@@ -1891,25 +1892,25 @@ t&gt;
    style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
    id="path912-4-4" /><text
    id="text1168-8-5"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493484px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="429.97638"
    y="-453.53625"><tspan
-     style="stroke-width:1.00000012"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1"
      id="tspan1166-6-4"
      y="-453.53625"
      x="429.97638">r</tspan></text>
 
 <text
    id="text1172-3-3"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="422.95609"
    y="-456.00482"><tspan
      id="tspan1170-0-8"
      y="-456.00482"
      x="422.95609"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">R</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">R</tspan></text>
 
 <path
    inkscape:connector-curvature="0"
@@ -1950,47 +1951,47 @@ t&gt;
    id="path930-9-9-8-5-1-4"
    sodipodi:nodetypes="cc" /><text
    id="text898-6-7"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493484px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="376.40057"
    y="-453.79837"><tspan
-     style="stroke-width:1.00000012"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1"
      id="tspan896-0-1"
      y="-453.79837"
      x="376.40057">σr</tspan></text>
 
 <text
    id="text902-4-4"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="371.05453"
    y="-456.267"><tspan
      id="tspan900-0-1"
      y="-456.267"
      x="371.05453"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93120098px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
 
 <text
    id="text898-6-5-8"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44493532px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:7.44494px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="359.69858"
    y="-408.11429"><tspan
-     style="stroke-width:1.00000012"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1"
      id="tspan896-0-3-9"
      y="-408.11429"
      x="359.69858">m</tspan></text>
 
 <text
    id="text902-4-8-6"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000012"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1"
    transform="scale(1.0001006,-0.99989941)"
    x="354.35254"
    y="-410.58292"><tspan
      id="tspan900-0-6-6"
      y="-410.58292"
      x="354.35254"
-     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.93119907px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.00000012">L</tspan></text>
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.9312px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1">L</tspan></text>
 
 <path
    inkscape:connector-curvature="0"
@@ -2002,14 +2003,14 @@ t&gt;
    transform="matrix(0.8289535,-2.0807341e-8,-1.1821462e-7,0.82093832,382.96133,349.10026)"
    style="stroke-width:1.20234871"><text
    transform="scale(1,-1)"
-   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.0934px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.20234871"
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-size:9.0934px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.20235"
    id="text1054-5-1"
    x="59.548306"
    y="-2.5262849"><tspan
      x="59.548306"
      y="-2.5262849"
      id="tspan1052-9-7"
-     style="stroke-width:1.20234871">rα</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';stroke-width:1.20235">rα</tspan></text>
 
 
 
@@ -2019,13 +2020,13 @@ t&gt;
 t&gt;
 <text
    transform="matrix(1,0,-0.33330001,-1,0,0)"
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.85616112px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14065957"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8562px;line-height:0%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.14066"
    id="text1074-8-3"
    x="42.105907"
    y="-7.8252225"><tspan
      x="42.105907 50.594635"
      y="-7.8252225"
      id="tspan1072-0-0"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.85616112px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.14065957">ωψ</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8562px;line-height:125%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:1.14066">ωψ</tspan></text>
 
 </g></g></g></g></g></g></svg>
