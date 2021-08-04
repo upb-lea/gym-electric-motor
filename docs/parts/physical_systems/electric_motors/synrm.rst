@@ -10,14 +10,14 @@ Electrical ODE
 **************
 
 .. math::
-    \frac{\mathrm{d} i_{sd}}{\mathrm{d} t}&=\frac{u_{sd} + p \omega_{me} L_q i_{sq} - R_s i_{sd}}{L_d} \\
-    \frac{\mathrm{d} i_{sq}}{\mathrm{d} t}&=\frac{u_{sq} - p \omega_{me} L_d i_{sd} - R_s i_{sq}}{L_q} \\
-    \frac{\mathrm{d} \varepsilon_{el}}{\mathrm{d} t}&= p \omega_{me}
+    \frac{\mathrm{d} i_\mathrm{sd}}{\mathrm{d} t}&=\frac{u_\mathrm{sd} + p \omega_\mathrm{me} L_\mathrm{q} i_\mathrm{sq} - R_\mathrm{s} i_\mathrm{sd}}{L_\mathrm{d}} \\
+    \frac{\mathrm{d} i_\mathrm{sq}}{\mathrm{d} t}&=\frac{u_\mathrm{sq} - p \omega_\mathrm{me} L_\mathrm{d} i_\mathrm{sd} - R_\mathrm{s} i_\mathrm{sq}}{L_\mathrm{q}} \\
+    \frac{\mathrm{d} \varepsilon_\mathrm{el}}{\mathrm{d} t}&= p \omega_\mathrm{me}
 
 Torque Equation
 ***************
 .. math::
-    T = 1.5 p (L_d - L_q) i_{sd} i_{sq}
+    T = \frac{3}{2} p (L_\mathrm{d} - L_\mathrm{q}) i_\mathrm{sd} i_\mathrm{sq}
 
 
 Code Documentation

@@ -9,14 +9,14 @@ Electrical ODE
 **************
 
 .. math::
-    \frac{\mathrm{d} i_a}{\mathrm{d} t} &= \frac{u - L_e^\prime \omega_{me} i_e - R_a i_a}{L_a} \\
-    \frac{\mathrm{d} i_e}{\mathrm{d} t} &= \frac{u  - R_e i_e}{L_e}
+    \frac{\mathrm{d} i_\mathrm{a}}{\mathrm{d} t} &= \frac{u - L_\mathrm{e}^\prime i_\mathrm{e} \omega_\mathrm{me} - R_\mathrm{a} i_\mathrm{a}}{L_\mathrm{a}} \\
+    \frac{\mathrm{d} i_\mathrm{e}}{\mathrm{d} t} &= \frac{u - R_\mathrm{e} i_\mathrm{e}}{L_\mathrm{e}}
 
 
 Torque Equation
 ***************
 .. math::
-    T = L_e^\prime i_e i_a
+    T = L_\mathrm{e}^\prime i_\mathrm{e} i_\mathrm{a}
 
 
 Code Documentation
