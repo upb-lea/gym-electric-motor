@@ -137,7 +137,7 @@ if __name__ == '__main__':
         ),
         # Set the DC-link supply voltage
         supply=dict(
-            u_sup=400
+            u_nominal=400
         ),
 
         motor=dict(
