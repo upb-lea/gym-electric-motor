@@ -1,15 +1,14 @@
 ## Examples
 
 In order to provide better accessibility of this simulation library we created several examples that showcase the usage of GEM's interface and features.
-The presented examples can be classified either as classical control examples (where conventional control methods are applied), as reinforcement-learning control examples 
-(which present a rather novel branch of control theory), or as feature showcases (where the focus lies in introducing interesting and useful builtins).
+The presented examples can be classified either as classical control approaches, as optimal control using model predictive control and model-free reinforcement-learning control examples, or as feature showcases (where the focus lies in introducing interesting and useful builtins).
 
 ### Installation, Setup and Interface
 - [GEM_cookbook.ipynb](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/GEM_cookbook.ipynb): a basic tutorial-style notebook that presents the basic interface and usage of GEM
 
 ### Classical Control
-- [pi_series_omega_control.py](classic_controllers/pi_series_omega_control.py): a conventional linear control algorithm applied to the speed control of a series DC motor with continuous-control-set
-- [perm_dc_omega_control.py](classic_controllers/perm_dc_omega_control.py): a conventional discontinuous control algorithm applied to the speed control of a permanently excited DC motor with finite-control-set
+- [Classic controller suite](classic_controllers/classic_controllers.py): a control algorithm library using standard, expert-driven techniques with automatic and manual controller tuning for an increasingly growing number of motor and inverter combinations
+- [Classic controller examples](classic_controllers): a set of examples applying the classic controller suite (e.g., field-oriented control for permanent synchronous motors)
 
 ### Advanced Control
 - [gekko_mpc_cont_pmsm_example.ipynb](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/gekko_mpc_cont_pmsm_example.ipynb): a model predictive control solution for the currents of the three-phase permanent magnet synchronous motor on a continuous-control-set

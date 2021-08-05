@@ -1,3 +1,4 @@
+import gym
 from numpy.random import seed
 import numpy.random as rd
 import pytest
@@ -137,49 +138,46 @@ class TestSwitchedReferenceGenerator:
     @pytest.mark.parametrize(
         "sub_generator",
         [
-            ['SinusReference'],
-            ['WienerProcessReference'],
-            ['StepReference'],
-            ['TriangleReference'],
-            ['SawtoothReference'],
-            ['SinusReference', 'WienerProcessReference', 'StepReference', 'TriangleReference', 'SawtoothReference'],
-            ['SinusReference', 'WienerProcessReference'],
-            ['StepReference', 'TriangleReference', 'SawtoothReference']
+            [SinusoidalReferenceGenerator()],
+            [WienerProcessReferenceGenerator()],
+            [StepReferenceGenerator()],
+            [TriangularReferenceGenerator()],
+            [SawtoothReferenceGenerator()],
+            [
+                SinusoidalReferenceGenerator(), WienerProcessReferenceGenerator(), StepReferenceGenerator(),
+                TriangularReferenceGenerator(), SawtoothReferenceGenerator()
+            ],
+            [SinusoidalReferenceGenerator(), WienerProcessReferenceGenerator()],
+            [StepReferenceGenerator(), TriangularReferenceGenerator(), SawtoothReferenceGenerator()]
         ]
     )
-    @pytest.mark.parametrize("sub_args", [None])
     @pytest.mark.parametrize("p", [None, [0.1, 0.2, 0.3, 0.2, 0.1]])
     @pytest.mark.parametrize(
         "super_episode_length, expected_sel",
         [((200, 500), (200, 500)), (100, (100, 101)), (500, (500, 501))]
     )
-    def test_init(self, monkeypatch, setup, sub_generator, sub_args, p, super_episode_length, expected_sel):
+    def test_init(self, monkeypatch, setup, sub_generator, p, super_episode_length, expected_sel):
         """
         test function for the initialization of a switched reference generator with different combinations of reference
         generators
         :param monkeypatch:
         :param setup: fixture to reset the counters and _reference_generators
         :param sub_generator: list of sub generators
-        :param sub_args: additional arguments for sub generators
         :param p: probabilities for the sub generators
         :param super_episode_length: range of teh episode length of the switched reference generator
         :param expected_sel: expected switched reference generator episode length
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
         self._sub_generator = sub_generator
-        self._kwargs = sub_args
         # call function to test
-        test_object = SwitchedReferenceGenerator(sub_generator, sub_args=sub_args, p=p,
-                                                 super_episode_length=super_episode_length)
+        test_object = SwitchedReferenceGenerator(sub_generator, p=p, super_episode_length=super_episode_length)
         # verify the expected results
         assert len(test_object._sub_generators) == len(sub_generator), 'unexpected number of sub generators'
         assert test_object._current_episode_length == 0, 'The current episode length is not 0.'
         assert test_object._super_episode_length == expected_sel, 'super episode length is not as expected'
-        assert test_object._current_ref_generator == self._reference_generator[0], \
-            'current reference generator is not the first in reference_generator'
-        assert test_object._sub_generators == self._reference_generator, 'Other sub generators than expected'
+        assert test_object._current_ref_generator in sub_generator
+        assert test_object._sub_generators == list(sub_generator), 'Other sub generators than expected'
 
     def test_set_modules(self, monkeypatch, setup):
         """
@@ -194,18 +192,21 @@ class TestSwitchedReferenceGenerator:
             WienerProcessReferenceGenerator(reference_state='dummy_state_0')
         ]
         reference_states = [1, 0, 0, 0, 0, 0, 0]
+        # Override reference spaces
+        sub_generator[0]._limit_margin = (1, 0)
+        sub_generator[1]._limit_margin = (0, 0.5)
 
-        monkeypatch.setattr(ReferenceGenerator, 'set_modules', self.monkey_super_set_modules)
+        expected_space = gym.spaces.Box(-1, 0.5, shape=(1,))
         self._sub_generator = sub_generator
-        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
         test_object = SwitchedReferenceGenerator(sub_generator)
+
         self._physical_system = DummyPhysicalSystem(7)
+        self._physical_system._state_space = gym.spaces.Box(-1, 1, shape=self._physical_system.state_space.shape)
         # call function to test
         test_object.set_modules(self._physical_system)
         # verify the expected results
-
-        assert test_object.reference_space.low == 0, 'Lower limit of the reference space is not 0'
-        assert test_object.reference_space.high == 1, 'Upper limit of the reference space is not 1'
+        assert all(test_object.reference_space.low == expected_space.low), 'Lower limit of the reference space is not 0'
+        assert test_object.reference_space.high == expected_space.high, 'Upper limit of the reference space is not 1'
         assert np.all(test_object._referenced_states == reference_states), 'referenced states are not the expected ones'
 
     @pytest.mark.parametrize("initial_state", [None, [0.8, 0.6, 0.4, 0.7]])
@@ -221,9 +222,8 @@ class TestSwitchedReferenceGenerator:
         """
         # setup test scenario
         monkeypatch.setattr(SwitchedReferenceGenerator, '_reset_reference', self.monkey_reset_reference)
-        sub_generator = ['SinusReference', 'WienerProcessReference']
+        sub_generator = [SinusoidalReferenceGenerator(), WienerProcessReferenceGenerator()]
         self._sub_generator = sub_generator
-        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
         test_object = SwitchedReferenceGenerator(sub_generator)
         monkeypatch.setattr(test_object._sub_generators[0], 'reset', self.monkey_dummy_reset)
         self._initial_state = initial_state
@@ -244,9 +244,8 @@ class TestSwitchedReferenceGenerator:
         :return:
         """
         # setup test scenario
-        sub_generator = ['SinusReference', 'WienerProcessReference']
+        sub_generator = [DummyReferenceGenerator(), DummyReferenceGenerator()]
         self._sub_generator = sub_generator
-        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
         test_object = SwitchedReferenceGenerator(sub_generator)
         monkeypatch.setattr(DummyReferenceGenerator, 'get_reference', self.monkey_dummy_get_reference)
         # call function to test
@@ -266,9 +265,9 @@ class TestSwitchedReferenceGenerator:
         :return:
         """
         # setup test scenario
-        sub_generator = ['SinusReference', 'WienerProcessReference']
+        sub_generator = [SinusoidalReferenceGenerator(), WienerProcessReferenceGenerator()]
         self._sub_generator = sub_generator
-        monkeypatch.setattr(swrg, 'instantiate', self.monkey_instantiate)
+
         test_object = SwitchedReferenceGenerator(sub_generator)
         monkeypatch.setattr(test_object, '_k', k)
         monkeypatch.setattr(test_object, '_current_episode_length', current_episode_length)
@@ -294,8 +293,10 @@ class TestSwitchedReferenceGenerator:
         test_object.seed(np.random.SeedSequence(123))
         test_object._reset_reference()
         assert test_object._k == 0
-        assert test_object._current_episode_length == 9
-        assert test_object._current_ref_generator == sub_reference_generators[2]
+        assert test_object._super_episode_length[0] \
+               <= test_object._current_episode_length\
+               <= test_object._super_episode_length[1]
+        assert test_object._current_ref_generator in sub_reference_generators
 
 
 class TestWienerProcessReferenceGenerator:
@@ -314,8 +315,9 @@ class TestWienerProcessReferenceGenerator:
         self._monkey_get_current_value_counter += 1
         return value
 
+    @pytest.mark.parametrize('kwargs, expected_result', [({}, {}), ({'test': 42}, {'test': 42})])
     @pytest.mark.parametrize('sigma_range', [(2e-3, 2e-1)])
-    def test_init(self, monkeypatch, sigma_range):
+    def test_init(self, monkeypatch, kwargs, expected_result, sigma_range):
         """
         test init()
         :param monkeypatch:
@@ -324,9 +326,13 @@ class TestWienerProcessReferenceGenerator:
         :param sigma_range: used range of sigma
         :return:
         """
-        test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range)
+        # setup test scenario
 
+        self._kwargs = kwargs
+        # call function to test
+        test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range, **self._kwargs)
         # verify the expected results
+
         assert test_object._sigma_range == sigma_range, 'sigma range is not passed correctly'
 
     def test_reset_reference(self, monkeypatch):
@@ -753,8 +759,10 @@ class TestMultipleReferenceGenerator(TestReferenceGenerator):
         return rg
 
     def test_initialization(self):
-        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator])
-        assert all([sg.kwargs == {} for sg in rg._sub_generators])
+        # Test with no sub_args
+        kwargs = {'dummy_arg': 'test'}
+        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], **kwargs)
+        assert all([sg.kwargs == kwargs for sg in rg._sub_generators])
 
         # Test single sub_args
         kwargs = {'dummy_arg': 'test'}

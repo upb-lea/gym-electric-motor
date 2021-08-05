@@ -12,12 +12,12 @@ class WeightedSumOfErrors(RewardFunction):
         r_{wse} = - \sum_i w_i ((|s_i-s^*_i|) / l_i) ^{n_i} + b
 
     Notation:
-        - :math:`r_{wse}`: Weighted sum of error reward
-        - :math:`w_{i}`: Reward weight of state i
-        - :math:`s_{i}`: State value of state i
-        - :math:`s^*_{i}`: Reference value of state i
-        - :math:`l_{i}`: State length of state i
-        - :math:`n_{i}`: Reward power of state i
+        - :math:`r_\mathrm{wse}`: Weighted sum of error reward
+        - :math:`w_{i}`: Reward weight of state :math:`i`
+        - :math:`s_{i}`: State value of state :math:`i`
+        - :math:`s^*_{i}`: Reference value of state :math:`i`
+        - :math:`l_{i}`: State length of state :math:`i`
+        - :math:`n_{i}`: Reward power of state :math:`i`
         - :math:`b`: Bias
 
     | :math:`l_i = 1` for states with positive values only.
