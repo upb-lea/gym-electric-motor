@@ -103,6 +103,7 @@ class ContCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
                  can be directly specified by passing the state name here (e.g. 'i', 'omega') \n
                 - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
                  passed to the environment.
+
             calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
                 simulation. This may lead to speed improvements. Default: True
             tau(float): Duration of one control step in seconds. Default: 1e-5.
