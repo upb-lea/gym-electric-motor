@@ -15,7 +15,7 @@ class DqContSpeedControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironm
         Environment to simulate a dq-domain continuous control set speed controlled permanent magnet synchr. motor.
 
     Key:
-        ``'AbcCont-SC-PMSM-v0'``
+        ``'DqCont-SC-PMSM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`

@@ -15,7 +15,7 @@ class FiniteSpeedControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
         Environment to simulate a finite control set speed controlled doubly fed induction motor.
 
     Key:
-        ``'AbcCont-SC-DFIM-v0'``
+        ``'Finite-SC-DFIM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`

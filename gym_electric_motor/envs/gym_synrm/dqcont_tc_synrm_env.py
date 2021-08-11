@@ -15,7 +15,7 @@ class DqContTorqueControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment)
         Environment to simulate a dq-domain continuous control set torque controlled synchronous reluctance motor.
 
     Key:
-        ``'DqCont-TC-PMSM-v0'``
+        ``'DqCont-TC-SynRM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
