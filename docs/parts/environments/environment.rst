@@ -101,17 +101,18 @@ Dq-Continuous Current Control DFIM Environment                       ``'DqCont-C
 
 .. toctree::
    :maxdepth: 3
-   :caption: DC Motor Environments:
+   :caption: Motor Environments:
    :glob:
 
-   permex_dc/*
-   extex_dc/*
-   series_dc/*
-   shunt_dc/*
-   pmsm/*
-   synrm/*
-   scim/*
-   dfim/*
+   permex_dc/permex_dc_envs
+   extex_dc/extex_dc_envs
+   series_dc/series_dc_envs
+   shunt_dc/shunt_dc_envs
+   pmsm/pmsm_envs
+   synrm/synrm_envs
+   scim/scim_envs
+   dfim/dfim_envs
+
 
 Electric Motor Base Environment
 '''''''''''''''''''''''''''''''
