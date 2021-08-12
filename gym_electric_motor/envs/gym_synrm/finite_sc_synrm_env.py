@@ -15,7 +15,7 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
         Environment to simulate a finite control set speed controlled synchronous reluctance motor.
 
     Key:
-        ``'Finite-SC-PMSM-v0'``
+        ``'Finite-SC-SynRM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`

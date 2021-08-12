@@ -23,16 +23,16 @@ Converter Base Class
 .. autoclass:: gym_electric_motor.physical_systems.converters.PowerElectronicConverter
    :members:
 
-Discrete Converter
+Finite Control Set Converter
 '''''''''''''''''''''''''''''''
 
-.. autoclass:: gym_electric_motor.physical_systems.converters.DiscConverter
+.. autoclass:: gym_electric_motor.physical_systems.converters.FiniteConverter
    :members:
    :inherited-members:
 
 
-Continuous Dynamically Averaged Converter
-'''''''''''''''''''''''''''''''''''''''''
+Continuous Control Set Dynamically Averaged Converter
+'''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 .. autoclass:: gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter
    :members:

@@ -100,76 +100,18 @@ Dq-Continuous Current Control DFIM Environment                       ``'DqCont-C
 =================================================================== ==============================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Motor Environments:
+   :glob:
 
-   finite_tc_permex
-   cont_tc_permex
-   finite_cc_permex
-   cont_cc_permex
-   finite_sc_permex
-   cont_sc_permex
-
-   finite_tc_extex
-   cont_tc_extex
-   finite_cc_extex
-   cont_cc_extex
-   finite_sc_extex
-   cont_sc_extex
-
-   finite_tc_series
-   cont_tc_series
-   finite_cc_series
-   cont_cc_series
-   finite_sc_series
-   cont_sc_series
-
-   finite_tc_shunt
-   cont_tc_shunt
-   finite_cc_shunt
-   cont_cc_shunt
-   finite_sc_shunt
-   cont_sc_shunt
-
-   finite_tc_pmsm
-   abccont_tc_pmsm
-   dqcont_tc_pmsm
-   finite_cc_pmsm
-   abccont_cc_pmsm
-   dqcont_cc_pmsm
-   finite_sc_pmsm
-   abccont_sc_pmsm
-   dqcont_sc_pmsm
-
-   finite_tc_synrm
-   abccont_tc_synrm
-   dqcont_tc_synrm
-   finite_cc_synrm
-   abccont_cc_synrm
-   dqcont_cc_synrm
-   finite_sc_synrm
-   abccont_sc_synrm
-   dqcont_sc_synrm
-
-   finite_tc_scim
-   abccont_tc_scim
-   dqcont_tc_scim
-   finite_cc_scim
-   abccont_cc_scim
-   dqcont_cc_scim
-   finite_sc_scim
-   abccont_sc_scim
-   dqcont_sc_scim
-
-   finite_tc_dfim
-   abccont_tc_dfim
-   dqcont_tc_dfim
-   finite_cc_dfim
-   abccont_cc_dfim
-   dqcont_cc_dfim
-   finite_sc_dfim
-   abccont_sc_dfim
-   dqcont_sc_dfim
+   permex_dc/permex_dc_envs
+   extex_dc/extex_dc_envs
+   series_dc/series_dc_envs
+   shunt_dc/shunt_dc_envs
+   pmsm/pmsm_envs
+   synrm/synrm_envs
+   scim/scim_envs
+   dfim/dfim_envs
 
 
 Electric Motor Base Environment

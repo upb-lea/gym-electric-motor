@@ -15,7 +15,7 @@ class DqContSpeedControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
         Environment to simulate a dq-domain continuous control set current controlled doubly fed induction motor.
 
     Key:
-        ``'AbcCont-SC-DFIM-v0'``
+        ``'DqCont-SC-DFIM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
