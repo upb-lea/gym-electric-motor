@@ -65,8 +65,7 @@ def concretePolynomialLoad():
     pytest fixture that returns a  PolynomialLoad object with concrete parameters
     :return: PolynomialLoad object initialized with concrete values
     """
-    addnl_params = dict(p=0.5, q=0.98, r=2678.88)
-    test_load_params = dict(a=0.01, b=0.05, c=0.1, j_load=0.1, p=0.5, q = 0.98, r= 2678.88)
+    test_load_params = dict(a=0.01, b=0.05, c=0.1, j_load=0.1)
     test_initializer = test_const_initializer
     # x, y are random kwargs
     return PolynomialStaticLoad(load_parameter=test_load_params, load_initializer=test_initializer)
@@ -164,12 +163,11 @@ def test_InitPolynomialStaticLoad(concretePolynomialLoad):
     :param concretePolynomialLoad:
     :return:
     """
-    test_concrete_load_parameterVal = {'a': 0.01, 'b': 0.05, 'c': 0.1, 'j_load': 0.1, 'p': 0.5, 'q': 0.98,
-                                       'r': 2678.88}
+    test_concrete_load_parameterVal = {'a': 0.01, 'b': 0.05, 'c': 0.1, 'j_load': 0.1}
     assert concretePolynomialLoad.load_parameter == test_concrete_load_parameterVal
 
 
-@pytest.mark.parametrize("omega, expected_result", [(-3, 30.6), (0, 20.0), (5, -7.6)])  # to verify all 3 branches
+@pytest.mark.parametrize("omega, expected_result", [(-3, 23400), (0, 20000), (5, 11400)])  # to verify all 3 branches
 def test_PolynomialStaticLoad_MechanicalOde(concretePolynomialLoad, omega, expected_result):
     """
     test the mechanical_ode() function of the PolynomialStaticLoad class
@@ -181,7 +179,8 @@ def test_PolynomialStaticLoad_MechanicalOde(concretePolynomialLoad, omega, expec
     test_mechanical_state = np.array([omega])
     test_t = 1
     test_torque = 2
-    op = PolynomialStaticLoad()
+    load_parameter = dict(j_load=1e-4, a=0.01, b=0.02, c=0.03)
+    op = PolynomialStaticLoad(load_parameter=load_parameter)
     output_val = op.mechanical_ode(test_t, test_mechanical_state, test_torque)
     # output_val = concretePolynomialLoad.mechanical_ode(test_t, test_mechanical_state, test_torque)
     assert math.isclose(expected_result, output_val, abs_tol=1E-6)

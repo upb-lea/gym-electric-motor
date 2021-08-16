@@ -2,6 +2,7 @@ import numpy as np
 from scipy.stats import truncnorm
 
 from ...random_component import RandomComponent
+from gym_electric_motor.utils import update_parameter_dict
 
 
 class ElectricMotor(RandomComponent):
@@ -119,7 +120,7 @@ class ElectricMotor(RandomComponent):
         RandomComponent.__init__(self)
         motor_parameter = motor_parameter or {}
         self._motor_parameter = self._default_motor_parameter.copy()
-        self._motor_parameter.update(motor_parameter)
+        self._motor_parameter = update_parameter_dict(self._default_motor_parameter, motor_parameter)
         limit_values = limit_values or {}
         self._limits = self._default_limits.copy()
         self._limits.update(limit_values)
