@@ -122,14 +122,11 @@ class ElectricMotor(RandomComponent):
         self._motor_parameter = self._default_motor_parameter.copy()
         self._motor_parameter = update_parameter_dict(self._default_motor_parameter, motor_parameter)
         limit_values = limit_values or {}
-        self._limits = self._default_limits.copy()
-        self._limits.update(limit_values)
+        self._limits = update_parameter_dict(self._default_limits, limit_values)
         nominal_values = nominal_values or {}
-        self._nominal_values = self._default_nominal_values.copy()
-        self._nominal_values.update(nominal_values)
+        self._nominal_values = update_parameter_dict(self._default_nominal_values, nominal_values)
         motor_initializer = motor_initializer or {}
-        self._initializer = self._default_initializer.copy()
-        self._initializer.update(motor_initializer)
+        self._initializer = update_parameter_dict(self._default_initializer, motor_initializer)
         self._initial_states = {}
         if self._initializer['states'] is not None:
             self._initial_states.update(self._initializer['states'])
