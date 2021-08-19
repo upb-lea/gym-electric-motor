@@ -25,7 +25,7 @@ class PowerElectronicConverter:
     #: Default action that is taken after a reset.
     _reset_action = None
 
-    def __init__(self, tau, dead_time=False, interlocking_time=0.0, **__):
+    def __init__(self, tau, dead_time=False, interlocking_time=0.0):
         """
        :param tau: Discrete time step of the system in seconds
        :param dead_time: Flag, if a system dead_time of one cycle should be considered.
@@ -97,7 +97,7 @@ class PowerElectronicConverter:
         """
         raise NotImplementedError
 
-    def _set_switching_pattern(self, *_, **__):
+    def _set_switching_pattern(self):
         """
         Method to calculate the switching pattern and corresponding switching times for the next time step.
         At least, the next time step [t + tau] is returned.
@@ -107,10 +107,12 @@ class PowerElectronicConverter:
         """
         self._switching_pattern = [self._current_action]
         return [self._action_start_time + self._tau]
-    
+
+
 class NoConverter(PowerElectronicConverter):
     """Dummy Converter class used to directly transfer the supply voltage to the motor"""
-    #Dummy default values for voltages and currents. No real use other than to fit the current physical system architecture
+    # Dummy default values for voltages and currents.
+    # No real use other than to fit the current physical system architecture
     voltages = Box(0, 1, shape=(3,))
     currents = Box(0, 1, shape=(3,))
     action_space = Box(low=np.array([]), high=np.array([]))
@@ -282,7 +284,7 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
         else:
             raise Exception('Invalid switching state of the converter')
 
-    def _set_switching_pattern(self, *_, **__):
+    def _set_switching_pattern(self):
         # Docstring in base class
         if (
                 self._current_action == 0

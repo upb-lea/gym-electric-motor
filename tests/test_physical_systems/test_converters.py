@@ -667,7 +667,7 @@ class TestPowerElectronicConverter:
         return self.class_to_test(tau=0, dead_time=False, interlocking_time=0)
 
     @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'a': 'Ignore all the rest', 'b': 12}),
+        (1, True, 0.1, {}),
         (0.1, False, 0.0, {}),
     ])
     def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
@@ -1037,7 +1037,7 @@ class TestFiniteMultiConverter(TestFiniteConverter):
         ])
 
     @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC'], 'a': 'Ignore all the rest', 'b': 12}),
+        (1, True, 0.1, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC']}),
         (0.1, False, 0.0, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC']}),
     ])
     def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
@@ -1132,7 +1132,7 @@ class TestContMultiConverter(TestContDynamicallyAveragedConverter):
         assert conv._subconverters == dummy_converters
 
     @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC'], 'a': 'Ignore all the rest', 'b': 12}),
+        (1, True, 0.1, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
         (0.1, False, 0.0, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
     ])
     def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
@@ -1209,7 +1209,7 @@ class TestFiniteB6BridgeConverter(TestFiniteConverter):
         return conv
 
     @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'a': 'Ignore all the rest', 'b': 12}),
+        (1, True, 0.1, {}),
         (0.1, False, 0.0, {}),
     ])
     def test_subconverter_initialization(self, tau, dead_time, interlocking_time, kwargs):

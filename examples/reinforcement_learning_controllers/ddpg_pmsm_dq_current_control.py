@@ -106,7 +106,7 @@ if __name__ == '__main__':
             state_plots=['i_sq', 'i_sd'],
             action_plots='all',
             reward_plot=True,
-            episodic_plots=[MeanEpisodeRewardPlot()]
+            additional_plots=[MeanEpisodeRewardPlot()]
         ),
         # Set the mechanical load to have constant speed
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
@@ -137,7 +137,7 @@ if __name__ == '__main__':
         ),
         # Set the DC-link supply voltage
         supply=dict(
-            u_sup=400
+            u_nominal=400
         ),
 
         motor=dict(

@@ -134,5 +134,29 @@ def register_class(subclass, superclass, keystring):
     _registry[superclass][keystring] = subclass
 
 
+def update_parameter_dict(source_dict, update_dict, copy=True):
+    """Merges two dictionaries (source and update) together.
+
+    It is similar to pythons dict.update() method. Furthermore, it assures that all keys in the update dictionary are
+    already present in the source dictionary. Otherwise a KeyError is thrown.
+
+    Arguments:
+          source_dict(dict): Source dictionary to be updated.
+          update_dict(dict): The new dictionary with the entries to update the source dict.
+          copy(bool): Flag, if the source dictionary shall be copied before updating. (Default True)
+    Returns:
+        dict: The updated source dictionary.
+    Exceptions:
+        KeyError: Thrown, if a key in the update dict is not available in the source dict.
+    """
+    source_keys = source_dict.keys()
+    for key in update_dict.keys():
+        if key not in source_keys:
+            raise KeyError(f'Cannot update_dict the source_dict. The key "{key}" is not available.')
+    new_dict = source_dict.copy() if copy else source_dict
+    new_dict.update(update_dict)
+    return new_dict
+
+
 #: Short notation for the gym.make call to avoid the necessary import of gym when making environments.
 make = gym.make

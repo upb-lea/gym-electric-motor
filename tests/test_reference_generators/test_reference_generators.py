@@ -315,22 +315,17 @@ class TestWienerProcessReferenceGenerator:
         self._monkey_get_current_value_counter += 1
         return value
 
-    @pytest.mark.parametrize('kwargs, expected_result', [({}, {}), ({'test': 42}, {'test': 42})])
     @pytest.mark.parametrize('sigma_range', [(2e-3, 2e-1)])
-    def test_init(self, monkeypatch, kwargs, expected_result, sigma_range):
+    def test_init(self, monkeypatch, sigma_range):
         """
         test init()
         :param monkeypatch:
-        :param kwargs: additional arguments
-        :param expected_result: expected result of additional arguments
         :param sigma_range: used range of sigma
         :return:
         """
         # setup test scenario
-
-        self._kwargs = kwargs
         # call function to test
-        test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range, **self._kwargs)
+        test_object = WienerProcessReferenceGenerator(sigma_range=sigma_range)
         # verify the expected results
 
         assert test_object._sigma_range == sigma_range, 'sigma range is not passed correctly'
@@ -757,27 +752,6 @@ class TestMultipleReferenceGenerator(TestReferenceGenerator):
         sub_generator_1.reference_observation = np.array([-1])
         sub_generator_2.reference_observation = np.array([1])
         return rg
-
-    def test_initialization(self):
-        # Test with no sub_args
-        kwargs = {'dummy_arg': 'test'}
-        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], **kwargs)
-        assert all([sg.kwargs == kwargs for sg in rg._sub_generators])
-
-        # Test single sub_args
-        kwargs = {'dummy_arg': 'test'}
-        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], sub_args=kwargs)
-        assert all([sg.kwargs == kwargs for sg in rg._sub_generators])
-
-        # Test fitting list of kwargs
-        sub_args = [{'dummy_arg_0': 'test'}, {'dummy_arg_1': 'test1'}]
-        rg = self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], sub_args=sub_args)
-        assert all([sg.kwargs == sub_arg for sg, sub_arg in zip(rg._sub_generators, sub_args)])
-
-        # Test non fitting list of subargs for failing assertion
-        sub_args = [{'dummy_arg_0': 'test'}, {'dummy_arg_1': 'test1'}, {'dummy_arg_2': 'must_fail'}]
-        with pytest.raises(AssertionError):
-            self.class_to_test([DummyReferenceGenerator, DummyReferenceGenerator], sub_args=sub_args)
 
     def test_set_modules(self):
         physical_system = DummyPhysicalSystem(state_length=3)

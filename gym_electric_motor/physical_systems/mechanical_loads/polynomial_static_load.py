@@ -1,6 +1,7 @@
 import numpy as np
 
 from .mechanical_load import MechanicalLoad
+from gym_electric_motor.utils import update_parameter_dict
 
 
 class PolynomialStaticLoad(MechanicalLoad):
@@ -13,7 +14,7 @@ class PolynomialStaticLoad(MechanicalLoad):
         | j_load: Moment of inertia of the mechanical system.
     """
 
-    _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=0)
+    _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=1e-5)
     _default_initializer = {'states': {'omega': 0.0},
                             'interval': None,
                             'random_init': None,
@@ -30,17 +31,16 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
-    def __init__(self, load_parameter=(), limits=None,
-                 load_initializer=None, **__):
+    def __init__(self, load_parameter=None, limits=None, load_initializer=None):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary.
             limits(dict):
             load_initializer(dict):
         """
-        self._load_parameter.update(load_parameter)
-        super().__init__(j_load=self._load_parameter['j_load'],
-                         load_initializer=load_initializer)
+        load_parameter = load_parameter if load_parameter is not None else dict()
+        self._load_parameter = update_parameter_dict(self._load_parameter, load_parameter)
+        super().__init__(j_load=self._load_parameter['j_load'], load_initializer=load_initializer)
         self._limits.update(limits or {})
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']

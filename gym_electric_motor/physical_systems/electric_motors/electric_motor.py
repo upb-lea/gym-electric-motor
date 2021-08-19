@@ -2,6 +2,7 @@ import numpy as np
 from scipy.stats import truncnorm
 
 from ...random_component import RandomComponent
+from gym_electric_motor.utils import update_parameter_dict
 
 
 class ElectricMotor(RandomComponent):
@@ -104,7 +105,7 @@ class ElectricMotor(RandomComponent):
 
     def __init__(
             self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None,
-            initial_limits=None, **__
+            initial_limits=None
     ):
         """
         :param  motor_parameter: Motor parameter dictionary. Contents specified
@@ -119,16 +120,13 @@ class ElectricMotor(RandomComponent):
         RandomComponent.__init__(self)
         motor_parameter = motor_parameter or {}
         self._motor_parameter = self._default_motor_parameter.copy()
-        self._motor_parameter.update(motor_parameter)
+        self._motor_parameter = update_parameter_dict(self._default_motor_parameter, motor_parameter)
         limit_values = limit_values or {}
-        self._limits = self._default_limits.copy()
-        self._limits.update(limit_values)
+        self._limits = update_parameter_dict(self._default_limits, limit_values)
         nominal_values = nominal_values or {}
-        self._nominal_values = self._default_nominal_values.copy()
-        self._nominal_values.update(nominal_values)
+        self._nominal_values = update_parameter_dict(self._default_nominal_values, nominal_values)
         motor_initializer = motor_initializer or {}
-        self._initializer = self._default_initializer.copy()
-        self._initializer.update(motor_initializer)
+        self._initializer = update_parameter_dict(self._default_initializer, motor_initializer)
         self._initial_states = {}
         if self._initializer['states'] is not None:
             self._initial_states.update(self._initializer['states'])
