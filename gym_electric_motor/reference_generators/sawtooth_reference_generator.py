@@ -12,7 +12,7 @@ class SawtoothReferenceGenerator(SubepisodedReferenceGenerator):
     _frequency = 0
     _offset = 0
 
-    def __init__(self, amplitude_range=None, frequency_range=(1, 10), offset_range=None, *_, **kwargs):
+    def __init__(self, amplitude_range=None, frequency_range=(1, 10), offset_range=None, **kwargs):
         """
         Args:
             amplitude_range(tuple(float,float)): Lower and upper limit for the amplitude.

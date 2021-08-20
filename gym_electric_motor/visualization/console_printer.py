@@ -9,7 +9,7 @@ class ConsolePrinter(ElectricMotorVisualization):
     and the cumulative reward. It also shows why an episode has terminated (external, constraint violation)
     """
 
-    def __init__(self, verbose=0, update_freq=1, **__):
+    def __init__(self, verbose=0, update_freq=1):
         """
         Args:
             verbose(Int):

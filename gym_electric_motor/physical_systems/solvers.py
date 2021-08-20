@@ -87,7 +87,7 @@ class EulerSolver(OdeSolver):
             x(t + \\frac{\\tau}{nsteps}) = x(t) + x^\prime(t) * \\frac{\\tau}{nsteps}
     """
 
-    def __init__(self, nsteps=1, **__):
+    def __init__(self, nsteps=1):
         """
         Args:
             nsteps(int): Number of cycles to calculate for each iteration. Higher steps make the system more accurate,

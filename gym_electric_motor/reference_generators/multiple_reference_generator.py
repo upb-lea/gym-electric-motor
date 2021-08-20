@@ -19,7 +19,7 @@ class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
                 will be passed to each sub_generator.
             kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.
         """
-        ReferenceGenerator.__init__(self)
+        ReferenceGenerator.__init__(self, **kwargs)
         gem.RandomComponent.__init__(self)
         self.reference_space = Box(-1, 1, shape=(1,))
         if type(sub_args) is dict:
