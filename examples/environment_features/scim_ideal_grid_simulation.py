@@ -1,18 +1,12 @@
-"""Run this file from within the 'examples' folder:
->> cd examples
->> python dqn_series_current_control.py
+"""This example simulates the start-up behavior of the squirrel cage induction motor connected to
+an ideal three-phase grid. The state and action space is continuous.
+Running the example will create a formatted plot that show the motor's angular velocity, the drive torque,
+the applied voltage in three-phase abc-coordinates, and the measured current in field-oriented dq-coordinates.
 """
+
 import numpy as np
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join('..')))
 import gym_electric_motor as gem
 import matplotlib.pyplot as plt
-
-# This example simulates the start-up behavior of the squirrel cage induction motor connected to
-# an ideal three-phase grid. The state and action space is continuous.
-# Running the example will create a formatted plot that show the motors angular velocity, the drive torque,
-# the applied voltage in three-phase abc-coordinates and the measured current in field-oriented dq-coordinates.
 
 
 def parameterize_three_phase_grid(amplitude, frequency, initial_phase):
@@ -50,7 +44,7 @@ env = gem.make(
     constraints=(),
 
     # Parameterize the mechanical load (we set everything to zero such that only j_rotor is significant)
-    load=dict(load_parameter=(dict(a=0, b=0, c=0, j_load=0))),
+    load=dict(load_initializer=(dict(a=0, b=0, c=0, j_load=0))),
 
     # Set the sampling time
     tau=1e-5
@@ -147,6 +141,6 @@ ax.yaxis.tick_right()
 plt.tick_params(axis='both', direction="in", left=False, right=True, bottom=True, top=True)
 plt.yticks([0, 10, 20, 30])
 plt.grid()
-plt.legend(loc="upper right", ncol=2)
 
+plt.legend(loc="upper right", ncol=2)
 plt.show()
