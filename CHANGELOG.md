@@ -27,7 +27,7 @@ API-documentation of every environment.
 
 ## [0.3.1] - 2020-12-18
 ### Added
-- Contraint monitor class
+- Constraint monitor class
 
 ### Changed
 - Visualization framework
