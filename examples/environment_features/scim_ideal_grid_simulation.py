@@ -43,9 +43,6 @@ env = gem.make(
     # "()" means, that limit violation will not necessitate an env.reset()
     constraints=(),
 
-    # Parameterize the mechanical load (we set everything to zero such that only j_rotor is significant)
-    load=dict(load_initializer=(dict(a=0, b=0, c=0, j_load=0))),
-
     # Set the sampling time
     tau=1e-5
 )
