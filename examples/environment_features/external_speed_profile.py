@@ -2,9 +2,7 @@ import numpy as np
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
-import sys
-sys.path.append('..')
-from classic_controllers.simple_controllers import Controller
+
 import time
 from scipy import signal
 from gym_electric_motor.physical_systems.mechanical_loads \
@@ -39,7 +37,8 @@ const_switch_gen = rg.SwitchedReferenceGenerator(
 # The ExternalSpeedLoad class allows to pass an arbitrary function of time which will then dictate the speed profile.
 # As shown here it can also contain more parameters. Some examples:
 # Parameterizable sine oscillation
-sinus_lambda = (lambda t, frequency, amplitude, bias: amplitude * np.sin(2 * np.pi * frequency * t) + bias)
+sinus_lambda = (lambda t, frequency, amplitude, bias: amplitude *
+                np.sin(2 * np.pi * frequency * t) + bias)
 # Constant speed
 constant_lambda = (lambda t, value: value)
 # Parameterizable triangle oscillation
@@ -65,10 +64,12 @@ if __name__ == '__main__':
         ode_solver='scipy.solve_ivp',
         tau=sampling_time,
         reference_generator=const_switch_gen,
-        visualization=MotorDashboard(state_plots=['omega', 'i'], reward_plot=True),
+        visualization=MotorDashboard(
+            state_plots=['omega', 'i'], reward_plot=True),
         constraints=(),
         # using ExternalSpeedLoad:
-        load=ExternalSpeedLoad(speed_profile=saw_lambda, tau=sampling_time, amplitude=40, frequency=5, bias=40)
+        load=ExternalSpeedLoad(speed_profile=saw_lambda, tau=sampling_time,
+                               speed_profile_kwargs=dict(amplitude=40, frequency=5, bias=40))
     )
 
     episode_duration = 0.2  # episode duration in seconds
@@ -89,4 +90,4 @@ if __name__ == '__main__':
                 state, _ = env.reset()
             cum_rew += reward
 
-        print(cum_rew)
+        print(f'Ep {eps} - cum_rew: {cum_rew:10.3f}')

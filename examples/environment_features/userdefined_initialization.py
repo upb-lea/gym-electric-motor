@@ -1,16 +1,13 @@
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
-import sys
-sys.path.append('..')
-from classic_controllers.simple_controllers import Controller
 import time
 
 '''
 This code example presents how the initializer interface can be used to sample random initial states for the drive.
-This is important when using e.g. reinforcement learning, because random initialization allows for a better
+This is important, e.g., when using reinforcement learning, because random initialization allows for a better
 exploration of the state space (so called "exploring starts").
-Initializers can be applied to electric motor state (which is also decisive for the initial torque) and
+Initializers can be applied to electric motor state (which also impacts the initial torque) and
 mechanical load (which sets initial drive speed).
 
 For a more general introduction to GEM, we recommend to have a look at the "_control.py" examples first.
@@ -53,7 +50,7 @@ if __name__ == '__main__':
             'Cont-CC-SeriesDc-v0',
             visualization=MotorDashboard(state_plots=['omega', 'i']),
             motor=dict(motor_parameter=dict(j_rotor=0.001), motor_initializer=gaussian_init),
-            load=dict(load_parameter=dict(a=0, b=0.1, c=0, j_load=0.001), load_initializer=uniform_init),
+            load=dict(j_load=0.001, load_initializer=uniform_init),
             ode_solver='scipy.solve_ivp',
             reference_generator=rg.SwitchedReferenceGenerator(
                 sub_generators=[
@@ -74,11 +71,10 @@ if __name__ == '__main__':
 
         # Print the initial states:
         denorm_state = state * env.limits
-        print(f"Initial speed: {denorm_state[0]:3.2f} 1/s")
-        print(f"Initial current: {denorm_state[2]:3.2f} A")
+
+        print(f"Ep. {j}: Initial speed: {denorm_state[0]:5.2f} 1/s, Initial current: {denorm_state[2]:3.2f} A")
         # We should be able to see that the initial state fits the used initializers
         # Here we should have omega in the interval [60 1/s, 80 1/s] and current closely around 25 A
-        print()
 
         for i in range(5000):
             env.render()
