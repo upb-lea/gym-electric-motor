@@ -56,6 +56,18 @@ def set_state_array(input_values, state_names):
     return state_array
 
 
+def initialize(base_class, arg, default_class, default_args):
+    if arg is None:
+        return default_class(**default_args)
+    elif isinstance(arg, base_class):
+        return arg
+    elif type(arg) is str:
+        return _registry[base_class][arg]()
+    elif type(arg) is dict:
+        default_args.update(arg)
+        return default_class(**default_args)
+
+
 def instantiate(superclass, instance, **kwargs):
     """
     Instantiation of an instance that inherits from the passed superclass.
@@ -120,6 +132,30 @@ def register_class(subclass, superclass, keystring):
     to be instantiable with the key-string.
     """
     _registry[superclass][keystring] = subclass
+
+
+def update_parameter_dict(source_dict, update_dict, copy=True):
+    """Merges two dictionaries (source and update) together.
+
+    It is similar to pythons dict.update() method. Furthermore, it assures that all keys in the update dictionary are
+    already present in the source dictionary. Otherwise a KeyError is thrown.
+
+    Arguments:
+          source_dict(dict): Source dictionary to be updated.
+          update_dict(dict): The new dictionary with the entries to update the source dict.
+          copy(bool): Flag, if the source dictionary shall be copied before updating. (Default True)
+    Returns:
+        dict: The updated source dictionary.
+    Exceptions:
+        KeyError: Thrown, if a key in the update dict is not available in the source dict.
+    """
+    source_keys = source_dict.keys()
+    for key in update_dict.keys():
+        if key not in source_keys:
+            raise KeyError(f'Cannot update_dict the source_dict. The key "{key}" is not available.')
+    new_dict = source_dict.copy() if copy else source_dict
+    new_dict.update(update_dict)
+    return new_dict
 
 
 #: Short notation for the gym.make call to avoid the necessary import of gym when making environments.

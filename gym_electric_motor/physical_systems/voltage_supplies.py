@@ -2,9 +2,9 @@ from gym_electric_motor.physical_systems.solvers import EulerSolver
 import warnings
 import numpy as np
 
+
 class VoltageSupply:
-    """
-    Base class for all VoltageSupplies to be used in a SCMLSystem.
+    """Base class for all VoltageSupplies to be used in a SCMLSystem.
 
     Parameter:
         supply_range(Tuple(float,float)): Minimal and maximal possible value for the voltage supply.
@@ -13,7 +13,7 @@ class VoltageSupply:
 
     #: Minimum and Maximum values of the Supply Voltage.
     supply_range = ()
-    #number of output voltages
+    # number of output voltages
     voltage_len = 1
 
     @property
@@ -24,7 +24,7 @@ class VoltageSupply:
         """
         return self._u_nominal
 
-    def __init__(self, u_nominal, **__):
+    def __init__(self, u_nominal):
         """
         Args:
             u_nominal(float): Nominal voltage of the Voltage Supply.
@@ -41,7 +41,7 @@ class VoltageSupply:
         """
         return self.get_voltage(0, 0)
 
-    def get_voltage(self, t, i_sup, *args, **kwargs):
+    def get_voltage(self, t, i_sup):
         """
         Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.
 
@@ -60,7 +60,7 @@ class IdealVoltageSupply(VoltageSupply):
     Ideal Voltage Supply that supplies with u_nominal independent of the time and the supply current.
     """
 
-    def __init__(self, u_nominal=600.0, **__):
+    def __init__(self, u_nominal=600.0):
         # Docstring of superclass
         super().__init__(u_nominal)
         self.supply_range = (u_nominal, u_nominal)
@@ -73,9 +73,9 @@ class IdealVoltageSupply(VoltageSupply):
 class RCVoltageSupply(VoltageSupply):
     """DC voltage supply modeled as RC element"""
     
-    def __init__(self, u_nominal=600.0, supply_parameter=None, **__):
-        """
-        This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element
+    def __init__(self, u_nominal=600.0, supply_parameter=None):
+        """This Voltage Supply is a model of a non ideal voltage supply.
+        The ideal voltage source U_0 is part of an RC element.
         
         Args: 
             supply_parameter(dict): Consists or Resistance R in Ohm and Capacitance C in Farad
@@ -94,7 +94,10 @@ class RCVoltageSupply(VoltageSupply):
         self._r = supply_parameter['R']
         self._c = supply_parameter['C']
         if self._r*self._c < 1e-4:
-            warnings.warn("The product of R and C might be too small for the correct calculation of the supply voltage. You might want to consider R*C as a time constant.")
+            warnings.warn(
+                "The product of R and C might be too small for the correct calculation of the supply voltage. "
+                "You might want to consider R*C as a time constant."
+            )
         self._u_sup = [u_nominal]
         self._u_0 = u_nominal
         self._solver = EulerSolver()
@@ -111,16 +114,17 @@ class RCVoltageSupply(VoltageSupply):
         self._u_sup = [self._u_0]
         return self._u_sup
     
-    def get_voltage(self, t,i_sup):
+    def get_voltage(self, t, i_sup):
         # Docstring of superclass
         self._solver.set_f_params(self._u_0, i_sup, self._r, self._c)
         self._u_sup = self._solver.integrate(t)
         return self._u_sup
-    
+
+
 class AC1PhaseSupply(VoltageSupply):
     """AC one phase voltage supply"""
 
-    def __init__(self, u_nominal=230, supply_parameter=None, **__):
+    def __init__(self, u_nominal=230, supply_parameter=None):
         """
         Args:
             u_nominal(float): Single phasic effective value of the voltage supply
@@ -142,7 +146,6 @@ class AC1PhaseSupply(VoltageSupply):
         else:
             supply_parameter = {'frequency': 50, 'phase': np.random.rand()*2*np.pi}
 
-    
         self._f = supply_parameter['frequency']
         self._phi = supply_parameter['phase']
         self._max_amp = self._u_nominal*np.sqrt(2)
@@ -158,10 +161,12 @@ class AC1PhaseSupply(VoltageSupply):
         self._u_sup = [self._max_amp*np.sin(2*np.pi*self._f*t + self._phi)]
         return self._u_sup
 
+
 class AC3PhaseSupply(VoltageSupply):
     """AC three phase voltage supply"""
     voltage_len = 3
-    def __init__(self, u_nominal=400, supply_parameter=None, **__):
+
+    def __init__(self, u_nominal=400, supply_parameter=None):
         """
         Args:
             u_nominal(float): Three phasic effective value of the voltage supply
@@ -174,7 +179,8 @@ class AC3PhaseSupply(VoltageSupply):
             assert isinstance(supply_parameter, dict), "supply_parameter should be a dict"
             assert 'frequency' in supply_parameter.keys(), "Pass key 'frequency' for frequency f in Hz in your dict"
             if 'phase' in supply_parameter.keys():
-                assert 0<= supply_parameter['phase'] < 2*np.pi, "The phase angle has to be given in rad in range [0,2*pi)"
+                assert 0 <= supply_parameter['phase'] < 2*np.pi,\
+                    "The phase angle has to be given in rad in range [0,2*pi)"
                 self._fixed_phi = True
                 supply_parameter = supply_parameter
             else:
@@ -197,5 +203,3 @@ class AC3PhaseSupply(VoltageSupply):
         # Docstring of superclass
         self._u_sup = [self._max_amp*np.sin(2*np.pi*self._f*t + self._phi + 2/3*np.pi*i) for i in range(3)]
         return self._u_sup
- 
-    

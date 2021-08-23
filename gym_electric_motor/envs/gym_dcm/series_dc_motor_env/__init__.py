@@ -1,0 +1,6 @@
+from .cont_cc_series_dc_env import ContCurrentControlDcSeriesMotorEnv
+from .cont_sc_series_dc_env import ContSpeedControlDcSeriesMotorEnv
+from .cont_tc_series_dc_env import ContTorqueControlDcSeriesMotorEnv
+from .finite_cc_series_dc_env import FiniteCurrentControlDcSeriesMotorEnv
+from .finite_sc_series_dc_env import FiniteSpeedControlDcSeriesMotorEnv
+from .finite_tc_series_dc_env import FiniteTorqueControlDcSeriesMotorEnv

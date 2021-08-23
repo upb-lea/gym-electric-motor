@@ -148,11 +148,13 @@ def mock_instantiate(superclass, key, **kwargs):
 
 
 class DummyReferenceGenerator(ReferenceGenerator):
-    reference_space = Box(0, 1, shape=(1,))
     _reset_counter = 0
 
     def __init__(self, reference_observation=np.array([1]), reference_state='dummy_state_0', **kwargs):
+        super().__init__()
+        self.reference_space = Box(0, 1, shape=(1,))
         self.kwargs = kwargs
+        self._reference_names = [reference_state]
         self.closed = False
         self.physical_system = None
         self.get_reference_state = None
@@ -299,7 +301,7 @@ class DummyVisualization(ElectricMotorVisualization):
 class DummyVoltageSupply(VoltageSupply):
 
     def __init__(self, u_nominal=560, tau=1e-4, **kwargs):
-        super().__init__(u_nominal, tau=tau)
+        super().__init__(u_nominal)
         self.i_sup = None
         self.t = None
         self.reset_counter = 0
@@ -382,7 +384,7 @@ class DummyElectricMotor(ElectricMotor):
         self.kwargs = kwargs
         self.reset_counter = 0
         self.u_in = None
-        super().__init__(tau=tau, **kwargs)
+        super().__init__(**kwargs)
 
     def electrical_ode(self, state, u_in, omega, *_):
         self.u_in = u_in
@@ -509,10 +511,10 @@ class DummyLoad(MechanicalLoad):
     omega_range = None
     HAS_JACOBIAN = True
 
-    def __init__(self, tau=1e-4, **kwargs):
+    def __init__(self, **kwargs):
         self.kwargs = kwargs
         self.reset_counter = 0
-        super().__init__(tau=tau, **kwargs)
+        super().__init__(**kwargs)
 
     def reset(self, state_space, state_positions, nominal_state,  *_, **__):
         self.reset_counter += 1
@@ -796,11 +798,3 @@ class DummyCallback(Callback):
 
     def on_close(self):
         self.close += 1
-        
-
-
-            
-    
-    
-
-# endregion

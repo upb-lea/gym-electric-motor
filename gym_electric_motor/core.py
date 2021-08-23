@@ -22,7 +22,9 @@ import numpy as np
 from gym.spaces import Box
 
 from .utils import instantiate
+from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
+import gym_electric_motor as gem
 
 
 class ElectricMotorEnvironment(gym.core.Env):
@@ -81,6 +83,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         A reference generator might terminate an episode, if the reference has ended.
         The reward function can terminate an episode, if a physical limit of the motor has been violated.
     """
+
     @property
     def physical_system(self):
         """
@@ -147,11 +150,19 @@ class ElectricMotorEnvironment(gym.core.Env):
         return [self._physical_system.state_names[s] for s in self.state_filter]
 
     @property
+    def reference_names(self):
+        """Returns a list of state names of all states in the observation (called in state_filter) in the same order"""
+        return self._reference_generator.reference_names
+
+    @property
     def nominal_state(self):
-        """
-        Returns a list of nominal values of all states in the observation (called in state_filter) in the same order
-        """
+        """Returns a list of nominal values of all states in the observation (called in state_filter) in that order"""
         return self._physical_system.nominal_state[self.state_filter]
+
+    @property
+    def visualizations(self):
+        """Returns a list of all active motor visualizations."""
+        return self._visualizations
 
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
                  callbacks=(), constraints=(), **kwargs):
@@ -193,15 +204,14 @@ class ElectricMotorEnvironment(gym.core.Env):
             cm = ConstraintMonitor(limit_constraints, additional_constraints)
         self._constraint_monitor = cm
 
-        # Announcement of the Modules among each other
+        # Announcement of the modules among each other
         self._reference_generator.set_modules(self.physical_system)
         self._constraint_monitor.set_modules(self.physical_system)
         self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
-        self.state_filter = [self._physical_system.state_names.index(s)
-                             for s in state_filter]
+        self.state_filter = [self._physical_system.state_names.index(s) for s in state_filter]
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high)
@@ -215,7 +225,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
-        
+
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
         for callback in self._callbacks:
@@ -272,6 +282,20 @@ class ElectricMotorEnvironment(gym.core.Env):
         )
         return (state[self.state_filter], ref_next), reward, self._done, {}
 
+    def seed(self, seed=None):
+        sg = np.random.SeedSequence(seed)
+        components = [
+            self._physical_system,
+            self._reference_generator,
+            self._reward_function,
+            self._constraint_monitor
+        ] + list(self._callbacks)
+        sub_sg = sg.spawn(len(components))
+        for sub, rc in zip(sub_sg, components):
+            if isinstance(rc, gem.RandomComponent):
+                rc.seed(sub)
+        return [sg.entropy]
+
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
         self._call_callbacks('on_close')
@@ -281,8 +305,7 @@ class ElectricMotorEnvironment(gym.core.Env):
 
 
 class ReferenceGenerator:
-    """
-    The abstract base class for reference generators in gym electric motor environments.
+    """The abstract base class for reference generators in gym electric motor environments.
 
     reference_space:
         Space of reference observations as defined in the OpenAI Gym Toolbox.
@@ -311,10 +334,11 @@ class ReferenceGenerator:
 
     """
 
-    #: The gym.space the references are in.
-    reference_space = None
-    _physical_system = None
-    _referenced_states = None
+    def __init__(self):
+        self.reference_space = None
+        self._physical_system = None
+        self._referenced_states = None
+        self._reference_names = None
 
     @property
     def referenced_states(self):
@@ -323,6 +347,15 @@ class ReferenceGenerator:
             ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.
         """
         return self._referenced_states
+
+    @property
+    def reference_names(self):
+        """
+        Returns:
+            reference_names(list(str)): A list containing all names of the referenced states in the reference
+            observation.
+        """
+        return self._reference_names
 
     def set_modules(self, physical_system):
         """Announcement of the PhysicalSystem to the ReferenceGenerator.
@@ -380,9 +413,7 @@ class ReferenceGenerator:
         return self.get_reference(initial_state), self.get_reference_observation(initial_state), None
 
     def close(self):
-        """
-        Called by the environment, when the environment is deleted to close files, store logs, etc.
-        """
+        """Called by the environment, when the environment is deleted to close files, store logs, etc."""
         pass
 
 
@@ -464,10 +495,8 @@ class RewardFunction:
 
 
 class PhysicalSystem:
-    """
-    The Physical System module encapsulates the physical model of the system as well as the simulation from one step to
-    the next.
-    """
+    """The Physical System module encapsulates the physical model of the system as well as the simulation from one step
+    to the next."""
 
     @property
     def k(self):

@@ -1,14 +1,14 @@
 import numpy as np
 from gym.spaces import Box
-from scipy.stats import truncnorm
 import warnings
+
+import gym_electric_motor as gem
+from ..random_component import RandomComponent
 from ..core import PhysicalSystem
-from ..physical_systems import electric_motors as em, mechanical_loads as ml, converters as cv, \
-    voltage_supplies as vs, noise_generators as ng, solvers as sv
-from ..utils import instantiate, set_state_array
+from ..utils import set_state_array
 
 
-class SCMLSystem(PhysicalSystem):
+class SCMLSystem(PhysicalSystem, RandomComponent):
     """
     The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
     a technical setting consisting of these components as well as a noise
@@ -31,36 +31,25 @@ class SCMLSystem(PhysicalSystem):
 
     @property
     def supply(self):
-        """
-        The voltage supply instance in the physical system
-        """
+        """The voltage supply instance in the physical system"""
         return self._supply
 
     @property
     def converter(self):
-        """
-        The power electronic converter instance in the system
-        """
+        """The power electronic converter instance in the system"""
         return self._converter
 
     @property
     def electrical_motor(self):
-        """
-        The electrical motor instance of the system
-        """
+        """The electrical motor instance of the system"""
         return self._electrical_motor
 
     @property
     def mechanical_load(self):
-        """
-        The mechanical load instance in the system
-        """
+        """The mechanical load instance in the system"""
         return self._mechanical_load
 
-    def __init__(self, converter, motor,
-                 load=None, supply='IdealVoltageSupply', ode_solver='euler',
-                 solver_kwargs=None, noise_generator=None, tau=1e-4,
-                 calc_jacobian=None, **kwargs):
+    def __init__(self, converter, motor, load, supply, ode_solver, noise_generator=None, tau=1e-4, calc_jacobian=None):
         """
         Args:
             converter(PowerElectronicConverter): Converter for the physical system
@@ -68,29 +57,20 @@ class SCMLSystem(PhysicalSystem):
             load(MechanicalLoad): Mechanical Load of the System
             supply(VoltageSupply): Voltage Supply
             ode_solver(OdeSolver): Ode Solver to use in this setting
-            solver_kwargs(dict): Special keyword arguments to be passed to the solver
             noise_generator(NoiseGenerator):  Noise generator
             tau(float): discrete time step of the system
             calc_jacobian(bool): If True, the jacobian matrices will be taken into account for the ode-solvers.
                 Default: The jacobians are used, if available
-            kwargs(dict): Further arguments to pass to the modules while instantiation
         """
-        self._converter = instantiate(cv.PowerElectronicConverter, converter, tau=tau, **kwargs)
-        self._electrical_motor = instantiate(em.ElectricMotor, motor, tau=tau, **kwargs)
-        load = load or ml.PolynomialStaticLoad(tau=tau, **kwargs)
-        self._mechanical_load = instantiate(ml.MechanicalLoad, load, tau=tau, **kwargs)
-        # If no special u_sup was passed, select the voltage limit of the motor
-        if 'u_sup' in kwargs.keys():
-            u_sup = kwargs['u_sup']
-        else:
-            u_sup = self._electrical_motor.limits['u']
-        self._supply = instantiate(vs.VoltageSupply, supply, u_nominal=u_sup, tau=tau, **kwargs)
-        noise_generator = noise_generator or ng.GaussianWhiteNoiseGenerator(tau=tau, **kwargs)
-        self._noise_generator = instantiate(ng.NoiseGenerator, noise_generator, **kwargs)
+        RandomComponent.__init__(self)
+        self._converter = converter
+        self._electrical_motor = motor
+        self._mechanical_load = load
+        self._supply = supply
+        self._noise_generator = noise_generator
         state_names = self._build_state_names()
         self._noise_generator.set_state_names(state_names)
-        solver_kwargs = solver_kwargs or {}
-        self._ode_solver = instantiate(sv.OdeSolver, ode_solver, **solver_kwargs)
+        self._ode_solver = ode_solver
         if calc_jacobian is None:
             calc_jacobian = self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN
         if calc_jacobian and self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN:
@@ -98,7 +78,7 @@ class SCMLSystem(PhysicalSystem):
         else:
             jac = None
         if calc_jacobian and jac is None:
-            warnings.warn('Jacobian Matrix is not provided for either the Motor or the Load Model')
+            warnings.warn('Jacobian Matrix is not provided for either the motor or the load Model')
 
         self._ode_solver.set_system_equation(self._system_equation, jac)
         self._mechanical_load.set_j_rotor(self._electrical_motor.motor_parameter['j_rotor'])
@@ -115,6 +95,10 @@ class SCMLSystem(PhysicalSystem):
         self._system_eq_placeholder = None
         self._motor_deriv_size = None
         self._load_deriv_size = None
+        self._components = [
+            self._supply, self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver,
+            self._noise_generator
+        ]
 
     def _set_limits(self):
         """
@@ -171,6 +155,13 @@ class SCMLSystem(PhysicalSystem):
         voltages_upper = voltages_lower + len(self._electrical_motor.VOLTAGES)
         self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
         self.U_SUP_IDX = list(range(voltages_upper, voltages_upper + self._supply.voltage_len))
+
+    def seed(self, seed=None):
+        RandomComponent.seed(self, seed)
+        sub_seeds = self.seed_sequence.spawn(len(self._components))
+        for component, sub_seed in zip(self._components, sub_seeds):
+            if isinstance(component, gem.RandomComponent):
+                component.seed(sub_seed)
 
     def simulate(self, action, *_, **__):
         # Docstring of superclass
@@ -271,6 +262,7 @@ class SCMLSystem(PhysicalSystem):
         Returns:
              The new state of the system.
         """
+        self.next_generator()
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
             state_positions=self.state_positions)
@@ -733,13 +725,15 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
 
         self.stator_voltage_space_idx = 0
         self.stator_voltage_low_idx = 0
-        self.stator_voltage_high_idx = self.stator_voltage_low_idx + \
-                                       self._converter.subsignal_voltage_space_dims[self.stator_voltage_space_idx]
+        self.stator_voltage_high_idx = \
+            self.stator_voltage_low_idx \
+            + self._converter.subsignal_voltage_space_dims[self.stator_voltage_space_idx]
 
         self.rotor_voltage_space_idx = 1
         self.rotor_voltage_low_idx = self.stator_voltage_high_idx
-        self.rotor_voltage_high_idx = self.rotor_voltage_low_idx + \
-                                       self._converter.subsignal_voltage_space_dims[self.rotor_voltage_space_idx]
+        self.rotor_voltage_high_idx = \
+            self.rotor_voltage_low_idx \
+            + self._converter.subsignal_voltage_space_dims[self.rotor_voltage_space_idx]
 
     def _set_limits(self):
         """
@@ -760,13 +754,16 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
 
     def _build_state_names(self):
         # Docstring of superclass
-        names_l = self._mechanical_load.state_names + ['torque',
-                                                       'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',
-                                                       'i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq',
-                                                       'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',
-                                                       'u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq',
-                                                       'epsilon', 'u_sup',
-                                                       ]
+        names_l = \
+            self._mechanical_load.state_names \
+            + [
+                'torque',
+                'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',
+                'i_ra', 'i_rb', 'i_rc', 'i_rd', 'i_rq',
+                'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',
+                'u_ra', 'u_rb', 'u_rc', 'u_rd', 'u_rq',
+                'epsilon', 'u_sup',
+            ]
         return names_l
 
     def _set_indices(self):
@@ -811,7 +808,6 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         i_ralpha = 1 / l_r * psi_ralpha - mp['l_m'] / l_r * i_salpha
         i_rbeta = 1 / l_r * psi_rbeta - mp['l_m'] / l_r * i_sbeta
         return [i_ralpha, i_rbeta]
-
 
     def simulate(self, action, *_, **__):
         # Docstring of superclass

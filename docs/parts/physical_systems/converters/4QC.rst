@@ -6,7 +6,7 @@ Four Quadrant Converters
 Discrete Four Quadrant Converter
 ''''''''''''''''''''''''''''''''''
 
-.. autoclass:: gym_electric_motor.physical_systems.converters.DiscFourQuadrantConverter
+.. autoclass:: gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter
    :members:
    :inherited-members:
 

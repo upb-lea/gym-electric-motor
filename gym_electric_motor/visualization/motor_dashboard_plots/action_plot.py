@@ -1,4 +1,4 @@
-from gym.spaces import Box
+from gym.spaces import Box, Discrete, MultiDiscrete
 import numpy as np
 
 from .base_plots import TimePlot
@@ -40,14 +40,18 @@ class ActionPlot(TimePlot):
         )
         self._lines.append(self._action_line)
 
+    def reset_data(self):
+        super().reset_data()
+        self._action_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
+        self._y_data.append(self._action_data)
+
     def set_env(self, env):
         # Docstring of superclass
         super().set_env(env)
         ps = env.physical_system
         # fetch the action space from the physical system
         self._action_space = ps.action_space
-        self._action_data = np.zeros_like(self._x_data, dtype=float) * np.nan
-        self._y_data.append(self._action_data)
+        self.reset_data()
 
         # check for the type of action space: Discrete or Continuous
         if type(self._action_space) is Box:  # for continuous action space
@@ -56,12 +60,18 @@ class ActionPlot(TimePlot):
             self._action_range_min = self._action_space.low[self._action]
             self._action_range_max = self._action_space.high[self._action]
 
-        else:
+        elif type(self._action_space) is Discrete:
             self._action_type = 'Discrete'
             # lower bound of discrete action = 0
             self._action_range_min = 0
             # fetch the action range of discrete type actions
             self._action_range_max = self._action_space.n
+        elif type(self._action_space) is MultiDiscrete:
+            self._action_type = 'MultiDiscrete'
+            # lower bound of discrete action = 0
+            self._action_range_min = 0
+            # fetch the action range of discrete type actions
+            self._action_range_max = self._action_space.nvec[self._action]
 
         spacing = 0.1 * (self._action_range_max - self._action_range_min)
         self._y_lim = self._action_range_min - spacing, self._action_range_max + spacing

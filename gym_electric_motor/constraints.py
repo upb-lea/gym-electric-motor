@@ -53,7 +53,9 @@ class LimitConstraint(Constraint):
         self._observed_states = None
 
     def __call__(self, state):
-        return float(any(abs(state[self._observed_states]) > 1.0))
+        observed = state[self._observed_states]
+        violation = any(abs(observed) > 1.0)
+        return float(violation)
 
     def set_modules(self, ps):
         self._limits = ps.limits

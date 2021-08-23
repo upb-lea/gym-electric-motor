@@ -47,8 +47,7 @@ def concreteMechanicalLoad():
     state_names = load_parameter1['state_names']
     j_load = load_parameter1['j_load']
     test_initializer = test_const_initializer
-    return MechanicalLoad(state_names, j_load, a=2, b=6,
-                          load_initializer=test_initializer)
+    return MechanicalLoad(state_names, j_load, load_initializer=test_initializer)
 
 
 @pytest.fixture
@@ -66,12 +65,10 @@ def concretePolynomialLoad():
     pytest fixture that returns a  PolynomialLoad object with concrete parameters
     :return: PolynomialLoad object initialized with concrete values
     """
-    addnl_params = dict(p=0.5, q=0.98, r=2678.88)
-    test_load_params = dict(a=0.01, b=0.05, c=0.1, j_load=0.1, p=0.5, q = 0.98, r= 2678.88)
+    test_load_params = dict(a=0.01, b=0.05, c=0.1, j_load=0.1)
     test_initializer = test_const_initializer
     # x, y are random kwargs
-    return PolynomialStaticLoad(load_parameter=test_load_params, x=3, y=76.,
-                                load_initializer=test_initializer)
+    return PolynomialStaticLoad(load_parameter=test_load_params, load_initializer=test_initializer)
 
 
 def test_InitMechanicalLoad(defaultMechanicalLoad, concreteMechanicalLoad):
@@ -166,12 +163,11 @@ def test_InitPolynomialStaticLoad(concretePolynomialLoad):
     :param concretePolynomialLoad:
     :return:
     """
-    test_concrete_load_parameterVal = {'a': 0.01, 'b': 0.05, 'c': 0.1, 'j_load': 0.1, 'p': 0.5, 'q': 0.98,
-                                       'r': 2678.88}
+    test_concrete_load_parameterVal = {'a': 0.01, 'b': 0.05, 'c': 0.1, 'j_load': 0.1}
     assert concretePolynomialLoad.load_parameter == test_concrete_load_parameterVal
 
 
-@pytest.mark.parametrize("omega, expected_result", [(-3, 30.6), (0, 20.0), (5, -7.6)])  # to verify all 3 branches
+@pytest.mark.parametrize("omega, expected_result", [(-3, 23400), (0, 20000), (5, 11400)])  # to verify all 3 branches
 def test_PolynomialStaticLoad_MechanicalOde(concretePolynomialLoad, omega, expected_result):
     """
     test the mechanical_ode() function of the PolynomialStaticLoad class
@@ -183,7 +179,8 @@ def test_PolynomialStaticLoad_MechanicalOde(concretePolynomialLoad, omega, expec
     test_mechanical_state = np.array([omega])
     test_t = 1
     test_torque = 2
-    op = PolynomialStaticLoad()
+    load_parameter = dict(j_load=1e-4, a=0.01, b=0.02, c=0.03)
+    op = PolynomialStaticLoad(load_parameter=load_parameter)
     output_val = op.mechanical_ode(test_t, test_mechanical_state, test_torque)
     # output_val = concretePolynomialLoad.mechanical_ode(test_t, test_mechanical_state, test_torque)
     assert math.isclose(expected_result, output_val, abs_tol=1E-6)
@@ -249,26 +246,31 @@ class TestExtSpeedLoad(TestMechanicalLoad):
 
     key = 'ExtSpeedLoad'
     class_to_test = ExternalSpeedLoad
-    kwargs = dict(speed_profile=speed_profile_,
-                  amp=test_amp,
-                  bias=test_bias,
-                  freq=test_freq)
+    kwargs = dict(
+        speed_profile=speed_profile_,
+        speed_profile_kwargs=dict(
+            amp=test_amp,
+            bias=test_bias,
+            freq=test_freq
+        )
+    )
 
     @pytest.fixture
     def ext_speed_load(self):
-        return ExternalSpeedLoad(speed_profile=speed_profile_,
-                                 amp=test_amp, bias=test_bias, freq=test_freq)
+        return ExternalSpeedLoad(
+            speed_profile=speed_profile_,
+            speed_profile_kwargs=dict(amp=test_amp, bias=test_bias, freq=test_freq)
+        )
 
     def test_initialization(self):
-        load = ExternalSpeedLoad(speed_profile=speed_profile_,
-                                 amp=test_amp, bias=test_bias, freq=test_freq)
+        load = ExternalSpeedLoad(
+            speed_profile=speed_profile_,
+            speed_profile_kwargs=dict(amp=test_amp, bias=test_bias, freq=test_freq)
+        )
         assert load._speed_profile == speed_profile_
-        assert load.omega == speed_profile_(t=0,
-                                                amp=test_amp,
-                                                bias=test_bias,
-                                                freq=test_freq)
+        assert load.omega == speed_profile_(t=0, amp=test_amp, bias=test_bias, freq=test_freq)
         for key in ['amp', 'bias', 'freq']:
-            assert key in load.kwargs
+            assert key in load.speed_profile_kwargs
 
     # to verify all 3 branches
     @pytest.mark.parametrize("omega, expected_result", [(-3, -69840.),
@@ -299,8 +301,9 @@ class TestExtSpeedLoad(TestMechanicalLoad):
     ]
     )
     def test_jacobian(self, omega, omega_initial, expected):
-        test_object = self.class_to_test(speed_profile_, amp=test_amp,
-                                         bias=test_bias, freq=test_freq)
+        test_object = self.class_to_test(
+            speed_profile_, speed_profile_kwargs=dict(amp=test_amp, bias=test_bias, freq=test_freq)
+        )
 
         # 2 Runs to test independence on time and torque
         result0 = test_object.mechanical_jacobian(0.456, np.array([omega]), 0.385)

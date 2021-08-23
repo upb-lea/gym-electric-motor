@@ -7,7 +7,7 @@ from ..testing_utils import DummyPhysicalSystem
 
 class TestLimitConstraint:
 
-    @pytest.mark.parametrize(['ps','observed_state_names','expected_state_names'], [
+    @pytest.mark.parametrize(['ps', 'observed_state_names', 'expected_state_names'], [
         [DummyPhysicalSystem(2), ['all_states'], ['dummy_state_0', 'dummy_state_1']],
         [DummyPhysicalSystem(3), ['dummy_state_0', 'dummy_state_2'], ['dummy_state_0', 'dummy_state_2']]
     ])

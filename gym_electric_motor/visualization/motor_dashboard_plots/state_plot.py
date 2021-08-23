@@ -9,7 +9,7 @@ class StatePlot(TimePlot):
     _default_limit_line_cfg = {
         'color': 'red',
         'linestyle': '--',
-        'linewidth': 1
+        'linewidth': .75
     }
 
     # Labels for each state variable.
@@ -33,6 +33,10 @@ class StatePlot(TimePlot):
         'u_sup': '$u_{sup}$/V',
         'epsilon': r'$\epsilon$/rad'
     }
+
+    @property
+    def state(self):
+        return self._state
 
     def __init__(self, state):
         """
@@ -81,9 +85,7 @@ class StatePlot(TimePlot):
         self._referenced = rg.referenced_states[self._state_idx]
         # Bool: if the data is already normalized to an interval of [-1, 1]
         self._normalized = self._limits != self._state_space[1]
-        # Initialize the data containers
-        self._state_data = np.ones(self._x_width) * np.nan
-        self._ref_data = np.ones(self._x_width) * np.nan
+        self.reset_data()
 
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
         max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
@@ -94,6 +96,12 @@ class StatePlot(TimePlot):
 
         # Set the y-axis label
         self._label = self.state_labels.get(self._state, self._state)
+
+    def reset_data(self):
+        super().reset_data()
+        # Initialize the data containers
+        self._state_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
+        self._ref_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
 
     def initialize(self, axis):
         # Docstring of superclass
@@ -139,6 +147,6 @@ class StatePlot(TimePlot):
         ref = reference[self._state_idx]
         idx = self.data_idx
         self._x_data[idx] = self._t
-        self._state_data[idx] = state_ * self._limits
+        self._state_data[idx] = state_ * self._limits if self._normalized else state_
         if self._referenced:
-            self._ref_data[idx] = ref * self._limits
+            self._ref_data[idx] = ref * self._limits if self._normalized else ref
