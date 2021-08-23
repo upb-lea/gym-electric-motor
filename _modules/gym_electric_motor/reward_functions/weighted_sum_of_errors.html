@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.reward_functions.weighted_sum_of_errors &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.reward_functions.weighted_sum_of_errors &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -180,12 +180,12 @@
 <span class="sd">        r_{wse} = - \sum_i w_i ((|s_i-s^*_i|) / l_i) ^{n_i} + b</span>
 
 <span class="sd">    Notation:</span>
-<span class="sd">        - :math:`r_{wse}`: Weighted sum of error reward</span>
-<span class="sd">        - :math:`w_{i}`: Reward weight of state i</span>
-<span class="sd">        - :math:`s_{i}`: State value of state i</span>
-<span class="sd">        - :math:`s^*_{i}`: Reference value of state i</span>
-<span class="sd">        - :math:`l_{i}`: State length of state i</span>
-<span class="sd">        - :math:`n_{i}`: Reward power of state i</span>
+<span class="sd">        - :math:`r_\mathrm{wse}`: Weighted sum of error reward</span>
+<span class="sd">        - :math:`w_{i}`: Reward weight of state :math:`i`</span>
+<span class="sd">        - :math:`s_{i}`: State value of state :math:`i`</span>
+<span class="sd">        - :math:`s^*_{i}`: Reference value of state :math:`i`</span>
+<span class="sd">        - :math:`l_{i}`: State length of state :math:`i`</span>
+<span class="sd">        - :math:`n_{i}`: Reward power of state :math:`i`</span>
 <span class="sd">        - :math:`b`: Bias</span>
 
 <span class="sd">    | :math:`l_i = 1` for states with positive values only.</span>
@@ -213,7 +213,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normed_reward_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">violation_reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">reward_power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+                 <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">reward_power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.</span>
@@ -299,7 +299,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

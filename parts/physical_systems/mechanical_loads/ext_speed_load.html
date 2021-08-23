@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>External Speed Load &mdash; gym-electric-motor 2020 documentation</title>
+  <title>External Speed Load &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -198,14 +198,14 @@
 <h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">ExternalSpeedLoad</code><span class="sig-paren">(</span><em class="sig-param">speed_profile</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">ExternalSpeedLoad</code><span class="sig-paren">(</span><em class="sig-param">speed_profile</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">speed_profile_kwargs=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>External speed mechanical load system which will set the speed to a
 predefined speed-function/ speed-profile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>speed_profile</strong> (<em>float -&gt; float</em>) – <p>function or lambda expression
-which takes a timestep t as argument and returns speed omega
+<li><p><strong>speed_profile</strong> (<em>float -&gt; float</em>) – <p>A callable(t, <a href="#id1"><span class="problematic" id="id2">**</span></a>speed_profile_args) -&gt; float
+which takes a timestep t and custom further arguments and returns a speed omega
 .. rubric:: Example</p>
 <p>(lambda t, amplitude, freq: amplitude*numpy.sin(2*pi*f)))
 with additional parameters:</p>
@@ -214,7 +214,8 @@ with additional parameters:</p>
 </div></blockquote>
 </p></li>
 <li><p><strong>tau</strong> (<em>float</em>) – discrete time step of the system</p></li>
-<li><p><strong>kwargs</strong> (<em>float</em>) – further arguments for speed_profile</p></li>
+<li><p><strong>speed_profile_kwargs</strong> (<em>dict</em>) – further arguments for speed_profile</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Arguments to be passed to superclass <a class="reference internal" href="mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">MechanicalLoad</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -429,7 +430,7 @@ list(str): Names of the states in the mechanical-ODE.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Readme File &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Readme File &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -188,7 +188,8 @@
 <div class="section" id="gym-electric-motor">
 <h2>Gym Electric Motor<a class="headerlink" href="#gym-electric-motor" title="Permalink to this headline">¶</a></h2>
 <a class="reference external image-reference" href="docs/plots/Motor_Logo.png"><img alt="" src="parts/docs/plots/Motor_Logo.png" /></a>
-<p><a class="reference external" href="https://arxiv.org/abs/1910.09434">**Paper**</a>
+<p><a class="reference external" href="https://joss.theoj.org/papers/10.21105/joss.02498">**Overview paper**</a>
+| <a class="reference external" href="https://arxiv.org/abs/1910.09434">**Reinforcement learning paper**</a>
 | <a class="reference external" href="#getting-started">**Quickstart**</a>
 | <a class="reference external" href="#installation">**Install guide**</a>
 | <a class="reference external" href="https://upb-lea.github.io/gym-electric-motor/">**Reference docs**</a>
@@ -201,8 +202,8 @@
 <a class="reference external image-reference" href="https://doi.org/10.21105/joss.02498"><img alt="DOI JOSS" src="https://joss.theoj.org/papers/10.21105/joss.02498/status.svg" /></a>
 <div class="section" id="overview">
 <h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
-<p>The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.</p>
-<p>It is built upon <a class="reference external" href="https://gym.openai.com/">OpenAI Gym Environments</a>, and, therefore, can be used for both, classical control simulation and r<a class="reference external" href="https://github.com/upb-lea/reinforcement_learning_course_materials">einforcement learning</a> experiments. It allows you to construct a typical drive train with the usual building blocks, i.e. supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from PI-controllers to <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html">Deep Deterministic Policy Gradient</a> agents.</p>
+<p>The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
+It is built upon <a class="reference external" href="https://gym.openai.com/">OpenAI Gym Environments</a>, and, therefore, can be used for both, classical control simulation and <a class="reference external" href="https://github.com/upb-lea/reinforcement_learning_course_materials">reinforcement learning</a> experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html">Deep Deterministic Policy Gradient</a> agents.</p>
 </div>
 <div class="section" id="getting-started">
 <h3>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h3>
@@ -211,7 +212,6 @@
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master//examples/environment_features/GEM_cookbook.ipynb">GEM cookbook</a></p></li>
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/keras_rl2_dqn_disc_pmsm_example.ipynb">Keras-rl2 example</a></p></li>
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb">Stable-baselines3 example</a></p></li>
-<li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/tensorforce_dqn_disc_pmsm_example.ipynb">Tensorforce example</a></p></li>
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/pmsm_mpc_dq_current_control.ipynb">MPC  example</a></p></li>
 </ul>
 <p>There is a list of <a class="reference external" href="examples/">standalone example scripts</a> as well for minimalistic demonstrations.</p>
@@ -268,25 +268,41 @@ pip install -e .
 <div class="section" id="information-flow-in-a-gem-environment">
 <h4>Information Flow in a GEM Environment<a class="headerlink" href="#information-flow-in-a-gem-environment" title="Permalink to this headline">¶</a></h4>
 <a class="reference external image-reference" href="docs/plots/SCML_Overview.png"><img alt="" src="parts/docs/plots/SCML_Overview.png" /></a>
-<p>Among various DC-motor models, the following three-phase motors - together with their power electronic counterparts - are available:</p>
+<p>Among various DC-motor models, the following AC motors - together with their power electronic counterparts - are available:</p>
 <ul class="simple">
 <li><p>Permanent magnet synchronous motor (PMSM),</p></li>
 <li><p>Synchronous reluctance motor (SynRM)</p></li>
 <li><p>Squirrel cage induction motor (SCIM)</p></li>
 <li><p>Doubly-fed induction motor (DFIM)</p></li>
 </ul>
-<p>The converters can be driven by means of a duty cycle (continuous mode) or switching commands (discrete mode).</p>
+<p>The converters can be driven by means of a duty cycle (continuous control set) or switching commands (finite control set).</p>
 </div>
 <div class="section" id="citation">
 <h4>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h4>
-<p>A whitepaper for this framework is available under (preprint: <a class="reference external" href="https://arxiv.org/abs/1910.09434">arxiv.org/abs/1910.09434</a>, full-paper: <a class="reference external" href="https://ieeexplore.ieee.org/document/9241851">IEEE-Xplore</a>). Please use the following BibTeX entry for citing us:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>@ARTICLE{9241851,
-author={A. {Traue} and G. {Book} and W. {Kirchgässner} and O. {Wallscheid}},
-journal={IEEE Transactions on Neural Networks and Learning Systems},
-title={Toward a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},
-year={2020},  volume={},  number={},
-pages={1-10},
-doi={10.1109/TNNLS.2020.3029573}}
+<p>A white paper for the general toolbox in the context of drive simulation and control prototyping can be found in the <a class="reference external" href="https://joss.theoj.org/papers/10.21105/joss.02498">Journal of Open Sorce Software (JOSS)</a>. Please use the following BibTeX entry for citing it:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>@article{Balakrishna2021,
+    doi = {10.21105/joss.02498},
+    url = {https://doi.org/10.21105/joss.02498},
+    year = {2021},
+    publisher = {The Open Journal},
+    volume = {6},
+    number = {58},
+    pages = {2498},
+    author = {Praneeth {Balakrishna} and Gerrit {Book} and Wilhelm {Kirchgässner} and Maximilian {Schenke} and Arne {Traue} and Oliver {Wallscheid}},
+    title = {gym-electric-motor (GEM): A Python toolbox for the simulation of electric drive systems},
+    journal = {Journal of Open Source Software}
+}
+</pre></div>
+</div>
+<p>A white paper for the utilization of this framework within reinforcement learning is available at <a class="reference external" href="https://ieeexplore.ieee.org/document/9241851">IEEE-Xplore</a> (preprint: <a class="reference external" href="https://arxiv.org/abs/1910.09434">arxiv.org/abs/1910.09434</a>). Please use the following BibTeX entry for citing it:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>@article{9241851,
+    doi={10.1109/TNNLS.2020.3029573}
+    author={A. {Traue} and G. {Book} and W. {Kirchgässner} and O. {Wallscheid}},
+    journal={IEEE Transactions on Neural Networks and Learning Systems},
+    title={Toward a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},
+    year={2020},  volume={},  number={},
+    pages={1-10},
+}
 </pre></div>
 </div>
 </div>
@@ -322,7 +338,7 @@ Execute pytest in the project’s root folder:</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

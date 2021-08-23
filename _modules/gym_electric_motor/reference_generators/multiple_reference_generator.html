@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.reference_generators.multiple_reference_generator &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.reference_generators.multiple_reference_generator &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -187,7 +187,7 @@
 <span class="sd">                will be passed to each sub_generator.</span>
 <span class="sd">            kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ReferenceGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">ReferenceGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">gem</span><span class="o">.</span><span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sub_args</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
@@ -260,7 +260,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

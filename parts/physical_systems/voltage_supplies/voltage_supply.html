@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Voltage Supplies &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Voltage Supplies &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -205,7 +205,7 @@
 <h2>Voltage Supply Base Class<a class="headerlink" href="#voltage-supply-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.voltage_supplies.</code><code class="sig-name descname">VoltageSupply</code><span class="sig-paren">(</span><em class="sig-param">u_nominal</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.voltage_supplies.</code><code class="sig-name descname">VoltageSupply</code><span class="sig-paren">(</span><em class="sig-param">u_nominal</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all VoltageSupplies to be used in a SCMLSystem.</p>
 <dl class="simple">
 <dt>Parameter:</dt><dd><p>supply_range(Tuple(float,float)): Minimal and maximal possible value for the voltage supply.
@@ -219,7 +219,7 @@ u_nominal(float): Nominal supply voltage</p>
 </dl>
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">
-<code class="sig-name descname">get_voltage</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">i_sup</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply.get_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_voltage</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">i_sup</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply.get_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -284,7 +284,7 @@ float: Nominal Voltage of the Voltage Supply</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

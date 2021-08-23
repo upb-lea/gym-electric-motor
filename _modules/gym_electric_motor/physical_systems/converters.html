@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.physical_systems.converters &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.physical_systems.converters &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -193,7 +193,7 @@
     <span class="c1">#: Default action that is taken after a reset.</span>
     <span class="n">_reset_action</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">dead_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">interlocking_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       :param tau: Discrete time step of the system in seconds</span>
 <span class="sd">       :param dead_time: Flag, if a system dead_time of one cycle should be considered.</span>
@@ -265,7 +265,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="k">def</span> <span class="nf">_set_switching_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_set_switching_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to calculate the switching pattern and corresponding switching times for the next time step.</span>
 <span class="sd">        At least, the next time step [t + tau] is returned.</span>
@@ -275,10 +275,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_switching_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">]</span></div>
-    
+
+
 <div class="viewcode-block" id="NoConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/NoConv.html#gym_electric_motor.physical_systems.converters.NoConverter">[docs]</a><span class="k">class</span> <span class="nc">NoConverter</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Dummy Converter class used to directly transfer the supply voltage to the motor&quot;&quot;&quot;</span>
-    <span class="c1">#Dummy default values for voltages and currents. No real use other than to fit the current physical system architecture</span>
+    <span class="c1"># Dummy default values for voltages and currents.</span>
+    <span class="c1"># No real use other than to fit the current physical system architecture</span>
     <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
     <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]))</span>
@@ -338,7 +340,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_in</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span></div>
 
 
-<span class="k">class</span> <span class="nc">FiniteConverter</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteConverter</span><span class="p">(</span><span class="n">PowerElectronicConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all finite converters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -354,18 +356,18 @@
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteConverter.set_action"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.set_action">[docs]</a>    <span class="k">def</span> <span class="nf">set_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">action</span><span class="p">),</span> \
             <span class="sa">f</span><span class="s2">&quot;The selected action </span><span class="si">{action}</span><span class="s2"> is not a valid element of the action space </span><span class="si">{self.action_space}</span><span class="s2">.&quot;</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
 <div class="viewcode-block" id="FiniteOneQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteOneQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
@@ -450,7 +452,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid switching state of the converter&#39;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_set_switching_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_set_switching_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">if</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">==</span> <span class="mi">0</span>
@@ -1036,7 +1038,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

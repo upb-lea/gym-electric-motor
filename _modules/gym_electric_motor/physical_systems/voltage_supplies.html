@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.physical_systems.voltage_supplies &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.physical_systems.voltage_supplies &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -192,7 +192,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            u_nominal(float): Nominal voltage of the Voltage Supply.</span>
@@ -209,7 +209,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="VoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="VoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</span>
 
@@ -228,7 +228,7 @@
 <span class="sd">    Ideal Voltage Supply that supplies with u_nominal independent of the time and the supply current.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mf">600.0</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mf">600.0</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_nominal</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supply_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">u_nominal</span><span class="p">,</span> <span class="n">u_nominal</span><span class="p">)</span>
@@ -241,9 +241,9 @@
 <div class="viewcode-block" id="RCVoltageSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">RCVoltageSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;DC voltage supply modeled as RC element&quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mf">600.0</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Voltage Supply is a model of a non ideal Voltage supply where the ideal voltage source U_0 is part of an RC element</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mf">600.0</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This Voltage Supply is a model of a non ideal voltage supply.</span>
+<span class="sd">        The ideal voltage source U_0 is part of an RC element.</span>
 <span class="sd">        </span>
 <span class="sd">        Args: </span>
 <span class="sd">            supply_parameter(dict): Consists or Resistance R in Ohm and Capacitance C in Farad</span>
@@ -292,7 +292,7 @@
 <div class="viewcode-block" id="AC1PhaseSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply">[docs]</a><span class="k">class</span> <span class="nc">AC1PhaseSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;AC one phase voltage supply&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            u_nominal(float): Single phasic effective value of the voltage supply</span>
@@ -314,7 +314,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">supply_parameter</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">}</span>
 
-    
         <span class="bp">self</span><span class="o">.</span><span class="n">_f</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">=</span> <span class="n">supply_parameter</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -335,7 +334,7 @@
     <span class="sd">&quot;&quot;&quot;AC three phase voltage supply&quot;&quot;&quot;</span>
     <span class="n">voltage_len</span> <span class="o">=</span> <span class="mi">3</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            u_nominal(float): Three phasic effective value of the voltage supply</span>
@@ -383,7 +382,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

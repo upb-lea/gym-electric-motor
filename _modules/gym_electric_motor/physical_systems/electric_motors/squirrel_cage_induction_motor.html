@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.physical_systems.electric_motors.squirrel_cage_induction_motor &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.physical_systems.electric_motors.squirrel_cage_induction_motor &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -318,159 +318,6 @@
                                <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FLUXES</span><span class="p">,</span> <span class="n">flux_alphabeta_limits</span><span class="p">)}</span>
         <span class="n">flux_nominal_limits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nominal_new</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_initial_limits</span><span class="p">(</span><span class="n">flux_nominal_limits</span><span class="p">)</span></div>
-
-
-<span class="k">class</span> <span class="nc">DoublyFedInductionMotor</span><span class="p">(</span><span class="n">InductionMotor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        Motor Parameter        Unit        Default Value Description</span>
-<span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        r_s                    Ohm         12e-3         Stator resistance</span>
-<span class="sd">        r_r                    Ohm         21e-3         Rotor resistance</span>
-<span class="sd">        l_m                    H           13.5e-3       Main inductance</span>
-<span class="sd">        l_sigs                 H           0.2e-3        Stator-side stray inductance</span>
-<span class="sd">        l_sigr                 H           0.1e-3        Rotor-side stray inductance</span>
-<span class="sd">        p                      1           2             Pole pair number</span>
-<span class="sd">        j_rotor                kg/m^2      1e3           Moment of inertia of the rotor</span>
-<span class="sd">        =====================  ==========  ============= ===========================================</span>
-
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        Motor Currents  Unit   Description</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        i_sd            A      Direct axis current</span>
-<span class="sd">        i_sq            A      Quadrature axis current</span>
-<span class="sd">        i_sa            A      Current through branch a</span>
-<span class="sd">        i_sb            A      Current through branch b</span>
-<span class="sd">        i_sc            A      Current through branch c</span>
-<span class="sd">        i_salpha        A      Current in alpha axis</span>
-<span class="sd">        i_sbeta         A      Current in beta axis</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        Rotor flux      Unit   Description</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        psi_rd          Vs     Direct axis of the rotor oriented flux</span>
-<span class="sd">        psi_rq          Vs     Quadrature axis of the rotor oriented flux</span>
-<span class="sd">        psi_ra          Vs     Rotor oriented flux in branch a</span>
-<span class="sd">        psi_rb          Vs     Rotor oriented flux in branch b</span>
-<span class="sd">        psi_rc          Vs     Rotor oriented flux in branch c</span>
-<span class="sd">        psi_ralpha      Vs     Rotor oriented flux in alpha direction</span>
-<span class="sd">        psi_rbeta       Vs     Rotor oriented flux in beta direction</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        Motor Voltages  Unit   Description</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        u_sd            V      Direct axis voltage</span>
-<span class="sd">        u_sq            V      Quadrature axis voltage</span>
-<span class="sd">        u_sa            V      Stator voltage through branch a</span>
-<span class="sd">        u_sb            V      Stator voltage through branch b</span>
-<span class="sd">        u_sc            V      Stator voltage through branch c</span>
-<span class="sd">        u_salpha        V      Stator voltage in alpha axis</span>
-<span class="sd">        u_sbeta         V      Stator voltage in beta axis</span>
-<span class="sd">        u_ralpha        V      Rotor voltage in alpha axis</span>
-<span class="sd">        u_rbeta         V      Rotor voltage in beta axis</span>
-<span class="sd">        =============== ====== =============================================</span>
-
-<span class="sd">        ======== ===========================================================</span>
-<span class="sd">        Limits / Nominal Value Dictionary Entries:</span>
-<span class="sd">        -------- -----------------------------------------------------------</span>
-<span class="sd">        Entry    Description</span>
-<span class="sd">        ======== ===========================================================</span>
-<span class="sd">        i         General current limit / nominal value</span>
-<span class="sd">        i_sa      Current in phase a</span>
-<span class="sd">        i_sb      Current in phase b</span>
-<span class="sd">        i_sc      Current in phase c</span>
-<span class="sd">        i_salpha  Current in alpha axis</span>
-<span class="sd">        i_sbeta   Current in beta axis</span>
-<span class="sd">        i_sd      Current in direct axis</span>
-<span class="sd">        i_sq      Current in quadrature axis</span>
-<span class="sd">        omega     Mechanical angular Velocity</span>
-<span class="sd">        torque    Motor generated torque</span>
-<span class="sd">        u_sa      Voltage in phase a</span>
-<span class="sd">        u_sb      Voltage in phase b</span>
-<span class="sd">        u_sc      Voltage in phase c</span>
-<span class="sd">        u_salpha  Voltage in alpha axis</span>
-<span class="sd">        u_sbeta   Voltage in beta axis</span>
-<span class="sd">        u_sd      Voltage in direct axis</span>
-<span class="sd">        u_sq      Voltage in quadrature axis</span>
-<span class="sd">        u_ralpha  Rotor voltage in alpha axis</span>
-<span class="sd">        u_rbeta   Rotor voltage in beta axis</span>
-<span class="sd">        ======== ===========================================================</span>
-
-
-<span class="sd">        Note:</span>
-<span class="sd">            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).</span>
-<span class="sd">            Typically the rms value for the line voltage (:math:`U_L`) is given.</span>
-<span class="sd">            :math:`\hat{u}_S=\sqrt{2/3}~U_L`</span>
-
-<span class="sd">            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).</span>
-<span class="sd">            Typically the rms value for the phase current (:math:`I_S`) is given.</span>
-<span class="sd">            :math:`\hat{i}_S = \sqrt{2}~I_S`</span>
-
-<span class="sd">            If not specified, nominal values are equal to their corresponding limit values.</span>
-<span class="sd">            Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from</span>
-<span class="sd">            the general limits/nominal values (e.g. i)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-    <span class="n">ROTOR_VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u_ralpha&#39;</span><span class="p">,</span> <span class="s1">&#39;u_rbeta&#39;</span><span class="p">]</span>
-    <span class="n">ROTOR_CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i_ralpha&#39;</span><span class="p">,</span> <span class="s1">&#39;i_rbeta&#39;</span><span class="p">]</span>
-
-    <span class="n">IO_ROTOR_VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u_ra&#39;</span><span class="p">,</span> <span class="s1">&#39;u_rb&#39;</span><span class="p">,</span> <span class="s1">&#39;u_rc&#39;</span><span class="p">,</span> <span class="s1">&#39;u_rd&#39;</span><span class="p">,</span> <span class="s1">&#39;u_rq&#39;</span><span class="p">]</span>
-    <span class="n">IO_ROTOR_CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i_ra&#39;</span><span class="p">,</span> <span class="s1">&#39;i_rb&#39;</span><span class="p">,</span> <span class="s1">&#39;i_rc&#39;</span><span class="p">,</span> <span class="s1">&#39;i_rd&#39;</span><span class="p">,</span> <span class="s1">&#39;i_rq&#39;</span><span class="p">]</span>
-
-    <span class="c1">#### Parameters taken from  DOI: 10.1016/j.jestch.2016.01.015 (N. Kumar, T. R. Chelliah, S. P. Srivastava)</span>
-    <span class="n">_default_motor_parameter</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s1">&#39;l_m&#39;</span><span class="p">:</span> <span class="mf">297.5e-3</span><span class="p">,</span>
-        <span class="s1">&#39;l_sigs&#39;</span><span class="p">:</span> <span class="mf">25.71e-3</span><span class="p">,</span>
-        <span class="s1">&#39;l_sigr&#39;</span><span class="p">:</span> <span class="mf">25.71e-3</span><span class="p">,</span>
-        <span class="s1">&#39;j_rotor&#39;</span><span class="p">:</span> <span class="mf">13.695e-3</span><span class="p">,</span>
-        <span class="s1">&#39;r_s&#39;</span><span class="p">:</span> <span class="mf">4.42</span><span class="p">,</span>
-        <span class="s1">&#39;r_r&#39;</span><span class="p">:</span> <span class="mf">3.51</span><span class="p">,</span>
-    <span class="p">}</span>
-
-    <span class="n">_default_limits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">1800</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">30</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">720</span><span class="p">)</span>
-    <span class="n">_default_nominal_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">1650</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">30</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mf">7.5</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">720</span><span class="p">)</span>
-    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;states&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;i_salpha&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;i_sbeta&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                                        <span class="s1">&#39;psi_ralpha&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;psi_rbeta&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                                        <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
-                            <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="s1">&#39;random_params&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">IO_VOLTAGES</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">IO_ROTOR_VOLTAGES</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">IO_CURRENTS</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">IO_ROTOR_CURRENTS</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit_values</span><span class="o">=</span><span class="p">{},</span> <span class="n">nominal_values</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="c1"># Docstring of superclass</span>
-
-        <span class="n">voltage_limit</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
-        <span class="n">voltage_nominal</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
-        <span class="n">limits_agenda</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">nominal_agenda</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">IO_VOLTAGES</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">ROTOR_VOLTAGES</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">IO_CURRENTS</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">ROTOR_CURRENTS</span><span class="p">):</span>
-            <span class="n">limits_agenda</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">voltage_limit</span>
-            <span class="n">nominal_agenda</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">voltage_nominal</span>
-            <span class="n">limits_agenda</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> \
-                               <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_r&#39;</span><span class="p">]</span>
-            <span class="n">nominal_agenda</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> \
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">/</span> \
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_r&#39;</span><span class="p">]</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">limits_agenda</span><span class="p">,</span> <span class="n">nominal_agenda</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_update_initial_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nominal_new</span><span class="o">=</span><span class="p">{},</span> <span class="n">omega</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># Docstring of superclass</span>
-        <span class="c1"># draw a sample magnetic field angle from [-pi,pi]</span>
-        <span class="n">eps_mag</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">()</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-        <span class="n">flux_alphabeta_limits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flux_limit</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span>
-                                                 <span class="n">eps_mag</span><span class="o">=</span><span class="n">eps_mag</span><span class="p">,</span>
-                                                 <span class="n">u_q_max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="s1">&#39;u_sq&#39;</span><span class="p">],</span>
-                                                 <span class="n">u_rq_max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="s1">&#39;u_rq&#39;</span><span class="p">])</span>
-        <span class="n">flux_nominal_limits</span> <span class="o">=</span> <span class="p">{</span><span class="n">state</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span>
-                               <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FLUXES</span><span class="p">,</span> <span class="n">flux_alphabeta_limits</span><span class="p">)}</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_initial_limits</span><span class="p">(</span><span class="n">flux_nominal_limits</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -482,7 +329,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

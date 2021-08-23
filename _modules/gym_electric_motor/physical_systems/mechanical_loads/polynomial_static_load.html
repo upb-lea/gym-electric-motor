@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.physical_systems.mechanical_loads.polynomial_static_load &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.physical_systems.mechanical_loads.polynomial_static_load &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -169,6 +169,7 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.mechanical_load</span> <span class="kn">import</span> <span class="n">MechanicalLoad</span>
+<span class="kn">from</span> <span class="nn">gym_electric_motor.utils</span> <span class="kn">import</span> <span class="n">update_parameter_dict</span>
 
 
 <div class="viewcode-block" id="PolynomialStaticLoad"><a class="viewcode-back" href="../../../../parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad">[docs]</a><span class="k">class</span> <span class="nc">PolynomialStaticLoad</span><span class="p">(</span><span class="n">MechanicalLoad</span><span class="p">):</span>
@@ -181,7 +182,7 @@
 <span class="sd">        | j_load: Moment of inertia of the mechanical system.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_load_parameter</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">j_load</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">_load_parameter</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">j_load</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
     <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
                             <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                             <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -198,17 +199,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_parameter</span><span class="o">=</span><span class="p">(),</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">load_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            load_parameter(dict(float)): Parameter dictionary.</span>
 <span class="sd">            limits(dict):</span>
 <span class="sd">            load_initializer(dict):</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">load_parameter</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">j_load</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;j_load&#39;</span><span class="p">],</span>
-                         <span class="n">load_initializer</span><span class="o">=</span><span class="n">load_initializer</span><span class="p">)</span>
+        <span class="n">load_parameter</span> <span class="o">=</span> <span class="n">load_parameter</span> <span class="k">if</span> <span class="n">load_parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">,</span> <span class="n">load_parameter</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">j_load</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;j_load&#39;</span><span class="p">],</span> <span class="n">load_initializer</span><span class="o">=</span><span class="n">load_initializer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">limits</span> <span class="ow">or</span> <span class="p">{})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
@@ -241,7 +241,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

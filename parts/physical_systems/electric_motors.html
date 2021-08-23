@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Electric Motors &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Electric Motors &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -173,7 +173,7 @@
 <h2>Electric Motor Base Class<a class="headerlink" href="#electric-motor-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">ElectricMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">initial_limits=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">ElectricMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">initial_limits=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all technical electrical motor models.</p>
 <p>A motor consists of the ode-state. These are the dynamic quantities of its ODE.
 For example:</p>
@@ -463,7 +463,7 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 <p>Furthermore, the angular velocity is the electrical one and not the mechanical one <span class="math notranslate nohighlight">\(\omega = p \omega_{me}\)</span>.</p>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">SynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_motor.html#SynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">SynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_motor.html#SynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SynchronousMotor and its subclasses implement the technical system of a three phase synchronous motor.</p>
 <p>This includes the system equations, the motor parameters of the equivalent circuit diagram,
 as well as limits and bandwidth.</p>
@@ -775,7 +775,7 @@ dict(float): The motors parameter dictionary</p>
 <h2>Synchronous Reluctance Motor<a class="headerlink" href="#synchronous-reluctance-motor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">SynchronousReluctanceMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_reluctance_motor.html#SynchronousReluctanceMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">SynchronousReluctanceMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_reluctance_motor.html#SynchronousReluctanceMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
 <colgroup>
 <col style="width: 24%" />
@@ -1085,7 +1085,7 @@ The nominal peak current of a phase is given by <span class="math notranslate no
 <img alt="../../_images/Drehstromtrafo.svg" src="../../_images/Drehstromtrafo.svg" /></div>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">PermanentMagnetSynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/permanent_magnet_synchronous_motor.html#PermanentMagnetSynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">PermanentMagnetSynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/permanent_magnet_synchronous_motor.html#PermanentMagnetSynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
 <colgroup>
 <col style="width: 24%" />
@@ -1367,7 +1367,7 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

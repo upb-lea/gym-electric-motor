@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym.envs.registration &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym.envs.registration &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -178,7 +178,7 @@
 <span class="c1">#</span>
 <span class="c1"># 2016-10-31: We&#39;re experimentally expanding the environment ID format</span>
 <span class="c1"># to include an optional username.</span>
-<span class="n">env_id_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$&#39;</span><span class="p">)</span>
+<span class="n">env_id_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -202,7 +202,15 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reward_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nondeterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">,</span>
+        <span class="n">entry_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">reward_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nondeterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">max_episode_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span> <span class="o">=</span> <span class="n">entry_point</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reward_threshold</span> <span class="o">=</span> <span class="n">reward_threshold</span>
@@ -212,13 +220,21 @@
 
         <span class="n">match</span> <span class="o">=</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Attempted to register malformed environment ID: </span><span class="si">{}</span><span class="s1">. (Currently all IDs must be of the form </span><span class="si">{}</span><span class="s1">.)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">pattern</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_env_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>            
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
+                <span class="s2">&quot;Attempted to register malformed environment ID: </span><span class="si">{}</span><span class="s2">. (Currently all IDs must be of the form </span><span class="si">{}</span><span class="s2">.)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="p">,</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">pattern</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Instantiates an instance of the environment with appropriate kwargs&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Attempting to make deprecated env </span><span class="si">{}</span><span class="s1">. (HINT: is there a newer registered version of this env?)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
+                <span class="s2">&quot;Attempting to make deprecated env </span><span class="si">{}</span><span class="s2">. (HINT: is there a newer registered version of this env?)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="n">_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">):</span>
@@ -251,19 +267,24 @@
 
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Making new env: </span><span class="si">%s</span><span class="s1"> (</span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making new env: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Making new env: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making new env: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># We used to have people override _reset/_step rather than</span>
         <span class="c1"># reset/step. Set _gym_disable_underscore_compat = True on</span>
         <span class="c1"># your environment if you use these methods and don&#39;t want</span>
         <span class="c1"># compatibility code to be invoked.</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_reset&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_step&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_gym_disable_underscore_compat&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_reset&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_step&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_gym_disable_underscore_compat&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="p">):</span>
             <span class="n">patch_deprecated_methods</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">gym.wrappers.time_limit</span> <span class="kn">import</span> <span class="n">TimeLimit</span>
+
             <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>
 
@@ -271,19 +292,27 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
-            <span class="n">mod_name</span><span class="p">,</span> <span class="n">_sep</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">mod_name</span><span class="p">,</span> <span class="n">_sep</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
             <span class="c1"># catch ImportError for python2.7 compatibility</span>
             <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;A module (</span><span class="si">{}</span><span class="s1">) was specified for the environment but was not found, make sure the package is installed with `pip install` before calling `gym.make()`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod_name</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
+                    <span class="s2">&quot;A module (</span><span class="si">{}</span><span class="s2">) was specified for the environment but was not found, make sure the package is installed with `pip install` before calling `gym.make()`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">mod_name</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="n">path</span>
 
         <span class="n">match</span> <span class="o">=</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Attempted to look up malformed environment ID: </span><span class="si">{}</span><span class="s1">. (Currently all IDs must be of the form </span><span class="si">{}</span><span class="s1">.)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">pattern</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
+                <span class="s2">&quot;Attempted to look up malformed environment ID: </span><span class="si">{}</span><span class="s2">. (Currently all IDs must be of the form </span><span class="si">{}</span><span class="s2">.)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">pattern</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
@@ -291,31 +320,44 @@
             <span class="c1"># Parse the env name and check to see if it matches the non-version</span>
             <span class="c1"># part of a valid env (could also check the exact number here)</span>
             <span class="n">env_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">matching_envs</span> <span class="o">=</span> <span class="p">[</span><span class="n">valid_env_name</span> <span class="k">for</span> <span class="n">valid_env_name</span><span class="p">,</span> <span class="n">valid_env_spec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                             <span class="k">if</span> <span class="n">env_name</span> <span class="o">==</span> <span class="n">valid_env_spec</span><span class="o">.</span><span class="n">_env_name</span><span class="p">]</span>
+            <span class="n">matching_envs</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">valid_env_name</span>
+                <span class="k">for</span> <span class="n">valid_env_name</span><span class="p">,</span> <span class="n">valid_env_spec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">env_name</span> <span class="o">==</span> <span class="n">valid_env_spec</span><span class="o">.</span><span class="n">_env_name</span>
+            <span class="p">]</span>
             <span class="k">if</span> <span class="n">matching_envs</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">DeprecatedEnv</span><span class="p">(</span><span class="s1">&#39;Env </span><span class="si">{}</span><span class="s1"> not found (valid versions include </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">matching_envs</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">DeprecatedEnv</span><span class="p">(</span>
+                    <span class="s2">&quot;Env </span><span class="si">{}</span><span class="s2"> not found (valid versions include </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="p">,</span> <span class="n">matching_envs</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span><span class="s1">&#39;No registered env with id: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span><span class="s2">&quot;No registered env with id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Cannot re-register id: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Cannot re-register id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">EnvSpec</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
 
 <span class="c1"># Have a global registry</span>
 <span class="n">registry</span> <span class="o">=</span> <span class="n">EnvRegistry</span><span class="p">()</span>
 
+
 <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="make"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.utils.make">[docs]</a><span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+
 <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
+
 <span class="n">warn_once</span> <span class="o">=</span> <span class="kc">True</span>
+
 
 <span class="k">def</span> <span class="nf">patch_deprecated_methods</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -324,15 +366,21 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">warn_once</span>
     <span class="k">if</span> <span class="n">warn_once</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Environment &#39;</span><span class="si">%s</span><span class="s2">&#39; has deprecated methods &#39;_step&#39; and &#39;_reset&#39; rather than &#39;step&#39; and &#39;reset&#39;. Compatibility code invoked. Set _gym_disable_underscore_compat = True to disable this behavior.&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="p">)))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Environment &#39;</span><span class="si">%s</span><span class="s2">&#39; has deprecated methods &#39;_step&#39; and &#39;_reset&#39; rather than &#39;step&#39; and &#39;reset&#39;. Compatibility code invoked. Set _gym_disable_underscore_compat = True to disable this behavior.&quot;</span>
+            <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="p">))</span>
+        <span class="p">)</span>
         <span class="n">warn_once</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_reset</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">step</span>  <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_step</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">seed</span>  <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_seed</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_step</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_seed</span>
+
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">close</span><span class="p">():</span>
         <span class="n">env</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="n">env</span><span class="o">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">render</span>
     <span class="n">env</span><span class="o">.</span><span class="n">close</span> <span class="o">=</span> <span class="n">close</span>
 </pre></div>
@@ -346,7 +394,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

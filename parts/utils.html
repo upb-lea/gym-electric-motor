@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Utils &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Utils &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -269,6 +269,33 @@ to a numpy state array with the entries of the state_dict at the corresponding p
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="gym_electric_motor.utils.update_parameter_dict">
+<code class="sig-prename descclassname">gym_electric_motor.utils.</code><code class="sig-name descname">update_parameter_dict</code><span class="sig-paren">(</span><em class="sig-param">source_dict</em>, <em class="sig-param">update_dict</em>, <em class="sig-param">copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#update_parameter_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.utils.update_parameter_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two dictionaries (source and update) together.</p>
+<p>It is similar to pythons dict.update() method. Furthermore, it assures that all keys in the update dictionary are
+already present in the source dictionary. Otherwise a KeyError is thrown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_dict</strong> (<em>dict</em>) – Source dictionary to be updated.</p></li>
+<li><p><strong>update_dict</strong> (<em>dict</em>) – The new dictionary with the entries to update the source dict.</p></li>
+<li><p><strong>copy</strong> (<em>bool</em>) – Flag, if the source dictionary shall be copied before updating. (Default True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The updated source dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Exceptions:</dt><dd><p>KeyError: Thrown, if a key in the update dict is not available in the source dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
@@ -285,7 +312,7 @@ to a numpy state array with the entries of the state_dict at the corresponding p
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

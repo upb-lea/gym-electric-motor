@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.reference_generators.switched_reference_generator &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.reference_generators.switched_reference_generator &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -178,33 +178,26 @@
     <span class="sd">&quot;&quot;&quot;Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">super_episode_length</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_generators</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">super_episode_length</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            sub_generators(list(str/class/object)): List of keys, classes or objects to instantiate the sub_generators</span>
-<span class="sd">            sub_args(dict/list(dict)/None): (Optional) Arguments to pass to the sub_converters. If not passed all kwargs</span>
-<span class="sd">                will be passed to each sub_generator.</span>
+<span class="sd">            sub_generators(list(ReferenceGenerator)): ReferenceGenerator instances to be used as the sub_generators.</span>
 <span class="sd">            p(list(float)/None): (Optional) Probabilities for each sub_generator. If None a uniform</span>
-<span class="sd">                probability for each sub_converter is used.</span>
-<span class="sd">            super_episode_length(Tuple(int, int): Minimum and maximum number of time steps a sub_generator is used.</span>
-<span class="sd">            kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.</span>
+<span class="sd">                probability for each sub_generator is used.</span>
+<span class="sd">            super_episode_length(Tuple(int, int)): Minimum and maximum number of time steps a sub_generator is used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ReferenceGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sub_args</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
-            <span class="n">sub_arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">sub_args</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sub_args</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_args</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
-            <span class="n">sub_arguments</span> <span class="o">=</span> <span class="n">sub_args</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">sub_arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">instantiate</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="o">**</span><span class="n">sub_arg</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="n">sub_arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_arguments</span><span class="p">)</span>
-        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;No sub generator was passed.&#39;</span>
+        <span class="n">ref_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reference_names</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">sub_gen</span><span class="o">.</span><span class="n">reference_names</span> <span class="o">==</span> <span class="n">ref_names</span> <span class="k">for</span> <span class="n">sub_gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">),</span>\
+            <span class="s1">&#39;The passed sub generators have different referenced states.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span> <span class="o">=</span> <span class="n">ref_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_probabilities</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">super_episode_length</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
@@ -272,7 +265,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

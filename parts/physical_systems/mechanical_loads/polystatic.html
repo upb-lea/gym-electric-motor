@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Polynomial Static Load &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Polynomial Static Load &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -197,18 +197,18 @@
 <div class="section" id="mechanical-ode">
 <h2>Mechanical ODE<a class="headerlink" href="#mechanical-ode" title="Permalink to this headline">¶</a></h2>
 <div class="math notranslate nohighlight">
-\[\frac{ \mathrm{d} \omega_{me} } { \mathrm{d} t } = \frac{ T - T_L(\omega_{me})}{J_{total}}\]</div>
+\[\frac{ \mathrm{d} \omega_\mathrm{me} } { \mathrm{d} t } = \frac{ T - T_\mathrm{L} (\omega_\mathrm{me})}{J_\mathrm{total}}\]</div>
 </div>
 <div class="section" id="polynomial-load-equation">
 <h2>Polynomial Load Equation<a class="headerlink" href="#polynomial-load-equation" title="Permalink to this headline">¶</a></h2>
 <div class="math notranslate nohighlight">
-\[\begin{split}T_L(\omega_{me})=\mathrm{sign}(\omega_{me})(c \omega^2_{me} + b \vert\omega_{me}\vert + a)\\\end{split}\]</div>
+\[\begin{split}T_\mathrm{L}(\omega_\mathrm{me})=\mathrm{sign}(\omega_\mathrm{me})(c \omega^2_\mathrm{me} + b \vert\omega_\mathrm{me}\vert + a)\\\end{split}\]</div>
 </div>
 <div class="section" id="class-description">
 <h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">PolynomialStaticLoad</code><span class="sig-paren">(</span><em class="sig-param">load_parameter=()</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/polynomial_static_load.html#PolynomialStaticLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">PolynomialStaticLoad</code><span class="sig-paren">(</span><em class="sig-param">load_parameter=None</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">load_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/polynomial_static_load.html#PolynomialStaticLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.</p>
 <dl>
 <dt>Parameter dictionary entries:</dt><dd><div class="line-block">
@@ -445,7 +445,7 @@ list(str): Names of the states in the mechanical-ODE.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.physical_systems.mechanical_loads.external_speed_load &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.physical_systems.mechanical_loads.external_speed_load &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -188,20 +188,22 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_omega_initial</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed_profile</span><span class="p">,</span> <span class="n">load_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed_profile</span><span class="p">,</span> <span class="n">load_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">speed_profile_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            speed_profile(float -&gt; float): function or lambda expression</span>
-<span class="sd">                which takes a timestep t as argument and returns speed omega</span>
+<span class="sd">            speed_profile(float -&gt; float): A callable(t, **speed_profile_args) -&gt; float</span>
+<span class="sd">                which takes a timestep t and custom further arguments and returns a speed omega</span>
 <span class="sd">                example:</span>
 <span class="sd">                    (lambda t, amplitude, freq: amplitude*numpy.sin(2*pi*f)))</span>
 <span class="sd">                    with additional parameters:</span>
 <span class="sd">                        amplitude(float), freq(float), time(float)</span>
 <span class="sd">            tau(float): discrete time step of the system</span>
-<span class="sd">            kwargs(float): further arguments for speed_profile</span>
+<span class="sd">            speed_profile_kwargs(dict): further arguments for speed_profile</span>
+<span class="sd">            kwargs(dict): Arguments to be passed to superclass :py:class:`.MechanicalLoad`</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">speed_profile_kwargs</span> <span class="o">=</span> <span class="n">speed_profile_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">load_initializer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s1">&#39;Given initializer will be overwritten with starting value &#39;</span>
@@ -210,17 +212,16 @@
                 <span class="s1">&#39; load by the defined speed-profile.&#39;</span><span class="p">,</span>
                 <span class="ne">UserWarning</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_profile_kwargs</span> <span class="o">=</span> <span class="n">speed_profile_kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_speed_profile</span> <span class="o">=</span> <span class="n">speed_profile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
         <span class="c1"># setting initial load as speed-profile at time 0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_profile</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1">#self._jacobi = jacobi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_profile</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_profile_kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ExternalSpeedLoad.mechanical_ode"><a class="viewcode-back" href="../../../../parts/physical_systems/mechanical_loads/ext_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="c1"># calc next omega with given profile und tau</span>
-        <span class="n">omega_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_profile</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">omega_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_profile</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_profile_kwargs</span><span class="p">)</span>
         <span class="c1"># calculated T out of euler-forward, given omega_next and</span>
         <span class="c1"># actual omega give from system</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">)</span> <span class="o">*</span>
@@ -245,7 +246,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

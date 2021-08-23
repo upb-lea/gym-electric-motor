@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Permanent Magnet Synchronous Motor &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Permanent Magnet Synchronous Motor &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -210,20 +210,20 @@
 <div class="section" id="electrical-ode">
 <h2>Electrical ODE<a class="headerlink" href="#electrical-ode" title="Permalink to this headline">¶</a></h2>
 <div class="math notranslate nohighlight">
-\[\begin{split}\frac{\mathrm{d} i_{sd}}{\mathrm{d} t}&amp;=\frac{u_{sd} + p \omega_{me} L_q i_{sq} - R_s i_{sd}}{L_d} \\
-\frac{\mathrm{d} i_{sq}}{\mathrm{d} t}&amp;=\frac{u_{sq} - p \omega_{me} (L_d i_{sd} + \mathit{\Psi}_p) - R_s i_{sq}}{L_q} \\
-\frac{\mathrm{d} \varepsilon_{el}}{\mathrm{d} t}&amp;= p \omega_{me}\end{split}\]</div>
+\[\begin{split}\frac{\mathrm{d} i_\mathrm{sd}}{\mathrm{d} t}&amp;=\frac{u_\mathrm{sd} + p \omega_\mathrm{me} L_\mathrm{q} i_\mathrm{sq} - R_\mathrm{s} i_\mathrm{sd}}{L_\mathrm{d}} \\
+\frac{\mathrm{d} i_\mathrm{sq}}{\mathrm{d} t}&amp;=\frac{u_\mathrm{sq} - p \omega_\mathrm{me} (L_\mathrm{d} i_\mathrm{sd} + \mathit{\Psi}_\mathrm{p}) - R_\mathrm{s} i_\mathrm{sq}}{L_\mathrm{q}} \\
+\frac{\mathrm{d} \varepsilon_\mathrm{el}}{\mathrm{d} t}&amp;= p \omega_\mathrm{me}\end{split}\]</div>
 </div>
 <div class="section" id="torque-equation">
 <h2>Torque Equation<a class="headerlink" href="#torque-equation" title="Permalink to this headline">¶</a></h2>
 <div class="math notranslate nohighlight">
-\[T=\frac{3}{2} p (\mathit{\Psi}_p +(L_d-L_q)i_{sd}) i_{sq}\]</div>
+\[T=\frac{3}{2} p (\mathit{\Psi}_\mathrm{p} +(L_\mathrm{d}-L_\mathrm{q})i_\mathrm{sd}) i_\mathrm{sq}\]</div>
 </div>
 <div class="section" id="code-documentation">
 <h2>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">PermanentMagnetSynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/permanent_magnet_synchronous_motor.html#PermanentMagnetSynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">PermanentMagnetSynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/electric_motors/permanent_magnet_synchronous_motor.html#PermanentMagnetSynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils align-default">
 <colgroup>
 <col style="width: 24%" />
@@ -762,7 +762,7 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

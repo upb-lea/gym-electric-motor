@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>gym_electric_motor.utils &mdash; gym-electric-motor 2020 documentation</title>
+  <title>gym_electric_motor.utils &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -302,6 +302,30 @@
     <span class="n">_registry</span><span class="p">[</span><span class="n">superclass</span><span class="p">][</span><span class="n">keystring</span><span class="p">]</span> <span class="o">=</span> <span class="n">subclass</span></div>
 
 
+<div class="viewcode-block" id="update_parameter_dict"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.update_parameter_dict">[docs]</a><span class="k">def</span> <span class="nf">update_parameter_dict</span><span class="p">(</span><span class="n">source_dict</span><span class="p">,</span> <span class="n">update_dict</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Merges two dictionaries (source and update) together.</span>
+
+<span class="sd">    It is similar to pythons dict.update() method. Furthermore, it assures that all keys in the update dictionary are</span>
+<span class="sd">    already present in the source dictionary. Otherwise a KeyError is thrown.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">          source_dict(dict): Source dictionary to be updated.</span>
+<span class="sd">          update_dict(dict): The new dictionary with the entries to update the source dict.</span>
+<span class="sd">          copy(bool): Flag, if the source dictionary shall be copied before updating. (Default True)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The updated source dictionary.</span>
+<span class="sd">    Exceptions:</span>
+<span class="sd">        KeyError: Thrown, if a key in the update dict is not available in the source dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">source_keys</span> <span class="o">=</span> <span class="n">source_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">update_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source_keys</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot update_dict the source_dict. The key &quot;</span><span class="si">{key}</span><span class="s1">&quot; is not available.&#39;</span><span class="p">)</span>
+    <span class="n">new_dict</span> <span class="o">=</span> <span class="n">source_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">source_dict</span>
+    <span class="n">new_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">update_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_dict</span></div>
+
+
 <span class="c1">#: Short notation for the gym.make call to avoid the necessary import of gym when making environments.</span>
 <span class="n">make</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span>
 </pre></div>
@@ -315,7 +339,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>

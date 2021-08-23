@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Switched Reference Generator &mdash; gym-electric-motor 2020 documentation</title>
+  <title>Switched Reference Generator &mdash; gym-electric-motor 2021 documentation</title>
   
 
   
@@ -187,18 +187,15 @@
 <h1>Switched Reference Generator<a class="headerlink" href="#switched-reference-generator" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">SwitchedReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">sub_generators</em>, <em class="sig-param">sub_args=None</em>, <em class="sig-param">p=None</em>, <em class="sig-param">super_episode_length=(100</em>, <em class="sig-param">10000)</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">SwitchedReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">sub_generators</em>, <em class="sig-param">p=None</em>, <em class="sig-param">super_episode_length=(100</em>, <em class="sig-param">10000)</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sub_generators</strong> (<em>list</em><em>(</em><em>str/class/object</em><em>)</em>) – List of keys, classes or objects to instantiate the sub_generators</p></li>
-<li><p><strong>sub_args</strong> (<em>dict/list</em><em>(</em><em>dict</em><em>)</em><em>/None</em>) – (Optional) Arguments to pass to the sub_converters. If not passed all kwargs
-will be passed to each sub_generator.</p></li>
+<li><p><strong>sub_generators</strong> (<em>list</em><em>(</em><a class="reference internal" href="reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a><em>)</em>) – ReferenceGenerator instances to be used as the sub_generators.</p></li>
 <li><p><strong>p</strong> (<em>list</em><em>(</em><em>float</em><em>)</em><em>/None</em>) – (Optional) Probabilities for each sub_generator. If None a uniform
-probability for each sub_converter is used.</p></li>
-<li><p><strong>super_episode_length</strong> (<em>Tuple</em><em>(</em><em>int</em><em>, </em><em>int</em>) – Minimum and maximum number of time steps a sub_generator is used.</p></li>
-<li><p><strong>kwargs</strong> – All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.</p></li>
+probability for each sub_generator is used.</p></li>
+<li><p><strong>super_episode_length</strong> (<em>Tuple</em><em>(</em><em>int</em><em>, </em><em>int</em><em>)</em>) – Minimum and maximum number of time steps a sub_generator is used.</p></li>
 </ul>
 </dd>
 </dl>
@@ -350,7 +347,7 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Praneeth Balakrishna, Gerrit Book, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
+        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
 
     </p>
   </div>
