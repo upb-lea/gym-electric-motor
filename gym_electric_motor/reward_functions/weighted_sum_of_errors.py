@@ -12,12 +12,12 @@ class WeightedSumOfErrors(RewardFunction):
         r_{wse} = - \sum_i w_i ((|s_i-s^*_i|) / l_i) ^{n_i} + b
 
     Notation:
-        - :math:`r_{wse}`: Weighted sum of error reward
-        - :math:`w_{i}`: Reward weight of state i
-        - :math:`s_{i}`: State value of state i
-        - :math:`s^*_{i}`: Reference value of state i
-        - :math:`l_{i}`: State length of state i
-        - :math:`n_{i}`: Reward power of state i
+        - :math:`r_\mathrm{wse}`: Weighted sum of error reward
+        - :math:`w_{i}`: Reward weight of state :math:`i`
+        - :math:`s_{i}`: State value of state :math:`i`
+        - :math:`s^*_{i}`: Reference value of state :math:`i`
+        - :math:`l_{i}`: State length of state :math:`i`
+        - :math:`n_{i}`: Reward power of state :math:`i`
         - :math:`b`: Bias
 
     | :math:`l_i = 1` for states with positive values only.
@@ -45,7 +45,7 @@ class WeightedSumOfErrors(RewardFunction):
     """
 
     def __init__(self, reward_weights=None, normed_reward_weights=False, violation_reward=None,
-                 gamma=0.9, reward_power=1, bias=0.0, **__):
+                 gamma=0.9, reward_power=1, bias=0.0):
         """
         Args:
             reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.

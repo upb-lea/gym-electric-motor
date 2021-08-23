@@ -9,18 +9,18 @@ class ConstReferenceGenerator(ReferenceGenerator):
     Reference Generator that generates a constant reference for a single state variable.
     """
 
-    def __init__(self, reference_state='omega', reference_value=0.5,  *_, **__):
+    def __init__(self, reference_state='omega', reference_value=0.5, **kwargs):
         """
         Args:
             reference_value(float): Normalized Value for the const reference.
             reference_state(string): Name of the state to reference
-
-            kwargs(dict): Arguments passed to the superclass ReferenceGenerator .
+            kwargs(dict): Arguments passed to the superclass ReferenceGenerator.
         """
-        super().__init__()
+        super().__init__(**kwargs)
         self._reference_value = reference_value
         self._reference_state = reference_state.lower()
         self.reference_space = Box(np.array([reference_value]), np.array([reference_value]))
+        self._reference_names = self._reference_state
 
     def set_modules(self, physical_system):
         # docstring from superclass

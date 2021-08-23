@@ -26,8 +26,10 @@ class MotorDashboard(ElectricMotorVisualization):
     StepPlot base classes.
     """
 
-    def __init__(self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
-                 update_interval=1000, step_plot_width=10000, style=None, **__):
+    def __init__(
+        self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
+        update_interval=1000, time_plot_width=10000, style=None
+    ):
         """
         Args:
             state_plots('all'/iterable(str)): An iterable of state names to be shown. If 'all' all states will be shown.
@@ -40,7 +42,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 to be shown on the dashboard
             update_interval(int > 0): Amount of steps after which the plots are updated. Updating each step reduces the
                 performance drastically. Default: 1000
-            step_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
+            time_plot_width(int > 0): Width of the step plots in steps. Default: 10000 steps
                 (1 second for continuously controlled environments / 0.1 second for discretely controlled environments)
             style(string): Select one of the matplotlib-styles. e.g. "dark-background".
                 Default: None (the already selected style)
@@ -50,8 +52,8 @@ class MotorDashboard(ElectricMotorVisualization):
         assert all(isinstance(ap, (TimePlot, EpisodePlot, StepPlot)) for ap in additional_plots)
         assert type(update_interval) in [int, float]
         assert update_interval > 0
-        assert type(step_plot_width) in [int, float]
-        assert step_plot_width > 0
+        assert type(time_plot_width) in [int, float]
+        assert time_plot_width > 0
         assert style in plt.style.available or style is None
 
         super().__init__()
@@ -72,20 +74,19 @@ class MotorDashboard(ElectricMotorVisualization):
         self._reward_plot = reward_plot
 
         # Separate the additional plots into StepPlots, EpisodicPlots and StepPlots
-        self._custom_step_plots = [p for p in additional_plots if isinstance(p, TimePlot)]
+        self._custom_time_plots = [p for p in additional_plots if isinstance(p, TimePlot)]
         self._episodic_plots = [p for p in additional_plots if isinstance(p, EpisodePlot)]
         self._step_plots = [p for p in additional_plots if isinstance(p, StepPlot)]
 
         self._time_plots = []
         self._update_interval = int(update_interval)
-        self._step_plot_width = int(step_plot_width)
+        self._time_plot_width = int(time_plot_width)
         self._plots = []
         self._k = 0
         self._update_render = False
 
     def on_reset_begin(self):
-        """Called before the environment is reset. All subplots are reset.
-        """
+        """Called before the environment is reset. All subplots are reset."""
         for plot in self._plots:
             plot.on_reset_begin()
 
@@ -148,8 +149,9 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._action_plots == 'all':
             if type(env.action_space) is gym.spaces.Discrete:
                 self._action_plots = [0]
-            elif type(env.action_space) is gym.spaces.Box:
+            elif type(env.action_space) in (gym.spaces.Box, gym.spaces.MultiDiscrete):
                 self._action_plots = list(range(env.action_space.shape[0]))
+
         self._time_plots = []
 
         if len(self._state_plots) > 0:
@@ -158,7 +160,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 self._time_plots.append(StatePlot(state))
 
         if len(self._action_plots) > 0:
-            assert type(env.action_space) in (gym.spaces.Box, gym.spaces.Discrete), \
+            assert type(env.action_space) in (gym.spaces.Box, gym.spaces.Discrete, gym.spaces.MultiDiscrete), \
                 f'Action space of type {type(env.action_space)} not supported for plotting.'
             for action in self._action_plots:
                 ap = ActionPlot(action)
@@ -168,30 +170,71 @@ class MotorDashboard(ElectricMotorVisualization):
             self._reward_plot = RewardPlot()
             self._time_plots.append(self._reward_plot)
 
+        self._time_plots += self._custom_time_plots
+
         self._plots = self._time_plots + self._episodic_plots + self._step_plots
 
-        for step_plot in self._time_plots:
-            step_plot.set_width(self._step_plot_width)
+        for time_plot in self._time_plots:
+            time_plot.set_width(self._time_plot_width)
 
         for plot in self._plots:
             plot.set_env(env)
+
+    def reset_figures(self):
+        """Method to reset the figures to the initial state.
+
+        This method can be called, when the plots shall be reset after the training and before the test, for example.
+        Another use case, that requires the call of this method by the user, is when the dashboard is executed within
+        a jupyter notebook and the figures shall be plotted below a new cell."""
+        for plot in self._plots:
+            plot.reset_data()
+        self._episodic_plot_figure = self._time_plot_figure = self._step_plot_figure = None
+        self._figures = []
 
     def _initialize(self):
         """Called with first render() call to setup the figures and plots."""
         plt.close()
         self._figures = []
 
-        # create separate figures for time based, step and episode based plots
+        if plt.get_backend() == 'nbAgg':
+            self._initialize_figures_notebook()
+        else:
+            self._initialize_figures_window()
+
+        plt.pause(0.1)
+
+    def _initialize_figures_notebook(self):
+        # Create all plots below each other: First Time then Episode then Step Plots
+        no_of_plots = len(self._episodic_plots) + len(self._step_plots) + len(self._time_plots)
+
+        if no_of_plots == 0:
+            return
+        fig, axes = plt.subplots(no_of_plots, figsize=(8, 2*no_of_plots))
+        self._figures = [fig]
+        axes = [axes] if no_of_plots == 1 else axes
+        time_axes = axes[:len(self._time_plots)]
+        axes = axes[len(self._time_plots):]
         if len(self._time_plots) > 0:
-            self._time_plot_figure, axes_step = plt.subplots(len(self._time_plots), sharex=True)
-            self._time_plot_figure.canvas.manager.set_window_title('Time Plots')
-            axes_step = [axes_step] if len(self._time_plots) == 1 else axes_step
-            self._time_plot_figure.subplots_adjust(wspace=0.0, hspace=0.2)
-            axes_step[-1].set_xlabel('$t$/s')
-            self._figures.append(self._time_plot_figure)
-            for plot, axis in zip(self._time_plots, axes_step):
+            time_axes[-1].set_xlabel('t/s')
+            self._time_plot_figure = fig
+            for plot, axis in zip(self._time_plots, time_axes):
+                plot.initialize(axis)
+        episode_axes = axes[:len(self._episodic_plots)]
+        axes = axes[len(self._episodic_plots):]
+        if len(self._episodic_plots) > 0:
+            episode_axes[-1].set_xlabel('Episode No')
+            self._episodic_plot_figure = fig
+            for plot, axis in zip(self._episodic_plots, episode_axes):
+                plot.initialize(axis)
+        step_axes = axes
+        if len(self._step_plots) > 0:
+            step_axes[-1].set_xlabel('Cumulative Steps')
+            self._step_plot_figure = fig
+            for plot, axis in zip(self._step_plots, step_axes):
                 plot.initialize(axis)
 
+    def _initialize_figures_window(self):
+        # create separate figures for time based, step and episode based plots
         if len(self._episodic_plots) > 0:
             self._episodic_plot_figure, axes_ep = plt.subplots(len(self._episodic_plots), sharex=True)
             axes_ep = [axes_ep] if len(self._episodic_plots) == 1 else axes_ep
@@ -212,7 +255,15 @@ class MotorDashboard(ElectricMotorVisualization):
             for plot, axis in zip(self._step_plots, axes_int):
                 plot.initialize(axis)
 
-        plt.pause(0.1)
+        if len(self._time_plots) > 0:
+            self._time_plot_figure, axes_step = plt.subplots(len(self._time_plots), sharex=True)
+            self._time_plot_figure.canvas.manager.set_window_title('Time Plots')
+            axes_step = [axes_step] if len(self._time_plots) == 1 else axes_step
+            self._time_plot_figure.subplots_adjust(wspace=0.0, hspace=0.2)
+            axes_step[-1].set_xlabel('$t$/s')
+            self._figures.append(self._time_plot_figure)
+            for plot, axis in zip(self._time_plots, axes_step):
+                plot.initialize(axis)
 
     def _update(self):
         """Called every *update cycle* steps to refresh the figure."""

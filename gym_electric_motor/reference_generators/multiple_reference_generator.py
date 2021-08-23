@@ -3,15 +3,13 @@ from gym.spaces import Box
 
 from ..core import ReferenceGenerator
 from ..utils import instantiate
+import gym_electric_motor as gem
 
 
-class MultipleReferenceGenerator(ReferenceGenerator):
-    """
-    Reference Generator that combines multiple sub reference generators that all have to reference
+class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
+    """Reference Generator that combines multiple sub reference generators that all have to reference
     different state variables.
     """
-
-    reference_space = Box(-1, 1, shape=(1,))
 
     def __init__(self, sub_generators, sub_args=None, **kwargs):
         """
@@ -21,7 +19,9 @@ class MultipleReferenceGenerator(ReferenceGenerator):
                 will be passed to each sub_generator.
             kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.
         """
-        super().__init__()
+        ReferenceGenerator.__init__(self, **kwargs)
+        gem.RandomComponent.__init__(self)
+        self.reference_space = Box(-1, 1, shape=(1,))
         if type(sub_args) is dict:
             sub_arguments = [sub_args] * len(sub_generators)
         elif hasattr(sub_args, '__iter__'):
@@ -31,6 +31,9 @@ class MultipleReferenceGenerator(ReferenceGenerator):
             sub_arguments = [kwargs] * len(sub_generators)
         self._sub_generators = [instantiate(ReferenceGenerator, sub_generator, **sub_arg)
                                 for sub_generator, sub_arg in zip(sub_generators, sub_arguments)]
+        self._reference_names = []
+        for sub_gen in self._sub_generators:
+            self._reference_names += sub_gen.reference_names
 
     def set_modules(self, physical_system):
         """
@@ -71,3 +74,10 @@ class MultipleReferenceGenerator(ReferenceGenerator):
         return np.concatenate(
             [sub_generator.get_reference_observation(state, **kwargs) for sub_generator in self._sub_generators]
         )
+
+    def seed(self, seed=None):
+        super().seed(seed)
+        for sub_generator in self._sub_generators:
+            if isinstance(sub_generator, gem.RandomComponent):
+                seed = self._seed_sequence.spawn(1)[0]
+                sub_generator.seed(seed)

@@ -1,0 +1,6 @@
+from .cont_cc_shunt_dc_env import ContCurrentControlDcShuntMotorEnv
+from .cont_sc_shunt_dc_env import ContSpeedControlDcShuntMotorEnv
+from .cont_tc_shunt_dc_env import ContTorqueControlDcShuntMotorEnv
+from .finite_cc_shunt_dc_env import FiniteCurrentControlDcShuntMotorEnv
+from .finite_sc_shunt_dc_env import FiniteSpeedControlDcShuntMotorEnv
+from .finite_tc_shunt_dc_env import FiniteTorqueControlDcShuntMotorEnv
