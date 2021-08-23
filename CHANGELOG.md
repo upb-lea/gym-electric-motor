@@ -6,11 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0] - 2021-xx-xx
+## [1.0.0] - 2021-08-23
 ### Added
 - classic controllers in examples with complete makeover
 - Possibility to seed all random number generators at once with a unified API - Reproduciblity improved.
-- 
 
 ### Changed
 #### Environment IDs
