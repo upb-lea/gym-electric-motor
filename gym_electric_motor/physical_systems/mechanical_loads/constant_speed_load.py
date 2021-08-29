@@ -10,10 +10,12 @@ class ConstantSpeedLoad(MechanicalLoad):
     """
 
     HAS_JACOBIAN = True
-    _default_initializer = {'states': {'omega': 0.0},
-                            'interval': None,
-                            'random_init': None,
-                            'random_params': (None, None)}
+    _default_initializer = {
+        'states': {'omega': 0.0},
+        'interval': None,
+        'random_init': None,
+        'random_params': (None, None)
+    }
 
     @property
     def omega_fixed(self):
@@ -39,4 +41,4 @@ class ConstantSpeedLoad(MechanicalLoad):
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
-        return np.array([0]), np.array([0])
+        return np.array([[0]]), np.array([0])
