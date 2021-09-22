@@ -52,7 +52,7 @@ class PolynomialStaticLoad(MechanicalLoad):
         self._b = self._load_parameter['b']
         self._c = self._load_parameter['c']
 
-    def _static_load(self, omega, *_):
+    def _static_load(self, omega):
         """Calculation of the load torque for a given speed omega."""
         sign = 1 if omega > 0 else -1 if omega < -0 else 0
         # Limit the constant load term 'a' for velocities around zero for a more stable integration
@@ -64,9 +64,9 @@ class PolynomialStaticLoad(MechanicalLoad):
     def mechanical_ode(self, t, mechanical_state, torque):
         # Docstring of superclass
         omega = mechanical_state[self.OMEGA_IDX]
-        static_load = self._static_load(omega)
-        load = torque - static_load
-        return np.array([load / self._j_total])
+        static_torque = self._static_load(omega)
+        total_torque = torque - static_torque
+        return np.array([total_torque / self._j_total])
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
