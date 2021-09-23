@@ -1,9 +1,12 @@
 from gym.spaces import Discrete, Box, MultiDiscrete
 from gym_electric_motor.physical_systems import SynchronousMotorSystem, DcMotorSystem, DcSeriesMotor, \
-    DcExternallyExcitedMotor
+    DcExternallyExcitedMotor, DoublyFedInductionMotorSystem, SquirrelCageInductionMotorSystem
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, SwitchedReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor import envs
+
+from externally_referenced_state_plot import ExternallyReferencedStatePlot
+from externally_plot import ExternallyPlot
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -63,7 +66,7 @@ class Controller:
         """
         pass
 
-    def get_ref(self):
+    def get_plot_data(self):
         """Function to pass the calculated reference values to the visualization."""
         pass
 
@@ -74,7 +77,7 @@ class Controller:
         """
         pass
 
-    def plot(self, external_reference_plots, state_names):
+    def plot(self, external_reference_plots=[], state_names=[], external_plot=[]):
         """
         This method passes the latest internally generated references of the controller the ExternalReferencePlots. The
         GEM-Environment uses this data to plot these references with the according states within its MotorDashboard.
@@ -87,23 +90,41 @@ class Controller:
         """
 
         if self.visualization:
-            external_refs = self.get_ref()
             external_ref_plots = list(external_reference_plots)
-            ref_state_idxs = external_refs['ref_state']
-            plot_state_idxs = [
-                list(state_names).index(external_ref_plot.state) for external_ref_plot in external_reference_plots
-            ]
-            ref_values = external_refs['ref_value']
-            for ref_state_idx, ref_value in zip(ref_state_idxs, ref_values):
-                try:
-                    plot_idx = plot_state_idxs.index(ref_state_idx)
-                except ValueError:
-                    pass
-                else:
-                    external_ref_plots[plot_idx].external_reference(ref_value)
+            external_plots = list(external_plot)
+            external_data = self.get_plot_data()
+            if len(external_ref_plots) != 0:
+                ref_state_idxs = external_data['ref_state']
+                plot_state_idxs = [
+                    list(state_names).index(external_ref_plot.state) for external_ref_plot in external_reference_plots
+                ]
+                ref_values = external_data['ref_value']
+                for ref_state_idx, ref_value in zip(ref_state_idxs, ref_values):
+                    try:
+                        plot_idx = plot_state_idxs.index(ref_state_idx)
+                    except ValueError:
+                        pass
+                    else:
+                        external_ref_plots[plot_idx].external_reference(ref_value)
+
+            if len(external_plots) != 0:
+                ext_state = external_data['external']
+                for ext_plot, ext_data in zip(external_plots, ext_state):
+                    ext_plot.add_data(ext_data)
 
     @staticmethod
     def get_visualization(environment, **controller_kwargs):
+        if 'external_plot' in controller_kwargs.keys():
+            ext_plot = []
+            ref_plot = []
+            for external_plots in controller_kwargs['external_plot']:
+                if isinstance(external_plots, ExternallyPlot):
+                    ext_plot.append(external_plots)
+                elif isinstance(external_plots, ExternallyReferencedStatePlot):
+                    ref_plot.append(external_plots)
+            controller_kwargs['external_plot'] = ext_plot
+            controller_kwargs['external_ref_plots'] = ref_plot
+
         for visualization in environment._visualizations:
             if isinstance(visualization, MotorDashboard):
                 controller_kwargs['update_interval'] = visualization._update_interval
@@ -160,11 +181,29 @@ class Controller:
             else:
                 controller_type = 'cascaded_foc_controller'
 
+        elif isinstance(environment.physical_system, SquirrelCageInductionMotorSystem):
+            if len(stages) == 2:
+                if len(stages[1]) == 1 and 'i_sq' in controller_kwargs['ref_states']:
+                    controller_type = 'foc_rotor_flux_observer'
+                else:
+                    controller_type = 'cascaded_foc_rotor_flux_observer'
+            else:
+                controller_type = 'cascaded_foc_rotor_flux_observer'
+
+        elif isinstance(environment.physical_system, DoublyFedInductionMotorSystem):
+            if len(stages) == 2:
+                if len(stages[1]) == 1 and 'i_sq' in controller_kwargs['ref_states']:
+                    controller_type = 'foc_rotor_flux_observer'
+                else:
+                    controller_type = 'cascaded_foc_rotor_flux_observer'
+            else:
+                controller_type = 'cascaded_foc_rotor_flux_observer'
+
         return controller_type, _stages
 
     @staticmethod
     def automated_controller_design(environment, **controller_kwargs):
-        """This method automatically designs the controller based on the given motor environment and control task."""
+        """This methode automatically designs the controller based on the given motor environment and control task."""
 
         action_space_type = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
@@ -214,6 +253,23 @@ class Controller:
                 else:
                     stages = [[{'controller_type': 'pi_controller'},
                               {'controller_type': 'pi_controller'}], [{'controller_type': 'pi_controller'}]]
+
+        elif isinstance(environment.physical_system, SquirrelCageInductionMotorSystem) or isinstance(environment.physical_system, DoublyFedInductionMotorSystem):
+            if 'i_sq' in ref_states or 'torque' in ref_states:
+                controller_type = 'foc_rotor_flux_observer' if 'i_sq' in ref_states else 'cascaded_foc_rotor_flux_observer'
+                if action_space_type is Discrete:
+                    stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
+                              [{'controller_type': 'on_off'}]]
+                else:
+                    stages = [[{'controller_type': 'pi_controller'}, {'controller_type': 'pi_controller'}]]
+            elif 'omega' in ref_states:
+                controller_type = 'cascaded_foc_rotor_flux_observer'
+                if action_space_type is Discrete:
+                    stages = [[{'controller_type': 'on_off'}], [{'controller_type': 'on_off'}],
+                              [{'controller_type': 'on_off'}], [{'controller_type': 'pi_controller'}]]
+                else:
+                    stages = [[{'controller_type': 'pi_controller'},
+                               {'controller_type': 'pi_controller'}], [{'controller_type': 'pi_controller'}]]
         else:
             controller_type = 'foc_controller'
 
@@ -222,7 +278,7 @@ class Controller:
     @staticmethod
     def automated_gain(environment, stages, controller_type, **controller_kwargs):
         """
-            This method automatically parameterizes a given controller design if the parameter automated_gain is True
+            This methode automatically parameterizes a given controller design if the parameter automated_gain is True
             (default True), based on the design according to the symmetric optimum (SO). Further information about the
             design according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
         """
@@ -238,6 +294,13 @@ class Controller:
             u_e_lim = limits[environment.physical_system.VOLTAGES_IDX[-1]]
 
         elif isinstance(environment.physical_system, SynchronousMotorSystem):
+            i_sd_lim = limits[environment.state_names.index('i_sd')]
+            i_sq_lim = limits[environment.state_names.index('i_sq')]
+            u_sd_lim = limits[environment.state_names.index('u_sd')]
+            u_sq_lim = limits[environment.state_names.index('u_sq')]
+            torque_lim = limits[environment.state_names.index('torque')]
+
+        else:
             i_sd_lim = limits[environment.state_names.index('i_sd')]
             i_sq_lim = limits[environment.state_names.index('i_sq')]
             u_sd_lim = limits[environment.state_names.index('u_sd')]
@@ -421,6 +484,71 @@ class Controller:
                             d_gain = p_gain * environment.physical_system.tau
                             stages[3][0]['d_gain'] = stages[3][0].get('d_gain', d_gain)
 
+            elif _controllers[controller_type][0] == FieldOrientedControllerRotorFluxObserver:
+
+                mp['l_s'] = mp['l_m'] + mp['l_sigs']
+                mp['l_r'] = mp['l_m'] + mp['l_sigr']
+                sigma = (mp['l_s'] * mp['l_r'] - mp['l_m'] ** 2) / (mp['l_s'] * mp['l_r'])
+                tau_sigma = (sigma * mp['l_s']) / (mp['r_s'] + mp['r_r'] * mp['l_m'] ** 2 / mp['l_r'] ** 2)
+                tau_r = mp['l_r'] / mp['r_r']
+                p_gain = tau_r / tau_sigma
+                i_gain = p_gain / tau_sigma
+
+                stages[0][0]['p_gain'] = stages[0][0].get('p_gain', p_gain)
+                stages[0][0]['i_gain'] = stages[0][0].get('i_gain', i_gain)
+                stages[0][1]['p_gain'] = stages[0][1].get('p_gain', p_gain)
+                stages[0][1]['i_gain'] = stages[0][1].get('i_gain', i_gain)
+
+                if _controllers[stages[0][0]['controller_type']][2] == PIDController:
+                    d_gain = p_gain * tau_sigma
+                    stages[0][0]['d_gain'] = stages[0][0].get('d_gain', d_gain)
+
+                if _controllers[stages[0][1]['controller_type']][2] == PIDController:
+                    d_gain = p_gain * tau_sigma
+                    stages[0][1]['d_gain'] = stages[0][1].get('d_gain', d_gain)
+
+            elif _controllers[controller_type][0] == CascadedFieldOrientedControllerRotorFluxObserver:
+
+                if 'torque' not in controller_kwargs['ref_states']:
+                    overlaid = stages[1]
+
+                mp['l_s'] = mp['l_m'] + mp['l_sigs']
+                mp['l_r'] = mp['l_m'] + mp['l_sigr']
+                sigma = (mp['l_s'] * mp['l_r'] - mp['l_m'] ** 2) / (mp['l_s'] * mp['l_r'])
+                tau_sigma = (sigma * mp['l_s']) / (mp['r_s'] + mp['r_r'] * mp['l_m'] ** 2 / mp['l_r'] ** 2)
+                tau_r = mp['l_r'] / mp['r_r']
+                p_gain = tau_r / tau_sigma
+                i_gain = p_gain / tau_sigma
+
+                stages[0][0]['p_gain'] = stages[0][0].get('p_gain', p_gain)
+                stages[0][0]['i_gain'] = stages[0][0].get('i_gain', i_gain)
+                stages[0][1]['p_gain'] = stages[0][1].get('p_gain', p_gain)
+                stages[0][1]['i_gain'] = stages[0][1].get('i_gain', i_gain)
+
+                if _controllers[stages[0][0]['controller_type']][2] == PIDController:
+                    d_gain = p_gain * tau_sigma
+                    stages[0][0]['d_gain'] = stages[0][0].get('d_gain', d_gain)
+
+                if _controllers[stages[0][1]['controller_type']][2] == PIDController:
+                    d_gain = p_gain * tau_sigma
+                    stages[0][1]['d_gain'] = stages[0][1].get('d_gain', d_gain)
+
+                if 'torque' not in controller_kwargs['ref_states'] and \
+                        _controllers[overlaid[0]['controller_type']][1] == ContinuousController:
+                    t_n = p_gain / i_gain
+                    j_total = environment.physical_system.mechanical_load.j_total
+                    p_gain = j_total / (a ** 2 * t_n) / torque_lim * omega_lim
+                    i_gain = p_gain / (a * t_n)
+
+                    overlaid[0]['p_gain'] = overlaid[0].get('p_gain', p_gain)
+                    overlaid[0]['i_gain'] = overlaid[0].get('i_gain', i_gain)
+
+                    if _controllers[overlaid[0]['controller_type']][2] == PIDController:
+                        d_gain = p_gain * environment.physical_system.tau
+                        overlaid[0]['d_gain'] = overlaid[0].get('d_gain', d_gain)
+
+                    stages = [stages[0], overlaid]
+
         return stages
 
 
@@ -491,8 +619,8 @@ class ContinuousActionController(Controller):
         self.plot(self.external_ref_plots, self.state_names)
         return self.action
 
-    def get_ref(self):
-        return dict(ref_state=[], ref_value=[])
+    def get_plot_data(self):
+        return dict(ref_state=[], ref_value=[], external=[])
 
     def reset(self):
         self.controller.reset()
@@ -545,8 +673,8 @@ class DiscreteActionController(Controller):
         else:
             return self.controller.control(state[self.ref_state_idx], reference[self.ref_idx])
 
-    def get_ref(self):
-        return dict(ref_state=[], ref_value=[])
+    def get_plot_data(self):
+        return dict(ref_state=[], ref_value=[], external=[])
 
     def reset(self):
         self.controller.reset()
@@ -685,8 +813,8 @@ class CascadedController(Controller):
         psi_e = max(self.psi_e or self.l_e * state[self.i_e_idx] * self.nominal_values[self.i_e_idx], 1e-6)
         return (state[self.omega_idx] * self.nominal_values[self.omega_idx] * psi_e) / self.nominal_values[self.u_idx]
 
-    def get_ref(self):
-        return dict(ref_state=self.ref_state_idx, ref_value=self.ref)
+    def get_plot_data(self):
+        return dict(ref_state=self.ref_state_idx, ref_value=self.ref, external=[])
 
     def reset(self):
         for controller in self.controller_stages:
@@ -790,8 +918,8 @@ class FieldOrientedController(Controller):
         self.plot(self.external_ref_plots, self.state_names)
         return action
 
-    def get_ref(self):
-        return dict(ref_state=[], ref_value=[])
+    def get_plot_data(self):
+        return dict(ref_state=[], ref_value=[], external=[])
 
     def reset(self):
         if self.has_cont_action_space:
@@ -838,7 +966,6 @@ class CascadedFieldOrientedController(Controller):
         if self.current_control:
             self.ref_d_idx = np.where(ref_states == 'i_sd')[0][0]
             self.ref_idx = np.where(ref_states != 'i_sd')[0][0]
-            self.ref_state_idx = [self.i_sq_idx, environment.state_names.index(ref_states[self.ref_idx])]
 
         self.omega_control = 'omega' in ref_states and type(environment)
         self.has_cont_action_space = type(self.action_space) is Box
@@ -955,8 +1082,8 @@ class CascadedFieldOrientedController(Controller):
         self.plot(self.external_ref_plots, self.state_names)
         return action
 
-    def get_ref(self):
-        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1])
+    def get_plot_data(self):
+        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1], external=[])
 
     def reset(self):
         if self.omega_control:
@@ -1471,6 +1598,595 @@ class TorqueToCurrentConversion:
         self.integrated = self.integrated_reset
 
 
+class FieldOrientedControllerRotorFluxObserver(Controller):
+    """
+        This class controls the currents of induction motors using a field oriented controller. The control is performed
+        in the rotating dq-stator-coordinates. For this purpose, the two current components are optionally decoupled and
+        two independent current controllers are used. The rotor flux required for this is estimated based on a current
+        model.
+    """
+
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], external_plot=[], **controller_kwargs):
+        self.env = environment
+        self.action_space = environment.action_space
+        self.state_space = environment.physical_system.state_space
+        self.state_names = environment.state_names
+
+        self.stages = stages
+        self.flux_observer = FluxEstimator(self.env)
+        self.i_sd_idx = self.env.state_names.index('i_sd')
+        self.i_sq_idx = self.env.state_names.index('i_sq')
+        self.u_s_abc_idx = [self.env.state_names.index(state) for state in ['u_sa', 'u_sb', 'u_sc']]
+        self.i_sd_ref_idx = np.where(ref_states == 'i_sd')[0][0]
+        self.i_sq_ref_idx = np.where(ref_states == 'i_sq')[0][0]
+        self.omega_idx = self.env.state_names.index('omega')
+
+        mp = self.env.physical_system.electrical_motor.motor_parameter
+        self.p = mp['p']
+        self.l_m = mp['l_m']
+        self.l_sigma_s = mp['l_sigs']
+        self.l_r = self.l_m + mp['l_sigr']
+        self.l_s = self.l_m + mp['l_sigs']
+        self.r_r = mp['r_r']
+        self.r_s = mp['r_s']
+        self.tau_r = self.l_r / self.r_r
+        self.sigma = (self.l_s * self.l_r - self.l_m ** 2) / (self.l_s * self.l_r)
+        self.limits = self.env.physical_system.limits
+        self.tau_sigma = self.sigma * self.l_s / (self.r_s + self.r_r * self.l_m**2 / self.l_r**2)
+        self.tau = self.env.physical_system.tau
+
+        self.dq_to_abc_transformation = environment.physical_system.dq_to_abc_space
+
+        self.external_plot = external_plot
+        self.external_ref_plots = external_ref_plots
+
+        self.has_cont_action_space = type(self.action_space) is Box
+        self.external_ref_plots = external_ref_plots
+        for ext_ref_plot in self.external_ref_plots:
+            ext_ref_plot.set_reference(ref_states)
+
+        labels = [{'y_label': r"|$\Psi_{r}$|/Vs", 'state_label': r"|$\hat{\Psi}_{r}$|/Vs"},
+                  {'y_label': r"$\measuredangle\Psi_r$/rad", 'state_label': r"$\measuredangle\hat{\Psi}_r$/rad"}]
+
+        for ext_plot, label in zip(self.external_plot, labels):
+            ext_plot.set_label(label)
+
+        if self.has_cont_action_space:
+            assert len(stages[0]) == 2, 'Number of stages not correct'
+            self.decoupling = controller_kwargs.get('decoupling', True)
+            self.u_sd_0 = self.u_sq_0 = 0
+            self.d_controller = _controllers[stages[0][0]['controller_type']][1].make(
+                environment, stages[0][0], **controller_kwargs)
+            self.q_controller = _controllers[stages[0][1]['controller_type']][1].make(
+                environment, stages[0][1], **controller_kwargs)
+
+    def control(self, state, reference):
+        """
+            This is the main methode of the FieldOrientedControllerRotorFluxObserver. It calculates the input voltages
+            u_a,b,c
+        """
+        state = state * self.limits
+        psi_abs, psi_angle = self.flux_observer.estimate(state)
+        omega_me = state[self.omega_idx]
+        i_sd = state[self.i_sd_idx]
+        i_sq = state[self.i_sq_idx]
+        omega_s = omega_me + self.r_r * self.l_m / self.l_r * i_sq / max(np.abs(psi_abs), 1e-4) * np.sign(psi_abs)
+
+        if self.decoupling:
+            self.u_sd_0 = -omega_s * self.sigma * self.l_s * i_sq - self.l_m * self.r_r / (self.l_r ** 2) * psi_abs
+            self.u_sq_0 = omega_s * self.sigma * self.l_s * i_sd + omega_me * self.l_m / self.l_r * psi_abs
+
+        u_sd_delta = self.d_controller.control(state[self.i_sd_idx], reference[self.i_sd_ref_idx] * self.limits[self.i_sd_idx])
+        u_sq_delta = self.q_controller.control(state[self.i_sq_idx], reference[self.i_sq_ref_idx] * self.limits[self.i_sq_idx])
+
+        u_sd = self.u_sd_0 + u_sd_delta
+        u_sq = self.u_sq_0 + u_sq_delta
+
+        u_s_abc = self.dq_to_abc_transformation((u_sd, u_sq), psi_angle)
+
+        u_s_abc /= self.limits[self.u_s_abc_idx]
+
+        action = np.clip(u_s_abc, self.action_space.low, self.action_space.high)
+
+        if action.all() == u_s_abc.all():
+            self.d_controller.integrate(state[self.i_sd_idx], reference[self.i_sd_ref_idx] * self.limits[self.i_sd_idx])
+            self.q_controller.integrate(state[self.i_sq_idx], reference[self.i_sq_ref_idx] * self.limits[self.i_sq_idx])
+        self.psi_abs = psi_abs
+        self.psi_angle = psi_angle
+        self.plot(external_plot=self.external_plot)
+        return action
+
+    def get_plot_data(self):
+        return dict(ref_state=[], ref_value=[], external=[[self.psi_abs], [self.psi_angle]])
+
+    def reset(self):
+        self.flux_observer.reset()
+        self.d_controller.reset()
+        self.q_controller.reset()
+
+
+class CascadedFieldOrientedControllerRotorFluxObserver(Controller):
+    """
+        This controller is used for torque or speed control of induction motors. The controller consists of a field
+        oriented controller for current control, an efficiency-optimized torque controller and an optional speed
+        controller. The current control is equivalent to the current control of the FieldOrientedControllerRotorFluxObserver.
+        The TorqueToCurrentConversionRotorFluxObserver is used for torque control and a PI-Controller by default is used
+        for speed control.
+    """
+
+    def __init__(self, environment, stages, ref_states, external_ref_plots=[], external_plot=[], **controller_kwargs):
+        self.env = environment
+        self.action_space = environment.action_space
+        self.state_space = environment.physical_system.state_space
+        self.state_names = environment.state_names
+
+        self.stages = stages
+        self.flux_observer = FluxEstimator(self.env)
+        self.i_sd_idx = self.env.state_names.index('i_sd')
+        self.i_sq_idx = self.env.state_names.index('i_sq')
+        self.u_s_abc_idx = [self.env.state_names.index(state) for state in ['u_sa', 'u_sb', 'u_sc']]
+        self.omega_idx = self.env.state_names.index('omega')
+        self.torque_idx = self.env.state_names.index('torque')
+
+        mp = self.env.physical_system.electrical_motor.motor_parameter
+        self.p = mp['p']
+        self.l_m = mp['l_m']
+        self.l_sigma_s = mp['l_sigs']
+        self.l_r = self.l_m + mp['l_sigr']
+        self.l_s = self.l_m + mp['l_sigs']
+        self.r_r = mp['r_r']
+        self.r_s = mp['r_s']
+        self.tau_r = self.l_r / self.r_r
+        self.sigma = (self.l_s * self.l_r - self.l_m ** 2) / (self.l_s * self.l_r)
+        self.limits = self.env.physical_system.limits
+        self.nominal_values = self.env.physical_system.nominal_state
+        self.tau_sigma = self.sigma * self.l_s / (self.r_s + self.r_r * self.l_m ** 2 / self.l_r ** 2)
+        self.tau = self.env.physical_system.tau
+
+        self.dq_to_abc_transformation = environment.physical_system.dq_to_abc_space
+
+        self.torque_control = 'torque' in ref_states or 'omega' in ref_states
+        self.current_control = 'i_sd' in ref_states
+        self.omega_control = 'omega' in ref_states
+        self.ref_state_idx = [self.i_sq_idx, self.i_sd_idx]
+
+        if self.current_control:
+            self.ref_d_idx = np.where(ref_states == 'i_sd')[0][0]
+            self.ref_idx = np.where(ref_states != 'i_sd')[0][0]
+
+        if self.torque_control:
+            self.ref_state_idx.append(self.torque_idx)
+            self.torque_controller = TorqueToCurrentConversionRotorFluxObserver(environment, stages)
+
+        if self.omega_control:
+            self.ref_state_idx.append(self.omega_idx)
+
+        self.ref_idx = 0
+
+        self.external_plot = external_plot
+        self.external_ref_plots = external_ref_plots
+
+        self.has_cont_action_space = type(self.action_space) is Box
+        self.external_ref_plots = external_ref_plots
+        self.psi_opt = 0
+
+        plot_ref = np.append(np.array([environment.state_names[i] for i in self.ref_state_idx]), ref_states)
+        for ext_ref_plot in self.external_ref_plots:
+            ext_ref_plot.set_reference(plot_ref)
+
+        labels = [
+            {'y_label': r"|$\Psi_{r}$|/Vs", 'state_label': r"|$\hat{\Psi}_{r}$|/Vs", 'ref_label': r"|$\Psi_{r}$|$^*$/Vs"},
+            {'y_label': r"$\measuredangle\Psi_r$/rad", 'state_label': r"$\measuredangle\hat{\Psi}_r$/rad"}]
+
+        for ext_plot, label in zip(self.external_plot, labels):
+            ext_plot.set_label(label)
+
+        if self.has_cont_action_space:
+            assert len(stages[0]) == 2, 'Number of stages not correct'
+            self.decoupling = controller_kwargs.get('decoupling', True)
+            self.u_sd_0 = self.u_sq_0 = 0
+            self.d_controller = _controllers[stages[0][0]['controller_type']][1].make(
+                environment, stages[0][0], **controller_kwargs)
+            self.q_controller = _controllers[stages[0][1]['controller_type']][1].make(
+                environment, stages[0][1], **controller_kwargs)
+
+            if self.omega_control:
+                self.overlaid_controller = [_controllers[stages[1][i]['controller_type']][1].make(
+                    environment, stages[1][i], cascaded=True, **controller_kwargs) for i in range(0, len(stages[1]))]
+                self.overlaid_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
+                                      range(0, len(stages[1]))]
+
+        self.ref = np.zeros(len(self.ref_state_idx))
+
+    def control(self, state, reference):
+        self.ref[-1] = reference[self.ref_idx]
+        psi_abs, psi_angle = self.flux_observer.estimate(state * self.limits)
+
+        if self.omega_control:
+            for i in range(len(self.overlaid_controller) + 1, 1, -1):
+                self.ref[i] = self.overlaid_controller[i-2].control(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+
+                if (0.85 * self.state_space.low[self.ref_state_idx[i]] <= self.ref[i] <= 0.85 *
+                        self.state_space.high[self.ref_state_idx[i]]) and self.overlaid_type[i - 2]:
+                    self.overlaid_controller[i - 2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
+                else:
+                    self.ref[i] = np.clip(self.ref[i], self.nominal_values[self.ref_state_idx[i]] / self.limits[
+                        self.ref_state_idx[i]] * self.state_space.low[self.ref_state_idx[i]],
+                                          self.nominal_values[self.ref_state_idx[i]] / self.limits[
+                                              self.ref_state_idx[i]] * self.state_space.high[self.ref_state_idx[i]])
+
+        if self.torque_control:
+            torque = self.ref[2] * self.limits[self.torque_idx]
+            self.ref[0], self.ref[1], self.psi_opt = self.torque_controller.control(state, torque, psi_abs)
+
+        if self.has_cont_action_space:
+            state = state * self.limits
+            omega_me = state[self.omega_idx]
+            i_sd = state[self.i_sd_idx]
+            i_sq = state[self.i_sq_idx]
+            omega_s = omega_me + self.r_r * self.l_m / self.l_r * i_sq / max(np.abs(psi_abs), 1e-4) * np.sign(psi_abs)
+
+            if self.decoupling:
+                self.u_sd_0 = -omega_s * self.sigma * self.l_s * i_sq - self.l_m * self.r_r / (self.l_r ** 2) * psi_abs
+                self.u_sq_0 = omega_s * self.sigma * self.l_s * i_sd + omega_me * self.l_m / self.l_r * psi_abs
+
+            u_sd_delta = self.d_controller.control(state[self.i_sd_idx],
+                                                   self.ref[1] * self.limits[self.i_sd_idx])
+            u_sq_delta = self.q_controller.control(state[self.i_sq_idx],
+                                                   self.ref[0] * self.limits[self.i_sq_idx])
+
+            u_sd = self.u_sd_0 + u_sd_delta
+            u_sq = self.u_sq_0 + u_sq_delta
+
+            u_s_abc = self.dq_to_abc_transformation((u_sd, u_sq), psi_angle)
+
+            u_s_abc /= self.limits[self.u_s_abc_idx]
+            action = np.clip(u_s_abc, self.action_space.low, self.action_space.high)
+
+            if action.all() == u_s_abc.all():
+                self.d_controller.integrate(state[self.i_sd_idx],
+                                            self.ref[1] * self.limits[self.i_sd_idx])
+                self.q_controller.integrate(state[self.i_sq_idx],
+                                            self.ref[0] * self.limits[self.i_sq_idx])
+            self.psi_abs = psi_abs
+            self.psi_angle = psi_angle
+
+        self.plot(external_reference_plots=self.external_ref_plots, state_names=self.state_names, external_plot=self.external_plot)
+        return action
+
+    def get_plot_data(self):
+        return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1],
+                    external=[[self.psi_abs, self.psi_opt],
+                              [self.psi_angle]])
+
+    def reset(self):
+        if self.omega_control:
+            for overlaid_controller in self.overlaid_controller:
+                overlaid_controller.reset()
+        if self.has_cont_action_space:
+            self.d_controller.reset()
+            self.q_controller.reset()
+
+        else:
+            for abc_controller in self.abc_controller:
+                abc_controller.reset()
+
+        if self.torque_control:
+            self.torque_controller.reset()
+
+        self.flux_observer.reset()
+
+
+class TorqueToCurrentConversionRotorFluxObserver:
+    """
+        This class represents the torque controller for the cascaded control of induction motors. The torque controller
+        uses LUT to find an appropriate operating point for the flux and torque.  The flux is limited by a modulation
+        controller. A reference value for the i_sd current is then determined using the operating point of the flux and
+        a PI controller. In addition, a reference for the i_sq current is calculated based on the current flux and the
+        operating point of the torque.
+        Predefined plots are available for visualization of the operating points (plot_torque: default True). Also the
+        operation of the modulation controller can be plotted (plot_modulation: default False).
+        Further information can be found at https://ieeexplore.ieee.org/document/7203404.
+    """
+
+    def __init__(self, environment, stages, plot_torque=True, plot_modulation=False, update_interval=1000):
+        self.env = environment
+        self.nominal_values = self.env.physical_system.nominal_state
+        self.state_space = self.env.physical_system.state_space
+        mp = self.env.physical_system.electrical_motor.motor_parameter
+        self.l_m = mp['l_m']
+        self.l_r = self.l_m + mp['l_sigr']
+        self.l_s = self.l_m + mp['l_sigs']
+        self.r_r = mp['r_r']
+        self.r_s = mp['r_s']
+        self.p = mp['p']
+        self.tau = self.env.physical_system.tau
+        tau_s = self.l_s / self.r_s
+
+        self.i_sd_idx = self.env.state_names.index('i_sd')
+        self.i_sq_idx = self.env.state_names.index('i_sq')
+        self.torque_idx = self.env.state_names.index('torque')
+        self.u_sa_idx = environment.state_names.index('u_sa')
+        self.u_sd_idx = environment.state_names.index('u_sd')
+        self.u_sq_idx = environment.state_names.index('u_sq')
+        self.omega_idx = environment.state_names.index('omega')
+        self.limits = self.env.physical_system.limits
+
+        p_gain = stages[0][1]['p_gain'] * 2 * tau_s ** 2 # flux controller p gain
+        i_gain = p_gain / self.tau # flux controller i gain
+        self.psi_controller = PIController(self.env, p_gain=p_gain, i_gain=i_gain) # flux controller
+
+        self.torque_count = 1001
+
+        self.i_sd_count = 500
+        self.i_sd = np.linspace(0, self.limits[self.i_sd_idx], self.i_sd_count)
+
+        self.i_sq_count = 1001
+        self.i_sq = np.linspace(0, self.limits[self.i_sq_idx], self.i_sq_count)
+
+        self.t_maximum = self.limits[self.torque_idx]
+        self.t_minimum = -self.limits[self.torque_idx]
+
+        self.psi_opt_t = self.psi_opt()
+        self.psi_max = np.max(self.psi_opt_t[1])
+        self.psi_count = 1000
+
+        self.t_max_psi = self.t_max()
+
+        self.a_max = 1  # maximum modulation level
+        self.k_ = 0.8
+        d = 2  # damping of the modulation controller
+        alpha = d / (d - np.sqrt(d ** 2 - 1))
+        self.i_gain = 1 / (self.l_s / (1.25 * self.r_s)) * (alpha - 1) / alpha ** 2
+
+        self.u_dc = np.sqrt(3) * self.limits[self.u_sa_idx]
+        self.limited = False
+        self.integrated = 0
+        self.psi_high = 0.1 * self.psi_max
+
+        self.psi_low = -self.psi_max
+        self.integrated_reset = 0.5 * self.psi_low  # Reset value of the modulation controller
+
+        self.plot_torque = plot_torque
+        self.plot_modulation = plot_modulation
+        self.update_interval = update_interval
+        self.k = 0
+
+    def intitialize_torque_plot(self):
+        plt.ion()
+
+        self.fig_torque = plt.figure('Torque Controller')
+        self.psi_opt_plot = plt.subplot2grid((1, 2), (0, 0))
+        self.t_max_plot = plt.subplot2grid((1, 2), (0, 1))
+        self.psi_opt_plot.plot(self.psi_opt_t[0], self.psi_opt_t[1], label='$\Psi^*_{r, opt}(T^*)$')
+        self.psi_opt_plot.grid()
+        self.psi_opt_plot.set_xlabel('T / Nm')
+        self.psi_opt_plot.set_ylabel('$\Psi$ / Vs')
+        self.psi_opt_plot.legend()
+
+        self.t_max_plot.plot(self.t_max_psi[1], self.t_max_psi[0], label='$T_{max}(\Psi_{max})$')
+        self.t_max_plot.grid()
+        self.t_max_plot.set_xlabel('$\Psi$ / Vs')
+        self.t_max_plot.set_ylabel('T / Nm')
+        self.t_max_plot.legend()
+
+    def psi_opt(self):
+        #Calculate the optimal flux for a given torque
+        psi_opt_t = []
+        i_sd = np.linspace(0, self.limits[self.i_sd_idx], self.i_sd_count)
+        for t in np.linspace(self.t_minimum, self.t_maximum, self.torque_count):
+            if t != 0:
+                i_sq = t / (3/2 * self.p * self.l_m ** 2 / self.l_r * i_sd[1:])
+                pv = 3 / 2 * (self.r_s * np.power(i_sd[1:], 2) + (
+                            self.r_s + self.r_r * self.l_m ** 2 / self.l_r ** 2) * np.power(i_sq, 2)) #Calculate losses
+
+                i_idx = np.argmin(pv) #Minimize losses
+                i_sd_opt = i_sd[i_idx]
+                i_sq_opt = i_sq[i_idx]
+            else:
+                i_sq_opt = 0
+                i_sd_opt = 0
+
+            psi_opt = self.l_m * i_sd_opt
+            psi_opt_t.append([t, psi_opt, i_sd_opt, i_sq_opt])
+        return np.array(psi_opt_t).T
+
+    def t_max(self):
+        #Calculate maximum torque for a given flux
+        psi = np.linspace(self.psi_max, 0, self.psi_count)
+        t_val = []
+        i_sd_val = []
+        i_sq_val = []
+
+        for psi_ in psi:
+            i_sd = psi_ / self.l_m
+            i_sq = np.sqrt(self.nominal_values[self.u_sd_idx] ** 2 / (self.nominal_values[self.omega_idx] ** 2 * self.l_s ** 2) - i_sd ** 2)
+
+            t = 3 / 2 * self.p * self.l_m / self.l_r * psi_ * i_sq
+            t_val.append(t)
+            i_sd_val.append(i_sd)
+            i_sq_val.append(i_sq)
+
+        t_val.extend(list(-np.array(t_val[::-1])))
+        psi = np.append(psi, psi[::-1])
+        i_sd_val.extend(i_sd_val[::-1])
+        i_sq_val.extend(list(-np.array(i_sq_val[::-1])))
+
+        return np.array([t_val, psi, i_sd_val, i_sq_val])
+
+    def get_psi_opt(self, torque):
+        torque = np.clip(torque, self.t_minimum, self.t_maximum)
+        return int(round((torque - self.t_minimum) / (self.t_maximum - self.t_minimum) * (self.torque_count - 1)))
+
+    def get_t_max(self, psi):
+        psi = np.clip(psi, 0, self.psi_max)
+        return int(round(psi / self.psi_max * (self.psi_count - 1)))
+
+    def control(self, state, torque, psi_abs):
+        """
+            This main method is called by the CascadedFieldOrientedControllerRotorFluxObserver to calculate reference
+            values for the i_sd and i_sq currents from a given torque reference.
+        """
+
+        #Calculate the optimal flux
+        psi_opt = self.psi_opt_t[1, self.get_psi_opt(torque)]
+        psi_max = self.modulation_control(state)
+        psi_opt = min(psi_opt, psi_max)
+
+        #Limit the torque
+        t_max = self.t_max_psi[0, self.psi_count - self.get_t_max(psi_opt)]
+        torque = np.clip(torque, -np.abs(t_max), np.abs(t_max))
+
+        #Calculate the reference for i_sd
+        i_sd_ = self.psi_controller.control(psi_abs, psi_opt)
+        i_sd = np.clip(i_sd_, -0.9 * self.nominal_values[self.i_sd_idx], 0.9 * self.nominal_values[self.i_sd_idx])
+        if i_sd_ == i_sd:
+            self.psi_controller.integrate(psi_abs, psi_opt)
+
+        #Calculate the reference for i_sq
+        i_sq = np.clip(torque / max(psi_abs, 0.001) * 2 / 3 / self.p * self.l_r / self.l_m, -self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx])
+        if self.nominal_values[self.i_sq_idx] < np.sqrt(i_sq ** 2 + i_sd ** 2):
+            i_sq = np.sign(i_sq) * np.sqrt(self.nominal_values[self.i_sq_idx] ** 2 - i_sd ** 2)
+
+        #Update plots
+        if self.plot_torque:
+            if self.k == 0:
+                self.intitialize_torque_plot()
+                self.k_list = []
+                self.torque_list = []
+                self.psi_list = []
+
+            self.k_list.append(self.k * self.tau)
+            self.torque_list.append(torque)
+            self.psi_list.append(psi_opt)
+
+            if self.k % self.update_interval == 0:
+                self.psi_opt_plot.scatter(self.torque_list, self.psi_list, c='tab:blue', s=3)
+                self.t_max_plot.scatter(self.psi_list, self.torque_list, c='tab:blue', s=3)
+
+                self.fig_torque.canvas.draw()
+                self.fig_torque.canvas.flush_events()
+                self.k_list = []
+                self.torque_list = []
+                self.psi_list = []
+
+        self.k += 1
+        return i_sq / self.limits[self.i_sq_idx], i_sd / self.limits[self.i_sd_idx], psi_opt
+
+    def modulation_control(self, state):
+
+        #Calculate modulation
+        a = 2 * np.sqrt((state[self.u_sd_idx] * self.limits[self.u_sd_idx]) ** 2 + (
+                    state[self.u_sq_idx] * self.limits[self.u_sq_idx]) ** 2) / self.u_dc
+
+        if a > 1.01 * self.a_max:
+            self.integrated = self.integrated_reset
+
+        a_delta = self.k_ * self.a_max - a
+
+        omega = max(np.abs(state[self.omega_idx]) * self.limits[self.omega_idx], 0.0001)
+        k_i = 2 * np.abs(omega) * self.p / self.u_dc #Calculate i gain
+
+        i_gain = self.i_gain * k_i
+
+        psi_delta = i_gain * (a_delta * self.tau + self.integrated) #Calculate Flux delta
+
+        if self.psi_low <= psi_delta <= self.psi_high:
+            self.integrated += a_delta * self.tau
+
+        else:
+            psi_delta = np.clip(psi_delta, self.psi_low, self.psi_high)
+
+        psi_max = self.u_dc / (np.sqrt(3) * np.abs(omega) * self.p)
+
+        psi = max(psi_max + psi_delta, 0)
+
+        #Update plot
+        if self.plot_modulation:
+            if self.k == 0:
+                self.initialize_modulation_plot()
+            self.k_list_a.append(self.k * self.tau)
+            self.a_list.append(a)
+            self.psi_delta_list.append(psi_delta)
+
+            if self.k % self.update_interval == 0:
+                    self.a_plot.scatter(self.k_list_a, self.a_list, c='tab:blue', s=3)
+                    self.psi_delta_plot.scatter(self.k_list_a, self.psi_delta_list, c='tab:blue', s=3)
+                    self.a_plot.set_xlim(max(self.k * self.tau, 1) - 1, max(self.k * self.tau, 1))
+                    self.psi_delta_plot.set_xlim(max(self.k * self.tau, 1) - 1, max(self.k * self.tau, 1))
+                    self.k_list_a = []
+                    self.a_list = []
+                    self.psi_delta_list = []
+
+        return psi
+
+    def initialize_modulation_plot(self):
+        if self.plot_modulation:
+            plt.ion()
+            self.fig_modulation = plt.figure('Modulation Controller')
+            self.a_plot = plt.subplot2grid((1, 2), (0, 0))
+            self.psi_delta_plot = plt.subplot2grid((1, 2), (0, 1))
+
+            self.a_plot.set_title('Modulation')
+            self.a_plot.axhline(self.k_ * self.a_max, c='tab:orange', label=r'$a^*$')
+            self.a_plot.plot([], [], c='tab:blue', label='a')
+            self.a_plot.set_xlabel('t / s')
+            self.a_plot.set_ylabel('a')
+            self.a_plot.grid(True)
+            self.a_plot.set_xlim(0, 1)
+            self.a_plot.legend(loc=2)
+
+            self.psi_delta_plot.set_title(r'$\Psi_\mathrm{\Delta}$')
+            self.psi_delta_plot.axhline(self.psi_low, c='tab:red', linestyle='dashed', label='Limit')
+            self.psi_delta_plot.axhline(self.psi_high, c='tab:red', linestyle='dashed')
+            self.psi_delta_plot.plot([], [], c='tab:blue', label=r'$\Psi_\mathrm{\Delta}$')
+            self.psi_delta_plot.set_xlabel('t / s')
+            self.psi_delta_plot.set_ylabel(r'$\Psi_\mathrm{\Delta} / Vs$')
+            self.psi_delta_plot.grid(True)
+            self.psi_delta_plot.set_xlim(0, 1)
+            self.psi_delta_plot.legend(loc=2)
+
+            self.a_list = []
+            self.psi_delta_list = []
+            self.k_list_a = []
+
+    def reset(self):
+        self.psi_controller.reset()
+
+
+class FluxEstimator:
+    """
+        This class represents a rotor flux observer for an induction motor base on a current model. Further information
+        can be found at https://ieeexplore.ieee.org/document/4270863.
+    """
+    def __init__(self, env):
+        mp = env.physical_system.electrical_motor.motor_parameter
+        self.l_m = mp['l_m']
+        self.l_r = mp['l_m'] + mp['l_sigr']
+        self.r_r = mp['r_r']
+        self.T23 = env.physical_system.electrical_motor.t_23
+        self.abc_to_alphabeta_transformation = env.physical_system.abc_to_alphabeta_space
+        self.tau = env.physical_system.tau
+        self.integrated = np.complex(0, 0)
+        self.i_s_idx = [env.state_names.index('i_sa'), env.state_names.index('i_sb'), env.state_names.index('i_sc')]
+        self.omega_idx = env.state_names.index('omega')
+        self.i_limit = env.physical_system.limits[env.state_names.index('i_sa')]
+        self.o_limit = env.physical_system.limits[env.state_names.index('omega')]
+        self.p = mp['p']
+
+    def estimate(self, state):
+        i_s = state[self.i_s_idx]
+        omega = state[self.omega_idx] * self.p
+        [i_s_alpha, i_s_beta] = self.abc_to_alphabeta_transformation(i_s)
+        delta = np.complex(i_s_alpha, i_s_beta) * self.r_r * self.l_m / self.l_r - self.integrated * np.complex(
+            self.r_r / self.l_r, -omega)
+        self.integrated += delta * self.tau
+        return np.abs(self.integrated), np.angle(self.integrated)
+
+    def reset(self):
+        self.integrated = 0
+
+
 class ContinuousController:
     """The class ContinuousController is the base for all continuous base controller (P-I-D-Controller)"""
 
@@ -1651,5 +2367,6 @@ _controllers = {
     'cascaded_controller': [CascadedController],
     'foc_controller': [FieldOrientedController],
     'cascaded_foc_controller': [CascadedFieldOrientedController],
-    #    'foc_rotor_flux_observer': FOC_Rotor_Flux_Observer
+    'foc_rotor_flux_observer': [FieldOrientedControllerRotorFluxObserver],
+    'cascaded_foc_rotor_flux_observer': [CascadedFieldOrientedControllerRotorFluxObserver],
 }
