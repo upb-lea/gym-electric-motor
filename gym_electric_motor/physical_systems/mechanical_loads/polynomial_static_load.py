@@ -74,5 +74,5 @@ class PolynomialStaticLoad(MechanicalLoad):
         sign = 1 if omega > 0 else -1 if omega < 0 else 0
         # Linear region of the constant load term 'a' ?
         a = 0 if abs(omega) > self._a * self.tau_decay / self._j_total else self._j_total / self.tau_decay
-        return np.array([[(-self._b * sign - 2 * self._c * omega + a) / self._j_total]]), \
+        return np.array([[(-self._b - 2 * sign * self._c * omega - a) / self._j_total]]), \
             np.array([1 / self._j_total])
