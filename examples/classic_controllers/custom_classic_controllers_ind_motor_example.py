@@ -1,4 +1,4 @@
-from classic_controllers_ind import Controller
+from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 from externally_plot import ExternallyPlot
 import gym_electric_motor as gem
