@@ -8,10 +8,32 @@ class PolynomialStaticLoad(MechanicalLoad):
     """ Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.
 
     Parameter dictionary entries:
-        | a: Constant Load Torque coefficient (for modeling static friction)
-        | b: Linear Load Torque coefficient (for modeling sliding friction)
-        | c: Quadratic Load Torque coefficient (for modeling air resistances)
-        | j_load: Moment of inertia of the mechanical system.
+        - :math:`a / Nm`: Constant Load Torque coefficient (for modeling static friction)
+        - :math:`b / (Nm s)`: Linear Load Torque coefficient (for modeling sliding friction)
+        - :math:`c / (Nm s^2)`: Quadratic Load Torque coefficient (for modeling air resistances)
+        - :math:`j_load / (kg m^2)` : Moment of inertia of the mechanical system.
+
+    Usage Example:
+        >>> import gym_electric_motor as gem
+        >>> from gym_electric_motor.physical_systems.mechanical_loads import PolynomialStaticLoad
+        >>>
+        >>> # Create a custom PolynomialStaticLoad instance
+        >>> my_poly_static_load = PolynomialStaticLoad(
+        ...     load_parameter=dict(a=1e-3, b=1e-4, c=0.0, j_load=1e-3),
+        ...     limits=dict(omega=150.0), # rad / s
+        ... )
+        >>>
+        >>> env = gem.make(
+        ...     'Cont-SC-ExtExDc-v0',
+        ...     load=my_poly_static_load
+        ... )
+        >>> done = True
+        >>> for _ in range(1000):
+        >>>     if done:
+        >>>         state, reference = env.reset()
+        >>>     env.render()
+        >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
+
     """
 
     _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=1e-5)
@@ -40,9 +62,9 @@ class PolynomialStaticLoad(MechanicalLoad):
     def __init__(self, load_parameter=None, limits=None, load_initializer=None):
         """
         Args:
-            load_parameter(dict(float)): Parameter dictionary.
-            limits(dict):
-            load_initializer(dict):
+            load_parameter(dict(float)): Parameter dictionary. Keys: ``'a', 'b', 'c', 'j_load'``
+            limits(dict): dictionary to update the limits of the load-instance. Keys: ``'omega'``
+            load_initializer(dict): Dictionary to parameterize the initializer.
         """
         load_parameter = load_parameter if load_parameter is not None else dict()
         self._load_parameter = update_parameter_dict(self._load_parameter, load_parameter)
