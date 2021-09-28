@@ -2,6 +2,8 @@
 docs/_build/*
 docs/_static/*
 docs/_modules/*
+docs/html/*
+docs/doctrees/*
 !.gitkeep
 
 # IDE 
