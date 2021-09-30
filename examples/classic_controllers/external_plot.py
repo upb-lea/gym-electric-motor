@@ -1,14 +1,15 @@
 from gym_electric_motor.visualization.motor_dashboard_plots.base_plots import TimePlot
 import numpy as np
 
-class ExternallyPlot(TimePlot):
+
+class ExternalPlot(TimePlot):
     """
         Class to plot lines that do not belong to the state of the environment. A reference and any number of additional
         lines can be plotted.
         Usage Example
         -------------
             if __name__ == '__main__':
-                external_plot = ExternallyPlot(min=-1, max=1, reference=True, additional_lines=2)
+                external_plot = ExternalPlot(min=-1, max=1, reference=True, additional_lines=2)
 
                 env = gem.make('DqCont-CC-PMSM-v0', visualization=MotorDashboard(state_plots=['i_sd', 'i_sq'],
                                                                                 additional_plots=(external_plot,)))
@@ -25,14 +26,14 @@ class ExternallyPlot(TimePlot):
                 (state, reference), reward, done, _ = env.step([0, 0])
     """
 
-    def __init__(self, reference=False, additional_lines=0, min=0, max=1):
+    def __init__(self, referenced=False, additional_lines=0, min=0, max=1):
         super().__init__()
 
         self._state_line_config = self._default_time_line_cfg.copy()
         self._ref_line_config = self._default_time_line_cfg.copy()
         self._add_line_config = self._default_time_line_cfg.copy()
 
-        self._referenced = reference
+        self._referenced = referenced
         self.min = min
         self.max = max
 
@@ -105,7 +106,7 @@ class ExternallyPlot(TimePlot):
             self._axis.legend((self._state_line, ), (self.state_label, ), loc='upper left', numpoints=20)
 
     def set_label(self, labels):
-        """Methode to set the labels"""
+        """Method to set the labels"""
         self._label = labels.get('y_label', '')
         self.state_label = labels['state_label']
         if self._referenced:
@@ -119,7 +120,7 @@ class ExternallyPlot(TimePlot):
         self._x_data[idx] = self._t
 
     def add_data(self, additional_data):
-        """Methode to pass the externally data"""
+        """Method to pass the external data"""
         idx = self.data_idx
         if self._referenced:
             self._state_data[idx] = additional_data[0]
@@ -133,4 +134,3 @@ class ExternallyPlot(TimePlot):
                 self._additional_data[i][idx] = additional_data[i + 1]
         else:
             self._state_data[idx] = additional_data[0]
- 

@@ -1,10 +1,12 @@
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
-from externally_plot import ExternallyPlot
+from external_plot import ExternalPlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
+import numpy as np
 
 if __name__ == '__main__':
+
     """
         motor type:     'SCIM'      Squirrel Cage Induction Motor
 
@@ -12,11 +14,11 @@ if __name__ == '__main__':
                         'TC'        Torque Control
                         'CC'        Current Control
 
-        action_type:    'Cont'      Continuous Action Space
+        action_type:    'AbcCont'      Continuous Action Space
     """
 
     motor_type = 'SCIM'
-    control_type = 'TC'
+    control_type = 'SC'
     action_type = 'AbcCont'
 
     env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
@@ -24,7 +26,7 @@ if __name__ == '__main__':
     # definition of the plotted variables
     states = ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
-    external_plot = [ExternallyPlot(reference=control_type != 'CC'), ExternallyPlot(min=-3.142, max=3.142)]
+    external_plot = [ExternalPlot(referenced=control_type != 'CC'), ExternalPlot(min=-np.pi, max=np.pi)]
     external_ref_plots += external_plot
 
     # initialize the gym-electric-motor environment
