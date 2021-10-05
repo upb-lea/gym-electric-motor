@@ -24,7 +24,8 @@ class DiscreteActionController:
         for ext_ref_plot in self.external_ref_plots:
             ext_ref_plot.set_reference(ref_states)
 
-        if self.control_e:
+        # Initialize Controller
+        if self.control_e:  # Check, if a controller for i_e is needed
             assert len(stages) == 2, 'Controller design is incomplete'
             assert 'i_e' in ref_states, 'No reference for i_e'
             self.ref_e_idx = np.where(ref_states == 'i_e')[0][0]
@@ -41,17 +42,32 @@ class DiscreteActionController:
                                                                                  **controller_kwargs)
 
     def control(self, state, reference):
-        plot(self.external_ref_plots, self.state_names)
+        """
+            Main method that is called by the user to calculate the manipulated variable.
+
+            Args:
+                state: state of the gem environment
+                reference: reference for the controlled states
+
+            Returns:
+                action: action for the gem environment
+        """
+        plot(self.external_ref_plots, self.state_names)     # Plot external data
+
+        # Check if i_e controller is used
         if self.control_e:
             return [self.controller.control(state[self.ref_state_idx], reference[self.ref_idx]),
                     self.controller_e.control(state[self.i_idx], reference[self.ref_e_idx])]
         else:
             return self.controller.control(state[self.ref_state_idx], reference[self.ref_idx])
 
-    def get_plot_data(self):
+    @staticmethod
+    def get_plot_data():
+        # Get external plot data
         return dict(ref_state=[], ref_value=[], external=[])
 
     def reset(self):
+        # Reset the Controllers
         self.controller.reset()
         if self.control_e:
             self.control_e.reset()

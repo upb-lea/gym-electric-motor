@@ -50,12 +50,15 @@ class CascadedFieldOrientedController:
 
         self.limit = environment.physical_system.limits
         self.nominal_values = environment.physical_system.nominal_state
+
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_p = self.mp.get('psi_p', 0)
         self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
         self.decoupling = controller_kwargs.get('decoupling', True)
+
         self.ref_state_idx = [self.i_sq_idx, self.i_sd_idx]
 
+        # Initialize torque controller
         if self.torque_control:
             self.ref_state_idx.append(self.torque_idx)
             self.torque_controller = TorqueToCurrentConversion(environment, plot_torque, plot_modulation,
@@ -65,6 +68,7 @@ class CascadedFieldOrientedController:
 
         self.ref_idx = 0
 
+        # Initialize continuous controller stages
         if self.has_cont_action_space:
             assert len(stages[0]) == 2, 'Number of stages not correct'
             self.d_controller = _controllers[stages[0][0]['controller_type']][1].make(
@@ -79,6 +83,7 @@ class CascadedFieldOrientedController:
                 self.overlaid_type = [_controllers[stages[1][i]['controller_type']][1] == ContinuousController for i in
                                       range(0, len(stages[1]))]
 
+        # Initialize discrete controller stages
         else:
 
             if self.omega_control:
@@ -93,24 +98,37 @@ class CascadedFieldOrientedController:
                 environment, stages[i][0], _controllers, **controller_kwargs) for i in range(3)]
             self.i_abc_idx = [environment.state_names.index(state) for state in ['i_a', 'i_b', 'i_c']]
 
-        self.ref = np.zeros(len(self.ref_state_idx))
-        self.p = [environment.state_names[i] for i in self.ref_state_idx]
+        self.ref = np.zeros(len(self.ref_state_idx))    # Define array for reference values
 
+        # Set up the plots
         plot_ref = np.append(np.array([environment.state_names[i] for i in self.ref_state_idx]), ref_states)
-
         for ext_ref_plot in self.external_ref_plots:
             ext_ref_plot.set_reference(plot_ref)
 
     def control(self, state, reference):
+        """
+            Main method that is called by the user to calculate the manipulated variable.
 
-        self.ref[-1] = reference[self.ref_idx]
+            Args:
+                state: state of the gem environment
+                reference: reference for the controlled states
+
+            Returns:
+                action: action for the gem environment
+        """
+
+        self.ref[-1] = reference[self.ref_idx]  # Set the reference
+
         epsilon_d = state[self.eps_idx] * self.limit[self.eps_idx] + self.dead_time * self.tau * state[self.omega_idx] * \
-                    self.limit[self.omega_idx] * self.mp['p']
+                    self.limit[self.omega_idx] * self.mp['p']   # Calculate delta epsilon
 
+        # Iterate through high-level controller
         if self.omega_control:
             for i in range(len(self.overlaid_controller) + 1, 1, -1):
+                # Calculate reference
                 self.ref[i] = self.overlaid_controller[i-2].control(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
 
+                # Check limits and integrate
                 if (0.85 * self.state_space.low[self.ref_state_idx[i]] <= self.ref[i] <= 0.85 *
                         self.state_space.high[self.ref_state_idx[i]]) and self.overlaid_type[i - 2]:
                     self.overlaid_controller[i - 2].integrate(state[self.ref_state_idx[i + 1]], self.ref[i + 1])
@@ -120,11 +138,15 @@ class CascadedFieldOrientedController:
                                           self.nominal_values[self.ref_state_idx[i]] / self.limit[
                                               self.ref_state_idx[i]] * self.state_space.high[self.ref_state_idx[i]])
 
+        # Calculate reference values for i_d and i_q
         if self.torque_control:
             torque = self.ref[2] * self.limit[self.torque_idx]
             self.ref[0], self.ref[1] = self.torque_controller.control(state, torque)
 
+        # Calculate action for continuous action space
         if self.has_cont_action_space:
+
+            # Decouple the two current components
             if self.decoupling:
                 self.u_sd_0 = -state[self.omega_idx] * self.mp['p'] * self.mp['l_q'] * state[self.i_sq_idx]\
                               * self.limit[self.i_sq_idx] / self.limit[self.u_sd_idx] * self.limit[self.omega_idx]
@@ -132,16 +154,20 @@ class CascadedFieldOrientedController:
                         state[self.i_sd_idx] * self.mp['l_d'] * self.limit[self.u_sd_idx] + self.psi_p) / self.limit[
                          self.u_sq_idx] * self.limit[self.omega_idx]
 
+            # Calculate action for u_sd
             if self.torque_control:
                 u_sd = self.d_controller.control(state[self.i_sd_idx], self.ref[1]) + self.u_sd_0
             else:
                 u_sd = self.d_controller.control(state[self.i_sd_idx], reference[self.ref_d_idx]) + self.u_sd_0
 
+            # Calculate action for u_sq
             u_sq = self.q_controller.control(state[self.i_sq_idx], self.ref[0]) + self.u_sq_0
 
+            # Shifting the reference potential
             action_temp = self.backward_transformation((u_sq, u_sd), epsilon_d)
             action_temp = action_temp - 0.5 * (max(action_temp) + min(action_temp))
 
+            # Check limit and integrate
             action = np.clip(action_temp, self.action_space.low[0], self.action_space.high[0])
             if (action == action_temp).all():
                 if self.torque_control:
@@ -150,21 +176,26 @@ class CascadedFieldOrientedController:
                     self.d_controller.integrate(state[self.i_sd_idx], reference[self.ref_d_idx])
                 self.q_controller.integrate(state[self.i_sq_idx], self.ref[0])
 
+        # Calculate action for discrete action space
         else:
-            r = self.ref[1] if self.torque_control else reference[self.ref_d_idx]
-            ref_abc = self.backward_transformation((self.ref[0], r), epsilon_d)
+            ref = self.ref[1] if self.torque_control else reference[self.ref_d_idx]
+            ref_abc = self.backward_transformation((self.ref[0], ref), epsilon_d)
             action = 0
             for i in range(3):
                 action += (2 ** (2 - i)) * self.abc_controller[i].control(state[self.i_abc_idx[i]], ref_abc[i])
 
+        # Plot overlaid reference values
         plot(external_reference_plots=self.external_ref_plots, state_names=self.state_names, external_data=self.get_plot_data(),
              visualization=True)
+
         return action
 
     def get_plot_data(self):
+        # Getting the external data that should be plotted
         return dict(ref_state=self.ref_state_idx[:-1], ref_value=self.ref[:-1], external=[])
 
     def reset(self):
+        # Reset the Controllers
         if self.omega_control:
             for overlaid_controller in self.overlaid_controller:
                 overlaid_controller.reset()

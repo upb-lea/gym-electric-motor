@@ -16,6 +16,7 @@ class InductionMotorFieldOrientedController:
                  **controller_kwargs):
         self.env = environment
         self.action_space = environment.action_space
+        self.has_cont_action_space = type(self.action_space) is Box
         self.state_space = environment.physical_system.state_space
         self.state_names = environment.state_names
 
@@ -44,10 +45,10 @@ class InductionMotorFieldOrientedController:
 
         self.dq_to_abc_transformation = environment.physical_system.dq_to_abc_space
 
+        # Set up the plots
         self.external_plot = external_plot
         self.external_ref_plots = external_ref_plots
 
-        self.has_cont_action_space = type(self.action_space) is Box
         self.external_ref_plots = external_ref_plots
         for ext_ref_plot in self.external_ref_plots:
             ext_ref_plot.set_reference(ref_states)
@@ -58,6 +59,7 @@ class InductionMotorFieldOrientedController:
         for ext_plot, label in zip(self.external_plot, labels):
             ext_plot.set_label(label)
 
+        # Initialize continuous controllers
         if self.has_cont_action_space:
             assert len(stages[0]) == 2, 'Number of stages not correct'
             self.decoupling = controller_kwargs.get('decoupling', True)
@@ -69,46 +71,59 @@ class InductionMotorFieldOrientedController:
 
     def control(self, state, reference):
         """
-            This is the main method of the InductionMotorFieldOrientedController. It calculates the input voltages
-            u_a,b,c
+            This main method of the InductionMotorFieldOrientedController is called by the user. It calculates the input
+            voltages u_a,b,c.
+
+            Args:
+                state: state of the gem environment
+                reference: reference for the controlled states
+
+            Returns:
+                action: action for the gem environment
         """
-        state = state * self.limits
-        psi_abs, psi_angle = self.flux_observer.estimate(state)
+
+        state = state * self.limits     # Denormalize the state
+        self.psi_abs, self.psi_angle = self.flux_observer.estimate(state)  # Estimate the flux
+
         omega_me = state[self.omega_idx]
         i_sd = state[self.i_sd_idx]
         i_sq = state[self.i_sq_idx]
-        omega_s = omega_me + self.r_r * self.l_m / self.l_r * i_sq / max(np.abs(psi_abs), 1e-4) * np.sign(psi_abs)
 
-        if self.decoupling:
-            self.u_sd_0 = -omega_s * self.sigma * self.l_s * i_sq - self.l_m * self.r_r / (self.l_r ** 2) * psi_abs
-            self.u_sq_0 = omega_s * self.sigma * self.l_s * i_sd + omega_me * self.l_m / self.l_r * psi_abs
+        omega_s = omega_me + self.r_r * self.l_m / self.l_r * i_sq / max(np.abs(self.psi_abs), 1e-4) * np.sign(self.psi_abs)
 
+        # Calculate delate u_sd, u_sq
         u_sd_delta = self.d_controller.control(state[self.i_sd_idx], reference[self.i_sd_ref_idx] * self.limits[self.i_sd_idx])
         u_sq_delta = self.q_controller.control(state[self.i_sq_idx], reference[self.i_sq_ref_idx] * self.limits[self.i_sq_idx])
+
+        # Decouple the two current components
+        if self.decoupling:
+            self.u_sd_0 = -omega_s * self.sigma * self.l_s * i_sq - self.l_m * self.r_r / (self.l_r ** 2) * self.psi_abs
+            self.u_sq_0 = omega_s * self.sigma * self.l_s * i_sd + omega_me * self.l_m / self.l_r * self.psi_abs
 
         u_sd = self.u_sd_0 + u_sd_delta
         u_sq = self.u_sq_0 + u_sq_delta
 
-        u_s_abc = self.dq_to_abc_transformation((u_sd, u_sq), psi_angle)
-
+        # Transform action in abc coordinates and normalize action
+        u_s_abc = self.dq_to_abc_transformation((u_sd, u_sq), self.psi_angle)
         u_s_abc /= self.limits[self.u_s_abc_idx]
 
+        # Limit action and integrate
         action = np.clip(u_s_abc, self.action_space.low, self.action_space.high)
-
         if (action == u_s_abc).all():
             self.d_controller.integrate(state[self.i_sd_idx], reference[self.i_sd_ref_idx] * self.limits[self.i_sd_idx])
             self.q_controller.integrate(state[self.i_sq_idx], reference[self.i_sq_ref_idx] * self.limits[self.i_sq_idx])
-        self.psi_abs = psi_abs
-        self.psi_angle = psi_angle
 
+        # Plot the external data
         plot(external_plot=self.external_plot, external_data=self.get_plot_data())
 
         return action
 
     def get_plot_data(self):
+        # Getting the external data that should be plotted
         return dict(ref_state=[], ref_value=[], external=[[self.psi_abs], [self.psi_angle]])
 
     def reset(self):
+        # Reset the Controllers and the observer
         self.flux_observer.reset()
         self.d_controller.reset()
         self.q_controller.reset()

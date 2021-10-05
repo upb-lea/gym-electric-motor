@@ -19,6 +19,8 @@ class InductionMotorTorqueToCurrentConversion:
         self.env = environment
         self.nominal_values = self.env.physical_system.nominal_state
         self.state_space = self.env.physical_system.state_space
+
+        # Calculate parameters of the motor
         mp = self.env.physical_system.electrical_motor.motor_parameter
         self.l_m = mp['l_m']
         self.l_r = self.l_m + mp['l_sigr']
@@ -38,9 +40,9 @@ class InductionMotorTorqueToCurrentConversion:
         self.omega_idx = environment.state_names.index('omega')
         self.limits = self.env.physical_system.limits
 
-        p_gain = stages[0][1]['p_gain'] * 2 * tau_s ** 2 # flux controller p gain
-        i_gain = p_gain / self.tau # flux controller i gain
-        self.psi_controller = PIController(self.env, p_gain=p_gain, i_gain=i_gain) # flux controller
+        p_gain = stages[0][1]['p_gain'] * 2 * tau_s ** 2    # flux controller p gain
+        i_gain = p_gain / self.tau  # flux controller i gain
+        self.psi_controller = PIController(self.env, p_gain=p_gain, i_gain=i_gain)  # flux controller
 
         self.torque_count = 1001
 
@@ -69,7 +71,6 @@ class InductionMotorTorqueToCurrentConversion:
         self.limited = False
         self.integrated = 0
         self.psi_high = 0.1 * self.psi_max
-
         self.psi_low = -self.psi_max
         self.integrated_reset = 0.5 * self.psi_low  # Reset value of the modulation controller
 
@@ -97,16 +98,16 @@ class InductionMotorTorqueToCurrentConversion:
         self.t_max_plot.legend()
 
     def psi_opt(self):
-        #Calculate the optimal flux for a given torque
+        # Calculate the optimal flux for a given torque
         psi_opt_t = []
         i_sd = np.linspace(0, self.limits[self.i_sd_idx], self.i_sd_count)
         for t in np.linspace(self.t_minimum, self.t_maximum, self.torque_count):
             if t != 0:
                 i_sq = t / (3/2 * self.p * self.l_m ** 2 / self.l_r * i_sd[1:])
                 pv = 3 / 2 * (self.r_s * np.power(i_sd[1:], 2) + (
-                            self.r_s + self.r_r * self.l_m ** 2 / self.l_r ** 2) * np.power(i_sq, 2)) #Calculate losses
+                            self.r_s + self.r_r * self.l_m ** 2 / self.l_r ** 2) * np.power(i_sq, 2)) # Calculate losses
 
-                i_idx = np.argmin(pv) #Minimize losses
+                i_idx = np.argmin(pv)   # Minimize losses
                 i_sd_opt = i_sd[i_idx]
                 i_sq_opt = i_sq[i_idx]
             else:
@@ -118,7 +119,7 @@ class InductionMotorTorqueToCurrentConversion:
         return np.array(psi_opt_t).T
 
     def t_max(self):
-        #Calculate maximum torque for a given flux
+        # Calculate maximum torque for a given flux
         psi = np.linspace(self.psi_max, 0, self.psi_count)
         t_val = []
         i_sd_val = []
@@ -140,6 +141,8 @@ class InductionMotorTorqueToCurrentConversion:
 
         return np.array([t_val, psi, i_sd_val, i_sq_val])
 
+    # Methods to get the indices of the lists for maximum torque and optimal flux
+
     def get_psi_opt(self, torque):
         torque = np.clip(torque, self.t_minimum, self.t_maximum)
         return int(round((torque - self.t_minimum) / (self.t_maximum - self.t_minimum) * (self.torque_count - 1)))
@@ -154,27 +157,27 @@ class InductionMotorTorqueToCurrentConversion:
             values for the i_sd and i_sq currents from a given torque reference.
         """
 
-        #Calculate the optimal flux
+        # Calculate the optimal flux
         psi_opt = self.psi_opt_t[1, self.get_psi_opt(torque)]
         psi_max = self.modulation_control(state)
         psi_opt = min(psi_opt, psi_max)
 
-        #Limit the torque
+        # Limit the torque
         t_max = self.t_max_psi[0, self.psi_count - self.get_t_max(psi_opt)]
         torque = np.clip(torque, -np.abs(t_max), np.abs(t_max))
 
-        #Calculate the reference for i_sd
+        # Calculate the reference for i_sd
         i_sd_ = self.psi_controller.control(psi_abs, psi_opt)
         i_sd = np.clip(i_sd_, -0.9 * self.nominal_values[self.i_sd_idx], 0.9 * self.nominal_values[self.i_sd_idx])
         if i_sd_ == i_sd:
             self.psi_controller.integrate(psi_abs, psi_opt)
 
-        #Calculate the reference for i_sq
+        # Calculate the reference for i_sq
         i_sq = np.clip(torque / max(psi_abs, 0.001) * 2 / 3 / self.p * self.l_r / self.l_m, -self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx])
         if self.nominal_values[self.i_sq_idx] < np.sqrt(i_sq ** 2 + i_sd ** 2):
             i_sq = np.sign(i_sq) * np.sqrt(self.nominal_values[self.i_sq_idx] ** 2 - i_sd ** 2)
 
-        #Update plots
+        # Update plots
         if self.plot_torque:
             if self.k == 0:
                 self.intitialize_torque_plot()
@@ -201,25 +204,27 @@ class InductionMotorTorqueToCurrentConversion:
 
     def modulation_control(self, state):
 
-        #Calculate modulation
+        # Calculate modulation
         a = 2 * np.sqrt((state[self.u_sd_idx] * self.limits[self.u_sd_idx]) ** 2 + (
                     state[self.u_sq_idx] * self.limits[self.u_sq_idx]) ** 2) / self.u_dc
 
+        #
         if a > 1.01 * self.a_max:
             self.integrated = self.integrated_reset
 
         a_delta = self.k_ * self.a_max - a
 
         omega = max(np.abs(state[self.omega_idx]) * self.limits[self.omega_idx], 0.0001)
-        k_i = 2 * np.abs(omega) * self.p / self.u_dc #Calculate i gain
 
+        # Calculate i gain
+        k_i = 2 * np.abs(omega) * self.p / self.u_dc
         i_gain = self.i_gain * k_i
 
-        psi_delta = i_gain * (a_delta * self.tau + self.integrated) #Calculate Flux delta
+        psi_delta = i_gain * (a_delta * self.tau + self.integrated)     # Calculate Flux delta
 
+        # Check, if limits are violated
         if self.psi_low <= psi_delta <= self.psi_high:
             self.integrated += a_delta * self.tau
-
         else:
             psi_delta = np.clip(psi_delta, self.psi_low, self.psi_high)
 
@@ -227,7 +232,7 @@ class InductionMotorTorqueToCurrentConversion:
 
         psi = max(psi_max + psi_delta, 0)
 
-        #Update plot
+        # Update plot
         if self.plot_modulation:
             if self.k == 0:
                 self.initialize_modulation_plot()
@@ -253,6 +258,7 @@ class InductionMotorTorqueToCurrentConversion:
             self.a_plot = plt.subplot2grid((1, 2), (0, 0))
             self.psi_delta_plot = plt.subplot2grid((1, 2), (0, 1))
 
+            # Define modulation plot
             self.a_plot.set_title('Modulation')
             self.a_plot.axhline(self.k_ * self.a_max, c='tab:orange', label=r'$a^*$')
             self.a_plot.plot([], [], c='tab:blue', label='a')
@@ -262,6 +268,7 @@ class InductionMotorTorqueToCurrentConversion:
             self.a_plot.set_xlim(0, 1)
             self.a_plot.legend(loc=2)
 
+            # Define the delta flux plot
             self.psi_delta_plot.set_title(r'$\Psi_\mathrm{\Delta}$')
             self.psi_delta_plot.axhline(self.psi_low, c='tab:red', linestyle='dashed', label='Limit')
             self.psi_delta_plot.axhline(self.psi_high, c='tab:red', linestyle='dashed')
@@ -277,4 +284,5 @@ class InductionMotorTorqueToCurrentConversion:
             self.k_list_a = []
 
     def reset(self):
+        # Reset the integrated value
         self.psi_controller.reset()

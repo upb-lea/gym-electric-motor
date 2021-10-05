@@ -163,13 +163,15 @@ class TorqueToCurrentConversion:
 
             return np.array(psi_i_d_q)
 
-        self.mtpc = mtpc()
-        self.mtpf = mtpf()
+        self.mtpc = mtpc()  # define maximum torque per current characteristic
+        self.mtpf = mtpf()  # define maximum torque per flux characteristic
 
+        # Calculate a list with the flux and the corresponding torque of the mtpc characteristic
         self.psi_t = np.sqrt(
             np.power(self.psi_p + self.l_d * self.mtpc[:, 1], 2) + np.power(self.l_q * self.mtpc[:, 2], 2))
         self.psi_t = np.array([self.mtpc[:, 0], self.psi_t])
 
+        # define a grid for the two current components
         self.i_q_max = np.linspace(-self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx], self.i_count)
         self.i_d_max = -np.sqrt(self.nominal_values[self.i_sq_idx] ** 2 - np.power(self.i_q_max, 2))
         i_count_mgrid = 200j
@@ -177,14 +179,18 @@ class TorqueToCurrentConversion:
                             -self.limit[self.i_sq_idx]:self.limit[self.i_sq_idx]:i_count_mgrid / 2]
         i_d = i_d.flatten()
         i_q = i_q.flatten()
+
+        # Decide between SPMSM and IPMSM
         if self.l_d != self.l_q:
             idx = np.where(np.sign(self.psi_p + i_d * self.l_d) * np.power(self.psi_p + i_d * self.l_d, 2) + np.power(
                 i_q * self.l_q, 2) > 0)
         else:
             idx = np.where(self.psi_p + i_d * self.l_d > 0)
+
         i_d = i_d[idx]
         i_q = i_q[idx]
 
+        # Calculate torque and flux for the grid of the currents
         t = self.p * 1.5 * (self.psi_p + (self.l_d - self.l_q) * i_d) * i_q
         psi = np.sqrt(np.power(self.l_d * i_d + self.psi_p, 2) + np.power(self.l_q * i_q, 2))
 
@@ -211,6 +217,7 @@ class TorqueToCurrentConversion:
             self.i_q_inter_plot = self.i_q_inter.T
 
         elif torque_control == 'interpolate':
+            # Interpolate the torque and flux to get lists for the optimal currents
             self.t_grid, self.psi_grid = np.mgrid[np.amin(t):np.amax(t):np.complex(0, self.t_count),
                                                   self.psi_min:self.psi_max:np.complex(self.psi_count)]
             self.i_q_inter = griddata((t, psi), i_q, (self.t_grid, self.psi_grid), method='linear')
@@ -230,6 +237,8 @@ class TorqueToCurrentConversion:
         if self.plot_torque:
             plt.ion()
             self.fig_torque = plt.figure('Torque Controller')
+
+            # Check if current, torque, flux characteristics could be plotted
             if self.torque_control in ['interpolate', 'analytical']:
                 self.i_d_q_characteristic_ = plt.subplot2grid((2, 3), (0, 0), rowspan=2)
                 self.psi_plot = plt.subplot2grid((2, 3), (0, 1))
@@ -246,6 +255,7 @@ class TorqueToCurrentConversion:
                 np.sqrt(np.power(self.mtpc[:, 1], 2) + np.power(self.mtpc[:, 2], 2)) <= self.nominal_values[
                     self.i_sd_idx])
 
+            # Define the plot for the current characteristics
             self.i_d_q_characteristic_.set_title('$i_\mathrm{d,q_{ref}}$')
             self.i_d_q_characteristic_.plot(self.mtpc[mtpc_i_idx, 1][0], self.mtpc[mtpc_i_idx, 2][0], label='MTPC', c='tab:orange')
             self.i_d_q_characteristic_.plot(self.mtpf[:, 2], self.mtpf[:, 3], label=r'MTPF', c='tab:green')
@@ -257,6 +267,7 @@ class TorqueToCurrentConversion:
             self.i_d_q_characteristic_.set_xlabel(r'$i_\mathrm{d}$ / A')
             self.i_d_q_characteristic_.set_ylabel(r'$i_\mathrm{q}$ / A')
 
+            # Define the plot for the flux characteristic
             self.psi_plot.set_title(r'$\Psi^*_\mathrm{max}(T^*)$')
             self.psi_plot.plot(self.psi_t[0], self.psi_t[1], label=r'$\Psi^*_\mathrm{max}(T^*)$', c='tab:orange')
             self.psi_plot.plot([], [], label=r'$\Psi(T)$', c='tab:blue')
@@ -266,6 +277,7 @@ class TorqueToCurrentConversion:
             self.psi_plot.set_ylim(bottom=0)
             self.psi_plot.legend(loc=2)
 
+            # Define the plot for the torque characteristic
             torque = self.mtpf[:, 1]
             torque[0:np.where(torque == np.min(torque))[0][0]] = np.min(torque)
             torque[np.where(torque == np.max(torque))[0][0]:] = np.max(torque)
@@ -277,6 +289,7 @@ class TorqueToCurrentConversion:
             self.torque_plot.grid(True)
             self.torque_plot.legend(loc=2)
 
+            # Define the plot of currents
             if self.torque_control in ['interpolate', 'analytical']:
                 self.i_q_plot.plot_surface(self.t_grid, self.psi_grid, self.i_q_inter_plot, cmap=cm.jet, linewidth=0,
                                            vmin=np.nanmin(self.i_q_inter_plot), vmax=np.nanmax(self.i_q_inter_plot))
@@ -309,17 +322,20 @@ class TorqueToCurrentConversion:
                 2 * self.l_q * self.psi_p ** 3 + 2 * (self.psi_p ** 2 - psi ** 2) * self.psi_p * (self.l_d - self.l_q),
                 (self.psi_p ** 2 - psi ** 2) * self.psi_p ** 2 + (self.l_q * 2 * torque / (3 * self.p)) ** 2]
 
-        sol = np.roots(poly)
-        i_d = np.real(sol[-1])
-        i_q = 2 * torque / (3 * self.p * (self.psi_p + (self.l_d - self.l_q) * i_d))
+        sol = np.roots(poly)    # Solve polynomial
+        i_d = np.real(sol[-1])  # Select the appropriate solution for i_d
+        i_q = 2 * torque / (3 * self.p * (self.psi_p + (self.l_d - self.l_q) * i_d))   # Calculate the corresponding i_q
         return i_d, i_q
 
     def get_i_d_q(self, torque, psi, psi_idx):
+        """Method to solve the control online and check, if current is on mtpc characteristic"""
         i_d, i_q = self.solve_analytical(torque, psi)
         if i_d > self.mtpc[psi_idx, 1]:
             i_d = self.mtpc[psi_idx, 1]
             i_q = self.mtpc[psi_idx, 2]
         return i_d, i_q
+
+    # Methods to get the indices of the calculated characteristics
 
     def get_t_idx(self, torque):
         torque = np.clip(torque, self.t_min, self.t_max)
@@ -424,20 +440,27 @@ class TorqueToCurrentConversion:
             information can be found at https://ieeexplore.ieee.org/document/7409195.
         """
 
+        # Calculate modulation
         a = 2 * np.sqrt((state[self.u_sd_idx] * self.limit[self.u_sd_idx]) ** 2 + (
                     state[self.u_sq_idx] * self.limit[self.u_sq_idx]) ** 2) / self.u_dc
 
+        # Check, if integral part should be reset
         if a > 1.1 * self.a_max:
             self.integrated = self.integrated_reset
 
         a_delta = self.k_ * self.a_max - a
         omega = max(np.abs(state[self.omega_idx]) * self.limit[self.omega_idx], 0.0001)
-        psi_max_ = self.u_dc / (np.sqrt(3) * omega * self.p)
-        k_i = 2 * omega * self.p / self.u_dc
 
+        # Calculate maximum flux for a given speed
+        psi_max_ = self.u_dc / (np.sqrt(3) * omega * self.p)
+
+        # Calculate gain
+        k_i = 2 * omega * self.p / self.u_dc
         i_gain = self.i_gain / k_i
+
         psi_delta = i_gain * (a_delta * self.tau + self.integrated)
 
+        # Check, if limits are violated
         if self.psi_low <= psi_delta <= self.psi_high:
             if self.limited:
                 self.integrated = self.integrated_reset
@@ -448,7 +471,10 @@ class TorqueToCurrentConversion:
             psi_delta = np.clip(psi_delta, self.psi_low, self.psi_high)
             self.limited = True
 
+        # Calculate output flux of the modulation controller
         psi = psi_max_ + psi_delta
+
+        # Plot the operation of the modulation controller
         if self.plot_modulation:
             if self.k == 0:
                 self.initialize_modulation_plot()
@@ -474,6 +500,7 @@ class TorqueToCurrentConversion:
             self.a_plot = plt.subplot2grid((1, 2), (0, 0))
             self.psi_delta_plot = plt.subplot2grid((1, 2), (0, 1))
 
+            # Define the modulation plot
             self.a_plot.set_title('Modulation')
             self.a_plot.axhline(self.k_ * self.a_max, c='tab:orange', label=r'$a^*$')
             self.a_plot.plot([], [], c='tab:blue', label='a')
@@ -483,6 +510,7 @@ class TorqueToCurrentConversion:
             self.a_plot.set_xlim(0, 1)
             self.a_plot.legend(loc=2)
 
+            # Define the delta flux plot
             self.psi_delta_plot.set_title(r'$\Psi_\mathrm{\Delta}$')
             self.psi_delta_plot.axhline(self.psi_low, c='tab:red', linestyle='dashed', label='Limit')
             self.psi_delta_plot.axhline(self.psi_high, c='tab:red', linestyle='dashed')
@@ -498,4 +526,5 @@ class TorqueToCurrentConversion:
             self.k_list_a = []
 
     def reset(self):
+        # Reset the integrated value
         self.integrated = self.integrated_reset

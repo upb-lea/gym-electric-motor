@@ -47,11 +47,14 @@ class FieldOrientedController:
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_p = self.mp.get('psi_p', 0)
         self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
+
         self.has_cont_action_space = type(self.action_space) is Box
+
         self.external_ref_plots = external_ref_plots
         for ext_ref_plot in self.external_ref_plots:
             ext_ref_plot.set_reference(ref_states)
 
+        # Initialize continuous controllers
         if self.has_cont_action_space:
             assert len(stages[0]) == 2, 'Number of stages not correct'
             self.decoupling = controller_kwargs.get('decoupling', True)
@@ -62,6 +65,7 @@ class FieldOrientedController:
             self.q_controller = _controllers[stages[0][1]['controller_type']][1].make(
                 environment, stages[0][1], _controllers, **controller_kwargs)
 
+        # Initialize discrete controllers
         else:
             assert len(stages) == 3, 'Number of stages not correct'
             self.abc_controller = [_controllers[stages[0][0]['controller_type']][1].make(
@@ -69,9 +73,25 @@ class FieldOrientedController:
             self.i_abc_idx = [environment.state_names.index(state) for state in ['i_a', 'i_b', 'i_c']]
 
     def control(self, state, reference):
+        """
+            Main method that is called by the user to calculate the manipulated variable.
+
+            Args:
+                state: state of the gem environment
+                reference: reference for the controlled states
+
+            Returns:
+                action: action for the gem environment
+        """
+
+        # Calculate delta epsilon
         epsilon_d = state[self.eps_idx] * self.limit[self.eps_idx] + self.dead_time * self.tau * \
                     state[self.omega_idx] * self.limit[self.omega_idx] * self.mp['p']
+
+        # Check if action space is continuous
         if self.has_cont_action_space:
+
+            # Decoupling of the d- and q-component
             if self.decoupling:
                 self.u_sd_0 = -state[self.omega_idx] * self.mp['p'] * self.mp['l_q'] * state[self.i_sq_idx] * self.limit[
                     self.i_sq_idx] / self.limit[self.u_sd_idx] * self.limit[self.omega_idx]
@@ -79,30 +99,40 @@ class FieldOrientedController:
                         state[self.i_sd_idx] * self.mp['l_d'] * self.limit[self.u_sd_idx] + self.psi_p) / self.limit[
                              self.u_sq_idx] * self.limit[self.omega_idx]
 
+            # Calculate the two actions
             u_sd = self.d_controller.control(state[self.d_idx], reference[self.ref_d_idx]) + self.u_sd_0
             u_sq = self.q_controller.control(state[self.q_idx], reference[self.ref_q_idx]) + self.u_sq_0
 
+            # Shifting the reference potential
             action_temp = self.backward_transformation((u_sq, u_sd), epsilon_d)
             action_temp = action_temp - 0.5 * (max(action_temp) + min(action_temp))
 
+            # Check limit and integrate
             action = np.clip(action_temp, self.action_space.low[0], self.action_space.high[0])
             if (action == action_temp).all():
                 self.d_controller.integrate(state[self.d_idx], reference[self.ref_d_idx])
                 self.q_controller.integrate(state[self.q_idx], reference[self.ref_q_idx])
 
         else:
+            # Transform reference in abc coordinates
             ref_abc = self.backward_transformation((reference[self.ref_q_idx], reference[self.ref_d_idx]), epsilon_d)
             action = 0
+
+            # Calculate discrete action
             for i in range(3):
                 action += (2 ** (2 - i)) * self.abc_controller[i].control(state[self.i_abc_idx[i]], ref_abc[i])
 
+        # Plot external data
         plot(self.external_ref_plots, self.state_names, external_data=self.get_plot_data())
         return action
 
-    def get_plot_data(self):
+    @staticmethod
+    def get_plot_data():
+        # Getting the external data that should be plotted
         return dict(ref_state=[], ref_value=[], external=[])
 
     def reset(self):
+        # Reset the Controllers
         if self.has_cont_action_space:
             self.d_controller.reset()
             self.q_controller.reset()
