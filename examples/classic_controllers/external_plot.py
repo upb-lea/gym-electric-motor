@@ -58,18 +58,21 @@ class ExternalPlot(TimePlot):
         self.min = min
         self.max = max
 
+        # matplotlib-Lines for the state and reference
         self._state_line = None
         self._reference_line = None
 
+        self.state_label = ''
+        self.ref_label = ''
+
+        # Data containers
         self._state_data = []
         self._reference_data = []
         self._additional_data = []
 
+        # Add additional lines
         self.added = additional_lines > 0
         self.add_lines = additional_lines
-
-        self.state_label = ''
-        self.ref_label = ''
 
         if self.added:
             self.add_labels = []
@@ -80,13 +83,16 @@ class ExternalPlot(TimePlot):
                 self.add_labels.append('')
 
     def set_env(self, env):
+        # Docstring of superclass
         super().set_env(env)
         self._label = None
         self._y_lim = (self.min, self.max)
         self.reset_data()
 
     def reset_data(self):
+        # Docstring of superclass
         super().reset_data()
+        # Initialize the data containers
         self._state_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
         self._reference_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
 
@@ -98,9 +104,11 @@ class ExternalPlot(TimePlot):
         # Docstring of superclass
         super().initialize(axis)
 
+        # Line to plot the state data
         self._state_line, = self._axis.plot(self._x_data, self._state_data, **self._state_line_config, zorder=self.add_lines+2)
         self._lines = [self._state_line]
 
+        # If the state is referenced plot also the reference line
         if self._referenced:
             self._reference_line, = self._axis.plot(self._x_data, self._reference_data, **self._ref_line_config, zorder=self.add_lines+1)
             axis.lines = axis.lines[::-1]
@@ -108,14 +116,14 @@ class ExternalPlot(TimePlot):
 
         self._y_data = [self._state_data, self._reference_data]
 
-        # Check if there are added lines and define these lines
+        # If there are added lines plot also these lines
         if self.added:
             for i in range(self.add_lines):
                 self._additional_lines[i], = self._axis.plot(self._x_data, self._additional_data[i], **self._add_line_config, zorder=self.add_lines-i)
                 self._lines.append(self._additional_lines[i])
                 self._y_data.append(self._additional_data[i])
 
-        # Check if there is a reference and define the line
+        # Set the labels of the refernce line and additional lines
         if self._referenced:
             if self.added:
                 lines = [self._state_line, self._reference_line]
@@ -149,6 +157,7 @@ class ExternalPlot(TimePlot):
     def add_data(self, additional_data):
         """Method to pass the external data. A list must be passed with the length of the number of plots."""
         idx = self.data_idx
+        # Write the data to the data containers
         if self._referenced:
             self._state_data[idx] = additional_data[0]
             self._reference_data[idx] = additional_data[1]
