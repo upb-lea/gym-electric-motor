@@ -13,13 +13,19 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
         Args:
             sigma_range(Tuple(float,float)): Lower and Upper limit for the sigma-parameter of the WienerProcess.
             initial_range(Tuple(float,float)): Minimal and maximal normalized value of the initial reference point
-             of a new episode. Default: Whole reference space.
-            kwargs: Further arguments to pass to SubepisodedReferenceGenerator
+             of a new episode. Default: Equal to the limit margin inherited from the
+             :py:class:`.SubepisodedReferenceGenerator`
+            kwargs: Further arguments to pass to :py:class:`.SubepisodedReferenceGenerator`
         """
         super().__init__(**kwargs)
         self._initial_range = initial_range
         self._current_sigma = 0
         self._sigma_range = sigma_range
+
+    def set_modules(self, physical_system):
+        super().set_modules(physical_system)
+        if self._initial_range is None:
+            self._initial_range = self._limit_margin
 
     def _reset_reference(self):
         self._current_sigma = 10 ** self._get_current_value(np.log10(self._sigma_range))
@@ -33,8 +39,6 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
             if reference_value < self._limit_margin[0]:
                 reference_value = self._limit_margin[0]
             self._reference[i] = reference_value
-        if self._initial_range is None:
-            self._initial_range = self._limit_margin
 
     def reset(self, initial_state=None, initial_reference=None):
         if initial_reference is None:
