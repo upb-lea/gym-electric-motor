@@ -8,14 +8,16 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
     sigma and mean = 0.
     """
 
-    def __init__(self, sigma_range=(1e-3, 1e-1), **kwargs):
+    def __init__(self, sigma_range=(1e-3, 1e-1), initial_range=(-1, 1), **kwargs):
         """
         Args:
             sigma_range(Tuple(float,float)): Lower and Upper limit for the sigma-parameter of the WienerProcess.
+            initial_range(Tuplw(float,float)): Minimal and maximal normalized value of the initial reference point
+             of a new episode.
             kwargs: Further arguments to pass to SubepisodedReferenceGenerator
         """
         super().__init__(**kwargs)
-
+        self._initial_range = initial_range
         self._current_sigma = 0
         self._sigma_range = sigma_range
 
@@ -31,3 +33,10 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
             if reference_value < self._limit_margin[0]:
                 reference_value = self._limit_margin[0]
             self._reference[i] = reference_value
+
+    def reset(self, initial_state=None, initial_reference=None):
+        if initial_reference is None:
+            initial_reference = np.zeros_like(self._referenced_states, dtype=float)
+            initial_reference[self._referenced_states] =\
+                np.random.uniform(self._initial_range[0], self._initial_range[1], 1)
+        return super().reset(initial_state, initial_reference)
