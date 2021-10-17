@@ -44,5 +44,5 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
         if initial_reference is None:
             initial_reference = np.zeros_like(self._referenced_states, dtype=float)
             initial_reference[self._referenced_states] =\
-                np.random.uniform(self._initial_range[0], self._initial_range[1], 1)
+                self.random_generator.uniform(self._initial_range[0], self._initial_range[1], 1)
         return super().reset(initial_state, initial_reference)
