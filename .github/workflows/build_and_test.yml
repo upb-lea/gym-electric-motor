@@ -1,12 +1,13 @@
 name: Build
 
 on:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   push:
     branches: [ master, nightly ]
   pull_request:
     branches: [ master, nightly ]
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  
+  
 
 jobs:
   test-code:
