@@ -1,72 +1,33 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Switched Reference Generator &mdash; gym-electric-motor 2021 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Switched Reference Generator &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Reward Functions" href="../reward_functions/reward_function.html" />
     <link rel="prev" title="Multiple Reference Generator" href="multiple_ref_generator.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> gym-electric-motor
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,18 +35,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
@@ -116,78 +66,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../random_component.html">Random Component</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">gym-electric-motor</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="reference_generator.html">Reference Generators</a> &raquo;</li>
-        
       <li>Switched Reference Generator</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/parts/reference_generators/switched_reference_generator.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="switched-reference-generator">
-<h1>Switched Reference Generator<a class="headerlink" href="#switched-reference-generator" title="Permalink to this headline">¶</a></h1>
+<h1>Switched Reference Generator<a class="headerlink" href="#switched-reference-generator" title="Permalink to this headline"></a></h1>
 <dl class="class">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">SwitchedReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">sub_generators</em>, <em class="sig-param">p=None</em>, <em class="sig-param">super_episode_length=(100</em>, <em class="sig-param">10000)</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">SwitchedReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">sub_generators</em>, <em class="sig-param">p=None</em>, <em class="sig-param">super_episode_length=(100</em>, <em class="sig-param">10000)</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator" title="Permalink to this definition"></a></dt>
 <dd><p>Reference Generator that switches randomly between multiple sub generators with a certain probability p for each.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -201,13 +109,13 @@ probability for each sub_generator is used.</p></li>
 </dl>
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.close" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.close" title="Permalink to this definition"></a></dt>
 <dd><p>Called by the environment, when the environment is deleted to close files, store logs, etc.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference">
-<code class="sig-name descname">get_reference</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.get_reference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_reference</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.get_reference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the reference array of the current time step.</p>
 <p>The reference array needs to be in the same shape as the state variables. For referenced states the reference
 value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</p>
@@ -226,7 +134,7 @@ value is passed. For unreferenced states a default value (e.g. Zero) can be set 
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference_observation">
-<code class="sig-name descname">get_reference_observation</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">*_</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.get_reference_observation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference_observation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_reference_observation</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">*_</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.get_reference_observation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.get_reference_observation" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the reference observation for the next time step. This observation needs to fit in the reference space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -243,19 +151,19 @@ value is passed. For unreferenced states a default value (e.g. Zero) can be set 
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.next_generator">
-<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.next_generator" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.next_generator" title="Permalink to this definition"></a></dt>
 <dd><p>Sets a new reference generator for a new episode.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.random_generator">
-<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.random_generator" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.random_generator" title="Permalink to this definition"></a></dt>
 <dd><p>The random generator that has to be used to draw the random numbers.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reference_names">
-<em class="property">property </em><code class="sig-name descname">reference_names</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reference_names" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">reference_names</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reference_names" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 reference_names(list(str)): A list containing all names of the referenced states in the reference
 observation.</p>
@@ -263,14 +171,14 @@ observation.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.referenced_states">
-<em class="property">property </em><code class="sig-name descname">referenced_states</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.referenced_states" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">referenced_states</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.referenced_states" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset of references for a new episode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -293,7 +201,7 @@ ndarray(bool): Boolean-Array with the length of the state_variables indicating w
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.seed">
-<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.seed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.seed" title="Permalink to this definition"></a></dt>
 <dd><p>The function to set the seed.</p>
 <p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
 to this component that is generated based on the source-seed of the env.</p>
@@ -315,13 +223,13 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.seed_sequence">
-<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.seed_sequence" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.seed_sequence" title="Permalink to this definition"></a></dt>
 <dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.reference_generators.SwitchedReferenceGenerator.set_modules">
-<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.set_modules" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/switched_reference_generator.html#SwitchedReferenceGenerator.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SwitchedReferenceGenerator.set_modules" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment.</p>
@@ -335,50 +243,33 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../reward_functions/reward_function.html" class="btn btn-neutral float-right" title="Reward Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="multiple_ref_generator.html" class="btn btn-neutral float-left" title="Multiple Reference Generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../reward_functions/reward_function.html" class="btn btn-neutral float-right" title="Reward Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
-
-    </p>
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

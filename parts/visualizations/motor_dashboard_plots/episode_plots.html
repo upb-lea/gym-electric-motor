@@ -1,72 +1,33 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Episode Plot (Abstract) &mdash; gym-electric-motor 2021 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Episode Plot (Abstract) &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Mean Episode Reward Plot" href="mean_episode_reward_plot.html" />
     <link rel="prev" title="Episode Length Plot" href="episode_length_plot.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,18 +35,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
@@ -119,85 +69,42 @@
 <li class="toctree-l1"><a class="reference internal" href="../../random_component.html">Random Component</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">gym-electric-motor</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../visualization.html">Visualization</a> &raquo;</li>
-        
           <li><a href="../motor_dashboard.html">Motor Dashboard</a> &raquo;</li>
-        
       <li>Episode Plot (Abstract)</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../_sources/parts/visualizations/motor_dashboard_plots/episode_plots.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="episode-plot-abstract">
-<h1>Episode Plot (Abstract)<a class="headerlink" href="#episode-plot-abstract" title="Permalink to this headline">¶</a></h1>
+<h1>Episode Plot (Abstract)<a class="headerlink" href="#episode-plot-abstract" title="Permalink to this headline"></a></h1>
 <p>The EpisodePlot is the base class for all plots that plot data with number of episodes on the x-axis.</p>
 <dl class="class">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard_plots.</code><code class="sig-name descname">EpisodePlot</code><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#EpisodePlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard_plots.</code><code class="sig-name descname">EpisodePlot</code><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#EpisodePlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot" title="Permalink to this definition"></a></dt>
 <dd><p>Base Plot class that all episode based plots .</p>
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">axis</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">axis</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.initialize" title="Permalink to this definition"></a></dt>
 <dd><p>Initialization of the plot.</p>
 <p>It is called by the MotorDashboard. Set labels, legends… when overriding this method.</p>
 <dl class="field-list simple">
@@ -209,37 +116,37 @@
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_close">
-<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_close" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_close" title="Permalink to this definition"></a></dt>
 <dd><p>Gets called at the beginning of a close</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_begin">
-<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#EpisodePlot.on_reset_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_begin" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#EpisodePlot.on_reset_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_begin" title="Permalink to this definition"></a></dt>
 <dd><p>Gets called at the beginning of each reset</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_end">
-<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_end" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_reset_end" title="Permalink to this definition"></a></dt>
 <dd><p>Gets called at the end of each reset</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_begin">
-<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_begin" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_begin" title="Permalink to this definition"></a></dt>
 <dd><p>Gets called at the beginning of each step</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_end">
-<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_end" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.on_step_end" title="Permalink to this definition"></a></dt>
 <dd><p>Gets called at the end of each step</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.render">
-<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.render" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.render" title="Permalink to this definition"></a></dt>
 <dd><p>Update of the plots axis.</p>
 <p>The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
 are scaled dynamically.</p>
@@ -247,13 +154,13 @@ are scaled dynamically.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.reset_data">
-<code class="sig-name descname">reset_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#EpisodePlot.reset_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.reset_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#EpisodePlot.reset_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.reset_data" title="Permalink to this definition"></a></dt>
 <dd><p>Called by the dashboard, when the figures are reset to generate a new figure.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.set_env">
-<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.set_env" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.EpisodePlot.set_env" title="Permalink to this definition"></a></dt>
 <dd><p>Sets the environment of the motor.</p>
 </dd></dl>
 
@@ -263,50 +170,33 @@ are scaled dynamically.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="mean_episode_reward_plot.html" class="btn btn-neutral float-right" title="Mean Episode Reward Plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="episode_length_plot.html" class="btn btn-neutral float-left" title="Episode Length Plot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mean_episode_reward_plot.html" class="btn btn-neutral float-right" title="Mean Episode Reward Plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
-
-    </p>
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,70 +1,31 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Summary &mdash; gym-electric-motor 2021 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Summary &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> gym-electric-motor
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,18 +33,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../parts/readme.html">Readme File</a></li>
@@ -102,71 +52,30 @@
 <li class="toctree-l1"><a class="reference internal" href="../parts/random_component.html">Random Component</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">gym-electric-motor</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Summary</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/JOSS/paper.md.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <hr class="docutils" />
 <p>title: ‘gym-electric-motor (GEM): A Python toolbox for the simulation of electric drive systems’
 tags:</p>
@@ -203,7 +112,7 @@ bibliography: Literature.bib</p></li>
 </ul>
 <hr class="docutils" />
 <div class="section" id="summary">
-<h1>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h1>
+<h1>Summary<a class="headerlink" href="#summary" title="Permalink to this headline"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">gym-electric-motor</span></code> (<code class="docutils literal notranslate"><span class="pre">GEM</span></code>) library provides simulation environments for electrical drive systems and, therefore, allows to easily design and analyze drive control solutions in Python.
 Since <code class="docutils literal notranslate"><span class="pre">GEM</span></code> is strongly inspired by OpenAI’s <code class="docutils literal notranslate"><span class="pre">gym</span></code> [&#64;gym-whitepaper], it is particularly well-equipped for (but not limited to) applications in the field of reinforcement-learning-based control algorithms.
 In addition, the interface allows to plug in any expert-driven control approach, such as model predictive control, to be tested  and to perform benchmark comparisons.
@@ -211,7 +120,7 @@ The <code class="docutils literal notranslate"><span class="pre">GEM</span></cod
 A modular structure allows additional system components to be included in the simulation framework.</p>
 </div>
 <div class="section" id="statement-of-need">
-<h1>Statement of Need<a class="headerlink" href="#statement-of-need" title="Permalink to this headline">¶</a></h1>
+<h1>Statement of Need<a class="headerlink" href="#statement-of-need" title="Permalink to this headline"></a></h1>
 <p>Electric drive systems and their control are an important topic in both academic and industrial research due to their worldwide usage and deployment.
 Control algorithms for these systems have usually been designed, parameterized and tested within <code class="docutils literal notranslate"><span class="pre">MATLAB</span> <span class="pre">-</span> <span class="pre">Simulink</span></code> [&#64;MathWorks], which is developed and promoted specifically for
 such engineering tasks.
@@ -224,7 +133,7 @@ Considering the prevalence of commercial software like <code class="docutils lit
 <code class="docutils literal notranslate"><span class="pre">GEM</span></code> has already been used in graduate courses on reinforcement learning [&#64;rl-lecture].</p>
 </div>
 <div class="section" id="related-software">
-<h1>Related software<a class="headerlink" href="#related-software" title="Permalink to this headline">¶</a></h1>
+<h1>Related software<a class="headerlink" href="#related-software" title="Permalink to this headline"></a></h1>
 <p>Due to the strong dependence of downstream industrial development on simulated environments there is a comprehensive variety of commercial software that enables numerical analysis of every facet of electric drives.
 To name just a few, <code class="docutils literal notranslate"><span class="pre">MATLAB</span> <span class="pre">-</span> <span class="pre">Simulink</span></code> is probably the most popular software environment for numerical analysis in engineering.
 Herein, <code class="docutils literal notranslate"><span class="pre">MATLAB</span></code> is providing for a scientific calculation framework and <code class="docutils literal notranslate"><span class="pre">Simulink</span></code> for a model-driven graphical interface with a very large field of applications.
@@ -238,7 +147,7 @@ Hence, these software packages are usually not considered in control development
 This particularly applies in the early control design phase when researching new, innovative control approaches (rapid control prototyping) or when students want to receive quasi-instantaneous simulation feedbacks.</p>
 </div>
 <div class="section" id="package-architecture">
-<h1>Package Architecture<a class="headerlink" href="#package-architecture" title="Permalink to this headline">¶</a></h1>
+<h1>Package Architecture<a class="headerlink" href="#package-architecture" title="Permalink to this headline"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">GEM</span></code> library models an electric drive system by its four main components: voltage supply, power converter, electric motor and mechanical load.
 The general structure of such a system is depicted in autoref{fig:SCML_system}.</p>
 <a class="reference external image-reference" href="../plots/SCML_Setting.eps"><img alt="Simplified structure diagram of an electric drive system\label{fig:SCML_system}" src="../_images/SCML_Setting.eps" /></a>
@@ -259,7 +168,7 @@ Speed changes that result from the difference between motor and load torque are 
 Alternatively, the motor speed can be set to a fixed value, which can be useful for the investigation of control algorithms concerning generator operation, or it can be set to follow a specified trajectory, which is convenient when inspecting scenarios with defined speed demands like in traction applications.</p>
 </div>
 <div class="section" id="features">
-<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline"></a></h1>
 <p>A large number of different motor systems is already implemented.
 These include DC drives as well as synchronous and induction three-phase drives.
 A complete list can be viewed in the <code class="docutils literal notranslate"><span class="pre">GEM</span></code> documentation [&#64;GEM-docu].
@@ -272,7 +181,7 @@ Optionally, the environment can be setup such that a reset of the system is indu
 In addition, built-in visualization and plotting routines allow to monitor the training process of reinforcement learning agents or the performance of expert-driven control approaches.</p>
 </div>
 <div class="section" id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
 <p>A minimal example of <code class="docutils literal notranslate"><span class="pre">GEM's</span></code> simulation capability is presented in autoref{fig:SCIM<em>example}.
 The plot shows the start-up behavior of a squirrel cage induction motor connected to an idealized three-phase electric grid depicting the angular velocity $omega</em>mathrm{me}$, the torque $T$, the voltage $u<em>{a,b,c}$ and the current $i</em>{d,q}$.
 Here, the voltage is depicted within the physical $abc$-frame while the current is viewed within the simplified $dq$-frame.</p>
@@ -285,51 +194,35 @@ Featured examples:</p>
 </ul>
 </div>
 <div class="section" id="references">
-<h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
+<h1>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h1>
 </div>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
-
-    </p>
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

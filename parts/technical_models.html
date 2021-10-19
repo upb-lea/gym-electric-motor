@@ -1,70 +1,31 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Technical Models &mdash; gym-electric-motor 2021 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Technical Models &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> gym-electric-motor
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,18 +33,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
@@ -102,83 +52,42 @@
 <li class="toctree-l1"><a class="reference internal" href="random_component.html">Random Component</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">gym-electric-motor</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Technical Models</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/parts/technical_models.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="technical-models">
-<h1>Technical Models<a class="headerlink" href="#technical-models" title="Permalink to this headline">¶</a></h1>
+<h1>Technical Models<a class="headerlink" href="#technical-models" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
 <p>The technical models contain the technical properties of the motor, the power electronic converter and the load.</p>
 <p>The motors and the loads can be parametrized by either choosing the number of its default set in the environment
 initialization or by passing a new Load or Motor parameter dictionary as described below.
 The parameters of the power electronic converter are directly included in the initialization.</p>
 <div class="section" id="dc-motor-parameter-dictionary">
-<h3>DC Motor Parameter Dictionary<a class="headerlink" href="#dc-motor-parameter-dictionary" title="Permalink to this headline">¶</a></h3>
+<h3>DC Motor Parameter Dictionary<a class="headerlink" href="#dc-motor-parameter-dictionary" title="Permalink to this headline"></a></h3>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 32%" />
@@ -242,7 +151,7 @@ The parameters of the power electronic converter are directly included in the in
 </table>
 </div>
 <div class="section" id="pmsm-and-synrm-parameter-dictionary">
-<h3>PMSM and SynRM Parameter Dictionary<a class="headerlink" href="#pmsm-and-synrm-parameter-dictionary" title="Permalink to this headline">¶</a></h3>
+<h3>PMSM and SynRM Parameter Dictionary<a class="headerlink" href="#pmsm-and-synrm-parameter-dictionary" title="Permalink to this headline"></a></h3>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21%" />
@@ -288,7 +197,7 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 <p>Furthermore, the angular velocity is the electrical one and not the mechanical one <span class="math notranslate nohighlight">\(\omega = p \omega_{me}\)</span>.</p>
 </div>
 <div class="section" id="load-parameter-dictionary">
-<h3>Load Parameter Dictionary<a class="headerlink" href="#load-parameter-dictionary" title="Permalink to this headline">¶</a></h3>
+<h3>Load Parameter Dictionary<a class="headerlink" href="#load-parameter-dictionary" title="Permalink to this headline"></a></h3>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 33%" />
@@ -316,7 +225,7 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </table>
 </div>
 <div class="section" id="dc-shunt-default-models">
-<h3>DC Shunt Default Models<a class="headerlink" href="#dc-shunt-default-models" title="Permalink to this headline">¶</a></h3>
+<h3>DC Shunt Default Models<a class="headerlink" href="#dc-shunt-default-models" title="Permalink to this headline"></a></h3>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 48%" />
@@ -350,7 +259,7 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </table>
 </div>
 <div class="section" id="dc-series-default-models">
-<h3>DC Series Default Models<a class="headerlink" href="#dc-series-default-models" title="Permalink to this headline">¶</a></h3>
+<h3>DC Series Default Models<a class="headerlink" href="#dc-series-default-models" title="Permalink to this headline"></a></h3>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 48%" />
@@ -384,7 +293,7 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </table>
 </div>
 <div class="section" id="dc-permanently-excited-default-models">
-<h3>DC Permanently Excited Default Models<a class="headerlink" href="#dc-permanently-excited-default-models" title="Permalink to this headline">¶</a></h3>
+<h3>DC Permanently Excited Default Models<a class="headerlink" href="#dc-permanently-excited-default-models" title="Permalink to this headline"></a></h3>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 48%" />
@@ -415,7 +324,7 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </table>
 </div>
 <div class="section" id="dc-externally-excited-default-models">
-<h3>DC Externally Excited Default Models<a class="headerlink" href="#dc-externally-excited-default-models" title="Permalink to this headline">¶</a></h3>
+<h3>DC Externally Excited Default Models<a class="headerlink" href="#dc-externally-excited-default-models" title="Permalink to this headline"></a></h3>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 48%" />
@@ -474,46 +383,30 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
-
-    </p>
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

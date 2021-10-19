@@ -1,72 +1,33 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>External Speed Load &mdash; gym-electric-motor 2021 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>External Speed Load &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Ornstein Uhlenbeck Load" href="ornstein_uhlenbeck_load.html" />
     <link rel="prev" title="Constant Speed Load" href="const_speed_load.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,18 +35,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
@@ -121,84 +71,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../../random_component.html">Random Component</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">gym-electric-motor</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../physical_system.html">Physical Systems</a> &raquo;</li>
-        
           <li><a href="../scml_system.html">Supply Converter Motor Load System (SCML)</a> &raquo;</li>
-        
           <li><a href="mechanical_load.html">Mechanical Loads</a> &raquo;</li>
-        
       <li>External Speed Load</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../_sources/parts/physical_systems/mechanical_loads/ext_speed_load.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="external-speed-load">
-<h1>External Speed Load<a class="headerlink" href="#external-speed-load" title="Permalink to this headline">¶</a></h1>
+<h1>External Speed Load<a class="headerlink" href="#external-speed-load" title="Permalink to this headline"></a></h1>
 <div class="section" id="class-description">
-<h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this headline">¶</a></h2>
+<h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this headline"></a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">ExternalSpeedLoad</code><span class="sig-paren">(</span><em class="sig-param">speed_profile</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">speed_profile_kwargs=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">ExternalSpeedLoad</code><span class="sig-paren">(</span><em class="sig-param">speed_profile</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">speed_profile_kwargs=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad" title="Permalink to this definition"></a></dt>
 <dd><p>External speed mechanical load system which will set the speed to a
 predefined speed-function/ speed-profile.</p>
 <dl class="field-list simple">
@@ -221,7 +127,7 @@ with additional parameters:</p>
 </dl>
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.get_state_space">
-<code class="sig-name descname">get_state_space</code><span class="sig-paren">(</span><em class="sig-param">omega_range</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.get_state_space" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_state_space</code><span class="sig-paren">(</span><em class="sig-param">omega_range</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.get_state_space" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>omega_range</strong> (<em>Tuple</em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em>) – Lower and upper values the motor can generate for omega normalized to (-1, 1)</p>
@@ -237,7 +143,7 @@ with additional parameters:</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">nominal_state</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">nominal_state</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initialize" title="Permalink to this definition"></a></dt>
 <dd><p>Initializes the state of the load on an episode start.</p>
 <p>Values can be given as a constant or sampled random out of a statistical distribution. Initial value is in
 range of the nominal values or a given interval.</p>
@@ -254,28 +160,28 @@ range of the nominal values or a given interval.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initializer">
-<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initializer" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 dict: The motors initial state and additional initializer parameters</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.j_total">
-<em class="property">property </em><code class="sig-name descname">j_total</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.j_total" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">j_total</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.j_total" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 float: Total moment of inertia affecting the motor shaft.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.limits">
-<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.limits" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.limits" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 dict(float): Mapping of the motor states to their limit values.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_jacobian">
-<code class="sig-name descname">mechanical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.mechanical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_jacobian" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mechanical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.mechanical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_jacobian" title="Permalink to this definition"></a></dt>
 <dd><p>Calculation of the jacobians of the mechanical-ODE for each of the mechanical state.</p>
 <p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
 be set to True. Otherwise, the jacobian will not be called.</p>
@@ -299,7 +205,7 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_ode">
-<code class="sig-name descname">mechanical_ode</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.mechanical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_ode" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mechanical_ode</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.mechanical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_ode" title="Permalink to this definition"></a></dt>
 <dd><p>Calculation of the derivatives of the mechanical-ODE for each of the mechanical states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -320,33 +226,33 @@ be set to True. Otherwise, the jacobian will not be called.</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.next_generator">
-<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.next_generator" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.next_generator" title="Permalink to this definition"></a></dt>
 <dd><p>Sets a new reference generator for a new episode.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.nominal_values">
-<em class="property">property </em><code class="sig-name descname">nominal_values</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.nominal_values" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">nominal_values</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.nominal_values" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 dict(float): Mapping of the motor states to their nominal values</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.omega">
-<em class="property">property </em><code class="sig-name descname">omega</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.omega" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">omega</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.omega" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 float: Function-value for omega in rad/s at time-step t.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.random_generator">
-<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.random_generator" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.random_generator" title="Permalink to this definition"></a></dt>
 <dd><p>The random generator that has to be used to draw the random numbers.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset the motors state to a new initial state. (Default 0)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -368,7 +274,7 @@ physical system</p></li>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed">
-<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed" title="Permalink to this definition"></a></dt>
 <dd><p>The function to set the seed.</p>
 <p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
 to this component that is generated based on the source-seed of the env.</p>
@@ -390,13 +296,13 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed_sequence">
-<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed_sequence" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed_sequence" title="Permalink to this definition"></a></dt>
 <dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.set_j_rotor">
-<code class="sig-name descname">set_j_rotor</code><span class="sig-paren">(</span><em class="sig-param">j_rotor</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.set_j_rotor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_j_rotor</code><span class="sig-paren">(</span><em class="sig-param">j_rotor</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.set_j_rotor" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>j_rotor</strong> (<em>float</em>) – The moment of inertia of the rotor shaft of the motor.</p>
@@ -406,7 +312,7 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
 <dl class="method">
 <dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.state_names">
-<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.state_names" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.state_names" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 list(str): Names of the states in the mechanical-ODE.</p>
 </dd></dl>
@@ -418,50 +324,33 @@ list(str): Names of the states in the mechanical-ODE.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ornstein_uhlenbeck_load.html" class="btn btn-neutral float-right" title="Ornstein Uhlenbeck Load" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="const_speed_load.html" class="btn btn-neutral float-left" title="Constant Speed Load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ornstein_uhlenbeck_load.html" class="btn btn-neutral float-right" title="Ornstein Uhlenbeck Load" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
-
-    </p>
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

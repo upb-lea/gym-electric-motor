@@ -1,70 +1,31 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>gym.envs.registration &mdash; gym-electric-motor 2021 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>gym.envs.registration &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,18 +33,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
@@ -102,74 +52,41 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">gym-electric-motor</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
       <li>gym.envs.registration</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for gym.envs.registration</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">importlib_metadata</span> <span class="k">as</span> <span class="nn">metadata</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">importlib.metadata</span> <span class="k">as</span> <span class="nn">metadata</span>
 
 <span class="kn">from</span> <span class="nn">gym</span> <span class="kn">import</span> <span class="n">error</span><span class="p">,</span> <span class="n">logger</span>
 
@@ -179,6 +96,9 @@
 <span class="c1"># 2016-10-31: We&#39;re experimentally expanding the environment ID format</span>
 <span class="c1"># to include an optional username.</span>
 <span class="n">env_id_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$&quot;</span><span class="p">)</span>
+
+<span class="c1"># Whitelist of plugins which can hook into the `gym.envs.internal` entry point.</span>
+<span class="n">plugin_internal_whitelist</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ale_py.gym&quot;</span><span class="p">}</span>
 
 
 <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -198,6 +118,7 @@
 <span class="sd">        reward_threshold (Optional[int]): The reward threshold before the task is considered solved</span>
 <span class="sd">        nondeterministic (bool): Whether this environment is non-deterministic even after seeding</span>
 <span class="sd">        max_episode_steps (Optional[int]): The maximum number of steps that an episode can consist of</span>
+<span class="sd">        order_enforce (Optional[int]): Whether to wrap the environment in an orderEnforcing wrapper</span>
 <span class="sd">        kwargs (dict): The kwargs to pass to the environment class</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -209,6 +130,7 @@
         <span class="n">reward_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">nondeterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">max_episode_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">order_enforce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
@@ -216,6 +138,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reward_threshold</span> <span class="o">=</span> <span class="n">reward_threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nondeterministic</span> <span class="o">=</span> <span class="n">nondeterministic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">=</span> <span class="n">max_episode_steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_enforce</span> <span class="o">=</span> <span class="n">order_enforce</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">kwargs</span>
 
         <span class="n">match</span> <span class="o">=</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
@@ -235,8 +158,10 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
                 <span class="p">)</span>
             <span class="p">)</span>
+
         <span class="n">_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">):</span>
             <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">(</span><span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -247,7 +172,15 @@
         <span class="n">spec</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">spec</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">_kwargs</span>
         <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">gym.wrappers.time_limit</span> <span class="kn">import</span> <span class="n">TimeLimit</span>
 
+            <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_enforce</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">gym.wrappers.order_enforcing</span> <span class="kn">import</span> <span class="n">OrderEnforcing</span>
+
+                <span class="n">env</span> <span class="o">=</span> <span class="n">OrderEnforcing</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -264,6 +197,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -272,20 +206,6 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making new env: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1"># We used to have people override _reset/_step rather than</span>
-        <span class="c1"># reset/step. Set _gym_disable_underscore_compat = True on</span>
-        <span class="c1"># your environment if you use these methods and don&#39;t want</span>
-        <span class="c1"># compatibility code to be invoked.</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_reset&quot;</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_step&quot;</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;_gym_disable_underscore_compat&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="p">):</span>
-            <span class="n">patch_deprecated_methods</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">gym.wrappers.time_limit</span> <span class="kn">import</span> <span class="n">TimeLimit</span>
-
-            <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>
 
     <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -293,11 +213,10 @@
 
     <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
-            <span class="n">mod_name</span><span class="p">,</span> <span class="n">_sep</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="n">mod_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
-            <span class="c1"># catch ImportError for python2.7 compatibility</span>
-            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="n">ModuleNotFoundError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
                     <span class="s2">&quot;A module (</span><span class="si">{}</span><span class="s2">) was specified for the environment but was not found, make sure the package is installed with `pip install` before calling `gym.make()`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">mod_name</span>
@@ -325,19 +244,62 @@
                 <span class="k">for</span> <span class="n">valid_env_name</span><span class="p">,</span> <span class="n">valid_env_spec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">env_name</span> <span class="o">==</span> <span class="n">valid_env_spec</span><span class="o">.</span><span class="n">_env_name</span>
             <span class="p">]</span>
+            <span class="n">algorithmic_envs</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;Copy&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;RepeatCopy&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;DuplicatedInput&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Reverse&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ReversedAdiiton&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ReversedAddition3&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">toytext_envs</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;KellyCoinflip&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;KellyCoinflipGeneralized&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NChain&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Roulette&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;GuessingGame&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;HotterColder&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
             <span class="k">if</span> <span class="n">matching_envs</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">DeprecatedEnv</span><span class="p">(</span>
                     <span class="s2">&quot;Env </span><span class="si">{}</span><span class="s2"> not found (valid versions include </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="nb">id</span><span class="p">,</span> <span class="n">matching_envs</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">algorithmic_envs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span>
+                    <span class="s2">&quot;Algorithmic environment </span><span class="si">{}</span><span class="s2"> has been moved out of Gym. Install it via `pip install gym-algorithmic` and add `import gym_algorithmic` before using it.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="nb">id</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">toytext_envs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span>
+                    <span class="s2">&quot;Toytext environment </span><span class="si">{}</span><span class="s2"> has been moved out of Gym. Install it via `pip install gym-legacy-toytext` and add `import gym_toytext` before using it.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="nb">id</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span><span class="s2">&quot;No registered env with id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="nb">id</span><span class="p">:</span>
+                <span class="n">namespace</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Custom namespace &#39;</span><span class="si">{namespace}</span><span class="s2">&#39; is being overrode by namespace &#39;</span><span class="si">{self._ns}</span><span class="s2">&#39;. &quot;</span>
+                    <span class="s2">&quot;If you are developing a plugin you shouldn&#39;t specify a namespace in `register` calls. &quot;</span>
+                    <span class="s2">&quot;The namespace is specified through the entry point key.&quot;</span>
+                <span class="p">)</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self._ns}</span><span class="s2">/</span><span class="si">{id}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Cannot re-register id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Overriding environment </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">EnvSpec</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ns</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="n">ns</span>
+        <span class="k">yield</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <span class="c1"># Have a global registry</span>
@@ -356,76 +318,72 @@
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
 
-<span class="n">warn_once</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">registry</span><span class="o">.</span><span class="n">namespace</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+        <span class="k">yield</span>
 
 
-<span class="k">def</span> <span class="nf">patch_deprecated_methods</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Methods renamed from &#39;_method&#39; to &#39;method&#39;, render() no longer has &#39;close&#39; parameter, close is a separate method.</span>
-<span class="sd">    For backward compatibility, this makes it possible to work with unmodified environments.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">warn_once</span>
-    <span class="k">if</span> <span class="n">warn_once</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;Environment &#39;</span><span class="si">%s</span><span class="s2">&#39; has deprecated methods &#39;_step&#39; and &#39;_reset&#39; rather than &#39;step&#39; and &#39;reset&#39;. Compatibility code invoked. Set _gym_disable_underscore_compat = True to disable this behavior.&quot;</span>
-            <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="p">))</span>
-        <span class="p">)</span>
-        <span class="n">warn_once</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_reset</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_step</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_seed</span>
+<span class="k">def</span> <span class="nf">load_env_plugins</span><span class="p">(</span><span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;gym.envs&quot;</span><span class="p">):</span>
+    <span class="c1"># Load third-party environments</span>
+    <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry_point</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="c1"># Python 3.8 doesn&#39;t support plugin.module, plugin.attr</span>
+        <span class="c1"># So we&#39;ll have to try and parse this ourselves</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">plugin</span><span class="o">.</span><span class="n">attr</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Gym environment plugin `</span><span class="si">{module}</span><span class="s2">` must specify a function to execute, not a root module&quot;</span>
+                <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">namespace</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__internal__&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">plugin_internal_whitelist</span><span class="p">:</span>
+                <span class="n">context</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Trying to register an internal environment when `</span><span class="si">{module}</span><span class="s2">` is not in the whitelist&quot;</span>
+                <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">close</span><span class="p">():</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">env</span><span class="o">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">render</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">close</span> <span class="o">=</span> <span class="n">close</span>
+        <span class="k">with</span> <span class="n">context</span><span class="p">:</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fn</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.
-
-    </p>
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
