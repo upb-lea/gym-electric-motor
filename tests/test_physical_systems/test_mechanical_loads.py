@@ -319,8 +319,8 @@ class TestPolyStaticLoad(TestMechanicalLoad):
     key = 'PolyStaticLoad'
 
     @pytest.mark.parametrize('omega, load_parameter, expected', [
-        (-0.5, dict(a=12, b=1, c=0, j_load=1), (1, 1)),
-        (0, dict(j_load=0.5), (0, 2)),
+        (-0.5, dict(a=12, b=1, c=0, j_load=1), (np.array([[-1.]]), np.array([[1.]]))),
+        (0, dict(j_load=0.5), (np.array([[-1000.]]), np.array([[2.]]))),
         (2, dict(a=20, b=0, c=2, j_load=0.25), (-32, 4)),
         (2, dict(a=20, b=0.125, c=2, j_load=0.25), (-32.5, 4))
     ]

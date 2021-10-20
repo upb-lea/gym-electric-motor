@@ -1,4 +1,4 @@
-Externally Excited DC Motor Environments
+Squirrel Cage Induction Motor Environments
 ******************************************
 
 
