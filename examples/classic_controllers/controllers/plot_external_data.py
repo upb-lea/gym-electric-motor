@@ -1,4 +1,4 @@
-def plot(external_reference_plots=[], state_names=[], external_plot=[], visualization=True, external_data=[]):
+def plot(external_reference_plots=(), state_names=(), external_plot=(), visualization=True, external_data=()):
     """
     This method passes the latest internally generated references of the controller the ExternalReferencePlots. The
     GEM-Environment uses this data to plot these references with the according states within its MotorDashboard.
@@ -9,6 +9,10 @@ def plot(external_reference_plots=[], state_names=[], external_plot=[], visualiz
         state_names:
             The list of all environment state names.
         external_plot(Iterable[ExternalPlot])
+        visualization:
+            Boolean if there is a visualization.
+        external_data:
+            List of data to be plotted
     """
 
     if visualization:

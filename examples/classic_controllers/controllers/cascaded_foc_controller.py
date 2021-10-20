@@ -15,8 +15,8 @@ class CascadedFieldOrientedController:
         weakening range. The speed controller is designed as a PI-controller by default.
     """
 
-    def __init__(self,  environment, stages, _controllers, ref_states, external_ref_plots=[], plot_torque=True, plot_modulation=False,
-                 update_interval=1000, torque_control='interpolate', **controller_kwargs):
+    def __init__(self,  environment, stages, _controllers, ref_states, external_ref_plots=(), plot_torque=True,
+                 plot_modulation=False, update_interval=1000, torque_control='interpolate', **controller_kwargs):
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
         self.backward_transformation = (lambda quantities, eps: t32(q(quantities[::-1], eps)))

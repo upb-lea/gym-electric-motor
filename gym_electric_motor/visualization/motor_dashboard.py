@@ -272,3 +272,7 @@ class MotorDashboard(ElectricMotorVisualization):
         for fig in self._figures:
             fig.canvas.draw()
             fig.canvas.flush_events()
+
+    @property
+    def update_interval(self):
+        return self._update_interval

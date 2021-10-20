@@ -15,7 +15,8 @@ class InductionMotorCascadedFieldOrientedController:
         for speed control.
     """
 
-    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=[], external_plot=[], **controller_kwargs):
+    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=(), external_plot=(),
+                 **controller_kwargs):
 
         self.env = environment
         self.action_space = environment.action_space

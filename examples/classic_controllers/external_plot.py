@@ -37,7 +37,7 @@ class ExternalPlot(TimePlot):
 
     def __init__(self, referenced=False, additional_lines=0, min=0, max=1):
         """
-            This function creates an object for external plots in a GEM Motordashboard.
+            This function creates an object for external plots in a GEM MotorDashboard.
 
             Args:
                 referenced: a reference is to be displayed

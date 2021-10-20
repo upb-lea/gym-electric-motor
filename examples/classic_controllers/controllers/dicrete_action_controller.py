@@ -10,9 +10,9 @@ class DiscreteActionController:
         controller is used. For the externally excited dc motor, the excitation current is also controlled.
     """
 
-    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=[], **controller_kwargs):
+    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=(), **controller_kwargs):
         assert type(environment.action_space) in [Discrete, MultiDiscrete] and isinstance(environment.physical_system,
-                                                                                          DcMotorSystem), 'No suitable action space for Discrete Action Controller'
+                                            DcMotorSystem), 'No suitable action space for Discrete Action Controller'
 
         self.ref_idx = np.where(ref_states != 'i_e')[0][0]
         self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])

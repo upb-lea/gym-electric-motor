@@ -14,7 +14,7 @@ class CascadedController:
         plots.
     """
 
-    def __init__(self, environment, stages, _controllers, visualization, ref_states, external_ref_plots=[], **controller_kwargs):
+    def __init__(self, environment, stages, _controllers, visualization, ref_states, external_ref_plots=(), **controller_kwargs):
 
         self.visualization = visualization
         self.action_space = environment.action_space

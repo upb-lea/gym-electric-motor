@@ -12,7 +12,7 @@ class InductionMotorFieldOrientedController:
         model.
     """
 
-    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=[], external_plot=[],
+    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=(), external_plot=(),
                  **controller_kwargs):
         self.env = environment
         self.action_space = environment.action_space

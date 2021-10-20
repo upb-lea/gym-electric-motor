@@ -8,19 +8,30 @@ class FluxEstimator:
     """
     def __init__(self, env):
         mp = env.physical_system.electrical_motor.motor_parameter
-        self.l_m = mp['l_m']
-        self.l_r = mp['l_m'] + mp['l_sigr']
-        self.r_r = mp['r_r']
-        self.p = mp['p']
-        self.T23 = env.physical_system.electrical_motor.t_23
+        self.l_m = mp['l_m']                    # Main induction
+        self.l_r = mp['l_m'] + mp['l_sigr']     # Induction of the rotor
+        self.r_r = mp['r_r']                    # Rotor resistance
+        self.p = mp['p']                        # Pole pair number
+        self.tau = env.physical_system.tau      # Sampling time
+
+        # function to transform the currents from abc to alpha/beta coordinates
         self.abc_to_alphabeta_transformation = env.physical_system.abc_to_alphabeta_space
-        self.tau = env.physical_system.tau
+
+        # Integrated values of the flux for the two directions (Re: alpha, Im: beta)
         self.integrated = np.complex(0, 0)
         self.i_s_idx = [env.state_names.index('i_sa'), env.state_names.index('i_sb'), env.state_names.index('i_sc')]
         self.omega_idx = env.state_names.index('omega')
 
     def estimate(self, state):
-        """Method to estimate the flux of an induction motor"""
+        """
+            Method to estimate the flux of an induction motor
+
+            Args:
+                state: state of the gym-electric-motor environment
+
+            Returns:
+                Amount and angle of the estimated flux
+        """
 
         i_s = state[self.i_s_idx]
         omega = state[self.omega_idx] * self.p
@@ -38,4 +49,4 @@ class FluxEstimator:
 
     def reset(self):
         # Reset the integrated value
-        self.integrated = 0
+        self.integrated = np.complex(0, 0)

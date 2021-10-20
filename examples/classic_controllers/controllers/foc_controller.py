@@ -14,7 +14,7 @@ class FieldOrientedController:
         manipulated variable for each current component.
     """
 
-    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=[], **controller_kwargs):
+    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=(), **controller_kwargs):
         assert isinstance(environment.physical_system, SynchronousMotorSystem), 'No suitable Environment for FOC Controller'
 
         t32 = environment.physical_system.electrical_motor.t_32

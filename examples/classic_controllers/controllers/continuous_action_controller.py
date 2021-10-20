@@ -11,9 +11,9 @@ class ContinuousActionController:
         is also controlled.
     """
 
-    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=[], **controller_kwargs):
+    def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=(), **controller_kwargs):
         assert type(environment.action_space) is Box and isinstance(environment.physical_system,
-                                                                    DcMotorSystem), 'No suitable action space for Continuous Action Controller'
+                                            DcMotorSystem), 'No suitable action space for Continuous Action Controller'
         self.action_space = environment.action_space
         self.state_names = environment.state_names
 

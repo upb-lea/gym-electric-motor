@@ -45,7 +45,18 @@ class Controller:
             the inputs of the control function are the state and the reference, both are given by the environment
 
         """
-        _controllers = cls.controller_register()
+
+        _controllers = {
+                            'pi_controller': [ContinuousActionController, ContinuousController, PIController],
+                            'pid_controller': [ContinuousActionController, ContinuousController, PIDController],
+                            'on_off': [DiscreteActionController, DiscreteController, OnOffController],
+                            'three_point': [DiscreteActionController, DiscreteController, ThreePointController],
+                            'cascaded_controller': [CascadedController],
+                            'foc_controller': [FieldOrientedController],
+                            'cascaded_foc_controller': [CascadedFieldOrientedController],
+                            'foc_rotor_flux_observer': [InductionMotorFieldOrientedController],
+                            'cascaded_foc_rotor_flux_observer': [InductionMotorCascadedFieldOrientedController],
+                    }
         controller_kwargs = cls.reference_states(environment, **controller_kwargs)
         controller_kwargs = cls.get_visualization(environment, **controller_kwargs)
 
@@ -63,6 +74,7 @@ class Controller:
 
     @staticmethod
     def get_visualization(environment, **controller_kwargs):
+        """This method separates external_plots and external_ref_plots. It also checks if a MotorDashboard is used."""
         if 'external_plot' in controller_kwargs.keys():
             ext_plot = []
             ref_plot = []
@@ -74,9 +86,9 @@ class Controller:
             controller_kwargs['external_plot'] = ext_plot
             controller_kwargs['external_ref_plots'] = ref_plot
 
-        for visualization in environment._visualizations:
+        for visualization in environment.visualizations:
             if isinstance(visualization, MotorDashboard):
-                controller_kwargs['update_interval'] = visualization._update_interval
+                controller_kwargs['update_interval'] = visualization.update_interval
                 controller_kwargs['visualization'] = True
                 return controller_kwargs
         controller_kwargs['visualization'] = False
@@ -232,6 +244,16 @@ class Controller:
             This method automatically parameterizes a given controller design if the parameter automated_gain is True
             (default True), based on the design according to the symmetric optimum (SO). Further information about the
             design according to the SO can be found in the following paper (https://ieeexplore.ieee.org/document/55967).
+
+            Args:
+                environment: gym-electric-motor environment
+                stages: list of the stages of the controller
+                controller_type: string of the used controller type from the dictionary _controllers
+                _controllers: dictionary of all possible controllers and controller stages
+                controller_kwargs: further arguments of the controller
+
+            Returns:
+                list of stages, which are completely parameterized
         """
 
         ref_states = controller_kwargs['ref_states']
@@ -501,17 +523,3 @@ class Controller:
                     stages = [stages[0], overlaid]
 
         return stages
-
-    @staticmethod
-    def controller_register():
-        return {
-            'pi_controller': [ContinuousActionController, ContinuousController, PIController],
-            'pid_controller': [ContinuousActionController, ContinuousController, PIDController],
-            'on_off': [DiscreteActionController, DiscreteController, OnOffController],
-            'three_point': [DiscreteActionController, DiscreteController, ThreePointController],
-            'cascaded_controller': [CascadedController],
-            'foc_controller': [FieldOrientedController],
-            'cascaded_foc_controller': [CascadedFieldOrientedController],
-            'foc_rotor_flux_observer': [InductionMotorFieldOrientedController],
-            'cascaded_foc_rotor_flux_observer': [InductionMotorCascadedFieldOrientedController],
-            }

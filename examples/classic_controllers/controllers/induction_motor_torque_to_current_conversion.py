@@ -119,8 +119,9 @@ class InductionMotorTorqueToCurrentConversion:
         return np.array(psi_opt_t).T
 
     def t_max(self):
-        # Calculate maximum torque for a given flux
+        # All flux values to calculate the corresponding torque and currents for
         psi = np.linspace(self.psi_max, 0, self.psi_count)
+        # The resulting torque and currents lists
         t_val = []
         i_sd_val = []
         i_sq_val = []
@@ -134,6 +135,7 @@ class InductionMotorTorqueToCurrentConversion:
             i_sd_val.append(i_sd)
             i_sq_val.append(i_sq)
 
+        # The characteristic is symmetrical for positive and negative torques.
         t_val.extend(list(-np.array(t_val[::-1])))
         psi = np.append(psi, psi[::-1])
         i_sd_val.extend(i_sd_val[::-1])
@@ -155,6 +157,14 @@ class InductionMotorTorqueToCurrentConversion:
         """
             This main method is called by the CascadedFieldOrientedControllerRotorFluxObserver to calculate reference
             values for the i_sd and i_sq currents from a given torque reference.
+
+            Args:
+                state: state of the gym-electric-motor environment
+                torque: reference value for the torque
+                psi_abs: amount of the estimated flux
+
+            Returns:
+                Reference values for the currents i_sq and i_sd, optimal flux
         """
 
         # Calculate the optimal flux
