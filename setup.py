@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='gym_electric_motor',
-      version='0.3.1',
+      version='1.0.0',
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
@@ -23,7 +23,6 @@ setuptools.setup(
       extras_require={'examples': [
                         'keras-rl2',
                         'stable-baselines3',
-                        'tensorforce==0.5.5',
                         'gekko']
                      },
       author=', '.join(sorted(AUTHORS, key=lambda n: n.split()[-1].lower())),

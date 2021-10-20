@@ -9,7 +9,7 @@
 | [**Reference docs**](https://upb-lea.github.io/gym-electric-motor/)
 | [**Release notes**](https://github.com/upb-lea/gym-electric-motor/releases)
 
-[![Build Status](https://travis-ci.org/upb-lea/gym-electric-motor.svg?branch=master)](https://travis-ci.org/upb-lea/gym-electric-motor)
+[![Build Status](https://github.com/upb-lea/gym-electric-motor/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/upb-lea/gym-electric-motor/actions/workflows/build_and_test.yml)
 [![codecov](https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg)](https://codecov.io/gh/upb-lea/gym-electric-motor)
 [![PyPI version shields.io](https://img.shields.io/pypi/v/gym-electric-motor.svg)](https://pypi.python.org/pypi/gym-electric-motor/)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE)
