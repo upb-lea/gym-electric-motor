@@ -19,7 +19,7 @@ class FieldOrientedController:
 
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
-        self.backward_transformation = (lambda quantities, eps: t32(q(quantities[::-1], eps)))
+        self.backward_transformation = (lambda quantities, eps: t32(q(quantities, eps)))
 
         self.tau = environment.physical_system.tau
 
@@ -104,7 +104,7 @@ class FieldOrientedController:
             u_sq = self.q_controller.control(state[self.q_idx], reference[self.ref_q_idx]) + self.u_sq_0
 
             # Shifting the reference potential
-            action_temp = self.backward_transformation((u_sq, u_sd), epsilon_d)
+            action_temp = self.backward_transformation((u_sd, u_sq), epsilon_d)
             action_temp = action_temp - 0.5 * (max(action_temp) + min(action_temp))
 
             # Check limit and integrate
@@ -115,7 +115,7 @@ class FieldOrientedController:
 
         else:
             # Transform reference in abc coordinates
-            ref_abc = self.backward_transformation((reference[self.ref_q_idx], reference[self.ref_d_idx]), epsilon_d)
+            ref_abc = self.backward_transformation((reference[self.ref_d_idx], reference[self.ref_q_idx]), epsilon_d)
             action = 0
 
             # Calculate discrete action

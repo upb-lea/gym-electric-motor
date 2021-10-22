@@ -1,6 +1,6 @@
 from .continuous_controller import ContinuousController
 from .induction_motor_torque_to_current_conversion import InductionMotorTorqueToCurrentConversion
-from .flux_estimator import FluxEstimator
+from .flux_observer import FluxObserver
 from .plot_external_data import plot
 from gym.spaces import Box
 import numpy as np
@@ -25,7 +25,7 @@ class InductionMotorCascadedFieldOrientedController:
         self.state_names = environment.state_names
 
         self.stages = stages
-        self.flux_observer = FluxEstimator(self.env)
+        self.flux_observer = FluxObserver(self.env)
         self.i_sd_idx = self.env.state_names.index('i_sd')
         self.i_sq_idx = self.env.state_names.index('i_sq')
         self.u_s_abc_idx = [self.env.state_names.index(state) for state in ['u_sa', 'u_sb', 'u_sc']]

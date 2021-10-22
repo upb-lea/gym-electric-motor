@@ -19,7 +19,7 @@ class CascadedFieldOrientedController:
                  plot_modulation=False, update_interval=1000, torque_control='interpolate', **controller_kwargs):
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
-        self.backward_transformation = (lambda quantities, eps: t32(q(quantities[::-1], eps)))
+        self.backward_transformation = (lambda quantities, eps: t32(q(quantities, eps)))
         self.tau = environment.physical_system.tau
 
         self.action_space = environment.action_space
@@ -164,7 +164,7 @@ class CascadedFieldOrientedController:
             u_sq = self.q_controller.control(state[self.i_sq_idx], self.ref[0]) + self.u_sq_0
 
             # Shifting the reference potential
-            action_temp = self.backward_transformation((u_sq, u_sd), epsilon_d)
+            action_temp = self.backward_transformation((u_sd, u_sq), epsilon_d)
             action_temp = action_temp - 0.5 * (max(action_temp) + min(action_temp))
 
             # Check limit and integrate
@@ -179,7 +179,7 @@ class CascadedFieldOrientedController:
         # Calculate action for discrete action space
         else:
             ref = self.ref[1] if self.torque_control else reference[self.ref_d_idx]
-            ref_abc = self.backward_transformation((self.ref[0], ref), epsilon_d)
+            ref_abc = self.backward_transformation((ref, self.ref[0]), epsilon_d)
             action = 0
             for i in range(3):
                 action += (2 ** (2 - i)) * self.abc_controller[i].control(state[self.i_abc_idx[i]], ref_abc[i])

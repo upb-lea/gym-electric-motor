@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class FluxEstimator:
+class FluxObserver:
     """
         This class represents a rotor flux observer for an induction motor base on a current model. Further information
         can be found at https://ieeexplore.ieee.org/document/4270863.

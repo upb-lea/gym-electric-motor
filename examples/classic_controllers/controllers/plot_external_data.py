@@ -36,7 +36,7 @@ def plot(external_reference_plots=(), state_names=(), external_plot=(), visualiz
                 try:
                     plot_idx = plot_state_idxs.index(ref_state_idx)
                 except ValueError:
-                    pass
+                    pass    # Ignore reference input, if there is no reference in this plot
                 else:
                     external_ref_plots[plot_idx].external_reference(ref_value)
 
