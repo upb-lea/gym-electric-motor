@@ -89,12 +89,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
-        <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;random_params&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="p">}</span>
+    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+                            <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="s1">&#39;random_params&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">omega_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -120,7 +118,7 @@
 
 <div class="viewcode-block" id="ConstantSpeedLoad.mechanical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.mechanical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span></div></div>
 </pre></div>
 
            </div>
