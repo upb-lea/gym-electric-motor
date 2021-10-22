@@ -87,16 +87,24 @@
 <span class="sd">    sigma and mean = 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sigma_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sigma_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">),</span> <span class="n">initial_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            sigma_range(Tuple(float,float)): Lower and Upper limit for the sigma-parameter of the WienerProcess.</span>
-<span class="sd">            kwargs: Further arguments to pass to SubepisodedReferenceGenerator</span>
+<span class="sd">            initial_range(Tuple(float,float)): Minimal and maximal normalized value of the initial reference point</span>
+<span class="sd">             of a new episode. Default: Equal to the limit margin inherited from the</span>
+<span class="sd">             :py:class:`.SubepisodedReferenceGenerator`</span>
+<span class="sd">            kwargs: Further arguments to pass to :py:class:`.SubepisodedReferenceGenerator`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_range</span> <span class="o">=</span> <span class="n">initial_range</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_sigma</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sigma_range</span> <span class="o">=</span> <span class="n">sigma_range</span>
+
+<div class="viewcode-block" id="WienerProcessReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span></div>
 
     <span class="k">def</span> <span class="nf">_reset_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_sigma</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_value</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigma_range</span><span class="p">))</span>
@@ -109,7 +117,14 @@
                 <span class="n">reference_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">reference_value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">reference_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_value</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_value</span>
+
+<div class="viewcode-block" id="WienerProcessReferenceGenerator.reset"><a class="viewcode-back" href="../../../parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">initial_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">initial_reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">]</span> <span class="o">=</span>\
+                <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">initial_reference</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
