@@ -21,7 +21,7 @@ class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
         """
         ReferenceGenerator.__init__(self, **kwargs)
         gem.RandomComponent.__init__(self)
-        self.reference_space = Box(-1, 1, shape=(1,))
+        self.reference_space = Box(-1, 1, shape=(1,), dtype=np.float64)
         if type(sub_args) is dict:
             sub_arguments = [sub_args] * len(sub_generators)
         elif hasattr(sub_args, '__iter__'):
@@ -50,7 +50,7 @@ class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
 
         ref_space_low = np.concatenate([sub_generator.reference_space.low for sub_generator in self._sub_generators])
         ref_space_high = np.concatenate([sub_generator.reference_space.high for sub_generator in self._sub_generators])
-        self.reference_space = Box(ref_space_low, ref_space_high)
+        self.reference_space = Box(ref_space_low, ref_space_high, dtype=np.float64)
         self._referenced_states = np.sum(
             [sub_generator.referenced_states for sub_generator in self._sub_generators], dtype=bool, axis=0
         )
