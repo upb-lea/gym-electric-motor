@@ -174,7 +174,7 @@ class TorqueToCurrentConversion:
         # define a grid for the two current components
         self.i_q_max = np.linspace(-self.nominal_values[self.i_sq_idx], self.nominal_values[self.i_sq_idx], self.i_count)
         self.i_d_max = -np.sqrt(self.nominal_values[self.i_sq_idx] ** 2 - np.power(self.i_q_max, 2))
-        i_count_mgrid = 200j
+        i_count_mgrid = self.i_count * 1j
         i_d, i_q = np.mgrid[-self.limit[self.i_sd_idx]:0:i_count_mgrid,
                             -self.limit[self.i_sq_idx]:self.limit[self.i_sq_idx]:i_count_mgrid / 2]
         i_d = i_d.flatten()
