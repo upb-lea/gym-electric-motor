@@ -113,9 +113,9 @@ class NoConverter(PowerElectronicConverter):
     """Dummy Converter class used to directly transfer the supply voltage to the motor"""
     # Dummy default values for voltages and currents.
     # No real use other than to fit the current physical system architecture
-    voltages = Box(0, 1, shape=(3,))
-    currents = Box(0, 1, shape=(3,))
-    action_space = Box(low=np.array([]), high=np.array([]))
+    voltages = Box(0, 1, shape=(3,), dtype=np.float64)
+    currents = Box(0, 1, shape=(3,), dtype=np.float64)
+    action_space = Box(low=np.array([]), high=np.array([]), dtype=np.float64)
 
     def i_sup(self, i_out):
         return i_out[0]
@@ -219,8 +219,8 @@ class FiniteOneQuadrantConverter(FiniteConverter):
         | currents: Box(0, 1, shape=(1,))
     """
 
-    voltages = Box(0, 1, shape=(1,))
-    currents = Box(0, 1, shape=(1,))
+    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
+    currents = Box(0, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(2)
 
     def convert(self, i_out, t):
@@ -250,8 +250,8 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
         | currents: Box(-1, 1, shape=(1,))
     """
 
-    voltages = Box(0, 1, shape=(1,))
-    currents = Box(-1, 1, shape=(1,))
+    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(3)
 
     def convert(self, i_out, t):
@@ -317,8 +317,8 @@ class FiniteFourQuadrantConverter(FiniteConverter):
         | Box(-1, 1, shape=(1,))
         | Box(-1, 1, shape=(1,))
     """
-    voltages = Box(-1, 1, shape=(1,))
-    currents = Box(-1, 1, shape=(1,))
+    voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(4)
 
     def __init__(self, **kwargs):
@@ -367,9 +367,9 @@ class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(0, 1, shape=(1,))
         | currents: Box(0, 1, shape=(1,))
     """
-    voltages = Box(0, 1, shape=(1,))
-    currents = Box(0, 1, shape=(1,))
-    action_space = Box(0, 1, shape=(1,))
+    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
+    currents = Box(0, 1, shape=(1,), dtype=np.float64)
+    action_space = Box(0, 1, shape=(1,), dtype=np.float64)
 
     def _convert(self, i_in, *_):
         # Docstring in base class
@@ -400,9 +400,9 @@ class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(0, 1, shape=(1,))
         | currents: Box(-1, 1, shape=(1,))
     """
-    voltages = Box(0, 1, shape=(1,))
-    currents = Box(-1, 1, shape=(1,))
-    action_space = Box(0, 1, shape=(1,))
+    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
+    action_space = Box(0, 1, shape=(1,), dtype=np.float64)
 
 
     def _convert(self, *_):
@@ -438,9 +438,9 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(-1, 1, shape=(1,))
         | currents: Box(-1, 1, shape=(1,))
     """
-    voltages = Box(-1, 1, shape=(1,))
-    currents = Box(-1, 1, shape=(1,))
-    action_space = Box(-1, 1, shape=(1,))
+    voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
+    action_space = Box(-1, 1, shape=(1,), dtype=np.float64)
 
     def __init__(self, **kwargs):
         # Docstring in base class
@@ -540,8 +540,8 @@ class FiniteMultiConverter(FiniteConverter):
 
         # put limits into gym_space format
         self.action_space = MultiDiscrete(self.action_space)
-        self.currents = Box(currents_low, currents_high)
-        self.voltages = Box(voltages_low, voltages_high)
+        self.currents = Box(currents_low, currents_high, dtype=np.float64)
+        self.voltages = Box(voltages_low, voltages_high, dtype=np.float64)
 
     def convert(self, i_out, t):
         # Docstring in base class
@@ -644,9 +644,9 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         voltages_high = np.concatenate(voltages_high)
 
         # put limits into gym_space format
-        self.action_space = Box(action_space_low, action_space_high)
-        self.currents = Box(currents_low, currents_high)
-        self.voltages = Box(voltages_low, voltages_high)
+        self.action_space = Box(action_space_low, action_space_high, dtype=np.float64)
+        self.currents = Box(currents_low, currents_high, dtype=np.float64)
+        self.voltages = Box(voltages_low, voltages_high, dtype=np.float64)
 
     def set_action(self, action, t):
         # Docstring in base class
@@ -732,9 +732,9 @@ class FiniteB6BridgeConverter(FiniteConverter):
 
     action_space = Discrete(8)
     # Only positive voltages can be applied
-    voltages = Box(-1, 1, shape=(3,))
+    voltages = Box(-1, 1, shape=(3,), dtype=np.float64)
     # positive and negative currents are possible
-    currents = Box(-1, 1, shape=(3,))
+    currents = Box(-1, 1, shape=(3,), dtype=np.float64)
     _reset_action = 0
     _subactions = [
         [2, 2, 2],
@@ -810,11 +810,11 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
         Box(-0.5, 0.5, shape=(3,))
     """
 
-    action_space = Box(-1, 1, shape=(3,))
+    action_space = Box(-1, 1, shape=(3,), dtype=np.float64)
     # Only positive voltages can be applied
-    voltages = Box(-1, 1, shape=(3,))
+    voltages = Box(-1, 1, shape=(3,), dtype=np.float64)
     # Positive and negative currents are possible
-    currents = Box(-1, 1, shape=(3,))
+    currents = Box(-1, 1, shape=(3,), dtype=np.float64)
 
     _reset_action = [0, 0, 0]
 

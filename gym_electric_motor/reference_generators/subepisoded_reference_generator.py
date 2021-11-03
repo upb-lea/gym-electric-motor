@@ -26,7 +26,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
         """
         ReferenceGenerator.__init__(self, **kwargs)
         RandomComponent.__init__(self)
-        self.reference_space = Box(-1, 1, shape=(1,))
+        self.reference_space = Box(-1, 1, shape=(1,), dtype=np.float64)
         self._reference = None
         self._limit_margin = limit_margin
         self._reference_value = 0.0
@@ -57,7 +57,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
             self._limit_margin = lower_margin[0], upper_margin[0]
         else:
             raise Exception('Unknown type for the limit margin.')
-        self.reference_space = Box(lower_margin[0], upper_margin[0], shape=(1,))
+        self.reference_space = Box(lower_margin[0], upper_margin[0], shape=(1,), dtype=np.float64)
 
     def reset(self, initial_state=None, initial_reference=None):
         """

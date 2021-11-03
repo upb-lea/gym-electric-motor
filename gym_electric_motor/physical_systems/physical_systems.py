@@ -317,7 +317,7 @@ class DcMotorSystem(SCMLSystem):
             low['u_sup'] = 0
         low = set_state_array(low, state_names)
         high = set_state_array(high, state_names)
-        return Box(low, high)
+        return Box(low, high, dtype=np.float64)
 
 
 class ThreePhaseMotorSystem(SCMLSystem):
@@ -432,14 +432,14 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         if control_space == 'dq':
             assert type(self._converter.action_space) == Box, \
                 'dq-control space is only available for Continuous Controlled Converters'
-            self._action_space = Box(-1, 1, shape=(2,))
+            self._action_space = Box(-1, 1, shape=(2,), dtype=np.float64)
 
     def _build_state_space(self, state_names):
         # Docstring of superclass
         low = -1 * np.ones_like(state_names, dtype=float)
         low[self.U_SUP_IDX] = 0.0
         high = np.ones_like(state_names, dtype=float)
-        return Box(low, high)
+        return Box(low, high, dtype=np.float64)
 
     def _build_state_names(self):
         # Docstring of superclass
@@ -571,14 +571,14 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         super().__init__(ode_solver=ode_solver, **kwargs)
         self.control_space = control_space
         if control_space == 'dq':
-            self._action_space = Box(-1, 1, shape=(2,))
+            self._action_space = Box(-1, 1, shape=(2,), dtype=np.float64)
 
     def _build_state_space(self, state_names):
         # Docstring of superclass
         low = -1 * np.ones_like(state_names, dtype=float)
         low[self.U_SUP_IDX] = 0.0
         high = np.ones_like(state_names, dtype=float)
-        return Box(low, high)
+        return Box(low, high, dtype=np.float64)
 
     def _build_state_names(self):
         # Docstring of superclass
@@ -721,7 +721,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         super().__init__(ode_solver=ode_solver, **kwargs)
         self.control_space = control_space
         if control_space == 'dq':
-            self._action_space = Box(-1, 1, shape=(4,))
+            self._action_space = Box(-1, 1, shape=(4,), dtype=np.float64)
 
         self.stator_voltage_space_idx = 0
         self.stator_voltage_low_idx = 0
@@ -750,7 +750,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         low = -1 * np.ones_like(state_names, dtype=float)
         low[self.U_SUP_IDX] = 0.0
         high = np.ones_like(state_names, dtype=float)
-        return Box(low, high)
+        return Box(low, high, dtype=np.float64)
 
     def _build_state_names(self):
         # Docstring of superclass
