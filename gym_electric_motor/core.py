@@ -214,7 +214,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         self.state_filter = [self._physical_system.state_names.index(s) for s in state_filter]
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
-        state_space = Box(states_low, states_high)
+        state_space = Box(states_low, states_high, dtype=np.float64)
         self.observation_space = gym.spaces.Tuple((
             state_space,
             self._reference_generator.reference_space
