@@ -105,6 +105,11 @@
 <span class="sd">    StepPlot base classes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">update_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of steps until the visualization is updated&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_interval</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">state_plots</span><span class="o">=</span><span class="p">(),</span> <span class="n">action_plots</span><span class="o">=</span><span class="p">(),</span> <span class="n">reward_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">additional_plots</span><span class="o">=</span><span class="p">(),</span>
         <span class="n">update_interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">time_plot_width</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span>
