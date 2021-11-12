@@ -15,7 +15,7 @@ series_motor_parameter = {'motor_parameter': {'r_a': 3.78, 'r_e': 35, 'l_a': 6.3
                           'nominal_values': {'omega': 370, 'torque': 40, 'i': 50, 'u': 430},
                           'reward_weights': {'omega': 1, 'torque': 0, 'i': 0, 'u': 0, 'u_sup': 0}}
 series_state_positions = {'omega': 0, 'torque': 1, 'i': 2, 'u': 3, 'u_sup': 4}
-series_state_space = Box(low=-1, high=1, shape=(5,))
+series_state_space = Box(low=-1, high=1, shape=(5,), dtype=np.float64)
 series_initializer = {'states': {'i': 0.0},
                       'interval': None,
                       'random_init': None,
@@ -27,7 +27,7 @@ shunt_motor_parameter = {'motor_parameter': {'r_a': 3.78, 'r_e': 35, 'l_a': 6.3e
                          'nominal_values': {'omega': 368, 'torque': 40, 'i_a': 50, 'i_e': 5, 'u': 430},
                          'reward_weights': {'omega': 1, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u': 0, 'u_sup': 0}}
 shunt_state_positions = {'omega': 0, 'torque': 1, 'i_a': 2, 'i_e': 3, 'u': 4, 'u_sup': 5}
-shunt_state_space = Box(low=-1, high=1, shape=(6,))
+shunt_state_space = Box(low=-1, high=1, shape=(6,), dtype=np.float64)
 shunt_initializer = {'states': {'i_a': 0.0, 'i_e': 0.0},
                      'interval': None,
                      'random_init': None,
@@ -42,7 +42,7 @@ extex_motor_parameter = {'motor_parameter': {'r_a': 3.78, 'r_e': 35, 'l_a': 6.3e
                          'reward_weights': {'omega': 1, 'torque': 0, 'i_a': 0, 'i_e': 0, 'u_a': 0, 'u_e': 0,
                                             'u_sup': 0}}
 extex_state_positions = {'omega': 0, 'torque': 1, 'i_a': 2, 'i_e': 3, 'u_a': 4, 'u_e': 5, 'u_sup': 6}
-extex_state_space = Box(low=-1, high=1, shape=(7,))
+extex_state_space = Box(low=-1, high=1, shape=(7,), dtype=np.float64)
 extex_initializer = {'states': {'i_a': 0.0, 'i_e': 0.0},
                         'interval': None,
                         'random_init': None,
@@ -55,7 +55,7 @@ permex_motor_parameter = {'motor_parameter': {'r_a': 3.78, 'l_a': 6.3e-3, 'psi_e
                           'nominal_values': {'omega': 368, 'torque': 40, 'i': 50, 'u': 460},
                           'reward_weights': {'omega': 1, 'torque': 0, 'i': 0, 'u': 0, 'u_sup': 0}}
 permex_state_positions = {'omega': 0, 'torque': 1, 'i': 2, 'u': 3, 'u_sup': 4}
-permex_state_space = Box(low=-1, high=1, shape=(5,))
+permex_state_space = Box(low=-1, high=1, shape=(5,), dtype=np.float64)
 permex_initializer = {'states': {'i': 0.0},
                       'interval': None,
                       'random_init': None,
@@ -70,7 +70,7 @@ pmsm_motor_parameter = {'motor_parameter': {'p': 3, 'l_d': 84e-3, 'l_q': 125e-3,
 pmsm_state_positions = {'omega': 0, 'torque': 1, 'i_a': 2, 'i_b': 3, 'i_c': 4,
                         'i_sq': 5, 'i_sd': 6, 'u_a': 7, 'u_b': 8, 'u_c': 9,
                         'u_sq': 10, 'u_sd': 11, 'epsilon': 12, 'u_sup': 13}
-pmsm_state_space = Box(low=-1, high=1, shape=(14,))
+pmsm_state_space = Box(low=-1, high=1, shape=(14,), dtype=np.float64)
 pmsm_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                     'interval': None,
                     'random_init': None,
@@ -84,7 +84,7 @@ synrm_motor_parameter = {
 synrm_state_positions = {'omega': 0, 'torque': 1, 'i_a': 2, 'i_b': 3, 'i_c': 4,
                          'i_sq': 5, 'i_sd': 6, 'u_a': 7, 'u_b': 8, 'u_c': 9,
                          'u_sq': 10, 'u_sd': 11, 'epsilon': 12, 'u_sup': 13}
-synrm_state_space = Box(low=-1, high=1, shape=(14,))
+synrm_state_space = Box(low=-1, high=1, shape=(14,), dtype=np.float64)
 synrm_initializer = {'states': {'i_sq': 0.0, 'i_sd': 0.0, 'epsilon': 0.0},
                      'interval': None,
                      'random_init': None,
@@ -98,7 +98,7 @@ sci_motor_parameter = {
 sci_state_positions = {'omega': 0, 'torque': 1, 'i_sa': 2, 'i_sb': 3, 'i_sc': 4,
                         'i_sq': 5, 'i_sd': 6, 'u_sa': 7, 'u_sb': 8, 'u_sc': 9,
                         'u_sq': 10, 'u_sd': 11, 'epsilon': 12, 'u_sup': 13}
-sci_state_space = Box(low=-1, high=1, shape=(14,))
+sci_state_space = Box(low=-1, high=1, shape=(14,), dtype=np.float64)
 sci_initializer = {'states': {'i_salpha': 0.0, 'i_sbeta': 0.0,
                                'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
                                'epsilon': 0.0},
@@ -111,7 +111,7 @@ dfim_state_positions = {'omega': 0, 'torque': 1, 'i_sa': 2, 'i_sb': 3, 'i_sc': 4
                         'i_rq': 10, 'i_rd': 11, 'u_sa': 12, 'u_sb': 13, 'u_sc': 14,
                         'u_sq': 15, 'u_sd': 16, 'u_ra': 17, 'u_rb': 18, 'u_rc': 19,
                         'u_rq': 20, 'u_rd': 21, 'epsilon': 22, 'u_sup': 23}
-dfim_state_space = Box(low=-1, high=1, shape=(24,))
+dfim_state_space = Box(low=-1, high=1, shape=(24,), dtype=np.float64)
 dfim_initializer = {'states': {'i_salpha': 0.0, 'i_sbeta': 0.0,
                                 'psi_ralpha': 0.0, 'psi_rbeta': 0.0,
                                 'epsilon': 0.0},

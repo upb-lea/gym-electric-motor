@@ -9,7 +9,7 @@ class ZeroReferenceGenerator(ReferenceGenerator):
 
     def __init__(self):
         super().__init__()
-        self.reference_space = Box(0, 0, (0,))
+        self.reference_space = Box(0, 0, (0,), dtype=np.float64)
         self._reference_names = []
 
     def set_modules(self, physical_system):
