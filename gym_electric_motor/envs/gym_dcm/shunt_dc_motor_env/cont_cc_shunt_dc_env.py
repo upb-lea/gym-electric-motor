@@ -6,6 +6,7 @@ from gym_electric_motor.reference_generators import WienerProcessReferenceGenera
 from gym_electric_motor import physical_systems as ps
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
+from gym_electric_motor.state_action_processors import CurrentSumProcessor
 
 
 class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
@@ -134,6 +135,7 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
             calc_jacobian=calc_jacobian,
             tau=tau
         )
+
         reference_generator = initialize(
             ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='i_a')
         )
@@ -145,5 +147,6 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
             visualization, MotorDashboard, dict(state_plots=('i_a',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
+            state_action_processors=(CurrentSumProcessor(('i_a', 'i_e')),)
         )

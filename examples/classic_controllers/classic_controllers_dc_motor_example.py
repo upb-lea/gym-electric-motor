@@ -19,8 +19,8 @@ if __name__ == '__main__':
                     'Finite'    Discrete Action Space
     """
 
-    motor_type = 'PermExDc'
-    control_type = 'SC'
+    motor_type = 'ShuntDc'
+    control_type = 'CC'
     action_type = 'Cont'
 
     motor = action_type + '-' + control_type + '-' + motor_type + '-v0'
@@ -35,10 +35,10 @@ if __name__ == '__main__':
         raise KeyError(motor_type + ' is not available')
 
     # definition of the plotted variables
-    external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
+    #external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots))
+    env = gem.make(motor, visualization=MotorDashboard(state_plots='all'))
 
     """
         initialize the controller
@@ -51,7 +51,7 @@ if __name__ == '__main__':
             a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
     
     """
-    controller = Controller.make(env, external_ref_plots=external_ref_plots)
+    controller = Controller.make(env)
 
     state, reference = env.reset()
 

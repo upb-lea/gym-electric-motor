@@ -133,7 +133,7 @@ class Controller:
     def find_controller_type(environment, stages, **controller_kwargs):
         _stages = stages
 
-        if isinstance(environment.physical_system, DcMotorSystem):
+        if isinstance(environment.physical_system.unwrapped, DcMotorSystem):
             if type(stages) is list:
                 if len(stages) > 1:
                     if type(stages[0]) is list:
@@ -151,7 +151,7 @@ class Controller:
                 else:
                     controller_type = stages
                     _stages = [{'controller_type': stages}]
-        elif isinstance(environment.physical_system, SynchronousMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
             if len(stages) == 2:
                 if len(stages[1]) == 1 and 'i_sq' in controller_kwargs['ref_states']:
                     controller_type = 'foc_controller'
@@ -169,7 +169,7 @@ class Controller:
         action_space_type = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
         stages = []
-        if isinstance(environment.physical_system, DcMotorSystem):  # Checking type of motor
+        if isinstance(environment.physical_system.unwrapped, DcMotorSystem):  # Checking type of motor
 
             if 'omega' in ref_states or 'torque' in ref_states:  # Checking control task
                 controller_type = 'cascaded_controller'
@@ -198,7 +198,7 @@ class Controller:
                 else:
                     stages = [stages, [{'controller_type': 'three_point'}]]
 
-        elif isinstance(environment.physical_system, SynchronousMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
             if 'i_sq' in ref_states or 'torque' in ref_states:  # Checking control task
                 controller_type = 'foc_controller' if 'i_sq' in ref_states else 'cascaded_foc_controller'
                 if action_space_type is Discrete:
@@ -231,13 +231,13 @@ class Controller:
         mp = environment.physical_system.electrical_motor.motor_parameter
         limits = environment.physical_system.limits
         omega_lim = limits[environment.state_names.index('omega')]
-        if isinstance(environment.physical_system, DcMotorSystem):
+        if isinstance(environment.physical_system.unwrapped, DcMotorSystem):
             i_a_lim = limits[environment.physical_system.CURRENTS_IDX[0]]
             i_e_lim = limits[environment.physical_system.CURRENTS_IDX[-1]]
             u_a_lim = limits[environment.physical_system.VOLTAGES_IDX[0]]
             u_e_lim = limits[environment.physical_system.VOLTAGES_IDX[-1]]
 
-        elif isinstance(environment.physical_system, SynchronousMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
             i_sd_lim = limits[environment.state_names.index('i_sd')]
             i_sq_lim = limits[environment.state_names.index('i_sq')]
             u_sd_lim = limits[environment.state_names.index('u_sd')]
@@ -250,7 +250,7 @@ class Controller:
 
         if isinstance(environment.physical_system.electrical_motor, DcSeriesMotor):
             mp['l'] = mp['l_a'] + mp['l_e']
-        elif isinstance(environment.physical_system, DcMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, DcMotorSystem):
             mp['l'] = mp['l_a']
 
         if 'automated_gain' not in controller_kwargs.keys() or automated_gain:
@@ -432,8 +432,9 @@ class ContinuousActionController(Controller):
     """
 
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
-        assert type(environment.action_space) is Box and isinstance(environment.physical_system,
-                                                                    DcMotorSystem), 'No suitable action space for Continuous Action Controller'
+        assert type(environment.action_space) is Box\
+            and isinstance(environment.physical_system.unwrapped, DcMotorSystem), \
+            'No suitable action space for Continuous Action Controller'
         self.action_space = environment.action_space
         self.state_names = environment.state_names
         self.ref_idx = np.where(ref_states != 'i_e')[0][0]
@@ -510,9 +511,10 @@ class DiscreteActionController(Controller):
         controller is used. For the externally excited dc motor, the excitation current is also controlled.
     """
 
-    def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
-        assert type(environment.action_space) in [Discrete, MultiDiscrete] and isinstance(environment.physical_system,
-                                                                                          DcMotorSystem), 'No suitable action space for Discrete Action Controller'
+    def __init__(self, environment, stages, ref_states, external_ref_plots=(), **controller_kwargs):
+        assert type(environment.action_space) in [Discrete, MultiDiscrete] \
+            and isinstance(environment.physical_system.unwrapped, DcMotorSystem),\
+            'No suitable action space for Discrete Action Controller'
         self.ref_idx = np.where(ref_states != 'i_e')[0][0]
         self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
         self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
@@ -706,7 +708,8 @@ class FieldOrientedController(Controller):
     """
 
     def __init__(self, environment, stages, ref_states, external_ref_plots=[], **controller_kwargs):
-        assert isinstance(environment.physical_system, SynchronousMotorSystem), 'No suitable Environment for FOC Controller'
+        assert isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem),\
+            'No suitable Environment for FOC Controller'
 
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
