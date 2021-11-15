@@ -26,6 +26,11 @@ class MotorDashboard(ElectricMotorVisualization):
     StepPlot base classes.
     """
 
+    @property
+    def update_interval(self):
+        """Number of steps until the visualization is updated"""
+        return self._update_interval
+
     def __init__(
         self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
         update_interval=1000, time_plot_width=10000, style=None

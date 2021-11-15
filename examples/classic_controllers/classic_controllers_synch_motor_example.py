@@ -3,6 +3,7 @@ from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
 
+
 if __name__ == '__main__':
 
     """
