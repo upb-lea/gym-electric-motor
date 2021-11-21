@@ -1,11 +1,12 @@
-from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem
+from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, \
+    DoublyFedInductionMotorSystem, ThreePhaseMotorSystem, SCMLSystem
 from .converters import PowerElectronicConverter, FiniteOneQuadrantConverter, FiniteTwoQuadrantConverter, \
     FiniteFourQuadrantConverter, FiniteMultiConverter, FiniteB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter, NoConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
-    DoublyFedInductionMotor
+    DoublyFedInductionMotor, ThreePhaseMotor
 
 from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad, \
     OrnsteinUhlenbeckLoad
