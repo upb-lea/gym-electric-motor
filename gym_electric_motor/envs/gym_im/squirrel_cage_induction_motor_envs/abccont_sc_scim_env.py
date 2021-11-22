@@ -92,7 +92,8 @@ class AbcContSpeedControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment)
     """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-4):
+                 state_action_processors=(), constraints=(SquaredConstraint(('i_sq', 'i_sd')),),
+                 calc_jacobian=True, tau=1e-4):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -152,5 +153,6 @@ class AbcContSpeedControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment)
             ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
+            state_action_processors=state_action_processors
         )

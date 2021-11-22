@@ -12,7 +12,7 @@ class DqToAbcActionProcessor(StateActionProcessor):
         return gym.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
 
     @staticmethod
-    def _transformation(self, action, angle):
+    def _transformation(action, angle):
         return ps.ThreePhaseMotor.t_32(ps.ThreePhaseMotor.q_inv(action, angle))
 
     def __init__(self, angle_name=None, physical_system=None):
@@ -39,7 +39,7 @@ class DqToAbcActionProcessor(StateActionProcessor):
         self._angle_index = physical_system.state_names.index(self._angle_name)
         self._omega_index = physical_system.state_names.index('omega')
         if hasattr(physical_system.converter, 'dead_time') \
-                and physical_system.converter.dead_time == True:
+                and physical_system.converter.dead_time is True:
             self._angle_advance = 1.5
         else:
             self._angle_advance = 0.5
@@ -47,8 +47,9 @@ class DqToAbcActionProcessor(StateActionProcessor):
         return self
 
     def simulate(self, action):
-        advanced_angle = self._state[self._angle_index] \
-            + self._angle_advance * self._physical_system.tau * self._state[self._omega_index]
+        advanced_angle = self._state[self._angle_index] * self._physical_system.limits[self._angle_index] \
+            + self._angle_advance * self._physical_system.tau \
+            * self._state[self._omega_index] * self._physical_system.limits[self._omega_index]
         abc_action = self._transformation(action, advanced_angle)
         self._state = self._physical_system.simulate(abc_action)
         return self._state

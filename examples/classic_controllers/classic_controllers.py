@@ -117,7 +117,7 @@ class Controller:
     def find_controller_type(environment, stages, **controller_kwargs):
         _stages = stages
 
-        if isinstance(environment.physical_system, DcMotorSystem):
+        if isinstance(environment.physical_system.unwrapped, DcMotorSystem):
             if type(stages) is list:
                 if len(stages) > 1:
                     if type(stages[0]) is list:
@@ -135,7 +135,7 @@ class Controller:
                 else:
                     controller_type = stages
                     _stages = [{'controller_type': stages}]
-        elif isinstance(environment.physical_system, SynchronousMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
             if len(stages) == 2:
                 if len(stages[1]) == 1 and 'i_sq' in controller_kwargs['ref_states']:
                     controller_type = 'foc_controller'
@@ -144,7 +144,7 @@ class Controller:
             else:
                 controller_type = 'cascaded_foc_controller'
 
-        elif isinstance(environment.physical_system, SquirrelCageInductionMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, SquirrelCageInductionMotorSystem):
             if len(stages) == 2:
                 if len(stages[1]) == 1 and 'i_sq' in controller_kwargs['ref_states']:
                     controller_type = 'foc_rotor_flux_observer'
@@ -153,7 +153,7 @@ class Controller:
             else:
                 controller_type = 'cascaded_foc_rotor_flux_observer'
 
-        elif isinstance(environment.physical_system, DoublyFedInductionMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, DoublyFedInductionMotorSystem):
             if len(stages) == 2:
                 if len(stages[1]) == 1 and 'i_sq' in controller_kwargs['ref_states']:
                     controller_type = 'foc_rotor_flux_observer'
@@ -171,7 +171,7 @@ class Controller:
         action_space_type = type(environment.action_space)
         ref_states = controller_kwargs['ref_states']
         stages = []
-        if isinstance(environment.physical_system, DcMotorSystem):  # Checking type of motor
+        if isinstance(environment.physical_system.unwrapped, DcMotorSystem):  # Checking type of motor
 
             if 'omega' in ref_states or 'torque' in ref_states:  # Checking control task
                 controller_type = 'cascaded_controller'
@@ -200,7 +200,7 @@ class Controller:
                 else:
                     stages = [stages, [{'controller_type': 'three_point'}]]
 
-        elif isinstance(environment.physical_system, SynchronousMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
             if 'i_sq' in ref_states or 'torque' in ref_states:  # Checking control task
                 controller_type = 'foc_controller' if 'i_sq' in ref_states else 'cascaded_foc_controller'
                 if action_space_type is Discrete:
@@ -217,7 +217,7 @@ class Controller:
                     stages = [[{'controller_type': 'pi_controller'},
                               {'controller_type': 'pi_controller'}], [{'controller_type': 'pi_controller'}]]
 
-        elif isinstance(environment.physical_system, (SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem)):
+        elif isinstance(environment.physical_system.unwrapped, (SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem)):
             if 'i_sq' in ref_states or 'torque' in ref_states:
                 controller_type = 'foc_rotor_flux_observer' if 'i_sq' in ref_states else 'cascaded_foc_rotor_flux_observer'
                 if action_space_type is Discrete:
@@ -260,13 +260,13 @@ class Controller:
         mp = environment.physical_system.electrical_motor.motor_parameter
         limits = environment.physical_system.limits
         omega_lim = limits[environment.state_names.index('omega')]
-        if isinstance(environment.physical_system, DcMotorSystem):
+        if isinstance(environment.physical_system.unwrapped, DcMotorSystem):
             i_a_lim = limits[environment.physical_system.CURRENTS_IDX[0]]
             i_e_lim = limits[environment.physical_system.CURRENTS_IDX[-1]]
             u_a_lim = limits[environment.physical_system.VOLTAGES_IDX[0]]
             u_e_lim = limits[environment.physical_system.VOLTAGES_IDX[-1]]
 
-        elif isinstance(environment.physical_system, SynchronousMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
             i_sd_lim = limits[environment.state_names.index('i_sd')]
             i_sq_lim = limits[environment.state_names.index('i_sq')]
             u_sd_lim = limits[environment.state_names.index('u_sd')]
@@ -286,7 +286,7 @@ class Controller:
 
         if isinstance(environment.physical_system.electrical_motor, DcSeriesMotor):
             mp['l'] = mp['l_a'] + mp['l_e']
-        elif isinstance(environment.physical_system, DcMotorSystem):
+        elif isinstance(environment.physical_system.unwrapped, DcMotorSystem):
             mp['l'] = mp['l_a']
 
         if 'automated_gain' not in controller_kwargs.keys() or automated_gain:

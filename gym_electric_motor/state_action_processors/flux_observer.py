@@ -21,6 +21,10 @@ class FluxObserver(StateActionProcessor):
         self._integrated = np.complex(0, 0)
         self._current_names = current_names
 
+    @staticmethod
+    def _abc_to_alphabeta_transformation(i_s):
+        return gem.physical_systems.electric_motors.ThreePhaseMotor.t_23(i_s)
+
     def set_physical_system(self, physical_system):
         assert isinstance(physical_system.electrical_motor, gem.physical_systems.electric_motors.InductionMotor)
         super().set_physical_system(physical_system)
@@ -28,7 +32,7 @@ class FluxObserver(StateActionProcessor):
         high = np.concatenate((physical_system.state_space.high, [1., 1.]))
         self.state_space = gym.spaces.Box(low, high, dtype=np.float64)
         self._current_indices = [physical_system.state_positions[name] for name in self._current_names]
-        psi_limit = 100.0
+        psi_limit = 1.0
         self._limits = np.concatenate((physical_system.limits, [psi_limit, np.pi]))
         self._nominal_state = np.concatenate((physical_system.nominal_state, [psi_limit, np.pi]))
         self._state_names = physical_system.state_names + ['psi_abs', 'psi_angle']
@@ -45,19 +49,21 @@ class FluxObserver(StateActionProcessor):
 
     def reset(self):
         self._integrated = np.complex(0, 0)
+        return np.concatenate((super().reset(), [0.0, 0.0]))
 
     def simulate(self, action):
-        state = self._physical_system.simulate(action)
-        i_s = state[self.i_s_idx]
-        omega = state[self.omega_idx] * self.p
+        state_norm = self._physical_system.simulate(action)
+        state = state_norm * self._physical_system.limits
+        i_s = state[self._i_s_idx]
+        omega = state[self._omega_idx] * self._p
 
         # Transform current into alpha, beta coordinates
-        [i_s_alpha, i_s_beta] = self.abc_to_alphabeta_transformation(i_s)
+        [i_s_alpha, i_s_beta] = self._abc_to_alphabeta_transformation(i_s)
 
         # Calculate delta flux
-        delta = np.complex(i_s_alpha, i_s_beta) * self.r_r * self.l_m / self.l_r \
-            - self._integrated * np.complex(self.r_r / self.l_r, -omega)
+        delta = np.complex(i_s_alpha, i_s_beta) * self._r_r * self._l_m / self._l_r \
+            - self._integrated * np.complex(self._r_r / self._l_r, -omega)
 
         # Integrate the flux
         self._integrated += delta * self._physical_system.tau
-        return np.concatenate((state, [np.abs(self.integrated), np.angle(self.integrated)]))
+        return np.concatenate((state, [np.abs(self._integrated), np.angle(self._integrated)])) / self._limits

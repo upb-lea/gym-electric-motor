@@ -3,6 +3,7 @@ from externally_referenced_state_plot import ExternallyReferencedStatePlot
 from external_plot import ExternalPlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
+from gym_electric_motor.state_action_processors import FluxObserver
 import numpy as np
 
 if __name__ == '__main__':
@@ -24,13 +25,14 @@ if __name__ == '__main__':
     env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
 
     # definition of the plotted variables
-    states = ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']
-    external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
-    external_plot = [ExternalPlot(referenced=control_type != 'CC'), ExternalPlot(min=-np.pi, max=np.pi)]
-    external_ref_plots += external_plot
+    #states = ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']
+    #external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
+    #external_plot = [ExternalPlot(referenced=control_type != 'CC'), ExternalPlot(min=-np.pi, max=np.pi)]
+    #external_ref_plots += external_plot
 
     # initialize the gym-electric-motor environment
-    env = gem.make(env_id, visualization=MotorDashboard(additional_plots=external_ref_plots))
+    env = gem.make(env_id, state_action_processors=(FluxObserver(),),
+                   visualization=MotorDashboard(state_plots=('omega', 'psi_abs', 'psi_angle')))
 
     """
         initialize the controller
@@ -42,7 +44,7 @@ if __name__ == '__main__':
             automated_gain (optional)       if True (default), the controller will be tune automatically
 
     """
-    controller = Controller.make(env, external_plot=external_ref_plots)
+    controller = Controller.make(env)
 
     state, reference = env.reset()
 
