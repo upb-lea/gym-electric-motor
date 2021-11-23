@@ -1,39 +1,50 @@
-import gym
-import numpy as np
-
 from gym_electric_motor.state_action_processors import StateActionProcessor
 
 
-class CurrentSumProcessor(StateActionProcessor):
+class StateNoiseProcessor(StateActionProcessor):
 
-    def __init__(self, currents, limit='max', physical_system=None):
-        self._currents = currents
-        assert limit in ['max', 'sum']
-        self._limit = max if limit == 'max' else np.sum
-        self._current_indices = []
+    @property
+    def random_kwargs(self):
+        return self._random_kwargs
+
+    @random_kwargs.setter
+    def random_kwargs(self, value):
+        self._random_kwargs = dict(value)
+
+    def __init__(self, states, random_dist='normal', random_kwargs=(), random_length=1000, physical_system=None):
+        self._random_kwargs = dict(random_kwargs)
+        self._random_length = int(random_length)
+        self._random_pointer = 0
+        self._noise = None
+        self._states = states
+        self._random_dist = random_dist
+        self._state_indices = []
         super().__init__(physical_system)
+        assert hasattr(self._random_generator, random_dist), \
+            f'The numpy random number generator has no distribution {random_dist}.'\
+            'Check https://numpy.org/doc/stable/reference/random/generator.html#distributions for distributions.'
 
     def set_physical_system(self, physical_system):
         super().set_physical_system(physical_system)
-        low = np.concatenate((physical_system.state_space.low, [-1.]))
-        high = np.concatenate((physical_system.state_space.high, [1.]))
-        self.state_space = gym.spaces.Box(low, high, dtype=np.float64)
-        self._current_indices = [physical_system.state_positions[current] for current in self._currents]
-        current_limit = self._limit(physical_system.limits[self._current_indices])
-        current_nominal_value = self._limit(physical_system.nominal_state[self._current_indices])
-        self._limits = np.concatenate((physical_system.limits, [current_limit]))
-        self._nominal_state = np.concatenate((physical_system.nominal_state, [current_nominal_value]))
-        self._state_names = physical_system.state_names + ['i_sum']
-        self._state_positions = {key: index for index, key in enumerate(self._state_names)}
+        self._state_indices = [physical_system.state_positions[state_name] for state_name in self._states]
         return self
 
     def reset(self):
-        state = self._physical_system.reset()
-        return np.concatenate((state, [self._get_current_sum(state)]))
+        state = super().reset()
+        self._new_noise()
+        return self._add_noise(state)
 
     def simulate(self, action):
-        state = self._physical_system.simulate(action)
-        return np.concatenate((state, [self._get_current_sum(state)]))
+        if self._random_pointer >= self._random_length:
+            self._new_noise()
+        return self._add_noise(self._physical_system.simulate(action))
 
-    def _get_current_sum(self, state):
-        return np.sum(state[self._current_indices])
+    def _add_noise(self, state):
+        state[self._state_indices] = state[self._state_indices] + self._noise[self._random_pointer]
+        self._random_pointer += 1
+        return state
+
+    def _new_noise(self):
+        self._random_pointer = 0
+        fct = getattr(self._random_generator, self._random_dist)
+        self._noise = fct(size=(self._random_length, len(self._state)), **self._random_kwargs)

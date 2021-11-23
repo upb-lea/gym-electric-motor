@@ -29,7 +29,7 @@ class DqToAbcActionProcessor(StateActionProcessor):
         assert isinstance(physical_system.electrical_motor, ps.ThreePhaseMotor)
         super().set_physical_system(physical_system)
         if self._angle_name is None:
-            if isinstance(physical_system.electric_motor,
+            if isinstance(physical_system.electrical_motor,
                           (ps.PermanentMagnetSynchronousMotor, ps.SynchronousReluctanceMotor)):
                 self._angle_name = 'epsilon'
             else:

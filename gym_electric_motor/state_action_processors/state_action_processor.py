@@ -63,7 +63,8 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
         return self._state_names
 
     def __init__(self, physical_system=None):
-        super().__init__(None, None, (), None)
+        gem.core.PhysicalSystem.__init__(self, None, None, (), None)
+        gem.core.RandomComponent.__init__(self)
         self._physical_system = physical_system
         self._limits = None
         self._nominal_state = None
@@ -89,6 +90,7 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
         return self._physical_system.simulate(action)
 
     def reset(self, **kwargs):
+        self.next_generator()
         return self._physical_system.reset(**kwargs)
 
     def __str__(self):
