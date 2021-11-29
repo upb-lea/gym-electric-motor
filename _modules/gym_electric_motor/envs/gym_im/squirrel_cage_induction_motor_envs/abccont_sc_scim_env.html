@@ -222,7 +222,8 @@
             <span class="n">control_space</span><span class="o">=</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">reference_generator</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">WienerProcessReferenceGenerator</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;omega&#39;</span><span class="p">)</span>
+            <span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">WienerProcessReferenceGenerator</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="n">sigma_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)),</span>
         <span class="p">)</span>
         <span class="n">reward_function</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
             <span class="n">RewardFunction</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="n">WeightedSumOfErrors</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reward_weights</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mf">1.0</span><span class="p">))</span>
