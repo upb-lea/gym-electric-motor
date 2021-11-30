@@ -18,9 +18,9 @@ if __name__ == '__main__':
                         'Finite'    Discrete Action Space
     """
 
-    motor_type = 'PMSM'
-    control_type = 'TC'
-    action_type = 'AbcCont'
+    motor_type = 'SynRM'
+    control_type = 'SC'
+    action_type = 'Finite'
 
     env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
 
