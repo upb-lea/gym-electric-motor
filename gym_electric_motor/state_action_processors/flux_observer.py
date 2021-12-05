@@ -6,8 +6,28 @@ from gym_electric_motor.state_action_processors import StateActionProcessor
 
 
 class FluxObserver(StateActionProcessor):
+    """The FluxObserver extends the systems state vector by estimated flux states ``psi_abs``, and ``psi_angle``.
+
+        .. math:: psi_{abs} =  |\Psi |
+
+        .. math:: psi_{angle} = \\angle{\Psi_t}
+
+        .. math:: \Psi \in \mathbb{C}
+
+        .. math:: I_{s, \\alpha \\beta} = \\left( I_{s,\\alpha}, I_{s, \\beta} \\right) ^T
+
+        .. math::
+            \Delta \Psi_k = \\frac {(I_{s, \\alpha}+jI_{s, \\beta}) R_r L_m}{L_r}
+            - \Psi_{k-1}\\frac{R_r}{L_r}j\omega
+
+        .. math ::
+            \Psi_k = \sum_{i=0}^k (\Psi_{k-1} + \Delta\Psi_k) \\tau
+    """
 
     def __init__(self, current_names=('i_sa', 'i_sb', 'i_sc'), physical_system=None):
+        """
+        Args:
+        """
         super(FluxObserver, self).__init__(physical_system)
         self._current_indices = None
         self._l_m = None  # Main induction
@@ -61,9 +81,9 @@ class FluxObserver(StateActionProcessor):
         [i_s_alpha, i_s_beta] = self._abc_to_alphabeta_transformation(i_s)
 
         # Calculate delta flux
-        delta = np.complex(i_s_alpha, i_s_beta) * self._r_r * self._l_m / self._l_r \
+        delta_psi = np.complex(i_s_alpha, i_s_beta) * self._r_r * self._l_m / self._l_r \
             - self._integrated * np.complex(self._r_r / self._l_r, -omega)
 
         # Integrate the flux
-        self._integrated += delta * self._physical_system.tau
+        self._integrated += delta_psi * self._physical_system.tau
         return np.concatenate((state, [np.abs(self._integrated), np.angle(self._integrated)])) / self._limits

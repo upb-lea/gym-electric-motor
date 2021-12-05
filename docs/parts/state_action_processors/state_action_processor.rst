@@ -6,6 +6,7 @@ State Action Processor
     :caption: Available StateActionProcessors:
 
     current_sum_processor
+    flux_observer
 
 State Action Processor Base Class
 ''''''''''''''''''''''''''''''''''

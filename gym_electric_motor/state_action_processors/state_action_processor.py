@@ -5,7 +5,7 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
     """A StateActionProcessor is a wrapper around the PhysicalSystem of an gem-environment.
 
     It may be used to modify its states and actions. In contrast to gym-wrappers which are put around the whole
-    whole environment, modified states by the StateActionProcessors can be referenced, rewarded and visualized by the
+    environment, modified states by the StateActionProcessors can be referenced, rewarded and visualized by the
     other components of the environment.
     """
 
@@ -37,7 +37,7 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
 
     @property
     def physical_system(self):
-        """The inner physical_system"""
+        """The inner physical_system."""
         return self._physical_system
 
     @property
