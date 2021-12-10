@@ -78,15 +78,8 @@
              
   <h1>Source code for gym.envs.registration</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">importlib_metadata</span> <span class="k">as</span> <span class="nn">metadata</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">importlib.metadata</span> <span class="k">as</span> <span class="nn">metadata</span>
 
 <span class="kn">from</span> <span class="nn">gym</span> <span class="kn">import</span> <span class="n">error</span><span class="p">,</span> <span class="n">logger</span>
 
@@ -96,9 +89,6 @@
 <span class="c1"># 2016-10-31: We&#39;re experimentally expanding the environment ID format</span>
 <span class="c1"># to include an optional username.</span>
 <span class="n">env_id_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$&quot;</span><span class="p">)</span>
-
-<span class="c1"># Whitelist of plugins which can hook into the `gym.envs.internal` entry point.</span>
-<span class="n">plugin_internal_whitelist</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ale_py.gym&quot;</span><span class="p">}</span>
 
 
 <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -118,7 +108,6 @@
 <span class="sd">        reward_threshold (Optional[int]): The reward threshold before the task is considered solved</span>
 <span class="sd">        nondeterministic (bool): Whether this environment is non-deterministic even after seeding</span>
 <span class="sd">        max_episode_steps (Optional[int]): The maximum number of steps that an episode can consist of</span>
-<span class="sd">        order_enforce (Optional[int]): Whether to wrap the environment in an orderEnforcing wrapper</span>
 <span class="sd">        kwargs (dict): The kwargs to pass to the environment class</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -130,7 +119,6 @@
         <span class="n">reward_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">nondeterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">max_episode_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">order_enforce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
@@ -138,7 +126,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reward_threshold</span> <span class="o">=</span> <span class="n">reward_threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nondeterministic</span> <span class="o">=</span> <span class="n">nondeterministic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">=</span> <span class="n">max_episode_steps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_enforce</span> <span class="o">=</span> <span class="n">order_enforce</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">kwargs</span>
 
         <span class="n">match</span> <span class="o">=</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
@@ -158,10 +145,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-
         <span class="n">_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">):</span>
             <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">(</span><span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -172,15 +157,7 @@
         <span class="n">spec</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">spec</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">_kwargs</span>
         <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
-        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">gym.wrappers.time_limit</span> <span class="kn">import</span> <span class="n">TimeLimit</span>
 
-            <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_enforce</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">gym.wrappers.order_enforcing</span> <span class="kn">import</span> <span class="n">OrderEnforcing</span>
-
-                <span class="n">env</span> <span class="o">=</span> <span class="n">OrderEnforcing</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -197,7 +174,6 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -206,6 +182,10 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making new env: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">gym.wrappers.time_limit</span> <span class="kn">import</span> <span class="n">TimeLimit</span>
+
+            <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>
 
     <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -282,24 +262,9 @@
                 <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span><span class="s2">&quot;No registered env with id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="nb">id</span><span class="p">:</span>
-                <span class="n">namespace</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Custom namespace &#39;</span><span class="si">{namespace}</span><span class="s2">&#39; is being overrode by namespace &#39;</span><span class="si">{self._ns}</span><span class="s2">&#39;. &quot;</span>
-                    <span class="s2">&quot;If you are developing a plugin you shouldn&#39;t specify a namespace in `register` calls. &quot;</span>
-                    <span class="s2">&quot;The namespace is specified through the entry point key.&quot;</span>
-                <span class="p">)</span>
-            <span class="nb">id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self._ns}</span><span class="s2">/</span><span class="si">{id}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Overriding environment </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">EnvSpec</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-    <span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ns</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="n">ns</span>
-        <span class="k">yield</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <span class="c1"># Have a global registry</span>
@@ -316,47 +281,6 @@
 
 <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-
-
-<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
-    <span class="k">with</span> <span class="n">registry</span><span class="o">.</span><span class="n">namespace</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
-        <span class="k">yield</span>
-
-
-<span class="k">def</span> <span class="nf">load_env_plugins</span><span class="p">(</span><span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;gym.envs&quot;</span><span class="p">):</span>
-    <span class="c1"># Load third-party environments</span>
-    <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry_point</span><span class="p">,</span> <span class="p">[]):</span>
-        <span class="c1"># Python 3.8 doesn&#39;t support plugin.module, plugin.attr</span>
-        <span class="c1"># So we&#39;ll have to try and parse this ourselves</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">plugin</span><span class="o">.</span><span class="n">attr</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-                <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="kc">None</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Gym environment plugin `</span><span class="si">{module}</span><span class="s2">` must specify a function to execute, not a root module&quot;</span>
-                <span class="p">)</span>
-
-        <span class="n">context</span> <span class="o">=</span> <span class="n">namespace</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__internal__&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">plugin_internal_whitelist</span><span class="p">:</span>
-                <span class="n">context</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Trying to register an internal environment when `</span><span class="si">{module}</span><span class="s2">` is not in the whitelist&quot;</span>
-                <span class="p">)</span>
-
-        <span class="k">with</span> <span class="n">context</span><span class="p">:</span>
-            <span class="n">fn</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">fn</span><span class="p">()</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 </pre></div>
 
            </div>

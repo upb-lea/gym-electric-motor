@@ -117,42 +117,20 @@
 <em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">PolynomialStaticLoad</code><span class="sig-paren">(</span><em class="sig-param">load_parameter=None</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">load_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/polynomial_static_load.html#PolynomialStaticLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad" title="Permalink to this definition"></a></dt>
 <dd><p>Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.</p>
 <dl>
-<dt>Parameter dictionary entries:</dt><dd><ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(a / Nm\)</span>: Constant Load Torque coefficient (for modeling static friction)</p></li>
-<li><p><span class="math notranslate nohighlight">\(b / (Nm s)\)</span>: Linear Load Torque coefficient (for modeling sliding friction)</p></li>
-<li><p><span class="math notranslate nohighlight">\(c / (Nm s^2)\)</span>: Quadratic Load Torque coefficient (for modeling air resistances)</p></li>
-<li><p><span class="math notranslate nohighlight">\(j_load / (kg m^2)\)</span> : Moment of inertia of the mechanical system.</p></li>
-</ul>
-</dd>
-<dt>Usage Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems.mechanical_loads</span> <span class="kn">import</span> <span class="n">PolynomialStaticLoad</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create a custom PolynomialStaticLoad instance</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_poly_static_load</span> <span class="o">=</span> <span class="n">PolynomialStaticLoad</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">load_parameter</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">j_load</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">limits</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mf">150.0</span><span class="p">),</span> <span class="c1"># rad / s</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="s1">&#39;Cont-SC-ExtExDc-v0&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">load</span><span class="o">=</span><span class="n">my_poly_static_load</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="n">state</span><span class="p">,</span> <span class="n">reference</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
-</pre></div>
+<dt>Parameter dictionary entries:</dt><dd><div class="line-block">
+<div class="line">a: Constant Load Torque coefficient (for modeling static friction)</div>
+<div class="line">b: Linear Load Torque coefficient (for modeling sliding friction)</div>
+<div class="line">c: Quadratic Load Torque coefficient (for modeling air resistances)</div>
+<div class="line">j_load: Moment of inertia of the mechanical system.</div>
 </div>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>load_parameter</strong> (<em>dict</em><em>(</em><em>float</em><em>)</em>) – Parameter dictionary. Keys: <code class="docutils literal notranslate"><span class="pre">'a',</span> <span class="pre">'b',</span> <span class="pre">'c',</span> <span class="pre">'j_load'</span></code></p></li>
-<li><p><strong>limits</strong> (<em>dict</em>) – dictionary to update the limits of the load-instance. Keys: <code class="docutils literal notranslate"><span class="pre">'omega'</span></code></p></li>
-<li><p><strong>load_initializer</strong> (<em>dict</em>) – Dictionary to parameterize the initializer.</p></li>
+<li><p><strong>load_parameter</strong> (<em>dict</em><em>(</em><em>float</em><em>)</em>) – Parameter dictionary.</p></li>
+<li><p><strong>limits</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>load_initializer</strong> (<em>dict</em>) – </p></li>
 </ul>
 </dd>
 </dl>
