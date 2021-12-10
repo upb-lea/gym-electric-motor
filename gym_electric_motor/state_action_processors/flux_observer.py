@@ -18,7 +18,7 @@ class FluxObserver(StateActionProcessor):
 
         .. math::
             \Delta \Psi_k = \\frac {(I_{s, \\alpha}+jI_{s, \\beta}) R_r L_m}{L_r}
-            - \Psi_{k-1}\\frac{R_r}{L_r}j\omega
+            - \Psi_{k-1}(\\frac{R_r}{L_r}+ j\omega)
 
         .. math ::
             \Psi_k = \sum_{i=0}^k (\Psi_{k-1} + \Delta\Psi_k) \\tau
