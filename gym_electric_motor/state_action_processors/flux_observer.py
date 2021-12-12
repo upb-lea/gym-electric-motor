@@ -27,6 +27,10 @@ class FluxObserver(StateActionProcessor):
     def __init__(self, current_names=('i_sa', 'i_sb', 'i_sc'), physical_system=None):
         """
         Args:
+            current_names(Iterable[string]): Names of the currents to be observed to estimate the flux.
+                (Default: ``('i_sa', 'i_sb', 'i_sc')``)
+            physical_system(PhysicalSystem): (Optional) Physical System to initialize this observer. If not passed,
+                the observer will be initialized during environment creation.
         """
         super(FluxObserver, self).__init__(physical_system)
         self._current_indices = None
@@ -46,6 +50,7 @@ class FluxObserver(StateActionProcessor):
         return gem.physical_systems.electric_motors.ThreePhaseMotor.t_23(i_s)
 
     def set_physical_system(self, physical_system):
+        # Docstring of super class
         assert isinstance(physical_system.electrical_motor, gem.physical_systems.electric_motors.InductionMotor)
         super().set_physical_system(physical_system)
         low = np.concatenate((physical_system.state_space.low, [-1., -1.]))
@@ -68,10 +73,12 @@ class FluxObserver(StateActionProcessor):
         return self
 
     def reset(self):
+        # Docstring of super class
         self._integrated = np.complex(0, 0)
         return np.concatenate((super().reset(), [0.0, 0.0]))
 
     def simulate(self, action):
+        # Docstring of super class
         state_norm = self._physical_system.simulate(action)
         state = state_norm * self._physical_system.limits
         i_s = state[self._i_s_idx]

@@ -5,7 +5,7 @@ from gym_electric_motor.state_action_processors import StateActionProcessor
 
 
 class CurrentSumProcessor(StateActionProcessor):
-    """Adds an ``i_sum`` state to the systems state vector that adds up several currents."""
+    """Adds an ``i_sum`` state to the systems state vector that adds up currents."""
 
     def __init__(self, currents, limit='max', physical_system=None):
         """

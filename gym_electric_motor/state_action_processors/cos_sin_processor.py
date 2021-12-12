@@ -9,6 +9,11 @@ class CosSinProcessor(StateActionProcessor):
     certain systems state.
     """
 
+    @property
+    def angle(self):
+        """Returns the name of the state whose cosine and sine are appended to the state vector."""
+        return self._angle
+
     def __init__(self, angle='epsilon', physical_system=None):
         """
         Args:
