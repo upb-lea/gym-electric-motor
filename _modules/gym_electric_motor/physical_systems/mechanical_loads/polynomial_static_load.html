@@ -87,17 +87,45 @@
     <span class="sd">&quot;&quot;&quot; Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.</span>
 
 <span class="sd">    Parameter dictionary entries:</span>
-<span class="sd">        | a: Constant Load Torque coefficient (for modeling static friction)</span>
-<span class="sd">        | b: Linear Load Torque coefficient (for modeling sliding friction)</span>
-<span class="sd">        | c: Quadratic Load Torque coefficient (for modeling air resistances)</span>
-<span class="sd">        | j_load: Moment of inertia of the mechanical system.</span>
+<span class="sd">        - :math:`a / Nm`: Constant Load Torque coefficient (for modeling static friction)</span>
+<span class="sd">        - :math:`b / (Nm s)`: Linear Load Torque coefficient (for modeling sliding friction)</span>
+<span class="sd">        - :math:`c / (Nm s^2)`: Quadratic Load Torque coefficient (for modeling air resistances)</span>
+<span class="sd">        - :math:`j_load / (kg m^2)` : Moment of inertia of the mechanical system.</span>
+
+<span class="sd">    Usage Example:</span>
+<span class="sd">        &gt;&gt;&gt; import gym_electric_motor as gem</span>
+<span class="sd">        &gt;&gt;&gt; from gym_electric_motor.physical_systems.mechanical_loads import PolynomialStaticLoad</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Create a custom PolynomialStaticLoad instance</span>
+<span class="sd">        &gt;&gt;&gt; my_poly_static_load = PolynomialStaticLoad(</span>
+<span class="sd">        ...     load_parameter=dict(a=1e-3, b=1e-4, c=0.0, j_load=1e-3),</span>
+<span class="sd">        ...     limits=dict(omega=150.0), # rad / s</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; env = gem.make(</span>
+<span class="sd">        ...     &#39;Cont-SC-ExtExDc-v0&#39;,</span>
+<span class="sd">        ...     load=my_poly_static_load</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; done = True</span>
+<span class="sd">        &gt;&gt;&gt; for _ in range(1000):</span>
+<span class="sd">        &gt;&gt;&gt;     if done:</span>
+<span class="sd">        &gt;&gt;&gt;         state, reference = env.reset()</span>
+<span class="sd">        &gt;&gt;&gt;     env.render()</span>
+<span class="sd">        &gt;&gt;&gt;     (state, reference), reward, done, _ = env.step(env.action_space.sample())</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_load_parameter</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">j_load</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
-    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
-                            <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="s1">&#39;random_params&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}</span>
+    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+        <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;random_params&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">#: Time constant to smoothen the static load functions constant term &quot;a&quot; around 0 velocity</span>
+    <span class="c1"># Steps of a lead to unstable behavior of the ode-solver.</span>
+    <span class="n">tau_decay</span> <span class="o">=</span> <span class="mf">1e-3</span>
 
     <span class="c1">#: Parameter indicating if the class is implementing the optional jacobian function</span>
     <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
@@ -113,9 +141,9 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            load_parameter(dict(float)): Parameter dictionary.</span>
-<span class="sd">            limits(dict):</span>
-<span class="sd">            load_initializer(dict):</span>
+<span class="sd">            load_parameter(dict(float)): Parameter dictionary. Keys: ``&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;j_load&#39;``</span>
+<span class="sd">            limits(dict): dictionary to update the limits of the load-instance. Keys: ``&#39;omega&#39;``</span>
+<span class="sd">            load_initializer(dict): Dictionary to parameterize the initializer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">load_parameter</span> <span class="o">=</span> <span class="n">load_parameter</span> <span class="k">if</span> <span class="n">load_parameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">,</span> <span class="n">load_parameter</span><span class="p">)</span>
@@ -125,22 +153,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_parameter</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_static_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculation of the load torque for a given speed omega.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">omega</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">omega</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="n">sign</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">*</span> <span class="n">omega</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_static_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculation of the load torque for a given speed omega.&quot;&quot;&quot;</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">omega</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">omega</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="c1"># Limit the constant load term &#39;a&#39; for velocities around zero for a more stable integration</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> \
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_decay</span> \
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_decay</span> <span class="o">*</span> <span class="n">omega</span>
+        <span class="k">return</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">*</span> <span class="n">omega</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">+</span> <span class="n">a</span>
 
 <div class="viewcode-block" id="PolynomialStaticLoad.mechanical_ode"><a class="viewcode-back" href="../../../../parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">torque</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static_load</span><span class="p">(</span><span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span>
+        <span class="n">static_torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static_load</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+        <span class="n">total_torque</span> <span class="o">=</span> <span class="n">torque</span> <span class="o">-</span> <span class="n">static_torque</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">total_torque</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="PolynomialStaticLoad.mechanical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.mechanical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">mechanical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mechanical_state</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">*</span> <span class="n">sign</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">*</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">])</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">]]),</span> \
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div></div>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">mechanical_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span><span class="p">]</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">omega</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">omega</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="c1"># Linear region of the constant load term &#39;a&#39; ?</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_decay</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_decay</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sign</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">]]),</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_j_total</span><span class="p">])</span></div></div>
 </pre></div>
 
            </div>
