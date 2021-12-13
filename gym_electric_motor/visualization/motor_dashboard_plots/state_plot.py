@@ -108,14 +108,12 @@ class StatePlot(TimePlot):
         super().initialize(axis)
 
         # Line to plot the state data
-        self._state_line, = self._axis.plot(self._x_data, self._state_data, **self._state_line_config)
+        self._state_line, = self._axis.plot(self._x_data, self._state_data, **self._state_line_config, zorder=2)
         self._lines = [self._state_line]
 
         # If the state is referenced plot also the reference line
         if self._referenced:
-            self._reference_line, = self._axis.plot(self._x_data, self._ref_data, **self._ref_line_config)
-            # Plot state line in front
-            axis.lines = axis.lines[::-1]
+            self._reference_line, = self._axis.plot(self._x_data, self._ref_data, **self._ref_line_config, zorder=1)
             self._lines.append(self._reference_line)
         min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
         max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
