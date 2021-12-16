@@ -132,7 +132,7 @@ class FiniteSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
                 load_parameter=dict(a=0.0, b=0.0, c=0.0, j_load=1e-3)
             )),
-            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau

@@ -128,7 +128,7 @@ class FiniteTorqueControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment)
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteB6BridgeConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.SynchronousReluctanceMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
-            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.EulerSolver, dict()),
+            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
