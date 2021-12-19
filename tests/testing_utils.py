@@ -1,4 +1,4 @@
-from .conf import *
+from tests.conf import *
 from gym_electric_motor.physical_systems import *
 from gym_electric_motor.utils import make_module, set_state_array
 from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization, \
@@ -244,10 +244,16 @@ class DummyPhysicalSystem(PhysicalSystem):
         """
         return self._nominal_values
 
-    def __init__(self, state_length=1, state_names='dummy_state', **kwargs):
+    def __init__(self, state_length=None, state_names='dummy_state', **kwargs):
+
+        if isinstance(state_names, str):
+            if state_length is None:
+                state_length = 1
+            state_names = [f'{state_names}_{i}' for i in range(state_length)]
+        state_length = len(state_names)
         super().__init__(
             Box(-1, 1, shape=(1,), dtype=np.float64), Box(-1, 1, shape=(state_length,), dtype=np.float64),
-            [f'{state_names}_{i}' for i in range(state_length)], 1
+            state_names, 1
         )
         self._limits = np.array([10 * (i + 1) for i in range(state_length)])
         self._nominal_values = np.array([(i + 1) for i in range(state_length)])

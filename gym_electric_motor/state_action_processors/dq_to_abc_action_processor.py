@@ -42,8 +42,6 @@ class DqToAbcActionProcessor(StateActionProcessor):
 
     def set_physical_system(self, physical_system):
         # Docstring of super class
-        assert isinstance(physical_system.unwrapped, ps.SCMLSystem),\
-            'Only SCML Systems can be used within this processor'
         assert isinstance(physical_system.electrical_motor, ps.ThreePhaseMotor), \
             'The motor in the system has to derive from the ThreePhaseMotor to define transformations.'
         super().set_physical_system(physical_system)

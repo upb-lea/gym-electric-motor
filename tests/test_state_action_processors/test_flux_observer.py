@@ -3,8 +3,8 @@ import pytest
 import numpy as np
 import gym_electric_motor as gem
 
-from ..testing_utils import DummyPhysicalSystem
-from ..utils import StateActionTestProcessor
+from tests.testing_utils import DummyPhysicalSystem
+from tests.utils import StateActionTestProcessor
 from .test_state_action_processor import TestStateActionProcessor
 
 
@@ -12,32 +12,46 @@ class TestFluxObserver(TestStateActionProcessor):
 
     @pytest.fixture
     def physical_system(self):
-        return StateActionTestProcessor(physical_system=gem.physical_systems.SquirrelCageInductionMotorSystem())
+        ps = DummyPhysicalSystem(state_names=['omega','i_sa', 'i_sb', 'i_sc','i_sd', 'i_sq'])
+        ps.unwrapped.electrical_motor = gem.physical_systems.electric_motors.SquirrelCageInductionMotor(
+            limit_values=dict(i=20.0),
+            motor_parameter=dict(l_m=10.0)
+        )
+        ps.unwrapped._limits[ps.state_names.index('i_sd')] = ps.unwrapped.electrical_motor.limits['i_sd']
+        return ps
+
+    @pytest.fixture
+    def reset_physical_system(self, physical_system):
+        ps.reset()
+        return ps
 
     @pytest.fixture
     def processor(self, physical_system):
         return gem.state_action_processors.FluxObserver(physical_system=physical_system)
 
+    @pytest.fixture
+    def reset_processor(self, processor):
+        processor.reset()
+        return processor
+
     def test_limits(self, processor, physical_system):
-        assert all(processor.limits == np.concatenate((physical_system.limits, [1., 1.])))
+        assert all(processor.limits == np.concatenate((physical_system.limits, [200., np.pi])))
 
     def test_nominal_state(self, processor, physical_system):
-        assert all(processor.nominal_state == np.concatenate((physical_system.nominal_state, [1., 1.])))
+        assert all(processor.nominal_state == np.concatenate((physical_system.nominal_state, [200., np.pi])))
 
     def test_state_space(self, processor, physical_system):
-        low = np.concatenate((physical_system.state_space.low, [-1, -1]))
-        high = np.concatenate((physical_system.state_space.high, [1, 1]))
-        space = gym.spaces.Box(low, high)
+        psiabs_max = 200.0
+        low = np.concatenate((physical_system.state_space.low, [-psiabs_max, -np.pi]))
+        high = np.concatenate((physical_system.state_space.high, [psiabs_max, np.pi]))
+        space = gym.spaces.Box(low, high, dtype=np.float64)
         assert processor.state_space == space
 
     def test_reset(self, processor, physical_system):
-        assert all(processor.reset() == np.concatenate((physical_system.state, [1., 0.])))
+        assert all(processor.reset() == np.concatenate((physical_system.state, [0., 0.])))
 
     @pytest.mark.parametrize('action', [1, 2, 3, 4])
-    def test_simulate(self, processor, physical_system, action):
-        state = processor.simulate(action)
-        ps_state = physical_system.state
-        assert action == physical_system.action
-        cos_sin_state = ps_state[physical_system.state_positions[processor.angle]]
-        assert all(state == np.concatenate((ps_state, [np.cos(cos_sin_state), np.sin(cos_sin_state)])))
+    def test_simulate(self, reset_processor, physical_system, action):
+        state = reset_processor.simulate(action)
+        assert all(state[:-2] == physical_system.state)
 

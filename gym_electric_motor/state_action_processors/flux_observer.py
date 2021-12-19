@@ -32,7 +32,6 @@ class FluxObserver(StateActionProcessor):
             physical_system(PhysicalSystem): (Optional) Physical System to initialize this observer. If not passed,
                 the observer will be initialized during environment creation.
         """
-        super(FluxObserver, self).__init__(physical_system)
         self._current_indices = None
         self._l_m = None  # Main induction
         self._l_r = None  # Induction of the rotor
@@ -44,6 +43,8 @@ class FluxObserver(StateActionProcessor):
         # Integrated values of the flux for the two directions (Re: alpha, Im: beta)
         self._integrated = np.complex(0, 0)
         self._current_names = current_names
+        super(FluxObserver, self).__init__(physical_system)
+
 
     @staticmethod
     def _abc_to_alphabeta_transformation(i_s):
@@ -53,20 +54,20 @@ class FluxObserver(StateActionProcessor):
         # Docstring of super class
         assert isinstance(physical_system.electrical_motor, gem.physical_systems.electric_motors.InductionMotor)
         super().set_physical_system(physical_system)
-        low = np.concatenate((physical_system.state_space.low, [-1., -1.]))
-        high = np.concatenate((physical_system.state_space.high, [1., 1.]))
-        self.state_space = gym.spaces.Box(low, high, dtype=np.float64)
-        self._current_indices = [physical_system.state_positions[name] for name in self._current_names]
-        psi_limit = 1.0
-        self._limits = np.concatenate((physical_system.limits, [psi_limit, np.pi]))
-        self._nominal_state = np.concatenate((physical_system.nominal_state, [psi_limit, np.pi]))
-        self._state_names = physical_system.state_names + ['psi_abs', 'psi_angle']
-        self._state_positions = {key: index for index, key in enumerate(self._state_names)}
         mp = physical_system.electrical_motor.motor_parameter
         self._l_m = mp['l_m']  # Main induction
         self._l_r = mp['l_m'] + mp['l_sigr']  # Induction of the rotor
         self._r_r = mp['r_r']  # Rotor resistance
         self._p = mp['p']  # Pole pair number
+        psi_limit = self._l_m * physical_system.limits[physical_system.state_names.index('i_sd')]
+        low = np.concatenate((physical_system.state_space.low, [-psi_limit, -np.pi]))
+        high = np.concatenate((physical_system.state_space.high, [psi_limit, np.pi]))
+        self.state_space = gym.spaces.Box(low, high, dtype=np.float64)
+        self._current_indices = [physical_system.state_positions[name] for name in self._current_names]
+        self._limits = np.concatenate((physical_system.limits, [psi_limit, np.pi]))
+        self._nominal_state = np.concatenate((physical_system.nominal_state, [psi_limit, np.pi]))
+        self._state_names = physical_system.state_names + ['psi_abs', 'psi_angle']
+        self._state_positions = {key: index for index, key in enumerate(self._state_names)}
 
         self._i_s_idx = [physical_system.state_positions[name] for name in self._current_names]
         self._omega_idx = physical_system.state_positions['omega']

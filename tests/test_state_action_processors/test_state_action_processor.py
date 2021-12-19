@@ -1,17 +1,23 @@
 import pytest
-import gym_electric_motor as gem
-from ..testing_utils import DummyPhysicalSystem
+from fontTools.ttx import process
 
+import gym_electric_motor as gem
+import tests.testing_utils as tu
 
 class TestStateActionProcessor:
 
     @pytest.fixture
     def physical_system(self):
-        return DummyPhysicalSystem()
+        return tu.DummyPhysicalSystem()
 
     @pytest.fixture
     def processor(self, physical_system):
         return gem.state_action_processors.StateActionProcessor(physical_system=physical_system)
+
+    @pytest.fixture
+    def reset_processor(self, processor):
+        processor.reset()
+        return processor
 
     @pytest.fixture
     def double_wrapped(self, processor):
@@ -30,16 +36,16 @@ class TestStateActionProcessor:
         assert double_wrapped.unwrapped == physical_system
 
     def test_nominal_state(self, processor, physical_system):
-        assert processor.nominal_state == physical_system.nominal_state
+        assert all(processor.nominal_state == physical_system.nominal_state)
 
     def test_limits(self, processor, physical_system):
-        assert processor.limits == physical_system.limits
+        assert all(processor.limits == physical_system.limits)
 
     def test_reset(self, processor, physical_system):
-        assert processor.reset() == physical_system.state
+        assert all(processor.reset() == physical_system.state)
 
     @pytest.mark.parametrize(['action'], [[1]])
-    def test_simulate(self, processor, physical_system, action):
-        state = processor.simulate(action)
+    def test_simulate(self, reset_processor, physical_system, action):
+        state = reset_processor.simulate(action)
         assert state == physical_system.state
         assert action == physical_system.action

@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 import gym_electric_motor as gem
 
-from ..testing_utils import DummyPhysicalSystem
+from tests.testing_utils import DummyPhysicalSystem
 from .test_state_action_processor import TestStateActionProcessor
 
 

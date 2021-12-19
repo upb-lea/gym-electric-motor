@@ -31,8 +31,9 @@ class DeadTimeProcessor(StateActionProcessor):
             physical_system(PhysicalSystem (optional)): The inner physical system of this StateActionProcessor.
         """
         self._reset_actions = reset_action
-        self._action_deque = deque(maxlen=steps)
         self._steps = int(steps)
+        assert self._steps > 0, f'The number of steps has to be greater than 0. A "{steps}" has been passed.'
+        self._action_deque = deque(maxlen=steps)
         super().__init__(physical_system)
 
     def set_physical_system(self, physical_system):
@@ -41,6 +42,7 @@ class DeadTimeProcessor(StateActionProcessor):
         Args:
             physical_system(PhysicalSystem): The physical system to be set.
         """
+        super().set_physical_system(physical_system)
         if self._reset_actions is None:
             action_space = physical_system.action_space
             if isinstance(action_space, gym.spaces.Discrete):
