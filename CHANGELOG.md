@@ -10,15 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2021-12-20
 ## Added
 - Classic field oriented controllers for induction motors
+- Uniform initialization of the WienerProcessReferenceGenerator
 
 ## Changed
 - Reduced the dynamics of the reference signals in several speed control environments
+- Changed the default ode-solver of all environments to the ScipyOdeSolver
 
 ## Fixed
 - gym version compatibility for all versions >= 0.21.0
 - Docs: m2r dependency to m2r2. Enables compatibility with latest sphinx versions.
 - matplotlib compatibility with versions >= 3.5.0
 - Bugfix in the stable_baselines3_dqn_disc_pmsm_example.ipynb example notebook
+- Bugfix in the jacobian of the ConstantSpeedLoad
 
 ## [1.0.0] - 2021-08-23
 ### Added
