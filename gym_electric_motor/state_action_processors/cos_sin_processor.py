@@ -19,7 +19,7 @@ class CosSinProcessor(StateActionProcessor):
         Args:
             angle(string): Name of the state whose cosine and sine will be added to the systems state vector.
                 Default: ``'epsilon'``
-            physical_system(PhysicalSystem(optional): Inner system of this processor.
+            physical_system(PhysicalSystem(optional)): Inner system of this processor.
         """
         self._angle = angle
         self._angle_index = None

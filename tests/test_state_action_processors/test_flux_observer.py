@@ -41,9 +41,9 @@ class TestFluxObserver(TestStateActionProcessor):
         assert all(processor.nominal_state == np.concatenate((physical_system.nominal_state, [200., np.pi])))
 
     def test_state_space(self, processor, physical_system):
-        psiabs_max = 200.0
-        low = np.concatenate((physical_system.state_space.low, [-psiabs_max, -np.pi]))
-        high = np.concatenate((physical_system.state_space.high, [psiabs_max, np.pi]))
+        psi_abs_max = 200.0
+        low = np.concatenate((physical_system.state_space.low, [-psi_abs_max, -np.pi]))
+        high = np.concatenate((physical_system.state_space.high, [psi_abs_max, np.pi]))
         space = gym.spaces.Box(low, high, dtype=np.float64)
         assert processor.state_space == space
 

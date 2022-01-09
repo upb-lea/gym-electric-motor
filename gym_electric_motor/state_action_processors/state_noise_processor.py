@@ -87,4 +87,4 @@ class StateNoiseProcessor(StateActionProcessor):
         """Samples new noise from the random distribution for the next steps."""
         self._random_pointer = 0
         fct = getattr(self._random_generator, self._random_dist)
-        self._noise = fct(size=(self._random_length, len(self._state)), **self._random_kwargs)
+        self._noise = fct(size=(self._random_length, len(self._state_indices)), **self._random_kwargs)
