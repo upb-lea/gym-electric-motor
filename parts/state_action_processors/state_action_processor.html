@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>State Action Processor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Current Sum Processor" href="current_sum_processor.html" />
+    <link rel="prev" title="scipy.integrate.odeint Solver" href="../physical_systems/ode_solvers/scipy_odeint.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">State Action Processor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="current_sum_processor.html">Current Sum Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flux_observer.html">Flux Observer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cos_sin_processor.html">Cos Sin Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dead_time_processor.html">Dead Time Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dq_to_abc_action_processor.html">Dq To Abc Action Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_noise_processor.html">State Noise Processor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../random_component.html">Random Component</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>State Action Processor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/parts/state_action_processors/state_action_processor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="state-action-processor">
+<h1>State Action Processor<a class="headerlink" href="#state-action-processor" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Available StateActionProcessors:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="current_sum_processor.html">Current Sum Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flux_observer.html">Flux Observer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cos_sin_processor.html">Cos Sin Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dead_time_processor.html">Dead Time Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dq_to_abc_action_processor.html">Dq To Abc Action Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state_noise_processor.html">State Noise Processor</a></li>
+</ul>
+</div>
+<div class="section" id="state-action-processor-base-class">
+<h2>State Action Processor Base Class<a class="headerlink" href="#state-action-processor-base-class" title="Permalink to this headline"></a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.state_action_processors.</code><code class="sig-name descname">StateActionProcessor</code><span class="sig-paren">(</span><em class="sig-param">physical_system=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/state_action_processor.html#StateActionProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor" title="Permalink to this definition"></a></dt>
+<dd><p>A StateActionProcessor is a wrapper around the PhysicalSystem of a gem-environment.</p>
+<p>It may be used to modify its states and actions. In contrast to gym-wrappers which are put around the whole
+environment, modified states by the StateActionProcessors can be referenced, rewarded and visualized by the
+other components of the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – (Optional) The inner physical system can be passed to directly call the
+set_physical_system-method after the initialization.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.action_space">
+<em class="property">property </em><code class="sig-name descname">action_space</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.action_space" title="Permalink to this definition"></a></dt>
+<dd><p>The processed action space.</p>
+<p>If it is unset, the action space of the inner physical system is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.limits" title="Permalink to this definition"></a></dt>
+<dd><p>The processed physical system limits.</p>
+<p>If it is unset, the inner limits are returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.nominal_state">
+<em class="property">property </em><code class="sig-name descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.nominal_state" title="Permalink to this definition"></a></dt>
+<dd><p>The processed physical system nominal state.</p>
+<p>If it is unset, the inner nominal state is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.physical_system">
+<em class="property">property </em><code class="sig-name descname">physical_system</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>The next inner physical_system or the next inner state_action_processor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/state_action_processor.html#StateActionProcessor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the physical system to an initial state before a new episode starts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The initial systems state</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>element of state_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/state_action_processor.html#StateActionProcessor.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.seed" title="Permalink to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.set_physical_system">
+<code class="sig-name descname">set_physical_system</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/state_action_processor.html#StateActionProcessor.set_physical_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.set_physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the inner physical system of this StateActionProcessor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The inner physical system or state action processor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/state_action_processor.html#StateActionProcessor.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.simulate" title="Permalink to this definition"></a></dt>
+<dd><p>Simulation of the Physical System for one time step with the input action.
+This method is called in the environment in every step to update the systems state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>element of action_space</em>) – The action to play on the system for the next time step.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The systems state after the action was applied.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>element of state_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.state_names">
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.state_names" title="Permalink to this definition"></a></dt>
+<dd><p>The processed physical system state names.</p>
+<p>If it is unset, the state names of the inner physical system are returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.state_space">
+<em class="property">property </em><code class="sig-name descname">state_space</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.state_space" title="Permalink to this definition"></a></dt>
+<dd><p>The processed state space.</p>
+<p>If it is unset, the state space of the inner physical system is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.state_action_processors.StateActionProcessor.unwrapped">
+<em class="property">property </em><code class="sig-name descname">unwrapped</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.StateActionProcessor.unwrapped" title="Permalink to this definition"></a></dt>
+<dd><p>The innermost physical system within all state-action processors.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../physical_systems/ode_solvers/scipy_odeint.html" class="btn btn-neutral float-left" title="scipy.integrate.odeint Solver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="current_sum_processor.html" class="btn btn-neutral float-right" title="Current Sum Processor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_electric_motor.state_action_processors.state_noise_processor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/state_action_processors/state_action_processor.html">State Action Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_electric_motor.state_action_processors.state_noise_processor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_electric_motor.state_action_processors.state_noise_processor</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.state_action_processors</span> <span class="kn">import</span> <span class="n">StateActionProcessor</span>
+
+
+<div class="viewcode-block" id="StateNoiseProcessor"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor">[docs]</a><span class="k">class</span> <span class="nc">StateNoiseProcessor</span><span class="p">(</span><span class="n">StateActionProcessor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The StateNoiseProcessor puts additional noise onto the systems state.</span>
+
+<span class="sd">    The random distribution of the noise can be selected by those available in the numpy random generator:</span>
+<span class="sd">            `&lt;https://numpy.org/doc/stable/reference/random/generator.html#distributions&gt;`_</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">            import gym_electric_motor as gem</span>
+<span class="sd">            state_noise_processor = gem.state_action_processors.StateNoiseProcessor(</span>
+<span class="sd">                states=[&#39;omega&#39;, &#39;torque&#39;],</span>
+<span class="sd">                random_dist=&#39;laplace&#39;</span>
+<span class="sd">                random_kwargs=dict(loc=0.0, scale=0.1)</span>
+<span class="sd">            )</span>
+<span class="sd">            env = gem.make(&#39;Cont-SC-PermExDc-v0&#39;, state_action_processors=(state_noise_processor,))</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">random_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the random keyword arguments that are passed through to the random generator function.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_kwargs</span>
+
+    <span class="nd">@random_kwargs</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">random_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">random_dist</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="n">random_kwargs</span><span class="o">=</span><span class="p">(),</span> <span class="n">random_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">             states(Iterable[string] / &#39;all&#39;): Names of the states onto which the noise shall be added.</span>
+<span class="sd">                Shortcut &#39;all&#39;: Add it to all available states.</span>
+<span class="sd">            random_dist(string): Name of the random distribution behind the numpy random generator that shall be used.</span>
+<span class="sd">            random_kwargs(dict): Keyword arguments that are passed through to the selected random distribution.</span>
+<span class="sd">                For available entries have a look at the page linked above. Only the argument &#39;size&#39; cannot be passed.</span>
+<span class="sd">            random_length(int): Number of random samples that are drawn at once. Drawing from the random distribution</span>
+<span class="sd">                at every cycle would be too slow. So, multiple samples are drawn at once for the next steps.</span>
+<span class="sd">            physical_system(PhysicalSystem): (Optional) If available the inner physical system can already be passed to</span>
+<span class="sd">                the processor here. Otherwise the processor will be initialized during environment creation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">random_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">random_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_states</span> <span class="o">=</span> <span class="n">states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_dist</span> <span class="o">=</span> <span class="n">random_dist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="p">,</span> <span class="n">random_dist</span><span class="p">),</span> \
+            <span class="sa">f</span><span class="s1">&#39;The numpy random number generator has no distribution </span><span class="si">{random_dist}</span><span class="s1">.&#39;</span>\
+            <span class="s1">&#39;Check https://numpy.org/doc/stable/reference/random/generator.html#distributions for distributions.&#39;</span>
+
+<div class="viewcode-block" id="StateNoiseProcessor.set_physical_system"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+        <span class="c1"># Docstring from super class</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="n">state_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="StateNoiseProcessor.reset"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring from super class</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_noise</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_noise</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StateNoiseProcessor.simulate"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="c1"># Docstring from super class</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_length</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_new_noise</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_noise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">action</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_add_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds noise to the current state.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            state(numpy.ndarray[float]): The systems state without noise.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray[float]): The state with additional noise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">_new_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Samples new noise from the random distribution for the next steps.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">fct</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_dist</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span> <span class="o">=</span> <span class="n">fct</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">)),</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_kwargs</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
