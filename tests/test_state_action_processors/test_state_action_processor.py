@@ -1,8 +1,8 @@
 import pytest
-from fontTools.ttx import process
 
 import gym_electric_motor as gem
 import tests.testing_utils as tu
+
 
 class TestStateActionProcessor:
 
