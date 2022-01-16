@@ -92,15 +92,17 @@
 <h1>Cos Sin Processor<a class="headerlink" href="#cos-sin-processor" title="Permalink to this headline"></a></h1>
 <dl class="class">
 <dt id="gym_electric_motor.state_action_processors.CosSinProcessor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.state_action_processors.</code><code class="sig-name descname">CosSinProcessor</code><span class="sig-paren">(</span><em class="sig-param">angle='epsilon'</em>, <em class="sig-param">physical_system=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/cos_sin_processor.html#CosSinProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.state_action_processors.</code><code class="sig-name descname">CosSinProcessor</code><span class="sig-paren">(</span><em class="sig-param">angle='epsilon'</em>, <em class="sig-param">physical_system=None</em>, <em class="sig-param">remove_angle=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/cos_sin_processor.html#CosSinProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor" title="Permalink to this definition"></a></dt>
 <dd><p>Adds <code class="docutils literal notranslate"><span class="pre">cos(angle)</span></code> and <code class="docutils literal notranslate"><span class="pre">sin(angle)</span></code> states to the systems state vector that are the cosine and sine of a
 certain systems state.</p>
+<p>Optionally, the CosSinProcessor can also remove the angle from the state vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>angle</strong> (<em>string</em>) – Name of the state whose cosine and sine will be added to the systems state vector.
 Default: <code class="docutils literal notranslate"><span class="pre">'epsilon'</span></code></p></li>
 <li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a><em>(</em><em>optional</em><em>)</em>) – Inner system of this processor.</p></li>
+<li><p><strong>remove_angle</strong> (<em>bool</em>) – Remove the angle from the state vector</p></li>
 </ul>
 </dd>
 </dl>
