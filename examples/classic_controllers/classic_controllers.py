@@ -62,7 +62,7 @@ class Controller:
 
         if stages is not None:
             controller_type, stages = cls.find_controller_type(environment, stages, **controller_kwargs)
-            assert controller_type in cls._controllers.keys(), f'Controller {controller_type} unknown'
+            assert controller_type in _controllers.keys(), f'Controller {controller_type} unknown'
             stages = cls.automated_gain(environment, stages, controller_type, _controllers, **controller_kwargs)
             controller = _controllers[controller_type][0](environment, stages, _controllers, **controller_kwargs)
 
