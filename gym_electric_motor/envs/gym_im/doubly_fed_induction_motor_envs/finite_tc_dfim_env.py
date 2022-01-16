@@ -23,7 +23,6 @@ class FiniteTorqueControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
         - Motor: :py:class:`.DoublyFedInductionMotor`
         - Load: :py:class:`.ConstantSpeedLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
-        - Noise: **None**
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'torque'``
 
@@ -92,7 +91,7 @@ class FiniteTorqueControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
         >>>     env.render()
         >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5):
         """
@@ -102,7 +101,6 @@ class FiniteTorqueControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
             motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment
             load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment
             ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment
-            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment
             reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment
             reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
@@ -130,7 +128,7 @@ class FiniteTorqueControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
             This class is then initialized with its default parameters.
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
-        default_subconverters = (
+        default_sub_converters = (
             ps.FiniteB6BridgeConverter(),
             ps.FiniteB6BridgeConverter()
         )
@@ -140,12 +138,11 @@ class FiniteTorqueControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
                 ps.PowerElectronicConverter,
                 converter,
                 ps.FiniteMultiConverter,
-                dict(subconverters=default_subconverters)
+                dict(subconverters=default_sub_converters)
             ),
             motor=initialize(ps.ElectricMotor, motor, ps.DoublyFedInductionMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )

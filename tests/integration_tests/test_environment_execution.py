@@ -4,13 +4,13 @@ import numpy as np
 
 control_tasks = ['TC', 'SC', 'CC']
 action_types = ['Cont', 'Finite']
-dc_motors = ['SeriesDc', 'PermExDc', 'ExtExDc', 'ShuntDc']
+motors = ['SeriesDc', 'PermExDc', 'ExtExDc', 'ShuntDc', 'PMSM', 'SynRM', 'DFIM', 'SCIM']
 versions = ['v0']
 
 
 @pytest.mark.parametrize('no_of_steps', [100])
 @pytest.mark.parametrize('version', versions)
-@pytest.mark.parametrize('dc_motor', dc_motors)
+@pytest.mark.parametrize('dc_motor', motors)
 @pytest.mark.parametrize('control_task', control_tasks)
 @pytest.mark.parametrize('action_type', action_types)
 def test_execution(dc_motor, control_task, action_type, version, no_of_steps):

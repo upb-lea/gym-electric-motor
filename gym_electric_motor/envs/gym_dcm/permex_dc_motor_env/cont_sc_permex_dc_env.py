@@ -22,7 +22,6 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         - Motor: :py:class:`.DcPermanentlyExcitedMotor`
         - Load: :py:class:`.PolynomialStaticLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
-        - Noise: **None**
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
 
@@ -84,7 +83,7 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         >>>     env.render()
         >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=('i',), calc_jacobian=True, tau=1e-4, state_action_processors=()):
         """
@@ -94,7 +93,6 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
             motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment
             load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment
             ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` dor the environment
-            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment
             reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment
             reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
@@ -132,7 +130,6 @@ class ContSpeedControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
                 load_parameter=dict(a=0.0, b=0.0, c=0.0, j_load=1e-4)
             )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )

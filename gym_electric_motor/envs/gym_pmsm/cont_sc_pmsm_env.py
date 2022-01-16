@@ -1,96 +1,90 @@
 from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
     ElectricMotorVisualization
-from gym_electric_motor.physical_systems.physical_systems import SquirrelCageInductionMotorSystem
+from gym_electric_motor.physical_systems.physical_systems import SynchronousMotorSystem
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator, MultipleReferenceGenerator
+from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 from gym_electric_motor import physical_systems as ps
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
 from gym_electric_motor.constraints import SquaredConstraint
 
 
-class AbcContTorqueControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment):
+class ContSpeedControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate an abc-domain cont. control set torque controlled squirrel cage induction motor.
+    Description:
+        Environment to simulate a abc-domain continuous control set speed controlled permanent magnet synchr. motor.
 
-        Key:
-            ``'AbcCont-TC-SCIM-v0'``
+    Key:
+        ``'Cont-SC-PMSM-v0'``
 
-        Default Components:
-            - Supply: :py:class:`.IdealVoltageSupply`
-            - Converter: :py:class:`.ContB6BridgeConverter`
-            - Motor: :py:class:`.SquirrelCageInductionMotor`
-            - Load: :py:class:`.ConstantSpeedLoad`
-            - Ode-Solver: :py:class:`.EulerSolver`
-            - Noise: **None**
+    Default Components:
+        - Supply: :py:class:`.IdealVoltageSupply`
+        - Converter: :py:class:`.ContB6BridgeConverter`
+        - Motor: :py:class:`.PermanentMagnetSynchronousMotor`
+        - Load: :py:class:`.PolynomialStaticLoad`
+        - Ode-Solver: :py:class:`.EulerSolver`
 
-            - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'torque'``
+        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
 
-            - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'torque' = 1.0``
+        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'omega' = 1.0``
 
-            - Visualization: :py:class:`.MotorDashboard` torque and action plots
+        - Visualization: :py:class:`.MotorDashboard` current and action plots
 
-            - Constraints: :py:class:`.SquaredConstraint` on the currents  ``'i_sd', 'i_sq'``
+        - Constraints: :py:class:`.SquaredConstraint` on the currents  ``'i_sd', 'i_sq'``
 
-        State Variables:
-            ``[
-                'omega' , 'torque',
-                'i_sa', 'i_sb', 'i_sc', 'i_sd', 'i_sq',
-                'u_sa', 'u_sb', 'u_sc', 'u_sd', 'u_sq',
-                'epsilon', 'u_sup'
-            ]``
+    State Variables:
+        ``['omega' , 'torque', 'i_sd', 'i_sq', 'i_a', 'i_b', 'i_c', 'u_sd', 'u_sq', 'u_a', 'u_b', 'u_c', 'u_sup']``
 
-        Reference Variables:
-            ``['torque']``
+    Reference Variables:
+        ``['omega']``
 
-        Control Cycle Time:
-            tau = 1e-4 seconds
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=14 * [-1], high=14 * [1])
+    State Space:
+        Box(low=13 * [-1], high=13 * [1])
 
-        Reference Space:
-            Box(low=[-1, -1], high=[1, 1])
+    Reference Space:
+        Box(low=[-1, -1], high=[1, 1])
 
-        Action Space:
-            Box(low=[-1, -1, -1], high=[1, 1, 1])
+    Action Space:
+        Box(low=[-1, -1, -1], high=[1, 1, 1])
 
-        Initial State:
-            Zeros on all state variables.
+    Initial State:
+        Zeros on all state variables.
 
-        Example:
-            >>> import gym_electric_motor as gem
-            >>> from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
-            >>>
-            >>> # Select a different ode_solver with default parameters by passing a keystring
-            >>> my_overridden_solver = 'scipy.solve_ivp'
-            >>>
-            >>> # Update the default arguments to the voltage supply by passing a parameter dict
-            >>> my_changed_voltage_supply_args = {'u_nominal': 400.0}
-            >>>
-            >>> # Replace the reference generator by passing a new instance
-            >>> my_new_ref_gen_instance = LaplaceProcessReferenceGenerator(
-            ...     reference_state='i_sq',
-            ...     sigma_range=(1e-3, 1e-2)
-            ... )
-            >>> env = gem.make(
-            ...     'AbcCont-TC-SCIM-v0',
-            ...     voltage_supply=my_changed_voltage_supply_args,
-            ...     ode_solver=my_overridden_solver,
-            ...     reference_generator=my_new_ref_gen_instance
-            ... )
-            >>> done = True
-            >>> for _ in range(1000):
-            >>>     if done:
-            >>>         state, reference = env.reset()
-            >>>     env.render()
-            >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
+    Example:
+        >>> import gym_electric_motor as gem
+        >>> from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
+        >>>
+        >>> # Select a different ode_solver with default parameters by passing a keystring
+        >>> my_overridden_solver = 'scipy.solve_ivp'
+        >>>
+        >>> # Update the default arguments to the voltage supply by passing a parameter dict
+        >>> my_changed_voltage_supply_args = {'u_nominal': 400.0}
+        >>>
+        >>> # Replace the reference generator by passing a new instance
+        >>> my_new_ref_gen_instance = LaplaceProcessReferenceGenerator(
+        ...     reference_state='omega',
+        ...     sigma_range=(1e-3, 1e-2)
+        ... )
+        >>> env = gem.make(
+        ...     'Cont-SC-PMSM-v0',
+        ...     voltage_supply=my_changed_voltage_supply_args,
+        ...     ode_solver=my_overridden_solver,
+        ...     reference_generator=my_new_ref_gen_instance
+        ... )
+        >>> done = True
+        >>> for _ in range(1000):
+        >>>     if done:
+        >>>         state, reference = env.reset()
+        >>>     env.render()
+        >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-4,
                  state_action_processors=()):
@@ -101,7 +95,6 @@ class AbcContTorqueControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment
             load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment
             ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment
-            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment
             reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment
             reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
@@ -131,32 +124,25 @@ class AbcContTorqueControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             This class is then initialized with its default parameters.
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
-        physical_system = SquirrelCageInductionMotorSystem(
+        physical_system = SynchronousMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContB6BridgeConverter, dict()),
-            motor=initialize(ps.ElectricMotor, motor, ps.SquirrelCageInductionMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict()),
+            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
+                load_parameter=dict(a=0.01, b=0.01, c=0.0)
+            )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau,
-            control_space='abc'
         )
         reference_generator = initialize(
-            ReferenceGenerator,
-            reference_generator,
-            WienerProcessReferenceGenerator,
-            dict(reference_state='torque')
+            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator, dict(reference_state='omega')
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
         )
         visualization = initialize(
-            ElectricMotorVisualization,
-            visualization,
-            MotorDashboard,
-            dict(state_plots=('torque',), action_plots='all')
-        )
+            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,

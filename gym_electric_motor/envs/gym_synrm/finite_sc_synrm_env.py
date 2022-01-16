@@ -23,7 +23,6 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
         - Motor: :py:class:`.SynchronousReluctanceMotor`
         - Load: :py:class:`.PolynomialStaticLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
-        - Noise: **None**
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
 
@@ -85,7 +84,7 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
         >>>     env.render()
         >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5,
                  state_action_processors=()):
@@ -134,7 +133,6 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
                 load_parameter=dict(a=0.01, b=0.01, c=0.0)
             )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )

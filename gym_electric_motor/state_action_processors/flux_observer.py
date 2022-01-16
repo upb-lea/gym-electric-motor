@@ -45,7 +45,6 @@ class FluxObserver(StateActionProcessor):
         self._current_names = current_names
         super(FluxObserver, self).__init__(physical_system)
 
-
     @staticmethod
     def _abc_to_alphabeta_transformation(i_s):
         return gem.physical_systems.electric_motors.ThreePhaseMotor.t_23(i_s)

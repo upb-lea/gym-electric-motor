@@ -9,21 +9,20 @@ from gym_electric_motor.utils import initialize
 from gym_electric_motor.constraints import SquaredConstraint
 
 
-class AbcContTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
+class ContTorqueControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
     """
     Description:
-        Environment to simulate a abc-domain continuous control set torque controlled permanent magnet synchr. motor.
+        Environment to simulate a abc-domain continuous control set torque controlled synchronous reluctance motor.
 
     Key:
-        ``'AbcCont-TC-PMSM-v0'``
+        ``'Cont-TC-SynRM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
         - Converter: :py:class:`.ContB6BridgeConverter`
-        - Motor: :py:class:`.PermanentMagnetSynchronousMotor`
+        - Motor: :py:class:`.SynchronousReluctanceMotor`
         - Load: :py:class:`.ConstantSpeedLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
-        - Noise: **None**
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'torque'``
 
@@ -73,7 +72,7 @@ class AbcContTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
         ...     sigma_range=(1e-3, 1e-2)
         ... )
         >>> env = gem.make(
-        ...     'AbcCont-TC-PMSM-v0',
+        ...     'Cont-TC-SynRM-v0',
         ...     voltage_supply=my_changed_voltage_supply_args,
         ...     ode_solver=my_overridden_solver,
         ...     reference_generator=my_new_ref_gen_instance
@@ -85,7 +84,7 @@ class AbcContTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
         >>>     env.render()
         >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-4,
                  state_action_processors=()):
@@ -96,7 +95,6 @@ class AbcContTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
             motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment
             load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment
             ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment
-            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment
             reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment
             reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
@@ -129,13 +127,11 @@ class AbcContTorqueControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
         physical_system = SynchronousMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.ContB6BridgeConverter, dict()),
-            motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict()),
+            motor=initialize(ps.ElectricMotor, motor, ps.SynchronousReluctanceMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau,
-            control_space='abc'
         )
         reference_generator = initialize(
             ReferenceGenerator,

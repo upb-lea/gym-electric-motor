@@ -23,7 +23,6 @@ class FiniteCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             - Motor: :py:class:`.SquirrelCageInductionMotor`
             - Load: :py:class:`.ConstantSpeedLoad`
             - Ode-Solver: :py:class:`.EulerSolver`
-            - Noise: **None**
 
             - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'i_sd', 'i_sq``
 
@@ -90,7 +89,7 @@ class FiniteCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             >>>     env.render()
             >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5,
                  state_action_processors=()):
@@ -101,7 +100,6 @@ class FiniteCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment
             load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment
             ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment
-            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment
             reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment
             reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
@@ -131,7 +129,7 @@ class FiniteCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             This class is then initialized with its default parameters.
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
-        default_subgenerators = (
+        default_sub_generators = (
             WienerProcessReferenceGenerator(reference_state='i_sd'),
             WienerProcessReferenceGenerator(reference_state='i_sq')
         )
@@ -142,7 +140,6 @@ class FiniteCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             motor=initialize(ps.ElectricMotor, motor, ps.SquirrelCageInductionMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )
@@ -150,7 +147,7 @@ class FiniteCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment
             ReferenceGenerator,
             reference_generator,
             MultipleReferenceGenerator,
-            dict(sub_generators=default_subgenerators)
+            dict(sub_generators=default_sub_generators)
         )
         reward_function = initialize(
             RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_sd=0.5, i_sq=0.5))

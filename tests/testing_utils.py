@@ -4,7 +4,7 @@ from gym_electric_motor.utils import make_module, set_state_array
 from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization, \
     ConstraintMonitor
 from gym_electric_motor.physical_systems import PowerElectronicConverter, MechanicalLoad, ElectricMotor, OdeSolver, \
-    VoltageSupply, NoiseGenerator
+    VoltageSupply
 import gym_electric_motor.physical_systems.converters as cv
 from gym_electric_motor.physical_systems.physical_systems import SCMLSystem
 import numpy as np
@@ -541,23 +541,6 @@ class DummyLoad(MechanicalLoad):
     def get_state_space(self, omega_range):
         self.omega_range = omega_range
         return {'omega': 0, 'position': -1}, {'omega': 1, 'position': -1}
-
-
-class DummyNoise(NoiseGenerator):
-    """
-    dummy class for noise generator
-    """
-
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
-        self.reset_counter = 0
-        super().__init__()
-
-    def reset(self):
-        return np.ones_like(self._state_variables, dtype=float) * 0.36
-
-    def noise(self, *_, **__):
-        return np.ones_like(self._state_variables, dtype=float) * 0.42
 
 
 class DummyOdeSolver(OdeSolver):
