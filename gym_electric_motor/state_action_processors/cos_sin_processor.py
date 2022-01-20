@@ -35,7 +35,7 @@ class CosSinProcessor(StateActionProcessor):
         super().set_physical_system(physical_system)
         self._angle_index = physical_system.state_positions[self._angle]
 
-        self._remove_idx = [self._angle_index] if self._remove_angle else []
+        self._remove_idx = self._angle_index if self._remove_angle else []
         low = np.concatenate((np.delete(physical_system.state_space.low, self._remove_idx), [-1., -1.]))
         high = np.concatenate((np.delete(physical_system.state_space.high, self._remove_idx), [1., 1.]))
         self.state_space = gym.spaces.Box(low, high, dtype=np.float64)

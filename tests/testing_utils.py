@@ -334,8 +334,8 @@ class DummyConverter(PowerElectronicConverter):
     currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(4)
 
-    def __init__(self, tau=2E-4, dead_time=False, interlocking_time=0, action_space=None, voltages=None, currents=None, **kwargs):
-        super().__init__(tau, dead_time, interlocking_time)
+    def __init__(self, tau=2E-4, interlocking_time=0, action_space=None, voltages=None, currents=None, **kwargs):
+        super().__init__(tau, interlocking_time)
         self.action_space = action_space or self.action_space
         self.voltages = voltages or self.voltages
         self.currents = currents or self.currents

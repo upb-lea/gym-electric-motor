@@ -434,7 +434,7 @@ def test_discrete_b6_bridge():
     converters_default = [converter_default_init_1, converter_default_init_2]
     for converter in converters_default:
         assert all(converter.reset() == -0.5 * np.ones(3))
-        assert converter._subconverters[0].action_space.n == 3
+        assert converter._sub_converters[0].action_space.n == 3
         assert converter.action_space.n == 8
 
         # 1  1  1  1  2  2  2  1  2  1  # Action for the converter
@@ -455,8 +455,7 @@ def test_discrete_b6_bridge():
                 for time_step in time_steps:
                     i_in[k] = [i_in_]
                     voltage = converter.convert(i_in, time_step)
-                    assert voltage[k] == 0.5 * u_out[step_counter], "Wrong action " + str(
-                        step_counter)
+                    assert voltage[k] == 0.5 * u_out[step_counter], "Wrong action " + str(step_counter)
                     step_counter += 1
 
     # test parametrized converter
@@ -479,8 +478,7 @@ def test_discrete_b6_bridge():
              [[0.5], [-0.5], [0]],
              [[0.5], [-0.5], [0.5]]]
 
-    expected_voltage = np.array([[-1, -1, 1],
-                                 [1, 1, -1],
+    expected_voltage = np.array([[1, 1, -1],
                                  [1, 1, -1],
                                  [1, -1, -1],
                                  [1, -1, -1],
@@ -495,7 +493,8 @@ def test_discrete_b6_bridge():
                                  [-1, 1, 1],
                                  [1, 1, 1],
                                  [-1, 1, -1],
-                                 [-1, -1, -1]]) / 2
+                                 [-1, -1, -1],
+                                 [1, -1, -1]]) / 2
 
     times = np.arange(len(actions)) * tau
     converters_init = [converter_init_1, converter_init_2]
@@ -631,7 +630,7 @@ class TestPowerElectronicConverter:
 
     @pytest.mark.parametrize("action_space", [Discrete(3), Box(-1, 1, shape=(1,))])
     def test_set_action(self, monkeypatch, converter, action_space):
-        monkeypatch.setattr(converter, "_set_switching_pattern", lambda: [0.0])
+        monkeypatch.setattr(converter, "_set_switching_pattern", lambda action: [0.0])
         monkeypatch.setattr(converter, "action_space", converter.action_space or action_space)
         next_action = converter.action_space.sample()
         converter.set_action(next_action, 0)
@@ -652,7 +651,7 @@ class TestContDynamicallyAveragedConverter(TestPowerElectronicConverter):
 
     @pytest.fixture
     def converter(self, monkeypatch):
-        converter = self.class_to_test(tau=0.1, dead_time=False, interlocking_time=0)
+        converter = self.class_to_test(tau=0.1, interlocking_time=0)
         converter.action_space = converter.action_space or Box(-1, 1, shape=(1,))
         if converter.voltages and converter.currents:
             converter.voltages = Box(converter.voltages.low[0], converter.voltages.high[0], shape=(1,)) #(converter.voltages.low[0] or -1, converter.voltages.high[0] or -1)
@@ -748,12 +747,11 @@ class TestFiniteTwoQuadrantConverter(TestFiniteConverter):
 
     @pytest.mark.parametrize("interlocking_time", [0.0, 0.1])
     def test_set_switching_pattern(self, monkeypatch, converter, interlocking_time):
-        monkeypatch.setattr(converter, "_dead_time", False)
         monkeypatch.setattr(converter, "_interlocking_time", interlocking_time)
 
         # Test if no interlocking step required after switching state 0 (
         monkeypatch.setattr(converter, "_switching_state", 0)
-        assert converter._set_switching_pattern() == [converter._tau]
+        assert converter._set_switching_pattern(0) == [converter._tau]
         assert converter._switching_pattern == [converter._current_action]
         # Test if no interlocking step required, if the same action is set again
         monkeypatch.setattr(converter, "_switching_state", 1)
@@ -975,26 +973,25 @@ class TestFiniteMultiConverter(TestFiniteConverter):
             DummyConverter(action_space=Discrete(4), voltages=Box(-1, 1, shape=(1,)), currents=Box(-1, 1, shape=(1,))),
         ])
 
-    @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC']}),
-        (0.1, False, 0.0, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC']}),
+    @pytest.mark.parametrize("tau, interlocking_time, kwargs", [
+        (1, 0.1, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC']}),
+        (0.1, 0.0, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC']}),
     ])
-    def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
-        super().test_initialization(tau, dead_time, interlocking_time, kwargs)
-        conv = self.class_to_test(tau=tau, dead_time=dead_time, interlocking_time=interlocking_time, **kwargs)
+    def test_initialization(self, tau, interlocking_time, kwargs):
+        super().test_initialization(tau, interlocking_time, kwargs)
+        conv = self.class_to_test(tau=tau, interlocking_time=interlocking_time, **kwargs)
         assert np.all(
             conv.subsignal_voltage_space_dims ==
-            np.array([(np.squeeze(subconv.voltages.shape) or 1) for subconv in conv._subconverters])
+            np.array([(np.squeeze(subconv.voltages.shape) or 1) for subconv in conv._sub_converters])
         ), "Voltage space dims in the multi converter do not fit the subconverters."
         assert np.all(
             conv.subsignal_current_space_dims ==
-            np.array([(np.squeeze(subconv.currents.shape) or 1) for subconv in conv._subconverters])
+            np.array([(np.squeeze(subconv.currents.shape) or 1) for subconv in conv._sub_converters])
         ), "Current space dims in the multi converter do not fit the subconverters."
-        assert np.all(conv.action_space.nvec == [subconv.action_space.n for subconv in conv._subconverters]
+        assert np.all(conv.action_space.nvec == [subconv.action_space.n for subconv in conv._sub_converters]
                       ), "Action space of the multi converter does not fit the subconverters."
-        for sc in conv._subconverters:
+        for sc in conv._sub_converters:
             assert sc._interlocking_time == interlocking_time
-            assert sc._dead_time == dead_time
             assert sc._tau == tau
 
     def test_registered(self):
@@ -1005,13 +1002,13 @@ class TestFiniteMultiConverter(TestFiniteConverter):
     def test_reset(self, converter):
         u_in = converter.reset()
         assert u_in == [0.0] * converter.voltages.shape[0]
-        assert np.all([subconv.reset_counter == 1 for subconv in converter._subconverters])
+        assert np.all([subconv.reset_counter == 1 for subconv in converter._sub_converters])
 
     def test_set_action(self, monkeypatch, converter, **_):
         for action in np.ndindex(tuple(converter.action_space.nvec)):
-            sc0 = converter._subconverters[0]
-            sc1 = converter._subconverters[1]
-            sc2 = converter._subconverters[2]
+            sc0 = converter._sub_converters[0]
+            sc1 = converter._sub_converters[1]
+            sc2 = converter._sub_converters[2]
             t = (action[0] * sc1.action_space.n * sc2.action_space.n +
                  action[1] * sc2.action_space.n + action[2])* converter._tau
             converter.set_action(action, t)
@@ -1027,16 +1024,16 @@ class TestFiniteMultiConverter(TestFiniteConverter):
     @pytest.mark.parametrize('i_out', [[0, 6, 2, 7, 9], [1, 0.5, 2], [-1, 1]])
     def test_convert(self, converter, i_out):
         # Setting of the demanded output voltages from the dummy converters
-        for subconverter in converter._subconverters:
+        for subconverter in converter._sub_converters:
             subconverter.action = subconverter.action_space.sample()
         u = converter.convert(i_out, 0)
         assert np.all(
-            u == [subconv.action for subconv in converter._subconverters]
+            u == [subconv.action for subconv in converter._sub_converters]
         )
 
     @pytest.mark.parametrize('i_out',  [[0, 6, 2, 7, 9], [1, 0.5, 2, -7, 50], [-1, 1, 0.01, 16, -42]])
     def test_i_sup(self, converter, i_out):
-        sc0, sc1, sc2 = converter._subconverters
+        sc0, sc1, sc2 = converter._sub_converters
         converter.set_action(converter.action_space.sample(), np.random.rand())
         i_sup = converter.i_sup(i_out)
         assert sc0.last_i_out + sc1.last_i_out + sc2.last_i_out == i_out
@@ -1070,13 +1067,13 @@ class TestContMultiConverter(TestContDynamicallyAveragedConverter):
         assert type(conv) == self.class_to_test
         assert conv._sub_converters == dummy_converters
 
-    @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
-        (0.1, False, 0.0, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
+    @pytest.mark.parametrize("tau, interlocking_time, kwargs", [
+        (1, 0.1, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
+        (0.1, 0.0, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
     ])
-    def test_initialization(self, tau, dead_time, interlocking_time, kwargs):
-        super().test_initialization(tau, dead_time, interlocking_time, kwargs)
-        conv = self.class_to_test(tau=tau, dead_time=dead_time, interlocking_time=interlocking_time, **kwargs)
+    def test_initialization(self, tau, interlocking_time, kwargs):
+        super().test_initialization(tau, interlocking_time, kwargs)
+        conv = self.class_to_test(tau=tau, interlocking_time=interlocking_time, **kwargs)
         assert np.all(
             conv.action_space.low == np.concatenate([subconv.action_space.low for subconv in conv._sub_converters])
         ), "Action space lower boundaries in the multi converter do not fit the subconverters."
@@ -1093,7 +1090,6 @@ class TestContMultiConverter(TestContDynamicallyAveragedConverter):
         ), "Current space dims in the multi converter do not fit the subconverters."
         for sc in conv._sub_converters:
             assert sc._interlocking_time == interlocking_time
-            assert sc._dead_time == dead_time
             assert sc._tau == tau
 
     def test_reset(self, converter):
@@ -1142,26 +1138,25 @@ class TestFiniteB6BridgeConverter(TestFiniteConverter):
     def converter(self):
         conv = self.class_to_test()
         subconverters = [
-            PowerElectronicConverterWrapper(subconverter, tau=conv._tau) for subconverter in conv._subconverters
+            PowerElectronicConverterWrapper(subconverter, tau=conv._tau) for subconverter in conv._sub_converters
         ]
-        conv._subconverters = subconverters
+        conv._sub_converters = subconverters
         return conv
 
-    @pytest.mark.parametrize("tau, dead_time, interlocking_time, kwargs", [
-        (1, True, 0.1, {}),
-        (0.1, False, 0.0, {}),
+    @pytest.mark.parametrize("tau, interlocking_time, kwargs", [
+        (1, 0.1, {}),
+        (0.1, 0.0, {}),
     ])
-    def test_subconverter_initialization(self, tau, dead_time, interlocking_time, kwargs):
-        conv = self.class_to_test(tau=tau, dead_time=dead_time, interlocking_time=interlocking_time, **kwargs)
-        for sc in conv._subconverters:
+    def test_subconverter_initialization(self, tau, interlocking_time, kwargs):
+        conv = self.class_to_test(tau=tau, interlocking_time=interlocking_time, **kwargs)
+        for sc in conv._sub_converters:
             assert sc._interlocking_time == interlocking_time
-            assert sc._dead_time == dead_time
             assert sc._tau == tau
 
     def test_reset(self, converter):
         u_init = converter.reset()
         assert np.all(
-            subconv.reset_counter == 1 for subconv in converter._subconverters
+            subconv.reset_counter == 1 for subconv in converter._sub_converters
         )
         assert u_init == [-0.5] * 3
 
@@ -1169,10 +1164,10 @@ class TestFiniteB6BridgeConverter(TestFiniteConverter):
         for action in range(converter.action_space.n):
             t = np.random.rand()
             converter.set_action(action, t)
-            assert converter._subconverters[0].last_t == t
-            assert converter._subconverters[1].last_t == t
-            assert converter._subconverters[2].last_t == t
-            subactions = [sc.last_action % 2 for sc in converter._subconverters]
+            assert converter._sub_converters[0].last_t == t
+            assert converter._sub_converters[1].last_t == t
+            assert converter._sub_converters[2].last_t == t
+            subactions = [sc.last_action % 2 for sc in converter._sub_converters]
             assert action == reduce(lambda x, y: 2*x+y, subactions)
 
         time = 0
@@ -1191,7 +1186,7 @@ class TestFiniteB6BridgeConverter(TestFiniteConverter):
     @pytest.mark.parametrize('i_out', [[-1, -1, 0], [1, 1, -2], [0, 0, 1]])
     def test_convert(self, converter, i_out):
         t = np.random.rand()
-        sc1, sc2, sc3 = converter._subconverters
+        sc1, sc2, sc3 = converter._sub_converters
         for action in range(converter.action_space.n):
             converter.set_action(action, t)
             u_out = converter.convert(i_out, t)
@@ -1203,7 +1198,7 @@ class TestFiniteB6BridgeConverter(TestFiniteConverter):
 
     @pytest.mark.parametrize('i_out', [[-1, -1, 0], [1, 1, -2], [0, 0, 1]])
     def test_i_sup(self, converter, i_out):
-        sc1, sc2, sc3 = converter._subconverters
+        sc1, sc2, sc3 = converter._sub_converters
         for action in range(converter.action_space.n):
             converter.set_action(action, converter._tau * action)
             i_sup = converter.i_sup(i_out)
