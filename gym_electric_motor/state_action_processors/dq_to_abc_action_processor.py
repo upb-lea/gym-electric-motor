@@ -9,9 +9,6 @@ class DqToAbcActionProcessor(StateActionProcessor):
     """The DqToAbcActionProcessor converts an inner system with an AC motor and actions in abc coordinates to a
     system to which actions in the dq-coordinate system can be applied.
     """
-    @property
-    def action_space(self):
-        return self._action_space
 
     @staticmethod
     def _transformation(action, angle):
@@ -38,8 +35,9 @@ class DqToAbcActionProcessor(StateActionProcessor):
         self._state = None
         self._angle_name = angle_name
         self._angle_advance = 0.0
-        self._action_space = gym.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
+
         super().__init__(physical_system)
+
 
     def set_physical_system(self, physical_system):
         # Docstring of super class
@@ -50,7 +48,7 @@ class DqToAbcActionProcessor(StateActionProcessor):
         if isinstance(physical_system, ps.DoublyFedInductionMotorSystem):
             self._set_dfim_system(physical_system)
             return self
-
+        self._action_space = gym.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
         # If no angle name was passed, try to use defaults. ('epsilon' for sync motors 'psi_angle' for induction motors)
         if self._angle_name is None:
             if isinstance(physical_system.electrical_motor,
