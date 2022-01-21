@@ -783,7 +783,6 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="s1">&#39;scipy.ode&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            control_space(str):(&#39;abc&#39; or &#39;dq&#39;) Choose, if actions the actions space is in dq or abc space</span>
 <span class="sd">            kwargs: Further arguments to pass tp SCMLSystem</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ode_solver</span><span class="o">=</span><span class="n">ode_solver</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -801,9 +800,7 @@
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rotor_voltage_space_idx</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_set_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to set the physical limits from the modules.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Method to set the physical limits from the modules.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">):</span>
             <span class="n">motor_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
             <span class="n">mechanical_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>

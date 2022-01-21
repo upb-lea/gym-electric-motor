@@ -113,7 +113,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span> <span class="o">=</span> <span class="n">interlocking_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_action</span>
 
 <div class="viewcode-block" id="PowerElectronicConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -122,7 +122,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">             list(float): A default output voltage after reset(=0V).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_action</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span></div>
 
