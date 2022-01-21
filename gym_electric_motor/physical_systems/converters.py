@@ -33,7 +33,7 @@ class PowerElectronicConverter:
         self._tau = tau
         self._interlocking_time = interlocking_time
         self._action_start_time = 0.0
-        self._current_action = None
+        self._current_action = self._reset_action
 
     def reset(self):
         """
@@ -42,7 +42,7 @@ class PowerElectronicConverter:
         Returns:
              list(float): A default output voltage after reset(=0V).
         """
-        self._current_action = None
+        self._current_action = self._reset_action
         self._action_start_time = 0.0
         return [0.0]
 

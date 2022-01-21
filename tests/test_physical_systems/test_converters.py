@@ -482,18 +482,20 @@ def test_discrete_b6_bridge():
                                  [1, 1, -1],
                                  [1, -1, -1],
                                  [1, -1, -1],
-                                 [1, -1, 1],
+                                 [1, -1, -1],
                                  [1, -1, 1],
                                  [-1, -1, 1],
                                  [-1, -1, 1],
                                  [-1, 1, -1],
                                  [-1, 1, -1],
+                                 [-1, 1, -1],
                                  [-1, 1, 1],
-                                 [-1, 1, 1],
-                                 [-1, 1, 1],
+                                 [1, 1, 1],
                                  [1, 1, 1],
                                  [-1, 1, -1],
                                  [-1, -1, -1],
+                                 [-1, -1, -1],
+                                 [1, -1, -1],
                                  [1, -1, -1]]) / 2
 
     times = np.arange(len(actions)) * tau
@@ -559,17 +561,18 @@ def test_continuous_b6_bridge():
                 assert abs(voltage[0] - single_action / 2) < 1E-9
 
     # testing parametrized converter
-    expected_voltages = np.array([[-5, -4.95, -5],
-                                  [5, -4.95, 3.2],
-                                  [3.7, -4.8, -1.55],
-                                  [-1.2, 4.85, -5],
-                                  [3.3, 2.45, -4.7],
-                                  [-1.55, 2.45, 4.85],
-                                  [-5, 4.95, 2.55],
-                                  [-4.8, 3.7, 2.55],
-                                  [4.85, -1.2, 4.95],
-                                  [2.45, 3.2, 3.7]]) / 10
-
+    expected_voltages = np.array([
+        [0.495, -0.495, 0.32],
+        [0.38, -0.47, -0.155],
+        [-0.13,0.485, -0.5],
+        [0.33,0.245, -0.48],
+        [-0.145, 0.245, 0.495],
+        [-0.5, 0.495, 0.245],
+        [-0.48, 0.37, 0.255],
+        [0.485, -0.13, 0.5],
+        [0.245, 0.33, 0.37],
+        [0.245, -0.155, -0.13]
+    ])
     converter_init_1 = cv.ContB6BridgeConverter(**cf.converter_parameter)
     converter_init_2 = make_module(cv.PowerElectronicConverter, 'Cont-B6C', **cf.converter_parameter)
     converters = [converter_init_1, converter_init_2]
@@ -591,6 +594,7 @@ def test_continuous_b6_bridge():
             voltages = converter.convert(i_in, time_step)
             for voltage, test_voltage in zip(voltages, expected_voltage):
                 assert abs(voltage - test_voltage) < 1E-9
+
 
 # endregion
 
@@ -614,8 +618,8 @@ class TestPowerElectronicConverter:
         (1, 0.1),
         (0.1, 0.0),
     ])
-    def test_initialization(self, tau, interlocking_time):
-        converter = self.class_to_test(tau=tau, interlocking_time=interlocking_time)
+    def test_initialization(self, tau, interlocking_time, **kwargs):
+        converter = self.class_to_test(tau=tau, interlocking_time=interlocking_time, **kwargs)
         assert converter._tau == tau
         assert converter._interlocking_time == interlocking_time
 
@@ -757,13 +761,13 @@ class TestFiniteTwoQuadrantConverter(TestFiniteConverter):
         monkeypatch.setattr(converter, "_switching_state", 1)
         monkeypatch.setattr(converter, "_current_action", 1)
         monkeypatch.setattr(converter, "_action_start_time", 1)
-        assert converter._set_switching_pattern() == [converter._tau + 1]
+        assert converter._set_switching_pattern(1) == [converter._tau + 1]
         assert converter._switching_pattern == [converter._current_action]
         # Test if interlocking step is required, if action changes to another <> 0
         monkeypatch.setattr(converter, "_switching_state", 1)
         monkeypatch.setattr(converter, "_current_action", 2)
         monkeypatch.setattr(converter, "_action_start_time", 2)
-        switching_times = converter._set_switching_pattern()
+        switching_times = converter._set_switching_pattern(2)
         if interlocking_time > 0:
             assert switching_times == [interlocking_time + 2, converter._tau + 2]
             assert converter._switching_pattern == [0, converter._current_action]
@@ -978,7 +982,7 @@ class TestFiniteMultiConverter(TestFiniteConverter):
         (0.1, 0.0, {'subconverters': ['Finite-1QC', 'Finite-B6C', 'Finite-4QC']}),
     ])
     def test_initialization(self, tau, interlocking_time, kwargs):
-        super().test_initialization(tau, interlocking_time, kwargs)
+        super().test_initialization(tau, interlocking_time, **kwargs)
         conv = self.class_to_test(tau=tau, interlocking_time=interlocking_time, **kwargs)
         assert np.all(
             conv.subsignal_voltage_space_dims ==
@@ -1072,7 +1076,7 @@ class TestContMultiConverter(TestContDynamicallyAveragedConverter):
         (0.1, 0.0, {'subconverters': ['Cont-1QC', 'Cont-B6C', 'Cont-4QC']}),
     ])
     def test_initialization(self, tau, interlocking_time, kwargs):
-        super().test_initialization(tau, interlocking_time, kwargs)
+        super().test_initialization(tau, interlocking_time, **kwargs)
         conv = self.class_to_test(tau=tau, interlocking_time=interlocking_time, **kwargs)
         assert np.all(
             conv.action_space.low == np.concatenate([subconv.action_space.low for subconv in conv._sub_converters])

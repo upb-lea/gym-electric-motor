@@ -703,7 +703,6 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
     def __init__(self, ode_solver='scipy.ode', **kwargs):
         """
         Args:
-            control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
             kwargs: Further arguments to pass tp SCMLSystem
         """
         super().__init__(ode_solver=ode_solver, **kwargs)
@@ -721,9 +720,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             + self._converter.subsignal_voltage_space_dims[self.rotor_voltage_space_idx]
 
     def _set_limits(self):
-        """
-        Method to set the physical limits from the modules.
-        """
+        """Method to set the physical limits from the modules."""
         for ind, state in enumerate(self._state_names):
             motor_lim = self._electrical_motor.limits.get(state, np.inf)
             mechanical_lim = self._mechanical_load.limits.get(state, np.inf)
