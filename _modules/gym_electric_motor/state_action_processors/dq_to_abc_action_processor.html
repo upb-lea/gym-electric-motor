@@ -164,6 +164,13 @@
         <span class="k">raise</span> <span class="ne">ReferenceError</span><span class="p">(</span><span class="s1">&#39;Physical System is unset.&#39;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_single_angle_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dq to abc space transformation function for all environments except those for a doubly fed induction motor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: The actions for the stator and rotor circuit in dq-coordinates.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The next state of the physical system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">advanced_angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_angle_index</span><span class="p">]</span> \
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle_advance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_omega_index</span><span class="p">]</span>
         <span class="n">abc_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformation</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">advanced_angle</span><span class="p">)</span>
@@ -172,7 +179,13 @@
         <span class="k">return</span> <span class="n">normalized_state</span>
 
     <span class="k">def</span> <span class="nf">_dfim_simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-        <span class="c1"># Docstring of super class</span>
+        <span class="sd">&quot;&quot;&quot;Dq to abc space transformation function for doubly fed induction motor environments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action: The actions for the stator and rotor circuit in dq-coordinates.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The next state of the physical system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">advanced_angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_angle_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> \
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle_advance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_omega_index</span><span class="p">]</span>
         <span class="n">dq_action_stator</span> <span class="o">=</span> <span class="n">action</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>

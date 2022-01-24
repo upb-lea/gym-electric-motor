@@ -93,11 +93,13 @@
 <dl class="class">
 <dt id="gym_electric_motor.state_action_processors.FluxObserver">
 <em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.state_action_processors.</code><code class="sig-name descname">FluxObserver</code><span class="sig-paren">(</span><em class="sig-param">current_names=('i_sa'</em>, <em class="sig-param">'i_sb'</em>, <em class="sig-param">'i_sc')</em>, <em class="sig-param">physical_system=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/flux_observer.html#FluxObserver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver" title="Permalink to this definition"></a></dt>
-<dd><p>The FluxObserver extends the systems state vector by estimated flux states <code class="docutils literal notranslate"><span class="pre">psi_abs</span></code>, and <code class="docutils literal notranslate"><span class="pre">psi_angle</span></code>.</p>
+<dd><p>The FluxObserver extends the systems state vector of induction machine environments by estimated flux states
+<code class="docutils literal notranslate"><span class="pre">psi_abs</span></code>, and <code class="docutils literal notranslate"><span class="pre">psi_angle</span></code>. The flux is estimated as follows:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[psi_{abs} =  |\Psi|\]</div>
 <div class="math notranslate nohighlight">
-\[psi_{abs} =  |\Psi |\]</div>
-<div class="math notranslate nohighlight">
-\[psi_{angle} = \angle{\Psi_t}\]</div>
+\[psi_{angle} = \angle{\Psi}\]</div>
 <div class="math notranslate nohighlight">
 \[\Psi \in \mathbb{C}\]</div>
 <div class="math notranslate nohighlight">
@@ -107,6 +109,7 @@
 - \Psi_{k-1}(\frac{R_r}{L_r}+ j\omega)\]</div>
 <div class="math notranslate nohighlight">
 \[\Psi_k = \sum_{i=0}^k (\Psi_{k-1} + \Delta\Psi_k) \tau\]</div>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -86,11 +86,12 @@
 
 
 <div class="viewcode-block" id="FluxObserver"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver">[docs]</a><span class="k">class</span> <span class="nc">FluxObserver</span><span class="p">(</span><span class="n">StateActionProcessor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The FluxObserver extends the systems state vector by estimated flux states ``psi_abs``, and ``psi_angle``.</span>
+    <span class="sd">&quot;&quot;&quot;The FluxObserver extends the systems state vector of induction machine environments by estimated flux states</span>
+<span class="sd">    ``psi_abs``, and ``psi_angle``. The flux is estimated as follows:</span>
 
-<span class="sd">        .. math:: psi_{abs} =  |\Psi |</span>
+<span class="sd">        .. math:: psi_{abs} =  |\Psi|</span>
 
-<span class="sd">        .. math:: psi_{angle} = \\angle{\Psi_t}</span>
+<span class="sd">        .. math:: psi_{angle} = \\angle{\Psi}</span>
 
 <span class="sd">        .. math:: \Psi \in \mathbb{C}</span>
 
