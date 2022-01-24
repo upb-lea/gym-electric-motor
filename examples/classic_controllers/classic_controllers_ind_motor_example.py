@@ -25,10 +25,10 @@ if __name__ == '__main__':
     env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
 
     # definition of the plotted variables
-    #states = ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']
-    #external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
-    #external_plot = [ExternalPlot(referenced=control_type != 'CC'), ExternalPlot(min=-np.pi, max=np.pi)]
-    #external_ref_plots += external_plot
+    states = ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']
+    external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
+    external_plot = [ExternalPlot(referenced=control_type != 'CC'), ExternalPlot(min=-np.pi, max=np.pi)]
+    external_ref_plots += external_plot
 
     # initialize the gym-electric-motor environment
     env = gem.make(env_id, state_action_processors=(FluxObserver(),),

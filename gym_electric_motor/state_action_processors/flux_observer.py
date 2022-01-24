@@ -6,11 +6,12 @@ from gym_electric_motor.state_action_processors import StateActionProcessor
 
 
 class FluxObserver(StateActionProcessor):
-    """The FluxObserver extends the systems state vector by estimated flux states ``psi_abs``, and ``psi_angle``.
+    """The FluxObserver extends the systems state vector of induction machine environments by estimated flux states
+    ``psi_abs``, and ``psi_angle``. The flux is estimated as follows:
 
-        .. math:: psi_{abs} =  |\Psi |
+        .. math:: psi_{abs} =  |\Psi|
 
-        .. math:: psi_{angle} = \\angle{\Psi_t}
+        .. math:: psi_{angle} = \\angle{\Psi}
 
         .. math:: \Psi \in \mathbb{C}
 

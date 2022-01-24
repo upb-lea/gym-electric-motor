@@ -84,6 +84,13 @@ class DqToAbcActionProcessor(StateActionProcessor):
         raise ReferenceError('Physical System is unset.')
 
     def _single_angle_simulate(self, action):
+        """Dq to abc space transformation function for all environments except those for a doubly fed induction motor.
+
+        Args:
+            action: The actions for the stator and rotor circuit in dq-coordinates.
+        Returns:
+            The next state of the physical system.
+        """
         advanced_angle = self._state[self._angle_index] \
             + self._angle_advance * self._physical_system.tau * self._state[self._omega_index]
         abc_action = self._transformation(action, advanced_angle)
@@ -92,7 +99,13 @@ class DqToAbcActionProcessor(StateActionProcessor):
         return normalized_state
 
     def _dfim_simulate(self, action):
-        # Docstring of super class
+        """Dq to abc space transformation function for doubly fed induction motor environments.
+
+        Args:
+            action: The actions for the stator and rotor circuit in dq-coordinates.
+        Returns:
+            The next state of the physical system.
+        """
         advanced_angle = self._state[self._angle_index[1]] \
             + self._angle_advance * self._physical_system.tau * self._state[self._omega_index]
         dq_action_stator = action[:2]
