@@ -60,7 +60,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
@@ -98,6 +97,99 @@
              
   <div class="section" id="gaussian-white-noise-generator">
 <h1>Gaussian White Noise Generator<a class="headerlink" href="#gaussian-white-noise-generator" title="Permalink to this headline"></a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.noise_generators.</code><code class="sig-name descname">NoiseGenerator</code><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/noise_generators.html#NoiseGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>The noise generator generates noise added to the state for the observation.</p>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.next_generator">
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.next_generator" title="Permalink to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.noise">
+<code class="sig-name descname">noise</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/noise_generators.html#NoiseGenerator.noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.noise" title="Permalink to this definition"></a></dt>
+<dd><p>Call this function to get the additive noise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array of noise added to each state.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.random_generator">
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.random_generator" title="Permalink to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/noise_generators.html#NoiseGenerator.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset of all internal states of the Noise generator to a default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Noise for the initial observation at time 0.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.seed" title="Permalink to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.seed_sequence">
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.seed_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_signal_power_level">
+<code class="sig-name descname">set_signal_power_level</code><span class="sig-paren">(</span><em class="sig-param">signal_powers</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/noise_generators.html#NoiseGenerator.set_signal_power_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_signal_power_level" title="Permalink to this definition"></a></dt>
+<dd><p>Setting of the signal power levels (Nominal values) as baseline for the noise power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>signal_powers</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – Array of signal powers (nominal values).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_state_names">
+<code class="sig-name descname">set_state_names</code><span class="sig-paren">(</span><em class="sig-param">state_names</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/noise_generators.html#NoiseGenerator.set_state_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.noise_generators.NoiseGenerator.set_state_names" title="Permalink to this definition"></a></dt>
+<dd><p>Announcement of the state names by the physical system to the noise generator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state_names</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of state names of the physical system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

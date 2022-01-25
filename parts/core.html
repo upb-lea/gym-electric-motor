@@ -46,7 +46,6 @@
 <li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Core</a></li>
@@ -257,7 +256,7 @@ violation degrees to a total violation degree.</p>
 
 <dl class="class">
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=()</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=()</em>, <em class="sig-param">constraints=()</em>, <em class="sig-param">state_action_processors=()</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=()</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=()</em>, <em class="sig-param">constraints=()</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Description:</dt><dd><p>The main class connecting all modules of the gym-electric-motor environments.</p>
 </dd>
@@ -337,8 +336,6 @@ observes the limit on each state.
 </p></li>
 <li><p><strong>visualization</strong> – The visualizations of this environment.</p></li>
 <li><p><strong>state_filter</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – Selection of states that are shown in the observation.</p></li>
-<li><p><strong>state_action_processors</strong> (<em>iterable</em><em>(</em><a class="reference internal" href="state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor" title="gym_electric_motor.state_action_processors.StateActionProcessor"><em>StateActionProcessor</em></a><em>)</em>) – StateActionProcessor instances to be wrapped around
-the physical system.</p></li>
 <li><p><strong>callbacks</strong> (<em>list</em><em>(</em><a class="reference internal" href="#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks being called in the environment</p></li>
 <li><p><strong>**kwargs</strong> – Arguments to be passed to the modules.</p></li>
 </ul>

@@ -44,7 +44,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
@@ -144,7 +143,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
         <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span>
+            <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="ThreePhaseMotor.q_inv"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q_inv">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">q_inv</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
