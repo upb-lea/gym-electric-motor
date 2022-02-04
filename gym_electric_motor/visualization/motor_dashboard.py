@@ -26,6 +26,11 @@ class MotorDashboard(ElectricMotorVisualization):
     StepPlot base classes.
     """
 
+    @property
+    def update_interval(self):
+        """Number of steps until the visualization is updated"""
+        return self._update_interval
+
     def __init__(
         self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
         update_interval=1000, time_plot_width=10000, style=None
@@ -131,7 +136,7 @@ class MotorDashboard(ElectricMotorVisualization):
         """Updates the plots every *update cycle* calls of this method."""
         if not (self._time_plot_figure or self._episodic_plot_figure or self._step_plot_figure) \
            and len(self._plots) > 0:
-            self._initialize()
+            self.initialize()
         if self._update_render:
             self._update()
             self._update_render = False
@@ -191,12 +196,12 @@ class MotorDashboard(ElectricMotorVisualization):
         self._episodic_plot_figure = self._time_plot_figure = self._step_plot_figure = None
         self._figures = []
 
-    def _initialize(self):
+    def initialize(self):
         """Called with first render() call to setup the figures and plots."""
         plt.close()
         self._figures = []
 
-        if plt.get_backend() == 'nbAgg':
+        if plt.get_backend() in ['nbAgg', 'module://ipympl.backend_nbagg']:
             self._initialize_figures_notebook()
         else:
             self._initialize_figures_window()
@@ -272,3 +277,4 @@ class MotorDashboard(ElectricMotorVisualization):
         for fig in self._figures:
             fig.canvas.draw()
             fig.canvas.flush_events()
+

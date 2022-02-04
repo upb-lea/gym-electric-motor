@@ -20,7 +20,7 @@ if __name__ == '__main__':
     """
 
     motor_type = 'PermExDc'
-    control_type = 'SC'
+    control_type = 'TC'
     action_type = 'Cont'
 
     motor = action_type + '-' + control_type + '-' + motor_type + '-v0'

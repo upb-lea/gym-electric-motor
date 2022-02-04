@@ -20,7 +20,7 @@ class SwitchedReferenceGenerator(ReferenceGenerator, RandomComponent):
         """
         ReferenceGenerator.__init__(self)
         RandomComponent.__init__(self)
-        self.reference_space = Box(-1, 1, shape=(1,))
+        self.reference_space = Box(-1, 1, shape=(1,), dtype=np.float64)
         self._reference = None
         self._k = 0
 

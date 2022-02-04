@@ -1,12 +1,13 @@
 name: Build
 
 on:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   push:
     branches: [ master, nightly ]
   pull_request:
     branches: [ master, nightly ]
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  
+  
 
 jobs:
   test-code:
@@ -40,7 +41,7 @@ jobs:
     - name: Build Sphinx documentation
       uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "python -m pip install sphinx==2.4.4 m2r sphinx_rtd_theme && python -m pip install -r requirements.txt & python -m pip install ."
+        pre-build-command: "python -m pip install sphinx m2r2 sphinx_rtd_theme && python -m pip install -r requirements.txt & python -m pip install ."
         docs-folder: "docs/"
     # Publish built docs to gh-pages branch.
     # ===============================

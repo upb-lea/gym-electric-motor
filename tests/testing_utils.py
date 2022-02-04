@@ -150,9 +150,9 @@ def mock_instantiate(superclass, key, **kwargs):
 class DummyReferenceGenerator(ReferenceGenerator):
     _reset_counter = 0
 
-    def __init__(self, reference_observation=np.array([1]), reference_state='dummy_state_0', **kwargs):
+    def __init__(self, reference_observation=np.array([1.]), reference_state='dummy_state_0', **kwargs):
         super().__init__()
-        self.reference_space = Box(0, 1, shape=(1,))
+        self.reference_space = Box(0., 1., shape=(1,), dtype=np.float64)
         self.kwargs = kwargs
         self._reference_names = [reference_state]
         self.closed = False
@@ -246,7 +246,7 @@ class DummyPhysicalSystem(PhysicalSystem):
 
     def __init__(self, state_length=1, state_names='dummy_state', **kwargs):
         super().__init__(
-            Box(-1, 1, shape=(1,)), Box(-1, 1, shape=(state_length,)),
+            Box(-1, 1, shape=(1,), dtype=np.float64), Box(-1, 1, shape=(state_length,), dtype=np.float64),
             [f'{state_names}_{i}' for i in range(state_length)], 1
         )
         self._limits = np.array([10 * (i + 1) for i in range(state_length)])
@@ -257,7 +257,7 @@ class DummyPhysicalSystem(PhysicalSystem):
         self.kwargs = kwargs
 
     def reset(self, initial_state=None):
-        self.state = np.array([0] * len(self._state_names))
+        self.state = np.array([0.] * len(self._state_names))
         return self.state
 
     def simulate(self, action):
@@ -324,8 +324,8 @@ class DummyVoltageSupply(VoltageSupply):
 
 class DummyConverter(PowerElectronicConverter):
 
-    voltages = Box(0, 1, shape=(1,))
-    currents = Box(-1, 1, shape=(1,))
+    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(4)
 
     def __init__(self, tau=2E-4, dead_time=False, interlocking_time=0, action_space=None, voltages=None, currents=None, **kwargs):
