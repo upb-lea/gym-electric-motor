@@ -27,14 +27,18 @@ class DqToAbcActionProcessor(StateActionProcessor):
 
     @classmethod
     def register_transformation(cls, motor_types):
-            def wrapper(callable_):
-                for motor_type in motor_types:
-                    cls._registry[motor_type] = callable_
-            return wrapper
+        def wrapper(callable_):
+            for motor_type in motor_types:
+                cls._registry[motor_type] = callable_
+        return wrapper
 
-    def __new__(cls, motor_type, *args, **kwargs):
+    @classmethod
+    def make(cls, motor_type, *args, **kwargs):
         assert motor_type in cls._registry.keys(), f'Not supported motor_type {motor_type}.'
-        return cls._registry[motor_type](*args, **kwargs)
+        class_ = cls._registry[motor_type]
+        inst = class_(*args, **kwargs)
+        return inst
+
 
     def __init__(self, angle_name, physical_system=None):
         """
@@ -108,11 +112,17 @@ DqToAbcActionProcessor.register_transformation(['SCIM'])(
 )
 
 
+@DqToAbcActionProcessor.register_transformation(['DFIM'])
 class _DFIMDqToAbcActionProcessor(DqToAbcActionProcessor):
 
     @property
     def action_space(self):
         return gym.spaces.Box(-1, 1, shape=(4,))
+
+    def __init__(self, physical_system=None):
+        super().__init__('epsilon', physical_system=physical_system)
+        self._flux_angle_name = 'psi_abs'
+        self._flux_angle_index = None
 
     def simulate(self, action):
         """Dq to abc space transformation function for doubly fed induction motor environments.
@@ -122,13 +132,17 @@ class _DFIMDqToAbcActionProcessor(DqToAbcActionProcessor):
         Returns:
             The next state of the physical system.
         """
-        advanced_angle = self._state[self._angle_index[1]] \
-            + self._angle_advance * self._physical_system.tau * self._state[self._omega_index]
+        advanced_angle = self._advance_angle(self._state)
         dq_action_stator = action[:2]
         dq_action_rotor = action[2:]
         abc_action_stator = self._transformation(dq_action_stator, advanced_angle)
-        abc_action_rotor = self._transformation(dq_action_rotor, self._angle_index[0] - advanced_angle)
+        abc_action_rotor = self._transformation(dq_action_rotor, self._state[self._flux_angle_index] - advanced_angle)
         abc_action = np.concatenate((abc_action_stator, abc_action_rotor))
         normalized_state = self._physical_system.simulate(abc_action)
         self._state = normalized_state * self._physical_system.limits
         return normalized_state
+
+    def set_physical_system(self, physical_system):
+        super().set_physical_system(physical_system)
+        self._flux_angle_index = physical_system.state_names.index('psi_angle')
+        return self

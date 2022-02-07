@@ -28,3 +28,6 @@ examples/logs/
 .coverage
 
 /my_examples/
+gym_electric_motor/state_action_processors/dq_to_abc_action_processor.py
+.vscode/settings.json
+.vscode/launch.json
