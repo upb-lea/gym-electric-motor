@@ -39,7 +39,6 @@ class DqToAbcActionProcessor(StateActionProcessor):
         inst = class_(*args, **kwargs)
         return inst
 
-
     def __init__(self, angle_name, physical_system=None):
         """
         Args:

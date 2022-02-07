@@ -17,7 +17,7 @@ class TestDqToAbcActionProcessor(TestStateActionProcessor):
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.state_action_processors.DqToAbcActionProcessor(physical_system=physical_system)
+        return gem.state_action_processors.DqToAbcActionProcessor.make('PMSM', physical_system=physical_system)
 
     def test_action_space(self, processor, physical_system):
         space = gym.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
