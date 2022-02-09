@@ -604,10 +604,10 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
         self.TORQUE_IDX = len(self.mechanical_load.state_names)
         currents_lower = self.TORQUE_IDX + 1
-        currents_upper = currents_lower + 5
+        currents_upper = currents_lower + 6
         self.CURRENTS_IDX = list(range(currents_lower, currents_upper))
         voltages_lower = currents_upper
-        voltages_upper = voltages_lower + 5
+        voltages_upper = voltages_lower + 6
         self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
         self.EPSILON_IDX = voltages_upper
         self.U_SUP_IDX = list(range(self.EPSILON_IDX + 1, self.EPSILON_IDX + 1 + self._supply.voltage_len))
@@ -619,25 +619,27 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         eps = ode_state[self._ode_epsilon_idx]
         if self.control_space == 'dq':
             action = self.dq_to_abc_space(action, eps)
-        i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
+        i_in_dq = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
+        i_in_abc = list(self.dq_to_abc_space(i_in_dq[:2], eps)) + i_in_dq[2:]
         switching_times = self._converter.set_action(action, self._t)
 
         for t in switching_times[:-1]:
-            i_sup = self._converter.i_sup(i_in)
+            i_sup = self._converter.i_sup(i_in_abc)
             u_sup = self._supply.get_voltage(self._t, i_sup)
-            u_in = self._converter.convert(i_in, self._ode_solver.t)
+            u_in = self._converter.convert(i_in_abc, self._ode_solver.t)
             u_in = [u * u_s for u in u_in for u_s in u_sup]
-            u_dq = self.abc_to_dq_space(u_in, eps)
+            u_dq = list(self.abc_to_dq_space(u_in[:2], eps)) + u_in[2:]
             self._ode_solver.set_f_params(u_dq)
             ode_state = self._ode_solver.integrate(t)
             eps = ode_state[self._ode_epsilon_idx]
-            i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
+            i_in_dq = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
+            i_in_abc = list(self.dq_to_abc_space(i_in_dq[:2], eps)) + i_in_dq[2:]
 
-        i_sup = self._converter.i_sup(i_in)
+        i_sup = self._converter.i_sup(i_in_abc)
         u_sup = self._supply.get_voltage(self._t, i_sup)
-        u_in = self._converter.convert(i_in, self._ode_solver.t)
+        u_in = self._converter.convert(i_in_abc, self._ode_solver.t)
         u_in = [u * u_s for u in u_in for u_s in u_sup]
-        u_dq = self.abc_to_dq_space(u_in, eps)
+        u_dq = self.abc_to_dq_space(u_in[:2], eps) + u_in[2:]
         self._ode_solver.set_f_params(u_dq)
         ode_state = self._ode_solver.integrate(self._t + self._tau)
         self._t = self._ode_solver.t
@@ -681,7 +683,7 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         u_abc = [u * u_s for u in u_abc for u_s in u_sup]
         u_dq = self.abc_to_dq_space(u_abc, eps)
         i_dq = ode_state[self._ode_currents_idx]
-        i_abc = self.dq_to_abc_space(i_dq, eps)
+        i_abc = self.dq_to_abc_space(i_dq[:2], eps)
         torque = self.electrical_motor.torque(motor_state)
         noise = self._noise_generator.reset()
         self._t = 0
