@@ -202,6 +202,53 @@ register(
     **registration_kwargs
 )
 
+# Externally Excited Synchronous Motor Environments
+register(
+    id='Finite-SC-EESM-v0',
+    entry_point=envs_path+'FiniteSpeedControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='Finite-TC-EESM-v0',
+    entry_point=envs_path+'FiniteTorqueControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='Finite-CC-EESM-v0',
+    entry_point=envs_path+'FiniteCurrentControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='AbcCont-CC-EESM-v0',
+    entry_point=envs_path+'AbcContCurrentControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='AbcCont-TC-EESM-v0',
+    entry_point=envs_path+'AbcContTorqueControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='AbcCont-SC-EESM-v0',
+    entry_point=envs_path+'AbcContSpeedControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='DqCont-CC-EESM-v0',
+    entry_point=envs_path+'DqContCurrentControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='DqCont-TC-EESM-v0',
+    entry_point=envs_path+'DqContTorqueControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='DqCont-SC-EESM-v0',
+    entry_point=envs_path+'DqContSpeedControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+
 # Synchronous Reluctance Motor Environments
 register(
     id='Finite-SC-SynRM-v0',

@@ -98,8 +98,8 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         'p': 3,
         'l_d': 1.66e-3,
         'l_q': 0.35e-3,
-        'l_m': 000,
-        'l_e': 000,
+        'l_m': 1.66e-4,
+        'l_e': 1.66e-3,
         'j_rotor': 0.3883,
         'r_s': 15.55e-3,
         'r_e': 7.2e-3,
@@ -141,7 +141,7 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
             return self.torque([0, self._limits['i_sq'], self._limits['i_e'], 0])
         else:
             i_n = self.nominal_values['i']
-            _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
+            _p = mp['l_m'] * i_n / (2 * (mp['l_d'] - mp['l_q']))
             _q = - i_n ** 2 / 2
             i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
             i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)

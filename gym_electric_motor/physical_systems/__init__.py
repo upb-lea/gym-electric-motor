@@ -1,11 +1,12 @@
-from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem
+from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem, \
+    ExternallyExcitedSynchronousMotorSystem
 from .converters import PowerElectronicConverter, FiniteOneQuadrantConverter, FiniteTwoQuadrantConverter, \
     FiniteFourQuadrantConverter, FiniteMultiConverter, FiniteB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter, NoConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
-    DoublyFedInductionMotor
+    DoublyFedInductionMotor, ExternallyExcitedSynchronousMotor
 
 from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad, \
     OrnsteinUhlenbeckLoad
@@ -61,9 +62,11 @@ register_class(DcPermanentlyExcitedMotor, ElectricMotor, 'DcPermEx')
 register_class(DcExternallyExcitedMotor, ElectricMotor, 'DcExtEx')
 register_class(DcShuntMotor, ElectricMotor, 'DcShunt')
 register_class(PermanentMagnetSynchronousMotor, ElectricMotor, 'PMSM')
+register_class(ExternallyExcitedSynchronousMotor, ElectricMotor, 'EESM')
 register_class(SynchronousReluctanceMotor, ElectricMotor, 'SynRM')
 register_class(SquirrelCageInductionMotor, ElectricMotor, 'SCIM')
 register_class(DoublyFedInductionMotor, ElectricMotor, 'DFIM')
+
 
 register_class(IdealVoltageSupply, VoltageSupply, 'IdealVoltageSupply')
 register_class(RCVoltageSupply, VoltageSupply, 'RCVoltageSupply')

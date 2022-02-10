@@ -620,7 +620,7 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         if self.control_space == 'dq':
             action = self.dq_to_abc_space(action, eps)
         i_in_dq = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
-        i_in_abc = list(self.dq_to_abc_space(i_in_dq[:2], eps)) + i_in_dq[2:]
+        i_in_abc = list(self.dq_to_abc_space(i_in_dq[:2], eps)) + list(i_in_dq[2:])
         switching_times = self._converter.set_action(action, self._t)
 
         for t in switching_times[:-1]:
@@ -681,7 +681,7 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
             eps -= 2 * np.pi
         u_abc = self.converter.reset()
         u_abc = [u * u_s for u in u_abc for u_s in u_sup]
-        u_dq = self.abc_to_dq_space(u_abc, eps)
+        u_dq = self.abc_to_dq_space(u_abc[:3], eps)
         i_dq = ode_state[self._ode_currents_idx]
         i_abc = self.dq_to_abc_space(i_dq[:2], eps)
         torque = self.electrical_motor.torque(motor_state)
