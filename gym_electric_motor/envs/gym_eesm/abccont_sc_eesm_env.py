@@ -73,7 +73,7 @@ class AbcContSpeedControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvir
         ...     sigma_range=(1e-3, 1e-2)
         ... )
         >>> env = gem.make(
-        ...     'AbcCont-SC-PMSM-v0',
+        ...     'AbcCont-SC-EESM-v0',
         ...     voltage_supply=my_changed_voltage_supply_args,
         ...     ode_solver=my_overridden_solver,
         ...     reference_generator=my_new_ref_gen_instance

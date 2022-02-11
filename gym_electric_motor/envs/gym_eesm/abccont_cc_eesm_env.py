@@ -125,7 +125,8 @@ class AbcContCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnv
         """
         default_subgenerators = (
             WienerProcessReferenceGenerator(reference_state='i_sd'),
-            WienerProcessReferenceGenerator(reference_state='i_sq')
+            WienerProcessReferenceGenerator(reference_state='i_sq'),
+            WienerProcessReferenceGenerator(reference_state='i_e'),
         )
         default_subconverters = (
             ps.ContB6BridgeConverter(),
@@ -154,13 +155,13 @@ class AbcContCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnv
             dict(sub_generators=default_subgenerators)
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_sd=0.5, i_sq=0.5))
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_sd=1/3, i_sq=1/3, i_e=1/3))
         )
         visualization = initialize(
             ElectricMotorVisualization,
             visualization,
             MotorDashboard,
-            dict(state_plots=('i_sd', 'i_sq'), action_plots='all')
+            dict(state_plots=('i_sd', 'i_sq', 'i_e'), action_plots='all')
         )
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,

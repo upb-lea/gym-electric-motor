@@ -133,6 +133,31 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
         self._model_constants[self.I_E_IDX] = self._model_constants[self.I_E_IDX] / mp['l_e']
 
+    def electrical_ode(self, state, u_dq, omega, *_):
+        """
+        The differential equation of the Synchronous Motor.
+
+        Args:
+            state: The current state of the motor. [i_sd, i_sq, epsilon]
+            omega: The mechanical load
+            u_qd: The input voltages [u_sd, u_sq]
+
+        Returns:
+            The derivatives of the state vector d/dt([i_sd, i_sq, epsilon])
+        """
+        return np.matmul(self._model_constants, np.array([
+            omega,
+            state[self.I_SD_IDX],
+            state[self.I_SQ_IDX],
+            state[self.I_E_IDX],
+            u_dq[0],
+            u_dq[1],
+            u_dq[2],
+            omega * state[self.I_SD_IDX],
+            omega * state[self.I_SQ_IDX],
+            omega * state[self.I_E_IDX]
+        ]))
+
     def _torque_limit(self):
         # Docstring of superclass
         mp = self._motor_parameter
