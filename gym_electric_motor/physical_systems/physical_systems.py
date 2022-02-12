@@ -214,35 +214,38 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
             ndarray(float): The derivatives of the ODE-State. Based on this, the Ode Solver calculates the next state.
         """
         if self._system_eq_placeholder is None:
-
+            motor_state = state[self._motor_ode_idx]
             motor_derivative = self._electrical_motor.electrical_ode(
-                state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+                motor_state, u_in, state[self._omega_ode_idx]
             )
-            torque = self._electrical_motor.torque(state[self._motor_ode_idx])
-            load_derivative = self._mechanical_load.mechanical_ode(t, state[
-                self._load_ode_idx], torque)
+            torque = self._electrical_motor.torque(motor_state)
+            load_derivative = self._mechanical_load.mechanical_ode(
+                t, state[self._load_ode_idx], torque
+            )
             self._system_eq_placeholder = np.concatenate((load_derivative,
                                                           motor_derivative))
             self._motor_deriv_size = motor_derivative.size
             self._load_deriv_size = load_derivative.size
         else:
+            motor_state = state[self._motor_ode_idx]
             self._system_eq_placeholder[:self._load_deriv_size] = \
                 self._mechanical_load.mechanical_ode(
                     t, state[self._load_ode_idx],
-                    self._electrical_motor.torque(state[self._motor_ode_idx])
+                    self._electrical_motor.torque(motor_state)
                 ).ravel()
             self._system_eq_placeholder[self._load_deriv_size:] = \
                 self._electrical_motor.electrical_ode(
-                    state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+                    motor_state, u_in, state[self._omega_ode_idx]
                 ).ravel()
 
         return self._system_eq_placeholder
 
     def _system_jacobian(self, t, state, u_in, **__):
+        motor_state = state[self._motor_ode_idx]
         motor_jac, el_state_over_omega, torque_over_el_state = self._electrical_motor.electrical_jacobian(
-            state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+            motor_state, u_in, state[self._omega_ode_idx]
         )
-        torque = self._electrical_motor.torque(state[self._motor_ode_idx])
+        torque = self._electrical_motor.torque(motor_state)
         load_jac, load_over_torque = self._mechanical_load.mechanical_jacobian(
             t, state[self._load_ode_idx], torque
         )
