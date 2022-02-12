@@ -629,7 +629,7 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
             u_in = self._converter.convert(i_in_abc_e, self._ode_solver.t)
             u_in = [u * u_s for u in u_in for u_s in u_sup]
             u_dq_e = list(self.abc_to_dq_space(u_in[:2], eps)) + u_in[2:]
-            self._ode_solver.set_f_params(u_dq)
+            self._ode_solver.set_f_params(u_dq_e)
             ode_state = self._ode_solver.integrate(t)
             eps = ode_state[self._ode_epsilon_idx]
             i_in_dq_e = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
