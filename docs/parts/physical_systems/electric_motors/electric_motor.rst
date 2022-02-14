@@ -10,6 +10,7 @@ Electric Motors
     series
     shunt
     pmsm
+    eesm
     synrm
     scim
     dfim
