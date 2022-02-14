@@ -65,6 +65,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
@@ -119,7 +120,7 @@ ContinuousDynamicallyAveragedConverter derive to be the base class for all conti
 <h2>Converter Base Class<a class="headerlink" href="#converter-base-class" title="Permalink to this headline"></a></h2>
 <dl class="class">
 <dt id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">PowerElectronicConverter</code><span class="sig-paren">(</span><em class="sig-param">tau</em>, <em class="sig-param">dead_time=False</em>, <em class="sig-param">interlocking_time=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#PowerElectronicConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.converters.</code><code class="sig-name descname">PowerElectronicConverter</code><span class="sig-paren">(</span><em class="sig-param">tau</em>, <em class="sig-param">interlocking_time=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#PowerElectronicConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="Permalink to this definition"></a></dt>
 <dd><p>Base class for all converters in a SCMLSystem.</p>
 <dl>
 <dt>Properties:</dt><dd><div class="line-block">
@@ -136,7 +137,6 @@ ContinuousDynamicallyAveragedConverter derive to be the base class for all conti
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau</strong> – Discrete time step of the system in seconds</p></li>
-<li><p><strong>dead_time</strong> – Flag, if a system dead_time of one cycle should be considered.</p></li>
 <li><p><strong>interlocking_time</strong> – Interlocking time of the transistors in seconds</p></li>
 </ul>
 </dd>
@@ -246,7 +246,6 @@ switching state.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau</strong> – Discrete time step of the system in seconds</p></li>
-<li><p><strong>dead_time</strong> – Flag, if a system dead_time of one cycle should be considered.</p></li>
 <li><p><strong>interlocking_time</strong> – Interlocking time of the transistors in seconds</p></li>
 </ul>
 </dd>
@@ -340,7 +339,6 @@ dynamically averaged model over one time step.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau</strong> – Discrete time step of the system in seconds</p></li>
-<li><p><strong>dead_time</strong> – Flag, if a system dead_time of one cycle should be considered.</p></li>
 <li><p><strong>interlocking_time</strong> – Interlocking time of the transistors in seconds</p></li>
 </ul>
 </dd>
