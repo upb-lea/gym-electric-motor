@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     motor_type = 'SCIM'
     control_type = 'TC'
-    action_type = 'AbcCont'
+    action_type = 'Cont'
 
     env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
 
