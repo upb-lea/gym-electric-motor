@@ -1,8 +1,8 @@
 from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
     ElectricMotorVisualization
-from gym_electric_motor.physical_systems.physical_systems import SynchronousMotorSystem
+from gym_electric_motor.physical_systems.physical_systems import ExternallyExcitedSynchronousMotorSystem
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator, MultipleReferenceGenerator
+from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 from gym_electric_motor import physical_systems as ps
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
@@ -21,7 +21,7 @@ class FiniteSpeedControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviro
         - Supply: :py:class:`.IdealVoltageSupply`
         - Converter: :py:class:`.FiniteMultiConverter`(:py:class:`.FiniteB6BridgeConverter`, :py:class:`.FiniteFourQuadrantConverter`)
         - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`
-        - Load: :py:class:`.ConstantSpeedLoad`
+        - Load: :py:class:`.PolynomialStaticLoad`
         - Ode-Solver: :py:class:`.ScipyOdeSolver`
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantities:* ``'omega'``
@@ -125,11 +125,11 @@ class FiniteSpeedControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviro
             ps.FiniteB6BridgeConverter(),
             ps.FiniteFourQuadrantConverter()
         )
-        physical_system = SynchronousMotorSystem(
+        physical_system = ExternallyExcitedSynchronousMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteMultiConverter, dict(subconverters=default_subconverters)),
             motor=initialize(ps.ElectricMotor, motor, ps.ExternallyExcitedSynchronousMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict),
+            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict()),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
@@ -147,7 +147,7 @@ class FiniteSpeedControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviro
             ElectricMotorVisualization,
             visualization,
             MotorDashboard,
-            dict(state_plots=('omega'), action_plots='all')
+            dict(state_plots=('omega',), action_plots='all')
         )
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
