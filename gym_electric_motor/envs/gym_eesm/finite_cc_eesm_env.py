@@ -6,38 +6,37 @@ from gym_electric_motor.reference_generators import WienerProcessReferenceGenera
 from gym_electric_motor import physical_systems as ps
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
-from gym_electric_motor.constraints import SquaredConstraint
+from gym_electric_motor.constraints import LimitConstraint, SquaredConstraint
 
 
 class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvironment):
     """
     Description:
-        Environment to simulate a finite control set current controlled permanent magnet synchr. motor.
+        Environment to simulate a finite control set current controlled externally excited synchronous motor.
 
     Key:
-        ``'Finite-CC-PMSM-v0'``
+        ``'Finite-CC-EESM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
-        - Converter: :py:class:`.FiniteB6BridgeConverter`
-        - Motor: :py:class:`.PermanentMagnetSynchronousMotor`
+        - Converter: :py:class:`.FiniteMultiConverter`(:py:class:`.FiniteB6BridgeConverter`, :py:class:`.FiniteFourQuadrantConverter`)
+        - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`
         - Load: :py:class:`.ConstantSpeedLoad`
-        - Ode-Solver: :py:class:`.EulerSolver`
-        - Noise: **None**
+        - Ode-Solver: :py:class:`.ScipyOdeSolver`
 
-        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'i_sd', 'i_sq``
+        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantities:* ``'i_sd', 'i_sq', 'i_e'``
 
-        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'i_sd' = 0.5, 'i_sq' = 0.5``
+        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'i_sd' = 1/3, 'i_sq' = 1/3, 'i_e' = 1/3``
 
         - Visualization: :py:class:`.MotorDashboard` current and action plots
 
-        - Constraints: :py:class:`.SquaredConstraint` on the currents  ``'i_sd', 'i_sq'``
+        - Constraints: :py:class:`.SquaredConstraint` on the currents  ``'i_sd', 'i_sq'``, :py:class:`.LimitConstraint` on the current  ``'i_e'``
 
     State Variables:
-        ``['omega' , 'torque', 'i_sd', 'i_sq', 'i_a', 'i_b', 'i_c', 'u_sd', 'u_sq', 'u_a', 'u_b', 'u_c', 'u_sup']``
+        ``['omega' , 'torque', 'i_sd', 'i_sq', 'i_a', 'i_b', 'i_c', 'i_e', 'u_sd', 'u_sq', 'u_a', 'u_b', 'u_c', 'u_e', 'u_sup']``
 
     Reference Variables:
-        ``['i_sd', 'i_sq']``
+        ``['i_sd', 'i_sq', 'i_e']``
 
     Control Cycle Time:
         tau = 1e-5 seconds
@@ -46,13 +45,13 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=13 * [-1], high=13 * [1])
+        Box(low=15 * [-1], high=15 * [1])
 
     Reference Space:
-        Box(low=[-1, -1], high=[1, 1])
+        Box(low=[-1, -1, -1], high=[1, 1, 1])
 
     Action Space:
-        Discrete(8)
+        MultiDiscrete((8, 4))
 
     Initial State:
         Zeros on all state variables.
@@ -73,7 +72,7 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
         ...     sigma_range=(1e-3, 1e-2)
         ... )
         >>> env = gem.make(
-        ...     'Finite-CC-PMSM-v0',
+        ...     'Finite-CC-EESM-v0',
         ...     voltage_supply=my_changed_voltage_supply_args,
         ...     ode_solver=my_overridden_solver,
         ...     reference_generator=my_new_ref_gen_instance
@@ -85,9 +84,9 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
         >>>     env.render()
         >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5):
+                 constraints=(SquaredConstraint(('i_sq', 'i_sd')), LimitConstraint(('i_e',))), calc_jacobian=True, tau=1e-5):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -95,7 +94,6 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
             motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment
             load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment
             ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment
-            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment
             reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment
             reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
@@ -125,16 +123,19 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
         """
         default_subgenerators = (
             WienerProcessReferenceGenerator(reference_state='i_sd'),
-            WienerProcessReferenceGenerator(reference_state='i_sq')
+            WienerProcessReferenceGenerator(reference_state='i_sq'),
+            WienerProcessReferenceGenerator(reference_state='i_e')
         )
-
+        default_subconverters = (
+            ps.FiniteB6BridgeConverter(),
+            ps.FiniteFourQuadrantConverter()
+        )
         physical_system = SynchronousMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteB6BridgeConverter, dict()),
-            motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict()),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteMultiConverter, dict(subconverters=default_subconverters)),
+            motor=initialize(ps.ElectricMotor, motor, ps.ExternallyExcitedSynchronousMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )
@@ -145,13 +146,13 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
             dict(sub_generators=default_subgenerators)
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_sd=0.5, i_sq=0.5))
+            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_sd=1/3, i_sq=1/3, i_e=1/3))
         )
         visualization = initialize(
             ElectricMotorVisualization,
             visualization,
             MotorDashboard,
-            dict(state_plots=('i_sd', 'i_sq'), action_plots='all')
+            dict(state_plots=('i_sd', 'i_sq', 'i_e'), action_plots='all')
         )
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,

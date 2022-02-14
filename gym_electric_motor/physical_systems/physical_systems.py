@@ -553,7 +553,7 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
 class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
     """SCML-System that can be used with the externally excited synchronous motor (EESM)"""
 
-    def __init__(self, control_space='abc', **kwargs):
+    def __init__(self, **kwargs):
         """
         Args:
             control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
@@ -561,11 +561,6 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         """
         super().__init__(**kwargs)
         self._action_space = Box(-1,1, shape=(4,), dtype=np.float64)
-        self.control_space = control_space
-        if control_space == 'dq':
-            assert type(self._converter.action_space) == Box, \
-                'dq-control space is only available for Continuous Controlled Converters'
-            self._action_space = Box(-1, 1, shape=(3,), dtype=np.float64)
 
     def _build_state_space(self, state_names):
         # Docstring of superclass
@@ -610,8 +605,6 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         # Docstring of superclass
         ode_state = self._ode_solver.y
         eps = ode_state[self._ode_epsilon_idx]
-        if self.control_space == 'dq':
-            action = self.dq_to_abc_space(action, eps)
         i_in_dq_e = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
         i_in_abc_e = list(self.dq_to_abc_space(i_in_dq_e[:2], eps)) + list(i_in_dq_e[2:])
         switching_times = self._converter.set_action(action, self._t)
@@ -638,7 +631,6 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         self._t = self._ode_solver.t
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
-        noise = self._noise_generator.noise()
         mechanical_state = ode_state[self._load_ode_idx]
         i_dq_e = ode_state[self._ode_currents_idx]
         i_abc = list(
@@ -656,7 +648,7 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
             [eps],
             u_sup
         ))
-        return (system_state + noise) / self._limits
+        return system_state / self._limits
 
     def reset(self, *_):
         # Docstring of superclass
@@ -678,7 +670,6 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
         i_dq = ode_state[self._ode_currents_idx]
         i_abc = self.dq_to_abc_space(i_dq[:2], eps)
         torque = self.electrical_motor.torque(motor_state)
-        noise = self._noise_generator.reset()
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
@@ -690,7 +681,7 @@ class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
             [eps],
             u_sup,
         ))
-        return (system_state + noise) / self._limits
+        return system_state / self._limits
 
 class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
     """
