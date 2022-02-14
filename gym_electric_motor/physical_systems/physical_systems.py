@@ -553,14 +553,6 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
 class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
     """SCML-System that can be used with the externally excited synchronous motor (EESM)"""
 
-    def __init__(self, **kwargs):
-        """
-        Args:
-            control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
-            kwargs: Further arguments to pass tp SCMLSystem
-        """
-        super().__init__(**kwargs)
-        self._action_space = Box(-1,1, shape=(4,), dtype=np.float64)
 
     def _build_state_space(self, state_names):
         # Docstring of superclass
