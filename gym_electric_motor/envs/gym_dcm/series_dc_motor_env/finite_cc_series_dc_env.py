@@ -22,7 +22,6 @@ class FiniteCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         - Motor: :py:class:`.DcSeriesMotor`
         - Load: :py:class:`.ConstantSpeedLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
-        - Noise: **None**
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'i'``
 
@@ -84,9 +83,9 @@ class FiniteCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         >>>     env.render()
         >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i',), calc_jacobian=True, tau=1e-5):
+                 constraints=('i',), calc_jacobian=True, tau=1e-5, state_action_processors=()):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -94,7 +93,6 @@ class FiniteCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment
             load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment
             ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment
-            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment
             reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment
             reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
@@ -108,6 +106,8 @@ class FiniteCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             tau(float): Duration of one control step in seconds. Default: 1e-5.
             state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
             callbacks(list(Callback)): Callbacks for user interaction. Default: ()
+            state_action_processors(list(StateActionProcessor)): List of state action processors to modify the
+            actions to and states from the physical system before they are used in the environment. Default: ()
 
         Note on the env-arg type:
             All parameters of type env-arg can be selected as one of the following types:
@@ -128,7 +128,6 @@ class FiniteCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )
@@ -142,5 +141,6 @@ class FiniteCurrentControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('i',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
+            state_action_processors=state_action_processors
         )

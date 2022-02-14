@@ -17,6 +17,8 @@ import gym_electric_motor.reward_functions
 import gym_electric_motor.visualization
 import gym_electric_motor.physical_systems
 import gym_electric_motor.envs
+import gym_electric_motor.state_action_processors
+
 from gym.envs.registration import register
 import gym
 from packaging import version
@@ -172,33 +174,18 @@ register(
     **registration_kwargs
 )
 register(
-    id='AbcCont-CC-PMSM-v0',
-    entry_point=envs_path+'AbcContCurrentControlPermanentMagnetSynchronousMotorEnv',
+    id='Cont-CC-PMSM-v0',
+    entry_point=envs_path+'ContCurrentControlPermanentMagnetSynchronousMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-TC-PMSM-v0',
-    entry_point=envs_path+'AbcContTorqueControlPermanentMagnetSynchronousMotorEnv',
+    id='Cont-TC-PMSM-v0',
+    entry_point=envs_path+'ContTorqueControlPermanentMagnetSynchronousMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-SC-PMSM-v0',
-    entry_point=envs_path+'AbcContSpeedControlPermanentMagnetSynchronousMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-CC-PMSM-v0',
-    entry_point=envs_path+'DqContCurrentControlPermanentMagnetSynchronousMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-TC-PMSM-v0',
-    entry_point=envs_path+'DqContTorqueControlPermanentMagnetSynchronousMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-SC-PMSM-v0',
-    entry_point=envs_path+'DqContSpeedControlPermanentMagnetSynchronousMotorEnv',
+    id='Cont-SC-PMSM-v0',
+    entry_point=envs_path+'ContSpeedControlPermanentMagnetSynchronousMotorEnv',
     **registration_kwargs
 )
 
@@ -266,33 +253,18 @@ register(
     **registration_kwargs
 )
 register(
-    id='AbcCont-CC-SynRM-v0',
-    entry_point=envs_path+'AbcContCurrentControlSynchronousReluctanceMotorEnv',
+    id='Cont-CC-SynRM-v0',
+    entry_point=envs_path+'ContCurrentControlSynchronousReluctanceMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-TC-SynRM-v0',
-    entry_point=envs_path+'AbcContTorqueControlSynchronousReluctanceMotorEnv',
+    id='Cont-TC-SynRM-v0',
+    entry_point=envs_path+'ContTorqueControlSynchronousReluctanceMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-SC-SynRM-v0',
-    entry_point=envs_path+'AbcContSpeedControlSynchronousReluctanceMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-CC-SynRM-v0',
-    entry_point=envs_path+'DqContCurrentControlSynchronousReluctanceMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-TC-SynRM-v0',
-    entry_point=envs_path+'DqContTorqueControlSynchronousReluctanceMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-SC-SynRM-v0',
-    entry_point=envs_path+'DqContSpeedControlSynchronousReluctanceMotorEnv',
+    id='Cont-SC-SynRM-v0',
+    entry_point=envs_path+'ContSpeedControlSynchronousReluctanceMotorEnv',
     **registration_kwargs
 )
 
@@ -313,33 +285,18 @@ register(
     **registration_kwargs
 )
 register(
-    id='AbcCont-CC-SCIM-v0',
-    entry_point=envs_path+'AbcContCurrentControlSquirrelCageInductionMotorEnv',
+    id='Cont-CC-SCIM-v0',
+    entry_point=envs_path+'ContCurrentControlSquirrelCageInductionMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-TC-SCIM-v0',
-    entry_point=envs_path+'AbcContTorqueControlSquirrelCageInductionMotorEnv',
+    id='Cont-TC-SCIM-v0',
+    entry_point=envs_path+'ContTorqueControlSquirrelCageInductionMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-SC-SCIM-v0',
-    entry_point=envs_path+'AbcContSpeedControlSquirrelCageInductionMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-CC-SCIM-v0',
-    entry_point=envs_path+'DqContCurrentControlSquirrelCageInductionMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-TC-SCIM-v0',
-    entry_point=envs_path+'DqContTorqueControlSquirrelCageInductionMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-SC-SCIM-v0',
-    entry_point=envs_path+'DqContSpeedControlSquirrelCageInductionMotorEnv',
+    id='Cont-SC-SCIM-v0',
+    entry_point=envs_path+'ContSpeedControlSquirrelCageInductionMotorEnv',
     **registration_kwargs
 )
 
@@ -360,32 +317,17 @@ register(
     **registration_kwargs
 )
 register(
-    id='AbcCont-CC-DFIM-v0',
-    entry_point=envs_path+'AbcContCurrentControlDoublyFedInductionMotorEnv',
+    id='Cont-CC-DFIM-v0',
+    entry_point=envs_path+'ContCurrentControlDoublyFedInductionMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-TC-DFIM-v0',
-    entry_point=envs_path+'AbcContTorqueControlDoublyFedInductionMotorEnv',
+    id='Cont-TC-DFIM-v0',
+    entry_point=envs_path+'ContTorqueControlDoublyFedInductionMotorEnv',
     **registration_kwargs
 )
 register(
-    id='AbcCont-SC-DFIM-v0',
-    entry_point=envs_path+'AbcContSpeedControlDoublyFedInductionMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-CC-DFIM-v0',
-    entry_point=envs_path+'DqContCurrentControlDoublyFedInductionMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-TC-DFIM-v0',
-    entry_point=envs_path+'DqContTorqueControlDoublyFedInductionMotorEnv',
-    **registration_kwargs
-)
-register(
-    id='DqCont-SC-DFIM-v0',
-    entry_point=envs_path+'DqContSpeedControlDoublyFedInductionMotorEnv',
+    id='Cont-SC-DFIM-v0',
+    entry_point=envs_path+'ContSpeedControlDoublyFedInductionMotorEnv',
     **registration_kwargs
 )

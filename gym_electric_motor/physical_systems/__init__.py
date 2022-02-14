@@ -1,19 +1,20 @@
+
 from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem, \
-    ExternallyExcitedSynchronousMotorSystem
+    ExternallyExcitedSynchronousMotorSystem, ThreePhaseMotorSystem, SCMLSystem
+    
 from .converters import PowerElectronicConverter, FiniteOneQuadrantConverter, FiniteTwoQuadrantConverter, \
     FiniteFourQuadrantConverter, FiniteMultiConverter, FiniteB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter, NoConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
-    DoublyFedInductionMotor, ExternallyExcitedSynchronousMotor
+    DoublyFedInductionMotor, ExternallyExcitedSynchronousMotor, , ThreePhaseMotor
+
 
 from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad, \
     OrnsteinUhlenbeckLoad
 
 from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSolver, ScipyOdeSolver
-
-from .noise_generators import NoiseGenerator, GaussianWhiteNoiseGenerator
 
 from .voltage_supplies import VoltageSupply, IdealVoltageSupply, RCVoltageSupply, AC1PhaseSupply, AC3PhaseSupply
 
@@ -25,7 +26,6 @@ register_superclass(PowerElectronicConverter)
 register_superclass(MechanicalLoad)
 register_superclass(ElectricMotor)
 register_superclass(OdeSolver)
-register_superclass(NoiseGenerator)
 register_superclass(VoltageSupply)
 
 
@@ -49,8 +49,6 @@ register_class(NoConverter, PowerElectronicConverter, 'NoConverter')
 register_class(PolynomialStaticLoad, MechanicalLoad, 'PolyStaticLoad')
 register_class(ConstantSpeedLoad, MechanicalLoad, 'ConstSpeedLoad')
 register_class(ExternalSpeedLoad, MechanicalLoad, 'ExtSpeedLoad')
-
-register_class(GaussianWhiteNoiseGenerator, NoiseGenerator, 'GWN')
 
 register_class(EulerSolver, OdeSolver, 'euler')
 register_class(ScipyOdeSolver, OdeSolver, 'scipy.ode')
