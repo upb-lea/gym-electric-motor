@@ -10,6 +10,10 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
     """
 
     @property
+    def k(self):
+        return self._physical_system.k
+
+    @property
     def action_space(self):
         """The processed action space.
 

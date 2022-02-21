@@ -20,6 +20,7 @@ from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLo
 from gym.core import Wrapper
 from gym.spaces import Box, Tuple
 from gym_electric_motor.constraints import SquaredConstraint
+from gym_electric_motor.state_action_processors import DqToAbcActionProcessor, DeadTimeProcessor
 
 '''
 This example shows how we can use GEM to train a reinforcement learning agent to control the current within
@@ -96,12 +97,13 @@ if __name__ == '__main__':
 
     # Change the motor nominal values
     nominal_values = {key: 0.7 * limit for key, limit in limit_values.items()}
-
+    state_action_processors = (DeadTimeProcessor(), DqToAbcActionProcessor.make('PMSM'))
     # Create the environment
     env = gem.make(
         # Choose the permanent magnet synchronous motor with continuous-control-set
-        'DqCont-CC-PMSM-v0',
+        'Cont-CC-PMSM-v0',
         # Pass a class with extra parameters
+        state_action_processors=state_action_processors,
         visualization=MotorDashboard(
             state_plots=['i_sq', 'i_sd'],
             action_plots='all',
@@ -132,9 +134,7 @@ if __name__ == '__main__':
         # Consider converter dead time within the simulation
         # This means that a given action will show effect only with one step delay
         # This is realistic behavior of drive applications
-        converter=dict(
-            dead_time=True,
-        ),
+        
         # Set the DC-link supply voltage
         supply=dict(
             u_nominal=400

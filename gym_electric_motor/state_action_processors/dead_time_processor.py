@@ -57,6 +57,7 @@ class DeadTimeProcessor(StateActionProcessor):
                     'Only Discrete / MultiDiscrete and Box allowed for the dead time processor.'
                 )
             self._reset_actions = lambda: [reset_action] * self._action_deque.maxlen
+        return self
 
     def reset(self):
         """Resets the processor and the inner physical system for a new episode.
