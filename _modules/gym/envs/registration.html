@@ -78,89 +78,139 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym.envs.registration</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">difflib</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">importlib.util</span>
 <span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Type</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Generator</span><span class="p">,</span>
+    <span class="n">Sequence</span><span class="p">,</span>
+    <span class="n">cast</span><span class="p">,</span>
+    <span class="n">SupportsFloat</span><span class="p">,</span>
+    <span class="n">overload</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">importlib_metadata</span> <span class="k">as</span> <span class="nn">metadata</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">importlib_metadata</span> <span class="k">as</span> <span class="nn">metadata</span>  <span class="c1"># type: ignore</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">importlib.metadata</span> <span class="k">as</span> <span class="nn">metadata</span>
 
-<span class="kn">from</span> <span class="nn">gym</span> <span class="kn">import</span> <span class="n">error</span><span class="p">,</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">InitVar</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">MutableMapping</span>
 
-<span class="c1"># This format is true today, but it&#39;s *not* an official spec.</span>
-<span class="c1"># [username/](env-name)-v(version)    env-name is group 1, version is group 2</span>
-<span class="c1">#</span>
-<span class="c1"># 2016-10-31: We&#39;re experimentally expanding the environment ID format</span>
-<span class="c1"># to include an optional username.</span>
-<span class="n">env_id_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="c1"># Whitelist of plugins which can hook into the `gym.envs.internal` entry point.</span>
-<span class="n">plugin_internal_whitelist</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ale_py.gym&quot;</span><span class="p">}</span>
+<span class="kn">from</span> <span class="nn">gym</span> <span class="kn">import</span> <span class="n">error</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">Env</span>
+<span class="kn">from</span> <span class="nn">gym.envs.__relocated__</span> <span class="kn">import</span> <span class="n">internal_env_relocation_map</span>
 
 
-<span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+<span class="k">else</span><span class="p">:</span>
+
+    <span class="k">class</span> <span class="nc">Literal</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">__class_getitem__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Any</span>
+
+
+<span class="n">ENV_ID_RE</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;^(?:(?P&lt;namespace&gt;[\w:-]+)\/)?(?:(?P&lt;name&gt;[\w:.-]+?))(?:-v(?P&lt;version&gt;\d+))?$&quot;</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
     <span class="n">mod_name</span><span class="p">,</span> <span class="n">attr_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
     <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
     <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fn</span>
 
 
-<span class="k">class</span> <span class="nc">EnvSpec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">parse_env_id</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Parse environment ID string format.</span>
+
+<span class="sd">    This format is true today, but it&#39;s *not* an official spec.</span>
+<span class="sd">    [username/](env-name)-v(version)    env-name is group 1, version is group 2</span>
+
+<span class="sd">    2016-10-31: We&#39;re experimentally expanding the environment ID format</span>
+<span class="sd">    to include an optional username.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">ENV_ID_RE</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Malformed environment ID: </span><span class="si">{id}</span><span class="s2">.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(Currently all IDs must be of the form </span><span class="si">{ENV_ID_RE}</span><span class="s2">.)&quot;</span>
+        <span class="p">)</span>
+    <span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;namespace&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">EnvSpec</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A specification for a particular instance of the environment. Used</span>
 <span class="sd">    to register the parameters for official evaluations.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        id (str): The official environment ID</span>
-<span class="sd">        entry_point (Optional[str]): The Python entrypoint of the environment class (e.g. module.name:Class)</span>
-<span class="sd">        reward_threshold (Optional[int]): The reward threshold before the task is considered solved</span>
-<span class="sd">        nondeterministic (bool): Whether this environment is non-deterministic even after seeding</span>
-<span class="sd">        max_episode_steps (Optional[int]): The maximum number of steps that an episode can consist of</span>
-<span class="sd">        order_enforce (Optional[int]): Whether to wrap the environment in an orderEnforcing wrapper</span>
-<span class="sd">        kwargs (dict): The kwargs to pass to the environment class</span>
+<span class="sd">        id_requested: The official environment ID</span>
+<span class="sd">        entry_point: The Python entrypoint of the environment class (e.g. module.name:Class)</span>
+<span class="sd">        reward_threshold: The reward threshold before the task is considered solved</span>
+<span class="sd">        nondeterministic: Whether this environment is non-deterministic even after seeding</span>
+<span class="sd">        max_episode_steps: The maximum number of steps that an episode can consist of</span>
+<span class="sd">        order_enforce: Whether to wrap the environment in an orderEnforcing wrapper</span>
+<span class="sd">        kwargs: The kwargs to pass to the environment class</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="nb">id</span><span class="p">,</span>
-        <span class="n">entry_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">reward_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">nondeterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">max_episode_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">order_enforce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span> <span class="o">=</span> <span class="n">entry_point</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reward_threshold</span> <span class="o">=</span> <span class="n">reward_threshold</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nondeterministic</span> <span class="o">=</span> <span class="n">nondeterministic</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">=</span> <span class="n">max_episode_steps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_enforce</span> <span class="o">=</span> <span class="n">order_enforce</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">kwargs</span>
+    <span class="n">id_requested</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">entry_point</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">reward_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">nondeterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">max_episode_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">order_enforce</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">namespace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">match</span> <span class="o">=</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
-                <span class="s2">&quot;Attempted to register malformed environment ID: </span><span class="si">{}</span><span class="s2">. (Currently all IDs must be of the form </span><span class="si">{}</span><span class="s2">.)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="nb">id</span><span class="p">,</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">pattern</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_env_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_requested</span><span class="p">):</span>
+        <span class="c1"># Initialize namespace, name, version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="n">id_requested</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        `id_requested` is an InitVar meaning it&#39;s only used at initialization to parse</span>
+<span class="sd">        the namespace, name, and version. This means we can define the dynamic</span>
+<span class="sd">        property `id` to construct the `id` from the parsed fields. This has the</span>
+<span class="sd">        benefit that we update the fields and obtain a dynamic id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">namespace</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.namespace}</span><span class="s2">/&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;-v</span><span class="si">{self.version}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{namespace}{name}{version}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Instantiates an instance of the environment with appropriate kwargs&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
-                <span class="s2">&quot;Attempting to make deprecated env </span><span class="si">{}</span><span class="s2">. (HINT: is there a newer registered version of this env?)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
-                <span class="p">)</span>
+                <span class="sa">f</span><span class="s2">&quot;Attempting to make deprecated env </span><span class="si">{self.id}</span><span class="s2">. &quot;</span>
+                <span class="s2">&quot;(HINT: is there a newer registered version of this env?)&quot;</span>
             <span class="p">)</span>
-
-        <span class="n">_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">):</span>
@@ -171,24 +221,330 @@
 
         <span class="c1"># Make the environment aware of which spec it came from.</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">spec</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">_kwargs</span>
+        <span class="n">spec</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">_kwargs</span>
         <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_enforce</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">gym.wrappers.order_enforcing</span> <span class="kn">import</span> <span class="n">OrderEnforcing</span>
+
+            <span class="n">env</span> <span class="o">=</span> <span class="n">OrderEnforcing</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;expected spec to be set to the unwrapped env.&quot;</span>
         <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">gym.wrappers.time_limit</span> <span class="kn">import</span> <span class="n">TimeLimit</span>
 
             <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_enforce</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">gym.wrappers.order_enforcing</span> <span class="kn">import</span> <span class="n">OrderEnforcing</span>
-
-                <span class="n">env</span> <span class="o">=</span> <span class="n">OrderEnforcing</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;EnvSpec(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">EnvSpecTree</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The EnvSpecTree provides a dict-like mapping object</span>
+<span class="sd">    from environment IDs to specifications.</span>
+
+<span class="sd">    The EnvSpecTree is backed by a tree-like structure.</span>
+<span class="sd">    The environment ID format is [{namespace}/]{name}-v{version}.</span>
+
+<span class="sd">    The tree has multiple root nodes corresponding to a namespace.</span>
+<span class="sd">    The children of a namespace node corresponds to the environment name.</span>
+<span class="sd">    Furthermore, each name has a mapping from versions to specifications.</span>
+<span class="sd">    It looks like the following,</span>
+
+<span class="sd">    {</span>
+<span class="sd">        None: {</span>
+<span class="sd">            MountainCar: {</span>
+<span class="sd">                0: EnvSpec(...),</span>
+<span class="sd">                1: EnvSpec(...)</span>
+<span class="sd">            }</span>
+<span class="sd">        },</span>
+<span class="sd">        ALE: {</span>
+<span class="sd">            Tetris: {</span>
+<span class="sd">                5: EnvSpec(...)</span>
+<span class="sd">            }</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+
+<span class="sd">    The tree-structure isn&#39;t user-facing and the EnvSpecTree will act</span>
+<span class="sd">    like a dictionary. For example, to lookup an environment ID:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        specs = EnvSpecTree()</span>
+
+<span class="sd">        specs[&quot;My/Env-v0&quot;] = EnvSpec(...)</span>
+<span class="sd">        assert specs[&quot;My/Env-v0&quot;] == EnvSpec(...)</span>
+
+<span class="sd">        assert specs.tree[&quot;My&quot;][&quot;Env&quot;][&quot;0&quot;] == specs[&quot;My/Env-v0&quot;]</span>
+<span class="sd">        ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initialize the tree as a nested sequence of defaultdicts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_length</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">versions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">EnvSpec</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the versions associated with a namespace and name.</span>
+
+<span class="sd">        Note: This function takes into account environment relocations.</span>
+<span class="sd">        For example, `versions(None, &quot;Breakout&quot;)` will return,</span>
+<span class="sd">            ```</span>
+<span class="sd">            [</span>
+<span class="sd">                EnvSpec(namespace=None, name=&quot;Breakout&quot;, version=0),</span>
+<span class="sd">                EnvSpec(namespace=None, name=&quot;Breakout&quot;, version=4),</span>
+<span class="sd">                EnvSpec(namespace=&quot;ALE&quot;, name=&quot;Breakout&quot;, version=5)</span>
+<span class="sd">            ]</span>
+<span class="sd">            ```</span>
+<span class="sd">        Notice the last environment which is outside of the requested namespace.</span>
+<span class="sd">        This only applies to environments which are in the `internal_env_relocation_map`.</span>
+<span class="sd">        See `gym/envs/__relocated__.py` for more info.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_name_exists</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">versions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">internal_env_relocation_map</span><span class="p">:</span>
+            <span class="n">relocated_namespace</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">internal_env_relocation_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_assert_name_exists</span><span class="p">(</span><span class="n">relocated_namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="n">versions</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">relocated_namespace</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">except</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">versions</span>
+
+    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all the environment names associated with a namespace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_namespace_exists</span><span class="p">(</span><span class="n">namespace</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">namespaces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all the namespaces contained in the tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="c1"># Iterate through the structure and generate the IDs contained in the tree.</span>
+        <span class="k">for</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">versions</span> <span class="ow">in</span> <span class="n">names</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">version</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">versions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">namespace</span> <span class="o">==</span> <span class="n">namespace</span>
+                    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span>
+                    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">version</span>
+                    <span class="k">yield</span> <span class="n">spec</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="k">def</span> <span class="nf">_assert_namespace_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">namespace</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Namespace `</span><span class="si">{namespace}</span><span class="s2">` does not exist.&quot;</span>
+        <span class="k">if</span> <span class="n">namespace</span><span class="p">:</span>
+            <span class="n">suggestions</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespaces</span><span class="p">(),</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">suggestions</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; Did you mean: `</span><span class="si">{suggestions[0]}</span><span class="s2">`?&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; Have you installed the proper package for `</span><span class="si">{namespace}</span><span class="s2">`?&quot;</span>
+        <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">NamespaceNotFound</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_assert_name_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_namespace_exists</span><span class="p">(</span><span class="n">namespace</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">]:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">internal_env_relocation_map</span><span class="p">:</span>
+            <span class="n">relocated_namespace</span><span class="p">,</span> <span class="n">relocated_package</span> <span class="o">=</span> <span class="n">internal_env_relocation_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The environment `</span><span class="si">{name}</span><span class="s2">` has been moved out of Gym to the package `</span><span class="si">{relocated_package}</span><span class="s2">`.&quot;</span>
+
+            <span class="c1"># Check if the package is installed</span>
+            <span class="c1"># If not instruct the user to install the package and then how to instantiate the env</span>
+            <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">relocated_package</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; Please install the package via `pip install </span><span class="si">{relocated_package}</span><span class="s2">`.&quot;</span>
+
+            <span class="c1"># Otherwise the user should be able to instantiate the environment directly</span>
+            <span class="k">if</span> <span class="n">namespace</span> <span class="o">!=</span> <span class="n">relocated_namespace</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; You can instantiate the new namespaced environment as `</span><span class="si">{relocated_namespace}</span><span class="s2">/</span><span class="si">{name}</span><span class="s2">`.&quot;</span>
+        <span class="c1"># If the environment hasn&#39;t been relocated we&#39;ll construct a generic error message</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Environment `</span><span class="si">{name}</span><span class="s2">` doesn&#39;t exist&quot;</span>
+            <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; in namespace `</span><span class="si">{namespace}</span><span class="s2">`&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;.&quot;</span>
+            <span class="n">suggestions</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="n">namespace</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">suggestions</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; Did you mean: `</span><span class="si">{suggestions[0]}</span><span class="s2">`?&quot;</span>
+        <span class="c1"># Throw the error</span>
+        <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">NameNotFound</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_assert_version_exists</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_name_exists</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">]:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Construct the appropriate exception.</span>
+        <span class="c1"># If the version is less than the latest version</span>
+        <span class="c1"># then we throw an error.DeprecatedEnv exception.</span>
+        <span class="c1"># Otherwise we throw error.VersionNotFound.</span>
+        <span class="n">versions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">versions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="n">versioned_specs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="n">versions</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="n">default_spec</span> <span class="o">=</span> <span class="n">versions</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">versions</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">versioned_specs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">default_spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="n">latest_spec</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="n">versioned_specs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_spec</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Environment version `v</span><span class="si">{version}</span><span class="s2">` for `&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The default version for `&quot;</span>
+
+        <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{namespace}</span><span class="s2">/&quot;</span>
+        <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{name}</span><span class="s2">` &quot;</span>
+
+        <span class="c1"># If this version doesn&#39;t exist but there exists a newer non-default</span>
+        <span class="c1"># version we should warn the user this version is deprecated.</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">latest_spec</span>
+            <span class="ow">and</span> <span class="n">latest_spec</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">version</span> <span class="o">&lt;</span> <span class="n">latest_spec</span><span class="o">.</span><span class="n">version</span>
+        <span class="p">):</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;is deprecated. &quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Please use the latest version `v</span><span class="si">{latest_spec.version}</span><span class="s2">`.&quot;</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">DeprecatedEnv</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="c1"># If this version doesn&#39;t exist and there only exists a default version</span>
+        <span class="k">elif</span> <span class="n">latest_spec</span> <span class="ow">and</span> <span class="n">latest_spec</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;is deprecated. &quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{latest_spec.name}</span><span class="s2">` only provides the default version. &quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;You can initialize the environment as `gym.make(&quot;</span><span class="si">{latest_spec.id}</span><span class="s1">&quot;)`.&#39;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">DeprecatedEnv</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="c1"># Otherwise we&#39;ve asked for a version that doesn&#39;t exist.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;could not be found. `</span><span class="si">{name}</span><span class="s2">` provides &quot;</span>
+
+            <span class="k">if</span> <span class="n">default_spec</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;a default version&quot;</span>
+                <span class="k">if</span> <span class="n">versioned_specs</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot; and &quot;</span>
+            <span class="k">if</span> <span class="n">versioned_specs</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;the versioned environments: [ &quot;</span>
+                <span class="n">versioned_specs_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                    <span class="n">versioned_specs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span>
+                <span class="p">)</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;`v</span><span class="si">{spec.version}</span><span class="s2">`&quot;</span><span class="p">,</span> <span class="n">versioned_specs_sorted</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot; ]&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;.&quot;</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">VersionNotFound</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EnvSpec</span><span class="p">:</span>
+        <span class="c1"># Get an item from the tree.</span>
+        <span class="c1"># We first parse the components so we can look up the</span>
+        <span class="c1"># appropriate environment ID.</span>
+        <span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_version_exists</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="n">version</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">EnvSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Insert an item into the tree.</span>
+        <span class="c1"># First we parse the components to get the path</span>
+        <span class="c1"># for insertion.</span>
+        <span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="n">version</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="c1"># Increase the size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_length</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Delete an item from the tree.</span>
+        <span class="c1"># First parse the components so we can follow the</span>
+        <span class="c1"># path to delete.</span>
+        <span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_version_exists</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+
+        <span class="c1"># Remove the envspec with this version.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+        <span class="c1"># Remove the name if it&#39;s empty.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># Remove the namespace if it&#39;s empty.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">namespace</span><span class="p">)</span>
+        <span class="c1"># Decrease the size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_length</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># Check if the tree contains a path for this key.</span>
+        <span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">namespace</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span>
+            <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="n">version</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="n">namespace</span><span class="p">][</span><span class="n">name</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Construct a tree-like representation structure</span>
+        <span class="c1"># so we can easily look at the contents of the tree.</span>
+        <span class="n">tree_repr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># For each namespace we&#39;ll iterate over the names</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="c1"># Insert a separator if we&#39;re between depths</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tree_repr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">tree_repr</span> <span class="o">+=</span> <span class="s2">&quot;│</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="c1"># if this isn&#39;t the root we&#39;ll display the namespace</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
+                <span class="n">tree_repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;├──{str(namespace)}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="c1"># Construct the namespace string so we can print this for</span>
+            <span class="c1"># our children.</span>
+            <span class="n">namespace</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{namespace}</span><span class="s2">/&quot;</span> <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">name_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">versions</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="c1"># If this isn&#39;t the root we&#39;ll have to increase our</span>
+                <span class="c1"># depth, i.e., insert some space</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
+                    <span class="n">tree_repr</span> <span class="o">+=</span> <span class="s2">&quot;│   &quot;</span>
+                <span class="c1"># If this is the last item make sure we use the</span>
+                <span class="c1"># termination character. Otherwise use the nested</span>
+                <span class="c1"># character.</span>
+                <span class="k">if</span> <span class="n">name_idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">tree_repr</span> <span class="o">+=</span> <span class="s2">&quot;└──&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tree_repr</span> <span class="o">+=</span> <span class="s2">&quot;├──&quot;</span>
+                <span class="c1"># Print the namespace and the name</span>
+                <span class="c1"># and get ready to print the versions.</span>
+                <span class="n">tree_repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{namespace}{name}</span><span class="s2">: [ &quot;</span>
+                <span class="c1"># Print each version comma separated</span>
+                <span class="k">for</span> <span class="n">version_idx</span><span class="p">,</span> <span class="n">version</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">versions</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">tree_repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{version}</span><span class="s2">&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tree_repr</span> <span class="o">+=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="k">if</span> <span class="n">version_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">versions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">tree_repr</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span>
+                <span class="n">tree_repr</span> <span class="o">+=</span> <span class="s2">&quot; ]</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">tree_repr</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Return the length of the container</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length</span>
 
 
-<span class="k">class</span> <span class="nc">EnvRegistry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">EnvRegistry</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Register an env by ID. IDs remain stable over time and are</span>
 <span class="sd">    guaranteed to resolve to the same environment dynamics (or be</span>
 <span class="sd">    desupported). The goal is that results on a particular environment</span>
@@ -197,146 +553,233 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span> <span class="o">=</span> <span class="n">EnvSpecTree</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making new env: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making new env: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># We need to manually parse the ID so we can check</span>
+        <span class="c1"># the version without error-ing out in self.spec</span>
+        <span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Get all versions of this spec.</span>
+        <span class="n">versions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">versions</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># We check what the latest version of the environment is and display</span>
+        <span class="c1"># a warning if the user is attempting to initialize an older version</span>
+        <span class="c1"># or an unversioned one.</span>
+        <span class="n">latest_versioned_spec</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">versions</span><span class="p">),</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span><span class="p">),</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">latest_versioned_spec</span>
+            <span class="ow">and</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">version</span> <span class="o">&lt;</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">latest_versioned_spec</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The environment </span><span class="si">{path}</span><span class="s2"> is out of date. You should consider &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;upgrading to version `v</span><span class="si">{latest_versioned_spec.version}</span><span class="s2">` &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;with the environment ID `</span><span class="si">{latest_versioned_spec.id}</span><span class="s2">`.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">latest_versioned_spec</span> <span class="ow">and</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Using the latest versioned environment `</span><span class="si">{latest_versioned_spec.id}</span><span class="s2">` &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;instead of the unversioned environment `</span><span class="si">{path}</span><span class="s2">`&quot;</span>
+            <span class="p">)</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">latest_versioned_spec</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="c1"># Lookup our path</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">env</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">env</span>
+        <span class="c1"># Construct the environment</span>
+        <span class="k">return</span> <span class="n">spec</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EnvSpec</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
             <span class="n">mod_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ModuleNotFoundError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
-                    <span class="s2">&quot;A module (</span><span class="si">{}</span><span class="s2">) was specified for the environment but was not found, make sure the package is installed with `pip install` before calling `gym.make()`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">mod_name</span>
-                    <span class="p">)</span>
+                    <span class="sa">f</span><span class="s2">&quot;A module (</span><span class="si">{mod_name}</span><span class="s2">) was specified for the environment but was not found, &quot;</span>
+                    <span class="s2">&quot;make sure the package is installed with `pip install` before calling `gym.make()`&quot;</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="n">path</span>
 
-        <span class="n">match</span> <span class="o">=</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
-                <span class="s2">&quot;Attempted to look up malformed environment ID: </span><span class="si">{}</span><span class="s2">. (Currently all IDs must be of the form </span><span class="si">{}</span><span class="s2">.)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="nb">id</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">env_id_re</span><span class="o">.</span><span class="n">pattern</span>
+        <span class="c1"># We can go ahead and return the env_spec.</span>
+        <span class="c1"># The EnvSpecTree will take care of any exceptions.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">EnvSpec</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Custom namespace `</span><span class="si">{spec.namespace}</span><span class="s2">` is being overridden &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;by namespace `</span><span class="si">{self._ns}</span><span class="s2">`. If you are developing a &quot;</span>
+                    <span class="s2">&quot;plugin you shouldn&#39;t specify a namespace in `register` &quot;</span>
+                    <span class="s2">&quot;calls. The namespace is specified through the &quot;</span>
+                    <span class="s2">&quot;entry point package metadata.&quot;</span>
                 <span class="p">)</span>
-            <span class="p">)</span>
+            <span class="c1"># Replace namespace</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">namespace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="c1"># Parse the env name and check to see if it matches the non-version</span>
-            <span class="c1"># part of a valid env (could also check the exact number here)</span>
-            <span class="n">env_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">matching_envs</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">valid_env_name</span>
-                <span class="k">for</span> <span class="n">valid_env_name</span><span class="p">,</span> <span class="n">valid_env_spec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">env_name</span> <span class="o">==</span> <span class="n">valid_env_spec</span><span class="o">.</span><span class="n">_env_name</span>
-            <span class="p">]</span>
-            <span class="n">algorithmic_envs</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s2">&quot;Copy&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;RepeatCopy&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;DuplicatedInput&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Reverse&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ReversedAdiiton&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ReversedAddition3&quot;</span><span class="p">,</span>
-            <span class="p">]</span>
-            <span class="n">toytext_envs</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s2">&quot;KellyCoinflip&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;KellyCoinflipGeneralized&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;NChain&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Roulette&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;GuessingGame&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;HotterColder&quot;</span><span class="p">,</span>
-            <span class="p">]</span>
-            <span class="k">if</span> <span class="n">matching_envs</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">DeprecatedEnv</span><span class="p">(</span>
-                    <span class="s2">&quot;Env </span><span class="si">{}</span><span class="s2"> not found (valid versions include </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="nb">id</span><span class="p">,</span> <span class="n">matching_envs</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">algorithmic_envs</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span>
-                    <span class="s2">&quot;Algorithmic environment </span><span class="si">{}</span><span class="s2"> has been moved out of Gym. Install it via `pip install gym-algorithmic` and add `import gym_algorithmic` before using it.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="nb">id</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">toytext_envs</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span>
-                    <span class="s2">&quot;Toytext environment </span><span class="si">{}</span><span class="s2"> has been moved out of Gym. Install it via `pip install gym-legacy-toytext` and add `import gym_toytext` before using it.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="nb">id</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">UnregisteredEnv</span><span class="p">(</span><span class="s2">&quot;No registered env with id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+            <span class="c1"># Get all versions of this spec.</span>
+            <span class="n">versions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="o">.</span><span class="n">versions</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="nb">id</span><span class="p">:</span>
-                <span class="n">namespace</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Custom namespace &#39;</span><span class="si">{namespace}</span><span class="s2">&#39; is being overrode by namespace &#39;</span><span class="si">{self._ns}</span><span class="s2">&#39;. &quot;</span>
-                    <span class="s2">&quot;If you are developing a plugin you shouldn&#39;t specify a namespace in `register` calls. &quot;</span>
-                    <span class="s2">&quot;The namespace is specified through the entry point key.&quot;</span>
+            <span class="c1"># We raise an error if the user is attempting to initialize an</span>
+            <span class="c1"># unversioned environment when a versioned one already exists.</span>
+            <span class="n">latest_versioned_spec</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="n">versions</span><span class="p">),</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span><span class="p">),</span>
+                <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">unversioned_spec</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+                <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">versions</span><span class="p">),</span> <span class="kc">None</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Trying to register an unversioned spec when versioned spec exists</span>
+            <span class="k">if</span> <span class="n">unversioned_spec</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;Can&#39;t register the versioned environment &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{spec.id}</span><span class="s2">` when the unversioned environment &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{unversioned_spec.id}</span><span class="s2">` of the same name already exists.&quot;</span>
                 <span class="p">)</span>
-            <span class="nb">id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self._ns}</span><span class="s2">/</span><span class="si">{id}</span><span class="s2">&quot;</span>
-        <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Overriding environment </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">EnvSpec</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">RegistrationError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">latest_versioned_spec</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Can&#39;t register the unversioned environment `</span><span class="si">{spec.id}</span><span class="s2">` &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;when version `</span><span class="si">{latest_versioned_spec.version}</span><span class="s2">` &quot;</span>
+                    <span class="s2">&quot;of the same name already exists. Note: the default &quot;</span>
+                    <span class="s2">&quot;behavior is that the `gym.make` with the unversioned &quot;</span>
+                    <span class="s2">&quot;environment will return the latest versioned environment.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">RegistrationError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="c1"># We might not find this namespace or name in which case</span>
+        <span class="c1"># we should continue to register the environment.</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">NamespaceNotFound</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">NameNotFound</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overriding environment </span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">[</span><span class="n">spec</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span>
 
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-    <span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ns</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ns</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="n">ns</span>
         <span class="k">yield</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ns</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_specs</span><span class="p">)</span>
 
 
 <span class="c1"># Have a global registry</span>
 <span class="n">registry</span> <span class="o">=</span> <span class="n">EnvRegistry</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="make"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.utils.make">[docs]</a><span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="c1"># fmt: off</span>
+<span class="c1"># Continuous</span>
+<span class="c1"># ----------------------------------------</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;CartPole-v0&quot;</span><span class="p">,</span> <span class="s2">&quot;CartPole-v1&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;MountainCar-v0&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;MountainCarContinuous-v0&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Pendulum-v1&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Acrobot-v1&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="c1"># Box2d</span>
+<span class="c1"># ----------------------------------------</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;LunarLander-v2&quot;</span><span class="p">,</span> <span class="s2">&quot;LunarLanderContinuous-v2&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;BipedalWalker-v3&quot;</span><span class="p">,</span> <span class="s2">&quot;BipedalWalkerHardcore-v3&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;CarRacing-v0&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]]:</span> <span class="o">...</span>
+
+<span class="c1"># Toy Text</span>
+<span class="c1"># ----------------------------------------</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Blackjack-v1&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;FrozenLake-v1&quot;</span><span class="p">,</span> <span class="s2">&quot;FrozenLake8x8-v1&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;CliffWalking-v0&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Taxi-v3&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="c1"># Mujoco</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
+    <span class="s2">&quot;Reacher-v2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pusher-v2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Thrower-v2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Striker-v2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvertedPendulum-v2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvertedDoublePendulum-v2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HalfCheetah-v2&quot;</span><span class="p">,</span> <span class="s2">&quot;HalfCheetah-v3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Hopper-v2&quot;</span><span class="p">,</span> <span class="s2">&quot;Hopper-v3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Swimmer-v2&quot;</span><span class="p">,</span> <span class="s2">&quot;Swimmer-v3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Walker2d-v2&quot;</span><span class="p">,</span> <span class="s2">&quot;Walker2d-v3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ant-v2&quot;</span>
+<span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="c1"># ----------------------------------------</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Env&quot;</span><span class="p">:</span> <span class="o">...</span>
+<span class="c1"># fmt: on</span>
+<div class="viewcode-block" id="make"><a class="viewcode-back" href="../../../parts/utils.html#gym_electric_motor.utils.make">[docs]</a><span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Env&quot;</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EnvSpec</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
 
 <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">namespace</span><span class="p">(</span><span class="n">ns</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">with</span> <span class="n">registry</span><span class="o">.</span><span class="n">namespace</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
         <span class="k">yield</span>
 
 
-<span class="k">def</span> <span class="nf">load_env_plugins</span><span class="p">(</span><span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;gym.envs&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">load_env_plugins</span><span class="p">(</span><span class="n">entry_point</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gym.envs&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># Load third-party environments</span>
-    <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry_point</span><span class="p">,</span> <span class="p">[]):</span>
+    <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">entry_point</span><span class="p">):</span>
         <span class="c1"># Python 3.8 doesn&#39;t support plugin.module, plugin.attr</span>
         <span class="c1"># So we&#39;ll have to try and parse this ourselves</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">plugin</span><span class="o">.</span><span class="n">attr</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">plugin</span><span class="o">.</span><span class="n">attr</span>  <span class="c1"># type: ignore  ## error: Cannot access member &quot;attr&quot; for type &quot;EntryPoint&quot;</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
                 <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span>
@@ -344,12 +787,18 @@
                 <span class="p">)</span>
 
         <span class="n">context</span> <span class="o">=</span> <span class="n">namespace</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__internal__&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">plugin_internal_whitelist</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">):</span>
+            <span class="c1"># `__internal__` is an artifact of the plugin system when</span>
+            <span class="c1"># the root namespace had an allow-list. The allow-list is now</span>
+            <span class="c1"># removed and plugins can register environments in the root</span>
+            <span class="c1"># namespace with the `__root__` magic key.</span>
+            <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__root__&quot;</span> <span class="ow">or</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__internal__&quot;</span><span class="p">:</span>
                 <span class="n">context</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Trying to register an internal environment when `</span><span class="si">{module}</span><span class="s2">` is not in the whitelist&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;The environment namespace magic key `</span><span class="si">{plugin.name}</span><span class="s2">` is unsupported. &quot;</span>
+                    <span class="s2">&quot;To register an environment at the root namespace you should specify &quot;</span>
+                    <span class="s2">&quot;the `__root__` namespace.&quot;</span>
                 <span class="p">)</span>
 
         <span class="k">with</span> <span class="n">context</span><span class="p">:</span>

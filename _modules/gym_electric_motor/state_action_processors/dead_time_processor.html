@@ -136,7 +136,8 @@
                     <span class="sa">f</span><span class="s1">&#39;Action Space </span><span class="si">{action_space}</span><span class="s1"> of type {type(action_space)} unsupported.&#39;</span>
                     <span class="s1">&#39;Only Discrete / MultiDiscrete and Box allowed for the dead time processor.&#39;</span>
                 <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_actions</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="n">reset_action</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_deque</span><span class="o">.</span><span class="n">maxlen</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_actions</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="n">reset_action</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_deque</span><span class="o">.</span><span class="n">maxlen</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="DeadTimeProcessor.reset"><a class="viewcode-back" href="../../../parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resets the processor and the inner physical system for a new episode.</span>
