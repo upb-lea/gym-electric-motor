@@ -563,17 +563,19 @@ class PhysicalSystem:
         """
         return NotImplementedError
 
-    def __init__(self, action_space, state_space, state_names, tau):
+    def __init__(self, action_space, state_space, state_names, tau, n_parallel_envs=1):
         """
         Args:
             action_space(gym.Space): The set of allowed actions on the system.
             state_space(gym.Space): The set of possible systems states.
             state_names(ndarray(str)): The names of the systems states
             tau(float): The systems simulation time interval.
+            n_parallel_envs(int): The amount of parallel environments (batch-size)
         """
         self._action_space = action_space
         self._state_space = state_space
         self._state_names = state_names
+        self._n_prll_envs = n_parallel_envs
         self._state_positions = {key: index for index, key in enumerate(self._state_names)}
         self._tau = tau
         self._k = 0

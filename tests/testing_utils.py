@@ -244,10 +244,10 @@ class DummyPhysicalSystem(PhysicalSystem):
         """
         return self._nominal_values
 
-    def __init__(self, state_length=1, state_names='dummy_state', **kwargs):
+    def __init__(self, state_length=1, state_names='dummy_state', n_parallel_envs=3, **kwargs):
         super().__init__(
             Box(-1, 1, shape=(1,), dtype=np.float64), Box(-1, 1, shape=(state_length,), dtype=np.float64),
-            [f'{state_names}_{i}' for i in range(state_length)], 1
+            [f'{state_names}_{i}' for i in range(state_length)], 1, n_parallel_envs=n_parallel_envs
         )
         self._limits = np.array([10 * (i + 1) for i in range(state_length)])
         self._nominal_values = np.array([(i + 1) for i in range(state_length)])
@@ -257,12 +257,13 @@ class DummyPhysicalSystem(PhysicalSystem):
         self.kwargs = kwargs
 
     def reset(self, initial_state=None):
-        self.state = np.array([0.] * len(self._state_names))
+        self.state = np.zeros((self._n_prll_envs, len(self._state_names)), dtype=np.float32)
         return self.state
 
     def simulate(self, action):
+        action = action.reshape(-1, 1)  # column vector
         self.action = action
-        self.state = np.array([action * (i + 1) for i in range(len(self._state_names))])
+        self.state = action * (1 + np.arange(len(self._state_names)).reshape(1, -1))
         return self.state
 
     def close(self):
@@ -395,10 +396,10 @@ class DummyElectricMotor(ElectricMotor):
         return super().reset(state_space, state_positions)
 
     def torque(self, currents):
-        return np.prod(currents)
+        return np.prod(currents, axis=1)
 
     def i_in(self, state):
-        return [np.sum(state)]
+        return [np.sum(state, axis=1)]
 
     def electrical_jacobian(self, state, u_in, omega, *_):
         return self.electrical_jac_return

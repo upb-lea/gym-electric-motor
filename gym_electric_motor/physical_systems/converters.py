@@ -118,10 +118,10 @@ class NoConverter(PowerElectronicConverter):
     action_space = Box(low=np.array([]), high=np.array([]), dtype=np.float64)
 
     def i_sup(self, i_out):
-        return i_out[0]
+        return i_out[:, 0]
 
     def convert(self, i_out, t):
-        return [1]
+        return np.ones_like(i_out)
 
 class ContDynamicallyAveragedConverter(PowerElectronicConverter):
     """
@@ -143,7 +143,7 @@ class ContDynamicallyAveragedConverter(PowerElectronicConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return [min(max(self._convert(i_out, t) - self._interlock(i_out, t), self.voltages.low[0]), self.voltages.high[0])]
+        return np.clip(self._convert(i_out, t) - self._interlock(i_out, t), a_min=self.voltages.low[0], a_max=self.voltages.high[0])
 
     def _convert(self, i_in, t):
         """
@@ -169,7 +169,7 @@ class ContDynamicallyAveragedConverter(PowerElectronicConverter):
         Args:
             i_in(list(float)): list of all currents flowing into the motor.
         """
-        return np.sign(i_in[0]) / self._tau * self._interlocking_time
+        return np.sign(i_in[:, 0]) / self._tau * self._interlocking_time
 
 
 class FiniteConverter(PowerElectronicConverter):
@@ -225,11 +225,13 @@ class FiniteOneQuadrantConverter(FiniteConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return [self._current_action if i_out[0] >= 0 else 1]
+        ret = np.ones(i_out.shape[0])
+        ret[i_out[:, 0] >= 0] = self._current_action
+        return [ret]
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return i_out[0] if self._current_action == 1 else 0
+        return i_out[:, 0] if self._current_action == 1 else np.zeros(i_out.shape[0])
 
 
 class FiniteTwoQuadrantConverter(FiniteConverter):
@@ -262,25 +264,22 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
         else:
             self._switching_state = self._switching_pattern[0]
         if self._switching_state == 0:
-            if i_out[0] < 0:
-                return [1]
-            elif i_out[0] >= 0:
-                return [0.0]
+            return [(i_out[:, 0] < 0).astype(np.float)]
         elif self._switching_state == 1:
-            return [1]
+            return [np.ones(i_out.shape[0], dtype=np.float)]
         elif self._switching_state == 2:
-            return [0.0]
+            return [np.zeros(i_out.shape[0], dtype=np.float)]
         else:
             raise Exception('Invalid switching state of the converter')
 
     def i_sup(self, i_out):
         # Docstring in base class
         if self._switching_state == 0:
-            return i_out[0] if i_out[0] < 0 else 0
+            return np.clip(i_out[:, 0], a_min=None, a_max=0)
         elif self._switching_state == 1:
-            return i_out[0]
+            return i_out[:, 0]
         elif self._switching_state == 2:
-            return 0
+            return np.zeros(i_out.shape[0])
         else:
             raise Exception('Invalid switching state of the converter')
 
@@ -334,13 +333,14 @@ class FiniteFourQuadrantConverter(FiniteConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return [self._subconverters[0].convert(i_out, t)[0] - self._subconverters[1].convert([-i_out[0]], t)[0]]
+        return [self._subconverters[0].convert(i_out, t)[0] - self._subconverters[1].convert([-i_out[:, 0]], t)[0]]
 
     def set_action(self, action, t):
         # Docstring in base class
-        assert self.action_space.contains(action), \
-            f"The selected action {action} is not a valid element of the action space {self.action_space}."
+        assert all(self.action_space.contains(a) for a in action), \
+            f"The selected action {action} contains invalid elements for the action space {self.action_space}."
         times = []
+        # TODO: Further work for parallel envs
         action0 = [1, 1, 2, 2][action]
         action1 = [1, 2, 1, 2][action]
         times += self._subconverters[0].set_action(action0, t)

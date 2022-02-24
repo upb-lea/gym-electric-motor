@@ -208,8 +208,8 @@ def system(t, state, u):
     :param u: input
     :return: derivative of the current state
     """
-    x = state[0]
-    y = state[1]
+    x = state[:, 0]
+    y = state[:, 1]
     result = np.array([3 * x + 5 * y - 2 * x * y + 3 * x ** 2 - 0.5 * y ** 2,
                        10 - 0.6 * x + 0.9 * y ** 2 - 3 * x ** 2 * y + u])
     return result
@@ -223,8 +223,8 @@ def jacobian(t, state, u):
     :param u: input
     :return: jacobian matrix
     """
-    x = state[0]
-    y = state[1]
+    x = state[:, 0]
+    y = state[:, 1]
     result = np.array([[3 - 2 * y + 6 * x, 5 - 2 * x - y], [-0.6 - 6 * x * y, 1.8 * y - 3 * x ** 2]])
     return result
 
