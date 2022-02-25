@@ -97,7 +97,11 @@ if __name__ == '__main__':
 
     # Change the motor nominal values
     nominal_values = {key: 0.7 * limit for key, limit in limit_values.items()}
-    state_action_processors = (DeadTimeProcessor(), DqToAbcActionProcessor.make('PMSM'))
+    state_action_processors = (
+        DeadTimeProcessor(),
+        DqToAbcActionProcessor.make('PMSM'),
+    )
+    
     # Create the environment
     env = gem.make(
         # Choose the permanent magnet synchronous motor with continuous-control-set
@@ -114,7 +118,7 @@ if __name__ == '__main__':
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
 
         # Define which numerical solver is to be used for the simulation
-        ode_solver='scipy.solve_ivp',
+        ode_solver='scipy.ode',
 
         # Pass the previously defined reference generator
         reference_generator=rg,

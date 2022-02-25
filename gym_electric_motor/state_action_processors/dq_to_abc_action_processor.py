@@ -21,7 +21,7 @@ class DqToAbcActionProcessor(StateActionProcessor):
         Returns:
             numpy.ndarray[float]: The action in the abc-space
         """
-        return ps.ThreePhaseMotor.t_32(ps.ThreePhaseMotor.q_inv(action, angle))
+        return ps.ThreePhaseMotor.t_32(ps.ThreePhaseMotor.q(action, angle))
 
     _registry = {}
 
