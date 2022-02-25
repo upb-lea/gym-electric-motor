@@ -137,6 +137,7 @@ class ElectricMotor(RandomComponent):
         self._initial_limits.update(initial_limits)
         # preventing wrong user input for the basic case
         assert isinstance(self._initializer, dict), 'wrong initializer'
+        self.n_prll_envs = 1
 
     def electrical_ode(self, state, u_in, omega, *_):
         """Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.
@@ -171,7 +172,7 @@ class ElectricMotor(RandomComponent):
         """
         pass
 
-    def initialize(self, state_space, state_positions, **__):
+    def initialize(self, state_space, state_positions, n_prll_envs=1, **__):
         """
         Initializes given state values. Values can be given as a constant or
         sampled random out of a statistical distribution. Initial value is in
@@ -181,7 +182,9 @@ class ElectricMotor(RandomComponent):
         Args:
             state_space(gym.Box): normalized state space boundaries (given by physical system)
             state_positions(dict): indices of system states (given by physical system)
+            n_prll_envs(int): Number of parallel environments.
         """
+        self.n_prll_envs = n_prll_envs
         # for organization purposes
         interval = self._initializer['interval']
         random_dist = self._initializer['random_init']
@@ -191,8 +194,7 @@ class ElectricMotor(RandomComponent):
             self._initial_states.update(self._initializer['states'])
 
         # different limits for InductionMotor
-        if any(map(lambda state: state in self._initial_states.keys(),
-                   ['psi_ralpha', 'psi_rbeta'])):
+        if 'psi_ralpha' in self._initial_states or 'psi_rbeta' in self._initial_states:
             nominal_values_ = [self._initial_limits[state]
                                for state in self._initial_states]
             upper_bound = np.asarray(np.abs(nominal_values_), dtype=float)
@@ -231,11 +233,11 @@ class ElectricMotor(RandomComponent):
         if random_dist is not None:
             if random_dist == 'uniform':
                 initial_value = (upper_bound - lower_bound) \
-                    * self._random_generator.uniform(size=len(self._initial_states.keys())) \
+                    * self._random_generator.uniform(size=(n_prll_envs, len(self._initial_states.keys()))) \
                     + lower_bound
                 # writing initial values in initial_states dict
                 random_states = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[:, idx] for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(random_states)
 
@@ -245,12 +247,12 @@ class ElectricMotor(RandomComponent):
                 sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(
-                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())),
+                    a, b, loc=mue, scale=sigma, size=(n_prll_envs, len(self._initial_states.keys())),
                     random_state=self.seed_sequence.pool[0]
                 )
                 # writing initial values in initial_states dict
                 random_states = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[:, idx] for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(random_states)
 
@@ -258,35 +260,33 @@ class ElectricMotor(RandomComponent):
                 raise NotImplementedError
         # constant initialization for each motor state (current, epsilon)
         elif self._initial_states is not None:
-            initial_value = np.atleast_1d(list(self._initial_states.values()))
+            initial_value = np.vstack(n_prll_envs * [np.atleast_2d(list(self._initial_states.values()))])
             # check init_value meets interval boundaries
-            if ((lower_bound <= initial_value).all()
-                    and (initial_value <= upper_bound).all()):
-                initial_states_ = \
-                    {state: initial_value[idx]
-                     for idx, state in enumerate(self._initial_states.keys())}
+            if ((lower_bound <= initial_value).all() and (initial_value <= upper_bound).all()):
+                initial_states_ = {state: initial_value[:, idx] for idx, state in enumerate(self._initial_states.keys())}
                 self._initial_states.update(initial_states_)
             else:
                 raise Exception('Initialization value has to be within nominal boundaries')
         else:
             raise Exception('No matching Initialization Case')
 
-    def reset(self, state_space, state_positions, **__):
+    def reset(self, state_space, state_positions, n_prll_envs=1, **__):
         """Reset the motors state to a new initial state. (Default 0)
 
         Args:
             state_space(gym.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
+            n_prll_envs(int): Number of parallel environments
         Returns:
             numpy.ndarray(float): The initial motor states.
         """
         # check for valid initializer
         self.next_generator()
         if self._initializer and self._initializer['states']:
-            self.initialize(state_space, state_positions)
-            return np.asarray(list(self._initial_states.values()))
+            self.initialize(state_space, state_positions, n_prll_envs)
+            return np.vstack(n_prll_envs * [np.asarray(list(self._initial_states.values())).reshape(1, -1)])
         else:
-            return np.zeros(len(self.CURRENTS))
+            return np.zeros((n_prll_envs, len(self.CURRENTS)))
 
     def i_in(self, state):
         """

@@ -95,7 +95,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self._set_limits()
         self._set_nominal_state()
         self._noise_generator.set_signal_power_level(self._nominal_state)
-        self.system_state = np.zeros((self._n_prll_envs, state_names), dtype=float)
+        self.system_state = np.zeros((self.n_prll_envs, len(state_names)), dtype=float)
         self._system_eq_placeholder = None
         self._motor_deriv_size = None
         self._load_deriv_size = None
@@ -180,14 +180,12 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
 
         for t in switching_times[:-1]:
             i_sup = self._converter.i_sup(i_in)
-            # TODO: CHeck how to deal with u_sup and u_in for parallel envs
             u_sup = self._supply.get_voltage(self._t, i_sup)
             u_in = self._converter.convert(i_in, self._ode_solver.t)
             u_in = [u * u_s for u in u_in for u_s in u_sup]
             self._ode_solver.set_f_params(u_in)
             ode_state = self._ode_solver.integrate(t)
-            i_in = self._electrical_motor.i_in(
-                ode_state[:, self._ode_currents_idx])
+            i_in = self._electrical_motor.i_in(ode_state[:, self._ode_currents_idx])
 
         i_sup = self._converter.i_sup(i_in)
         u_sup = self._supply.get_voltage(self._t, i_sup)
@@ -197,18 +195,16 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         ode_state = self._ode_solver.integrate(self._t + self._tau)
         self._t = self._ode_solver.t
         self._k += 1
-        torque = self._electrical_motor.torque(
-            ode_state[:, self._motor_ode_idx])
+        torque = self._electrical_motor.torque(ode_state[:, self._motor_ode_idx])
         noise = self._noise_generator.noise()
 
         n_mech_states = len(self.mechanical_load.state_names)
         motor_state = ode_state[:, n_mech_states:]
-        self.system_state[:n_mech_states] = ode_state[:, :n_mech_states]
-        self.system_state[self.TORQUE_IDX] = torque
-        self.system_state[self.CURRENTS_IDX] = \
-            motor_state[self._electrical_motor.CURRENTS_IDX]
-        self.system_state[self.VOLTAGES_IDX] = u_in
-        self.system_state[self.U_SUP_IDX] = u_sup
+        self.system_state[:, :n_mech_states] = ode_state[:, :n_mech_states]
+        self.system_state[:, self.TORQUE_IDX] = torque
+        self.system_state[:, self.CURRENTS_IDX] = motor_state[:, self._electrical_motor.CURRENTS_IDX]
+        self.system_state[:, self.VOLTAGES_IDX] = u_in
+        self.system_state[:, self.U_SUP_IDX] = u_sup
         return (self.system_state + noise) / self._limits
 
     def _system_equation(self, t, state, u_in, **__):
@@ -271,11 +267,14 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self.next_generator()
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
-            state_positions=self.state_positions)
+            state_positions=self.state_positions,
+            n_prll_envs=self.n_prll_envs)
         mechanical_state = self._mechanical_load.reset(
             state_space=self.state_space,
             state_positions=self.state_positions,
-            nominal_state=self.nominal_state)
+            nominal_state=self.nominal_state,
+            n_prll_envs=self.n_prll_envs)
+        print(mechanical_state, motor_state)
         ode_state = np.hstack((mechanical_state, motor_state))
         u_sup = self.supply.reset()
         u_in = self.converter.reset()
@@ -465,8 +464,7 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
     def _set_indices(self):
         # Docstring of superclass
         self._omega_ode_idx = self._mechanical_load.OMEGA_IDX
-        self._load_ode_idx = list(
-            range(len(self._mechanical_load.state_names)))
+        self._load_ode_idx = list(range(len(self._mechanical_load.state_names)))
         self._ode_currents_idx = list(range(
             self._load_ode_idx[-1] + 1, self._load_ode_idx[-1] +
             1 + len(self._electrical_motor.CURRENTS)
@@ -541,32 +539,35 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         # Docstring of superclass
         motor_state = self._electrical_motor.reset(
             state_space=self.state_space,
-            state_positions=self.state_positions)
+            state_positions=self.state_positions,
+            n_prll_envs=self.n_prll_envs)
         mechanical_state = self._mechanical_load.reset(
             state_positions=self.state_positions,
             state_space=self.state_space,
-            nominal_state=self.nominal_state)
+            nominal_state=self.nominal_state,
+            n_prll_envs=self.n_prll_envs)
         ode_state = np.hstack((mechanical_state, motor_state))
-        u_sup = self.supply.reset()
+        u_sup = np.atleast_2d(self.supply.reset())
         eps = ode_state[:, self._ode_epsilon_idx]
         if eps > np.pi:
             eps -= 2 * np.pi
         u_abc = self.converter.reset()
-        u_abc = [u * u_s for u in u_abc.T for u_s in u_sup.T]
+        u_abc = np.atleast_2d(np.hstack([u * u_s for u in u_abc for u_s in u_sup]))
         u_dq = self.abc_to_dq_space(u_abc, eps)
         i_dq = ode_state[:, self._ode_currents_idx]
         i_abc = self.dq_to_abc_space(i_dq, eps)
-        torque = self.electrical_motor.torque(motor_state)
+        torque = np.atleast_2d(self.electrical_motor.torque(motor_state))
+        eps = np.atleast_2d(eps)
         noise = self._noise_generator.reset()
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
         system_state = np.hstack((
             mechanical_state,
-            torque.reshape(-1, 1),
+            torque,
             i_abc, i_dq,
             u_abc, u_dq,
-            eps.rehsape(-1, 1),
+            eps,
             u_sup,
         ))
         return (system_state + noise) / self._limits

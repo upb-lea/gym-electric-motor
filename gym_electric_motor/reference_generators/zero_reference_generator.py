@@ -14,10 +14,10 @@ class ZeroReferenceGenerator(ReferenceGenerator):
 
     def set_modules(self, physical_system):
         super().set_modules(physical_system)
-        self._referenced_states = np.zeros_like(self._physical_system.state_names, dtype=bool)
+        self._referenced_states = np.zeros((self._physical_system.n_prll_envs, self._physical_system.state_names), dtype=bool)
 
     def get_reference(self, state=None, *_, **__):
-        return np.zeros_like(self._physical_system.state_names, dtype=float)
+        return np.zeros((self._physical_system.n_prll_envs, self._physical_system.state_names), dtype=float)
 
     def get_reference_observation(self, state=None, *_, **__):
         return np.array([])

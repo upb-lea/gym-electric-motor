@@ -132,13 +132,13 @@ class SynchronousReluctanceMotor(SynchronousMotor):
                 [0, 0, 0]
             ]),
             np.array([
-                mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
-                - mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX],
+                mp['p'] * mp['l_q'] / mp['l_d'] * state[:, self.I_SQ_IDX],
+                - mp['p'] * mp['l_d'] / mp['l_q'] * state[:, self.I_SD_IDX],
                 mp['p']
             ]),
             np.array([
-                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
-                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX],
+                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[:, self.I_SQ_IDX],
+                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[:, self.I_SD_IDX],
                 0
             ])
         )

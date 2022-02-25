@@ -167,7 +167,8 @@ class DummyReferenceGenerator(ReferenceGenerator):
 
     def set_modules(self, physical_system):
         self.physical_system = physical_system
-        self.reference_array = np.ones_like(physical_system.state_names).astype(float)
+        self.reference_array = np.ones((self.physical_system.n_prll_envs, len(physical_system.state_names))).astype(float)
+        self.reference_observation = np.hstack(self.physical_system.n_prll_envs * [self.reference_observation])
         super().set_modules(physical_system)
         self._referenced_states = set_state_array(
             {self._reference_state: 1}, physical_system.state_names
@@ -175,8 +176,8 @@ class DummyReferenceGenerator(ReferenceGenerator):
 
     def reset(self, initial_state=None, initial_reference=None):
         self._reset_counter += 1
-        res = super().reset(initial_state, initial_reference)
-        return res[0], res[1], self.trajectory
+        ref, ref_obs, _ = super().reset(initial_state, initial_reference)
+        return ref, ref_obs, self.trajectory
 
     def get_reference(self, state, *_, **__):
         self.get_reference_state = state
@@ -257,7 +258,7 @@ class DummyPhysicalSystem(PhysicalSystem):
         self.kwargs = kwargs
 
     def reset(self, initial_state=None):
-        self.state = np.zeros((self._n_prll_envs, len(self._state_names)), dtype=np.float32)
+        self.state = np.zeros((self.n_prll_envs, len(self._state_names)), dtype=np.float32)
         return self.state
 
     def simulate(self, action):

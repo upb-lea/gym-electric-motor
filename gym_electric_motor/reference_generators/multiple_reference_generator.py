@@ -57,23 +57,21 @@ class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
 
     def reset(self, initial_state=None, initial_reference=None):
         # docstring from superclass
-        refs = np.zeros_like(self._physical_system.state_names, dtype=float)
-        ref_obs = np.array([])
+        refs = np.zeros((self._physical_system.n_prll_envs, self._physical_system.state_names.size), dtype=float)
+        ref_obs = None
         for sub_generator in self._sub_generators:
             ref, ref_observation, _ = sub_generator.reset(initial_state, initial_reference)
             refs += ref
-            ref_obs = np.concatenate((ref_obs, ref_observation))
+            ref_obs = ref_observation if ref_obs is None else np.hstack((ref_obs, ref_observation))
         return refs, ref_obs, None
 
     def get_reference(self, state, **kwargs):
         # docstring from superclass
-        return sum([sub_generator.get_reference(state, **kwargs) for sub_generator in self._sub_generators])
+        return np.sum([sub_generator.get_reference(state, **kwargs) for sub_generator in self._sub_generators], axis=1)
 
     def get_reference_observation(self, state, *_, **kwargs):
         # docstring from superclass
-        return np.concatenate(
-            [sub_generator.get_reference_observation(state, **kwargs) for sub_generator in self._sub_generators]
-        )
+        return np.hstack([sub_generator.get_reference_observation(state, **kwargs) for sub_generator in self._sub_generators])
 
     def seed(self, seed=None):
         super().seed(seed)

@@ -40,17 +40,17 @@ def set_state_array(input_values, state_names):
         the state_names and zero otherwise.
     """
 
-    if type(input_values) is dict:
+    if isinstance(input_values, dict):
         state_array = np.zeros_like(state_names, dtype=float)
         state_dict_to_state_array(input_values, state_array, state_names)
-    elif type(input_values) is np.ndarray:
-        assert len(input_values) == len(state_names)
+    elif isinstance(input_values, np.ndarray):
+        assert input_values.size == len(state_names)
         state_array = input_values
-    elif type(input_values) is list:
+    elif isinstance(input_values, list):
         assert len(input_values) == len(state_names)
         state_array = np.array(input_values)
-    elif type(input_values) is float or type(input_values) is int:
-        state_array = input_values * np.ones_like(state_names, dtype=float)
+    elif isinstance(input_values, (float, int)):
+        state_array = np.full_like(state_names, input_values, dtype=float)
     else:
         raise Exception('Incorrect type for the input values.')
     return state_array

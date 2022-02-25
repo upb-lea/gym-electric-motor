@@ -31,10 +31,10 @@ class ConstReferenceGenerator(ReferenceGenerator):
 
     def get_reference(self, *_, **__):
         # docstring from superclass
-        reference = np.zeros_like(self._referenced_states, dtype=float)
-        reference[self._referenced_states] = self._reference_value
+        reference = np.zeros((self._physical_system.n_prll_envs, self._referenced_states), dtype=float)
+        reference[:, self._referenced_states] = self._reference_value
         return reference
 
     def get_reference_observation(self, *_, **__):
         # docstring from superclass
-        return np.array([self._reference_value])
+        return np.array(self._physical_system.n_prll_envs * [self._reference_value]).reshape(-1, 1)

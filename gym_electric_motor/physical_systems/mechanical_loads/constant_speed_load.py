@@ -37,8 +37,8 @@ class ConstantSpeedLoad(MechanicalLoad):
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
-        return np.array([0])
+        return np.zeros(self.n_prll_envs)
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
-        return np.array([[0]]), np.array([0])
+        return np.zeros((self.n_prll_envs, 1)), np.zeros(self.n_prll_envs)

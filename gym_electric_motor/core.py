@@ -241,11 +241,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
         self._call_callbacks('on_reset_begin')
         self._done = False
-        state = self._physical_system.reset()
+        state = np.atleast_2d(self._physical_system.reset())
         reference, next_ref, trajectories = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
         self._call_callbacks('on_reset_end', state, reference)
-        return state[self.state_filter], next_ref
+        return state[:, self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
@@ -268,6 +268,9 @@ class ElectricMotorEnvironment(gym.core.Env):
         """
 
         assert not self._done, 'A reset is required before the environment can perform further steps'
+        action = np.atleast_1d(action)
+        assert action.shape[0] == self.physical_system.n_prll_envs, \
+            f'Too few actions for the amount of parallel environments were given: {action.shape[0]} != {self.physical_system.n_prll_envs}'
         self._call_callbacks('on_step_begin', self.physical_system.k, action)
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
@@ -575,7 +578,7 @@ class PhysicalSystem:
         self._action_space = action_space
         self._state_space = state_space
         self._state_names = state_names
-        self._n_prll_envs = n_parallel_envs
+        self.n_prll_envs = n_parallel_envs
         self._state_positions = {key: index for index, key in enumerate(self._state_names)}
         self._tau = tau
         self._k = 0

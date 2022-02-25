@@ -126,29 +126,30 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
             _q = - i_n ** 2 / 2
             i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
             i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
-            return self.torque([i_d_opt, i_q_opt, 0])
+            return self.torque(np.hstack([i_d_opt, i_q_opt, 0]).reshape(1, -1))
 
     def torque(self, currents):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+        return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[:, self.I_SD_IDX]) * currents[:, self.I_SQ_IDX]
 
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
+        omega = omega.reshape(-1, 1)
         return (
-            np.array([ # dx'/dx
-                [-mp['r_s'] / mp['l_d'], mp['l_q']/mp['l_d'] * omega * mp['p'], 0],
-                [-mp['l_d'] / mp['l_q'] * omega * mp['p'], - mp['r_s'] / mp['l_q'], 0],
-                [0, 0, 0]
+            np.dstack([ # dx'/dx
+                np.hstack([np.full_like(omega, -mp['r_s'] / mp['l_d']), mp['l_q']/mp['l_d'] * omega * mp['p'], np.zeros_like(omega)]),
+                np.hstack([-mp['l_d'] / mp['l_q'] * omega * mp['p'], np.full_like(omega, - mp['r_s'] / mp['l_q']), np.zeros_like(omega)]),
+                np.zeros((omega.shape[0], 3))
             ]),
-            np.array([ # dx'/dw
-                mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
-                - mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['p'] * mp['psi_p'] / mp['l_q'],
-                mp['p']
+            np.hstack([ # dx'/dw
+                mp['p'] * mp['l_q'] / mp['l_d'] * state[:, [self.I_SQ_IDX]], 
+                - mp['p'] * mp['l_d'] / mp['l_q'] * state[:, [self.I_SD_IDX]] - mp['p'] * mp['psi_p'] / mp['l_q'],
+                np.full(state.shape[0], mp['p'])
             ]),
-            np.array([ # dT/dx
-                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
-                1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
-                0
+            np.hstack([ # dT/dx
+                1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[:, [self.I_SQ_IDX]],
+                1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * state[:, [self.I_SD_IDX]]),
+                np.zeros((state.shape[0], 1))
             ])
         )

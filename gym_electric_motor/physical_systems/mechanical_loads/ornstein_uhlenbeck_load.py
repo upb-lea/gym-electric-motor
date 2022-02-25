@@ -32,11 +32,10 @@ class OrnsteinUhlenbeckLoad(MechanicalLoad):
         max_diff = (self._omega_range[1] - omega) / self.tau
         min_diff = (self._omega_range[0] - omega) / self.tau
         diff = self.theta * (self.mu - omega) * self.tau \
-            + self.sigma * np.sqrt(self.tau) * np.random.normal(size=1)
-        np.clip(diff, min_diff, max_diff, out=diff)
-        return diff
+            + self.sigma * np.sqrt(self.tau) * np.random.normal(size=(self.n_prll_envs, 1))
+        return np.clip(diff, min_diff, max_diff, out=diff)
 
     def reset(self, **kwargs):
         super().reset(**kwargs)
-        self._omega = np.random.uniform(self._omega_range[0], self._omega_range[1], 1)
+        self._omega = np.random.uniform(self._omega_range[0], self._omega_range[1], size=(self.n_prll_envs, 1))
         return self._omega

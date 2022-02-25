@@ -109,21 +109,24 @@ class TestElectricMotorEnvironment:
         for callback in cbs:
             assert callback.reset_begin == 1
             assert callback.reset_end == 1
-        assert (state, ref) in env.observation_space, 'Returned values not in observation space'
+        assert all([env.observation_space.contains(([s], [r])) for s,r in zip(state.ravel(), ref.ravel())]), 'Returned values not in observation space'
         assert np.all(np.all(state == ps.state)), 'Returned state is not the physical systems state'
         assert np.all(ref == rg.reference_observation), 'Returned reference is not the reference generators reference'
         assert np.all(state == rg.get_reference_state), 'Incorrect state passed to the reference generator'
-        assert rf.last_state == state, 'Incorrect state passed to the Reward Function'
-        assert rf.last_reference == rg.reference_array, 'Incorrect Reference passed to the reward function'
+        assert np.all(rf.last_state == state), 'Incorrect state passed to the Reward Function: {rf.last_state} != {state}'
+        assert np.all(rf.last_reference == rg.reference_array), 'Incorrect Reference passed to the reward function'
 
     @pytest.mark.parametrize('action, set_done', [(0, False), (-1, False), (1, False), (2, True)])
     def test_step(self, env, action, set_done):
+        
         ps = env.physical_system
         rg = env.reference_generator
         rf = env.reward_function
         cbs = env._callbacks
         cm = env.constraint_monitor
         cm.constraints[0].violation_degree = float(set_done)
+        action = np.full((ps.n_prll_envs,), action)
+        set_done = np.full((ps.n_prll_envs,), set_done)
         with pytest.raises(Exception):
             env.step(action), 'Environment goes through the step without previous reset'
         env.reset()
@@ -137,15 +140,15 @@ class TestElectricMotorEnvironment:
             assert callback.step_begin == 1
             assert callback.step_end == 1
         assert np.all(state == ps.state[env.state_filter]), 'Returned state and Physical Systems state are not equal'
-        assert rg.get_reference_state == ps.state,\
+        assert np.all(rg.get_reference_state == ps.state),\
             'State passed to the Reference Generator not equal to Physical System state'
-        assert rg.get_reference_obs_state == ps.state, \
+        assert np.all(rg.get_reference_obs_state == ps.state), \
             'State passed to the Reference Generator not equal to Physical System state'
-        assert ps.action == action, 'Action passed to Physical System not equal to selected action'
-        assert reward == -1 if set_done else 1
-        assert done == set_done
+        assert np.all(ps.action == action), 'Action passed to Physical System not equal to selected action'
+        assert np.all(reward == 1 - 2*set_done.astype(int))
+        assert np.all(done == set_done)
         # If episode terminated, no further step without reset
-        if set_done:
+        if any(set_done):
             with pytest.raises(Exception):
                 env.step(action)
 
@@ -175,7 +178,7 @@ class TestElectricMotorEnvironment:
             env.step(env.action_space.sample()), 'After Reference Generator change was no reset required'
         env.reset()
         # No Exception raised
-        env.step(env.action_space.sample())
+        env.step([env.action_space.sample() for _ in range(env.physical_system.n_prll_envs)])
 
     @pytest.mark.parametrize("reward_function", (DummyRewardFunction(),))
     def test_reward_function_change(self, env, reward_function):
@@ -188,10 +191,10 @@ class TestElectricMotorEnvironment:
         assert env.reward_function == reward_function, 'Reward Function was not changed'
         # Without Reset an Exception has to be thrown
         with pytest.raises(Exception):
-            env.step(env.action_space.sample()), 'After Reward Function change was no reset required'
+            env.step([env.action_space.sample() for _ in range(env.physical_system.n_prll_envs)]), 'After Reward Function change was no reset required'
         env.reset()
         # No Exception raised
-        env.step(env.action_space.sample())
+        env.step([env.action_space.sample() for _ in range(env.physical_system.n_prll_envs)])
 
     @pytest.mark.parametrize(
         "number_states, state_filter, expected_result", (

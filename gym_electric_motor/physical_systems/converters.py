@@ -340,16 +340,15 @@ class FiniteFourQuadrantConverter(FiniteConverter):
         assert all(self.action_space.contains(a) for a in action), \
             f"The selected action {action} contains invalid elements for the action space {self.action_space}."
         times = []
-        # TODO: Further work for parallel envs
-        action0 = [1, 1, 2, 2][action]
-        action1 = [1, 2, 1, 2][action]
+        action0 = np.array([1, 1, 2, 2])[action]
+        action1 = np.array([1, 2, 1, 2])[action]
         times += self._subconverters[0].set_action(action0, t)
         times += self._subconverters[1].set_action(action1, t)
         return sorted(list(set(times)))
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[0]])
+        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[:, 0]])
 
 
 class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
@@ -373,7 +372,9 @@ class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
 
     def _convert(self, i_in, *_):
         # Docstring in base class
-        return self._current_action[0] if i_in[0] >= 0 else 1
+        ret = np.ones(i_in.shape[0])
+        ret[i_in >= 0] = self._current_action[:, 0]
+        return ret
 
     def _interlock(self, *_):
         # Docstring in base class
@@ -381,7 +382,7 @@ class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return self._current_action[0] * i_out[0]
+        return self._current_action[:, 0] * i_out[:, 0]
 
 
 class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
@@ -407,15 +408,16 @@ class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
 
     def _convert(self, *_):
         # Docstring in base class
-        return self._current_action[0]
+        return self._current_action[:, 0]
 
     def i_sup(self, i_out):
         # Docstring in base class
-        interlocking_current = 1 if i_out[0] < 0 else 0
+        interlocking_current = (i_out[:, 0] < 0).astype(np.float)
+
         return (
-            self._current_action[0]
-            + self._interlocking_time / self._tau * (interlocking_current - self._current_action[0])
-        ) * i_out[0]
+            self._current_action[:, 0]
+            + self._interlocking_time / self._tau * (interlocking_current - self._current_action[:, 0])
+        ) * i_out[:, 0]
 
 
 class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
@@ -465,13 +467,13 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
         # Docstring in base class
         super().set_action(action, t)
         times = []
-        times += self._subconverters[0].set_action([0.5 * (action[0] + 1)], t)
-        times += self._subconverters[1].set_action([-0.5 * (action[0] - 1)], t)
+        times += self._subconverters[0].set_action([0.5 * (action[:, 0] + 1)], t)
+        times += self._subconverters[1].set_action([-0.5 * (action[:, 0] - 1)], t)
         return sorted(list(set(times)))
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[0]])
+        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[:, 0]])
 
 
 class FiniteMultiConverter(FiniteConverter):
@@ -549,7 +551,7 @@ class FiniteMultiConverter(FiniteConverter):
         subsignal_idx_low = 0
         for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_voltage_space_dims):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
-            u_in += subconverter.convert(i_out[subsignal_idx_low:subsignal_idx_high], t)
+            u_in += subconverter.convert(i_out[:, subsignal_idx_low:subsignal_idx_high], t)
             subsignal_idx_low = subsignal_idx_high
         return u_in
 
@@ -573,7 +575,7 @@ class FiniteMultiConverter(FiniteConverter):
         subsignal_idx_low = 0
         for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_current_space_dims):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
-            i_sup += subconverter.i_sup(i_out[subsignal_idx_low:subsignal_idx_high])
+            i_sup += subconverter.i_sup(i_out[:, subsignal_idx_low:subsignal_idx_high])
             subsignal_idx_low = subsignal_idx_high
         return i_sup
 
@@ -653,7 +655,7 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         times = []
         ind = 0
         for subconverter in self._subconverters:
-            sub_action = action[ind:ind + subconverter.action_space.shape[0]]
+            sub_action = action[:, ind:ind + subconverter.action_space.shape[0]]
             ind += subconverter.action_space.shape[0]
             times += subconverter.set_action(sub_action, t)
         return sorted(list(set(times)))
@@ -671,7 +673,7 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         subsignal_idx_low = 0
         for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_voltage_space_dims):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
-            u_in += subconverter.convert(i_out[subsignal_idx_low:subsignal_idx_high], t)
+            u_in += subconverter.convert(i_out[:, subsignal_idx_low:subsignal_idx_high], t)
             subsignal_idx_low = subsignal_idx_high
         return u_in
 
@@ -685,7 +687,7 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         subsignal_idx_low = 0
         for subconverter, subsignal_space_size in zip(self._subconverters, self.subsignal_current_space_dims):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
-            i_sup += subconverter.i_sup(i_out[subsignal_idx_low:subsignal_idx_high])
+            i_sup += subconverter.i_sup(i_out[:, subsignal_idx_low:subsignal_idx_high])
             subsignal_idx_low = subsignal_idx_high
 
         return i_sup
@@ -736,7 +738,7 @@ class FiniteB6BridgeConverter(FiniteConverter):
     # positive and negative currents are possible
     currents = Box(-1, 1, shape=(3,), dtype=np.float64)
     _reset_action = 0
-    _subactions = [
+    _subactions = np.array([
         [2, 2, 2],
         [2, 2, 1],
         [2, 1, 2],
@@ -745,7 +747,7 @@ class FiniteB6BridgeConverter(FiniteConverter):
         [1, 2, 1],
         [1, 1, 2],
         [1, 1, 1]
-    ]
+    ])
 
     def __init__(self, tau=1e-5, **kwargs):
         # Docstring in base class
@@ -767,21 +769,19 @@ class FiniteB6BridgeConverter(FiniteConverter):
     def convert(self, i_out, t):
         # Docstring in base class
         u_out = [
-            self._subconverters[0].convert([i_out[0]], t)[0] - 0.5,
-            self._subconverters[1].convert([i_out[1]], t)[0] - 0.5,
-            self._subconverters[2].convert([i_out[2]], t)[0] - 0.5
+            self._subconverters[0].convert([i_out[:, 0]], t)[0] - 0.5,
+            self._subconverters[1].convert([i_out[:, 1]], t)[0] - 0.5,
+            self._subconverters[2].convert([i_out[:, 2]], t)[0] - 0.5
         ]
         return u_out
 
     def set_action(self, action, t):
         # Docstring in base class
-        assert self.action_space.contains(action), \
+        assert all(self.action_space.contains(a) for a in action), \
             f"The selected action {action} is not a valid element of the action space {self.action_space}."
         subactions = self._subactions[action]
-        times = []
-        times += self._subconverters[0].set_action(subactions[0], t)
-        times += self._subconverters[1].set_action(subactions[1], t)
-        times += self._subconverters[2].set_action(subactions[2], t)
+        times = [subconverter.set_action(subactions[:, i], t)[0] for i, subconverter in enumerate(self._subconverters)]
+
         return sorted(list(set(times)))
 
     def i_sup(self, i_out):
@@ -838,18 +838,18 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
     def convert(self, i_out, t):
         # Docstring in base class
         u_out = [
-            self._subconverters[0].convert([i_out[0]], t)[0] - 0.5,
-            self._subconverters[1].convert([i_out[1]], t)[0] - 0.5,
-            self._subconverters[2].convert([i_out[2]], t)[0] - 0.5
+            self._subconverters[0].convert([i_out[:, 0]], t)[0] - 0.5,
+            self._subconverters[1].convert([i_out[:, 1]], t)[0] - 0.5,
+            self._subconverters[2].convert([i_out[:, 2]], t)[0] - 0.5
         ]
         return u_out
 
     def set_action(self, action, t):
         # Docstring in base class
         times = []
-        times += self._subconverters[0].set_action([0.5 * (action[0] + 1)], t)
-        times += self._subconverters[1].set_action([0.5 * (action[1] + 1)], t)
-        times += self._subconverters[2].set_action([0.5 * (action[2] + 1)], t)
+        times += self._subconverters[0].set_action([0.5 * (action[:, 0] + 1)], t)
+        times += self._subconverters[1].set_action([0.5 * (action[:, 1] + 1)], t)
+        times += self._subconverters[2].set_action([0.5 * (action[:, 2] + 1)], t)
         return sorted(list(set(times)))
 
     def _convert(self, i_in, t):

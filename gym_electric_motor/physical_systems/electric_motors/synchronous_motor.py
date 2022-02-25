@@ -116,13 +116,13 @@ class SynchronousMotor(ThreePhaseMotor):
     def _torque_limit(self):
         raise NotImplementedError
 
-    def reset(self, state_space, state_positions, **__):
+    def reset(self, state_space, state_positions, *args, **kwargs):
         # Docstring of superclass
         if self._initializer and self._initializer['states']:
-            self.initialize(state_space, state_positions)
-            return np.asarray(list(self._initial_states.values()))
+            self.initialize(state_space, state_positions, *args, **kwargs)
+            return np.vstack(self.n_prll_envs * [np.hstack(list(self._initial_states.values()))])
         else:
-            return np.zeros(len(self.CURRENTS) + 1)
+            return np.zeros(self.n_prll_envs, len(self.CURRENTS) + 1)
 
     def torque(self, state):
         # Docstring of superclass
@@ -146,19 +146,20 @@ class SynchronousMotor(ThreePhaseMotor):
         Returns:
             The derivatives of the state vector d/dt([i_sd, i_sq, epsilon])
         """
-        return np.matmul(self._model_constants, np.array([
+        omega = np.atleast_2d(omega)
+        return np.matmul(np.hstack([
             omega,
-            state[self.I_SD_IDX],
-            state[self.I_SQ_IDX],
-            u_dq[0],
-            u_dq[1],
-            omega * state[self.I_SD_IDX],
-            omega * state[self.I_SQ_IDX],
-        ]))
+            state[:, self.I_SD_IDX],
+            state[:, self.I_SQ_IDX],
+            np.atleast_2d(u_dq[0]),
+            np.atleast_2d(u_dq[1]),
+            omega * state[:, self.I_SD_IDX],
+            omega * state[:, self.I_SQ_IDX],
+        ]), self._model_constants)
 
     def i_in(self, state):
         # Docstring of superclass
-        return state[self.CURRENTS_IDX]
+        return state[:, self.CURRENTS_IDX]
 
     def _update_limits(self):
         # Docstring of superclass

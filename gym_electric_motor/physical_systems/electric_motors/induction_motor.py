@@ -157,17 +157,14 @@ class InductionMotor(ThreePhaseMotor):
         self._update_model()
         self._update_limits(_limit_values, _nominal_values)
 
-    def reset(self,
-              state_space,
-              state_positions,
-              omega=None):
+    def reset(self, state_space, state_positions, omega=None, *args, **kwargs):
         # Docstring of superclass
         if self._initializer and self._initializer['states']:
             self._update_initial_limits(omega=omega)
-            self.initialize(state_space, state_positions)
-            return np.asarray(list(self._initial_states.values()))
+            self.initialize(state_space, state_positions, *args, **kwargs)
+            return np.vstack(self.n_prll_envs * [np.asarray(list(self._initial_states.values()))])
         else:
-            return np.zeros(len(self.CURRENTS) + len(self.FLUXES) + 1)
+            return np.zeros((self.n_prll_envs, len(self.CURRENTS) + len(self.FLUXES) + 1))
 
     def electrical_ode(self, state, u_sr_alphabeta, omega, *args):
         """
@@ -181,24 +178,24 @@ class InductionMotor(ThreePhaseMotor):
         Returns:
             The derivatives of the state vector d/dt( [i_salpha, i_sbeta, psi_ralpha, psi_rbeta, epsilon])
         """
-        return np.matmul(self._model_constants, np.array([
+        return np.matmul(np.hstack([
             # omega, i_alpha, i_beta, psi_ralpha, psi_rbeta, omega * psi_ralpha, omega * psi_rbeta, u_salpha, u_sbeta, u_ralpha, u_rbeta,
             omega,
-            state[self.I_SALPHA_IDX],
-            state[self.I_SBETA_IDX],
-            state[self.PSI_RALPHA_IDX],
-            state[self.PSI_RBETA_IDX],
-            omega * state[self.PSI_RALPHA_IDX],
-            omega * state[self.PSI_RBETA_IDX],
-            u_sr_alphabeta[0, 0],
-            u_sr_alphabeta[0, 1],
-            u_sr_alphabeta[1, 0],
-            u_sr_alphabeta[1, 1],
-        ]))
+            state[:, self.I_SALPHA_IDX],
+            state[:, self.I_SBETA_IDX],
+            state[:, self.PSI_RALPHA_IDX],
+            state[:, self.PSI_RBETA_IDX],
+            omega * state[:, self.PSI_RALPHA_IDX],
+            omega * state[:, self.PSI_RBETA_IDX],
+            np.atleast_2d(u_sr_alphabeta[0, 0]),
+            np.atleast_2d(u_sr_alphabeta[0, 1]),
+            np.atleast_2d(u_sr_alphabeta[1, 0]),
+            np.atleast_2d(u_sr_alphabeta[1, 1]),
+        ]), self._model_constants)
 
     def i_in(self, state):
         # Docstring of superclass
-        return state[self.CURRENTS_IDX]
+        return state[:, self.CURRENTS_IDX]
 
     def _torque_limit(self):
         # Docstring of superclass
@@ -212,8 +209,8 @@ class InductionMotor(ThreePhaseMotor):
             1.5 * mp['p'] * mp['l_m'] \
             / (mp['l_m'] + mp['l_sigr']) \
             * (
-                states[self.PSI_RALPHA_IDX] * states[self.I_SBETA_IDX]
-                - states[self.PSI_RBETA_IDX] * states[self.I_SALPHA_IDX]
+                states[:, self.PSI_RALPHA_IDX] * states[:, self.I_SBETA_IDX]
+                - states[:, self.PSI_RBETA_IDX] * states[:, self.I_SALPHA_IDX]
             )
 
     def _flux_limit(self, omega=0, eps_mag=0, u_q_max=0.0, u_rq_max=0.0):
@@ -300,20 +297,17 @@ class InductionMotor(ThreePhaseMotor):
                 [0, 0, 0, 0, 0]
             ]),
             np.array([  # dx'/dw
-                mp['l_m'] * mp['p'] / (sigma * l_r * l_s) * state[
-                    self.PSI_RBETA_IDX],
-                - mp['l_m'] * mp['p'] / (sigma * l_r * l_s) * state[
-                    self.PSI_RALPHA_IDX],
-                - mp['p'] * state[self.PSI_RBETA_IDX],
-                mp['p'] * state[self.PSI_RALPHA_IDX],
+                mp['l_m'] * mp['p'] / (sigma * l_r * l_s) * state[:, self.PSI_RBETA_IDX],
+                - mp['l_m'] * mp['p'] / (sigma * l_r * l_s) * state[:, self.PSI_RALPHA_IDX],
+                - mp['p'] * state[:, self.PSI_RBETA_IDX],
+                mp['p'] * state[:, self.PSI_RALPHA_IDX],
                 mp['p']
             ]),
-            np.array([  # dT/dx
-                - state[self.PSI_RBETA_IDX] * 3 / 2 * mp['p'] * mp[
-                    'l_m'] / l_r,
-                state[self.PSI_RALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
-                state[self.I_SBETA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
-                - state[self.I_SALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
-                0
+            np.hstack([  # dT/dx
+                - state[:, self.PSI_RBETA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                state[:, self.PSI_RALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                state[:, self.I_SBETA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                - state[:, self.I_SALPHA_IDX] * 3 / 2 * mp['p'] * mp['l_m'] / l_r,
+                np.atleast_2d(0)
             ])
         )

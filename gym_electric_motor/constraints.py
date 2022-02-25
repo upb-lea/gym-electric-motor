@@ -53,7 +53,7 @@ class LimitConstraint(Constraint):
         self._observed_states = None
 
     def __call__(self, state):
-        observed = state[self._observed_states]
+        observed = state[:, self._observed_states]
         violation = any(abs(observed) > 1.0)
         return float(violation)
 

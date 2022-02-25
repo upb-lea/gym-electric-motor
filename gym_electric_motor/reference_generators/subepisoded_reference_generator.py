@@ -32,7 +32,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
         self._reference_value = 0.0
         self._reference_state = reference_state.lower()
         self._episode_len_range = episode_lengths
-        self._current_episode_length = int(self._get_current_value(episode_lengths))
+        self._current_episode_length = -1
         self._k = 0
         self._reference_names = [self._reference_state]
 
@@ -58,6 +58,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
         else:
             raise Exception('Unknown type for the limit margin.')
         self.reference_space = Box(lower_margin[0], upper_margin[0], shape=(1,), dtype=np.float64)
+        self._current_episode_length = self._get_current_value(self._episode_len_range).astype(int)
 
     def reset(self, initial_state=None, initial_reference=None):
         """
@@ -74,7 +75,7 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
              trajectory(None): No initial trajectory is passed.
         """
         if initial_reference is not None:
-            self._reference_value = initial_reference[self._referenced_states][0]
+            self._reference_value = initial_reference[:, self._referenced_states][:, 0]
         else:
             self._reference_value = 0.0
         self.next_generator()
@@ -82,8 +83,8 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
         return super().reset(initial_state)
 
     def get_reference(self, *_, **__):
-        reference = np.zeros_like(self._referenced_states, dtype=float)
-        reference[self._referenced_states] = self._reference_value
+        reference = np.zeros((self._physical_system.n_prll_envs, len(self._referenced_states)), dtype=float)
+        reference[:, self._referenced_states] = self._reference_value
         return reference
 
     def get_reference_observation(self, *_, **__):
@@ -91,9 +92,9 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
             self._k = 0
             self._current_episode_length = int(self._get_current_value(self._episode_len_range))
             self._reset_reference()
-        self._reference_value = self._reference[self._k]
+        self._reference_value = self._reference[:, self._k]
         self._k += 1
-        return np.array([self._reference_value])
+        return self._reference_value
 
     def _reset_reference(self):
         """
@@ -109,7 +110,8 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
         If float or int is passed this value will be returned. Otherwise a uniform distributed value
         between value_range[0] and value_range[1] is returned.
         """
-        if type(value_range) in [int, float]:
-            return value_range
-        elif type(value_range) in [list, tuple, np.ndarray]:
-            return (value_range[1] - value_range[0]) * self._random_generator.uniform() + value_range[0]
+        if isinstance(value_range, (int, float)):
+            return np.full(self._physical_system.n_prll_envs, value_range)
+        elif isinstance(value_range, (list, tuple, np.ndarray)):
+            lo, hi = value_range[0], value_range[1]
+            return self._random_generator.uniform(low=lo, high=hi, size=self._physical_system.n_prll_envs)

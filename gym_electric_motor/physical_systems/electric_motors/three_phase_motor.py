@@ -35,7 +35,7 @@ class ThreePhaseMotor(ElectricMotor):
         Returns:
             The converted quantities in the alpha-beta representation like ''[u_alpha, u_beta]''
         """
-        return np.matmul(ThreePhaseMotor._t23, quantities)
+        return np.matmul(quantities, ThreePhaseMotor._t23.T)
 
     @staticmethod
     def t_32(quantities):
@@ -48,7 +48,7 @@ class ThreePhaseMotor(ElectricMotor):
         Returns:
             The converted quantities in the abc representation like ``[u_a, u_b, u_c]``
         """
-        return np.matmul(ThreePhaseMotor._t32, quantities)
+        return np.matmul(quantities, ThreePhaseMotor._t32.T)
 
     @staticmethod
     def q(quantities, epsilon):
@@ -62,10 +62,10 @@ class ThreePhaseMotor(ElectricMotor):
         Returns:
             Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
         """
+        quantities = np.atleast_2d(quantities)
         cos = math.cos(epsilon)
         sin = math.sin(epsilon)
-        return cos * quantities[0] - sin * quantities[1], sin * quantities[
-            0] + cos * quantities[1]
+        return np.column_stack((cos * quantities[:, 0] - sin * quantities[:, 1], sin * quantities[:, 0] + cos * quantities[:, 1]))
 
     @staticmethod
     def q_inv(quantities, epsilon):

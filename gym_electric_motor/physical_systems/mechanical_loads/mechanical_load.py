@@ -95,8 +95,9 @@ class MechanicalLoad(RandomComponent):
         self._initializer = self._default_initializer.copy()
         self._initializer.update(load_initializer)
         self._initial_states = self._initializer.get('states', {state: 0.0 for state in self._state_names})
+        self.n_prll_envs = 1
 
-    def initialize(self, state_space, state_positions, nominal_state, **__):
+    def initialize(self, state_space, state_positions, nominal_state, n_prll_envs=1, **__):
         """Initializes the state of the load on an episode start.
 
         Values can be given as a constant or sampled random out of a statistical distribution. Initial value is in
@@ -106,7 +107,9 @@ class MechanicalLoad(RandomComponent):
             nominal_state(list): nominal values for each state given from physical system
             state_space(gym.spaces.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
+            n_prll_envs(int): Number of parallel environments
         """
+        self.n_prll_envs = n_prll_envs
         # for order and organization purposes
         interval = self._initializer['interval']
         random_dist = self._initializer['random_init']
@@ -130,10 +133,10 @@ class MechanicalLoad(RandomComponent):
         if random_dist is not None:
             if random_dist == 'uniform':
                 initial_value = (upper_bound - lower_bound) \
-                    * self.random_generator.uniform(size=len(self._initial_states.keys())) \
+                    * self.random_generator.uniform(size=(n_prll_envs, len(self._initial_states.keys()))) \
                     + lower_bound
                 random_states = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[:, idx] for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(random_states)
 
@@ -145,22 +148,22 @@ class MechanicalLoad(RandomComponent):
                 a = (lower_bound - mue) / sigma
                 b = (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(
-                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())),
+                    a, b, loc=mue, scale=sigma, size=(n_prll_envs, len(self._initial_states.keys())),
                     random_state=self.seed_sequence.pool[0]
                 )
                 random_states = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[:, idx] for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(random_states)
             else:
                 raise NotImplementedError
         # constant initialization for each motor state (current, epsilon)
         elif self._initial_states is not None:
-            initial_value = np.atleast_1d(list(self._initial_states.values()))
+            initial_value = np.vstack(n_prll_envs * [np.atleast_2d(list(self._initial_states.values()))])
             # check init_value meets interval boundaries
             if (lower_bound <= initial_value).all() and (initial_value <= upper_bound).all():
                 initial_states_ = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[:, idx] for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(initial_states_)
             else:
@@ -168,7 +171,7 @@ class MechanicalLoad(RandomComponent):
         else:
             raise Exception('No matching Initialization Case')
 
-    def reset(self, state_space, state_positions, nominal_state, **__):
+    def reset(self, state_space, state_positions, nominal_state, n_prll_envs=1, **__):
         """
         Reset the motors state to a new initial state. (Default 0)
 
@@ -177,15 +180,16 @@ class MechanicalLoad(RandomComponent):
                                   physical system
             state_space(gym.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
+            n_prll_envs(int): Number of parallel envs
         Returns:
             numpy.ndarray(float): The initial motor states.
         """
         self.next_generator()
         if self._initializer:
-            self.initialize(state_space, state_positions, nominal_state)
-            return np.asarray(list(self._initial_states.values()))
+            self.initialize(state_space, state_positions, nominal_state, n_prll_envs)
+            return np.vstack(n_prll_envs * [np.asarray(list(self._initial_states.values())).reshape(1, -1)])
         else:
-            return np.zeros_like(self._state_names, dtype=float)
+            return np.zeros((n_prll_envs, len(self._state_names)), dtype=float)
 
     def set_j_rotor(self, j_rotor):
         """

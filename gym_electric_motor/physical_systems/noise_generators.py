@@ -13,6 +13,10 @@ class NoiseGenerator(RandomComponent):
     _state_variables = None
     _signal_powers = None
 
+    def __init__(self, n_parallel_envs=1, *args, **kwargs):
+        self.n_prll_envs = n_parallel_envs
+        super().__init__(*args, **kwargs)
+
     def reset(self):
         """
         Reset of all internal states of the Noise generator to a default.
@@ -30,7 +34,7 @@ class NoiseGenerator(RandomComponent):
         Returns:
              ndarray(float): Array of noise added to each state.
         """
-        return np.zeros_like(self._state_variables, dtype=float)
+        return np.zeros((self.n_prll_envs, len(self._state_variables)), dtype=float)
 
     def set_state_names(self, state_names):
         """
@@ -59,13 +63,13 @@ class GaussianWhiteNoiseGenerator(NoiseGenerator):
     """
     _noise = None
 
-    def __init__(self, noise_levels=0.0, noise_length=10000):
+    def __init__(self, noise_levels=0.0, noise_length=10000, *args, **kwargs):
         """
         Args:
             noise_levels(dict/list/ndarray(float)): Fraction of noise power over the signal powers.
             noise_length(float): Length of simultaneously generated noise points for speed up.
         """
-        RandomComponent.__init__(self)
+        super().__init__(self, *args, **kwargs)
         self._noise_levels = noise_levels
         self._noise_length = noise_length
         self._noise_pointer = noise_length
@@ -79,7 +83,7 @@ class GaussianWhiteNoiseGenerator(NoiseGenerator):
         # Docstring of superclass
         if self._noise_pointer == self._noise_length:
             self._generate_noise()
-        noise = self._noise[self._noise_pointer]
+        noise = self._noise[:, self._noise_pointer, :]
         self._noise_pointer += 1
         return noise
 
@@ -89,6 +93,6 @@ class GaussianWhiteNoiseGenerator(NoiseGenerator):
         to speed up the computation.
         """
         self._noise = self._random_generator.normal(
-            0, self._noise_levels * self._signal_powers, (self._noise_length, len(self._signal_powers))
+            0, self._noise_levels * self._signal_powers, size=(self.n_prll_envs, self._noise_length, len(self._signal_powers))
         )
         self._noise_pointer = 0

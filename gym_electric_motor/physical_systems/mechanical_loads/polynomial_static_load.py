@@ -59,7 +59,7 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
-    def __init__(self, load_parameter=None, limits=None, load_initializer=None):
+    def __init__(self, load_parameter=None, limits=None, load_initializer=None, *args, **kwargs):
         """
         Args:
             load_parameter(dict(float)): Parameter dictionary. Keys: ``'a', 'b', 'c', 'j_load'``
@@ -68,7 +68,7 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         load_parameter = load_parameter if load_parameter is not None else dict()
         self._load_parameter = update_parameter_dict(self._load_parameter, load_parameter)
-        super().__init__(j_load=self._load_parameter['j_load'], load_initializer=load_initializer)
+        super().__init__(j_load=self._load_parameter['j_load'], load_initializer=load_initializer, *args, **kwargs)
         self._limits.update(limits or {})
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']
@@ -76,25 +76,27 @@ class PolynomialStaticLoad(MechanicalLoad):
 
     def _static_load(self, omega):
         """Calculation of the load torque for a given speed omega."""
-        sign = 1 if omega > 0 else -1 if omega < -0 else 0
+        sign = np.sign(omega)
         # Limit the constant load term 'a' for velocities around zero for a more stable integration
-        a = sign * self._a \
-            if abs(omega) > self._a / self._j_total * self.tau_decay \
-            else self._j_total / self.tau_decay * omega
+        a = np.zeros_like(omega)
+        mask = omega.abs() > self._a / self._j_total * self.tau_decay
+        a[mask] = sign * self._a 
+        a[~mask] = self._j_total / self.tau_decay * omega[~mask]
         return sign * self._c * omega**2 + self._b * omega + a
 
     def mechanical_ode(self, t, mechanical_state, torque):
         # Docstring of superclass
-        omega = mechanical_state[self.OMEGA_IDX]
+        omega = mechanical_state[:, self.OMEGA_IDX]
         static_torque = self._static_load(omega)
         total_torque = torque - static_torque
-        return np.array([total_torque / self._j_total])
+        return total_torque / self._j_total
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
-        omega = mechanical_state[self.OMEGA_IDX]
-        sign = 1 if omega > 0 else -1 if omega < 0 else 0
+        omega = mechanical_state[:, self.OMEGA_IDX]
+        sign = np.sign(omega)
         # Linear region of the constant load term 'a' ?
-        a = 0 if abs(omega) > self._a * self.tau_decay / self._j_total else self._j_total / self.tau_decay
-        return np.array([[(-self._b - 2 * sign * self._c * omega - a) / self._j_total]]), \
-            np.array([1 / self._j_total])
+        a = np.zeros_like(omega)
+        a[omega.abs() <= self._a * self.tau_decay / self._j_total] = self._j_total / self.tau_decay
+
+        return (-self._b - 2 * sign * self._c * omega - a) / self._j_total, np.array([1 / self._j_total])
