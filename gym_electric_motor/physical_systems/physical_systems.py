@@ -68,6 +68,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self._mechanical_load = load
         self._supply = supply
         self._noise_generator = noise_generator
+
         state_names = self._build_state_names()
         self._noise_generator.set_state_names(state_names)
         self._ode_solver = ode_solver
@@ -99,6 +100,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
             self._supply, self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver,
             self._noise_generator
         ]
+        self._converter.tau = self.tau
 
     def _set_limits(self):
         """
