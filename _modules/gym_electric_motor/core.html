@@ -44,7 +44,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
@@ -245,7 +244,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visualizations</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="p">(),</span> <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">callbacks</span><span class="o">=</span><span class="p">(),</span> <span class="n">constraints</span><span class="o">=</span><span class="p">(),</span> <span class="n">state_action_processors</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">callbacks</span><span class="o">=</span><span class="p">(),</span> <span class="n">constraints</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Setting and initialization of all environments&#39; modules.</span>
 
@@ -264,8 +263,6 @@
 <span class="sd">                        ConstraintMonitor in the environment.</span>
 <span class="sd">            visualization(iterable(ElectricMotorVisualization)/None): The visualizations of this environment.</span>
 <span class="sd">            state_filter(list(str)): Selection of states that are shown in the observation.</span>
-<span class="sd">            state_action_processors(iterable(StateActionProcessor)): StateActionProcessor instances to be wrapped around</span>
-<span class="sd">                the physical system.</span>
 <span class="sd">            callbacks(list(Callback)): Callbacks being called in the environment</span>
 <span class="sd">            **kwargs: Arguments to be passed to the modules.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -287,8 +284,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_constraint_monitor</span> <span class="o">=</span> <span class="n">cm</span>
 
         <span class="c1"># Announcement of the modules among each other</span>
-        <span class="k">for</span> <span class="n">state_action_processor</span> <span class="ow">in</span> <span class="n">state_action_processors</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">state_action_processor</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constraint_monitor</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraint_monitor</span><span class="p">)</span>
@@ -581,10 +576,6 @@
 <div class="viewcode-block" id="PhysicalSystem"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem">[docs]</a><span class="k">class</span> <span class="nc">PhysicalSystem</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;The Physical System module encapsulates the physical model of the system as well as the simulation from one step</span>
 <span class="sd">    to the next.&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">unwrapped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

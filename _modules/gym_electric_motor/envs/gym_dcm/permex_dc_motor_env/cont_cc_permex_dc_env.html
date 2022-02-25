@@ -44,7 +44,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../parts/core.html">Core</a></li>
@@ -102,6 +101,7 @@
 <span class="sd">        - Motor: :py:class:`.DcPermanentlyExcitedMotor`</span>
 <span class="sd">        - Load: :py:class:`.ConstantSpeedLoad`</span>
 <span class="sd">        - Ode-Solver: :py:class:`.EulerSolver`</span>
+<span class="sd">        - Noise: **None**</span>
 
 <span class="sd">        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``&#39;i&#39;``</span>
 
@@ -164,9 +164,9 @@
 <span class="sd">        &gt;&gt;&gt;     (state, reference), reward, done, _ = env.step(env.action_space.sample())</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noise_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">reward_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,),</span> <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">state_action_processors</span><span class="o">=</span><span class="p">()</span>
+        <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,),</span> <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -175,6 +175,7 @@
 <span class="sd">            motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment</span>
 <span class="sd">            load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment</span>
 <span class="sd">            ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment</span>
+<span class="sd">            noise_generator(env-arg): Specification of the :py:class:`.NoiseGenerator` for the environment</span>
 <span class="sd">            reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment</span>
 <span class="sd">            reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment</span>
 <span class="sd">            visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment</span>
@@ -188,8 +189,6 @@
 <span class="sd">            tau(float): Duration of one control step in seconds. Default: 1e-4.</span>
 <span class="sd">            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)</span>
 <span class="sd">            callbacks(list(Callback)): Callbacks for user interaction. Default: ()</span>
-<span class="sd">            state_action_processors(list(StateActionProcessor)): List of state action processors to modify the</span>
-<span class="sd">            actions to and states from the physical system before they are used in the environment. Default: ()</span>
 
 <span class="sd">        Note on the env-arg type:</span>
 <span class="sd">            All parameters of type env-arg can be selected as one of the following types:</span>
@@ -210,6 +209,7 @@
             <span class="n">motor</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">ElectricMotor</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">DcPermanentlyExcitedMotor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
             <span class="n">load</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">MechanicalLoad</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ConstantSpeedLoad</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega_fixed</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)),</span>
             <span class="n">ode_solver</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">OdeSolver</span><span class="p">,</span> <span class="n">ode_solver</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ScipyOdeSolver</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
+            <span class="n">noise_generator</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">NoiseGenerator</span><span class="p">,</span> <span class="n">noise_generator</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">NoiseGenerator</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
             <span class="n">calc_jacobian</span><span class="o">=</span><span class="n">calc_jacobian</span><span class="p">,</span>
             <span class="n">tau</span><span class="o">=</span><span class="n">tau</span>
         <span class="p">)</span>
@@ -225,8 +225,7 @@
             <span class="n">visualization</span><span class="p">,</span> <span class="n">MotorDashboard</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">state_plots</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,),</span> <span class="n">action_plots</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">))</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="o">=</span><span class="n">reward_function</span><span class="p">,</span>
-            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="n">state_filter</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-            <span class="n">state_action_processors</span><span class="o">=</span><span class="n">state_action_processors</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="n">state_filter</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span>
         <span class="p">)</span></div>
 </pre></div>
 
