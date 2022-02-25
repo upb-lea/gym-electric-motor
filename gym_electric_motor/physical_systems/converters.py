@@ -504,7 +504,7 @@ class FiniteMultiConverter(FiniteConverter):
 
     @property
     def tau(self):
-        return super()._tau
+        return self._tau
 
     @tau.setter
     def tau(self, value):
@@ -619,7 +619,7 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
 
     @property
     def tau(self):
-        return super()._tau
+        return self._tau
 
     @tau.setter
     def tau(self, value):
