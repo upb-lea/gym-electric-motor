@@ -148,4 +148,5 @@ class DoublyFedInductionMotor(InductionMotor):
                                                  u_rq_max=self._nominal_values['u_rq'])
         flux_nominal_limits = {state: value for state, value in
                                zip(self.FLUXES, flux_alphabeta_limits)}
+                                   
         super()._update_initial_limits(flux_nominal_limits)

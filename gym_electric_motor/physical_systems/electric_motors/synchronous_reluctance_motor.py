@@ -117,11 +117,13 @@ class SynchronousReluctanceMotor(SynchronousMotor):
         return self.torque([self._limits['i_sd'] / np.sqrt(2), self._limits['i_sq'] / np.sqrt(2), 0])
 
     def torque(self, currents):
+        if isinstance(currents, (list, tuple)):
+            currents = np.atleast_2d(currents)
         # Docstring of superclass
         mp = self._motor_parameter
         return 1.5 * mp['p'] * (
-                (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * \
-               currents[self.I_SQ_IDX]
+                (mp['l_d'] - mp['l_q']) * currents[:, self.I_SD_IDX]) * \
+               currents[:, self.I_SQ_IDX]
 
     def electrical_jacobian(self, state, u_in, omega, *_):
         mp = self._motor_parameter

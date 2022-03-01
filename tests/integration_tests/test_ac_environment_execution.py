@@ -21,6 +21,7 @@ def test_execution(ac_motor, control_task, action_type, version, no_of_steps):
         if done:
             observation = env.reset()
         action = [env.action_space.sample()]
+        print(action)
         observation, reward, done, info = env.step(action)
 
         assert info == {}

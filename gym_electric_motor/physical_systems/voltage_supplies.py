@@ -67,7 +67,7 @@ class IdealVoltageSupply(VoltageSupply):
 
     def get_voltage(self, *_, **__):
         # Docstring of superclass
-        return [self._u_nominal]
+        return np.atleast_2d(self._u_nominal)
 
 
 class RCVoltageSupply(VoltageSupply):
@@ -118,7 +118,7 @@ class RCVoltageSupply(VoltageSupply):
         # Docstring of superclass
         self._solver.set_f_params(self._u_0, i_sup, self._r, self._c)
         self._u_sup = self._solver.integrate(t)
-        return self._u_sup
+        return np.atleast_2d(self._u_sup)
 
 
 class AC1PhaseSupply(VoltageSupply):
@@ -158,8 +158,8 @@ class AC1PhaseSupply(VoltageSupply):
     
     def get_voltage(self, t, *_, **__):
         # Docstring of superclass
-        self._u_sup = [self._max_amp*np.sin(2*np.pi*self._f*t + self._phi)]
-        return self._u_sup
+        self._u_sup = self._max_amp*np.sin(2*np.pi*self._f*t + self._phi)
+        return np.atleast_2d(self._u_sup)
 
 
 class AC3PhaseSupply(VoltageSupply):
@@ -202,4 +202,4 @@ class AC3PhaseSupply(VoltageSupply):
     def get_voltage(self, t, *_, **__):
         # Docstring of superclass
         self._u_sup = [self._max_amp*np.sin(2*np.pi*self._f*t + self._phi + 2/3*np.pi*i) for i in range(3)]
-        return self._u_sup
+        return np.atleast_2d(self._u_sup)

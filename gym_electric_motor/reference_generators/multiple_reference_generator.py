@@ -57,7 +57,7 @@ class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
 
     def reset(self, initial_state=None, initial_reference=None):
         # docstring from superclass
-        refs = np.zeros((self._physical_system.n_prll_envs, self._physical_system.state_names.size), dtype=float)
+        refs = np.zeros((self._physical_system.n_prll_envs, len(self._physical_system.state_names)), dtype=float)
         ref_obs = None
         for sub_generator in self._sub_generators:
             ref, ref_observation, _ = sub_generator.reset(initial_state, initial_reference)

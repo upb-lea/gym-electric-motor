@@ -141,8 +141,9 @@ class StatePlot(TimePlot):
     def on_step_end(self, k, state, reference, reward, done):
         super().on_step_end(k, state, reference, reward, done)
         # Write the data to the data containers
-        state_ = state[self._state_idx]
-        ref = reference[self._state_idx]
+        # Showing only first environment
+        state_ = state[0, self._state_idx]
+        ref = reference[0, self._state_idx]
         idx = self.data_idx
         self._x_data[idx] = self._t
         self._state_data[idx] = state_ * self._limits if self._normalized else state_

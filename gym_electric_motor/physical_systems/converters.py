@@ -61,6 +61,7 @@ class PowerElectronicConverter:
         Returns:
             list(float): Times when a switching action occurs and the conversion function must be called by the system.
         """
+        print(action)
         if self._dead_time:
             self._current_action = self._dead_time_action
             self._dead_time_action = action
@@ -113,9 +114,9 @@ class NoConverter(PowerElectronicConverter):
     """Dummy Converter class used to directly transfer the supply voltage to the motor"""
     # Dummy default values for voltages and currents.
     # No real use other than to fit the current physical system architecture
-    voltages = Box(0, 1, shape=(3,), dtype=np.float64)
-    currents = Box(0, 1, shape=(3,), dtype=np.float64)
-    action_space = Box(low=np.array([]), high=np.array([]), dtype=np.float64)
+    voltages = Box(0, 1, shape=(3,), dtype=float)
+    currents = Box(0, 1, shape=(3,), dtype=float)
+    action_space = Box(low=np.array([]), high=np.array([]), dtype=float)
 
     def i_sup(self, i_out):
         return i_out[:, 0]
@@ -169,7 +170,7 @@ class ContDynamicallyAveragedConverter(PowerElectronicConverter):
         Args:
             i_in(list(float)): list of all currents flowing into the motor.
         """
-        return np.sign(i_in[:, 0]) / self._tau * self._interlocking_time
+        return np.sign(i_in[0]) / self._tau * self._interlocking_time
 
 
 class FiniteConverter(PowerElectronicConverter):
@@ -189,7 +190,7 @@ class FiniteConverter(PowerElectronicConverter):
         super().__init__(tau=tau, **kwargs)
 
     def set_action(self, action, t):
-        assert self.action_space.contains(action), \
+        assert all(self.action_space.contains(a) for a in action.ravel()), \
             f"The selected action {action} is not a valid element of the action space {self.action_space}."
         return super().set_action(action, t)
 
@@ -219,8 +220,8 @@ class FiniteOneQuadrantConverter(FiniteConverter):
         | currents: Box(0, 1, shape=(1,))
     """
 
-    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
-    currents = Box(0, 1, shape=(1,), dtype=np.float64)
+    voltages = Box(0, 1, shape=(1,), dtype=float)
+    currents = Box(0, 1, shape=(1,), dtype=float)
     action_space = Discrete(2)
 
     def convert(self, i_out, t):
@@ -252,28 +253,29 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
         | currents: Box(-1, 1, shape=(1,))
     """
 
-    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
-    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
+    voltages = Box(0, 1, shape=(1,), dtype=float)
+    currents = Box(-1, 1, shape=(1,), dtype=float)
     action_space = Discrete(3)
 
     def convert(self, i_out, t):
         # Docstring in base class
+        i_out = np.atleast_2d(i_out[0])  # TODO: Check if arg is really always 1-element list
         # Converter switches slightly (tau / 1000 seconds) before interlocking time due to inaccuracy of the solvers.
         if t - self._tau / 1000 > self._action_start_time + self._interlocking_time:
-            self._switching_state = self._switching_pattern[-1]
+            self._switching_state = self._switching_pattern[:, -1]
         else:
-            self._switching_state = self._switching_pattern[0]
-        if self._switching_state == 0:
-            return [(i_out[:, 0] < 0).astype(np.float)]
-        elif self._switching_state == 1:
-            return [np.ones(i_out.shape[0], dtype=np.float)]
-        elif self._switching_state == 2:
-            return [np.zeros(i_out.shape[0], dtype=np.float)]
-        else:
-            raise Exception('Invalid switching state of the converter')
+            self._switching_state = self._switching_pattern[:, 0]
+
+        assert any(0 <= x <= 2 for x in self._switching_state.ravel()), "Invalid switching state of the converter"
+        ret = np.zeros_like(self._switching_state)
+        ret[self._switching_state == 1] = 1
+        ret[self._switching_state == 0] = (i_out[:, 0] < 0).astype(float)
+        return [ret]
 
     def i_sup(self, i_out):
         # Docstring in base class
+        i_out = np.atleast_2d(i_out[0])  # TODO: check if this is valid
+        #TODO: figure out what switching state has to look like und why is _current_action 2-element list for 1 n_prll_env?
         if self._switching_state == 0:
             return np.clip(i_out[:, 0], a_min=None, a_max=0)
         elif self._switching_state == 1:
@@ -285,6 +287,10 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
 
     def _set_switching_pattern(self):
         # Docstring in base class
+        print(self._current_action)
+        print(self._switching_state)
+        print(self._interlocking_time)
+        curr_act = np.atleast_2d(np.hstack(self._current_action))
         if (
                 self._current_action == 0
                 or self._switching_state == 0
@@ -316,8 +322,8 @@ class FiniteFourQuadrantConverter(FiniteConverter):
         | Box(-1, 1, shape=(1,))
         | Box(-1, 1, shape=(1,))
     """
-    voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
-    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
+    voltages = Box(-1, 1, shape=(1,), dtype=float)
+    currents = Box(-1, 1, shape=(1,), dtype=float)
     action_space = Discrete(4)
 
     def __init__(self, **kwargs):
@@ -337,7 +343,7 @@ class FiniteFourQuadrantConverter(FiniteConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
-        assert all(self.action_space.contains(a) for a in action), \
+        assert all(self.action_space.contains(a) for a in action.ravel()), \
             f"The selected action {action} contains invalid elements for the action space {self.action_space}."
         times = []
         action0 = np.array([1, 1, 2, 2])[action]
@@ -366,9 +372,9 @@ class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(0, 1, shape=(1,))
         | currents: Box(0, 1, shape=(1,))
     """
-    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
-    currents = Box(0, 1, shape=(1,), dtype=np.float64)
-    action_space = Box(0, 1, shape=(1,), dtype=np.float64)
+    voltages = Box(0, 1, shape=(1,), dtype=float)
+    currents = Box(0, 1, shape=(1,), dtype=float)
+    action_space = Box(0, 1, shape=(1,), dtype=float)
 
     def _convert(self, i_in, *_):
         # Docstring in base class
@@ -401,22 +407,25 @@ class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(0, 1, shape=(1,))
         | currents: Box(-1, 1, shape=(1,))
     """
-    voltages = Box(0, 1, shape=(1,), dtype=np.float64)
-    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
-    action_space = Box(0, 1, shape=(1,), dtype=np.float64)
+    voltages = Box(0, 1, shape=(1,), dtype=float)
+    currents = Box(-1, 1, shape=(1,), dtype=float)
+    action_space = Box(0, 1, shape=(1,), dtype=float)
 
 
     def _convert(self, *_):
         # Docstring in base class
-        return self._current_action[:, 0]
+        return self._current_action[0]
 
     def i_sup(self, i_out):
         # Docstring in base class
-        interlocking_current = (i_out[:, 0] < 0).astype(np.float)
+        # TODO: is i_out always a 1-element list?
+
+        i_out = np.atleast_2d(i_out[0]) 
+        interlocking_current = (i_out[:, 0] < 0).astype(float)
 
         return (
-            self._current_action[:, 0]
-            + self._interlocking_time / self._tau * (interlocking_current - self._current_action[:, 0])
+            self._current_action[0]
+            + self._interlocking_time / self._tau * (interlocking_current - self._current_action[0])
         ) * i_out[:, 0]
 
 
@@ -440,9 +449,9 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(-1, 1, shape=(1,))
         | currents: Box(-1, 1, shape=(1,))
     """
-    voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
-    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
-    action_space = Box(-1, 1, shape=(1,), dtype=np.float64)
+    voltages = Box(-1, 1, shape=(1,), dtype=float)
+    currents = Box(-1, 1, shape=(1,), dtype=float)
+    action_space = Box(-1, 1, shape=(1,), dtype=float)
 
     def __init__(self, **kwargs):
         # Docstring in base class
@@ -542,8 +551,8 @@ class FiniteMultiConverter(FiniteConverter):
 
         # put limits into gym_space format
         self.action_space = MultiDiscrete(self.action_space)
-        self.currents = Box(currents_low, currents_high, dtype=np.float64)
-        self.voltages = Box(voltages_low, voltages_high, dtype=np.float64)
+        self.currents = Box(currents_low, currents_high, dtype=float)
+        self.voltages = Box(voltages_low, voltages_high, dtype=float)
 
     def convert(self, i_out, t):
         # Docstring in base class
@@ -646,9 +655,9 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         voltages_high = np.concatenate(voltages_high)
 
         # put limits into gym_space format
-        self.action_space = Box(action_space_low, action_space_high, dtype=np.float64)
-        self.currents = Box(currents_low, currents_high, dtype=np.float64)
-        self.voltages = Box(voltages_low, voltages_high, dtype=np.float64)
+        self.action_space = Box(action_space_low, action_space_high, dtype=float)
+        self.currents = Box(currents_low, currents_high, dtype=float)
+        self.voltages = Box(voltages_low, voltages_high, dtype=float)
 
     def set_action(self, action, t):
         # Docstring in base class
@@ -734,9 +743,9 @@ class FiniteB6BridgeConverter(FiniteConverter):
 
     action_space = Discrete(8)
     # Only positive voltages can be applied
-    voltages = Box(-1, 1, shape=(3,), dtype=np.float64)
+    voltages = Box(-1, 1, shape=(3,), dtype=float)
     # positive and negative currents are possible
-    currents = Box(-1, 1, shape=(3,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(3,), dtype=float)
     _reset_action = 0
     _subactions = np.array([
         [2, 2, 2],
@@ -777,10 +786,13 @@ class FiniteB6BridgeConverter(FiniteConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
-        assert all(self.action_space.contains(a) for a in action), \
+        assert all(self.action_space.contains(a) for a in action.ravel()), \
             f"The selected action {action} is not a valid element of the action space {self.action_space}."
-        subactions = self._subactions[action]
-        times = [subconverter.set_action(subactions[:, i], t)[0] for i, subconverter in enumerate(self._subconverters)]
+        print(f"Finiteb6converter: {action}")
+        print(f"Finiteb6converter:\n{self._subactions}")
+        subactions = self._subactions[action, :]
+        print(f"Finiteb6converter:\n{subactions} with shape {subactions.shape}\n\n")
+        times = [subconverter.set_action(subactions[..., i], t)[0] for i, subconverter in enumerate(self._subconverters)]
 
         return sorted(list(set(times)))
 
@@ -810,11 +822,11 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
         Box(-0.5, 0.5, shape=(3,))
     """
 
-    action_space = Box(-1, 1, shape=(3,), dtype=np.float64)
+    action_space = Box(-1, 1, shape=(3,), dtype=float)
     # Only positive voltages can be applied
-    voltages = Box(-1, 1, shape=(3,), dtype=np.float64)
+    voltages = Box(-1, 1, shape=(3,), dtype=float)
     # Positive and negative currents are possible
-    currents = Box(-1, 1, shape=(3,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(3,), dtype=float)
 
     _reset_action = [0, 0, 0]
 

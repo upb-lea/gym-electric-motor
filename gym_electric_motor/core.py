@@ -258,7 +258,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         """Perform one simulation step of the environment with an action of the action space.
 
         Args:
-            action: Action to play on the environment.
+            action: Action to play on the environment. Must be (# n_parallel_envs, # action space dimension) tensor.
+              If a one-dimensional tensor is given, only a single environment is assumed.
 
         Returns:
             observation(Tuple(ndarray(float),ndarray(float)): Tuple of the new state and the next reference.
@@ -266,9 +267,9 @@ class ElectricMotorEnvironment(gym.core.Env):
             done(bool): Flag, indicating if a reset is required before new steps can be taken.
             {}: An empty dictionary for consistency with the OpenAi Gym interface.
         """
-
+        
         assert not self._done, 'A reset is required before the environment can perform further steps'
-        action = np.atleast_1d(action)
+        action = np.atleast_2d(action)
         assert action.shape[0] == self.physical_system.n_prll_envs, \
             f'Too few actions for the amount of parallel environments were given: {action.shape[0]} != {self.physical_system.n_prll_envs}'
         self._call_callbacks('on_step_begin', self.physical_system.k, action)
@@ -283,7 +284,12 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._call_callbacks(
             'on_step_end', self.physical_system.k, state, reference, reward, self._done
         )
-        return (state[self.state_filter], ref_next), reward, self._done, {}
+        state = state[:, self.state_filter]
+        if len(state.shape) > 1 and state.shape[0] == 1:
+            state = np.squeeze(state, axis=0)
+        if len(ref_next.shape) > 1 and ref_next.shape[0] == 1:
+            ref_next = np.squeeze(ref_next, axis=0)
+        return (state, ref_next), reward, self._done, {}
 
     def seed(self, seed=None):
         sg = np.random.SeedSequence(seed)

@@ -94,5 +94,5 @@ class SquaredConstraint(Constraint):
         self._normalized = not np.all(ps.state_space.high[self._state_indices] == self._limits)
 
     def __call__(self, state):
-        state_ = state[self._state_indices] if self._normalized else state[self._state_indices] / self._limits
-        return float(np.sum(state_**2) > 1.0)
+        state_ = state[:, self._state_indices] if self._normalized else state[:, self._state_indices] / self._limits
+        return (np.sum(state_**2) > 1.0).astype(float)

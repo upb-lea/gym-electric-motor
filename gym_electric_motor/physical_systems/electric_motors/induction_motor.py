@@ -162,7 +162,7 @@ class InductionMotor(ThreePhaseMotor):
         if self._initializer and self._initializer['states']:
             self._update_initial_limits(omega=omega)
             self.initialize(state_space, state_positions, *args, **kwargs)
-            return np.vstack(self.n_prll_envs * [np.asarray(list(self._initial_states.values()))])
+            return np.vstack(self.n_prll_envs * [np.hstack(list(self._initial_states.values()))])
         else:
             return np.zeros((self.n_prll_envs, len(self.CURRENTS) + len(self.FLUXES) + 1))
 
@@ -234,9 +234,10 @@ class InductionMotor(ThreePhaseMotor):
         if omega == 0:
             psi_d_max = mp['l_m'] * self._nominal_values['i_sd']
         else:
-            i_d, i_q = self.q_inv([self._initial_states['i_salpha'],
+            i_dq = self.q_inv([self._initial_states['i_salpha'],
                                   self._initial_states['i_sbeta']],
                                   eps_mag)
+            i_d, i_q = i_dq[:, 0], i_dq[:, 1]
             psi_d_max = mp['p'] * omega * sigma * l_s * i_d + \
                         (mp['r_s'] + mp['r_r'] * l_mr**2) * i_q + \
                         u_q_max + \
@@ -245,7 +246,9 @@ class InductionMotor(ThreePhaseMotor):
             # clipping flux and setting nominal limit
             psi_d_max = 0.9 * np.clip(psi_d_max, a_min=0, a_max=np.abs(mp['l_m'] * i_d))
         # returning flux in alpha, beta system
-        return self.q([psi_d_max, 0], eps_mag)
+        flux_limits = self.q([psi_d_max, 0], eps_mag)
+        psi_alpha, psi_beta = flux_limits[:, 0], flux_limits[:, 1]
+        return psi_alpha, psi_beta
 
     def _update_model(self):
         # Docstring of superclass

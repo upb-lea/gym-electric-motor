@@ -79,6 +79,9 @@ class ActionPlot(TimePlot):
 
     def on_step_begin(self, k, action):
         # Docstring of superclass
+        # TODO: only first environment's action will be plotted
+        if len(action.shape) > 1:
+            action = action[0, :]
         super().on_step_begin(k, action)
         idx = self.data_idx
         self._x_data[idx] = self._t

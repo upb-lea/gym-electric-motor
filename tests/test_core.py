@@ -125,8 +125,8 @@ class TestElectricMotorEnvironment:
         cbs = env._callbacks
         cm = env.constraint_monitor
         cm.constraints[0].violation_degree = float(set_done)
-        action = np.full((ps.n_prll_envs,), action)
-        set_done = np.full((ps.n_prll_envs,), set_done)
+        action = np.full((ps.n_prll_envs, 1), action)
+        set_done = np.full((ps.n_prll_envs, 1), set_done)
         with pytest.raises(Exception):
             env.step(action), 'Environment goes through the step without previous reset'
         env.reset()
