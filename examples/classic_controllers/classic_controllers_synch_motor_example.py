@@ -14,13 +14,13 @@ if __name__ == '__main__':
                         'TC'         Torque Control
                         'CC'         Current Control
 
-        action_type:    'AbcCont'   Continuous Action Space in ABC-Coordinates
+        action_type:    'Cont'   Continuous Action Space in ABC-Coordinates
                         'Finite'    Discrete Action Space
     """
 
     motor_type = 'PMSM'
     control_type = 'TC'
-    action_type = 'AbcCont'
+    action_type = 'Cont'
 
     env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
 

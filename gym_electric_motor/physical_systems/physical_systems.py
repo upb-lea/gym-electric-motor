@@ -11,8 +11,7 @@ from ..utils import set_state_array
 class SCMLSystem(PhysicalSystem, RandomComponent):
     """
     The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
-    a technical setting consisting of these components as well as a noise
-    generator and a solver for the electrical ODE of the motor and mechanical
+    a technical setting consisting of these components and a solver for the electrical ODE of the motor and mechanical
     ODE of the load.
     """
     OMEGA_IDX = 0
@@ -49,7 +48,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         """The mechanical load instance in the system"""
         return self._mechanical_load
 
-    def __init__(self, converter, motor, load, supply, ode_solver, noise_generator=None, tau=1e-4, calc_jacobian=None):
+    def __init__(self, converter, motor, load, supply, ode_solver, tau=1e-4, calc_jacobian=None):
         """
         Args:
             converter(PowerElectronicConverter): Converter for the physical system
@@ -57,7 +56,6 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
             load(MechanicalLoad): Mechanical Load of the System
             supply(VoltageSupply): Voltage Supply
             ode_solver(OdeSolver): Ode Solver to use in this setting
-            noise_generator(NoiseGenerator):  Noise generator
             tau(float): discrete time step of the system
             calc_jacobian(bool): If True, the jacobian matrices will be taken into account for the ode-solvers.
                 Default: The jacobians are used, if available
@@ -67,9 +65,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self._electrical_motor = motor
         self._mechanical_load = load
         self._supply = supply
-        self._noise_generator = noise_generator
         state_names = self._build_state_names()
-        self._noise_generator.set_state_names(state_names)
         self._ode_solver = ode_solver
         if calc_jacobian is None:
             calc_jacobian = self._electrical_motor.HAS_JACOBIAN and self._mechanical_load.HAS_JACOBIAN
@@ -90,14 +86,12 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self._nominal_state = np.zeros_like(state_names, dtype=float)
         self._set_limits()
         self._set_nominal_state()
-        self._noise_generator.set_signal_power_level(self._nominal_state)
         self.system_state = np.zeros_like(state_names, dtype=float)
         self._system_eq_placeholder = None
         self._motor_deriv_size = None
         self._load_deriv_size = None
         self._components = [
-            self._supply, self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver,
-            self._noise_generator
+            self._supply, self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver
         ]
 
     def _set_limits(self):
@@ -187,7 +181,6 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self._t = self._ode_solver.t
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
-        noise = self._noise_generator.noise()
 
         n_mech_states = len(self.mechanical_load.state_names)
         motor_state = ode_state[n_mech_states:]
@@ -197,7 +190,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
             motor_state[self._electrical_motor.CURRENTS_IDX]
         self.system_state[self.VOLTAGES_IDX] = u_in
         self.system_state[self.U_SUP_IDX] = u_sup
-        return (self.system_state + noise) / self._limits
+        return self.system_state / self._limits
 
     def _system_equation(self, t, state, u_in, **__):
         """
@@ -275,7 +268,6 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         u_in = self.converter.reset()
         u_in = [u * u_s for u in u_in for u_s in u_sup]
         torque = self.electrical_motor.torque(motor_state)
-        noise = self._noise_generator.reset()
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
@@ -286,7 +278,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
             u_in,
             u_sup
         ))
-        return (system_state + noise) / self._limits
+        return system_state / self._limits
 
 
 class DcMotorSystem(SCMLSystem):
@@ -503,7 +495,6 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         self._t = self._ode_solver.t
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
-        noise = self._noise_generator.noise()
         mechanical_state = ode_state[self._load_ode_idx]
         i_dq = ode_state[self._ode_currents_idx]
         i_abc = list(
@@ -521,7 +512,7 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             [eps],
             u_sup
         ))
-        return (system_state + noise) / self._limits
+        return system_state / self._limits
 
     def reset(self, *_):
         # Docstring of superclass
@@ -543,7 +534,6 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         i_dq = ode_state[self._ode_currents_idx]
         i_abc = self.dq_to_abc_space(i_dq, eps)
         torque = self.electrical_motor.torque(motor_state)
-        noise = self._noise_generator.reset()
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
@@ -555,7 +545,7 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
             [eps],
             u_sup,
         ))
-        return (system_state + noise) / self._limits
+        return system_state/ self._limits
 
 
 class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
@@ -651,7 +641,6 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         self._t = self._ode_solver.t
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
-        noise = self._noise_generator.noise()
         mechanical_state = ode_state[self._load_ode_idx]
         i_dq = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_fs)
         i_abc = list(self.dq_to_abc_space(i_dq, eps_fs))
@@ -667,7 +656,7 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
             [eps],
             u_sup
         ))
-        return (system_state + noise) / self._limits
+        return system_state / self._limits
 
     def reset(self, *_):
         # Docstring of superclass
@@ -694,7 +683,6 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
         i_dq = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_fs)
         i_abc = self.dq_to_abc_space(i_dq, eps_fs)
         torque = self.electrical_motor.torque(motor_state)
-        noise = self._noise_generator.reset()
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
@@ -705,23 +693,19 @@ class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
             [eps],
             u_sup
         ])
-        return (system_state + noise) / self._limits
+        return system_state / self._limits
 
 
 class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
     """
     SCML-System for the Doubly Fed Induction Motor
     """
-    def __init__(self, control_space='abc', ode_solver='scipy.ode', **kwargs):
+    def __init__(self, ode_solver='scipy.ode', **kwargs):
         """
         Args:
-            control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
             kwargs: Further arguments to pass tp SCMLSystem
         """
         super().__init__(ode_solver=ode_solver, **kwargs)
-        self.control_space = control_space
-        if control_space == 'dq':
-            self._action_space = Box(-1, 1, shape=(4,), dtype=np.float64)
 
         self.stator_voltage_space_idx = 0
         self.stator_voltage_low_idx = 0
@@ -736,9 +720,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             + self._converter.subsignal_voltage_space_dims[self.rotor_voltage_space_idx]
 
     def _set_limits(self):
-        """
-        Method to set the physical limits from the modules.
-        """
+        """Method to set the physical limits from the modules."""
         for ind, state in enumerate(self._state_names):
             motor_lim = self._electrical_motor.limits.get(state, np.inf)
             mechanical_lim = self._mechanical_load.limits.get(state, np.inf)
@@ -826,16 +808,6 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         eps_field = self.calculate_field_angle(ode_state)
         eps_el = ode_state[self._ode_epsilon_idx]
 
-        # convert dq input voltage to abc
-        if self.control_space == 'dq':
-            stator_input_len = len(self._electrical_motor.STATOR_VOLTAGES)
-            rotor_input_len = len(self._electrical_motor.ROTOR_VOLTAGES)
-            action_stator = action[:stator_input_len]
-            action_rotor = action[stator_input_len:stator_input_len + rotor_input_len]
-            action_stator = self.dq_to_abc_space(action_stator, eps_field)
-            action_rotor = self.dq_to_abc_space(action_rotor, eps_field-eps_el)
-            action = np.concatenate((action_stator, action_rotor)).tolist()
-
         i_sabc = self.alphabeta_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]))
         i_rdef = self.alphabeta_to_abc_space(self.calculate_rotor_current(ode_state))
         switching_times = self._converter.set_action(action, self._t)
@@ -877,7 +849,6 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         self._t = self._ode_solver.t
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
-        noise = self._noise_generator.noise()
         mechanical_state = ode_state[self._load_ode_idx]
 
         i_sdq = self.alphabeta_to_dq_space(ode_state[self._ode_currents_idx], eps_field)
@@ -900,7 +871,7 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             [eps_el],
             u_sup,
         ))
-        return (system_state + noise) / self._limits
+        return system_state / self._limits
 
     def reset(self, *_):
         # Docstring of superclass
@@ -938,7 +909,6 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
         i_rdef = self.dq_to_abc_space(i_rdq, eps_field-eps_el)
 
         torque = self.electrical_motor.torque(motor_state)
-        noise = self._noise_generator.reset()
         self._t = 0
         self._k = 0
         self._ode_solver.set_initial_value(ode_state, self._t)
@@ -951,4 +921,4 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             [eps_el],
             u_sup
         ])
-        return (system_state + noise) / self._limits
+        return system_state / self._limits

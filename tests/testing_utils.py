@@ -1,10 +1,10 @@
-from .conf import *
+from tests.conf import *
 from gym_electric_motor.physical_systems import *
 from gym_electric_motor.utils import make_module, set_state_array
 from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization, \
     ConstraintMonitor
 from gym_electric_motor.physical_systems import PowerElectronicConverter, MechanicalLoad, ElectricMotor, OdeSolver, \
-    VoltageSupply, NoiseGenerator
+    VoltageSupply
 import gym_electric_motor.physical_systems.converters as cv
 from gym_electric_motor.physical_systems.physical_systems import SCMLSystem
 import numpy as np
@@ -244,10 +244,16 @@ class DummyPhysicalSystem(PhysicalSystem):
         """
         return self._nominal_values
 
-    def __init__(self, state_length=1, state_names='dummy_state', **kwargs):
+    def __init__(self, state_length=None, state_names='dummy_state', **kwargs):
+
+        if isinstance(state_names, str):
+            if state_length is None:
+                state_length = 1
+            state_names = [f'{state_names}_{i}' for i in range(state_length)]
+        state_length = len(state_names)
         super().__init__(
             Box(-1, 1, shape=(1,), dtype=np.float64), Box(-1, 1, shape=(state_length,), dtype=np.float64),
-            [f'{state_names}_{i}' for i in range(state_length)], 1
+            state_names, 1
         )
         self._limits = np.array([10 * (i + 1) for i in range(state_length)])
         self._nominal_values = np.array([(i + 1) for i in range(state_length)])
@@ -328,8 +334,8 @@ class DummyConverter(PowerElectronicConverter):
     currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(4)
 
-    def __init__(self, tau=2E-4, dead_time=False, interlocking_time=0, action_space=None, voltages=None, currents=None, **kwargs):
-        super().__init__(tau, dead_time, interlocking_time)
+    def __init__(self, tau=2E-4, interlocking_time=0, action_space=None, voltages=None, currents=None, **kwargs):
+        super().__init__(tau, interlocking_time)
         self.action_space = action_space or self.action_space
         self.voltages = voltages or self.voltages
         self.currents = currents or self.currents
@@ -535,23 +541,6 @@ class DummyLoad(MechanicalLoad):
     def get_state_space(self, omega_range):
         self.omega_range = omega_range
         return {'omega': 0, 'position': -1}, {'omega': 1, 'position': -1}
-
-
-class DummyNoise(NoiseGenerator):
-    """
-    dummy class for noise generator
-    """
-
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
-        self.reset_counter = 0
-        super().__init__()
-
-    def reset(self):
-        return np.ones_like(self._state_variables, dtype=float) * 0.36
-
-    def noise(self, *_, **__):
-        return np.ones_like(self._state_variables, dtype=float) * 0.42
 
 
 class DummyOdeSolver(OdeSolver):
