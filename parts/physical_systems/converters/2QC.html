@@ -65,6 +65,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
@@ -130,7 +131,6 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau</strong> – Discrete time step of the system in seconds</p></li>
-<li><p><strong>dead_time</strong> – Flag, if a system dead_time of one cycle should be considered.</p></li>
 <li><p><strong>interlocking_time</strong> – Interlocking time of the transistors in seconds</p></li>
 </ul>
 </dd>
@@ -209,17 +209,6 @@ switching state.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.tau">
-<em class="property">property </em><code class="sig-name descname">tau</code><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.tau" title="Permalink to this definition"></a></dt>
-<dd><p>Time of one simulation step in seconds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Float</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -248,7 +237,6 @@ switching state.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau</strong> – Discrete time step of the system in seconds</p></li>
-<li><p><strong>dead_time</strong> – Flag, if a system dead_time of one cycle should be considered.</p></li>
 <li><p><strong>interlocking_time</strong> – Interlocking time of the transistors in seconds</p></li>
 </ul>
 </dd>
@@ -323,17 +311,6 @@ switching state.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list(float)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.tau">
-<em class="property">property </em><code class="sig-name descname">tau</code><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.tau" title="Permalink to this definition"></a></dt>
-<dd><p>Time of one simulation step in seconds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Float</p>
 </dd>
 </dl>
 </dd></dl>

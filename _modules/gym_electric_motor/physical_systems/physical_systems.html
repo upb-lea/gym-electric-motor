@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
@@ -90,8 +91,7 @@
 <div class="viewcode-block" id="SCMLSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem">[docs]</a><span class="k">class</span> <span class="nc">SCMLSystem</span><span class="p">(</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of</span>
-<span class="sd">    a technical setting consisting of these components as well as a noise</span>
-<span class="sd">    generator and a solver for the electrical ODE of the motor and mechanical</span>
+<span class="sd">    a technical setting consisting of these components and a solver for the electrical ODE of the motor and mechanical</span>
 <span class="sd">    ODE of the load.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="mi">0</span>
@@ -128,7 +128,7 @@
         <span class="sd">&quot;&quot;&quot;The mechanical load instance in the system&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">ode_solver</span><span class="p">,</span> <span class="n">noise_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">ode_solver</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            converter(PowerElectronicConverter): Converter for the physical system</span>
@@ -136,7 +136,6 @@
 <span class="sd">            load(MechanicalLoad): Mechanical Load of the System</span>
 <span class="sd">            supply(VoltageSupply): Voltage Supply</span>
 <span class="sd">            ode_solver(OdeSolver): Ode Solver to use in this setting</span>
-<span class="sd">            noise_generator(NoiseGenerator):  Noise generator</span>
 <span class="sd">            tau(float): discrete time step of the system</span>
 <span class="sd">            calc_jacobian(bool): If True, the jacobian matrices will be taken into account for the ode-solvers.</span>
 <span class="sd">                Default: The jacobians are used, if available</span>
@@ -146,10 +145,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span> <span class="o">=</span> <span class="n">motor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span> <span class="o">=</span> <span class="n">load</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span> <span class="o">=</span> <span class="n">supply</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span> <span class="o">=</span> <span class="n">noise_generator</span>
-
         <span class="n">state_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_state_names</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">set_state_names</span><span class="p">(</span><span class="n">state_names</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span> <span class="o">=</span> <span class="n">ode_solver</span>
         <span class="k">if</span> <span class="n">calc_jacobian</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">calc_jacobian</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">HAS_JACOBIAN</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">HAS_JACOBIAN</span>
@@ -170,16 +166,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_limits</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_nominal_state</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">set_signal_power_level</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_system_eq_placeholder</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_motor_deriv_size</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_deriv_size</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span>
         <span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span>
 
     <span class="k">def</span> <span class="nf">_set_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -268,7 +261,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">])</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">noise</span><span class="p">()</span>
 
         <span class="n">n_mech_states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanical_load</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span>
         <span class="n">motor_state</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="n">n_mech_states</span><span class="p">:]</span>
@@ -278,7 +270,7 @@
             <span class="n">motor_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">CURRENTS_IDX</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">VOLTAGES_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_in</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_sup</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
 
     <span class="k">def</span> <span class="nf">_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -356,7 +348,6 @@
         <span class="n">u_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="n">u_in</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="o">*</span> <span class="n">u_s</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">u_in</span> <span class="k">for</span> <span class="n">u_s</span> <span class="ow">in</span> <span class="n">u_sup</span><span class="p">]</span>
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">motor_state</span><span class="p">)</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">ode_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
@@ -367,7 +358,7 @@
             <span class="n">u_in</span><span class="p">,</span>
             <span class="n">u_sup</span>
         <span class="p">))</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+        <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
 
 
 <div class="viewcode-block" id="DcMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">DcMotorSystem</span><span class="p">(</span><span class="n">SCMLSystem</span><span class="p">):</span>
@@ -584,7 +575,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">])</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">noise</span><span class="p">()</span>
         <span class="n">mechanical_state</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">]</span>
         <span class="n">i_dq</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">]</span>
         <span class="n">i_abc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
@@ -602,7 +592,7 @@
             <span class="p">[</span><span class="n">eps</span><span class="p">],</span>
             <span class="n">u_sup</span>
         <span class="p">))</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+        <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
 
 <div class="viewcode-block" id="SynchronousMotorSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
@@ -624,7 +614,6 @@
         <span class="n">i_dq</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">]</span>
         <span class="n">i_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dq_to_abc_space</span><span class="p">(</span><span class="n">i_dq</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">motor_state</span><span class="p">)</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">ode_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
@@ -636,7 +625,7 @@
             <span class="p">[</span><span class="n">eps</span><span class="p">],</span>
             <span class="n">u_sup</span><span class="p">,</span>
         <span class="p">))</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+        <span class="k">return</span> <span class="n">system_state</span><span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
 
 
 <div class="viewcode-block" id="SquirrelCageInductionMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">SquirrelCageInductionMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
@@ -732,7 +721,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">])</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">noise</span><span class="p">()</span>
         <span class="n">mechanical_state</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">]</span>
         <span class="n">i_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabeta_to_dq_space</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">],</span> <span class="n">eps_fs</span><span class="p">)</span>
         <span class="n">i_abc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dq_to_abc_space</span><span class="p">(</span><span class="n">i_dq</span><span class="p">,</span> <span class="n">eps_fs</span><span class="p">))</span>
@@ -748,7 +736,7 @@
             <span class="p">[</span><span class="n">eps</span><span class="p">],</span>
             <span class="n">u_sup</span>
         <span class="p">))</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+        <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
 
 <div class="viewcode-block" id="SquirrelCageInductionMotorSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
@@ -775,7 +763,6 @@
         <span class="n">i_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabeta_to_dq_space</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">],</span> <span class="n">eps_fs</span><span class="p">)</span>
         <span class="n">i_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dq_to_abc_space</span><span class="p">(</span><span class="n">i_dq</span><span class="p">,</span> <span class="n">eps_fs</span><span class="p">)</span>
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">motor_state</span><span class="p">)</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">ode_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
@@ -786,23 +773,19 @@
             <span class="p">[</span><span class="n">eps</span><span class="p">],</span>
             <span class="n">u_sup</span>
         <span class="p">])</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+        <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
 
 
 <div class="viewcode-block" id="DoublyFedInductionMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">DoublyFedInductionMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    SCML-System for the Doubly Fed Induction Motor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_space</span><span class="o">=</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="s1">&#39;scipy.ode&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="s1">&#39;scipy.ode&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            control_space(str):(&#39;abc&#39; or &#39;dq&#39;) Choose, if actions the actions space is in dq or abc space</span>
 <span class="sd">            kwargs: Further arguments to pass tp SCMLSystem</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ode_solver</span><span class="o">=</span><span class="n">ode_solver</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">control_space</span> <span class="o">=</span> <span class="n">control_space</span>
-        <span class="k">if</span> <span class="n">control_space</span> <span class="o">==</span> <span class="s1">&#39;dq&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stator_voltage_space_idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stator_voltage_low_idx</span> <span class="o">=</span> <span class="mi">0</span>
@@ -817,9 +800,7 @@
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">subsignal_voltage_space_dims</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rotor_voltage_space_idx</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_set_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Method to set the physical limits from the modules.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Method to set the physical limits from the modules.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">):</span>
             <span class="n">motor_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
             <span class="n">mechanical_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
@@ -907,16 +888,6 @@
         <span class="n">eps_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_field_angle</span><span class="p">(</span><span class="n">ode_state</span><span class="p">)</span>
         <span class="n">eps_el</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_epsilon_idx</span><span class="p">]</span>
 
-        <span class="c1"># convert dq input voltage to abc</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_space</span> <span class="o">==</span> <span class="s1">&#39;dq&#39;</span><span class="p">:</span>
-            <span class="n">stator_input_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">STATOR_VOLTAGES</span><span class="p">)</span>
-            <span class="n">rotor_input_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">ROTOR_VOLTAGES</span><span class="p">)</span>
-            <span class="n">action_stator</span> <span class="o">=</span> <span class="n">action</span><span class="p">[:</span><span class="n">stator_input_len</span><span class="p">]</span>
-            <span class="n">action_rotor</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="n">stator_input_len</span><span class="p">:</span><span class="n">stator_input_len</span> <span class="o">+</span> <span class="n">rotor_input_len</span><span class="p">]</span>
-            <span class="n">action_stator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dq_to_abc_space</span><span class="p">(</span><span class="n">action_stator</span><span class="p">,</span> <span class="n">eps_field</span><span class="p">)</span>
-            <span class="n">action_rotor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dq_to_abc_space</span><span class="p">(</span><span class="n">action_rotor</span><span class="p">,</span> <span class="n">eps_field</span><span class="o">-</span><span class="n">eps_el</span><span class="p">)</span>
-            <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">action_stator</span><span class="p">,</span> <span class="n">action_rotor</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-
         <span class="n">i_sabc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabeta_to_abc_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">i_in</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">]))</span>
         <span class="n">i_rdef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabeta_to_abc_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculate_rotor_current</span><span class="p">(</span><span class="n">ode_state</span><span class="p">))</span>
         <span class="n">switching_times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">set_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
@@ -958,7 +929,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">])</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">noise</span><span class="p">()</span>
         <span class="n">mechanical_state</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">]</span>
 
         <span class="n">i_sdq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabeta_to_dq_space</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">],</span> <span class="n">eps_field</span><span class="p">)</span>
@@ -981,7 +951,7 @@
             <span class="p">[</span><span class="n">eps_el</span><span class="p">],</span>
             <span class="n">u_sup</span><span class="p">,</span>
         <span class="p">))</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+        <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
 
 <div class="viewcode-block" id="DoublyFedInductionMotorSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
@@ -1019,7 +989,6 @@
         <span class="n">i_rdef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dq_to_abc_space</span><span class="p">(</span><span class="n">i_rdq</span><span class="p">,</span> <span class="n">eps_field</span><span class="o">-</span><span class="n">eps_el</span><span class="p">)</span>
 
         <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electrical_motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">motor_state</span><span class="p">)</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">ode_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
@@ -1032,7 +1001,7 @@
             <span class="p">[</span><span class="n">eps_el</span><span class="p">],</span>
             <span class="n">u_sup</span>
         <span class="p">])</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">system_state</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+        <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
 </pre></div>
 
            </div>
