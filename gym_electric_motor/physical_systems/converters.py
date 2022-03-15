@@ -501,7 +501,7 @@ class FiniteMultiConverter(FiniteConverter):
     @tau.setter
     def tau(self, value):
         self._tau = float(value)
-        for sub_converter in self._subconverters:
+        for sub_converter in self._sub_converters:
             sub_converter.tau = value
 
     def sub_converters(self):
@@ -616,7 +616,7 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
     @tau.setter
     def tau(self, value):
         self._tau = float(value)
-        for sub_converter in self._subconverters:
+        for sub_converter in self._sub_converters:
             sub_converter.tau = value
 
     def __init__(self, subconverters, **kwargs):
