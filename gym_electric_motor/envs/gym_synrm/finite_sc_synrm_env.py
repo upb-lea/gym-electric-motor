@@ -23,7 +23,6 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
         - Motor: :py:class:`.SynchronousReluctanceMotor`
         - Load: :py:class:`.PolynomialStaticLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
-        - Noise: **None**
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
 
@@ -85,9 +84,10 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
         >>>     env.render()
         >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None, noise_generator=None,
+    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5):
+                 constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5,
+                 state_action_processors=()):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -109,6 +109,8 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
             tau(float): Duration of one control step in seconds. Default: 1e-4.
             state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
             callbacks(list(Callback)): Callbacks for user interaction. Default: ()
+            state_action_processors(list(StateActionProcessor)): List of state action processors to modify the
+            actions to and states from the physical system before they are used in the environment. Default: ()
 
         Note on the env-arg type:
             All parameters of type env-arg can be selected as one of the following types:
@@ -131,7 +133,6 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
                 load_parameter=dict(a=0.01, b=0.01, c=0.0)
             )),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
-            noise_generator=initialize(ps.NoiseGenerator, noise_generator, ps.NoiseGenerator, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau
         )
@@ -146,5 +147,6 @@ class FiniteSpeedControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
             ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks
+            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
+            state_action_processors=state_action_processors
         )

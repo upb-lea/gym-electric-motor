@@ -64,8 +64,7 @@ class ThreePhaseMotor(ElectricMotor):
         """
         cos = math.cos(epsilon)
         sin = math.sin(epsilon)
-        return cos * quantities[0] - sin * quantities[1], sin * quantities[
-            0] + cos * quantities[1]
+        return cos * quantities[0] - sin * quantities[1], sin * quantities[0] + cos * quantities[1]
 
     @staticmethod
     def q_inv(quantities, epsilon):

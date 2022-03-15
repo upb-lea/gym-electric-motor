@@ -114,6 +114,9 @@ htmlhelp_basename = 'LEA-RLdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
+latex_packages = r'''
+\usepackage{amsmath}
+'''
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
@@ -131,6 +134,7 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
+    'packages': latex_packages
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
