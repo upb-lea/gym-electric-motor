@@ -25,6 +25,15 @@ class PowerElectronicConverter:
     #: Default action that is taken after a reset.
     _reset_action = None
 
+    @property
+    def tau(self):
+        """Float: Time of one simulation step in seconds."""
+        return self._tau
+
+    @tau.setter
+    def tau(self, value):
+        self._tau = float(value)
+
     def __init__(self, tau, interlocking_time=0.0):
         """
        :param tau: Discrete time step of the system in seconds
@@ -486,8 +495,18 @@ class FiniteMultiConverter(FiniteConverter):
     """
 
     @property
+    def tau(self):
+        return self._tau
+
+    @tau.setter
+    def tau(self, value):
+        self._tau = float(value)
+        for sub_converter in self._sub_converters:
+            sub_converter.tau = value
+
     def sub_converters(self):
         return self._sub_converters
+
 
     def __init__(self, subconverters, **kwargs):
         """
@@ -589,6 +608,16 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         Box([subconverter[0].voltages.low, subconverter[1].voltages.low, ...],
             [subconverter[0].voltages.high, subconverter[1].voltages.high, ...])
     """
+
+    @property
+    def tau(self):
+        return self._tau
+
+    @tau.setter
+    def tau(self, value):
+        self._tau = float(value)
+        for sub_converter in self._sub_converters:
+            sub_converter.tau = value
 
     def __init__(self, subconverters, **kwargs):
         """

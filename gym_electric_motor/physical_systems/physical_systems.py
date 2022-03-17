@@ -93,6 +93,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         self._components = [
             self._supply, self._converter, self._electrical_motor, self._mechanical_load, self._ode_solver
         ]
+        self._converter.tau = self.tau
 
     def _set_limits(self):
         """
