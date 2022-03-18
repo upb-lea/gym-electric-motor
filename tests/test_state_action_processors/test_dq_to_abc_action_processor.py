@@ -27,8 +27,8 @@ class TestDqToAbcActionProcessor(TestStateActionProcessor):
         ['dq_action', 'state', 'abc_action'],
         [
             (np.array([0.0, .0]), np.array([0.0, 0.0, 0.0]), np.array([0., 0., 0.])),
-            (np.array([0.0, 1.0]), np.array([12.8, 0.123, 0.0]), np.array([0.23752263,  0.72248018, -0.96000281])),
-            (np.array([0.0, .5]), np.array([-10.0, 0.123, 0.0]), np.array([0.49324109, -0.17566335, -0.31757774])),
+            (np.array([0.0, 1.0]), np.array([12.8, 0.123, 0.0]), np.array([-0.23752263,  0.96000281, -0.72248018])),
+            (np.array([0.0, .5]), np.array([-10.0, 0.123, 0.0]), np.array([-0.49324109,  0.31757774,  0.17566335])),
         ]
     )
     def test_simulate(self, reset_processor, physical_system, dq_action, state, abc_action):
