@@ -154,7 +154,7 @@ def test_discrete_single_power_electronic_converter(
 
 @pytest.mark.parametrize("convert, convert_class", [
     ('Finite-1QC', cv.FiniteOneQuadrantConverter),
-    ('Finite-2QC', cv.FiniteTwoQuadrantConverter),
+    ('Finite-2QC', cv.FiniteTwoCurrentQuadrantConverter),
     ('Finite-4QC', cv.FiniteFourQuadrantConverter)
 ])
 @pytest.mark.parametrize("tau", g_taus)
@@ -746,7 +746,7 @@ class TestFiniteOneQuadrantConverter(TestFiniteConverter):
 
 
 class TestFiniteTwoQuadrantConverter(TestFiniteConverter):
-    class_to_test = cv.FiniteTwoQuadrantConverter
+    class_to_test = cv.FiniteTwoCurrentQuadrantConverter
     key = 'Finite-2QC'
 
     @pytest.mark.parametrize("interlocking_time", [0.0, 0.1])
@@ -897,7 +897,7 @@ class TestContOneQuadrantConverter(TestContDynamicallyAveragedConverter):
 
 
 class TestContTwoQuadrantConverter(TestContDynamicallyAveragedConverter):
-    class_to_test = cv.ContTwoQuadrantConverter
+    class_to_test = cv.ContTwoCurrentQuadrantConverter
     key = 'Cont-2QC'
 
     @pytest.mark.parametrize('interlocking_time', [0.0, 0.1, 1])
