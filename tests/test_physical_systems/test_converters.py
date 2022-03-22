@@ -52,13 +52,13 @@ g_1qc_test_voltages = [g_test_voltages_1qc, g_test_voltages_1qc]
 g_2qc_test_voltages = [g_test_voltages_2qc, g_test_voltages_2qc_interlocking]
 g_4qc_test_voltages = [g_test_voltages_4qc, g_test_voltages_4qc_interlocking]
 g_disc_test_voltages = {'Finite-1QC': g_1qc_test_voltages,
-                        'Finite-2QC': g_2qc_test_voltages,
+                        'Finite-2CQC': g_2qc_test_voltages,
                         'Finite-4QC': g_4qc_test_voltages}
 g_disc_test_i_ins = {'Finite-1QC': g_i_ins_1qc,
-                     'Finite-2QC': g_i_ins_2qc,
+                     'Finite-2CQC': g_i_ins_2qc,
                      'Finite-4QC': g_i_ins_4qc}
 g_disc_test_actions = {'Finite-1QC': g_actions_1qc,
-                       'Finite-2QC': g_actions_2qc,
+                       'Finite-2CQC': g_actions_2qc,
                        'Finite-4QC': g_actions_4qc}
 
 
@@ -109,7 +109,7 @@ def discrete_converter_functions_testing(
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
 @pytest.mark.parametrize("converter_type, action_space_n, actions, i_ins, test_voltages",
                          [('Finite-1QC', 2, g_actions_1qc, g_i_ins_1qc, g_1qc_test_voltages),
-                          ('Finite-2QC', 3, g_actions_2qc, g_i_ins_2qc, g_2qc_test_voltages),
+                          ('Finite-2CQC', 3, g_actions_2qc, g_i_ins_2qc, g_2qc_test_voltages),
                           ('Finite-4QC', 4, g_actions_4qc, g_i_ins_4qc, g_4qc_test_voltages)])
 def test_discrete_single_power_electronic_converter(
         converter_type, action_space_n, actions, i_ins, test_voltages, interlocking_time, tau
@@ -154,7 +154,7 @@ def test_discrete_single_power_electronic_converter(
 
 @pytest.mark.parametrize("convert, convert_class", [
     ('Finite-1QC', cv.FiniteOneQuadrantConverter),
-    ('Finite-2QC', cv.FiniteTwoCurrentQuadrantConverter),
+    ('Finite-2CQC', cv.FiniteTwoCurrentQuadrantConverter),
     ('Finite-4QC', cv.FiniteFourQuadrantConverter)
 ])
 @pytest.mark.parametrize("tau", g_taus)
@@ -194,7 +194,7 @@ def test_discrete_multi_converter_initializations(tau, interlocking_time):
     :return:
     """
     # define all converter
-    all_single_disc_converter = ['Finite-1QC', 'Finite-2QC', 'Finite-4QC', 'Finite-B6C']
+    all_single_disc_converter = ['Finite-1QC', 'Finite-2CQC', 'Finite-4QC', 'Finite-B6C']
     interlocking_time *= tau
     # chose every combination of single converters
     for conv_1 in all_single_disc_converter:
@@ -218,7 +218,7 @@ def test_discrete_multi_power_electronic_converter(tau, interlocking_time):
     :return:
     """
     # define all converter
-    all_single_disc_converter = ['Finite-1QC', 'Finite-2QC', 'Finite-4QC', 'Finite-B6C']
+    all_single_disc_converter = ['Finite-1QC', 'Finite-2CQC', 'Finite-4QC', 'Finite-B6C']
     interlocking_time *= tau
 
     for conv_0 in all_single_disc_converter:
@@ -265,7 +265,7 @@ def test_discrete_multi_power_electronic_converter(tau, interlocking_time):
 # region continuous converter
 
 
-@pytest.mark.parametrize("converter_type", ['Cont-1QC', 'Cont-2QC', 'Cont-4QC'])
+@pytest.mark.parametrize("converter_type", ['Cont-1QC', 'Cont-2CQC', 'Cont-4QC'])
 @pytest.mark.parametrize("tau", g_taus)
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
 def test_continuous_power_electronic_converter(converter_type, tau, interlocking_time):
@@ -327,7 +327,7 @@ def continuous_converter_functions_testing(converter, times, interlocking_time, 
 def comparable_voltage(converter_type, action, i_in, tau, interlocking_time, last_action):
     voltage = np.array([action])
     error = np.array([- np.sign(i_in) / tau * interlocking_time])
-    if converter_type == 'Cont-2QC':
+    if converter_type == 'Cont-2CQC':
         voltage += error
         voltage = max(min(voltage, np.array([1])), np.array([0]))
     elif converter_type == 'Cont-4QC':
@@ -348,7 +348,7 @@ def test_continuous_multi_power_electronic_converter(tau, interlocking_time):
     :return:
     """
     # define all converter
-    all_single_cont_converter = ['Cont-1QC', 'Cont-2QC', 'Cont-4QC', 'Cont-B6C']
+    all_single_cont_converter = ['Cont-1QC', 'Cont-2CQC', 'Cont-4QC', 'Cont-B6C']
     interlocking_time *= tau
     times = g_times_cont * tau
     for conv_1 in all_single_cont_converter:
@@ -747,7 +747,7 @@ class TestFiniteOneQuadrantConverter(TestFiniteConverter):
 
 class TestFiniteTwoQuadrantConverter(TestFiniteConverter):
     class_to_test = cv.FiniteTwoCurrentQuadrantConverter
-    key = 'Finite-2QC'
+    key = 'Finite-2CQC'
 
     @pytest.mark.parametrize("interlocking_time", [0.0, 0.1])
     def test_set_switching_pattern(self, monkeypatch, converter, interlocking_time):
@@ -898,7 +898,7 @@ class TestContOneQuadrantConverter(TestContDynamicallyAveragedConverter):
 
 class TestContTwoQuadrantConverter(TestContDynamicallyAveragedConverter):
     class_to_test = cv.ContTwoCurrentQuadrantConverter
-    key = 'Cont-2QC'
+    key = 'Cont-2CQC'
 
     @pytest.mark.parametrize('interlocking_time', [0.0, 0.1, 1])
     @pytest.mark.parametrize('i_out', [[0.0], [0.1], [-1]])
@@ -1022,7 +1022,7 @@ class TestFiniteMultiConverter(TestFiniteConverter):
             assert sc2.action_set_time == t
 
     def test_default_init(self):
-        converter = self.class_to_test(subconverters=['Finite-1QC', 'Finite-B6C', 'Finite-2QC'])
+        converter = self.class_to_test(subconverters=['Finite-1QC', 'Finite-B6C', 'Finite-2CQC'])
         assert converter._tau == 1e-5
 
     @pytest.mark.parametrize('i_out', [[0, 6, 2, 7, 9], [1, 0.5, 2], [-1, 1]])
