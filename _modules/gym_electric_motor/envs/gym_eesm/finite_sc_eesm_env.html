@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.envs.gym_eesm.finite_tc_eesm_env &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <title>gym_electric_motor.envs.gym_eesm.finite_sc_eesm_env &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
@@ -68,7 +68,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>gym_electric_motor.envs.gym_eesm.finite_tc_eesm_env</li>
+      <li>gym_electric_motor.envs.gym_eesm.finite_sc_eesm_env</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,7 +77,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for gym_electric_motor.envs.gym_eesm.finite_tc_eesm_env</h1><div class="highlight"><pre>
+  <h1>Source code for gym_electric_motor.envs.gym_eesm.finite_sc_eesm_env</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.core</span> <span class="kn">import</span> <span class="n">ElectricMotorEnvironment</span><span class="p">,</span> <span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">RewardFunction</span><span class="p">,</span> \
     <span class="n">ElectricMotorVisualization</span>
 <span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems.physical_systems</span> <span class="kn">import</span> <span class="n">ExternallyExcitedSynchronousMotorSystem</span>
@@ -89,26 +89,26 @@
 <span class="kn">from</span> <span class="nn">gym_electric_motor.constraints</span> <span class="kn">import</span> <span class="n">LimitConstraint</span><span class="p">,</span> <span class="n">SquaredConstraint</span>
 
 
-<div class="viewcode-block" id="FiniteTorqueControlExternallyExcitedSynchronousMotorEnv"><a class="viewcode-back" href="../../../../parts/environments/eesm/finite_tc_eesm.html#gym_electric_motor.envs.FiniteTorqueControlExternallyExcitedSynchronousMotorEnv">[docs]</a><span class="k">class</span> <span class="nc">FiniteTorqueControlExternallyExcitedSynchronousMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteSpeedControlExternallyExcitedSynchronousMotorEnv"><a class="viewcode-back" href="../../../../parts/environments/eesm/finite_sc_eesm.html#gym_electric_motor.envs.FiniteSpeedControlExternallyExcitedSynchronousMotorEnv">[docs]</a><span class="k">class</span> <span class="nc">FiniteSpeedControlExternallyExcitedSynchronousMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description:</span>
-<span class="sd">        Environment to simulate a finite control set torque controlled externally excited synchronous motor.</span>
+<span class="sd">        Environment to simulate a finite control set speed controlled externally excited synchronous motor.</span>
 
 <span class="sd">    Key:</span>
-<span class="sd">        ``&#39;Finite-TC-EESM-v0&#39;``</span>
+<span class="sd">        ``&#39;Finite-SC-EESM-v0&#39;``</span>
 
 <span class="sd">    Default Components:</span>
 <span class="sd">        - Supply: :py:class:`.IdealVoltageSupply`</span>
 <span class="sd">        - Converter: :py:class:`.FiniteMultiConverter`(:py:class:`.FiniteB6BridgeConverter`, :py:class:`.FiniteFourQuadrantConverter`)</span>
 <span class="sd">        - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`</span>
-<span class="sd">        - Load: :py:class:`.ConstantSpeedLoad`</span>
+<span class="sd">        - Load: :py:class:`.PolynomialStaticLoad`</span>
 <span class="sd">        - Ode-Solver: :py:class:`.ScipyOdeSolver`</span>
 
-<span class="sd">        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantities:* ``&#39;torque&#39;``</span>
+<span class="sd">        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantities:* ``&#39;omega&#39;``</span>
 
-<span class="sd">        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``&#39;torque&#39; = 1``</span>
+<span class="sd">        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``&#39;omega&#39; = 1``</span>
 
-<span class="sd">        - Visualization: :py:class:`.MotorDashboard` torque and action plots</span>
+<span class="sd">        - Visualization: :py:class:`.MotorDashboard` speed and action plots</span>
 
 <span class="sd">        - Constraints: :py:class:`.SquaredConstraint` on the currents  ``&#39;i_sd&#39;, &#39;i_sq&#39;``, :py:class:`.LimitConstraint` on the current  ``&#39;i_e&#39;``</span>
 
@@ -116,7 +116,7 @@
 <span class="sd">        ``[&#39;omega&#39; , &#39;torque&#39;, &#39;i_sd&#39;, &#39;i_sq&#39;, &#39;i_a&#39;, &#39;i_b&#39;, &#39;i_c&#39;, &#39;i_e&#39;, &#39;u_sd&#39;, &#39;u_sq&#39;, &#39;u_a&#39;, &#39;u_b&#39;, &#39;u_c&#39;, &#39;u_e&#39;, &#39;u_sup&#39;]``</span>
 
 <span class="sd">    Reference Variables:</span>
-<span class="sd">        ``[&#39;torque&#39;]``</span>
+<span class="sd">        ``[&#39;omega&#39;]``</span>
 
 <span class="sd">    Control Cycle Time:</span>
 <span class="sd">        tau = 1e-5 seconds</span>
@@ -128,7 +128,7 @@
 <span class="sd">        Box(low=15 * [-1], high=15 * [1])</span>
 
 <span class="sd">    Reference Space:</span>
-<span class="sd">        Box(low=[-1, -1, -1], high=[1, 1, 1])</span>
+<span class="sd">        Box(low=[-1], high=[1])</span>
 
 <span class="sd">    Action Space:</span>
 <span class="sd">        MultiDiscrete((8, 4))</span>
@@ -152,7 +152,7 @@
 <span class="sd">        ...     sigma_range=(1e-3, 1e-2)</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; env = gem.make(</span>
-<span class="sd">        ...     &#39;Finite-TC-EESM-v0&#39;,</span>
+<span class="sd">        ...     &#39;Finite-SC-EESM-v0&#39;,</span>
 <span class="sd">        ...     voltage_supply=my_changed_voltage_supply_args,</span>
 <span class="sd">        ...     ode_solver=my_overridden_solver,</span>
 <span class="sd">        ...     reference_generator=my_new_ref_gen_instance</span>
@@ -200,7 +200,7 @@
 <span class="sd">            **str:** Pass a string out of the registered classes to select a different class for the component.</span>
 <span class="sd">            This class is then initialized with its default parameters.</span>
 <span class="sd">            The available strings can be looked up in the documentation. (e.g., ``converter=&#39;Finite-2QC&#39;``)</span>
-<span class="sd">        &quot;&quot;&quot;</span> 
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">default_subconverters</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ps</span><span class="o">.</span><span class="n">FiniteB6BridgeConverter</span><span class="p">(),</span>
             <span class="n">ps</span><span class="o">.</span><span class="n">FiniteFourQuadrantConverter</span><span class="p">()</span>
@@ -209,7 +209,7 @@
             <span class="n">supply</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">VoltageSupply</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">IdealVoltageSupply</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">u_nominal</span><span class="o">=</span><span class="mf">420.0</span><span class="p">)),</span>
             <span class="n">converter</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">FiniteMultiConverter</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">subconverters</span><span class="o">=</span><span class="n">default_subconverters</span><span class="p">)),</span>
             <span class="n">motor</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">ElectricMotor</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ExternallyExcitedSynchronousMotor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
-            <span class="n">load</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">MechanicalLoad</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ConstantSpeedLoad</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega_fixed</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)),</span>
+            <span class="n">load</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">MechanicalLoad</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">PolynomialStaticLoad</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
             <span class="n">ode_solver</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">OdeSolver</span><span class="p">,</span> <span class="n">ode_solver</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ScipyOdeSolver</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
             <span class="n">calc_jacobian</span><span class="o">=</span><span class="n">calc_jacobian</span><span class="p">,</span>
             <span class="n">tau</span><span class="o">=</span><span class="n">tau</span>
@@ -218,16 +218,16 @@
             <span class="n">ReferenceGenerator</span><span class="p">,</span>
             <span class="n">reference_generator</span><span class="p">,</span>
             <span class="n">WienerProcessReferenceGenerator</span><span class="p">,</span>
-            <span class="nb">dict</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;torque&#39;</span><span class="p">)</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;omega&#39;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">reward_function</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">RewardFunction</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="n">WeightedSumOfErrors</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reward_weights</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">torque</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">RewardFunction</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="n">WeightedSumOfErrors</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reward_weights</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
         <span class="p">)</span>
         <span class="n">visualization</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
             <span class="n">ElectricMotorVisualization</span><span class="p">,</span>
             <span class="n">visualization</span><span class="p">,</span>
             <span class="n">MotorDashboard</span><span class="p">,</span>
-            <span class="nb">dict</span><span class="p">(</span><span class="n">state_plots</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;torque&#39;</span><span class="p">,),</span> <span class="n">action_plots</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">state_plots</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;omega&#39;</span><span class="p">,),</span> <span class="n">action_plots</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="o">=</span><span class="n">reward_function</span><span class="p">,</span>
