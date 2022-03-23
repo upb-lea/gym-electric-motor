@@ -208,7 +208,7 @@
         <span class="p">)</span>
         <span class="n">default_subconverters</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ps</span><span class="o">.</span><span class="n">ContB6BridgeConverter</span><span class="p">(),</span>
-            <span class="n">ps</span><span class="o">.</span><span class="n">ContFourQuadrantConverter</span><span class="p">()</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">ContTwoVoltageQuadrantConverter</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="n">physical_system</span> <span class="o">=</span> <span class="n">ExternallyExcitedSynchronousMotorSystem</span><span class="p">(</span>
             <span class="n">supply</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">VoltageSupply</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">IdealVoltageSupply</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">u_nominal</span><span class="o">=</span><span class="mf">300.0</span><span class="p">)),</span>

@@ -559,7 +559,7 @@
 
     <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
