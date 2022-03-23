@@ -479,7 +479,7 @@ class ContTwoVoltageQuadrantConverter(ContDynamicallyAveragedConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return self._current_action if i_out[0] > 0 else [0.0]
+        return self._current_action.tolist() if i_out[0] >= 0 else [0.0]
 
     def i_sup(self, i_out):
         # Docstring in base class

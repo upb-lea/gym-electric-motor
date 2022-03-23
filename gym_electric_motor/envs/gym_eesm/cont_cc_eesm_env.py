@@ -128,7 +128,7 @@ class ContCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviro
         )
         default_subconverters = (
             ps.ContB6BridgeConverter(),
-            ps.ContFourQuadrantConverter()
+            ps.ContTwoVoltageQuadrantConverter()
         )
         physical_system = ExternallyExcitedSynchronousMotorSystem(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=300.0)),
