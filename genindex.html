@@ -243,10 +243,10 @@
 </li>
       <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter">ContDynamicallyAveragedConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter">ContFourQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.ContMultiConverter">ContMultiConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
       <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter">ContOneQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
@@ -287,6 +287,8 @@
 </li>
       <li><a href="parts/environments/synrm/abccont_tc_synrm.html#gym_electric_motor.envs.ContTorqueControlSynchronousReluctanceMotorEnv">ContTorqueControlSynchronousReluctanceMotorEnv (class in gym_electric_motor.envs)</a>
 </li>
+      <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter">ContTwoQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
+</li>
       <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.convert">convert() (gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
 
       <ul>
@@ -298,6 +300,8 @@
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
 </li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.convert">(gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.convert">(gym_electric_motor.physical_systems.converters.FiniteConverter method)</a>
@@ -307,6 +311,8 @@
         <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.convert">(gym_electric_motor.physical_systems.converters.FiniteMultiConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.convert">(gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/NoConv.html#gym_electric_motor.physical_systems.converters.NoConverter.convert">(gym_electric_motor.physical_systems.converters.NoConverter method)</a>
 </li>
@@ -493,9 +499,7 @@
 </li>
       <li><a href="parts/environments/dfim/finite_sc_dfim.html#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv">FiniteSpeedControlDoublyFedInductionMotorEnv (class in gym_electric_motor.envs)</a>
 </li>
-      <li><a href="parts/environments/eesm/finite_sc_eesm.html#gym_electric_motor.envs.FiniteSpeedControlExternallyExcitedSynchronousMotorEnv">FiniteSpeedControlExternallyExcitedSynchronousMotorEnv (class in gym_electric_motor.envs)</a>
-</li>
-      <li><a href="parts/environments/pmsm/finite_sc_pmsm.html#gym_electric_motor.envs.FiniteSpeedControlPermanentMagnetSynchronousMotorEnv">FiniteSpeedControlPermanentMagnetSynchronousMotorEnv (class in gym_electric_motor.envs)</a>
+      <li><a href="parts/environments/eesm/finite_sc_eesm.html#gym_electric_motor.envs.FiniteSpeedControlPermanentMagnetSynchronousMotorEnv">FiniteSpeedControlPermanentMagnetSynchronousMotorEnv (class in gym_electric_motor.envs)</a>, <a href="parts/environments/pmsm/finite_sc_pmsm.html#gym_electric_motor.envs.FiniteSpeedControlPermanentMagnetSynchronousMotorEnv">[1]</a>
 </li>
       <li><a href="parts/environments/scim/finite_sc_scim.html#gym_electric_motor.envs.FiniteSpeedControlSquirrelCageInductionMotorEnv">FiniteSpeedControlSquirrelCageInductionMotorEnv (class in gym_electric_motor.envs)</a>
 </li>
@@ -518,6 +522,8 @@
       <li><a href="parts/environments/scim/finite_tc_scim.html#gym_electric_motor.envs.FiniteTorqueControlSquirrelCageInductionMotorEnv">FiniteTorqueControlSquirrelCageInductionMotorEnv (class in gym_electric_motor.envs)</a>
 </li>
       <li><a href="parts/environments/synrm/finite_tc_synrm.html#gym_electric_motor.envs.FiniteTorqueControlSynchronousReluctanceMotorEnv">FiniteTorqueControlSynchronousReluctanceMotorEnv (class in gym_electric_motor.envs)</a>
+</li>
+      <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter">FiniteTwoQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
       <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver">FluxObserver (class in gym_electric_motor.state_action_processors)</a>
 </li>
@@ -676,6 +682,8 @@
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
 </li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.i_sup">(gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.i_sup">(gym_electric_motor.physical_systems.converters.FiniteConverter method)</a>
@@ -685,6 +693,8 @@
         <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.i_sup">(gym_electric_motor.physical_systems.converters.FiniteMultiConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.i_sup">(gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/NoConv.html#gym_electric_motor.physical_systems.converters.NoConverter.i_sup">(gym_electric_motor.physical_systems.converters.NoConverter method)</a>
 </li>
@@ -1590,6 +1600,8 @@
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
 </li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.reset">(gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.reset">(gym_electric_motor.physical_systems.converters.FiniteConverter method)</a>
@@ -1599,6 +1611,8 @@
         <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.reset">(gym_electric_motor.physical_systems.converters.FiniteMultiConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.reset">(gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/NoConv.html#gym_electric_motor.physical_systems.converters.NoConverter.reset">(gym_electric_motor.physical_systems.converters.NoConverter method)</a>
 </li>
@@ -1892,6 +1906,8 @@
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter method)</a>
 </li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter method)</a>
+</li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.set_action">(gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.set_action">(gym_electric_motor.physical_systems.converters.FiniteConverter method)</a>
@@ -1901,6 +1917,8 @@
         <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.set_action">(gym_electric_motor.physical_systems.converters.FiniteMultiConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter method)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.set_action">(gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/NoConv.html#gym_electric_motor.physical_systems.converters.NoConverter.set_action">(gym_electric_motor.physical_systems.converters.NoConverter method)</a>
 </li>
@@ -2234,6 +2252,8 @@
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter.tau">(gym_electric_motor.physical_systems.converters.ContOneQuadrantConverter property)</a>
 </li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.tau">(gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter property)</a>
+</li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.tau">(gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter property)</a>
 </li>
         <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.FiniteConverter.tau">(gym_electric_motor.physical_systems.converters.FiniteConverter property)</a>
@@ -2243,6 +2263,8 @@
         <li><a href="parts/physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter.tau">(gym_electric_motor.physical_systems.converters.FiniteMultiConverter property)</a>
 </li>
         <li><a href="parts/physical_systems/converters/1QC.html#gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter.tau">(gym_electric_motor.physical_systems.converters.FiniteOneQuadrantConverter property)</a>
+</li>
+        <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.tau">(gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter property)</a>
 </li>
         <li><a href="parts/physical_systems/converters/NoConv.html#gym_electric_motor.physical_systems.converters.NoConverter.tau">(gym_electric_motor.physical_systems.converters.NoConverter property)</a>
 </li>

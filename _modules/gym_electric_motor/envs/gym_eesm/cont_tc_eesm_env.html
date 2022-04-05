@@ -180,8 +180,8 @@
 <span class="sd">            visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment</span>
 <span class="sd">            constraints(iterable(str/Constraint)): All Constraints of the environment. \n</span>
 <span class="sd">                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)</span>
-<span class="sd">                 can be directly specified by passing the state name here (e.g., &#39;i&#39;, &#39;omega&#39;) \n</span>
-<span class="sd">                - instance of Constraint: More complex constraints (e.g., the SquaredConstraint can be initialized and</span>
+<span class="sd">                 can be directly specified by passing the state name here (e.g. &#39;i&#39;, &#39;omega&#39;) \n</span>
+<span class="sd">                - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and</span>
 <span class="sd">                 passed to the environment.</span>
 <span class="sd">            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the</span>
 <span class="sd">                simulation. This may lead to speed improvements. Default: True</span>
@@ -193,14 +193,14 @@
 <span class="sd">            All parameters of type env-arg can be selected as one of the following types:</span>
 
 <span class="sd">            **instance:** Pass an already instantiated object derived from the corresponding base class</span>
-<span class="sd">            (e.g., ``reward_function=MyRewardFunction()``). This is directly used in the environment.</span>
+<span class="sd">            (e.g. ``reward_function=MyRewardFunction()``). This is directly used in the environment.</span>
 
 <span class="sd">            **dict:** Pass a dict to update the default parameters of the default type.</span>
-<span class="sd">            (e.g., ``visualization=dict(state_plots=(&#39;omega&#39;, &#39;u&#39;))``)</span>
+<span class="sd">            (e.g. ``visualization=dict(state_plots=(&#39;omega&#39;, &#39;u&#39;))``)</span>
 
 <span class="sd">            **str:** Pass a string out of the registered classes to select a different class for the component.</span>
 <span class="sd">            This class is then initialized with its default parameters.</span>
-<span class="sd">            The available strings can be looked up in the documentation. (e.g., ``converter=&#39;Finite-2QC&#39;``)</span>
+<span class="sd">            The available strings can be looked up in the documentation. (e.g. ``converter=&#39;Finite-2QC&#39;``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">default_subconverters</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ps</span><span class="o">.</span><span class="n">ContB6BridgeConverter</span><span class="p">(),</span>

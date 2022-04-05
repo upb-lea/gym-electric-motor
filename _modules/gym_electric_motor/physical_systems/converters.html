@@ -314,7 +314,7 @@
         <span class="k">return</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span></div></div>
 
 
-<span class="k">class</span> <span class="nc">FiniteTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteTwoQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Key:</span>
 <span class="sd">        &#39;Finite-2QC&#39;</span>
@@ -336,7 +336,7 @@
     <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteTwoQuadrantConverter.convert"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="c1"># Converter switches slightly (tau / 1000 seconds) before interlocking time due to inaccuracy of the solvers.</span>
         <span class="k">if</span> <span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">:</span>
@@ -353,9 +353,9 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_state</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid switching state of the converter&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid switching state of the converter&#39;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="FiniteTwoQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
@@ -364,7 +364,7 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_state</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid switching state of the converter&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid switching state of the converter&#39;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_set_switching_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
@@ -378,47 +378,7 @@
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_switching_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">action</span><span class="p">]</span>
-            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">]</span>
-
-<span class="k">class</span> <span class="nc">FiniteTwoVoltageQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Key:</span>
-<span class="sd">        &#39;Finite-2VQC&#39;</span>
-
-<span class="sd">    Switching States / Actions:</span>
-<span class="sd">        | 0: Both Transistors on.</span>
-<span class="sd">        | 1: Both Transistors off.</span>
-
-<span class="sd">    Action Space:</span>
-<span class="sd">        Discrete(2)</span>
-
-<span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: Box(-q, 1, shape=(1,))</span>
-<span class="sd">        | currents: Box(0, 1, shape=(1,))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">action_space</span> <span class="o">=</span> <span class="n">Discrete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-        <span class="c1"># Docstring in base class        </span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
-        <span class="c1"># Docstring in base class</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_switching_pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="o">-</span><span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">i_out</span>
-
-    <span class="k">def</span> <span class="nf">_set_switching_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-        <span class="c1"># Docstring in base class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_switching_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">action</span><span class="p">]</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_start_time</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="FiniteFourQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">FiniteFourQuadrantConverter</span><span class="p">(</span><span class="n">FiniteConverter</span><span class="p">):</span>
@@ -446,7 +406,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">FiniteTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">FiniteTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span>
 
 <div class="viewcode-block" id="FiniteFourQuadrantConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.FiniteFourQuadrantConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
@@ -506,10 +466,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
 
 
-<span class="k">class</span> <span class="nc">ContTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">ContDynamicallyAveragedConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="ContTwoQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">ContTwoQuadrantConverter</span><span class="p">(</span><span class="n">ContDynamicallyAveragedConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Key:</span>
-<span class="sd">        &#39;Cont-2CQC&#39;</span>
+<span class="sd">        &#39;Cont-2QC&#39;</span>
 
 <span class="sd">    Actions:</span>
 <span class="sd">        | Duty Cycle upper Transistor: Action</span>
@@ -530,40 +490,14 @@
         <span class="c1"># Docstring in base class</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
+<div class="viewcode-block" id="ContTwoQuadrantConverter.i_sup"><a class="viewcode-back" href="../../../parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.ContTwoQuadrantConverter.i_sup">[docs]</a>    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="n">interlocking_current</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interlocking_time</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">interlocking_current</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="p">)</span> <span class="o">*</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
 
-<span class="k">class</span> <span class="nc">ContTwoVoltageQuadrantConverter</span><span class="p">(</span><span class="n">ContDynamicallyAveragedConverter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Key:</span>
-<span class="sd">        &#39;Cont-2VQC&#39;</span>
-
-<span class="sd">    Actions:</span>
-<span class="sd">        | Duty Cycle Transistors on: Action</span>
-
-<span class="sd">    Action Space:</span>
-<span class="sd">        Box([-1,1])</span>
-
-<span class="sd">    Output Voltages and Currents:</span>
-<span class="sd">        | voltages: Box(-1, 1, shape=(1,))</span>
-<span class="sd">        | currents: Box(0, 1, shape=(1,))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">voltages</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">currents</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">action_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-        <span class="c1"># Docstring in base class</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-
-    <span class="k">def</span> <span class="nf">i_sup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_out</span><span class="p">):</span>
-        <span class="c1"># Docstring in base class</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ContFourQuadrantConverter"><a class="viewcode-back" href="../../../parts/physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter">[docs]</a><span class="k">class</span> <span class="nc">ContFourQuadrantConverter</span><span class="p">(</span><span class="n">ContDynamicallyAveragedConverter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -592,7 +526,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">ContTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">ContTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span><span class="n">ContTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">ContTwoQuadrantConverter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Not used here</span>
@@ -920,9 +854,9 @@
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sub_converters</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">FiniteTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">FiniteTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">FiniteTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">FiniteTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
         <span class="p">]</span>
 
 <div class="viewcode-block" id="FiniteB6BridgeConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.FiniteB6BridgeConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -991,9 +925,9 @@
         <span class="c1"># Docstring in base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subconverters</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">ContTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">ContTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
-            <span class="n">ContTwoCurrentQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">ContTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">ContTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">ContTwoQuadrantConverter</span><span class="p">(</span><span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
         <span class="p">]</span>
 
 <div class="viewcode-block" id="ContB6BridgeConverter.reset"><a class="viewcode-back" href="../../../parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

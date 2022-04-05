@@ -124,7 +124,7 @@
 </dd>
 <dt>State Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['omega'</span> <span class="pre">,</span> <span class="pre">'torque',</span> <span class="pre">'i_sd',</span> <span class="pre">'i_sq',</span> <span class="pre">'i_a',</span> <span class="pre">'i_b',</span> <span class="pre">'i_c',</span> <span class="pre">'i_e',</span> <span class="pre">'u_sd',</span> <span class="pre">'u_sq',</span> <span class="pre">'u_a',</span> <span class="pre">'u_b',</span> <span class="pre">'u_c',</span> <span class="pre">'u_e',</span> <span class="pre">'u_sup']</span></code></p>
 </dd>
-<dt>Reference Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['torque']</span></code></p>
+<dt>Reference Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['i_sd',</span> <span class="pre">'i_sq',</span> <span class="pre">'i_e']</span></code></p>
 </dd>
 <dt>Control Cycle Time:</dt><dd><p>tau = 1e-5 seconds</p>
 </dd>
@@ -184,10 +184,10 @@
 <li><p>str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)</p></li>
 </ul>
 <blockquote>
-<div><p>can be directly specified by passing the state name here (e.g., ‘i’, ‘omega’)</p>
+<div><p>can be directly specified by passing the state name here (e.g. ‘i’, ‘omega’)</p>
 </div></blockquote>
 <ul>
-<li><p>instance of Constraint: More complex constraints (e.g., the SquaredConstraint can be initialized and</p></li>
+<li><p>instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and</p></li>
 </ul>
 <blockquote>
 <div><p>passed to the environment.</p>
@@ -204,12 +204,12 @@ simulation. This may lead to speed improvements. Default: True</p></li>
 <dl>
 <dt>Note on the env-arg type:</dt><dd><p>All parameters of type env-arg can be selected as one of the following types:</p>
 <p><strong>instance:</strong> Pass an already instantiated object derived from the corresponding base class
-(e.g., <code class="docutils literal notranslate"><span class="pre">reward_function=MyRewardFunction()</span></code>). This is directly used in the environment.</p>
+(e.g. <code class="docutils literal notranslate"><span class="pre">reward_function=MyRewardFunction()</span></code>). This is directly used in the environment.</p>
 <p><strong>dict:</strong> Pass a dict to update the default parameters of the default type.
-(e.g., <code class="docutils literal notranslate"><span class="pre">visualization=dict(state_plots=('omega',</span> <span class="pre">'u'))</span></code>)</p>
+(e.g. <code class="docutils literal notranslate"><span class="pre">visualization=dict(state_plots=('omega',</span> <span class="pre">'u'))</span></code>)</p>
 <p><strong>str:</strong> Pass a string out of the registered classes to select a different class for the component.
 This class is then initialized with its default parameters.
-The available strings can be looked up in the documentation. (e.g., <code class="docutils literal notranslate"><span class="pre">converter='Finite-2QC'</span></code>)</p>
+The available strings can be looked up in the documentation. (e.g. <code class="docutils literal notranslate"><span class="pre">converter='Finite-2QC'</span></code>)</p>
 </dd>
 </dl>
 </dd></dl>
