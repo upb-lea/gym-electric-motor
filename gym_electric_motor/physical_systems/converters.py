@@ -234,7 +234,7 @@ class FiniteOneQuadrantConverter(FiniteConverter):
         return i_out[0] if self._current_action == 1 else 0
 
 
-class FiniteTwoCurrentQuadrantConverter(FiniteConverter):
+class FiniteTwoQuadrantConverter(FiniteConverter):
     """
     Key:
         'Finite-2QC'
@@ -300,46 +300,6 @@ class FiniteTwoCurrentQuadrantConverter(FiniteConverter):
             self._switching_pattern = [0, action]
             return [self._action_start_time + self._interlocking_time, self._action_start_time + self._tau]
 
-class FiniteTwoVoltageQuadrantConverter(FiniteConverter):
-    """
-    Key:
-        'Finite-2VQC'
-
-    Switching States / Actions:
-        | 0: Both Transistors on.
-        | 1: Both Transistors off.
-
-    Action Space:
-        Discrete(2)
-
-    Output Voltages and Currents:
-        | voltages: Box(-q, 1, shape=(1,))
-        | currents: Box(0, 1, shape=(1,))
-    """
-
-    voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
-    currents = Box(0, 1, shape=(1,), dtype=np.float64)
-    action_space = Discrete(2)
-
-    def convert(self, i_out, t):
-        # Docstring in base class        
-        if self._switching_pattern[0] == 0:
-            return [-1.0]
-        else:
-            return [1.0]
-
-    def i_sup(self, i_out):
-        # Docstring in base class
-        if self._switching_pattern[0] == 0:
-            return -i_out[0]
-        else:
-            return i_out
-
-    def _set_switching_pattern(self, action):
-        # Docstring in base class
-        self._switching_pattern = [action]
-        return [self._action_start_time + self._tau]
-
 
 class FiniteFourQuadrantConverter(FiniteConverter):
     """
@@ -366,7 +326,7 @@ class FiniteFourQuadrantConverter(FiniteConverter):
     def __init__(self, **kwargs):
         # Docstring in base class
         super().__init__(**kwargs)
-        self._subconverters = [FiniteTwoCurrentQuadrantConverter(**kwargs), FiniteTwoCurrentQuadrantConverter(**kwargs)]
+        self._subconverters = [FiniteTwoQuadrantConverter(**kwargs), FiniteTwoQuadrantConverter(**kwargs)]
 
     def reset(self):
         # Docstring in base class
@@ -426,10 +386,10 @@ class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
         return self._current_action[0] * i_out[0]
 
 
-class ContTwoCurrentQuadrantConverter(ContDynamicallyAveragedConverter):
+class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
     """
     Key:
-        'Cont-2CQC'
+        'Cont-2QC'
 
     Actions:
         | Duty Cycle upper Transistor: Action
@@ -458,32 +418,6 @@ class ContTwoCurrentQuadrantConverter(ContDynamicallyAveragedConverter):
             + self._interlocking_time / self._tau * (interlocking_current - self._current_action[0])
         ) * i_out[0]
 
-class ContTwoVoltageQuadrantConverter(ContDynamicallyAveragedConverter):
-    """
-    Key:
-        'Cont-2VQC'
-
-    Actions:
-        | Duty Cycle Transistors on: Action
-
-    Action Space:
-        Box([-1,1])
-
-    Output Voltages and Currents:
-        | voltages: Box(-1, 1, shape=(1,))
-        | currents: Box(0, 1, shape=(1,))
-    """
-    voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
-    currents = Box(0, 1, shape=(1,), dtype=np.float64)
-    action_space = Box(-1, 1, shape=(1,), dtype=np.float64)
-
-    def convert(self, i_out, t):
-        # Docstring in base class
-        return self._current_action if i_out[0] > 0 else [0.0]
-
-    def i_sup(self, i_out):
-        # Docstring in base class
-        return self._current_action[0] * i_out[0]
 
 class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
     """
@@ -512,7 +446,7 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
     def __init__(self, **kwargs):
         # Docstring in base class
         super().__init__(**kwargs)
-        self._subconverters = [ContTwoCurrentQuadrantConverter(**kwargs), ContTwoCurrentQuadrantConverter(**kwargs)]
+        self._subconverters = [ContTwoQuadrantConverter(**kwargs), ContTwoQuadrantConverter(**kwargs)]
 
     def _convert(self, *_):
         # Not used here
@@ -840,9 +774,9 @@ class FiniteB6BridgeConverter(FiniteConverter):
         # Docstring in base class
         super().__init__(tau=tau, **kwargs)
         self._sub_converters = [
-            FiniteTwoCurrentQuadrantConverter(tau=tau, **kwargs),
-            FiniteTwoCurrentQuadrantConverter(tau=tau, **kwargs),
-            FiniteTwoCurrentQuadrantConverter(tau=tau, **kwargs),
+            FiniteTwoQuadrantConverter(tau=tau, **kwargs),
+            FiniteTwoQuadrantConverter(tau=tau, **kwargs),
+            FiniteTwoQuadrantConverter(tau=tau, **kwargs),
         ]
 
     def reset(self):
@@ -911,9 +845,9 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
         # Docstring in base class
         super().__init__(tau=tau, **kwargs)
         self._subconverters = [
-            ContTwoCurrentQuadrantConverter(tau=tau, **kwargs),
-            ContTwoCurrentQuadrantConverter(tau=tau, **kwargs),
-            ContTwoCurrentQuadrantConverter(tau=tau, **kwargs),
+            ContTwoQuadrantConverter(tau=tau, **kwargs),
+            ContTwoQuadrantConverter(tau=tau, **kwargs),
+            ContTwoQuadrantConverter(tau=tau, **kwargs),
         ]
 
     def reset(self):

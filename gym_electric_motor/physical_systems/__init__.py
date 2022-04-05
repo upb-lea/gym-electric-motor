@@ -2,10 +2,9 @@
 from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem, \
     ExternallyExcitedSynchronousMotorSystem, ThreePhaseMotorSystem, SCMLSystem
 
-from .converters import PowerElectronicConverter, FiniteOneQuadrantConverter, FiniteTwoCurrentQuadrantConverter, \
+from .converters import PowerElectronicConverter, FiniteOneQuadrantConverter, FiniteTwoQuadrantConverter, \
     FiniteFourQuadrantConverter, FiniteMultiConverter, FiniteB6BridgeConverter, ContOneQuadrantConverter, \
-    ContTwoCurrentQuadrantConverter, ContTwoVoltageQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter,\
-    ContB6BridgeConverter, NoConverter, FiniteTwoVoltageQuadrantConverter
+    ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter, NoConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
@@ -37,10 +36,8 @@ register_class(DoublyFedInductionMotorSystem, PhysicalSystem, 'DoublyFedInductio
 
 register_class(FiniteOneQuadrantConverter, PowerElectronicConverter, 'Finite-1QC')
 register_class(ContOneQuadrantConverter, PowerElectronicConverter, 'Cont-1QC')
-register_class(FiniteTwoCurrentQuadrantConverter, PowerElectronicConverter, 'Finite-2CQC')
-register_class(ContTwoCurrentQuadrantConverter, PowerElectronicConverter, 'Cont-2CQC')
-register_class(FiniteTwoVoltageQuadrantConverter, PowerElectronicConverter, 'Finite-2VQC')
-register_class(ContTwoVoltageQuadrantConverter, PowerElectronicConverter, 'Cont-2VQC')
+register_class(FiniteTwoQuadrantConverter, PowerElectronicConverter, 'Finite-2QC')
+register_class(ContTwoQuadrantConverter, PowerElectronicConverter, 'Cont-2QC')
 register_class(FiniteFourQuadrantConverter, PowerElectronicConverter, 'Finite-4QC')
 register_class(ContFourQuadrantConverter, PowerElectronicConverter, 'Cont-4QC')
 register_class(FiniteMultiConverter, PowerElectronicConverter, 'Finite-Multi')
