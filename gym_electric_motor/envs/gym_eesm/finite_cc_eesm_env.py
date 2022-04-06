@@ -99,8 +99,8 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
             visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment
             constraints(iterable(str/Constraint)): All Constraints of the environment. \n
                 - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)
-                 can be directly specified by passing the state name here (e.g. 'i', 'omega') \n
-                - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and
+                 can be directly specified by passing the state name here (e.g., 'i', 'omega') \n
+                - instance of Constraint: More complex constraints (e.g.,, the SquaredConstraint can be initialized and
                  passed to the environment.
             calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the
                 simulation. This may lead to speed improvements. Default: True
@@ -112,14 +112,14 @@ class FiniteCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvi
             All parameters of type env-arg can be selected as one of the following types:
 
             **instance:** Pass an already instantiated object derived from the corresponding base class
-            (e.g. ``reward_function=MyRewardFunction()``). This is directly used in the environment.
+            (e.g., ``reward_function=MyRewardFunction()``). This is directly used in the environment.
 
             **dict:** Pass a dict to update the default parameters of the default type.
-            (e.g. ``visualization=dict(state_plots=('omega', 'u'))``)
+            (e.g., ``visualization=dict(state_plots=('omega', 'u'))``)
 
             **str:** Pass a string out of the registered classes to select a different class for the component.
             This class is then initialized with its default parameters.
-            The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
+            The available strings can be looked up in the documentation. (e.g., ``converter='Finite-2QC'``)
         """
         default_subgenerators = (
             WienerProcessReferenceGenerator(reference_state='i_sd'),
