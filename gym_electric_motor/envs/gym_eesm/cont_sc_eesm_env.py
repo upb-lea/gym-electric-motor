@@ -19,7 +19,7 @@ class ContSpeedControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvironm
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
-        - Converter: :py:class:`.ContB6BridgeConverter`
+        - Converter: :py:class:`.ContMultiConverter`(:py:class:`.ContB6BridgeConverter`, :py:class:`.ContFourQuadrantConverter`)
         - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`
         - Load: :py:class:`.PolynomialStaticLoad`
         - Ode-Solver: :py:class:`.ScipyOdeSolver`

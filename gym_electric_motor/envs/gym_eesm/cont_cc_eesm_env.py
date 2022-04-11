@@ -19,7 +19,7 @@ class ContCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviro
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
-        - Converter: :py:class:`.ContB6BridgeConverter`
+        - Converter: :py:class:`.ContMultiConverter`(:py:class:`.ContB6BridgeConverter`, :py:class:`.ContFourQuadrantConverter`)
         - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`
         - Load: :py:class:`.ConstantSpeedLoad`
         - Ode-Solver: :py:class:`.ScipyOdeSolver`
@@ -51,7 +51,7 @@ class ContCurrentControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviro
         Box(low=[-1, -1, 0], high=[1, 1, 1])
 
     Action Space:
-        Box(low=[-1, -1, -1], high=[1, 1, 1])
+        Box(low=[-1, -1, -1, -1], high=[1, 1, 1, 1])
 
     Initial State:
         Zeros on all state variables.

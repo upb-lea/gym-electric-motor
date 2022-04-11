@@ -45,10 +45,10 @@ class FiniteTorqueControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvir
         Type: Tuple(State_Space, Reference_Space)
 
     State Space:
-        Box(low=15 * [-1], high=15 * [1])
+        Box(low = 15 * [-1], high =  15 * [1])
 
     Reference Space:
-        Box(low=[-1, -1, -1], high=[1, 1, 1])
+        Box(low=[-1], high=[1])
 
     Action Space:
         MultiDiscrete((8, 4))

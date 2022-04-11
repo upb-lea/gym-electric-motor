@@ -15,11 +15,11 @@ class ContTorqueControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviron
         Environment to simulate a continuous control set torque controlled externally excited synchronous motor.
 
     Key:
-        ``'Cont-TC-PMSM-v0'``
+        ``'Cont-TC-EESM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
-        - Converter: :py:class:`.ContB6BridgeConverter`
+        - Converter: :py:class:`.ContMultiConverter`(:py:class:`.ContB6BridgeConverter`, :py:class:`.ContFourQuadrantConverter`)
         - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`
         - Load: :py:class:`.ConstantSpeedLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
