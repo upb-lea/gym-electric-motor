@@ -112,8 +112,8 @@
 </dd>
 <dt>Default Components:</dt><dd><ul class="simple">
 <li><p>Supply: <a class="reference internal" href="../../physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply"><code class="xref py py-class docutils literal notranslate"><span class="pre">IdealVoltageSupply</span></code></a></p></li>
-<li><p>Converter: <a class="reference internal" href="../../physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter" title="gym_electric_motor.physical_systems.converters.ContB6BridgeConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContB6BridgeConverter</span></code></a></p></li>
-<li><p>Motor: <code class="xref py py-class docutils literal notranslate"><span class="pre">ExternallyExcitedSynchronousMotor</span></code></p></li>
+<li><p>Converter: <code class="xref py py-class docutils literal notranslate"><span class="pre">ContMultiConverter`(:py:class:</span></code>.ContB6BridgeConverter`, <a class="reference internal" href="../../physical_systems/converters/4QC.html#gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter" title="gym_electric_motor.physical_systems.converters.ContFourQuadrantConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContFourQuadrantConverter</span></code></a>)</p></li>
+<li><p>Motor: <a class="reference internal" href="../../physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor" title="gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExternallyExcitedSynchronousMotor</span></code></a></p></li>
 <li><p>Load: <a class="reference internal" href="../../physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad" title="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantSpeedLoad</span></code></a></p></li>
 <li><p>Ode-Solver: <a class="reference internal" href="../../physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver" title="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScipyOdeSolver</span></code></a></p></li>
 <li><p>Reference Generator: <a class="reference internal" href="../../reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator" title="gym_electric_motor.reference_generators.WienerProcessReferenceGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WienerProcessReferenceGenerator</span></code></a> <em>Reference Quantity:</em> <code class="docutils literal notranslate"><span class="pre">'i_sd',</span> <span class="pre">'i_sq</span></code></p></li>
@@ -134,7 +134,7 @@
 </dd>
 <dt>Reference Space:</dt><dd><p>Box(low=[-1, -1, 0], high=[1, 1, 1])</p>
 </dd>
-<dt>Action Space:</dt><dd><p>Box(low=[-1, -1, -1], high=[1, 1, 1])</p>
+<dt>Action Space:</dt><dd><p>Box(low=[-1, -1, -1, -1], high=[1, 1, 1, 1])</p>
 </dd>
 <dt>Initial State:</dt><dd><p>Zeros on all state variables.</p>
 </dd>

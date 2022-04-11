@@ -99,7 +99,7 @@
 
 <span class="sd">    Default Components:</span>
 <span class="sd">        - Supply: :py:class:`.IdealVoltageSupply`</span>
-<span class="sd">        - Converter: :py:class:`.ContB6BridgeConverter`</span>
+<span class="sd">        - Converter: :py:class:`.ContMultiConverter`(:py:class:`.ContB6BridgeConverter`, :py:class:`.ContFourQuadrantConverter`)</span>
 <span class="sd">        - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`</span>
 <span class="sd">        - Load: :py:class:`.ConstantSpeedLoad`</span>
 <span class="sd">        - Ode-Solver: :py:class:`.ScipyOdeSolver`</span>
@@ -131,7 +131,7 @@
 <span class="sd">        Box(low=[-1, -1, 0], high=[1, 1, 1])</span>
 
 <span class="sd">    Action Space:</span>
-<span class="sd">        Box(low=[-1, -1, -1], high=[1, 1, 1])</span>
+<span class="sd">        Box(low=[-1, -1, -1, -1], high=[1, 1, 1, 1])</span>
 
 <span class="sd">    Initial State:</span>
 <span class="sd">        Zeros on all state variables.</span>
