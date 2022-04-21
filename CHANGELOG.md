@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ## Added
 - State Action processors as a new feature to process actions and states directly in the environment.
+- The externally excited synchronous motor (EESM) has been added to the GEM-toolbox.
+
+## Changed
+- The MotorDashboard has received a "initialize()" method to initialize the plots below a specific cell.
+- The MotorDashboard is now compatible with the "%matplotlib widget" backend. Therefore, GEM is now compatible with the integrated jupiter notebook execution of Visual Studio Code
+
+## Fixed
+- If multiple converters were used and the time constant tau was changed from its default values, it was possible that the values of tau were different in each converter
+
 
 ## [1.0.1] - 2021-12-20
 ## Added
