@@ -208,35 +208,38 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
             ndarray(float): The derivatives of the ODE-State. Based on this, the Ode Solver calculates the next state.
         """
         if self._system_eq_placeholder is None:
-
+            motor_state = state[self._motor_ode_idx]
             motor_derivative = self._electrical_motor.electrical_ode(
-                state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+                motor_state, u_in, state[self._omega_ode_idx]
             )
-            torque = self._electrical_motor.torque(state[self._motor_ode_idx])
-            load_derivative = self._mechanical_load.mechanical_ode(t, state[
-                self._load_ode_idx], torque)
+            torque = self._electrical_motor.torque(motor_state)
+            load_derivative = self._mechanical_load.mechanical_ode(
+                t, state[self._load_ode_idx], torque
+            )
             self._system_eq_placeholder = np.concatenate((load_derivative,
                                                           motor_derivative))
             self._motor_deriv_size = motor_derivative.size
             self._load_deriv_size = load_derivative.size
         else:
+            motor_state = state[self._motor_ode_idx]
             self._system_eq_placeholder[:self._load_deriv_size] = \
                 self._mechanical_load.mechanical_ode(
                     t, state[self._load_ode_idx],
-                    self._electrical_motor.torque(state[self._motor_ode_idx])
+                    self._electrical_motor.torque(motor_state)
                 ).ravel()
             self._system_eq_placeholder[self._load_deriv_size:] = \
                 self._electrical_motor.electrical_ode(
-                    state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+                    motor_state, u_in, state[self._omega_ode_idx]
                 ).ravel()
 
         return self._system_eq_placeholder
 
     def _system_jacobian(self, t, state, u_in, **__):
+        motor_state = state[self._motor_ode_idx]
         motor_jac, el_state_over_omega, torque_over_el_state = self._electrical_motor.electrical_jacobian(
-            state[self._motor_ode_idx], u_in, state[self._omega_ode_idx]
+            motor_state, u_in, state[self._omega_ode_idx]
         )
-        torque = self._electrical_motor.torque(state[self._motor_ode_idx])
+        torque = self._electrical_motor.torque(motor_state)
         load_jac, load_over_torque = self._mechanical_load.mechanical_jacobian(
             t, state[self._load_ode_idx], torque
         )
@@ -548,6 +551,130 @@ class SynchronousMotorSystem(ThreePhaseMotorSystem):
         ))
         return system_state/ self._limits
 
+class ExternallyExcitedSynchronousMotorSystem(SynchronousMotorSystem):
+    """SCML-System that can be used with the externally excited synchronous motor (EESM)"""
+
+
+    def _build_state_space(self, state_names):
+        # Docstring of superclass
+        low = -1 * np.ones_like(state_names, dtype=float)
+        low[self.U_SUP_IDX] = 0.0
+        high = np.ones_like(state_names, dtype=float)
+        return Box(low, high, dtype=np.float64)
+
+    def _build_state_names(self):
+        # Docstring of superclass
+        return self._mechanical_load.state_names \
+        + [
+            'torque', 'i_a', 'i_b', 'i_c', 'i_sd', 'i_sq', 'i_e',
+            'u_a', 'u_b', 'u_c', 'u_sd', 'u_sq', 'u_e',
+            'epsilon', 'u_sup'
+        ]
+
+
+    def _set_indices(self):
+        # Docstring of superclass
+        self._omega_ode_idx = self._mechanical_load.OMEGA_IDX
+        self._load_ode_idx = list(range(len(self._mechanical_load.state_names)))
+        self._ode_currents_idx = list(range(
+            self._load_ode_idx[-1] + 1, self._load_ode_idx[-1] + 1 + len(self._electrical_motor.CURRENTS)
+        ))
+        self._motor_ode_idx = self._ode_currents_idx
+        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
+        self._ode_currents_idx = self._motor_ode_idx[:-1]
+        self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
+        self.TORQUE_IDX = len(self.mechanical_load.state_names)
+        currents_lower = self.TORQUE_IDX + 1
+        currents_upper = currents_lower + 6
+        self.CURRENTS_IDX = list(range(currents_lower, currents_upper))
+        voltages_lower = currents_upper
+        voltages_upper = voltages_lower + 6
+        self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
+        self.EPSILON_IDX = voltages_upper
+        self.U_SUP_IDX = list(range(self.EPSILON_IDX + 1, self.EPSILON_IDX + 1 + self._supply.voltage_len))
+        self._ode_epsilon_idx = self._motor_ode_idx[-1]
+
+    def simulate(self, action, *_, **__):
+        # Docstring of superclass
+        ode_state = self._ode_solver.y
+        eps = ode_state[self._ode_epsilon_idx]
+        i_in_dq_e = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
+        i_in_abc_e = list(self.dq_to_abc_space(i_in_dq_e[:2], eps)) + list(i_in_dq_e[2:])
+        switching_times = self._converter.set_action(action, self._t)
+
+        for t in switching_times[:-1]:
+            i_sup = self._converter.i_sup(i_in_abc_e)
+            u_sup = self._supply.get_voltage(self._t, i_sup)
+            u_in = self._converter.convert(i_in_abc_e, self._ode_solver.t)
+            u_in = [u * u_s for u in u_in for u_s in u_sup]
+            u_dq_e = list(self.abc_to_dq_space(u_in[:2], eps)) + u_in[2:]
+            self._ode_solver.set_f_params(u_dq_e)
+            ode_state = self._ode_solver.integrate(t)
+            eps = ode_state[self._ode_epsilon_idx]
+            i_in_dq_e = self._electrical_motor.i_in(ode_state[self._ode_currents_idx])
+            i_in_abc_e = list(self.dq_to_abc_space(i_in_dq_e[:2], eps)) + i_in_dq_e[2:]
+ 
+        i_sup = self._converter.i_sup(i_in_abc_e)
+        u_sup = self._supply.get_voltage(self._t, i_sup)
+        u_in = self._converter.convert(i_in_abc_e, self._ode_solver.t)
+        u_in = [u * u_s for u in u_in for u_s in u_sup]
+        u_dq_e = np.concatenate((self.abc_to_dq_space(u_in[:3], eps), u_in[3:]))
+        self._ode_solver.set_f_params(u_dq_e)
+        ode_state = self._ode_solver.integrate(self._t + self._tau)
+        self._t = self._ode_solver.t
+        self._k += 1
+        torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
+        mechanical_state = ode_state[self._load_ode_idx]
+        i_dq_e = ode_state[self._ode_currents_idx]
+        i_abc = list(
+            self.dq_to_abc_space(i_dq_e[:2], eps)
+        )
+        eps = ode_state[self._ode_epsilon_idx] % (2 * np.pi)
+        if eps > np.pi:
+            eps -= 2 * np.pi
+
+        system_state = np.concatenate((
+            mechanical_state,
+            [torque],
+            i_abc, i_dq_e,
+            u_in[:3], u_dq_e,
+            [eps],
+            u_sup
+        ))
+        return system_state / self._limits
+
+    def reset(self, *_):
+        # Docstring of superclass
+        motor_state = self._electrical_motor.reset(
+            state_space=self.state_space,
+            state_positions=self.state_positions)
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            state_space=self.state_space,
+            nominal_state=self.nominal_state)
+        ode_state = np.concatenate((mechanical_state, motor_state))
+        u_sup = self.supply.reset()
+        eps = ode_state[self._ode_epsilon_idx]
+        if eps > np.pi:
+            eps -= 2 * np.pi
+        u_abc = self.converter.reset()
+        u_abc = [u * u_s for u in u_abc for u_s in u_sup]
+        u_dq = self.abc_to_dq_space(u_abc[:3], eps)
+        i_dq = ode_state[self._ode_currents_idx]
+        i_abc = self.dq_to_abc_space(i_dq[:2], eps)
+        torque = self.electrical_motor.torque(motor_state)
+        self._t = 0
+        self._k = 0
+        self._ode_solver.set_initial_value(ode_state, self._t)
+        system_state = np.concatenate((
+            mechanical_state,
+            [torque],
+            i_abc, i_dq,
+            u_abc, u_dq,
+            [eps],
+            u_sup,
+        ))
+        return system_state / self._limits
 
 class SquirrelCageInductionMotorSystem(ThreePhaseMotorSystem):
     """

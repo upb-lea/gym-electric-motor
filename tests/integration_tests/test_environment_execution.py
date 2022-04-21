@@ -4,7 +4,7 @@ import numpy as np
 
 control_tasks = ['TC', 'SC', 'CC']
 action_types = ['Cont', 'Finite']
-motors = ['SeriesDc', 'PermExDc', 'ExtExDc', 'ShuntDc', 'PMSM', 'SynRM', 'DFIM', 'SCIM']
+motors = ['SeriesDc', 'PermExDc', 'ExtExDc', 'ShuntDc', 'PMSM', 'EESM', 'SynRM', 'DFIM', 'SCIM']
 versions = ['v0']
 
 
