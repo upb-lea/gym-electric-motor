@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='gym_electric_motor',
-      version='1.0.0',
+      version='1.1.0',
       description='An OpenAI gym environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
