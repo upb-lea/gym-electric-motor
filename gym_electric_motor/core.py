@@ -504,6 +504,9 @@ class PhysicalSystem:
 
     @property
     def unwrapped(self):
+        """Returns this instance of the physical system.
+        
+        If the system is wrapped into multiple StateActionProcessors this property returns directly the innermost system."""
         return self
 
     @property
