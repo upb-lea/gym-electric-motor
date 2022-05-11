@@ -103,6 +103,9 @@ class PowerElectronicConverter:
         Method to calculate the switching pattern and corresponding switching times for the next time step.
         At least, the next time step [t + tau] is returned.
 
+        Args: 
+            action(instance of action_space): The action for the next time step.
+            
         Returns:
              list(float): Switching times.
         """
