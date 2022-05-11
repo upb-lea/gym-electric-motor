@@ -189,6 +189,37 @@ register(
     **registration_kwargs
 )
 
+# Externally Excited Synchronous Motor Environments
+register(
+    id='Finite-SC-EESM-v0',
+    entry_point=envs_path+'FiniteSpeedControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='Finite-TC-EESM-v0',
+    entry_point=envs_path+'FiniteTorqueControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='Finite-CC-EESM-v0',
+    entry_point=envs_path+'FiniteCurrentControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='Cont-CC-EESM-v0',
+    entry_point=envs_path+'ContCurrentControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='Cont-TC-EESM-v0',
+    entry_point=envs_path+'ContTorqueControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
+register(
+    id='Cont-SC-EESM-v0',
+    entry_point=envs_path+'ContSpeedControlExternallyExcitedSynchronousMotorEnv',
+    **registration_kwargs
+)
 # Synchronous Reluctance Motor Environments
 register(
     id='Finite-SC-SynRM-v0',

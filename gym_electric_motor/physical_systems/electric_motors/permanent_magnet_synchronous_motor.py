@@ -9,13 +9,13 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     =====================  ==========  ============= ===========================================
     Motor Parameter        Unit        Default Value Description
     =====================  ==========  ============= ===========================================
-    r_s                    Ohm         0.78          Stator resistance
-    l_d                    H           1.2           Direct axis inductance
-    l_q                    H           6.3e-3        Quadrature axis inductance
-    p                      1           2             Pole pair number
-    j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
+    r_s                    Ohm         18e-3         Stator resistance
+    l_d                    H           0.37e-3       Direct axis inductance
+    l_q                    H           1.2e-3        Quadrature axis inductance
+    p                      1           3             Pole pair number
+    j_rotor                kg/m^2      0.03883       Moment of inertia of the rotor
     =====================  ==========  ============= ===========================================
-
+       
     =============== ====== =============================================
     Motor Currents  Unit   Description
     =============== ====== =============================================

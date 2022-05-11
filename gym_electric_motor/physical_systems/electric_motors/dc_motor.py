@@ -14,12 +14,12 @@ class DcMotor(ElectricMotor):
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
-        r_a                    Ohm         0.78          Armature circuit resistance
-        r_e                    Ohm         25            Exciting circuit resistance
-        l_a                    H           6.3e-3        Armature circuit inductance
-        l_e                    H           1.2           Exciting circuit inductance
-        l_e_prime              H           0.0094        Effective excitation inductance
-        j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
+        r_a                    Ohm         16e-3         Armature circuit resistance
+        r_e                    Ohm         16e-2         Exciting circuit resistance
+        l_a                    H           19e-6         Armature circuit inductance
+        l_e                    H           5.4e-3        Exciting circuit inductance
+        l_e_prime              H           1.7e-3        Effective excitation inductance
+        j_rotor                kg/m^2      0.025         Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
         
         ..note :: 

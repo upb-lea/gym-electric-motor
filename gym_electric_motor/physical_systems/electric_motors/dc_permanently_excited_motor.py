@@ -9,11 +9,12 @@ class DcPermanentlyExcitedMotor(DcMotor):
     =====================  ==========  ============= ===========================================
     Motor Parameter        Unit        Default Value Description
     =====================  ==========  ============= ===========================================
-    r_a                    Ohm         25.0          Armature circuit resistance
-    l_a                    H           3.438e-2      Armature circuit inductance
-    psi_e                  Wb          18            Magnetic Flux of the permanent magnet
-    j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
+    r_a                    Ohm         16e-3         Armature circuit resistance
+    l_a                    H           19e-6         Armature circuit inductance
+    psi_e                  Wb          0.165         Magnetic Flux of the permanent magnet
+    j_rotor                kg/m^2      0.025         Moment of inertia of the rotor
     =====================  ==========  ============= ===========================================
+    
     =============== ====== =============================================
     Motor Currents  Unit   Description
     =============== ====== =============================================
