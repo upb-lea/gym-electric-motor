@@ -10,6 +10,7 @@ class DcMotor(ElectricMotor):
         This includes the system equations, the motor parameters of the equivalent circuit diagram,
         as well as limits.
 
+
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
@@ -20,6 +21,10 @@ class DcMotor(ElectricMotor):
         l_e_prime              H           0.0094        Effective excitation inductance
         j_rotor                kg/m^2      0.017         Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
+        
+        ..note :: 
+            The motor parameter are based on the following DC Motor (slightly adapted):
+            https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor
 
         =============== ====== =============================================
         Motor Currents  Unit   Description
