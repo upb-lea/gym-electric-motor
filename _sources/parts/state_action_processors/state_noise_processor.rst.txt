@@ -1,6 +1,6 @@
 State Noise Processor
 ######################
 
-.. autoclass:: gym_electric_motor.state_action_processors.StateNoiseProcessor
+.. autoclass:: gym_electric_motor.physical_system_wrappers.StateNoiseProcessor
    :members:
    :inherited-members:

@@ -16,9 +16,7 @@
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Cos Sin Processor" href="cos_sin_processor.html" />
-    <link rel="prev" title="Current Sum Processor" href="current_sum_processor.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,20 +39,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
 </ul>
 <p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="state_action_processor.html">State Action Processor</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="current_sum_processor.html">Current Sum Processor</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Flux Observer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cos_sin_processor.html">Cos Sin Processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dead_time_processor.html">Dead Time Processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dq_to_abc_action_processor.html">Dq To Abc Action Processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="state_noise_processor.html">State Noise Processor</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
@@ -77,7 +66,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="state_action_processor.html">State Action Processor</a> &raquo;</li>
       <li>Flux Observer</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/parts/state_action_processors/flux_observer.rst.txt" rel="nofollow"> View page source</a>
@@ -91,8 +79,8 @@
   <div class="section" id="flux-observer">
 <h1>Flux Observer<a class="headerlink" href="#flux-observer" title="Permalink to this headline"></a></h1>
 <dl class="class">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.state_action_processors.</code><code class="sig-name descname">FluxObserver</code><span class="sig-paren">(</span><em class="sig-param">current_names=('i_sa'</em>, <em class="sig-param">'i_sb'</em>, <em class="sig-param">'i_sc')</em>, <em class="sig-param">physical_system=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/flux_observer.html#FluxObserver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_system_wrappers.</code><code class="sig-name descname">FluxObserver</code><span class="sig-paren">(</span><em class="sig-param">current_names=('i_sa'</em>, <em class="sig-param">'i_sb'</em>, <em class="sig-param">'i_sc')</em>, <em class="sig-param">physical_system=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/flux_observer.html#FluxObserver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver" title="Permalink to this definition"></a></dt>
 <dd><p>The FluxObserver extends the systems state vector of induction machine environments by estimated flux states
 <code class="docutils literal notranslate"><span class="pre">psi_abs</span></code>, and <code class="docutils literal notranslate"><span class="pre">psi_angle</span></code>. The flux is estimated as follows:</p>
 <blockquote>
@@ -121,61 +109,61 @@ the observer will be initialized during environment creation.</p></li>
 </dd>
 </dl>
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.action_space">
-<em class="property">property </em><code class="sig-name descname">action_space</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.action_space" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.action_space">
+<em class="property">property </em><code class="sig-name descname">action_space</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.action_space" title="Permalink to this definition"></a></dt>
 <dd><p>The processed action space.</p>
 <p>If it is unset, the action space of the inner physical system is returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.close" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.close" title="Permalink to this definition"></a></dt>
 <dd><p>Called, when the environment is closed.
 Close the System and all of its submodules by closing files, saving logs etc.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.k">
-<em class="property">property </em><code class="sig-name descname">k</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.k" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.k">
+<em class="property">property </em><code class="sig-name descname">k</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 int: The current systems time step k.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.limits">
-<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.limits" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.limits" title="Permalink to this definition"></a></dt>
 <dd><p>The processed physical system limits.</p>
 <p>If it is unset, the inner limits are returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.next_generator">
-<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.next_generator" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.next_generator">
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.next_generator" title="Permalink to this definition"></a></dt>
 <dd><p>Sets a new reference generator for a new episode.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.nominal_state">
-<em class="property">property </em><code class="sig-name descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.nominal_state" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.nominal_state">
+<em class="property">property </em><code class="sig-name descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.nominal_state" title="Permalink to this definition"></a></dt>
 <dd><p>The processed physical system nominal state.</p>
 <p>If it is unset, the inner nominal state is returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.physical_system">
-<em class="property">property </em><code class="sig-name descname">physical_system</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.physical_system" title="Permalink to this definition"></a></dt>
-<dd><p>The next inner physical_system or the next inner state_action_processor.</p>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.physical_system">
+<em class="property">property </em><code class="sig-name descname">physical_system</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>The next inner physical_system or the next inner physical_system_wrapper.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.random_generator">
-<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.random_generator" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.random_generator">
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.random_generator" title="Permalink to this definition"></a></dt>
 <dd><p>The random generator that has to be used to draw the random numbers.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/flux_observer.html#FluxObserver.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.reset" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/flux_observer.html#FluxObserver.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset the physical system to an initial state before a new episode starts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -188,8 +176,8 @@ int: The current systems time step k.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.seed">
-<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.seed" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.seed" title="Permalink to this definition"></a></dt>
 <dd><p>The function to set the seed.</p>
 <p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
 to this component that is generated based on the source-seed of the env.</p>
@@ -210,25 +198,25 @@ entropies. The entropy of this instance has to be placed always at first place.<
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.seed_sequence">
-<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.seed_sequence" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.seed_sequence">
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.seed_sequence" title="Permalink to this definition"></a></dt>
 <dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.set_physical_system">
-<code class="sig-name descname">set_physical_system</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/flux_observer.html#FluxObserver.set_physical_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.set_physical_system" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the inner physical system of this StateActionProcessor.</p>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system">
+<code class="sig-name descname">set_physical_system</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/flux_observer.html#FluxObserver.set_physical_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the inner physical system of this PhysicalSystemWrapper.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The inner physical system or state action processor.</p>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The inner physical system or Physical System Wrapper.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.simulate">
-<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/flux_observer.html#FluxObserver.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.simulate" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/flux_observer.html#FluxObserver.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.simulate" title="Permalink to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -245,37 +233,37 @@ This method is called in the environment in every step to update the systems sta
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.state_names">
-<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.state_names" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.state_names">
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.state_names" title="Permalink to this definition"></a></dt>
 <dd><p>The processed physical system state names.</p>
 <p>If it is unset, the state names of the inner physical system are returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.state_positions">
-<em class="property">property </em><code class="sig-name descname">state_positions</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.state_positions" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.state_positions">
+<em class="property">property </em><code class="sig-name descname">state_positions</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.state_positions" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.state_space">
-<em class="property">property </em><code class="sig-name descname">state_space</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.state_space" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.state_space">
+<em class="property">property </em><code class="sig-name descname">state_space</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.state_space" title="Permalink to this definition"></a></dt>
 <dd><p>The processed state space.</p>
 <p>If it is unset, the state space of the inner physical system is returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.tau">
-<em class="property">property </em><code class="sig-name descname">tau</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.tau" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.tau">
+<em class="property">property </em><code class="sig-name descname">tau</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.tau" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 float: The systems time constant tau.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.FluxObserver.unwrapped">
-<em class="property">property </em><code class="sig-name descname">unwrapped</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.FluxObserver.unwrapped" title="Permalink to this definition"></a></dt>
-<dd><p>The innermost physical system within all state-action processors.</p>
+<dt id="gym_electric_motor.physical_system_wrappers.FluxObserver.unwrapped">
+<em class="property">property </em><code class="sig-name descname">unwrapped</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.FluxObserver.unwrapped" title="Permalink to this definition"></a></dt>
+<dd><p>The innermost physical system within all Physical System Wrappers.</p>
 </dd></dl>
 
 </dd></dl>
@@ -285,10 +273,7 @@ float: The systems time constant tau.</p>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="current_sum_processor.html" class="btn btn-neutral float-left" title="Current Sum Processor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cos_sin_processor.html" class="btn btn-neutral float-right" title="Cos Sin Processor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

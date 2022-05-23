@@ -1,6 +1,6 @@
 Dead Time Processor
 #####################
 
-.. autoclass:: gym_electric_motor.state_action_processors.DeadTimeProcessor
+.. autoclass:: gym_electric_motor.physical_system_wrappers.DeadTimeProcessor
    :members:
    :inherited-members:

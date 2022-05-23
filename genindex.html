@@ -45,7 +45,6 @@
 <li class="toctree-l1"><a class="reference internal" href="parts/reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parts/state_action_processors/state_action_processor.html">State Action Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parts/core.html">Core</a></li>
@@ -134,26 +133,26 @@
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.action_space">action_space() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.action_space">[1]</a>
 
       <ul>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.action_space">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.action_space">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.action_space">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.action_space">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.action_space">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.action_space">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.action_space">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.action_space">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.action_space">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.action_space">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.action_space">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.action_space">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.action_space">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.action_space">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/visualizations/motor_dashboard_plots/action_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.ActionPlot">ActionPlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
 </li>
-      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.angle">angle() (gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
+      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.angle">angle() (gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -173,6 +172,18 @@
         <li><a href="parts/core.html#gym_electric_motor.core.ReferenceGenerator.close">(gym_electric_motor.core.ReferenceGenerator method)</a>, <a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.close">[1]</a>
 </li>
         <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.close">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.close">[1]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.close">[2]</a>
+</li>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.close">(gym_electric_motor.physical_system_wrappers.CosSinProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.close">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.close">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.close">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.close">(gym_electric_motor.physical_system_wrappers.FluxObserver method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.close">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor method)</a>
 </li>
         <li><a href="parts/reference_generators/const_reference_generator.html#gym_electric_motor.reference_generators.ConstReferenceGenerator.close">(gym_electric_motor.reference_generators.ConstReferenceGenerator method)</a>
 </li>
@@ -195,18 +206,6 @@
         <li><a href="parts/reference_generators/zero_reference_generator.html#gym_electric_motor.reference_generators.ZeroReferenceGenerator.close">(gym_electric_motor.reference_generators.ZeroReferenceGenerator method)</a>
 </li>
         <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
-</li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.close">(gym_electric_motor.state_action_processors.CosSinProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.close">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.close">(gym_electric_motor.state_action_processors.DeadTimeProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.close">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.close">(gym_electric_motor.state_action_processors.FluxObserver method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.close">(gym_electric_motor.state_action_processors.StateNoiseProcessor method)</a>
 </li>
       </ul></li>
       <li><a href="parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter">ConsolePrinter (class in gym_electric_motor.visualization.console_printer)</a>
@@ -321,7 +320,7 @@
       </ul></li>
       <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter">converter() (gym_electric_motor.physical_systems.physical_systems.SCMLSystem property)</a>
 </li>
-      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor">CosSinProcessor (class in gym_electric_motor.state_action_processors)</a>
+      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor">CosSinProcessor (class in gym_electric_motor.physical_system_wrappers)</a>
 </li>
       <li><a href="parts/visualizations/motor_dashboard_plots/cumulative_constraint_violation_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot">CumulativeConstraintViolationPlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
 </li>
@@ -331,7 +330,7 @@
 </li>
       <li><a href="parts/physical_systems/electric_motors.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX">CURRENTS_IDX (gym_electric_motor.physical_systems.electric_motors.ElectricMotor attribute)</a>, <a href="parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX">[1]</a>
 </li>
-      <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor">CurrentSumProcessor (class in gym_electric_motor.state_action_processors.current_sum_processor)</a>
+      <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor">CurrentSumProcessor (class in gym_electric_motor.physical_system_wrappers.current_sum_processor)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -363,15 +362,15 @@
 </li>
       <li><a href="parts/physical_systems/electric_motors/shunt.html#gym_electric_motor.physical_systems.electric_motors.DcShuntMotor">DcShuntMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
 </li>
-      <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.dead_time">dead_time() (gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
+      <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.dead_time">dead_time() (gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
 </li>
-      <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor">DeadTimeProcessor (class in gym_electric_motor.state_action_processors)</a>
+      <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor">DeadTimeProcessor (class in gym_electric_motor.physical_system_wrappers)</a>
 </li>
       <li><a href="parts/physical_systems/electric_motors/dfim.html#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor">DoublyFedInductionMotor (class in gym_electric_motor.physical_systems.electric_motors)</a>
 </li>
       <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem">DoublyFedInductionMotorSystem (class in gym_electric_motor.physical_systems.physical_systems)</a>
 </li>
-      <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor">DqToAbcActionProcessor (class in gym_electric_motor.state_action_processors)</a>
+      <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor">DqToAbcActionProcessor (class in gym_electric_motor.physical_system_wrappers)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -533,7 +532,7 @@
 </li>
       <li><a href="parts/physical_systems/converters/2QC.html#gym_electric_motor.physical_systems.converters.FiniteTwoQuadrantConverter">FiniteTwoQuadrantConverter (class in gym_electric_motor.physical_systems.converters)</a>
 </li>
-      <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver">FluxObserver (class in gym_electric_motor.state_action_processors)</a>
+      <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver">FluxObserver (class in gym_electric_motor.physical_system_wrappers)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -886,19 +885,19 @@
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.k">k() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.k">[1]</a>
 
       <ul>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.k">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.k">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.k">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.k">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.k">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.k">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.k">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.k">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.k">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.k">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.k">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.k">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.k">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.k">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -913,6 +912,20 @@
 
       <ul>
         <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.limits">(gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.limits">[1]</a>
+</li>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.limits">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.limits">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.limits">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.limits">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.limits">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.limits">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.limits">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
         <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.limits">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor property)</a>
 </li>
@@ -953,20 +966,6 @@
         <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.limits">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad property)</a>
 </li>
         <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits">(gym_electric_motor.physical_systems.physical_systems.SCMLSystem property)</a>
-</li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.limits">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.limits">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.limits">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.limits">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.limits">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.limits">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.limits">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1055,9 +1054,21 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.next_generator">next_generator() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
+      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.next_generator">next_generator() (gym_electric_motor.physical_system_wrappers.CosSinProcessor method)</a>
 
       <ul>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.next_generator">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.next_generator">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.next_generator">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.next_generator">(gym_electric_motor.physical_system_wrappers.FluxObserver method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.next_generator">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor method)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.next_generator">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
+</li>
         <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.next_generator">(gym_electric_motor.physical_systems.electric_motors.DcMotor method)</a>
 </li>
         <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.next_generator">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor method)</a>
@@ -1108,18 +1119,6 @@
 </li>
         <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.next_generator">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.next_generator">(gym_electric_motor.state_action_processors.CosSinProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.next_generator">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.next_generator">(gym_electric_motor.state_action_processors.DeadTimeProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.next_generator">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.next_generator">(gym_electric_motor.state_action_processors.FluxObserver method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.next_generator">(gym_electric_motor.state_action_processors.StateNoiseProcessor method)</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1130,21 +1129,21 @@
       <ul>
         <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.nominal_state">(gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.nominal_state">[1]</a>
 </li>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.nominal_state">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.nominal_state">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.nominal_state">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.nominal_state">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.nominal_state">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.nominal_state">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.nominal_state">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
+</li>
         <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state">(gym_electric_motor.physical_systems.physical_systems.SCMLSystem property)</a>
-</li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.nominal_state">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.nominal_state">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.nominal_state">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.nominal_state">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.nominal_state">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.nominal_state">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.nominal_state">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
       <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.nominal_values">nominal_values() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor property)</a>
@@ -1348,24 +1347,26 @@
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.physical_system">physical_system() (gym_electric_motor.core.ElectricMotorEnvironment property)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.physical_system">[1]</a>
 
       <ul>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.physical_system">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.physical_system">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.physical_system">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.physical_system">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.physical_system">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.physical_system">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.physical_system">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.physical_system">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.physical_system">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.physical_system">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.physical_system">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.physical_system">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.physical_system">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.physical_system">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem">PhysicalSystem (class in gym_electric_motor.core)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem">[1]</a>
+</li>
+      <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper">PhysicalSystemWrapper (class in gym_electric_motor.physical_system_wrappers)</a>
 </li>
       <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad">PolynomialStaticLoad (class in gym_electric_motor.physical_systems.mechanical_loads)</a>
 </li>
@@ -1459,9 +1460,21 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parts/callbacks.html#gym_electric_motor.callbacks.RampingLimitMargin">RampingLimitMargin (class in gym_electric_motor.callbacks)</a>
 </li>
-      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.random_generator">random_generator() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor property)</a>
+      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.random_generator">random_generator() (gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 
       <ul>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.random_generator">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.random_generator">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.random_generator">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.random_generator">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.random_generator">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.random_generator">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor property)</a>
+</li>
         <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.random_generator">(gym_electric_motor.physical_systems.electric_motors.DcMotor property)</a>
 </li>
         <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.random_generator">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor property)</a>
@@ -1512,20 +1525,8 @@
 </li>
         <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.random_generator">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator property)</a>
 </li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.random_generator">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.random_generator">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.random_generator">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.random_generator">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.random_generator">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.random_generator">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
-</li>
       </ul></li>
-      <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.random_kwargs">random_kwargs() (gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
+      <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.random_kwargs">random_kwargs() (gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
       <li><a href="parts/random_component.html#gym_electric_motor.RandomComponent">RandomComponent (class in gym_electric_motor)</a>
 </li>
@@ -1623,6 +1624,20 @@
         <li><a href="parts/core.html#gym_electric_motor.core.ReferenceGenerator.reset">(gym_electric_motor.core.ReferenceGenerator method)</a>, <a href="parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.reset">[1]</a>
 </li>
         <li><a href="parts/constraints/constraint.html#gym_electric_motor.core.RewardFunction.reset">(gym_electric_motor.core.RewardFunction method)</a>, <a href="parts/core.html#gym_electric_motor.core.RewardFunction.reset">[1]</a>, <a href="parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reset">[2]</a>
+</li>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.reset">(gym_electric_motor.physical_system_wrappers.CosSinProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.reset">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.reset">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.reset">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.reset">(gym_electric_motor.physical_system_wrappers.FluxObserver method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.reset">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.reset">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor method)</a>
 </li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.reset">(gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
 </li>
@@ -1730,20 +1745,6 @@
 </li>
         <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
 </li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.reset">(gym_electric_motor.state_action_processors.CosSinProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.reset">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.reset">(gym_electric_motor.state_action_processors.DeadTimeProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.reset">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.reset">(gym_electric_motor.state_action_processors.FluxObserver method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.reset">(gym_electric_motor.state_action_processors.StateActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.reset">(gym_electric_motor.state_action_processors.StateNoiseProcessor method)</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1800,6 +1801,20 @@
       <li><a href="parts/core.html#gym_electric_motor.core.ElectricMotorEnvironment.seed">seed() (gym_electric_motor.core.ElectricMotorEnvironment method)</a>, <a href="parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.seed">[1]</a>
 
       <ul>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.seed">(gym_electric_motor.physical_system_wrappers.CosSinProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.seed">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.seed">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.seed">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.seed">(gym_electric_motor.physical_system_wrappers.FluxObserver method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.seed">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.seed">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor method)</a>
+</li>
         <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.seed">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor method)</a>
 </li>
         <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.seed">(gym_electric_motor.physical_systems.electric_motors.DcMotor method)</a>
@@ -1854,24 +1869,22 @@
 </li>
         <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.seed">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator method)</a>
 </li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.seed">(gym_electric_motor.state_action_processors.CosSinProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.seed">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.seed">(gym_electric_motor.state_action_processors.DeadTimeProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.seed">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.seed">(gym_electric_motor.state_action_processors.FluxObserver method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.seed">(gym_electric_motor.state_action_processors.StateActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.seed">(gym_electric_motor.state_action_processors.StateNoiseProcessor method)</a>
-</li>
       </ul></li>
-      <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.seed_sequence">seed_sequence() (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor property)</a>
+      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.seed_sequence">seed_sequence() (gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 
       <ul>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.seed_sequence">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.seed_sequence">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.seed_sequence">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.seed_sequence">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.seed_sequence">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
+</li>
+        <li><a href="parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.seed_sequence">(gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor property)</a>
+</li>
         <li><a href="parts/physical_systems/electric_motors/dc_base.html#gym_electric_motor.physical_systems.electric_motors.DcMotor.seed_sequence">(gym_electric_motor.physical_systems.electric_motors.DcMotor property)</a>
 </li>
         <li><a href="parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.seed_sequence">(gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor property)</a>
@@ -1921,18 +1934,6 @@
         <li><a href="parts/reference_generators/triangular_reference_generator.html#gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed_sequence">(gym_electric_motor.reference_generators.TriangularReferenceGenerator property)</a>
 </li>
         <li><a href="parts/reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator.seed_sequence">(gym_electric_motor.reference_generators.WienerProcessReferenceGenerator property)</a>
-</li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.seed_sequence">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.seed_sequence">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.seed_sequence">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.seed_sequence">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.seed_sequence">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.seed_sequence">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
       <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.set_action">set_action() (gym_electric_motor.physical_systems.converters.ContB6BridgeConverter method)</a>
@@ -2065,20 +2066,20 @@
         <li><a href="parts/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">(gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors method)</a>
 </li>
       </ul></li>
-      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.set_physical_system">set_physical_system() (gym_electric_motor.state_action_processors.CosSinProcessor method)</a>
+      <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.set_physical_system">set_physical_system() (gym_electric_motor.physical_system_wrappers.CosSinProcessor method)</a>
 
       <ul>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.set_physical_system">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor method)</a>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.set_physical_system">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor method)</a>
 </li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.set_physical_system">(gym_electric_motor.state_action_processors.DeadTimeProcessor method)</a>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.set_physical_system">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor method)</a>
 </li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.set_physical_system">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor method)</a>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.set_physical_system">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor method)</a>
 </li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.set_physical_system">(gym_electric_motor.state_action_processors.FluxObserver method)</a>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system">(gym_electric_motor.physical_system_wrappers.FluxObserver method)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.set_physical_system">(gym_electric_motor.state_action_processors.StateActionProcessor method)</a>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.set_physical_system">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper method)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.set_physical_system">(gym_electric_motor.state_action_processors.StateNoiseProcessor method)</a>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.set_physical_system">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor method)</a>
 </li>
       </ul></li>
       <li><a href="parts/utils.html#gym_electric_motor.utils.set_state_array">set_state_array() (in module gym_electric_motor.utils)</a>
@@ -2108,6 +2109,20 @@
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.simulate">simulate() (gym_electric_motor.core.PhysicalSystem method)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.simulate">[1]</a>
 
       <ul>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.simulate">(gym_electric_motor.physical_system_wrappers.CosSinProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.simulate">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.simulate">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.simulate">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor method)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.simulate">(gym_electric_motor.physical_system_wrappers.FluxObserver method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.simulate">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper method)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.simulate">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor method)</a>
+</li>
         <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate">(gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem method)</a>
 </li>
         <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate">(gym_electric_motor.physical_systems.physical_systems.SCMLSystem method)</a>
@@ -2115,20 +2130,6 @@
         <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate">(gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem method)</a>
 </li>
         <li><a href="parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate">(gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem method)</a>
-</li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.simulate">(gym_electric_motor.state_action_processors.CosSinProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.simulate">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.simulate">(gym_electric_motor.state_action_processors.DeadTimeProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.simulate">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.simulate">(gym_electric_motor.state_action_processors.FluxObserver method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.simulate">(gym_electric_motor.state_action_processors.StateActionProcessor method)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.simulate">(gym_electric_motor.state_action_processors.StateNoiseProcessor method)</a>
 </li>
       </ul></li>
       <li><a href="parts/reference_generators/sinusoidal_reference_generator.html#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator">SinusoidalReferenceGenerator (class in gym_electric_motor.reference_generators)</a>
@@ -2146,6 +2147,20 @@
       <ul>
         <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.state_names">(gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.state_names">[1]</a>
 </li>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_names">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_names">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.state_names">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.state_names">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.state_names">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.state_names">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.state_names">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
+</li>
         <li><a href="parts/physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad.state_names">(gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad property)</a>
 </li>
         <li><a href="parts/physical_systems/mechanical_loads/ext_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.state_names">(gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad property)</a>
@@ -2156,58 +2171,42 @@
 </li>
         <li><a href="parts/physical_systems/mechanical_loads/polystatic.html#gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad.state_names">(gym_electric_motor.physical_systems.mechanical_loads.PolynomialStaticLoad property)</a>
 </li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.state_names">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.state_names">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.state_names">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.state_names">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.state_names">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.state_names">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.state_names">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
-</li>
       </ul></li>
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.state_positions">state_positions() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.state_positions">[1]</a>
 
       <ul>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.state_positions">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_positions">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.state_positions">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_positions">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.state_positions">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.state_positions">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.state_positions">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.state_positions">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.state_positions">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.state_positions">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.state_positions">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.state_positions">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.state_space">state_space() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.state_space">[1]</a>
 
       <ul>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.state_space">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_space">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.state_space">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_space">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.state_space">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.state_space">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.state_space">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.state_space">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.state_space">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.state_space">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.state_space">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.state_space">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.state_space">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.state_space">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
-      <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor">StateActionProcessor (class in gym_electric_motor.state_action_processors)</a>
-</li>
-      <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor">StateNoiseProcessor (class in gym_electric_motor.state_action_processors)</a>
+      <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor">StateNoiseProcessor (class in gym_electric_motor.physical_system_wrappers)</a>
 </li>
       <li><a href="parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot">StatePlot (class in gym_electric_motor.visualization.motor_dashboard_plots)</a>
 </li>
@@ -2286,6 +2285,18 @@
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.tau">tau() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.tau">[1]</a>
 
       <ul>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.tau">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.tau">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.tau">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.tau">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
+</li>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.tau">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
+</li>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.tau">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
+</li>
         <li><a href="parts/physical_systems/converters/B6C.html#gym_electric_motor.physical_systems.converters.ContB6BridgeConverter.tau">(gym_electric_motor.physical_systems.converters.ContB6BridgeConverter property)</a>
 </li>
         <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.tau">(gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter property)</a>
@@ -2313,18 +2324,6 @@
         <li><a href="parts/physical_systems/converters/NoConv.html#gym_electric_motor.physical_systems.converters.NoConverter.tau">(gym_electric_motor.physical_systems.converters.NoConverter property)</a>
 </li>
         <li><a href="parts/physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.tau">(gym_electric_motor.physical_systems.converters.PowerElectronicConverter property)</a>
-</li>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.tau">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.tau">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.tau">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.tau">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
-</li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.tau">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
-</li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.tau">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -2356,19 +2355,19 @@
       <li><a href="parts/core.html#gym_electric_motor.core.PhysicalSystem.unwrapped">unwrapped() (gym_electric_motor.core.PhysicalSystem property)</a>, <a href="parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.unwrapped">[1]</a>
 
       <ul>
-        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.state_action_processors.CosSinProcessor.unwrapped">(gym_electric_motor.state_action_processors.CosSinProcessor property)</a>
+        <li><a href="parts/state_action_processors/cos_sin_processor.html#gym_electric_motor.physical_system_wrappers.CosSinProcessor.unwrapped">(gym_electric_motor.physical_system_wrappers.CosSinProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor.unwrapped">(gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor property)</a>
+        <li><a href="parts/state_action_processors/current_sum_processor.html#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.unwrapped">(gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.state_action_processors.DeadTimeProcessor.unwrapped">(gym_electric_motor.state_action_processors.DeadTimeProcessor property)</a>
+        <li><a href="parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.unwrapped">(gym_electric_motor.physical_system_wrappers.DeadTimeProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.state_action_processors.DqToAbcActionProcessor.unwrapped">(gym_electric_motor.state_action_processors.DqToAbcActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.unwrapped">(gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor property)</a>
 </li>
-        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.state_action_processors.FluxObserver.unwrapped">(gym_electric_motor.state_action_processors.FluxObserver property)</a>
+        <li><a href="parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.unwrapped">(gym_electric_motor.physical_system_wrappers.FluxObserver property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.state_action_processors.StateActionProcessor.unwrapped">(gym_electric_motor.state_action_processors.StateActionProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.unwrapped">(gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper property)</a>
 </li>
-        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.state_action_processors.StateNoiseProcessor.unwrapped">(gym_electric_motor.state_action_processors.StateNoiseProcessor property)</a>
+        <li><a href="parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.unwrapped">(gym_electric_motor.physical_system_wrappers.StateNoiseProcessor property)</a>
 </li>
       </ul></li>
   </ul></td>

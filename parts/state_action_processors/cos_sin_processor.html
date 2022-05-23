@@ -16,9 +16,7 @@
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Dead Time Processor" href="dead_time_processor.html" />
-    <link rel="prev" title="Flux Observer" href="flux_observer.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,20 +39,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
 </ul>
 <p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="state_action_processor.html">State Action Processor</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="current_sum_processor.html">Current Sum Processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flux_observer.html">Flux Observer</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Cos Sin Processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dead_time_processor.html">Dead Time Processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dq_to_abc_action_processor.html">Dq To Abc Action Processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="state_noise_processor.html">State Noise Processor</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
@@ -77,7 +66,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="state_action_processor.html">State Action Processor</a> &raquo;</li>
       <li>Cos Sin Processor</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/parts/state_action_processors/cos_sin_processor.rst.txt" rel="nofollow"> View page source</a>
@@ -91,8 +79,8 @@
   <div class="section" id="cos-sin-processor">
 <h1>Cos Sin Processor<a class="headerlink" href="#cos-sin-processor" title="Permalink to this headline"></a></h1>
 <dl class="class">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.state_action_processors.</code><code class="sig-name descname">CosSinProcessor</code><span class="sig-paren">(</span><em class="sig-param">angle='epsilon'</em>, <em class="sig-param">physical_system=None</em>, <em class="sig-param">remove_angle=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/cos_sin_processor.html#CosSinProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_system_wrappers.</code><code class="sig-name descname">CosSinProcessor</code><span class="sig-paren">(</span><em class="sig-param">angle='epsilon'</em>, <em class="sig-param">physical_system=None</em>, <em class="sig-param">remove_angle=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/cos_sin_processor.html#CosSinProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor" title="Permalink to this definition"></a></dt>
 <dd><p>Adds <code class="docutils literal notranslate"><span class="pre">cos(angle)</span></code> and <code class="docutils literal notranslate"><span class="pre">sin(angle)</span></code> states to the systems state vector that are the cosine and sine of a
 certain systems state.</p>
 <p>Optionally, the CosSinProcessor can also remove the angle from the state vector.</p>
@@ -107,67 +95,67 @@ Default: <code class="docutils literal notranslate"><span class="pre">'epsilon'<
 </dd>
 </dl>
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.action_space">
-<em class="property">property </em><code class="sig-name descname">action_space</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.action_space" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.action_space">
+<em class="property">property </em><code class="sig-name descname">action_space</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.action_space" title="Permalink to this definition"></a></dt>
 <dd><p>The processed action space.</p>
 <p>If it is unset, the action space of the inner physical system is returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.angle">
-<em class="property">property </em><code class="sig-name descname">angle</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.angle" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.angle">
+<em class="property">property </em><code class="sig-name descname">angle</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.angle" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the name of the state whose cosine and sine are appended to the state vector.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.close" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.close" title="Permalink to this definition"></a></dt>
 <dd><p>Called, when the environment is closed.
 Close the System and all of its submodules by closing files, saving logs etc.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.k">
-<em class="property">property </em><code class="sig-name descname">k</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.k" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.k">
+<em class="property">property </em><code class="sig-name descname">k</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 int: The current systems time step k.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.limits">
-<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.limits" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.limits" title="Permalink to this definition"></a></dt>
 <dd><p>The processed physical system limits.</p>
 <p>If it is unset, the inner limits are returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.next_generator">
-<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.next_generator" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.next_generator">
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.next_generator" title="Permalink to this definition"></a></dt>
 <dd><p>Sets a new reference generator for a new episode.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.nominal_state">
-<em class="property">property </em><code class="sig-name descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.nominal_state" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.nominal_state">
+<em class="property">property </em><code class="sig-name descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.nominal_state" title="Permalink to this definition"></a></dt>
 <dd><p>The processed physical system nominal state.</p>
 <p>If it is unset, the inner nominal state is returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.physical_system">
-<em class="property">property </em><code class="sig-name descname">physical_system</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.physical_system" title="Permalink to this definition"></a></dt>
-<dd><p>The next inner physical_system or the next inner state_action_processor.</p>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.physical_system">
+<em class="property">property </em><code class="sig-name descname">physical_system</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>The next inner physical_system or the next inner physical_system_wrapper.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.random_generator">
-<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.random_generator" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.random_generator">
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.random_generator" title="Permalink to this definition"></a></dt>
 <dd><p>The random generator that has to be used to draw the random numbers.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/cos_sin_processor.html#CosSinProcessor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.reset" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/cos_sin_processor.html#CosSinProcessor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset the physical system to an initial state before a new episode starts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -180,8 +168,8 @@ int: The current systems time step k.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.seed">
-<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.seed" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.seed" title="Permalink to this definition"></a></dt>
 <dd><p>The function to set the seed.</p>
 <p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
 to this component that is generated based on the source-seed of the env.</p>
@@ -202,25 +190,25 @@ entropies. The entropy of this instance has to be placed always at first place.<
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.seed_sequence">
-<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.seed_sequence" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.seed_sequence">
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.seed_sequence" title="Permalink to this definition"></a></dt>
 <dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.set_physical_system">
-<code class="sig-name descname">set_physical_system</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/cos_sin_processor.html#CosSinProcessor.set_physical_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.set_physical_system" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the inner physical system of this StateActionProcessor.</p>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.set_physical_system">
+<code class="sig-name descname">set_physical_system</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/cos_sin_processor.html#CosSinProcessor.set_physical_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.set_physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the inner physical system of this PhysicalSystemWrapper.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The inner physical system or state action processor.</p>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The inner physical system or Physical System Wrapper.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.simulate">
-<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/state_action_processors/cos_sin_processor.html#CosSinProcessor.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.simulate" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/cos_sin_processor.html#CosSinProcessor.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.simulate" title="Permalink to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -237,37 +225,37 @@ This method is called in the environment in every step to update the systems sta
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.state_names">
-<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.state_names" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_names">
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_names" title="Permalink to this definition"></a></dt>
 <dd><p>The processed physical system state names.</p>
 <p>If it is unset, the state names of the inner physical system are returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.state_positions">
-<em class="property">property </em><code class="sig-name descname">state_positions</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.state_positions" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_positions">
+<em class="property">property </em><code class="sig-name descname">state_positions</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_positions" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.state_space">
-<em class="property">property </em><code class="sig-name descname">state_space</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.state_space" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_space">
+<em class="property">property </em><code class="sig-name descname">state_space</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.state_space" title="Permalink to this definition"></a></dt>
 <dd><p>The processed state space.</p>
 <p>If it is unset, the state space of the inner physical system is returned.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.tau">
-<em class="property">property </em><code class="sig-name descname">tau</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.tau" title="Permalink to this definition"></a></dt>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.tau">
+<em class="property">property </em><code class="sig-name descname">tau</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.tau" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
 float: The systems time constant tau.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.state_action_processors.CosSinProcessor.unwrapped">
-<em class="property">property </em><code class="sig-name descname">unwrapped</code><a class="headerlink" href="#gym_electric_motor.state_action_processors.CosSinProcessor.unwrapped" title="Permalink to this definition"></a></dt>
-<dd><p>The innermost physical system within all state-action processors.</p>
+<dt id="gym_electric_motor.physical_system_wrappers.CosSinProcessor.unwrapped">
+<em class="property">property </em><code class="sig-name descname">unwrapped</code><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.CosSinProcessor.unwrapped" title="Permalink to this definition"></a></dt>
+<dd><p>The innermost physical system within all Physical System Wrappers.</p>
 </dd></dl>
 
 </dd></dl>
@@ -277,10 +265,7 @@ float: The systems time constant tau.</p>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="flux_observer.html" class="btn btn-neutral float-left" title="Flux Observer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="dead_time_processor.html" class="btn btn-neutral float-right" title="Dead Time Processor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 
