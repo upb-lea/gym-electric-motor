@@ -4,7 +4,7 @@ import gym_electric_motor as gem
 import tests.testing_utils as tu
 
 
-class TestStateActionProcessor:
+class TestPhysicalSystemWrapper:
 
     @pytest.fixture
     def physical_system(self):
@@ -12,7 +12,7 @@ class TestStateActionProcessor:
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.state_action_processors.StateActionProcessor(physical_system=physical_system)
+        return gem.physical_system_wrappers.PhysicalSystemWrapper(physical_system=physical_system)
 
     @pytest.fixture
     def reset_processor(self, processor):
@@ -21,7 +21,7 @@ class TestStateActionProcessor:
 
     @pytest.fixture
     def double_wrapped(self, processor):
-        return gem.state_action_processors.StateActionProcessor(physical_system=processor)
+        return gem.physical_system_wrappers.PhysicalSystemWrapper(physical_system=processor)
 
     def test_action_space(self, processor, physical_system):
         assert processor.action_space == physical_system.action_space

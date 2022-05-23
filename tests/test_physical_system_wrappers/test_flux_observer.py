@@ -4,11 +4,11 @@ import numpy as np
 import gym_electric_motor as gem
 
 from tests.testing_utils import DummyPhysicalSystem
-from tests.utils import StateActionTestProcessor
-from .test_state_action_processor import TestStateActionProcessor
+from tests.utils import PhysicalSystemTestWrapper
+from .test_physical_system_wrapper import TestPhysicalSystemWrapper
 
 
-class TestFluxObserver(TestStateActionProcessor):
+class TestFluxObserver(TestPhysicalSystemWrapper):
 
     @pytest.fixture
     def physical_system(self):
@@ -27,7 +27,7 @@ class TestFluxObserver(TestStateActionProcessor):
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.state_action_processors.FluxObserver(physical_system=physical_system)
+        return gem.physical_system_wrappers.FluxObserver(physical_system=physical_system)
 
     @pytest.fixture
     def reset_processor(self, processor):

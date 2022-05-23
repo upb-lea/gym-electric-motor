@@ -3,7 +3,7 @@ from externally_referenced_state_plot import ExternallyReferencedStatePlot
 from external_plot import ExternalPlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.state_action_processors import FluxObserver
+from gym_electric_motor.physical_system_wrappers import FluxObserver
 import numpy as np
 
 if __name__ == '__main__':
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     external_ref_plots += external_plot
 
     # initialize the gym-electric-motor environment
-    env = gem.make(env_id, state_action_processors=(FluxObserver(),),
+    env = gem.make(env_id, physical_system_wrappers=(FluxObserver(),),
                    visualization=MotorDashboard(state_plots=('omega', 'psi_abs', 'psi_angle')))
 
     """

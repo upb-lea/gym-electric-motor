@@ -2,10 +2,10 @@ import gym
 import numpy as np
 
 import gym_electric_motor.physical_systems as ps
-from gym_electric_motor.state_action_processors import StateActionProcessor
+from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
 
 
-class DqToAbcActionProcessor(StateActionProcessor):
+class DqToAbcActionProcessor(PhysicalSystemWrapper):
     """The DqToAbcActionProcessor converts an inner system with an AC motor and actions in abc coordinates to a
     system to which actions in the dq-coordinate system can be applied.
     """

@@ -3,19 +3,19 @@ import pytest
 import numpy as np
 import gym_electric_motor as gem
 
-from .test_state_action_processor import TestStateActionProcessor
+from .test_physical_system_wrapper import TestPhysicalSystemWrapper
 from tests.testing_utils import DummyPhysicalSystem
 
 
-class TestDeadTimeProcessor(TestStateActionProcessor):
+class TestDeadTimeProcessor(TestPhysicalSystemWrapper):
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.state_action_processors.DeadTimeProcessor(physical_system=physical_system)
+        return gem.physical_system_wrappers.DeadTimeProcessor(physical_system=physical_system)
 
     @pytest.fixture
     def unset_processor(self, physical_system):
-        return gem.state_action_processors.DeadTimeProcessor()
+        return gem.physical_system_wrappers.DeadTimeProcessor()
 
     @pytest.mark.parametrize('action', [np.array([5.0]), np.array([2.0])])
     def test_simulate(self, reset_processor, physical_system, action):
@@ -24,9 +24,9 @@ class TestDeadTimeProcessor(TestStateActionProcessor):
         assert all(physical_system.action == np.array([0.0]))
 
     @pytest.mark.parametrize('unset_processor', [
-        gem.state_action_processors.DeadTimeProcessor(steps=2),
-        gem.state_action_processors.DeadTimeProcessor(steps=1),
-        gem.state_action_processors.DeadTimeProcessor(steps=5),
+        gem.physical_system_wrappers.DeadTimeProcessor(steps=2),
+        gem.physical_system_wrappers.DeadTimeProcessor(steps=1),
+        gem.physical_system_wrappers.DeadTimeProcessor(steps=5),
     ])
     @pytest.mark.parametrize(
         ['action_space', 'actions', 'reset_action'],
@@ -65,7 +65,7 @@ class TestDeadTimeProcessor(TestStateActionProcessor):
             except ValueError:
                 assert all(physical_system.action == expected_actions[i])
 
-    @pytest.mark.parametrize('processor', [gem.state_action_processors.DeadTimeProcessor()])
+    @pytest.mark.parametrize('processor', [gem.physical_system_wrappers.DeadTimeProcessor()])
     def test_false_action_space(self, processor, physical_system):
         physical_system._action_space = gym.spaces.MultiBinary(5)
         with pytest.raises(AssertionError):
@@ -74,4 +74,4 @@ class TestDeadTimeProcessor(TestStateActionProcessor):
     @pytest.mark.parametrize('steps', [0, -10])
     def test_false_steps(self, steps):
         with pytest.raises(AssertionError):
-            assert gem.state_action_processors.DeadTimeProcessor(steps)
+            assert gem.physical_system_wrappers.DeadTimeProcessor(steps)

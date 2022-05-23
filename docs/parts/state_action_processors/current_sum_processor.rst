@@ -1,6 +1,6 @@
 Current Sum Processor
 ######################
 
-.. autoclass:: gym_electric_motor.state_action_processors.current_sum_processor.CurrentSumProcessor
+.. autoclass:: gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor
    :members:
    :inherited-members:

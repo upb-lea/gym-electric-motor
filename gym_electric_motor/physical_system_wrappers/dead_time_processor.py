@@ -2,10 +2,10 @@ from collections import deque
 import numpy as np
 
 import gym.spaces
-from gym_electric_motor.state_action_processors import StateActionProcessor
+from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
 
 
-class DeadTimeProcessor(StateActionProcessor):
+class DeadTimeProcessor(PhysicalSystemWrapper):
     """The DeadTimeProcessor delays the actions to the physical system for a parameterizable amount of steps.
 
     Reset Actions:
@@ -28,7 +28,7 @@ class DeadTimeProcessor(StateActionProcessor):
             steps(int): Number of steps to delay the actions.
             reset_action(callable): A callable that returns a list of length steps to initialize the dead-actions
                 after a reset. Default: See above in the class description
-            physical_system(PhysicalSystem (optional)): The inner physical system of this StateActionProcessor.
+            physical_system(PhysicalSystem (optional)): The inner physical system of this PhysicalSystemWrapper.
         """
         self._reset_actions = reset_action
         self._steps = int(steps)

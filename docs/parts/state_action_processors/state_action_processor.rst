@@ -1,9 +1,9 @@
-State Action Processor
+Physical System Wrapper
 #######################
 
 ..  toctree::
     :maxdepth: 1
-    :caption: Available StateActionProcessors:
+    :caption: Available PhysicalSystemWrappers:
 
     current_sum_processor
     flux_observer
@@ -13,8 +13,8 @@ State Action Processor
     state_noise_processor
 
 
-State Action Processor Base Class
+Physical System Wrapper Base Class
 ''''''''''''''''''''''''''''''''''
 
-.. autoclass:: gym_electric_motor.state_action_processors.StateActionProcessor
+.. autoclass:: gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper
    :members:

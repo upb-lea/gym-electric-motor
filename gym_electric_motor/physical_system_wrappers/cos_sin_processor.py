@@ -1,10 +1,10 @@
 import gym
 import numpy as np
 
-from gym_electric_motor.state_action_processors import StateActionProcessor
+from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
 
 
-class CosSinProcessor(StateActionProcessor):
+class CosSinProcessor(PhysicalSystemWrapper):
     """Adds ``cos(angle)`` and ``sin(angle)`` states to the systems state vector that are the cosine and sine of a
     certain systems state.
 
