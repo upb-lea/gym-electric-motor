@@ -11,9 +11,10 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     =====================  ==========  ============= ===========================================
     r_s                    mOhm        15.55         Stator resistance
     r_e                    mOhm        7.2           Excitation resistance
-    l_d                    mH          0.166         Direct axis inductance
+    l_d                    mH          1.66          Direct axis inductance
     l_q                    mH          0.35          Quadrature axis inductance
-    l_e                    mH          1.66          Excitation inductance
+    l_m                    mH          1.589         Mutual inductance
+    l_e                    mH          1.74          Excitation inductance
     p                      1           3             Pole pair number
     j_rotor                kg/m^2      0.3883        Moment of inertia of the rotor
     =====================  ==========  ============= ===========================================
@@ -98,8 +99,8 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         'p': 3,
         'l_d': 1.66e-3,
         'l_q': 0.35e-3,
-        'l_m': 1.66e-4,
-        'l_e': 1.66e-3,
+        'l_m': 1.589e-3,
+        'l_e': 1.74e-3,
         'j_rotor': 0.3883,
         'r_s': 15.55e-3,
         'r_e': 7.2e-3,
