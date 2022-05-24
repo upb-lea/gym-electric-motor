@@ -162,7 +162,6 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     def _torque_limit(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        # I am not sure about this
         if mp['l_d'] == mp['l_q']:
             return self.torque([0, self._limits['i_sq'], self._limits['i_e'], 0])
         else:
