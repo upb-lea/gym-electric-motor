@@ -241,7 +241,6 @@
     <span class="k">def</span> <span class="nf">_torque_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
-        <span class="c1"># I am not sure about this</span>
         <span class="k">if</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_d&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_q&#39;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s1">&#39;i_sq&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s1">&#39;i_e&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
