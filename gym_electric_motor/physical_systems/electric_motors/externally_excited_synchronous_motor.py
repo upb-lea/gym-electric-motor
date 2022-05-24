@@ -169,13 +169,12 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
             i_n = self.nominal_values['i']
             _p = mp['l_m'] * i_n / (2 * (mp['l_d'] - mp['l_q']))
             _q = - i_n ** 2 / 2
-            i_d_opt = - _p / 2 - np.sqrt((_p / 2) ** 2 - _q)
-            i_q_opt_2 = i_n ** 2 - i_d_opt ** 2
-            if i_q_opt_2 >= 0:
-                i_q_opt = np.sqrt(i_q_opt_2)
+            if mp['l_d'] < mp['l_q']:
+                i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
             else:
-                i_q_opt = -np.sqrt(-i_q_opt_2)
-            return self.torque([i_d_opt, i_q_opt, self._limits['i_e'], 0])
+                i_d_opt = - _p / 2 + np.sqrt( (_p / 2) ** 2 - _q)
+            i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
+        return self.torque([i_d_opt, i_q_opt, self._limits['i_e'], 0])
 
     def torque(self, currents):
         # Docstring of superclass
