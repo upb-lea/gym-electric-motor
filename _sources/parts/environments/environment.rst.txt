@@ -6,9 +6,9 @@ In general, all environment-ids are structured as follows:
 
 ``ControlType-ControlTask-MotorType-v0``
 
-- The ``ControlType`` is in ``{Finite / Cont}`` for finite control set and continuous control set action spaces
+- The ``ControlType`` is in ``{Finite / Cont}`` for all DC Motors and in ``{Finite / AbcCont / DqCont}`` for all AC Motors
 - The ``ControlTask`` is in ``{TC / SC / CC}`` (Torque / Speed / Current Control)
-- The ``MotorType`` is in ``{PermExDc / ExtExDc / SeriesDc / ShuntDc / PMSM / SynRM / / EESM / DFIM / SCIM }``
+- The ``MotorType`` is in ``{PermExDc / ExtExDc / SeriesDc / ShuntDc / PMSM / SynRM / DFIM / SCIM }``
 
 
 =================================================================== ==============================
@@ -53,49 +53,50 @@ Continuous Current Control Shunt DC Motor Environment                ``'Cont-CC-
 **Permanent Magnet Synchronous Motor (PMSM) Environments**
 
 Finite Torque Control PMSM Environment                               ``'Finite-TC-PMSM-v0'``
-Torque Control PMSM Environment                                      ``'Cont-TC-PMSM-v0'``
+Abc-Continuous Torque Control PMSM Environment                       ``'AbcCont-TC-PMSM-v0'``
+Dq-Continuous Torque Control PMSM Environment                        ``'DqCont-TC-PMSM-v0'``
 Finite Speed Control PMSM Environment                                ``'Finite-SC-PMSM-v0'``
-Speed Control PMSM Environment                                       ``'Cont-SC-PMSM-v0'``
+Abc-Continuous Speed Control PMSM Environment                        ``'Abc-Cont-SC-PMSM-v0'``
+Dq-Continuous Speed Control PMSM Environment                         ``'Dq-Cont-SC-PMSM-v0'``
 Finite Current Control PMSM Environment                              ``'Finite-CC-PMSM-v0'``
-Current Control PMSM Environment                                     ``'Cont-CC-PMSM-v0'``
-
-
-**Externally Excited Synchronous Motor (EESM) Environments**
-
-Finite Torque Control EESM Environment                               ``'Finite-TC-EESM-v0'``
-Torque Control EESM Environment                                      ``'Cont-TC-EESM-v0'``
-Finite Speed Control EESM Environment                                ``'Finite-SC-EESM-v0'``
-Speed Control EESM Environment                                       ``'Cont-SC-EESM-v0'``
-Finite Current Control EESM Environment                              ``'Finite-CC-EESM-v0'``
-Current Control EESM Environment                                     ``'Cont-CC-EESM-v0'``
+Abc-Continuous Current Control PMSM Environment                      ``'AbcCont-CC-PMSM-v0'``
+Dq-Continuous Current Control PMSM Environment                       ``'DqCont-CC-PMSM-v0'``
 
 **Synchronous Reluctance Motor (SynRM) Environments**
 
 Finite Torque Control SynRM Environment                              ``'Finite-TC-SynRM-v0'``
-Torque Control SynRM Environment                                     ``'Cont-TC-SynRM-v0'``
+Abc-Continuous Torque Control SynRM Environment                      ``'AbcCont-TC-SynRM-v0'``
+Dq-Continuous Torque Control SynRM Environment                       ``'DqCont-TC-SynRM-v0'``
 Finite Speed Control SynRM Environment                               ``'Finite-SC-SynRM-v0'``
-Speed Control SynRM Environment                                      ``'Cont-SC-SynRM-v0'``
+Abc-Continuous Speed Control SynRM Environment                       ``'Abc-Cont-SC-SynRM-v0'``
+Dq-Continuous Speed Control SynRM Environment                        ``'Dq-Cont-SC-SynRM-v0'``
 Finite Current Control SynRM Environment                             ``'Finite-CC-SynRM-v0'``
-Current Control SynRM Environment                                    ``'Cont-CC-SynRM-v0'``
+Abc-Continuous Current Control SynRM Environment                     ``'AbcCont-CC-SynRM-v0'``
+Dq-Continuous Current Control SynRM Environment                      ``'DqCont-CC-SynRM-v0'``
 
 **Squirrel Cage Induction Motor (SCIM) Environments**
 
 Finite Torque Control SCIM Environment                               ``'Finite-TC-SCIM-v0'``
-Torque Control SCIM Environment                                      ``'Cont-TC-SCIM-v0'``
+Abc-Continuous Torque Control SCIM Environment                       ``'AbcCont-TC-SCIM-v0'``
+Dq-Continuous Torque Control SCIM Environment                        ``'DqCont-TC-SCIM-v0'``
 Finite Speed Control SCIM Environment                                ``'Finite-SC-SCIM-v0'``
-Speed Control SCIM Environment                                       ``'Cont-SC-SCIM-v0'``
+Abc-Continuous Speed Control SCIM Environment                        ``'Abc-Cont-SC-SCIM-v0'``
+Dq-Continuous Speed Control SCIM Environment                         ``'Dq-Cont-SC-SCIM-v0'``
 Finite Current Control SCIM Environment                              ``'Finite-CC-SCIM-v0'``
-Current Control SCIM Environment                                     ``'Cont-CC-SCIM-v0'``
+Abc-Continuous Current Control SCIM Environment                      ``'AbcCont-CC-SCIM-v0'``
+Dq-Continuous Current Control SCIM Environment                       ``'DqCont-CC-SCIM-v0'``
 
 **Doubly Fed Induction Motor (DFIM) Environments**
 
 Finite Torque Control DFIM Environment                               ``'Finite-TC-DFIM-v0'``
-Torque Control DFIM Environment                                      ``'Cont-TC-DFIM-v0'``
+Abc-Continuous Torque Control DFIM Environment                       ``'AbcCont-TC-DFIM-v0'``
+Dq-Continuous Torque Control DFIM Environment                        ``'DqCont-TC-DFIM-v0'``
 Finite Speed Control DFIM Environment                                ``'Finite-SC-DFIM-v0'``
-Speed Control DFIM Environment                                       ``'Cont-SC-DFIM-v0'``
+Abc-Continuous Speed Control DFIM Environment                        ``'Abc-Cont-SC-DFIM-v0'``
+Dq-Continuous Speed Control DFIM Environment                         ``'Dq-Cont-SC-DFIM-v0'``
 Finite Current Control DFIM Environment                              ``'Finite-CC-DFIM-v0'``
-Current Control DFIM Environment                                     ``'Cont-CC-DFIM-v0'``
-
+Abc-Continuous Current Control DFIM Environment                      ``'AbcCont-CC-DFIM-v0'``
+Dq-Continuous Current Control DFIM Environment                       ``'DqCont-CC-DFIM-v0'``
 =================================================================== ==============================
 
 .. toctree::
@@ -108,7 +109,6 @@ Current Control DFIM Environment                                     ``'Cont-CC-
    series_dc/series_dc_envs
    shunt_dc/shunt_dc_envs
    pmsm/pmsm_envs
-   eesm/eesm_envs
    synrm/synrm_envs
    scim/scim_envs
    dfim/dfim_envs
