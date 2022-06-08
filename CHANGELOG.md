@@ -13,8 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2022-04-25
 ## Added
-- State Action processors as a new feature to process actions and states directly in the environment.
-- The externally excited synchronous motor (EESM) has been added to the GEM-toolbox.
+- Physical System Wrappers as a new feature to process actions and states directly in the environment. A decent introduction can be found in the [GEM cookbook](https://github.com/upb-lea/gym-electric-motor/blob/nightly/examples/environment_features/GEM_cookbook.ipynb) (Paragraph 2.8)
+- The externally excited synchronous motor (EESM) has been added to the GEM-toolbox. 
+- The environments of the EESM can be instantiated with the following keys: "{Cont|Finite}-{CC|TC|SC}-EESM-v0",
 
 ## Changed
 - The MotorDashboard has received a "initialize()" method to initialize the plots below a specific cell.

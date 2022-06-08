@@ -1,4 +1,4 @@
-from .state_action_processor import StateActionProcessor
+from .physical_system_wrapper import PhysicalSystemWrapper
 from .current_sum_processor import CurrentSumProcessor
 from .flux_observer import FluxObserver
 from .dq_to_abc_action_processor import DqToAbcActionProcessor

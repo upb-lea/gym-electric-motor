@@ -6,7 +6,7 @@ from gym_electric_motor.reference_generators import WienerProcessReferenceGenera
 from gym_electric_motor import physical_systems as ps
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
-from gym_electric_motor.state_action_processors import CurrentSumProcessor
+from gym_electric_motor.physical_system_wrappers import CurrentSumProcessor
 
 
 class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
@@ -87,7 +87,7 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
 
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-4, state_action_processors=()):
+                 constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-4, physical_system_wrappers=()):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -108,7 +108,7 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
             tau(float): Duration of one control step in seconds. Default: 1e-5.
             state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)
             callbacks(list(Callback)): Callbacks for user interaction. Default: ()
-            state_action_processors(list(StateActionProcessor)): List of state action processors to modify the
+            physical_system_wrappers(list(PhysicalSystemWrapper)): List of Physical System Wrappers to modify the
             actions to and states from the physical system before they are used in the environment. Default: ()
 
         Note on the env-arg type:
@@ -147,5 +147,5 @@ class ContCurrentControlDcShuntMotorEnv(ElectricMotorEnvironment):
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            state_action_processors=tuple(state_action_processors) + (CurrentSumProcessor(('i_a', 'i_e')),)
+            physical_system_wrappers=tuple(physical_system_wrappers) + (CurrentSumProcessor(('i_a', 'i_e')),)
         )

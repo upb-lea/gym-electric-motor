@@ -1,7 +1,7 @@
-from gym_electric_motor.state_action_processors import StateActionProcessor
+from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
 
 
-class StateNoiseProcessor(StateActionProcessor):
+class StateNoiseProcessor(PhysicalSystemWrapper):
     """The StateNoiseProcessor puts additional noise onto the systems state.
 
     The random distribution of the noise can be selected by those available in the numpy random generator:
@@ -10,12 +10,12 @@ class StateNoiseProcessor(StateActionProcessor):
     Example:
         .. code-block:: python
             import gym_electric_motor as gem
-            state_noise_processor = gem.state_action_processors.StateNoiseProcessor(
+            state_noise_processor = gem.physical_system_wrappers.StateNoiseProcessor(
                 states=['omega', 'torque'],
                 random_dist='laplace'
                 random_kwargs=dict(loc=0.0, scale=0.1)
             )
-            env = gem.make('Cont-SC-PermExDc-v0', state_action_processors=(state_noise_processor,))
+            env = gem.make('Cont-SC-PermExDc-v0', physical_system_wrappers=(state_noise_processor,))
 
 
     """

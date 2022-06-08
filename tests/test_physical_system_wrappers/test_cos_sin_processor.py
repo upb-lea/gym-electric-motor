@@ -4,14 +4,14 @@ import numpy as np
 import gym_electric_motor as gem
 
 from tests.testing_utils import DummyPhysicalSystem
-from .test_state_action_processor import TestStateActionProcessor
+from .test_physical_system_wrapper import TestPhysicalSystemWrapper
 
 
-class TestCosSinProcessor(TestStateActionProcessor):
+class TestCosSinProcessor(TestPhysicalSystemWrapper):
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.state_action_processors.CosSinProcessor(angle='dummy_state_0', physical_system=physical_system)
+        return gem.physical_system_wrappers.CosSinProcessor(angle='dummy_state_0', physical_system=physical_system)
 
     def test_limits(self, processor, physical_system):
         assert all(processor.limits == np.concatenate((physical_system.limits, [1., 1.])))

@@ -1,11 +1,11 @@
 import gym_electric_motor as gem
 
 
-class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
-    """A StateActionProcessor is a wrapper around the PhysicalSystem of a gem-environment.
+class PhysicalSystemWrapper(gem.core.PhysicalSystem, gem.core.RandomComponent):
+    """A PhysicalSystemWrapper is a wrapper around the PhysicalSystem of a gem-environment.
 
     It may be used to modify its states and actions. In contrast to gym-wrappers which are put around the whole
-    environment, modified states by the StateActionProcessors can be referenced, rewarded and visualized by the
+    environment, modified states by the PhysicalSystemWrappers can be referenced, rewarded and visualized by the
     other components of the environment.
     """
 
@@ -41,7 +41,7 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
 
     @property
     def physical_system(self):
-        """The next inner physical_system or the next inner state_action_processor."""
+        """The next inner physical_system or the next inner physical_system_wrapper."""
         return self._physical_system
 
     @property
@@ -55,7 +55,7 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
 
     @property
     def unwrapped(self):
-        """The innermost physical system within all state-action processors."""
+        """The innermost physical system within all Physical System Wrappers."""
         return self.physical_system.unwrapped
 
     @property
@@ -91,10 +91,10 @@ class StateActionProcessor(gem.core.PhysicalSystem, gem.core.RandomComponent):
             self.set_physical_system(physical_system)
 
     def set_physical_system(self, physical_system):
-        """Sets the inner physical system of this StateActionProcessor.
+        """Sets the inner physical system of this PhysicalSystemWrapper.
 
         Args:
-            physical_system(PhysicalSystem): The inner physical system or state action processor.
+            physical_system(PhysicalSystem): The inner physical system or Physical System Wrapper.
         """
         self._physical_system = physical_system
         self._action_space = physical_system.action_space

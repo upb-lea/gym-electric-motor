@@ -2,10 +2,10 @@ import gym
 import numpy as np
 
 import gym_electric_motor as gem
-from gym_electric_motor.state_action_processors import StateActionProcessor
+from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
 
 
-class FluxObserver(StateActionProcessor):
+class FluxObserver(PhysicalSystemWrapper):
     """The FluxObserver extends the systems state vector of induction machine environments by estimated flux states
     ``psi_abs``, and ``psi_angle``. The flux is estimated as follows:
 

@@ -20,7 +20,7 @@ from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLo
 from gym.core import Wrapper
 from gym.spaces import Box, Tuple
 from gym_electric_motor.constraints import SquaredConstraint
-from gym_electric_motor.state_action_processors import DqToAbcActionProcessor, DeadTimeProcessor
+from gym_electric_motor.physical_system_wrappers import DqToAbcActionProcessor, DeadTimeProcessor
 
 '''
 This example shows how we can use GEM to train a reinforcement learning agent to control the current within
@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
     # Change the motor nominal values
     nominal_values = {key: 0.7 * limit for key, limit in limit_values.items()}
-    state_action_processors = (
+    physical_system_wrappers = (
         DeadTimeProcessor(),
         DqToAbcActionProcessor.make('PMSM'),
     )
@@ -107,7 +107,7 @@ if __name__ == '__main__':
         # Choose the permanent magnet synchronous motor with continuous-control-set
         'Cont-CC-PMSM-v0',
         # Pass a class with extra parameters
-        state_action_processors=state_action_processors,
+        physical_system_wrappers=physical_system_wrappers,
         visualization=MotorDashboard(
             state_plots=['i_sq', 'i_sd'],
             action_plots='all',

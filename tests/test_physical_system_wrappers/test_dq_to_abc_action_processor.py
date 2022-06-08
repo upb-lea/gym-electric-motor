@@ -4,10 +4,10 @@ import numpy as np
 import gym_electric_motor as gem
 
 from ..testing_utils import DummyPhysicalSystem
-from .test_state_action_processor import TestStateActionProcessor
+from .test_physical_system_wrapper import TestPhysicalSystemWrapper
 
 
-class TestDqToAbcActionProcessor(TestStateActionProcessor):
+class TestDqToAbcActionProcessor(TestPhysicalSystemWrapper):
 
     @pytest.fixture
     def physical_system(self):
@@ -17,7 +17,7 @@ class TestDqToAbcActionProcessor(TestStateActionProcessor):
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.state_action_processors.DqToAbcActionProcessor.make('PMSM', physical_system=physical_system)
+        return gem.physical_system_wrappers.DqToAbcActionProcessor.make('PMSM', physical_system=physical_system)
 
     def test_action_space(self, processor, physical_system):
         space = gym.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
