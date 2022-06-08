@@ -107,13 +107,14 @@ A white paper for the general toolbox in the context of drive simulation and con
 A white paper for the utilization of this framework within reinforcement learning is available at [IEEE-Xplore](https://ieeexplore.ieee.org/document/9241851) (preprint: [arxiv.org/abs/1910.09434](https://arxiv.org/abs/1910.09434)). Please use the following BibTeX entry for citing it:
 ```
 @article{9241851,  
-    doi={10.1109/TNNLS.2020.3029573}
-    author={A. {Traue} and G. {Book} and W. {Kirchgässner} and O. {Wallscheid}},  
-    journal={IEEE Transactions on Neural Networks and Learning Systems},   
-    title={Toward a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control},   
-    year={2020},  volume={},  number={},      
-    pages={1-10},  
-}
+  author={Traue, Arne and Book, Gerrit and Kirchgässner, Wilhelm and Wallscheid, Oliver},
+  journal={IEEE Transactions on Neural Networks and Learning Systems}, 
+  title={Toward a Reinforcement Learning Environment Toolbox for Intelligent Electric Motor Control}, 
+  year={2022},
+  volume={33},
+  number={3},
+  pages={919-928},
+  doi={10.1109/TNNLS.2020.3029573}}
 ```
 
 ### Running Unit Tests with Pytest
