@@ -89,16 +89,21 @@
 <span class="sd">        This includes the system equations, the motor parameters of the equivalent circuit diagram,</span>
 <span class="sd">        as well as limits.</span>
 
+
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
 <span class="sd">        Motor Parameter        Unit        Default Value Description</span>
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        r_a                    Ohm         0.78          Armature circuit resistance</span>
-<span class="sd">        r_e                    Ohm         25            Exciting circuit resistance</span>
-<span class="sd">        l_a                    H           6.3e-3        Armature circuit inductance</span>
-<span class="sd">        l_e                    H           1.2           Exciting circuit inductance</span>
-<span class="sd">        l_e_prime              H           0.0094        Effective excitation inductance</span>
-<span class="sd">        j_rotor                kg/m^2      0.017         Moment of inertia of the rotor</span>
+<span class="sd">        r_a                    Ohm         16e-3         Armature circuit resistance</span>
+<span class="sd">        r_e                    Ohm         16e-2         Exciting circuit resistance</span>
+<span class="sd">        l_a                    H           19e-6         Armature circuit inductance</span>
+<span class="sd">        l_e                    H           5.4e-3        Exciting circuit inductance</span>
+<span class="sd">        l_e_prime              H           1.7e-3        Effective excitation inductance</span>
+<span class="sd">        j_rotor                kg/m^2      0.025         Moment of inertia of the rotor</span>
 <span class="sd">        =====================  ==========  ============= ===========================================</span>
+<span class="sd">        </span>
+<span class="sd">        ..note :: </span>
+<span class="sd">            The motor parameter are based on the following DC Motor (slightly adapted):</span>
+<span class="sd">            https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor</span>
 
 <span class="sd">        =============== ====== =============================================</span>
 <span class="sd">        Motor Currents  Unit   Description</span>

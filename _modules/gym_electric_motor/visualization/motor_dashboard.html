@@ -215,7 +215,7 @@
         <span class="sd">&quot;&quot;&quot;Updates the plots every *update cycle* calls of this method.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_plot_figure</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episodic_plot_figure</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_plot_figure</span><span class="p">)</span> \
            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_render</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_render</span> <span class="o">=</span> <span class="kc">False</span></div>
@@ -275,17 +275,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_episodic_plot_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_plot_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_plot_figure</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_figures</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MotorDashboard.initialize"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called with first render() call to setup the figures and plots.&quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_figures</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">if</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;nbAgg&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nbAgg&#39;</span><span class="p">,</span> <span class="s1">&#39;module://ipympl.backend_nbagg&#39;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_figures_notebook</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_figures_window</span><span class="p">()</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_initialize_figures_notebook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Create all plots below each other: First Time then Episode then Step Plots</span>
@@ -356,6 +356,7 @@
         <span class="k">for</span> <span class="n">fig</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figures</span><span class="p">:</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span></div>
+
 </pre></div>
 
            </div>

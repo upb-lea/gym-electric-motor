@@ -43,6 +43,7 @@ documentation specifies the basic interfaces inside a physical system.
     parts/reference_generators/reference_generator
     parts/reward_functions/reward_function
     parts/physical_systems/physical_system
+    parts/physical_system_wrappers/physical_system_wrapper
     parts/visualizations/visualization
     parts/constraint_monitor
     parts/core

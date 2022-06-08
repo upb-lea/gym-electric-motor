@@ -102,8 +102,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">gym.envs.__relocated__</span> <span class="kn">import</span> <span class="n">internal_env_relocation_map</span>
-<span class="kn">from</span> <span class="nn">gym.utils.env_checker</span> <span class="kn">import</span> <span class="n">check_env</span>
 <span class="kn">from</span> <span class="nn">gym.wrappers</span> <span class="kn">import</span> <span class="n">AutoResetWrapper</span><span class="p">,</span> <span class="n">OrderEnforcing</span><span class="p">,</span> <span class="n">TimeLimit</span>
+<span class="kn">from</span> <span class="nn">gym.wrappers.env_checker</span> <span class="kn">import</span> <span class="n">PassiveEnvChecker</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">importlib_metadata</span> <span class="k">as</span> <span class="nn">metadata</span>  <span class="c1"># type: ignore</span>
@@ -122,7 +122,15 @@
 <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">callable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Loads an environment with name and returns an environment creation function</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The environment name</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Calls the environment constructor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mod_name</span><span class="p">,</span> <span class="n">attr_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
     <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
     <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
@@ -496,17 +504,7 @@
 
 <span class="k">def</span> <span class="nf">_check_spec_register</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">EnvSpec</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Checks whether the spec is valid to be registered. Helper function for `register`.&quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">registry</span><span class="p">,</span> <span class="n">current_namespace</span>
-    <span class="k">if</span> <span class="n">current_namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Custom namespace `</span><span class="si">{spec.namespace}</span><span class="s2">` is being overridden &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;by namespace `</span><span class="si">{current_namespace}</span><span class="s2">`. If you are developing a &quot;</span>
-                <span class="s2">&quot;plugin you shouldn&#39;t specify a namespace in `register` &quot;</span>
-                <span class="s2">&quot;calls. The namespace is specified through the &quot;</span>
-                <span class="s2">&quot;entry point package metadata.&quot;</span>
-            <span class="p">)</span>
-
+    <span class="k">global</span> <span class="n">registry</span>
     <span class="n">latest_versioned_spec</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
         <span class="p">(</span>
             <span class="n">spec_</span>
@@ -575,7 +573,10 @@
     <span class="n">ns</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">current_namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;namespace&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;namespace&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;namespace&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">current_namespace</span>
+        <span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Custom namespace `{kwargs.get(&#39;namespace&#39;)}` is being overridden &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;by namespace `</span><span class="si">{current_namespace}</span><span class="s2">`. If you are developing a &quot;</span>
@@ -604,11 +605,6 @@
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create an environment according to the given ID.</span>
-
-<span class="sd">    Warnings:</span>
-<span class="sd">        In v0.24, `gym.utils.env_checker.env_checker` is run for every initialised environment.</span>
-<span class="sd">        This calls the :meth:`Env.reset`, :meth:`Env.step` and :meth:`Env.render` functions to valid</span>
-<span class="sd">        if they follow the gym API. To disable this feature, set parameter `disable_env_checker=True`.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        id: Name of the environment. Optionally, a module to import can be included, eg. &#39;module:Env-v0&#39;</span>
@@ -664,49 +660,44 @@
     <span class="n">_kwargs</span> <span class="o">=</span> <span class="n">spec_</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="c1"># TODO: add a minimal env checker on initialization</span>
     <span class="k">if</span> <span class="n">spec_</span><span class="o">.</span><span class="n">entry_point</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{spec_.id}</span><span class="s2"> registered but entry_point is not specified&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">spec_</span><span class="o">.</span><span class="n">entry_point</span><span class="p">):</span>
-        <span class="bp">cls</span> <span class="o">=</span> <span class="n">spec_</span><span class="o">.</span><span class="n">entry_point</span>
+        <span class="n">env_creator</span> <span class="o">=</span> <span class="n">spec_</span><span class="o">.</span><span class="n">entry_point</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Assume it&#39;s a string</span>
-        <span class="bp">cls</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">spec_</span><span class="o">.</span><span class="n">entry_point</span><span class="p">)</span>
+        <span class="n">env_creator</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">spec_</span><span class="o">.</span><span class="n">entry_point</span><span class="p">)</span>
 
-    <span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">env_creator</span><span class="p">(</span><span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
 
+    <span class="c1"># Copies the environment creation specification and kwargs to add to the environment specification details</span>
     <span class="n">spec_</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">spec_</span><span class="p">)</span>
     <span class="n">spec_</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">_kwargs</span>
-
     <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec_</span>
 
+    <span class="c1"># Run the environment checker as the lowest level wrapper</span>
+    <span class="k">if</span> <span class="n">disable_env_checker</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">PassiveEnvChecker</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+    <span class="c1"># Add the order enforcing wrapper</span>
     <span class="k">if</span> <span class="n">spec_</span><span class="o">.</span><span class="n">order_enforce</span><span class="p">:</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">OrderEnforcing</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
+    <span class="c1"># Add the time limit wrapper</span>
     <span class="k">if</span> <span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">spec_</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">spec_</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">)</span>
 
+    <span class="c1"># Add the autoreset wrapper</span>
     <span class="k">if</span> <span class="n">autoreset</span><span class="p">:</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">AutoResetWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">disable_env_checker</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">check_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Env check failed with the following message: </span><span class="si">{e}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;You can set `disable_env_checker=True` to disable this check.&quot;</span>
-            <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">env</span></div>
 
 
 <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="n">env_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EnvSpec</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieve the spec for the given environment from the global registry.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve the spec for the given environment from the global registry.&quot;&quot;&quot;</span>
     <span class="n">spec_</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">env_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">spec_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ns</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_env_id</span><span class="p">(</span><span class="n">env_id</span><span class="p">)</span>
