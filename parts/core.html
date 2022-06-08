@@ -419,12 +419,7 @@ RewardFunction: The RewardFunction of the environment</p>
 <dl class="method">
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment.seed">
 <code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.seed" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Deprecated</dt>
-<dd class="field-odd"><p>function that sets the seed for the environment’s random number generator(s).</p>
-</dd>
-</dl>
-<p>Use <cite>env.reset(seed=seed)</cite> as the new API for setting the seed of the environment.</p>
+<dd><p>Sets the seed for this env’s random number generator(s).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Some environments use multiple pseudorandom number generators.
@@ -432,21 +427,18 @@ We want to capture all such seeds used in order to ensure that
 there aren’t accidental correlations between multiple generators.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>seed</strong> (<em>Optional int</em>) – The seed value for the random number geneartor</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Returns the list of seeds used in this environment’s random</dt><dd><p>number generators. The first value in the list should be the
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Returns the list of seeds used in this env’s random</dt><dd><p>number generators. The first value in the list should be the
 “main” seed, or the value which a reproducer should pass to
 ‘seed’. Often, the main seed equals the provided ‘seed’, but
-this won’t be true <cite>if seed=None</cite>, for example.</p>
+this won’t be true if seed=None, for example.</p>
 </dd>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>seeds (List[int])</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list&lt;bigint&gt;</p>
 </dd>
 </dl>
 </dd></dl>
