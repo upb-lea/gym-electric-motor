@@ -165,7 +165,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         return self._visualizations
 
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
-                 callbacks=(), constraints=(), **kwargs):
+                 callbacks=(), constraints=(), physical_system_wrappers=(), **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -184,6 +184,8 @@ class ElectricMotorEnvironment(gym.core.Env):
                         ConstraintMonitor in the environment.
             visualization(iterable(ElectricMotorVisualization)/None): The visualizations of this environment.
             state_filter(list(str)): Selection of states that are shown in the observation.
+            physical_system_wrappers(iterable(PhysicalSystemWrapper)): PhysicalSystemWrapper instances to be wrapped around
+                the physical system.
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
         """
@@ -205,6 +207,8 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._constraint_monitor = cm
 
         # Announcement of the modules among each other
+        for physical_system_wrapper in physical_system_wrappers:
+            self._physical_system = physical_system_wrapper.set_physical_system(self._physical_system)
         self._reference_generator.set_modules(self.physical_system)
         self._constraint_monitor.set_modules(self.physical_system)
         self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
@@ -497,6 +501,13 @@ class RewardFunction:
 class PhysicalSystem:
     """The Physical System module encapsulates the physical model of the system as well as the simulation from one step
     to the next."""
+
+    @property
+    def unwrapped(self):
+        """Returns this instance of the physical system.
+        
+        If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system."""
+        return self
 
     @property
     def k(self):

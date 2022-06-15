@@ -59,6 +59,13 @@ class PolynomialStaticLoad(MechanicalLoad):
         """
         return self._load_parameter
 
+    def set_j_rotor(self, j_rotor):
+        # Docstring of superclass
+        super().set_j_rotor(j_rotor)
+        self._omega_linear_factor = self._j_total / self.tau_decay
+        self._omega_lim = self._a / self._j_total * self.tau_decay
+
+
     def __init__(self, load_parameter=None, limits=None, load_initializer=None):
         """
         Args:
@@ -73,14 +80,18 @@ class PolynomialStaticLoad(MechanicalLoad):
         self._a = self._load_parameter['a']
         self._b = self._load_parameter['b']
         self._c = self._load_parameter['c']
+        # Speed value at which the linear behavior switches to constant
+        self._omega_lim = self._a / self._j_total * self.tau_decay
+        # Slope for the linear growth of the constant load part around zero speed
+        self._omega_linear_factor = self._j_total / self.tau_decay
 
     def _static_load(self, omega):
         """Calculation of the load torque for a given speed omega."""
         sign = 1 if omega > 0 else -1 if omega < -0 else 0
         # Limit the constant load term 'a' for velocities around zero for a more stable integration
         a = sign * self._a \
-            if abs(omega) > self._a / self._j_total * self.tau_decay \
-            else self._j_total / self.tau_decay * omega
+            if abs(omega) > self._omega_lim \
+            else self._omega_linear_factor * omega
         return sign * self._c * omega**2 + self._b * omega + a
 
     def mechanical_ode(self, t, mechanical_state, torque):

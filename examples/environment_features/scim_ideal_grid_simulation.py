@@ -34,7 +34,7 @@ def parameterize_three_phase_grid(amplitude, frequency, initial_phase):
 # Create the environment
 env = gem.make(
     # Choose the squirrel cage induction motor (SCIM) with continuous-control-set
-    "AbcCont-CC-SCIM-v0",
+    "Cont-CC-SCIM-v0",
 
     # Define the numerical solver for the simulation
     ode_solver="scipy.ode",

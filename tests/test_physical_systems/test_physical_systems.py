@@ -1,5 +1,5 @@
 import numpy as np
-from ..testing_utils import DummyConverter, DummyLoad, DummyNoise, DummyOdeSolver, DummyVoltageSupply, DummyElectricMotor,\
+from ..testing_utils import DummyConverter, DummyLoad, DummyOdeSolver, DummyVoltageSupply, DummyElectricMotor,\
     mock_instantiate, instantiate_dict
 from gym_electric_motor.physical_systems import physical_systems as ps, converters as cv, electric_motors as em,\
     mechanical_loads as ml, voltage_supplies as vs, solvers as sv
@@ -50,7 +50,6 @@ class TestSCMLSystem:
             load=DummyLoad(),
             supply=DummyVoltageSupply(),
             ode_solver=DummyOdeSolver(),
-            noise_generator=DummyNoise()
         )
 
     def test_reset(self, scml_system):
@@ -60,7 +59,7 @@ class TestSCMLSystem:
         state_space = scml_system.state_space
         state_positions = scml_system.state_positions
         initial_state = scml_system.reset()
-        target = (np.array([0, 0, 0, 0, 0, 0, 560]) + scml_system._noise_generator.reset()) / scml_system.limits
+        target = np.array([0, 0, 0, 0, 0, 0, 560]) / scml_system.limits
         assert np.all(initial_state == target), 'Initial states of the system are incorrect'
         assert scml_system._t == 0, 'Time of the system was not set to zero after reset'
         assert scml_system._k == 0, 'Episode step of the system was not set to zero after reset'
@@ -106,7 +105,6 @@ class TestSCMLSystem:
         # Calculate the next state
         desired_next_state = (
             np.concatenate((solver_state_me, torque, solver_state_el, u_in, u_sup))
-            + scml_system._noise_generator.noise()
         ) / scml_system.limits
 
         # Assertions for correct simulation

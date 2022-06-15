@@ -32,13 +32,15 @@ class ConstantSpeedLoad(MechanicalLoad):
         """
         super().__init__(load_initializer=load_initializer, **kwargs)
         self._omega = omega_fixed or self._initializer['states']['omega']
-        if omega_fixed:
+        if omega_fixed != 0:
             self._initializer['states']['omega'] = omega_fixed
+        self._ode_result = np.array([0.])
+        self._jacobian_result = (np.array([[0.]]), np.array([0.]))
 
     def mechanical_ode(self, *_, **__):
         # Docstring of superclass
-        return np.array([0])
+        return self._ode_result
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass
-        return np.array([[0]]), np.array([0])
+        return self._jacobian_result

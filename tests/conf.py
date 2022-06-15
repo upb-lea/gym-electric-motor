@@ -122,7 +122,7 @@ dfim_initializer = {'states': {'i_salpha': 0.0, 'i_sbeta': 0.0,
 load_parameter = {'j_load': 0.2, 'state_names': ['omega'], 'j_rot_load': 0.25, 'omega_range': (0, 1),
                   'parameter': dict(a=0.12, b=0.13, c=0.4, j_load=0.2)}
 
-converter_parameter = {'tau': 2E-4, 'dead_time': True, 'interlocking_time': 1E-6}
+converter_parameter = {'tau': 2E-4, 'interlocking_time': 1E-6}
 
 test_motor_parameter = {'DcSeries': series_motor_parameter,
                         'DcShunt': shunt_motor_parameter,

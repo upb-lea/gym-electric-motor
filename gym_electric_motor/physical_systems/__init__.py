@@ -1,18 +1,20 @@
-from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem
+
+from .physical_systems import DcMotorSystem, SynchronousMotorSystem, SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem, \
+    ExternallyExcitedSynchronousMotorSystem, ThreePhaseMotorSystem, SCMLSystem
+
 from .converters import PowerElectronicConverter, FiniteOneQuadrantConverter, FiniteTwoQuadrantConverter, \
     FiniteFourQuadrantConverter, FiniteMultiConverter, FiniteB6BridgeConverter, ContOneQuadrantConverter, \
     ContTwoQuadrantConverter, ContFourQuadrantConverter, ContMultiConverter, ContB6BridgeConverter, NoConverter
 
 from .electric_motors import DcExternallyExcitedMotor, DcSeriesMotor, DcPermanentlyExcitedMotor, DcShuntMotor, \
     PermanentMagnetSynchronousMotor, ElectricMotor, SynchronousReluctanceMotor, SquirrelCageInductionMotor, \
-    DoublyFedInductionMotor
+    DoublyFedInductionMotor, ExternallyExcitedSynchronousMotor, ThreePhaseMotor
+
 
 from .mechanical_loads import MechanicalLoad, PolynomialStaticLoad, ExternalSpeedLoad, ConstantSpeedLoad, \
     OrnsteinUhlenbeckLoad
 
 from .solvers import OdeSolver, EulerSolver, ScipyOdeIntSolver, ScipySolveIvpSolver, ScipyOdeSolver
-
-from .noise_generators import NoiseGenerator, GaussianWhiteNoiseGenerator
 
 from .voltage_supplies import VoltageSupply, IdealVoltageSupply, RCVoltageSupply, AC1PhaseSupply, AC3PhaseSupply
 
@@ -24,7 +26,6 @@ register_superclass(PowerElectronicConverter)
 register_superclass(MechanicalLoad)
 register_superclass(ElectricMotor)
 register_superclass(OdeSolver)
-register_superclass(NoiseGenerator)
 register_superclass(VoltageSupply)
 
 
@@ -49,8 +50,6 @@ register_class(PolynomialStaticLoad, MechanicalLoad, 'PolyStaticLoad')
 register_class(ConstantSpeedLoad, MechanicalLoad, 'ConstSpeedLoad')
 register_class(ExternalSpeedLoad, MechanicalLoad, 'ExtSpeedLoad')
 
-register_class(GaussianWhiteNoiseGenerator, NoiseGenerator, 'GWN')
-
 register_class(EulerSolver, OdeSolver, 'euler')
 register_class(ScipyOdeSolver, OdeSolver, 'scipy.ode')
 register_class(ScipySolveIvpSolver, OdeSolver, 'scipy.solve_ivp')
@@ -61,9 +60,11 @@ register_class(DcPermanentlyExcitedMotor, ElectricMotor, 'DcPermEx')
 register_class(DcExternallyExcitedMotor, ElectricMotor, 'DcExtEx')
 register_class(DcShuntMotor, ElectricMotor, 'DcShunt')
 register_class(PermanentMagnetSynchronousMotor, ElectricMotor, 'PMSM')
+register_class(ExternallyExcitedSynchronousMotor, ElectricMotor, 'EESM')
 register_class(SynchronousReluctanceMotor, ElectricMotor, 'SynRM')
 register_class(SquirrelCageInductionMotor, ElectricMotor, 'SCIM')
 register_class(DoublyFedInductionMotor, ElectricMotor, 'DFIM')
+
 
 register_class(IdealVoltageSupply, VoltageSupply, 'IdealVoltageSupply')
 register_class(RCVoltageSupply, VoltageSupply, 'RCVoltageSupply')

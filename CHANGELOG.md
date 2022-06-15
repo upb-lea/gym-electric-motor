@@ -4,7 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+##[Unreleased]
+## Added
+
+## Changed
+
+## Fixed
+
+## [1.1.0] - 2022-04-25
+## Added
+- Physical System Wrappers as a new feature to process actions and states directly in the environment. A decent introduction can be found in the [GEM cookbook](https://github.com/upb-lea/gym-electric-motor/blob/nightly/examples/environment_features/GEM_cookbook.ipynb) (Paragraph 2.8)
+- The externally excited synchronous motor (EESM) has been added to the GEM-toolbox. 
+- The environments of the EESM can be instantiated with the following keys: "{Cont|Finite}-{CC|TC|SC}-EESM-v0",
+
+## Changed
+- The MotorDashboard has received a "initialize()" method to initialize the plots below a specific cell.
+- The MotorDashboard is now compatible with the "%matplotlib widget" backend. Therefore, GEM is now compatible with the integrated jupiter notebook execution of Visual Studio Code
+
+## Fixed
+- If multiple converters were used and the time constant tau was changed from its default values, it was possible that the values of tau were different in each converter
 
 
 ## [1.0.1] - 2021-12-20

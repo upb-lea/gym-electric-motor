@@ -9,14 +9,15 @@ class DoublyFedInductionMotor(InductionMotor):
         =====================  ==========  ============= ===========================================
         Motor Parameter        Unit        Default Value Description
         =====================  ==========  ============= ===========================================
-        r_s                    Ohm         12e-3         Stator resistance
-        r_r                    Ohm         21e-3         Rotor resistance
-        l_m                    H           13.5e-3       Main inductance
-        l_sigs                 H           0.2e-3        Stator-side stray inductance
-        l_sigr                 H           0.1e-3        Rotor-side stray inductance
+        r_s                    Ohm         4.42          Stator resistance
+        r_r                    Ohm         3.51          Rotor resistance
+        l_m                    H           297.5e-3      Main inductance
+        l_sigs                 H           25.71e-3      Stator-side stray inductance
+        l_sigr                 H           25.71e-3      Rotor-side stray inductance
         p                      1           2             Pole pair number
-        j_rotor                kg/m^2      1e3           Moment of inertia of the rotor
+        j_rotor                kg/m^2      13.695e-3     Moment of inertia of the rotor
         =====================  ==========  ============= ===========================================
+                
         =============== ====== =============================================
         Motor Currents  Unit   Description
         =============== ====== =============================================

@@ -15,6 +15,7 @@ from .three_phase_motor import ThreePhaseMotor
 from .synchronous_motor import SynchronousMotor
 from .synchronous_reluctance_motor import SynchronousReluctanceMotor
 from .permanent_magnet_synchronous_motor import PermanentMagnetSynchronousMotor
+from .externally_excited_synchronous_motor import ExternallyExcitedSynchronousMotor
 
 # Induction Motors
 from .induction_motor import InductionMotor
