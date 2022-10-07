@@ -36,6 +36,11 @@ env = gem.make(
     # Choose the squirrel cage induction motor (SCIM) with continuous-control-set
     "Cont-CC-SCIM-v0",
 
+    #
+    load=gem.physical_systems.PolynomialStaticLoad(
+        dict(a=0.0, b=0.0, c=0.0, j_load=1e-6)
+    ),
+
     # Define the numerical solver for the simulation
     ode_solver="scipy.ode",
 
@@ -59,9 +64,9 @@ STATE = np.transpose(np.array([state * limits]))
 TIME = np.array([0])
 
 # Use the previously defined function to parameterize a three-phase grid with an amplitude of
-# 80 % of the DC-link voltage and a frequency of 50 Hertz
+# 100 % of the DC-link voltage and a frequency of 50 Hertz
 f_grid = 50  # Hertz
-u_abc = parameterize_three_phase_grid(amplitude=0.8, frequency=f_grid, initial_phase=0)
+u_abc = parameterize_three_phase_grid(amplitude=1.0, frequency=f_grid, initial_phase=0)
 
 # Set a time horizon to simulate, in this case 60 ms
 time_horizon = 0.06
@@ -98,7 +103,7 @@ plt.rcParams.update({'font.size': 8})
 plt.subplot(2, 2, 1)
 plt.plot(TIME, STATE[0])
 plt.ylabel(r"$\omega_\mathrm{me} \, / \, \frac{1}{\mathrm{s}}$")
-plt.xlim([0, 60])
+plt.xlim([TIME[0], TIME[-1]])
 plt.yticks([0, 50, 100, 150])
 plt.tick_params(axis='x', which='both', labelbottom=False)
 plt.tick_params(axis='both', direction="in", left=True, right=False, bottom=True, top=True)
@@ -109,7 +114,7 @@ plt.plot(TIME, STATE[7], label=r"$u_a$")
 plt.plot(TIME, STATE[8], label=r"$u_b$")
 plt.plot(TIME, STATE[9], label=r"$u_c$")
 plt.ylabel(r"$u \, / \, \mathrm{V}$")
-plt.xlim([0, 60])
+plt.xlim([TIME[0], TIME[-1]])
 plt.yticks([-200, 0, 200])
 ax.yaxis.set_label_position("right")
 ax.yaxis.tick_right()
@@ -122,7 +127,7 @@ plt.subplot(2, 2, 3)
 plt.plot(TIME, STATE[1])
 plt.xlabel(r"$t \, / \, \mathrm{ms}$")
 plt.ylabel(r"$T \, / \, \mathrm{Nm}$")
-plt.xlim([0, 60])
+plt.xlim([TIME[0], TIME[-1]])
 plt.yticks([0, 20])
 plt.tick_params(axis='both', direction="in", left=True, right=False, bottom=True, top=True)
 plt.grid()
@@ -132,7 +137,7 @@ plt.plot(TIME, STATE[5], label=r"$i_d$")
 plt.plot(TIME, STATE[6], label=r"$i_q$")
 plt.xlabel(r"$t \, / \, \mathrm{ms}$")
 plt.ylabel(r"$i \, / \, \mathrm{A}$")
-plt.xlim([0, 60])
+plt.xlim([TIME[0], TIME[-1]])
 ax.yaxis.set_label_position("right")
 ax.yaxis.tick_right()
 plt.tick_params(axis='both', direction="in", left=False, right=True, bottom=True, top=True)
