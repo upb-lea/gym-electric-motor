@@ -104,22 +104,22 @@
 <span class="sd">    =============== ====== =============================================</span>
 <span class="sd">    i_sd            A      Direct axis current</span>
 <span class="sd">    i_sq            A      Quadrature axis current</span>
-<span class="sd">    i_a             A      Current through branch a</span>
-<span class="sd">    i_b             A      Current through branch b</span>
-<span class="sd">    i_c             A      Current through branch c</span>
+<span class="sd">    i_a             A      Current through line a</span>
+<span class="sd">    i_b             A      Current through line b</span>
+<span class="sd">    i_c             A      Current through line c</span>
 <span class="sd">    i_alpha         A      Current in alpha axis</span>
 <span class="sd">    i_beta          A      Current in beta axis</span>
 <span class="sd">    =============== ====== =============================================</span>
 <span class="sd">    =============== ====== =============================================</span>
 <span class="sd">    Motor Voltages  Unit   Description</span>
 <span class="sd">    =============== ====== =============================================</span>
-<span class="sd">    u_sd            A      Direct axis voltage</span>
-<span class="sd">    u_sq            A      Quadrature axis voltage</span>
-<span class="sd">    u_a             A      Voltage through branch a</span>
-<span class="sd">    u_b             A      Voltage through branch b</span>
-<span class="sd">    u_c             A      Voltage through branch c</span>
-<span class="sd">    u_alpha         A      Voltage in alpha axis</span>
-<span class="sd">    u_beta          A      Voltage in beta axis</span>
+<span class="sd">    u_sd            V      Direct axis voltage</span>
+<span class="sd">    u_sq            V      Quadrature axis voltage</span>
+<span class="sd">    u_a             V      Phase voltage for line a</span>
+<span class="sd">    u_b             V      Phase voltage for line b</span>
+<span class="sd">    u_c             V      Phase voltage for line c</span>
+<span class="sd">    u_alpha         V      Phase voltage in alpha axis</span>
+<span class="sd">    u_beta          V      Phase voltage in beta axis</span>
 <span class="sd">    =============== ====== =============================================</span>
 
 <span class="sd">    ======== ===========================================================</span>
@@ -136,25 +136,26 @@
 <span class="sd">    i_sd     Current in direct axis</span>
 <span class="sd">    i_sq     Current in quadrature axis</span>
 <span class="sd">    omega    Mechanical angular Velocity</span>
-<span class="sd">    epsilon  Electrical rotational angle</span>
 <span class="sd">    torque   Motor generated torque</span>
-<span class="sd">    u_a      Voltage in phase a</span>
-<span class="sd">    u_b      Voltage in phase b</span>
-<span class="sd">    u_c      Voltage in phase c</span>
-<span class="sd">    u_alpha  Voltage in alpha axis</span>
-<span class="sd">    u_beta   Voltage in beta axis</span>
-<span class="sd">    u_sd     Voltage in direct axis</span>
-<span class="sd">    u_sq     Voltage in quadrature axis</span>
+<span class="sd">    epsilon  Electrical rotational angle</span>
+<span class="sd">    u_a      Phase voltage in phase a</span>
+<span class="sd">    u_b      Phase voltage in phase b</span>
+<span class="sd">    u_c      Phase voltage in phase c</span>
+<span class="sd">    u_alpha  Phase voltage in alpha axis</span>
+<span class="sd">    u_beta   Phase voltage in beta axis</span>
+<span class="sd">    u_sd     Phase voltage in direct axis</span>
+<span class="sd">    u_sq     Phase voltage in quadrature axis</span>
 <span class="sd">    ======== ===========================================================</span>
 
 
 <span class="sd">    Note:</span>
-<span class="sd">        The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).</span>
-<span class="sd">        Typically the rms value for the line voltage (:math:`U_L`) is given.</span>
+<span class="sd">        The voltage limits should be the peak-to-peak value of the phase voltage (:math:`\hat{u}_S`).</span>
+<span class="sd">        A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.</span>
+<span class="sd">        Typically the root mean square (RMS) value for the line voltage (:math:`U_L`) is given as</span>
 <span class="sd">        :math:`\hat{u}_S=\sqrt{2/3}~U_L`</span>
 
-<span class="sd">        The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).</span>
-<span class="sd">        Typically the rms value for the phase current (:math:`I_S`) is given.</span>
+<span class="sd">        The current limits should be the peak-to-peak value of the phase current (:math:`\hat{i}_S`).</span>
+<span class="sd">        Typically the RMS value for the phase current (:math:`I_S`) is given as</span>
 <span class="sd">        :math:`\hat{i}_S = \sqrt{2}~I_S`</span>
 
 <span class="sd">        If not specified, nominal values are equal to their corresponding limit values.</span>
