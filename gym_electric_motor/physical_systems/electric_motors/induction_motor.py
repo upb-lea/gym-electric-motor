@@ -5,8 +5,7 @@ from .three_phase_motor import ThreePhaseMotor
 
 
 class InductionMotor(ThreePhaseMotor):
-    """
-        The InductionMotor and its subclasses implement the technical system of a three phase induction motor.
+    """The InductionMotor and its subclasses implement the technical system of a three phase induction motor.
 
         This includes the system equations, the motor parameters of the equivalent circuit diagram,
         as well as limits and bandwidth.
@@ -28,9 +27,9 @@ class InductionMotor(ThreePhaseMotor):
         =============== ====== =============================================
         i_sd            A      Direct axis current
         i_sq            A      Quadrature axis current
-        i_sa            A      Current through branch a
-        i_sb            A      Current through branch b
-        i_sc            A      Current through branch c
+        i_sa            A      Current through line a
+        i_sb            A      Current through line b
+        i_sc            A      Current through line c
         i_salpha        A      Current in alpha axis
         i_sbeta         A      Current in beta axis
         =============== ====== =============================================
@@ -39,11 +38,11 @@ class InductionMotor(ThreePhaseMotor):
         =============== ====== =============================================
         u_sd            V      Direct axis voltage
         u_sq            V      Quadrature axis voltage
-        u_sa            V      Voltage through branch a
-        u_sb            V      Voltage through branch b
-        u_sc            V      Voltage through branch c
-        u_salpha        V      Voltage in alpha axis
-        u_sbeta         V      Voltage in beta axis
+        u_sa            V      Phase voltage for line a
+        u_sb            V      Phase voltage for line b
+        u_sc            V      Phase voltage for line c
+        u_salpha        V      Phase voltage in alpha axis
+        u_sbeta         V      Phase voltage in beta axis
         =============== ====== =============================================
 
         ======== ===========================================================
@@ -52,31 +51,34 @@ class InductionMotor(ThreePhaseMotor):
         Entry    Description
         ======== ===========================================================
         i        General current limit / nominal value
-        i_sa      Current in phase a
-        i_sb      Current in phase b
-        i_sc      Current in phase c
-        i_salpha  Current in alpha axis
-        i_sbeta   Current in beta axis
+        i_a      Current in phase a
+        i_b      Current in phase b
+        i_c      Current in phase c
+        i_alpha  Current in alpha axis
+        i_beta   Current in beta axis
         i_sd     Current in direct axis
         i_sq     Current in quadrature axis
         omega    Mechanical angular Velocity
         torque   Motor generated torque
-        u_sa      Voltage in phase a
-        u_sb      Voltage in phase b
-        u_sc      Voltage in phase c
-        u_salpha  Voltage in alpha axis
-        u_sbeta   Voltage in beta axis
-        u_sd     Voltage in direct axis
-        u_sq     Voltage in quadrature axis
+        epsilon  Electrical rotational angle
+        u_sa     Phase voltage in phase a
+        u_sb     Phase voltage in phase b
+        u_sc     Phase voltage in phase c
+        u_salpha Phase voltage in alpha axis
+        u_sbeta  Phase voltage in beta axis
+        u_sd     Phase voltage in direct axis
+        u_sq     Phase voltage in quadrature axis
         ======== ===========================================================
 
+
         Note:
-            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).
-            Typically the rms value for the line voltage (:math:`U_L`) is given.
+            The voltage limits should be the peak-to-peak value of the phase voltage (:math:`\hat{u}_S`).
+            A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
+            Typically the root mean square (RMS) value for the line voltage (:math:`U_L`) is given as
             :math:`\hat{u}_S=\sqrt{2/3}~U_L`
 
-            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).
-            Typically the rms value for the phase current (:math:`I_S`) is given.
+            The current limits should be the peak-to-peak value of the phase current (:math:`\hat{i}_S`).
+            Typically the RMS value for the phase current (:math:`I_S`) is given as
             :math:`\hat{i}_S = \sqrt{2}~I_S`
 
             If not specified, nominal values are equal to their corresponding limit values.

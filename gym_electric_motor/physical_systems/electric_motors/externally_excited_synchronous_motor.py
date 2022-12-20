@@ -73,12 +73,13 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
 
 
     Note:
-        The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).
-        Typically the rms value for the line voltage (:math:`U_L`) is given.
+        The voltage limits should be the peak-to-peak value of the phase voltage (:math:`\hat{u}_S`).
+        A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
+        Typically the RMS value for the line voltage (:math:`U_L`) is given as
         :math:`\hat{u}_S=\sqrt{2/3}~U_L`
 
-        The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).
-        Typically the rms value for the phase current (:math:`I_S`) is given.
+        The current limits should be the peak-to-peak value of the phase current (:math:`\hat{i}_S`).
+        Typically the RMS value for the phase current (:math:`I_S`) is given as
         :math:`\hat{i}_S = \sqrt{2}~I_S`
 
         If not specified, nominal values are equal to their corresponding limit values.
