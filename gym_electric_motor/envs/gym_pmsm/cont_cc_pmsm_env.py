@@ -12,7 +12,7 @@ from gym_electric_motor.constraints import SquaredConstraint
 class ContCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
     """
     Description:
-        Environment to simulate a abc-domain continuous control set current controlled permanent magnet synchr. motor.
+        Environment to simulate an abc-domain continuous control set current controlled permanent magnet synchr. motor.
 
     Key:
         ``'Cont-CC-PMSM-v0'``
