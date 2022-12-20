@@ -22,8 +22,8 @@ class TestFluxObserver(TestPhysicalSystemWrapper):
 
     @pytest.fixture
     def reset_physical_system(self, physical_system):
-        ps.reset()
-        return ps
+        physical_system.reset()
+        return physical_system
 
     @pytest.fixture
     def processor(self, physical_system):
