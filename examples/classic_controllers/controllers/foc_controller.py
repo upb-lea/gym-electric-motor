@@ -15,7 +15,7 @@ class FieldOrientedController:
     """
 
     def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=(), **controller_kwargs):
-        assert isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem), 'No suitable Environment for FOC Controller'
+        assert isinstance(environment.physical_system, SynchronousMotorSystem), 'No suitable Environment for FOC Controller'
 
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
@@ -46,7 +46,7 @@ class FieldOrientedController:
         self.limit = environment.physical_system.limits
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_p = self.mp.get('psi_p', 0)
-        self.dead_time = 1.5 #if environment.physical_system.converter._dead_time else 0.5
+        self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
 
         self.has_cont_action_space = type(self.action_space) is Box
 
