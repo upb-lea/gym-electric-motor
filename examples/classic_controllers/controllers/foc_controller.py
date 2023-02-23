@@ -15,7 +15,7 @@ class FieldOrientedController:
     """
 
     def __init__(self, environment, stages, _controllers, ref_states, external_ref_plots=(), **controller_kwargs):
-        assert isinstance(environment.physical_system, SynchronousMotorSystem), 'No suitable Environment for FOC Controller'
+        assert isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem), 'No suitable Environment for FOC Controller'
 
         t32 = environment.physical_system.electrical_motor.t_32
         q = environment.physical_system.electrical_motor.q
@@ -46,7 +46,7 @@ class FieldOrientedController:
         self.limit = environment.physical_system.limits
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_p = self.mp.get('psi_p', 0)
-        self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
+        self.dead_time = 1.5 #if environment.physical_system.converter._dead_time else 0.5
 
         self.has_cont_action_space = type(self.action_space) is Box
 
@@ -96,7 +96,7 @@ class FieldOrientedController:
                 self.u_sd_0 = -state[self.omega_idx] * self.mp['p'] * self.mp['l_q'] * state[self.i_sq_idx] * self.limit[
                     self.i_sq_idx] / self.limit[self.u_sd_idx] * self.limit[self.omega_idx]
                 self.u_sq_0 = state[self.omega_idx] * self.mp['p'] * (
-                        state[self.i_sd_idx] * self.mp['l_d'] * self.limit[self.u_sd_idx] + self.psi_p) / self.limit[
+                        state[self.i_sd_idx] * self.mp['l_d'] * self.limit[self.i_sd_idx] + self.psi_p) / self.limit[
                              self.u_sq_idx] * self.limit[self.omega_idx]
 
             # Calculate the two actions
