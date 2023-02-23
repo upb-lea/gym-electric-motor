@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Externally Excited Synchronous Motor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>Extertnally Excited Synchronous Motor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
@@ -26,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gym-electric-motor
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -56,7 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="series.html">DC Series Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="shunt.html">DC Shunt Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pmsm.html">Permanent Magnet Synchronous Motor</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Externally Excited Synchronous Motor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Extertnally Excited Synchronous Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="synrm.html">Synchronous Reluctance Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scim.html">Squirrel Cage Induction Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dfim.html">Doubly Fed Induction Motor</a></li>
@@ -93,11 +97,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../physical_system.html">Physical Systems</a></li>
           <li class="breadcrumb-item"><a href="../scml_system.html">Supply Converter Motor Load System (SCML)</a></li>
           <li class="breadcrumb-item"><a href="electric_motor.html">Electric Motors</a></li>
-      <li class="breadcrumb-item active">Externally Excited Synchronous Motor</li>
+      <li class="breadcrumb-item active">Extertnally Excited Synchronous Motor</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/parts/physical_systems/electric_motors/eesm.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -107,8 +111,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="externally-excited-synchronous-motor">
-<h1>Externally Excited Synchronous Motor<a class="headerlink" href="#externally-excited-synchronous-motor" title="Permalink to this headline"></a></h1>
+  <div class="section" id="extertnally-excited-synchronous-motor">
+<h1>Extertnally Excited Synchronous Motor<a class="headerlink" href="#extertnally-excited-synchronous-motor" title="Permalink to this headline"></a></h1>
 <div class="section" id="schematic">
 <h2>Schematic<a class="headerlink" href="#schematic" title="Permalink to this headline"></a></h2>
 <div class="figure align-default">
@@ -368,12 +372,11 @@ L_{\sigma \mathrm{e}} &amp;= L_\mathrm{e} - L_\mathrm{m} \\
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The voltage limits should be the peak-to-peak value of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
-A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
-Typically the RMS value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given as
+<p>The voltage limits should be the amplitude of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
+Typically the rms value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given.
 <span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span></p>
-<p>The current limits should be the peak-to-peak value of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
-Typically the RMS value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given as
+<p>The current limits should be the amplitude of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
+Typically the rms value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given.
 <span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span></p>
 <p>If not specified, nominal values are equal to their corresponding limit values.
 Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from

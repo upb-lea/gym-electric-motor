@@ -24,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> gym-electric-motor
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            gym-electric-motor
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -65,7 +69,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">gym_electric_motor.physical_systems.electric_motors.synchronous_reluctance_motor</li>
       <li class="wy-breadcrumbs-aside">
@@ -144,18 +148,18 @@
 
 
 <span class="sd">        Note:</span>
-<span class="sd">        The voltage limits should be the peak-to-peak value of the phase voltage (:math:`\hat{u}_S`).</span>
-<span class="sd">        A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.</span>
-<span class="sd">        Typically the root mean square (RMS) value for the line voltage (:math:`U_L`) is given as</span>
-<span class="sd">        :math:`\hat{u}_S=\sqrt{2/3}~U_L`</span>
+<span class="sd">            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).</span>
+<span class="sd">            Typically the rms value for the line voltage (:math:`U_L`) is given.</span>
+<span class="sd">            :math:`\hat{u}_S=\sqrt{2/3}~U_L`</span>
 
-<span class="sd">        The current limits should be the peak-to-peak value of the phase current (:math:`\hat{i}_S`).</span>
-<span class="sd">        Typically the RMS value for the phase current (:math:`I_S`) is given as</span>
-<span class="sd">        :math:`\hat{i}_S = \sqrt{2}~I_S`</span>
+<span class="sd">            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).</span>
+<span class="sd">            Typically the rms value for the phase current (:math:`I_S`) is given.</span>
+<span class="sd">            :math:`\hat{i}_S = \sqrt{2}~I_S`</span>
 
-<span class="sd">        If not specified, nominal values are equal to their corresponding limit values.</span>
-<span class="sd">        Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from</span>
-<span class="sd">        the general limits/nominal values (e.g. i)</span>
+<span class="sd">            If not specified, nominal values are equal to their corresponding limit values.</span>
+<span class="sd">            Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from</span>
+<span class="sd">            the general limits/nominal values (e.g. i)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
 

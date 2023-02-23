@@ -24,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> gym-electric-motor
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            gym-electric-motor
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -65,7 +69,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">gym_electric_motor.physical_systems.electric_motors.induction_motor</li>
       <li class="wy-breadcrumbs-aside">
@@ -84,7 +88,8 @@
 
 
 <div class="viewcode-block" id="InductionMotor"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor">[docs]</a><span class="k">class</span> <span class="nc">InductionMotor</span><span class="p">(</span><span class="n">ThreePhaseMotor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The InductionMotor and its subclasses implement the technical system of a three phase induction motor.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The InductionMotor and its subclasses implement the technical system of a three phase induction motor.</span>
 
 <span class="sd">        This includes the system equations, the motor parameters of the equivalent circuit diagram,</span>
 <span class="sd">        as well as limits and bandwidth.</span>
@@ -106,9 +111,9 @@
 <span class="sd">        =============== ====== =============================================</span>
 <span class="sd">        i_sd            A      Direct axis current</span>
 <span class="sd">        i_sq            A      Quadrature axis current</span>
-<span class="sd">        i_sa            A      Current through line a</span>
-<span class="sd">        i_sb            A      Current through line b</span>
-<span class="sd">        i_sc            A      Current through line c</span>
+<span class="sd">        i_sa            A      Current through branch a</span>
+<span class="sd">        i_sb            A      Current through branch b</span>
+<span class="sd">        i_sc            A      Current through branch c</span>
 <span class="sd">        i_salpha        A      Current in alpha axis</span>
 <span class="sd">        i_sbeta         A      Current in beta axis</span>
 <span class="sd">        =============== ====== =============================================</span>
@@ -117,11 +122,11 @@
 <span class="sd">        =============== ====== =============================================</span>
 <span class="sd">        u_sd            V      Direct axis voltage</span>
 <span class="sd">        u_sq            V      Quadrature axis voltage</span>
-<span class="sd">        u_sa            V      Phase voltage for line a</span>
-<span class="sd">        u_sb            V      Phase voltage for line b</span>
-<span class="sd">        u_sc            V      Phase voltage for line c</span>
-<span class="sd">        u_salpha        V      Phase voltage in alpha axis</span>
-<span class="sd">        u_sbeta         V      Phase voltage in beta axis</span>
+<span class="sd">        u_sa            V      Voltage through branch a</span>
+<span class="sd">        u_sb            V      Voltage through branch b</span>
+<span class="sd">        u_sc            V      Voltage through branch c</span>
+<span class="sd">        u_salpha        V      Voltage in alpha axis</span>
+<span class="sd">        u_sbeta         V      Voltage in beta axis</span>
 <span class="sd">        =============== ====== =============================================</span>
 
 <span class="sd">        ======== ===========================================================</span>
@@ -130,34 +135,31 @@
 <span class="sd">        Entry    Description</span>
 <span class="sd">        ======== ===========================================================</span>
 <span class="sd">        i        General current limit / nominal value</span>
-<span class="sd">        i_a      Current in phase a</span>
-<span class="sd">        i_b      Current in phase b</span>
-<span class="sd">        i_c      Current in phase c</span>
-<span class="sd">        i_alpha  Current in alpha axis</span>
-<span class="sd">        i_beta   Current in beta axis</span>
+<span class="sd">        i_sa      Current in phase a</span>
+<span class="sd">        i_sb      Current in phase b</span>
+<span class="sd">        i_sc      Current in phase c</span>
+<span class="sd">        i_salpha  Current in alpha axis</span>
+<span class="sd">        i_sbeta   Current in beta axis</span>
 <span class="sd">        i_sd     Current in direct axis</span>
 <span class="sd">        i_sq     Current in quadrature axis</span>
 <span class="sd">        omega    Mechanical angular Velocity</span>
 <span class="sd">        torque   Motor generated torque</span>
-<span class="sd">        epsilon  Electrical rotational angle</span>
-<span class="sd">        u_sa     Phase voltage in phase a</span>
-<span class="sd">        u_sb     Phase voltage in phase b</span>
-<span class="sd">        u_sc     Phase voltage in phase c</span>
-<span class="sd">        u_salpha Phase voltage in alpha axis</span>
-<span class="sd">        u_sbeta  Phase voltage in beta axis</span>
-<span class="sd">        u_sd     Phase voltage in direct axis</span>
-<span class="sd">        u_sq     Phase voltage in quadrature axis</span>
+<span class="sd">        u_sa      Voltage in phase a</span>
+<span class="sd">        u_sb      Voltage in phase b</span>
+<span class="sd">        u_sc      Voltage in phase c</span>
+<span class="sd">        u_salpha  Voltage in alpha axis</span>
+<span class="sd">        u_sbeta   Voltage in beta axis</span>
+<span class="sd">        u_sd     Voltage in direct axis</span>
+<span class="sd">        u_sq     Voltage in quadrature axis</span>
 <span class="sd">        ======== ===========================================================</span>
 
-
 <span class="sd">        Note:</span>
-<span class="sd">            The voltage limits should be the peak-to-peak value of the phase voltage (:math:`\hat{u}_S`).</span>
-<span class="sd">            A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.</span>
-<span class="sd">            Typically the root mean square (RMS) value for the line voltage (:math:`U_L`) is given as</span>
+<span class="sd">            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).</span>
+<span class="sd">            Typically the rms value for the line voltage (:math:`U_L`) is given.</span>
 <span class="sd">            :math:`\hat{u}_S=\sqrt{2/3}~U_L`</span>
 
-<span class="sd">            The current limits should be the peak-to-peak value of the phase current (:math:`\hat{i}_S`).</span>
-<span class="sd">            Typically the RMS value for the phase current (:math:`I_S`) is given as</span>
+<span class="sd">            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).</span>
+<span class="sd">            Typically the rms value for the phase current (:math:`I_S`) is given.</span>
 <span class="sd">            :math:`\hat{i}_S = \sqrt{2}~I_S`</span>
 
 <span class="sd">            If not specified, nominal values are equal to their corresponding limit values.</span>

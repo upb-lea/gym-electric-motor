@@ -26,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> gym-electric-motor
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gym-electric-motor
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -56,7 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="series.html">DC Series Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="shunt.html">DC Shunt Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pmsm.html">Permanent Magnet Synchronous Motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eesm.html">Externally Excited Synchronous Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eesm.html">Extertnally Excited Synchronous Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="synrm.html">Synchronous Reluctance Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scim.html">Squirrel Cage Induction Motor</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Doubly Fed Induction Motor</a></li>
@@ -93,7 +97,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../physical_system.html">Physical Systems</a></li>
           <li class="breadcrumb-item"><a href="../scml_system.html">Supply Converter Motor Load System (SCML)</a></li>
           <li class="breadcrumb-item"><a href="electric_motor.html">Electric Motors</a></li>
@@ -399,17 +403,18 @@
 </tr>
 </tbody>
 </table>
-<p>Note:
-The voltage limits should be the peak-to-peak value of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
-A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
-Typically the RMS value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given as
-<span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span></p>
-<p>The current limits should be the peak-to-peak value of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
-Typically the RMS value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given as
-<span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span></p>
-<p>If not specified, nominal values are equal to their corresponding limit values.
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The voltage limits should be the amplitude of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
+Typically the rms value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given.
+<span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span>
+The current limits should be the amplitude of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
+Typically the rms value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given.
+<span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span>
+If not specified, nominal values are equal to their corresponding limit values.
 Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
 the general limits/nominal values (e.g. i)</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

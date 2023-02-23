@@ -24,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> gym-electric-motor
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            gym-electric-motor
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -65,7 +69,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">gym_electric_motor.envs.gym_eesm.finite_sc_eesm_env</li>
       <li class="wy-breadcrumbs-aside">
@@ -165,7 +169,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">reward_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">(),</span>
-                 <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="n">SquaredConstraint</span><span class="p">((</span><span class="s1">&#39;i_sq&#39;</span><span class="p">,</span> <span class="s1">&#39;i_sd&#39;</span><span class="p">)),</span> <span class="n">LimitConstraint</span><span class="p">((</span><span class="s1">&#39;i_e&#39;</span><span class="p">,))),</span> <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+                 <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="n">SquaredConstraint</span><span class="p">((</span><span class="s1">&#39;i_sq&#39;</span><span class="p">,</span> <span class="s1">&#39;i_sd&#39;</span><span class="p">)),</span> <span class="n">LimitConstraint</span><span class="p">((</span><span class="s1">&#39;i_e&#39;</span><span class="p">,))),</span> <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">tau</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment</span>
@@ -186,6 +191,8 @@
 <span class="sd">            tau(float): Duration of one control step in seconds. Default: 1e-4.</span>
 <span class="sd">            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)</span>
 <span class="sd">            callbacks(list(Callback)): Callbacks for user interaction. Default: ()</span>
+<span class="sd">            physical_system_wrappers(list(PhysicalSystemWrapper)): List of Physical System Wrappers to modify the</span>
+<span class="sd">            actions to and states from the physical system before they are used in the environment. Default: ()</span>
 
 <span class="sd">        Note on the env-arg type:</span>
 <span class="sd">            All parameters of type env-arg can be selected as one of the following types:</span>
@@ -230,7 +237,8 @@
         <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="o">=</span><span class="n">reward_function</span><span class="p">,</span>
-            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="n">state_filter</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="n">state_filter</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+            <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="n">physical_system_wrappers</span>
         <span class="p">)</span></div>
 </pre></div>
 
