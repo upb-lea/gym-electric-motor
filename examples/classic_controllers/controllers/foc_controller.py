@@ -96,7 +96,7 @@ class FieldOrientedController:
                 self.u_sd_0 = -state[self.omega_idx] * self.mp['p'] * self.mp['l_q'] * state[self.i_sq_idx] * self.limit[
                     self.i_sq_idx] / self.limit[self.u_sd_idx] * self.limit[self.omega_idx]
                 self.u_sq_0 = state[self.omega_idx] * self.mp['p'] * (
-                        state[self.i_sd_idx] * self.mp['l_d'] * self.limit[self.u_sd_idx] + self.psi_p) / self.limit[
+                        state[self.i_sd_idx] * self.mp['l_d'] * self.limit[self.i_sd_idx] + self.psi_p) / self.limit[
                              self.u_sq_idx] * self.limit[self.omega_idx]
 
             # Calculate the two actions
