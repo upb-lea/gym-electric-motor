@@ -120,13 +120,17 @@ class ElectricMotor(RandomComponent):
         RandomComponent.__init__(self)
         motor_parameter = motor_parameter or {}
         self._motor_parameter = self._default_motor_parameter.copy()
-        self._motor_parameter = update_parameter_dict(self._default_motor_parameter, motor_parameter)
+        self._motor_parameter = update_parameter_dict(
+            self._default_motor_parameter, motor_parameter)
         limit_values = limit_values or {}
-        self._limits = update_parameter_dict(self._default_limits, limit_values)
+        self._limits = update_parameter_dict(
+            self._default_limits, limit_values)
         nominal_values = nominal_values or {}
-        self._nominal_values = update_parameter_dict(self._default_nominal_values, nominal_values)
+        self._nominal_values = update_parameter_dict(
+            self._default_nominal_values, nominal_values)
         motor_initializer = motor_initializer or {}
-        self._initializer = update_parameter_dict(self._default_initializer, motor_initializer)
+        self._initializer = update_parameter_dict(
+            self._default_initializer, motor_initializer)
         self._initial_states = {}
         if self._initializer['states'] is not None:
             self._initial_states.update(self._initializer['states'])
@@ -191,10 +195,12 @@ class ElectricMotor(RandomComponent):
             self._initial_states.update(self._initializer['states'])
 
         # different limits for InductionMotor
-        if any(map(lambda state: state in self._initial_states.keys(),
-                   ['psi_ralpha', 'psi_rbeta'])):
-            nominal_values_ = [self._initial_limits[state]
-                               for state in self._initial_states]
+        if any(state in self._initial_states for state in ['psi_ralpha', 'psi_rbeta']):
+            # caution: _initial_limits sometimes contains singleton ndarrays, they must be
+            #  extracted with .item()
+            nominal_values_ =\
+                [self._initial_limits[state].item() if isinstance(self._initial_limits[state], np.ndarray)
+                 else self._initial_limits[state] for state in self._initial_states]
             upper_bound = np.asarray(np.abs(nominal_values_), dtype=float)
             # state space for Induction Envs based on documentation
             # ['i_salpha', 'i_sbeta', 'psi_ralpha', 'psi_rbeta', 'epsilon']
@@ -214,7 +220,8 @@ class ElectricMotor(RandomComponent):
             ]
 
             upper_bound = np.asarray(nominal_values_, dtype=float)
-            lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_space_idx]
+            lower_bound = upper_bound * \
+                np.asarray(state_space.low, dtype=float)[state_space_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
             lower_bound = np.clip(
@@ -241,11 +248,13 @@ class ElectricMotor(RandomComponent):
 
             elif random_dist in ['normal', 'gaussian']:
                 # specific input or middle of interval
-                mue = random_params[0] or (upper_bound - lower_bound) / 2 + lower_bound
+                mue = random_params[0] or (
+                    upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a, b = (lower_bound - mue) / sigma, (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(
-                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())),
+                    a, b, loc=mue, scale=sigma, size=(
+                        len(self._initial_states.keys())),
                     random_state=self.seed_sequence.pool[0]
                 )
                 # writing initial values in initial_states dict
@@ -267,7 +276,8 @@ class ElectricMotor(RandomComponent):
                      for idx, state in enumerate(self._initial_states.keys())}
                 self._initial_states.update(initial_states_)
             else:
-                raise Exception('Initialization value has to be within nominal boundaries')
+                raise Exception(
+                    'Initialization value has to be within nominal boundaries')
         else:
             raise Exception('No matching Initialization Case')
 
@@ -317,7 +327,8 @@ class ElectricMotor(RandomComponent):
 
         for entry in self._limits.keys():
             if self._nominal_values.get(entry, 0) == 0:
-                self._nominal_values[entry] = nominal_d.get(entry, self._limits[entry])
+                self._nominal_values[entry] = nominal_d.get(
+                    entry, self._limits[entry])
 
     def _update_initial_limits(self, nominal_new=None):
         """Complete initial states with further state limits

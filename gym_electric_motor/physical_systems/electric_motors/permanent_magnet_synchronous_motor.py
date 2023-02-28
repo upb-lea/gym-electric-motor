@@ -21,9 +21,9 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     =============== ====== =============================================
     i_sd            A      Direct axis current
     i_sq            A      Quadrature axis current
-    i_a             A      Current through branch a
-    i_b             A      Current through branch b
-    i_c             A      Current through branch c
+    i_a             A      Current through line a
+    i_b             A      Current through line b
+    i_c             A      Current through line c
     i_alpha         A      Current in alpha axis
     i_beta          A      Current in beta axis
     =============== ====== =============================================
@@ -32,11 +32,11 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     =============== ====== =============================================
     u_sd            V      Direct axis voltage
     u_sq            V      Quadrature axis voltage
-    u_a             V      Voltage through branch a
-    u_b             V      Voltage through branch b
-    u_c             V      Voltage through branch c
-    u_alpha         V      Voltage in alpha axis
-    u_beta          V      Voltage in beta axis
+    u_a             V      Phase voltage for line a
+    u_b             V      Phase voltage for line b
+    u_c             V      Phase voltage for line c
+    u_alpha         V      Phase voltage in alpha axis
+    u_beta          V      Phase voltage in beta axis
     =============== ====== =============================================
 
     ======== ===========================================================
@@ -55,23 +55,24 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     omega    Mechanical angular Velocity
     torque   Motor generated torque
     epsilon  Electrical rotational angle
-    u_a      Voltage in phase a
-    u_b      Voltage in phase b
-    u_c      Voltage in phase c
-    u_alpha  Voltage in alpha axis
-    u_beta   Voltage in beta axis
-    u_sd     Voltage in direct axis
-    u_sq     Voltage in quadrature axis
+    u_a      Phase voltage in phase a
+    u_b      Phase voltage in phase b
+    u_c      Phase voltage in phase c
+    u_alpha  Phase voltage in alpha axis
+    u_beta   Phase voltage in beta axis
+    u_sd     Phase voltage in direct axis
+    u_sq     Phase voltage in quadrature axis
     ======== ===========================================================
 
 
     Note:
-        The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).
-        Typically the rms value for the line voltage (:math:`U_L`) is given.
+        The voltage limits should be the peak-to-peak value of the phase voltage (:math:`\hat{u}_S`).
+        A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
+        Typically the RMS value for the line voltage (:math:`U_L`) is given as
         :math:`\hat{u}_S=\sqrt{2/3}~U_L`
 
-        The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).
-        Typically the rms value for the phase current (:math:`I_S`) is given.
+        The current limits should be the peak-to-peak value of the phase current (:math:`\hat{i}_S`).
+        Typically the RMS value for the phase current (:math:`I_S`) is given as
         :math:`\hat{i}_S = \sqrt{2}~I_S`
 
         If not specified, nominal values are equal to their corresponding limit values.

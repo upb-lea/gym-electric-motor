@@ -1,4 +1,4 @@
-Extertnally Excited Synchronous Motor
+Externally Excited Synchronous Motor
 ######################################
 
 Schematic

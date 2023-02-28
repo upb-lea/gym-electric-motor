@@ -42,7 +42,7 @@ class FluxObserver(PhysicalSystemWrapper):
         self._omega_idx = None
 
         # Integrated values of the flux for the two directions (Re: alpha, Im: beta)
-        self._integrated = np.complex(0, 0)
+        self._integrated = complex(0, 0)
         self._current_names = current_names
         super(FluxObserver, self).__init__(physical_system)
 
@@ -75,7 +75,7 @@ class FluxObserver(PhysicalSystemWrapper):
 
     def reset(self):
         # Docstring of super class
-        self._integrated = np.complex(0, 0)
+        self._integrated = complex(0, 0)
         return np.concatenate((super().reset(), [0.0, 0.0]))
 
     def simulate(self, action):
@@ -89,8 +89,8 @@ class FluxObserver(PhysicalSystemWrapper):
         [i_s_alpha, i_s_beta] = self._abc_to_alphabeta_transformation(i_s)
 
         # Calculate delta flux
-        delta_psi = np.complex(i_s_alpha, i_s_beta) * self._r_r * self._l_m / self._l_r \
-            - self._integrated * np.complex(self._r_r / self._l_r, -omega)
+        delta_psi = complex(i_s_alpha, i_s_beta) * self._r_r * self._l_m / self._l_r \
+            - self._integrated * complex(self._r_r / self._l_r, -omega)
 
         # Integrate the flux
         self._integrated += delta_psi * self._physical_system.tau
