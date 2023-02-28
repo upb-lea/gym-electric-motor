@@ -161,17 +161,21 @@
 <span class="sd">        u_ralpha  Rotor voltage in alpha axis</span>
 <span class="sd">        u_rbeta   Rotor voltage in beta axis</span>
 <span class="sd">        ======== ===========================================================</span>
+
 <span class="sd">        Note:</span>
-<span class="sd">            The voltage limits should be the amplitude of the phase voltage (:math:`\hat{u}_S`).</span>
-<span class="sd">            Typically the rms value for the line voltage (:math:`U_L`) is given.</span>
-<span class="sd">            :math:`\hat{u}_S=\sqrt{2/3}~U_L`</span>
-<span class="sd">            The current limits should be the amplitude of the phase current (:math:`\hat{i}_S`).</span>
-<span class="sd">            Typically the rms value for the phase current (:math:`I_S`) is given.</span>
-<span class="sd">            :math:`\hat{i}_S = \sqrt{2}~I_S`</span>
-<span class="sd">            If not specified, nominal values are equal to their corresponding limit values.</span>
-<span class="sd">            Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from</span>
-<span class="sd">            the general limits/nominal values (e.g. i)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        The voltage limits should be the peak-to-peak value of the phase voltage (:math:`\hat{u}_S`).</span>
+<span class="sd">        A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.</span>
+<span class="sd">        Typically the RMS value for the line voltage (:math:`U_L`) is given as</span>
+<span class="sd">        :math:`\hat{u}_S=\sqrt{2/3}~U_L`</span>
+
+<span class="sd">        The current limits should be the peak-to-peak value of the phase current (:math:`\hat{i}_S`).</span>
+<span class="sd">        Typically the RMS value for the phase current (:math:`I_S`) is given as</span>
+<span class="sd">        :math:`\hat{i}_S = \sqrt{2}~I_S`</span>
+
+<span class="sd">        If not specified, nominal values are equal to their corresponding limit values.</span>
+<span class="sd">        Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from</span>
+<span class="sd">        the general limits/nominal values (e.g. i)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ROTOR_VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u_ralpha&#39;</span><span class="p">,</span> <span class="s1">&#39;u_rbeta&#39;</span><span class="p">]</span>
     <span class="n">ROTOR_CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i_ralpha&#39;</span><span class="p">,</span> <span class="s1">&#39;i_rbeta&#39;</span><span class="p">]</span>

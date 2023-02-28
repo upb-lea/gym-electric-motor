@@ -60,7 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="series.html">DC Series Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="shunt.html">DC Shunt Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pmsm.html">Permanent Magnet Synchronous Motor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eesm.html">Extertnally Excited Synchronous Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eesm.html">Externally Excited Synchronous Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="synrm.html">Synchronous Reluctance Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scim.html">Squirrel Cage Induction Motor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dfim.html">Doubly Fed Induction Motor</a></li>
@@ -191,15 +191,15 @@ as well as limits and bandwidth.</p>
 </tr>
 <tr class="row-even"><td><p>i_a</p></td>
 <td><p>A</p></td>
-<td><p>Current through branch a</p></td>
+<td><p>Current through line a</p></td>
 </tr>
 <tr class="row-odd"><td><p>i_b</p></td>
 <td><p>A</p></td>
-<td><p>Current through branch b</p></td>
+<td><p>Current through line b</p></td>
 </tr>
 <tr class="row-even"><td><p>i_c</p></td>
 <td><p>A</p></td>
-<td><p>Current through branch c</p></td>
+<td><p>Current through line c</p></td>
 </tr>
 <tr class="row-odd"><td><p>i_alpha</p></td>
 <td><p>A</p></td>
@@ -225,32 +225,32 @@ as well as limits and bandwidth.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>u_sd</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Direct axis voltage</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_sq</p></td>
-<td><p>A</p></td>
+<td><p>V</p></td>
 <td><p>Quadrature axis voltage</p></td>
 </tr>
 <tr class="row-even"><td><p>u_a</p></td>
-<td><p>A</p></td>
-<td><p>Voltage through branch a</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line a</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_b</p></td>
-<td><p>A</p></td>
-<td><p>Voltage through branch b</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line b</p></td>
 </tr>
 <tr class="row-even"><td><p>u_c</p></td>
-<td><p>A</p></td>
-<td><p>Voltage through branch c</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line c</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_alpha</p></td>
-<td><p>A</p></td>
-<td><p>Voltage in alpha axis</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage in alpha axis</p></td>
 </tr>
 <tr class="row-even"><td><p>u_beta</p></td>
-<td><p>A</p></td>
-<td><p>Voltage in beta axis</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage in beta axis</p></td>
 </tr>
 </tbody>
 </table>
@@ -295,42 +295,43 @@ as well as limits and bandwidth.</p>
 <tr class="row-odd"><td><p>omega</p></td>
 <td><p>Mechanical angular Velocity</p></td>
 </tr>
-<tr class="row-even"><td><p>epsilon</p></td>
-<td><p>Electrical rotational angle</p></td>
-</tr>
-<tr class="row-odd"><td><p>torque</p></td>
+<tr class="row-even"><td><p>torque</p></td>
 <td><p>Motor generated torque</p></td>
 </tr>
+<tr class="row-odd"><td><p>epsilon</p></td>
+<td><p>Electrical rotational angle</p></td>
+</tr>
 <tr class="row-even"><td><p>u_a</p></td>
-<td><p>Voltage in phase a</p></td>
+<td><p>Phase voltage in phase a</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_b</p></td>
-<td><p>Voltage in phase b</p></td>
+<td><p>Phase voltage in phase b</p></td>
 </tr>
 <tr class="row-even"><td><p>u_c</p></td>
-<td><p>Voltage in phase c</p></td>
+<td><p>Phase voltage in phase c</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_alpha</p></td>
-<td><p>Voltage in alpha axis</p></td>
+<td><p>Phase voltage in alpha axis</p></td>
 </tr>
 <tr class="row-even"><td><p>u_beta</p></td>
-<td><p>Voltage in beta axis</p></td>
+<td><p>Phase voltage in beta axis</p></td>
 </tr>
 <tr class="row-odd"><td><p>u_sd</p></td>
-<td><p>Voltage in direct axis</p></td>
+<td><p>Phase voltage in direct axis</p></td>
 </tr>
 <tr class="row-even"><td><p>u_sq</p></td>
-<td><p>Voltage in quadrature axis</p></td>
+<td><p>Phase voltage in quadrature axis</p></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The voltage limits should be the amplitude of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
-Typically the rms value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given.
+<p>The voltage limits should be the peak-to-peak value of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
+A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
+Typically the root mean square (RMS) value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given as
 <span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span></p>
-<p>The current limits should be the amplitude of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
-Typically the rms value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given.
+<p>The current limits should be the peak-to-peak value of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
+Typically the RMS value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given as
 <span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span></p>
 <p>If not specified, nominal values are equal to their corresponding limit values.
 Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
