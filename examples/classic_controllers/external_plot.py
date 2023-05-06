@@ -111,7 +111,7 @@ class ExternalPlot(TimePlot):
         # If the state is referenced plot also the reference line
         if self._referenced:
             self._reference_line, = self._axis.plot(self._x_data, self._reference_data, **self._ref_line_config, zorder=self.add_lines+1)
-            axis.lines = axis.lines[::-1]
+            #axis.lines = axis.lines[::-1]
             self._lines.append(self._reference_line)
 
         self._y_data = [self._state_data, self._reference_data]
