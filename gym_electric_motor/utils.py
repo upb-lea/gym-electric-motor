@@ -19,7 +19,7 @@ def state_dict_to_state_array(state_dict, state_array, state_names):
     for ind, key in enumerate(state_names):
         try:
             state_array[ind] = state_dict[key]
-        except KeyError:
+        except KeyError: # TODO
             pass
 
 
