@@ -17,9 +17,9 @@ Each ElectricMotorEnvironment contains the five following modules:
     - Visualization of the PhysicalSystems state, reference and reward for the user.
 
 """
-import gym
+import gymnasium
 import numpy as np
-from gym.spaces import Box
+from gymnasium.spaces import Box
 
 from .utils import instantiate
 from .random_component import RandomComponent
@@ -27,7 +27,7 @@ from .constraints import Constraint, LimitConstraint
 import gym_electric_motor as gem
 
 
-class ElectricMotorEnvironment(gym.core.Env):
+class ElectricMotorEnvironment(gymnasium.core.Env):
     """
     Description:
         The main class connecting all modules of the gym-electric-motor environments.
@@ -219,7 +219,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high, dtype=np.float64)
-        self.observation_space = gym.spaces.Tuple((
+        self.observation_space = gymnasium.spaces.Tuple((
             state_space,
             self._reference_generator.reference_space
         ))
@@ -546,7 +546,7 @@ class PhysicalSystem:
     def action_space(self):
         """
         Returns:
-            gym.Space: An OpenAI Gym Space that describes the possible actions on the system.
+            gymnasium.Space: An OpenAI Gym Space that describes the possible actions on the system.
         """
         return self._action_space
 
@@ -554,7 +554,7 @@ class PhysicalSystem:
     def state_space(self):
         """
         Returns:
-             gym.Space: An OpenAI Gym Space that describes the possible states of the system.
+             gymnasium.Space: An OpenAI Gym Space that describes the possible states of the system.
         """
         return self._state_space
 
@@ -577,8 +577,8 @@ class PhysicalSystem:
     def __init__(self, action_space, state_space, state_names, tau):
         """
         Args:
-            action_space(gym.Space): The set of allowed actions on the system.
-            state_space(gym.Space): The set of possible systems states.
+            action_space(gymnasium.Space): The set of allowed actions on the system.
+            state_space(gymnasium.Space): The set of possible systems states.
             state_names(ndarray(str)): The names of the systems states
             tau(float): The systems simulation time interval.
         """

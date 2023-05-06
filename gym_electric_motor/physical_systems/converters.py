@@ -1,5 +1,5 @@
 import numpy as np
-from gym.spaces import Discrete, Box, MultiDiscrete
+from gymnasium.spaces import Discrete, Box, MultiDiscrete
 
 from ..utils import instantiate
 
@@ -16,11 +16,11 @@ class PowerElectronicConverter:
         | E.g. (0, 1) - Only positive currents / (-1, 1) Positive and negative currents
     """
 
-    #: gym.Space that defines Minimum, Maximum and Dimension of possible output voltage of the converter
+    #: gymnasium.Space that defines Minimum, Maximum and Dimension of possible output voltage of the converter
     voltages = None
-    #: gym.Space that defines Minimum, Maximum and Dimension of possible output current of the converter
+    #: gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter
     currents = None
-    #: gym.Space that defines the set of all possible actions for the converter
+    #: gymnasium.Space that defines the set of all possible actions for the converter
     action_space = None
     #: Default action that is taken after a reset.
     _reset_action = None

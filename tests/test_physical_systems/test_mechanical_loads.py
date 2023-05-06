@@ -1,7 +1,7 @@
 import pytest
 import gym_electric_motor as gem
 from gym_electric_motor.physical_systems import PolynomialStaticLoad, MechanicalLoad, ConstantSpeedLoad, ExternalSpeedLoad
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import numpy as np
 from scipy import signal
 import math
@@ -118,7 +118,7 @@ def test_MechanicalLoad_reset(concreteMechanicalLoad):
     # random testcase for the necessary parameters needed for initialization
     test_positions = {'omega': 0}
     test_nominal = np.array([80])
-    # gym.Box state space with random size
+    # gymnasium.Box state space with random size
     test_space = Box(low=-1.0, high=1.0, shape=(3,))
     # set additional random kwargs
     resetVal = concreteMechanicalLoad.reset(a=7, b=9,
@@ -216,7 +216,7 @@ class TestConstSpeedLoad(TestMechanicalLoad):
     def test_reset(self, const_speed_load):
         test_positions = {'omega': 0}
         test_nominal = np.array([80])
-        # gym.Box state space with random size
+        # gymnasium.Box state space with random size
         test_space = Box(low=-1.0, high=1.0, shape=(3,))
         reset_val = const_speed_load.reset(state_positions=test_positions,
                                            nominal_state=test_nominal,
@@ -286,7 +286,7 @@ class TestExtSpeedLoad(TestMechanicalLoad):
     def test_reset(self, ext_speed_load):
         test_positions = {'omega': 0}
         test_nominal = np.array([80])
-        # gym.Box state space with random size
+        # gymnasium.Box state space with random size
         test_space = Box(low=-1.0, high=1.0, shape=(3,))
         reset_var = ext_speed_load.reset(state_positions=test_positions,
                                          nominal_state=test_nominal,

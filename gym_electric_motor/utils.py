@@ -1,5 +1,5 @@
 import numpy as np
-import gym
+import gymnasium
 
 
 def state_dict_to_state_array(state_dict, state_array, state_names):
@@ -158,5 +158,5 @@ def update_parameter_dict(source_dict, update_dict, copy=True):
     return new_dict
 
 
-#: Short notation for the gym.make call to avoid the necessary import of gym when making environments.
-make = gym.make
+#: Short notation for the gymnasium.make call to avoid the necessary import of gym when making environments.
+make = gymnasium.make

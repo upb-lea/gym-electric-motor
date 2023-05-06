@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 import pytest
 import numpy as np
 import gym_electric_motor as gem
@@ -20,7 +20,7 @@ class TestDqToAbcActionProcessor(TestPhysicalSystemWrapper):
         return gem.physical_system_wrappers.DqToAbcActionProcessor.make('PMSM', physical_system=physical_system)
 
     def test_action_space(self, processor, physical_system):
-        space = gym.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
+        space = gymnasium.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
         assert processor.action_space == space
 
     @pytest.mark.parametrize(

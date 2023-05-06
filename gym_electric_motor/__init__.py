@@ -19,13 +19,13 @@ import gym_electric_motor.physical_systems
 import gym_electric_motor.envs
 import gym_electric_motor.physical_system_wrappers
 
-from gym.envs.registration import register
-import gym
+from gymnasium.envs.registration import register
+import gymnasium
 from packaging import version
 # Add all superclasses of the modules to the registry.
 
-# Deactivate the order enforce wrapper that is put around a created env per default from gym-version 0.21.0 onwards
-registration_kwargs = dict(order_enforce=False) if version.parse(gym.__version__) >= version.parse('0.21.0') else dict()
+# Deactivate the order enforce wrapper that is put around a created env per default from gymnasium-version 0.21.0 onwards
+registration_kwargs = dict(order_enforce=False) if version.parse(gymnasium.__version__) >= version.parse('0.21.0') else dict()
 
 envs_path = 'gym_electric_motor.envs:'
 

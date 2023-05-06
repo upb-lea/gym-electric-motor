@@ -8,7 +8,7 @@ from gym_electric_motor.physical_systems import PowerElectronicConverter, Mechan
 import gym_electric_motor.physical_systems.converters as cv
 from gym_electric_motor.physical_systems.physical_systems import SCMLSystem
 import numpy as np
-from gym.spaces import Box, Discrete
+from gymnasium.spaces import Box, Discrete
 from scipy.integrate import ode
 from tests.conf import system, jacobian, permex_motor_parameter
 from gym_electric_motor.utils import instantiate

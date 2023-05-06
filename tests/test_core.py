@@ -2,12 +2,12 @@ import pytest
 import numpy as np
 from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization,\
     DummyCallback, DummyConstraintMonitor, DummyConstraint, mock_instantiate, instantiate_dict
-from gym.spaces import Tuple, Box
+from gymnasium.spaces import Tuple, Box
 import gym_electric_motor
 from gym_electric_motor.core import ElectricMotorEnvironment, RewardFunction, \
     ReferenceGenerator, PhysicalSystem, ConstraintMonitor, Constraint
 from gym_electric_motor.constraints import LimitConstraint
-import gym
+import gymnasium
 import gym_electric_motor as gem
 
 
@@ -254,8 +254,8 @@ class TestReferenceGenerator:
 class TestPhysicalSystem:
 
     def test_initialization(self):
-        action_space = gym.spaces.Discrete(3)
-        state_space = gym.spaces.Box(-1, 1, shape=(3,))
+        action_space = gymnasium.spaces.Discrete(3)
+        state_space = gymnasium.spaces.Box(-1, 1, shape=(3,))
         state_names = [f'dummy_state_{i}' for i in range(3)]
         tau = 1
         ps = PhysicalSystem(action_space, state_space, state_names, tau)

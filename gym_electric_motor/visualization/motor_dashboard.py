@@ -1,7 +1,7 @@
 from gym_electric_motor.core import ElectricMotorVisualization
 from .motor_dashboard_plots import StatePlot, ActionPlot, RewardPlot, TimePlot, EpisodePlot, StepPlot
 import matplotlib.pyplot as plt
-import gym
+import gymnasium
 
 
 class MotorDashboard(ElectricMotorVisualization):
@@ -152,9 +152,9 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._state_plots == 'all':
             self._state_plots = state_names
         if self._action_plots == 'all':
-            if type(env.action_space) is gym.spaces.Discrete:
+            if type(env.action_space) is gymnasium.spaces.Discrete:
                 self._action_plots = [0]
-            elif type(env.action_space) in (gym.spaces.Box, gym.spaces.MultiDiscrete):
+            elif type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.MultiDiscrete):
                 self._action_plots = list(range(env.action_space.shape[0]))
 
         self._time_plots = []
@@ -165,7 +165,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 self._time_plots.append(StatePlot(state))
 
         if len(self._action_plots) > 0:
-            assert type(env.action_space) in (gym.spaces.Box, gym.spaces.Discrete, gym.spaces.MultiDiscrete), \
+            assert type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.Discrete, gymnasium.spaces.MultiDiscrete), \
                 f'Action space of type {type(env.action_space)} not supported for plotting.'
             for action in self._action_plots:
                 ap = ActionPlot(action)

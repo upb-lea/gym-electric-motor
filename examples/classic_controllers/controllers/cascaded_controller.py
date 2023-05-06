@@ -1,5 +1,5 @@
 from .continuous_controller import ContinuousController
-from gym.spaces import Box, Discrete, MultiDiscrete
+from gymnasium.spaces import Box, Discrete, MultiDiscrete
 from gym_electric_motor.physical_systems import DcExternallyExcitedMotor
 from .plot_external_data import plot
 

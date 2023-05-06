@@ -1,4 +1,4 @@
-from gym.spaces import Box
+from gymnasium.spaces import Box
 from gym_electric_motor.physical_systems import DcMotorSystem, DcExternallyExcitedMotor
 from .plot_external_data import plot
 import numpy as np

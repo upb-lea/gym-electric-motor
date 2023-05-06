@@ -6,7 +6,7 @@ from tensorflow.keras.optimizers import Adam
 from rl.agents import DDPGAgent
 from rl.memory import SequentialMemory
 from rl.random import OrnsteinUhlenbeckProcess
-from gym.wrappers import FlattenObservation
+from gymnasium.wrappers import FlattenObservation
 import numpy as np
 import sys
 import os
@@ -17,8 +17,8 @@ from gym_electric_motor.reference_generators import MultipleReferenceGenerator, 
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.visualization.motor_dashboard_plots import MeanEpisodeRewardPlot
 from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
-from gym.core import Wrapper
-from gym.spaces import Box, Tuple
+from gymnasium.core import Wrapper
+from gymnasium.spaces import Box, Tuple
 from gym_electric_motor.constraints import SquaredConstraint
 from gym_electric_motor.physical_system_wrappers import DqToAbcActionProcessor, DeadTimeProcessor
 

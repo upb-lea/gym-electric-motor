@@ -1,7 +1,7 @@
 from .continuous_controller import ContinuousController
 from .torque_to_current_conversion import TorqueToCurrentConversion
 from .plot_external_data import plot
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import numpy as np
 
 

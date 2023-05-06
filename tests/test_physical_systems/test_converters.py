@@ -7,7 +7,7 @@ import numpy as np
 import tests.conf as cf
 from gym_electric_motor.utils import make_module
 from random import seed, uniform, randint
-from gym.spaces import Discrete, Box
+from gymnasium.spaces import Discrete, Box
 
 # region first version tests
 

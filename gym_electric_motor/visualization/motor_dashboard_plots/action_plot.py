@@ -1,4 +1,4 @@
-from gym.spaces import Box, Discrete, MultiDiscrete
+from gymnasium.spaces import Box, Discrete, MultiDiscrete
 import numpy as np
 
 from .base_plots import TimePlot

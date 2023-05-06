@@ -8,7 +8,7 @@ from tensorflow.keras.optimizers import Adam
 from rl.agents.dqn import DQNAgent
 from rl.policy import LinearAnnealedPolicy, EpsGreedyQPolicy
 from rl.memory import SequentialMemory
-from gym.wrappers import FlattenObservation
+from gymnasium.wrappers import FlattenObservation
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join('..')))

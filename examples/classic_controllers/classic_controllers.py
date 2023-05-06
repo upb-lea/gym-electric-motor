@@ -1,4 +1,4 @@
-from gym.spaces import Discrete, Box, MultiDiscrete
+from gymnasium.spaces import Discrete, Box, MultiDiscrete
 from gym_electric_motor.physical_systems import SynchronousMotorSystem, DcMotorSystem, DcSeriesMotor, \
     DcExternallyExcitedMotor, DoublyFedInductionMotorSystem, SquirrelCageInductionMotorSystem
 from gym_electric_motor.reference_generators import MultipleReferenceGenerator, SwitchedReferenceGenerator

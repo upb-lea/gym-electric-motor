@@ -2,7 +2,7 @@ import math
 from matplotlib import pyplot as plt
 import matplotlib
 from gym_electric_motor.core import *
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import pytest
 
 # region parameter definition

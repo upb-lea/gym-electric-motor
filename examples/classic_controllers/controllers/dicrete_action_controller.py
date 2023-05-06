@@ -1,5 +1,5 @@
 from .plot_external_data import plot
-from gym.spaces import Discrete, MultiDiscrete
+from gymnasium.spaces import Discrete, MultiDiscrete
 from gym_electric_motor.physical_systems import DcMotorSystem, DcExternallyExcitedMotor
 import numpy as np
 

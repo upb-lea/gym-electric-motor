@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 from numpy.random import seed
 import numpy.random as rd
 import pytest
@@ -196,12 +196,12 @@ class TestSwitchedReferenceGenerator:
         sub_generator[0]._limit_margin = (1, 0)
         sub_generator[1]._limit_margin = (0, 0.5)
 
-        expected_space = gym.spaces.Box(-1, 0.5, shape=(1,))
+        expected_space = gymnasium.spaces.Box(-1, 0.5, shape=(1,))
         self._sub_generator = sub_generator
         test_object = SwitchedReferenceGenerator(sub_generator)
 
         self._physical_system = DummyPhysicalSystem(7)
-        self._physical_system._state_space = gym.spaces.Box(-1, 1, shape=self._physical_system.state_space.shape)
+        self._physical_system._state_space = gymnasium.spaces.Box(-1, 1, shape=self._physical_system.state_space.shape)
         # call function to test
         test_object.set_modules(self._physical_system)
         # verify the expected results
