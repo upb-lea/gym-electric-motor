@@ -366,8 +366,11 @@ class Controller:
                                 d_gain = p_gain * environment.physical_system.tau
                                 stages_a[i][0]['d_gain'] = stages_a[i].get('d_gain', d_gain)
 
-                        stages_a[i][0]['p_gain'] = stages_a[i][0].get('p_gain', p_gain)#?
-                        stages_a[i][0]['i_gain'] = stages_a[i][0].get('i_gain', i_gain)#?
+                        # TODO: Remove this check after test and examples are running. Why is this here?
+                        assert 'p_gain' in stages_a[i][0]
+                        assert 'i_gain' in stages_a[i][0]
+                        # stages_a[i][0]['p_gain'] = stages_a[i][0].get('p_gain', p_gain)#?
+                        # stages_a[i][0]['i_gain'] = stages_a[i][0].get('i_gain', i_gain)#?
 
                 stages = stages_a if not stages_e else [stages_a, stages_e]
 
