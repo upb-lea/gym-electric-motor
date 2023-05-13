@@ -347,27 +347,52 @@ class Controller:
             elif _controllers[controller_type][0] == CascadedController:
 
                 for i in range(len(stages)):
-                    if _controllers[stages_a[i][0]['controller_type']][1] == ContinuousController: #had to add [0] to make dict in list acessable
+                    if type(stages_a[i]) is list:
+                        if _controllers[stages_a[i][0]['controller_type']][1] == ContinuousController: #had to add [0] to make dict in list acessable
 
-                        if i == 0:
-                            p_gain = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
-                            i_gain = p_gain / (environment.physical_system.tau * a ** 2)
+                            if i == 0:
+                                p_gain = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
+                                i_gain = p_gain / (environment.physical_system.tau * a ** 2)
 
-                            if _controllers[stages_a[i][0]['controller_type']][2] == PIDController:
-                                d_gain = p_gain * environment.physical_system.tau
-                                stages_a[i][0]['d_gain'] = stages_a[i].get('d_gain', d_gain)
+                                if _controllers[stages_a[i][0]['controller_type']][2] == PIDController:
+                                    d_gain = p_gain * environment.physical_system.tau
+                                    stages_a[i][0]['d_gain'] = stages_a[i][0].get('d_gain', d_gain)
 
-                        elif i == 1:
-                            t_n = environment.physical_system.tau * a ** 2
-                            p_gain = environment.physical_system.mechanical_load.j_total / (
-                                    a * t_n) / i_a_lim * omega_lim
-                            i_gain = p_gain / (a * t_n)
-                            if _controllers[stages_a[i][0]['controller_type']][2] == PIDController:
-                                d_gain = p_gain * environment.physical_system.tau
-                                stages_a[i][0]['d_gain'] = stages_a[i].get('d_gain', d_gain)
+                            elif i == 1:
+                                t_n = environment.physical_system.tau * a ** 2
+                                p_gain = environment.physical_system.mechanical_load.j_total / (
+                                        a * t_n) / i_a_lim * omega_lim
+                                i_gain = p_gain / (a * t_n)
+                                if _controllers[stages_a[i][0]['controller_type']][2] == PIDController:
+                                    d_gain = p_gain * environment.physical_system.tau
+                                    stages_a[i][0]['d_gain'] = stages_a[i][0].get('d_gain', d_gain)
 
-                        stages_a[i][0]['p_gain'] = stages_a[i][0].get('p_gain', p_gain)#?
-                        stages_a[i][0]['i_gain'] = stages_a[i][0].get('i_gain', i_gain)#?
+                            stages_a[i][0]['p_gain'] = stages_a[i][0].get('p_gain', p_gain)#?
+                            stages_a[i][0]['i_gain'] = stages_a[i][0].get('i_gain', i_gain)#?
+
+                    elif type(stages_a[i]) is dict:
+                        if _controllers[stages_a[i]['controller_type']][1] == ContinuousController: #had to add [0] to make dict in list acessable
+
+                            if i == 0:
+                                p_gain = mp['l'] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
+                                i_gain = p_gain / (environment.physical_system.tau * a ** 2)
+
+                                if _controllers[stages_a[i]['controller_type']][2] == PIDController:
+                                    d_gain = p_gain * environment.physical_system.tau
+                                    stages_a[i]['d_gain'] = stages_a[i].get('d_gain', d_gain)
+
+                            elif i == 1:
+                                t_n = environment.physical_system.tau * a ** 2
+                                p_gain = environment.physical_system.mechanical_load.j_total / (
+                                        a * t_n) / i_a_lim * omega_lim
+                                i_gain = p_gain / (a * t_n)
+                                if _controllers[stages_a[i]['controller_type']][2] == PIDController:
+                                    d_gain = p_gain * environment.physical_system.tau
+                                    stages_a[i]['d_gain'] = stages_a[i].get('d_gain', d_gain)
+
+                            stages_a[i]['p_gain'] = stages_a[i].get('p_gain', p_gain)#?
+                            stages_a[i]['i_gain'] = stages_a[i].get('i_gain', i_gain)#?
+
 
                 stages = stages_a if not stages_e else [stages_a, stages_e]
 
