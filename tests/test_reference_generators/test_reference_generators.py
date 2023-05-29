@@ -705,14 +705,14 @@ class TestConstReferenceGenerator(TestReferenceGenerator):
 
     @pytest.fixture
     def reference_generator(self, physical_system):
-        rg = ConstReferenceGenerator(reference_state=physical_system.state_names[1], reference_value=1)
+        rg = ConstReferenceGenerator(reference_state=physical_system.state_names[1], reference_value=1.0)
         rg.set_modules(physical_system)
         return rg
 
     @pytest.mark.parametrize('reference_value, reference_state', [(0.8, 'abc')])
     def test_initialization(self, reference_value, reference_state):
         rg = ConstReferenceGenerator(reference_value=reference_value, reference_state=reference_state)
-        assert rg.reference_space == Box(np.array([reference_value]), np.array([reference_value]))
+        assert rg.reference_space == Box(np.array([reference_value]), np.array([reference_value]), dtype=np.float64)
         assert rg._reference_value == reference_value
         assert rg._reference_state == reference_state
 

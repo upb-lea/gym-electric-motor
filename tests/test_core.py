@@ -86,6 +86,7 @@ class TestElectricMotorEnvironment:
             state_space = Box(
                 physical_system.state_space.low[state_idxs],
                 physical_system.state_space.high[state_idxs],
+                dtype=float
             )
             assert Tuple(
                 (state_space, reference_generator.reference_space)

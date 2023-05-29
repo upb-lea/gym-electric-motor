@@ -41,7 +41,8 @@ class TestSCMLSystem:
             '_build_state_space',
             lambda _, state_names: Box(
                 low=np.zeros_like(state_names, dtype=float),
-                high=np.zeros_like(state_names, dtype=float)
+                high=np.zeros_like(state_names, dtype=float),
+                dtype=float
             )
         )
         return self.class_to_test(
