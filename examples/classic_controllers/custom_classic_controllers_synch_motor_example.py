@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     controller = Controller.make(env, stages=stages, external_ref_plots=external_ref_plots, torque_control='analytical')
 
-    state, reference = env.reset_with_next_reference()
+    state, reference = env.reset()
 
     # simulate the environment
     for i in range(10001):

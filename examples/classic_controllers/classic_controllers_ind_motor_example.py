@@ -46,7 +46,7 @@ if __name__ == '__main__':
     """
     controller = Controller.make(env)
 
-    state, reference = env.reset_with_next_reference()
+    state, reference = env.reset()
 
     # simulate the environment
     for i in range(10001):

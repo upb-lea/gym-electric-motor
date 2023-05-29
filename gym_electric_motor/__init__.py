@@ -26,6 +26,7 @@ from packaging import version
 
 # Deactivate the order enforce wrapper that is put around a created env per default from gymnasium-version 0.21.0 onwards
 registration_kwargs = dict(order_enforce=False) if version.parse(gymnasium.__version__) >= version.parse('0.21.0') else dict()
+registration_kwargs['disable_env_checker'] = True
 
 envs_path = 'gym_electric_motor.envs:'
 

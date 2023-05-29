@@ -53,7 +53,7 @@ if __name__ == '__main__':
     """
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
-    state, reference = env.reset_with_next_reference()
+    state, reference = env.reset()
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)

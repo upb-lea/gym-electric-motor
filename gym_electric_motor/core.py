@@ -246,21 +246,10 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._call_callbacks('on_reset_begin')
         self._done = False
         state = self._physical_system.reset()
-        reference, _, _ = self.reference_generator.reset(state)
+        reference, next_ref, _ = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
         self._call_callbacks('on_reset_end', state, reference)
-        return state[self.state_filter] #, next_ref
-    
-    def reset_with_next_reference(self, *_, **__):
-        """
-        Reset of the environment and all its modules to an initial state.
-
-        Returns:
-             The initial observation consisting of the initial state and initial reference.
-        """
-        state = self.reset()
-        _, next_ref, _ = self.reference_generator.reset(state)
-        return state[self.state_filter] , next_ref
+        return state[self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
