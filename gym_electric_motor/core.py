@@ -236,13 +236,15 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             func = getattr(callback, func_name)
             func(*args)
             
-    def reset(self, *_, **__):
+    def reset(self, seed,*_, **__):
         """
         Reset of the environment and all its modules to an initial state.
 
         Returns:
              The initial observation consisting of the initial state and initial reference.
         """
+
+        self.seed(seed)
         self._call_callbacks('on_reset_begin')
         self._done = False
         state = self._physical_system.reset()
