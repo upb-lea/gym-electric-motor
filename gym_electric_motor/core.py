@@ -236,7 +236,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             func = getattr(callback, func_name)
             func(*args)
             
-    def reset(self, seed,*_, **__):
+    def reset(self, seed = None,*_, **__):
         """
         Reset of the environment and all its modules to an initial state.
 
