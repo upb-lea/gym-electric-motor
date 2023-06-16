@@ -243,7 +243,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         Returns:
              The initial observation consisting of the initial state and initial reference.
         """
-        super().reset()
         self._call_callbacks('on_reset_begin')
         self._done = False
         state = self._physical_system.reset()
