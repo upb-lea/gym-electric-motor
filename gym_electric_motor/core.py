@@ -243,6 +243,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         Returns:
              The initial observation consisting of the initial state and initial reference.
         """
+        super().reset()
         self._call_callbacks('on_reset_begin')
         self._done = False
         state = self._physical_system.reset()
@@ -307,6 +308,12 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._physical_system.close()
         self._reference_generator.close()
 
+    def get_figure(self):
+        """ Get main figure (MotorDashboard) """
+        assert len(self._visualizations) == 1
+        motor_dashboard = self._visualizations[0]
+        assert len(motor_dashboard._figures) == 1
+        return motor_dashboard._figures[0]
 
 class ReferenceGenerator:
     """The abstract base class for reference generators in gym electric motor environments.
