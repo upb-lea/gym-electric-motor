@@ -244,7 +244,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
              The initial observation consisting of the initial state and initial reference.
         """
 
-        self.seed(seed)
+        self._seed(seed)
         self._call_callbacks('on_reset_begin')
         self._done = False
         state = self._physical_system.reset()
@@ -288,7 +288,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         )
         return (state[self.state_filter], ref_next), reward, self._done, {}
 
-    def seed(self, seed=None):
+    def _seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
         components = [
             self._physical_system,

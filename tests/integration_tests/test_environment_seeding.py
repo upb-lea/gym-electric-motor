@@ -19,8 +19,6 @@ def test_seeding_same_env(dc_motor, control_task, action_type, version, no_of_st
     """This test assures that an environment that is seeded two times with the same seed generates the same episodes."""
     env_id = f'{action_type}-{control_task}-{dc_motor}-{version}'
     env = gem.make(env_id)
-    # Seed the environment initially
-    env.seed(seed)
     # Sample actions that are used in both executions
     actions = [env.action_space.sample() for _ in range(no_of_steps)]
     done = True
@@ -31,15 +29,13 @@ def test_seeding_same_env(dc_motor, control_task, action_type, version, no_of_st
     # Execute the env
     for i in range(no_of_steps):
         if done:
-            state, reference = env.reset()
+            state, reference = env.reset(seed)
         (state, reference), reward, done, info = env.step(actions[i])
         rewards1.append(reward)
         states1.append(state)
         references1.append(reference)
         done1.append(done)
 
-    # Seed the environment again with the same seed
-    env.seed(seed)
     done = True
     states2 = []
     references2 = []
@@ -48,7 +44,7 @@ def test_seeding_same_env(dc_motor, control_task, action_type, version, no_of_st
     # Execute the environment again
     for i in range(no_of_steps):
         if done:
-            state, reference = env.reset()
+            state, reference = env.reset(seed)
         (state, reference), reward, done, info = env.step(actions[i])
         rewards2.append(reward)
         states2.append(state)
@@ -74,7 +70,6 @@ def test_seeding_new_env(dc_motor, control_task, action_type, version, no_of_ste
     """This test assures that two equal environments that are seeded with the same seed generate the same episodes."""
     env_id = f'{action_type}-{control_task}-{dc_motor}-{version}'
     env = gem.make(env_id)
-    env.seed(seed)
     actions = [env.action_space.sample() for _ in range(no_of_steps)]
     done = True
 
@@ -85,7 +80,7 @@ def test_seeding_new_env(dc_motor, control_task, action_type, version, no_of_ste
 
     for i in range(no_of_steps):
         if done:
-            state, reference = env.reset()
+            state, reference = env.reset(seed)
         (state, reference), reward, done, info = env.step(actions[i])
         rewards1.append(reward)
         states1.append(state)
@@ -93,7 +88,6 @@ def test_seeding_new_env(dc_motor, control_task, action_type, version, no_of_ste
         done1.append(done)
 
     env = gem.make(env_id)
-    env.seed(seed)
     done = True
     states2 = []
     references2 = []
@@ -102,7 +96,7 @@ def test_seeding_new_env(dc_motor, control_task, action_type, version, no_of_ste
 
     for i in range(no_of_steps):
         if done:
-            state, reference = env.reset()
+            state, reference = env.reset(seed)
         action = env.action_space.sample()
         assert action in env.action_space
         (state, reference), reward, done, info = env.step(actions[i])
