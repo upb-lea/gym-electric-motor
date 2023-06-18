@@ -287,7 +287,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._call_callbacks(
             'on_step_end', self.physical_system.k, state, reference, reward, self._terminated
         )
-        return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated,{}
+        return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, {}
 
     def _seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
