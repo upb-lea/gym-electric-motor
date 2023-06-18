@@ -138,8 +138,8 @@ class StatePlot(TimePlot):
 
         self._y_data = [self._state_data, self._ref_data]
 
-    def on_step_end(self, k, state, reference, reward, done):
-        super().on_step_end(k, state, reference, reward, done)
+    def on_step_end(self, k, state, reference, reward, terminated):
+        super().on_step_end(k, state, reference, reward, terminated)
         # Write the data to the data containers
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]

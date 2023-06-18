@@ -16,14 +16,14 @@ versions = ['v0']
 def test_execution(dc_motor, control_task, action_type, version, no_of_steps):
     env_id = f'{action_type}-{control_task}-{dc_motor}-{version}'
     env = gem.make(env_id)
-    done = True
+    terminated = True
     for i in range(no_of_steps):
-        if done:
+        if terminated:
             observation = env.reset()
             state, reference = observation
         action = env.action_space.sample()
         assert action in env.action_space
-        observation, reward, done, info = env.step(action)
+        observation, reward, terminated, truncated, info = env.step(action)
         assert not np.any(np.isnan(observation[0])), 'An invalid nan-value is in the state.'
         assert not np.any(np.isnan(observation[1])), 'An invalid nan-value is in the reference.'
         assert info == {}

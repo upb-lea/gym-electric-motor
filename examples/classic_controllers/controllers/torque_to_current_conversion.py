@@ -10,12 +10,12 @@ class TorqueToCurrentConversion:
         This class represents the torque controller for cascaded control of synchronous motors.  For low speeds only the
         current limitation of the motor is important. The current vector to set a desired torque is selected so that the
         amount of the current vector is minimum (Maximum Torque per Current). For higher speeds, the voltage limitation
-        of the synchronous motor or the actuator must also be taken into account. This is done by converting the
+        of the synchronous motor or the actuator must also be taken into account. This is terminated by converting the
         available voltage to a speed-dependent maximum flux. An additional modulation controller is used for the flux
         control. By limiting the flux and the maximum torque per flux (MTPF), an operating point for the flux and the
-        torque is obtained. This is then converted into a current operating point. The conversion can be done by
+        torque is obtained. This is then converted into a current operating point. The conversion can be terminated by
         different methods (parameter torque_control). On the one hand, maps can be determined in advance by
-        interpolation or analytically, or the analytical determination can be done online.
+        interpolation or analytically, or the analytical determination can be terminated online.
         For the visualization of the operating points, both for the current operating points as well as the flux and
         torque operating points, predefined plots are available (plot_torque: default True). Also the values of the
         modulation controller can be visualized (plot_modulation: default False).

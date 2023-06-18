@@ -109,7 +109,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             reference_generator(ReferenceGenerator): The new reference generator of the environment.
         """
         self._reference_generator = reference_generator
-        self._done = True
+        self._terminated = True
 
     @property
     def reward_function(self):
@@ -128,7 +128,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             reward_function(RewardFunction): The new reward function of the environment.
         """
         self._reward_function = reward_function
-        self._done = True
+        self._terminated = True
 
     @property
     def constraint_monitor(self):
@@ -225,7 +225,8 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         ))
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
-        self._done = True
+        self._terminated = True
+        self._truncated = False
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
@@ -246,7 +247,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
         self._seed(seed)
         self._call_callbacks('on_reset_begin')
-        self._done = False
+        self._terminated = False
         state = self._physical_system.reset()
         reference, next_ref, _ = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
@@ -269,11 +270,11 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         Returns:
             observation(Tuple(ndarray(float),ndarray(float)): Tuple of the new state and the next reference.
             reward(float): Amount of reward received for the last step.
-            done(bool): Flag, indicating if a reset is required before new steps can be taken.
+            terminated(bool): Flag, indicating if a reset is required before new steps can be taken.
             {}: An empty dictionary for consistency with the OpenAi Gym interface.
         """
 
-        assert not self._done, 'A reset is required before the environment can perform further steps'
+        assert not self._terminated, 'A reset is required before the environment can perform further steps'
         self._call_callbacks('on_step_begin', self.physical_system.k, action)
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
@@ -281,12 +282,12 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         reward = self._reward_function.reward(
             state, reference, self._physical_system.k, action, violation_degree
         )
-        self._done = violation_degree >= 1.0
+        self._terminated = violation_degree >= 1.0
         ref_next = self.reference_generator.get_reference_observation(state)
         self._call_callbacks(
-            'on_step_end', self.physical_system.k, state, reference, reward, self._done
+            'on_step_end', self.physical_system.k, state, reference, reward, self._terminated
         )
-        return (state[self.state_filter], ref_next), reward, self._done, {}
+        return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated,{}
 
     def _seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
@@ -653,7 +654,7 @@ class Callback:
         """Gets called at the beginning of each step"""
         pass
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         """Gets called at the end of each step"""
         pass
 

@@ -27,12 +27,12 @@ class PolynomialStaticLoad(MechanicalLoad):
         ...     'Cont-SC-ExtExDc-v0',
         ...     load=my_poly_static_load
         ... )
-        >>> done = True
+        >>> terminated = True
         >>> for _ in range(1000):
-        >>>     if done:
+        >>>     if terminated:
         >>>         state, reference = env.reset()
         >>>     env.render()
-        >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
+        >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
 
     """
 

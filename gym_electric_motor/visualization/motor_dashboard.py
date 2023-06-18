@@ -115,7 +115,7 @@ class MotorDashboard(ElectricMotorVisualization):
         for plot in self._plots:
             plot.on_step_begin(k, action)
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         """The information after the step is passed
 
         Args:
@@ -124,10 +124,10 @@ class MotorDashboard(ElectricMotorVisualization):
             reference(array(float)): The reference corresponding to the state :math:`s^*_k`.
             reward(float): The reward that has been received for the last action that lead to the current state
                 :math:`r_{k}`.
-            done(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k}`.
+            terminated(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k}`.
         """
         for plot in self._plots:
-            plot.on_step_end(k, state, reference, reward, done)
+            plot.on_step_end(k, state, reference, reward, terminated)
         self._k += 1
         if self._k % self._update_interval == 0:
             self._update_render = True

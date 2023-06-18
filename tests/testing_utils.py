@@ -199,7 +199,7 @@ class DummyRewardFunction(RewardFunction):
         self.last_action = None
         self.last_time_step = None
         self.closed = False
-        self.done = False
+        self.terminated = False
         self.kwargs = kwargs
         super().__init__()
 

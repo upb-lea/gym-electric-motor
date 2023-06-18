@@ -172,10 +172,10 @@ class TimePlot(MotorDashboardPlot):
                 self._reset_memory.append(self._t)
         self._done = False
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         self._k += 1
         self._t += self._tau
-        self._done = done
+        self._done = terminated
 
     def render(self):
         super().render()
