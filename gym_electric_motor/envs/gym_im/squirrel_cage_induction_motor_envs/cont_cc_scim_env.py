@@ -82,12 +82,12 @@ class ContCurrentControlSquirrelCageInductionMotorEnv(ElectricMotorEnvironment):
             ...     ode_solver=my_overridden_solver,
             ...     reference_generator=my_new_ref_gen_instance
             ... )
-            >>> done = True
+            >>> terminated = True
             >>> for _ in range(1000):
-            >>>     if done:
+            >>>     if terminated:
             >>>         state, reference = env.reset()
             >>>     env.render()
-            >>>     (state, reference), reward, done, _ = env.step(env.action_space.sample())
+            >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
     """
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),

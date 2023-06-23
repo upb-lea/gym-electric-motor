@@ -84,9 +84,9 @@ if __name__ == '__main__':
         for i in range(5000):
             env.render()
             action = env.action_space.sample()
-            (state, reference), reward, done, _ = env.step(action)
+            (state, reference), reward, terminated, truncated, _ = env.step(action)
 
-            if done:
+            if terminated:
                 state, _ = env.reset()
             cum_rew += reward
 

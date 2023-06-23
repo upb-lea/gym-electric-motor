@@ -132,7 +132,7 @@ class TestElectricMotorEnvironment:
         for callback in cbs:
             assert callback.step_begin == 0
             assert callback.step_end == 0
-        (state, reference), reward, done, _ = env.step(action)
+        (state, reference), reward, terminated, truncated, _ = env.step(action)
         # Each of callback's step functions were called in step
         for callback in cbs:
             assert callback.step_begin == 1
@@ -144,7 +144,7 @@ class TestElectricMotorEnvironment:
             'State passed to the Reference Generator not equal to Physical System state'
         assert ps.action == action, 'Action passed to Physical System not equal to selected action'
         assert reward == -1 if set_done else 1
-        assert done == set_done
+        assert terminated == set_done
         # If episode terminated, no further step without reset
         if set_done:
             with pytest.raises(Exception):

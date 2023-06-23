@@ -25,14 +25,14 @@ class ExternalPlot(TimePlot):
             >>>     # setting the labels of the plots
             >>>     external_plot.set_label({'y_label': 'y', 'state_label': '$state$', 'ref_label': '$reference$',
             ...                             'add_label': ['$add_1$', '$add_2$']})
-            >>>     done = True
+            >>>     terminated = True
             >>>     for t in range(100000):
-            >>>     if done:
+            >>>     if terminated:
             >>>         state, reference = env.reset()
             >>>     env.render()
             >>>     data = [np.sin(t / 500), np.sin(t / 1000), np.sin(t / 1500), np.sin(t / 2000)]
             >>>     external_plot.add_data(data) # passing the data to the external plot
-            >>>     (state, reference), reward, done, _ = env.step([0, 0])
+            >>>     (state, reference), reward, terminated, truncated, _ = env.step([0, 0])
     """
 
     def __init__(self, referenced=False, additional_lines=0, min=0, max=1):
@@ -149,8 +149,8 @@ class ExternalPlot(TimePlot):
         if 'add_label' in labels.keys():
             self.add_labels = labels['add_label']
 
-    def on_step_end(self, k, state, reference, reward, done):
-        super().on_step_end(k, state, reference, reward, done)
+    def on_step_end(self, k, state, reference, reward, terminated):
+        super().on_step_end(k, state, reference, reward, terminated)
         idx = self.data_idx
         self._x_data[idx] = self._t
 

@@ -58,8 +58,8 @@ if __name__ == '__main__':
     for i in range(10001):
         action = controller.control(state, reference)
         env.render()
-        (state, reference), reward, done, _ = env.step(action)
-        if done:
+        (state, reference), reward, terminated, truncated, _ = env.step(action)
+        if terminated:
             env.reset()
             controller.reset()
     

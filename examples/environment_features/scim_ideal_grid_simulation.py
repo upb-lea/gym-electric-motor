@@ -76,7 +76,7 @@ for idx in range(step_horizon):
     time = idx * tau
 
     # apply the voltage as given by the grid
-    (state, reference), reward, done, _ = env.step(u_abc(time))
+    (state, reference), reward, terminated, truncated, _ = env.step(u_abc(time))
 
     # save the results of this simulation step
     STATE = np.append(STATE, np.transpose([state * limits]), axis=1)
