@@ -50,14 +50,13 @@ if __name__ == '__main__':
             a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
     
     """
-    visualization=MotorDashboard(additional_plots=external_ref_plots)
+    visualization = MotorDashboard(additional_plots=external_ref_plots)
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
     state, reference = env.reset(seed = None)
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)
-        env.render()
         (state, reference), reward, terminated, truncated, _ = env.step(action)
         if terminated:
             env.reset()

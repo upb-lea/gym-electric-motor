@@ -159,4 +159,4 @@ def update_parameter_dict(source_dict, update_dict, copy=True):
 
 
 #: Short notation for the gymnasium.make call to avoid the necessary import of gym when making environments.
-make = gymnasium.make
+# make = gymnasium.make

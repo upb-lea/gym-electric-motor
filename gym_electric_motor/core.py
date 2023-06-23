@@ -17,6 +17,8 @@ Each ElectricMotorEnvironment contains the five following modules:
     - Visualization of the PhysicalSystems state, reference and reward for the user.
 
 """
+import datetime
+
 import gymnasium
 import numpy as np
 from gymnasium.spaces import Box
@@ -164,6 +166,8 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         """Returns a list of all active motor visualizations."""
         return self._visualizations
 
+    env_id = "0"
+
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
                  callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, **kwargs):
         """
@@ -241,6 +245,11 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
 
+    def make(env_id, *args, **kwargs):
+        env = gymnasium.make(env_id, *args, **kwargs)
+        env.env_id = env_id
+        return env
+
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
         for callback in self._callbacks:
@@ -268,7 +277,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         """
         Update the visualization of the motor.
         """
-        if self.render_mode == "human":
+        if self.render_mode in ["human", "file"]:
             for visualization in self._visualizations:
                 visualization.render()
 
@@ -298,6 +307,11 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._call_callbacks(
             'on_step_end', self.physical_system.k, state, reference, reward, self._terminated
         )
+
+        # Call render code
+        if self.render_mode in ["human", "file"]:
+            self.render()
+
         return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, {}
 
     def _seed(self, seed=None):
@@ -315,13 +329,20 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         return [sg.entropy]
 
     def close(self):
+        # Save figure with timestamp as filename
+        if self.render_mode == "file":
+            figure = self._get_figure()
+            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            
+            filename = f"{self.env_id}_{timestamp}.png"
+            figure.savefig(filename, dpi=300)
         """Called when the environment is deleted. Closes all its modules."""
         self._call_callbacks('on_close')
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
 
-    def get_figure(self):
+    def _get_figure(self):
         """ Get main figure (MotorDashboard) """
         assert len(self._visualizations) == 1
         motor_dashboard = self._visualizations[0]
