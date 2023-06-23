@@ -90,6 +90,7 @@ class MotorDashboard(ElectricMotorVisualization):
         self._k = 0
         self._update_render = False
 
+
     def on_reset_begin(self):
         """Called before the environment is reset. All subplots are reset."""
         for plot in self._plots:
@@ -270,11 +271,14 @@ class MotorDashboard(ElectricMotorVisualization):
             for plot, axis in zip(self._time_plots, axes_step):
                 plot.initialize(axis)
 
+        self._figures[0].align_ylabels()
+
     def _update(self):
         """Called every *update cycle* steps to refresh the figure."""
         for plot in self._plots:
             plot.render()
         for fig in self._figures:
+            #fig.align_ylabels()
             fig.canvas.draw()
             fig.canvas.flush_events()
 
