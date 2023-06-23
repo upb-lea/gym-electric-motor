@@ -38,7 +38,6 @@ if __name__ == '__main__':
     env = gem.make("Finite-CC-PMSM-v0")  # instantiate a discretely controlled PMSM
     env.reset()
     for _ in range(10000):
-        env.render()  # visualize environment
         (states, references), rewards, done, _ =\ 
         	env.step(env.action_space.sample())  # pick random control actions
         if done:

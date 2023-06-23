@@ -77,7 +77,6 @@ if __name__ == '__main__':
         # Here we should have omega in the interval [60 1/s, 80 1/s] and current closely around 25 A
 
         for i in range(5000):
-            env.render()
             action = env.action_space.sample()
             (state, reference), reward, terminated, truncated, _ = env.step(action)
 

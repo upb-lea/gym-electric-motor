@@ -19,7 +19,6 @@ class ExternallyReferencedStatePlot(StatePlot):
                         state, reference = env.reset()
                     external_reference_value = my_external_isd_reference_generator.get_reference()
                     my_externally_referenced_plot.external_reference(external_reference_value)
-                    env.render()
                     action = env.action_space.sample()
                     (state, reference), reward, terminated, truncated, _ = env.step(action)
     """
