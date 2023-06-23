@@ -38,9 +38,8 @@ if __name__ == '__main__':
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots))
-    env.seed(1337)
-
+    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode="file")
+    
     """
         initialize the controller
 
@@ -54,7 +53,7 @@ if __name__ == '__main__':
     """
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
-    state, reference = env.reset()
+    state, reference = env.reset(seed=1337)
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)

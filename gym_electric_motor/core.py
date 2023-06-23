@@ -165,7 +165,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         return self._visualizations
 
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
-                 callbacks=(), constraints=(), physical_system_wrappers=(), **kwargs):
+                 callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -186,6 +186,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             state_filter(list(str)): Selection of states that are shown in the observation.
             physical_system_wrappers(iterable(PhysicalSystemWrapper)): PhysicalSystemWrapper instances to be wrapped around
                 the physical system.
+            render_mode(str) : if visualization is given, render_mode is set to "human", else render_mode ist set to None
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
         """
@@ -226,6 +227,13 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
         self._done = True
+
+        # Set render mode and metadata
+        render_modes = [None, "human", "file"]
+        self.metadata = {"render_modes": render_modes}
+        assert render_mode in render_modes
+        self.render_mode = render_mode
+
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
@@ -257,8 +265,9 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         """
         Update the visualization of the motor.
         """
-        for visualization in self._visualizations:
-            visualization.render()
+        if self.render_mode == "human":
+            for visualization in self._visualizations:
+                visualization.render()
 
     def step(self, action):
         """Perform one simulation step of the environment with an action of the action space.
