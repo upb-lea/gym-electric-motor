@@ -29,7 +29,6 @@ class ExternalPlot(TimePlot):
             >>>     for t in range(100000):
             >>>     if terminated:
             >>>         state, reference = env.reset()
-            >>>     env.render()
             >>>     data = [np.sin(t / 500), np.sin(t / 1000), np.sin(t / 1500), np.sin(t / 2000)]
             >>>     external_plot.add_data(data) # passing the data to the external plot
             >>>     (state, reference), reward, terminated, truncated, _ = env.step([0, 0])

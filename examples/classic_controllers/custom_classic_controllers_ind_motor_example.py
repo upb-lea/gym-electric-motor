@@ -53,7 +53,6 @@ if __name__ == '__main__':
 
     # simulate the environment
     for i in range(10001):
-        env.render()
         action = controller.control(state, reference)
         (state, reference), reward, terminated, truncated, _ = env.step(action)
         if terminated:

@@ -80,7 +80,6 @@ class ContCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment):
         >>> for _ in range(1000):
         >>>     if terminated:
         >>>         state, reference = env.reset()
-        >>>     env.render()
         >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
     """
     def __init__(

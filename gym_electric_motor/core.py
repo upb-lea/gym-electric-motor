@@ -17,6 +17,7 @@ Each ElectricMotorEnvironment contains the five following modules:
     - Visualization of the PhysicalSystems state, reference and reward for the user.
 
 """
+import os
 import datetime
 
 import gymnasium
@@ -236,7 +237,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
         # Set render mode and metadata
         render_modes = [None, "human", "file"]
-        self.metadata = {"render_modes": render_modes}
+        self.metadata["render_modes"] = render_modes
         assert render_mode in render_modes
         self.render_mode = render_mode
 
@@ -247,7 +248,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
     def make(env_id, *args, **kwargs):
         env = gymnasium.make(env_id, *args, **kwargs)
-        env.env_id = env_id
+        env.metadata["filename_prefix"] = env_id
         return env
 
     def _call_callbacks(self, func_name, *args):
@@ -331,10 +332,16 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
     def close(self):
         # Save figure with timestamp as filename
         if self.render_mode == "file":
+            # create output folder if it not exists
+            output_folder_name = "plots"
+            if not os.path.exists(output_folder_name):
+                # Create the folder "gem_output"
+                os.makedirs(output_folder_name)
+
             figure = self._get_figure()
             timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-            
-            filename = f"{self.env_id}_{timestamp}.png"
+            filename_prefix = self.metadata["filename_prefix"]
+            filename = f"{output_folder_name}/{filename_prefix}_{timestamp}.png"
             figure.savefig(filename, dpi=300)
         """Called when the environment is deleted. Closes all its modules."""
         self._call_callbacks('on_close')
