@@ -88,7 +88,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
     """
 
     env_id = None
-    metadata = {"render_modes": [None, "human", "once"],
+    metadata = {"render_modes": [None, "figure", "figure_once", "pickle_file"],
                 "save_figure_on_close": False,
                 "hold_figure_on_close": True}
 
@@ -194,7 +194,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             state_filter(list(str)): Selection of states that are shown in the observation.
             physical_system_wrappers(iterable(PhysicalSystemWrapper)): PhysicalSystemWrapper instances to be wrapped around
                 the physical system.
-            render_mode(str) : if visualization is given, render_mode is set to "human", else render_mode ist set to None
+            render_mode(str) : if visualization is given, render_mode is set to "figure", else render_mode ist set to None
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
         """
@@ -314,7 +314,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         )
 
         # Call render code
-        if self.render_mode in ["human"]:
+        if self.render_mode == "figure":
             self.render()
 
         return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, {}
@@ -346,14 +346,8 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         filename = f"{output_folder_name}/{filename_prefix}{filename_suffix}.png"
         figure.savefig(filename, dpi=300)
 
-    def close(self):
-        """Called when the environment is deleted. Closes all its modules."""
-        self._call_callbacks('on_close')
-        self._reward_function.close()
-        self._physical_system.close()
-        self._reference_generator.close()
-
-        if self.render_mode == "once":
+    def rendering_on_close(self):
+        if self.render_mode == "figure_once":
             self.render()
 
         # Save figure with timestamp as filename
@@ -364,6 +358,15 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         # Blocking plot call to still interactive with it
         if self.metadata["hold_figure_on_close"]:
             matplotlib.pyplot.show(block=True)
+
+    def close(self):
+        """Called when the environment is deleted. Closes all its modules."""
+        self._call_callbacks('on_close')
+        self._reward_function.close()
+        self._physical_system.close()
+        self._reference_generator.close()
+
+        self.rendering_on_close()
 
 
     def figure(self):

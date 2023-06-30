@@ -39,7 +39,7 @@ if __name__ == '__main__':
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode="once")
+    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode="figure_once")
     env.metadata["filename_prefix"] = "integration-test"
     env.metadata["filename_suffix"] = ""
     env.metadata["save_figure_on_close"] = True
