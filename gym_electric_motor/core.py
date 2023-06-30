@@ -28,7 +28,7 @@ from .utils import instantiate
 from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
 import gym_electric_motor as gem
-
+import matplotlib.pyplot
 
 class ElectricMotorEnvironment(gymnasium.core.Env):
     """
@@ -86,6 +86,11 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         A reference generator might terminate an episode, if the reference has ended.
         The reward function can terminate an episode, if a physical limit of the motor has been violated.
     """
+
+    env_id = None
+    metadata = {"render_modes": [None, "human", "once"],
+                "save_figure_on_close": False,
+                "hold_figure_on_close": True}
 
     @property
     def physical_system(self):
@@ -167,8 +172,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         """Returns a list of all active motor visualizations."""
         return self._visualizations
 
-    env_id = "0"
-
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
                  callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, **kwargs):
         """
@@ -236,9 +239,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._truncated = False
 
         # Set render mode and metadata
-        render_modes = [None, "human", "file"]
-        self.metadata["render_modes"] = render_modes
-        assert render_mode in render_modes
+        assert render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
 
         
@@ -249,6 +250,10 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
     def make(env_id, *args, **kwargs):
         env = gymnasium.make(env_id, *args, **kwargs)
         env.metadata["filename_prefix"] = env_id
+
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
+        env.metadata["filename_suffix"] = f"_{timestamp}"
+
         return env
 
     def _call_callbacks(self, func_name, *args):
@@ -278,9 +283,8 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         """
         Update the visualization of the motor.
         """
-        if self.render_mode in ["human", "file"]:
-            for visualization in self._visualizations:
-                visualization.render()
+        for visualization in self._visualizations:
+            visualization.render()
 
     def step(self, action):
         """Perform one simulation step of the environment with an action of the action space.
@@ -310,7 +314,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         )
 
         # Call render code
-        if self.render_mode in ["human", "file"]:
+        if self.render_mode in ["human"]:
             self.render()
 
         return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, {}
@@ -328,28 +332,41 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             if isinstance(rc, gem.RandomComponent):
                 rc.seed(sub)
         return [sg.entropy]
+    
+    def save_fig(self, figure):
+        """ Save figure with timestamped as filename """
+        # create output folder if it not exists
+        output_folder_name = "plots"
+        if not os.path.exists(output_folder_name):
+            # Create the folder "gem_output"
+            os.makedirs(output_folder_name)
+
+        filename_prefix = self.metadata["filename_prefix"]
+        filename_suffix = self.metadata["filename_suffix"]
+        filename = f"{output_folder_name}/{filename_prefix}{filename_suffix}.png"
+        figure.savefig(filename, dpi=300)
 
     def close(self):
-        # Save figure with timestamp as filename
-        if self.render_mode == "file":
-            # create output folder if it not exists
-            output_folder_name = "plots"
-            if not os.path.exists(output_folder_name):
-                # Create the folder "gem_output"
-                os.makedirs(output_folder_name)
-
-            figure = self._get_figure()
-            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-            filename_prefix = self.metadata["filename_prefix"]
-            filename = f"{output_folder_name}/{filename_prefix}_{timestamp}.png"
-            figure.savefig(filename, dpi=300)
         """Called when the environment is deleted. Closes all its modules."""
         self._call_callbacks('on_close')
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
 
-    def _get_figure(self):
+        if self.render_mode == "once":
+            self.render()
+
+        # Save figure with timestamp as filename
+        if self.metadata["save_figure_on_close"]:
+            assert self.render_mode != None
+            self.save_fig(self.figure())
+
+        # Blocking plot call to still interactive with it
+        if self.metadata["hold_figure_on_close"]:
+            matplotlib.pyplot.show(block=True)
+
+
+    def figure(self):
         """ Get main figure (MotorDashboard) """
         assert len(self._visualizations) == 1
         motor_dashboard = self._visualizations[0]

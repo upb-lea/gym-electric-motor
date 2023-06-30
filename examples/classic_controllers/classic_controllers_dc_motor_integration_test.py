@@ -2,6 +2,7 @@ from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
+import time
 
 if __name__ == '__main__':
 
@@ -38,8 +39,11 @@ if __name__ == '__main__':
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode="file")
+    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode="once")
     env.metadata["filename_prefix"] = "integration-test"
+    env.metadata["filename_suffix"] = ""
+    env.metadata["save_figure_on_close"] = True
+    # env.metadata["hold_figure_on_close"] = False
     """
         initialize the controller
 
@@ -55,9 +59,11 @@ if __name__ == '__main__':
 
     state, reference = env.reset(seed=1972)
     # simulate the environment
-    for i in range(10001):
+    for i in range(3001):
         action = controller.control(state, reference)
         (state, reference), reward, terminated, truncated, _ = env.step(action)
+        if i == 100:
+            pass
         if terminated:
             env.reset()
             controller.reset()
