@@ -29,6 +29,9 @@ from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
 import gym_electric_motor as gem
 import matplotlib.pyplot
+from matplotlib.figure import Figure
+import matplotlib
+
 
 class ElectricMotorEnvironment(gymnasium.core.Env):
     """
@@ -88,7 +91,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
     """
 
     env_id = None
-    metadata = {"render_modes": [None, "figure", "figure_once", "pickle_file"],
+    metadata = {"render_modes": [None, "figure", "figure_once", "figure_academic"],
                 "save_figure_on_close": False,
                 "hold_figure_on_close": True}
 
@@ -333,7 +336,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
                 rc.seed(sub)
         return [sg.entropy]
     
-    def save_fig(self, figure):
+    def save_fig(self, figure, filetype="png"):
         """ Save figure with timestamped as filename """
         # create output folder if it not exists
         output_folder_name = "plots"
@@ -343,21 +346,35 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
         filename_prefix = self.metadata["filename_prefix"]
         filename_suffix = self.metadata["filename_suffix"]
-        filename = f"{output_folder_name}/{filename_prefix}{filename_suffix}.png"
+        filename = f"{output_folder_name}/{filename_prefix}{filename_suffix}.{filetype}"
         figure.savefig(filename, dpi=300)
 
     def rendering_on_close(self):
-        if self.render_mode == "figure_once":
+
+        # Figure Mode
+        if self.render_mode and self.render_mode.startswith("figure"):
+
+            # Academic Mode (latex font)
+            if self.render_mode == "figure_academic":
+                matplotlib.rcParams.update({
+                    "text.usetex": True,
+                    "font.family": "Helvetica"
+                })
+
             self.render()
 
-        # Save figure with timestamp as filename
-        if self.metadata["save_figure_on_close"]:
-            assert self.render_mode != None
-            self.save_fig(self.figure())
+            # Save figure with timestamp as filename
+            if self.metadata["save_figure_on_close"]:
+                if self.render_mode == "figure_academic":
+                    self.save_fig(self.figure(), filetype="pdf")
+                else:
+                    self.save_fig(self.figure())
 
-        # Blocking plot call to still interactive with it
-        if self.metadata["hold_figure_on_close"]:
-            matplotlib.pyplot.show(block=True)
+            # Blocking plot call to still interactive with it
+            if self.metadata["hold_figure_on_close"]:
+                matplotlib.pyplot.show(block=True)
+        
+            
 
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
@@ -369,7 +386,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self.rendering_on_close()
 
 
-    def figure(self):
+    def figure(self) -> Figure:
         """ Get main figure (MotorDashboard) """
         assert len(self._visualizations) == 1
         motor_dashboard = self._visualizations[0]
