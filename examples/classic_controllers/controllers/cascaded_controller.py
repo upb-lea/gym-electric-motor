@@ -172,7 +172,7 @@ class CascadedController:
             else:
                 action = np.array([action, action_u_e], dtype='object')
 
-        if self.env.render_mode in ["figure", "figure_once"]:
+        if self.env.render_mode != None:
             # Plot the external references
             plot(external_reference_plots=self.external_ref_plots, state_names=self.state_names,
                 visualization=self.visualization, external_data=self.get_plot_data())
