@@ -85,7 +85,7 @@ class FiniteCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment)
     def __init__(
         self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
         reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-        constraints=('i',), calc_jacobian=True, tau=1e-5, physical_system_wrappers=()
+        constraints=('i',), calc_jacobian=True, tau=1e-5, physical_system_wrappers=(), **kwargs
     ):
         """
         Args:
@@ -144,5 +144,5 @@ class FiniteCurrentControlDcPermanentlyExcitedMotorEnv(ElectricMotorEnvironment)
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            physical_system_wrappers=physical_system_wrappers
+            physical_system_wrappers=physical_system_wrappers, **kwargs
         )
