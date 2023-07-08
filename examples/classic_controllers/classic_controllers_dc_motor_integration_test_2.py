@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     # definition of the reference generator
 
-    ref_generator = SinusoidalReferenceGenerator(amplitude_range= (100,100),
+    ref_generator = SinusoidalReferenceGenerator(amplitude_range= (1,1),
                                                  frequency_range= (5,5),
                                                  offset_range = (0,0),
                                                  episode_lengths = (10001, 10001))
@@ -49,6 +49,7 @@ if __name__ == '__main__':
     # initialize the gym-electric-motor environment
     env = gem.make(motor, 
                    visualization=MotorDashboard(additional_plots=external_ref_plots),
+                   scale_plots=True,
                    render_mode="figure", 
                    reference_generator = ref_generator)
     

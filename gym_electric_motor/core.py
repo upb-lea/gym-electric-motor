@@ -176,7 +176,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         return self._visualizations
 
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
-                 callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, **kwargs):
+                 callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, scale_plots = None, **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -244,8 +244,9 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         # Set render mode and metadata
         assert render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
-
         
+        self.scale_plots = scale_plots
+
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
