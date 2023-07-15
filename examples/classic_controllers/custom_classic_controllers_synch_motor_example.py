@@ -35,7 +35,8 @@ if __name__ == '__main__':
 
     # initialize the gym-electric-motor environment
     env = gem.make(env_id, visualization=MotorDashboard(additional_plots=external_ref_plots),
-                   motor=dict(limit_values=limit_values, nominal_values=nominal_values, motor_parameter=motor_parameter))
+                   motor=dict(limit_values=limit_values, nominal_values=nominal_values, motor_parameter=motor_parameter),
+                   render_mode = 'figure')
 
     """
     initialize the controller

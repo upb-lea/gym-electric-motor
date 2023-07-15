@@ -39,7 +39,7 @@ if __name__ == '__main__':
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots))
+    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode = 'figure')
 
     """
         initialize the controller
