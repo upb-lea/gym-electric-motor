@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 import numpy as np
 
 import gym_electric_motor.physical_systems as ps
@@ -91,7 +91,7 @@ class _ClassicDqToAbcActionProcessor(DqToAbcActionProcessor):
 
     @property
     def action_space(self):
-        return gym.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
+        return gymnasium.spaces.Box(-1, 1, shape=(2,), dtype=np.float64)
 
     def simulate(self, action):
         # Docstring of superclass
@@ -116,7 +116,7 @@ class _DFIMDqToAbcActionProcessor(DqToAbcActionProcessor):
 
     @property
     def action_space(self):
-        return gym.spaces.Box(-1, 1, shape=(4,))
+        return gymnasium.spaces.Box(-1, 1, shape=(4,))
 
     def __init__(self, physical_system=None):
         super().__init__('epsilon', physical_system=physical_system)

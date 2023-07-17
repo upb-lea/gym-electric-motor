@@ -104,7 +104,7 @@ class MechanicalLoad(RandomComponent):
 
         Args:
             nominal_state(list): nominal values for each state given from physical system
-            state_space(gym.spaces.Box): normalized state space boundaries
+            state_space(gymnasium.spaces.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
         """
         # for order and organization purposes
@@ -175,7 +175,7 @@ class MechanicalLoad(RandomComponent):
         Args:
             nominal_state(list): nominal values for each state given from
                                   physical system
-            state_space(gym.Box): normalized state space boundaries
+            state_space(gymnasium.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
         Returns:
             numpy.ndarray(float): The initial motor states.

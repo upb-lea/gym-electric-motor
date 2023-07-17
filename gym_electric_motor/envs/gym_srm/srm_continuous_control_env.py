@@ -1,7 +1,7 @@
-import gym
+import gymnasium
 
 
-class SRMContinuousControlEnv(gym.Env):
+class SRMContinuousControlEnv(gymnasium.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):

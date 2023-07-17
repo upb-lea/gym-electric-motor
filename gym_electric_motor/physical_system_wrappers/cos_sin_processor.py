@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 import numpy as np
 
 from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
@@ -38,7 +38,7 @@ class CosSinProcessor(PhysicalSystemWrapper):
         self._remove_idx = self._angle_index if self._remove_angle else []
         low = np.concatenate((np.delete(physical_system.state_space.low, self._remove_idx), [-1., -1.]))
         high = np.concatenate((np.delete(physical_system.state_space.high, self._remove_idx), [1., 1.]))
-        self.state_space = gym.spaces.Box(low, high, dtype=np.float64)
+        self.state_space = gymnasium.spaces.Box(low, high, dtype=np.float64)
 
         self._limits = np.concatenate((np.delete(physical_system.limits, self._remove_idx), [1., 1.]))
         self._nominal_state = np.concatenate((np.delete(physical_system.nominal_state, self._remove_idx), [1., 1.]))

@@ -19,41 +19,37 @@ def test_seeding_same_env(dc_motor, control_task, action_type, version, no_of_st
     """This test assures that an environment that is seeded two times with the same seed generates the same episodes."""
     env_id = f'{action_type}-{control_task}-{dc_motor}-{version}'
     env = gem.make(env_id)
-    # Seed the environment initially
-    env.seed(seed)
     # Sample actions that are used in both executions
     actions = [env.action_space.sample() for _ in range(no_of_steps)]
-    done = True
+    terminated = True
     states1 = []
     references1 = []
     rewards1 = []
-    done1 = []
+    terminated1 = []
     # Execute the env
     for i in range(no_of_steps):
-        if done:
-            state, reference = env.reset()
-        (state, reference), reward, done, info = env.step(actions[i])
+        if terminated:
+            state, reference = env.reset(seed)
+        (state, reference), reward, terminated, truncated, info = env.step(actions[i])
         rewards1.append(reward)
         states1.append(state)
         references1.append(reference)
-        done1.append(done)
+        terminated1.append(terminated)
 
-    # Seed the environment again with the same seed
-    env.seed(seed)
-    done = True
+    terminated = True
     states2 = []
     references2 = []
     rewards2 = []
-    done2 = []
+    terminated2 = []
     # Execute the environment again
     for i in range(no_of_steps):
-        if done:
-            state, reference = env.reset()
-        (state, reference), reward, done, info = env.step(actions[i])
+        if terminated:
+            state, reference = env.reset(seed)
+        (state, reference), reward, terminated, truncated, info = env.step(actions[i])
         rewards2.append(reward)
         states2.append(state)
         references2.append(reference)
-        done2.append(done)
+        terminated2.append(terminated)
 
     # Assure that the epsiodes of the initially and reseeded environment are equal
     references1 = np.array(references1).flatten()
@@ -61,7 +57,7 @@ def test_seeding_same_env(dc_motor, control_task, action_type, version, no_of_st
     assert(np.all(np.array(states1) == np.array(states2)))
     assert(np.all(np.array(references1).flatten() == np.array(references2).flatten()))
     assert(np.all(np.array(rewards1) == np.array(rewards2)))
-    assert (np.all(np.array(done1) == np.array(done2)))
+    assert (np.all(np.array(terminated1) == np.array(terminated2)))
 
 
 @pytest.mark.parametrize('no_of_steps', [100])
@@ -74,45 +70,43 @@ def test_seeding_new_env(dc_motor, control_task, action_type, version, no_of_ste
     """This test assures that two equal environments that are seeded with the same seed generate the same episodes."""
     env_id = f'{action_type}-{control_task}-{dc_motor}-{version}'
     env = gem.make(env_id)
-    env.seed(seed)
     actions = [env.action_space.sample() for _ in range(no_of_steps)]
-    done = True
+    terminated = True
 
     states1 = []
     references1 = []
     rewards1 = []
-    done1 = []
+    terminated1 = []
 
     for i in range(no_of_steps):
-        if done:
-            state, reference = env.reset()
-        (state, reference), reward, done, info = env.step(actions[i])
+        if terminated:
+            state, reference = env.reset(seed)
+        (state, reference), reward, terminated, truncated, info = env.step(actions[i])
         rewards1.append(reward)
         states1.append(state)
         references1.append(reference)
-        done1.append(done)
+        terminated1.append(terminated)
 
     env = gem.make(env_id)
-    env.seed(seed)
-    done = True
+    terminated = True
     states2 = []
     references2 = []
     rewards2 = []
-    done2 = []
+    terminated2 = []
 
     for i in range(no_of_steps):
-        if done:
-            state, reference = env.reset()
+        if terminated:
+            state, reference = env.reset(seed)
         action = env.action_space.sample()
         assert action in env.action_space
-        (state, reference), reward, done, info = env.step(actions[i])
+        (state, reference), reward, terminated, truncated, info = env.step(actions[i])
         rewards2.append(reward)
         states2.append(state)
         references2.append(reference)
-        done2.append(done)
+        terminated2.append(terminated)
 
     # Assure that the episodes of both environments are equal
     assert (np.all(np.array(states1) == np.array(states2)))
     assert (np.all(np.array(references1).flatten() == np.array(references2).flatten()))
     assert (np.all(np.array(rewards1) == np.array(rewards2)))
-    assert (np.all(np.array(done1) == np.array(done2)))
+    assert (np.all(np.array(terminated1) == np.array(terminated2)))

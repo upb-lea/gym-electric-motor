@@ -38,8 +38,7 @@ if __name__ == '__main__':
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots))
-
+    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode="figure_once")
     """
         initialize the controller
 
@@ -47,20 +46,19 @@ if __name__ == '__main__':
             environment                     gym-electric-motor environment
             external_ref_plots (optional)   plots of the environment, to plot all reference values
             stages (optional)               structure of the controller
-            automated_gain (optional)       if True (default), the controller will be tune automatically
+            automated_gain (optional)       if True (default), the controller will be tuned automatically
             a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
     
     """
+    visualization = MotorDashboard(additional_plots=external_ref_plots)
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
-    state, reference = env.reset()
-
+    state, reference = env.reset(seed = None)
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)
-        env.render()
-        (state, reference), reward, done, _ = env.step(action)
-        if done:
+        (state, reference), reward, terminated, truncated, _ = env.step(action)
+        if terminated:
             env.reset()
             controller.reset()
 

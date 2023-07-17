@@ -35,7 +35,8 @@ if __name__ == '__main__':
 
     # initialize the gym-electric-motor environment
     env = gem.make(env_id, visualization=MotorDashboard(additional_plots=external_ref_plots),
-                   motor=dict(limit_values=limit_values, nominal_values=nominal_values, motor_parameter=motor_parameter))
+                   motor=dict(limit_values=limit_values, nominal_values=nominal_values, motor_parameter=motor_parameter),
+                   render_mode = 'figure')
 
     """
     initialize the controller
@@ -104,10 +105,9 @@ if __name__ == '__main__':
 
     # simulate the environment
     for i in range(10001):
-        env.render()
         action = controller.control(state, reference)
-        (state, reference), reward, done, _ = env.step(action)
-        if done:
+        (state, reference), reward, terminated, truncated, _ = env.step(action)
+        if terminated:
             env.reset()
             controller.reset()
 

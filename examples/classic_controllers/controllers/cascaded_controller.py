@@ -1,5 +1,5 @@
 from .continuous_controller import ContinuousController
-from gym.spaces import Box, Discrete, MultiDiscrete
+from gymnasium.spaces import Box, Discrete, MultiDiscrete
 from gym_electric_motor.physical_systems import DcExternallyExcitedMotor
 from .plot_external_data import plot
 
@@ -16,6 +16,7 @@ class CascadedController:
 
     def __init__(self, environment, stages, _controllers, visualization, ref_states, external_ref_plots=(), **controller_kwargs):
 
+        self.env = environment
         self.visualization = visualization
         self.action_space = environment.action_space
         self.state_space = environment.physical_system.state_space
@@ -171,9 +172,10 @@ class CascadedController:
             else:
                 action = np.array([action, action_u_e], dtype='object')
 
-        # Plot the external references
-        plot(external_reference_plots=self.external_ref_plots, state_names=self.state_names,
-             visualization=self.visualization, external_data=self.get_plot_data())
+        if self.env.render_mode != None:
+            # Plot the external references
+            plot(external_reference_plots=self.external_ref_plots, state_names=self.state_names,
+                visualization=self.visualization, external_data=self.get_plot_data())
 
         return action
 

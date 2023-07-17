@@ -1,7 +1,7 @@
 from .continuous_controller import ContinuousController
 from .torque_to_current_conversion import TorqueToCurrentConversion
 from .plot_external_data import plot
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import numpy as np
 
 
@@ -53,7 +53,7 @@ class CascadedFieldOrientedController:
 
         self.mp = environment.physical_system.electrical_motor.motor_parameter
         self.psi_p = self.mp.get('psi_p', 0)
-        self.dead_time = 1.5 if environment.physical_system.converter._dead_time else 0.5
+        self.dead_time = 0.5
         self.decoupling = controller_kwargs.get('decoupling', True)
 
         self.ref_state_idx = [self.i_sq_idx, self.i_sd_idx]

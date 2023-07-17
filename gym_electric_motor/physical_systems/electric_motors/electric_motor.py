@@ -183,7 +183,7 @@ class ElectricMotor(RandomComponent):
         initial_states attribute
 
         Args:
-            state_space(gym.Box): normalized state space boundaries (given by physical system)
+            state_space(gymnasium.Box): normalized state space boundaries (given by physical system)
             state_positions(dict): indices of system states (given by physical system)
         """
         # for organization purposes
@@ -285,7 +285,7 @@ class ElectricMotor(RandomComponent):
         """Reset the motors state to a new initial state. (Default 0)
 
         Args:
-            state_space(gym.Box): normalized state space boundaries
+            state_space(gymnasium.Box): normalized state space boundaries
             state_positions(dict): indexes of system states
         Returns:
             numpy.ndarray(float): The initial motor states.

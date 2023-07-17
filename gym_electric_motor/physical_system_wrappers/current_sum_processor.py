@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 import numpy as np
 
 from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
@@ -29,7 +29,7 @@ class CurrentSumProcessor(PhysicalSystemWrapper):
         # Define the new state space as concatenation of the old state space and [-1,1] for i_sum
         low = np.concatenate((physical_system.state_space.low, [-1.]))
         high = np.concatenate((physical_system.state_space.high, [1.]))
-        self.state_space = gym.spaces.Box(low, high, dtype=np.float64)
+        self.state_space = gymnasium.spaces.Box(low, high, dtype=np.float64)
 
         # Set the new limits /  nominal values of the state vector
         current_limit = self._limit(physical_system.limits[self._current_indices])

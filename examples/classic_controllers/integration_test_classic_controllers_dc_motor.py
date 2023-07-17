@@ -2,6 +2,8 @@ from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
+from gym_electric_motor.reference_generators import SinusoidalReferenceGenerator
+import time
 
 if __name__ == '__main__':
 
@@ -19,9 +21,8 @@ if __name__ == '__main__':
                     'Finite'    Discrete Action Space
     """
 
-    # following manual controller design addresses an ExtExDc. Other motor types require different controller stages
-    motor_type = 'ExtExDc'
-    control_type = 'CC'
+    motor_type = 'PermExDc'
+    control_type = 'SC'
     action_type = 'Cont'
 
     motor = action_type + '-' + control_type + '-' + motor_type + '-v0'
@@ -38,45 +39,49 @@ if __name__ == '__main__':
     # definition of the plotted variables
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
 
-    # initialize the gym-electric-motor environment
-    env = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode = 'figure')
+    # definition of the reference generator
 
+    ref_generator = SinusoidalReferenceGenerator(amplitude_range= (1,1),
+                                                 frequency_range= (5,5),
+                                                 offset_range = (0,0),
+                                                 episode_lengths = (10001, 10001))
+
+    # initialize the gym-electric-motor environment
+    env = gem.make(motor, 
+                   visualization=MotorDashboard(additional_plots=external_ref_plots),
+                   scale_plots=True,
+                   render_mode="figure", 
+                   reference_generator = ref_generator)
+    
+    env.metadata["filename_prefix"] = "integration-test"
+    env.metadata["filename_suffix"] = ""
+    env.metadata["save_figure_on_close"] = False
+    env.metadata["hold_figure_on_close"] = True
     """
         initialize the controller
 
         Args:
             environment                     gym-electric-motor environment
             external_ref_plots (optional)   plots of the environment, to plot all reference values
-            automated_gain (optional)       if True (default), the controller will be tune automatically
+            stages (optional)               structure of the controller
+            automated_gain (optional)       if True (default), the controller will be tuned automatically
             a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
-            
-            stages (optional)               Each controller stage is defined in a dict. The key controller_type
-                                            specifies which type of controller is used for the stage.  In addition,
-                                            parameters of the controller can be passed like, e.g., the P-gain and I-gain
-                                            for the PI controller. The stages are grouped in an array in ascending
-                                            order. For the ExtExDc an additional current controller is needed, which is
-                                            added in a separate array.
+    
     """
+    controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
-    current_a_controller = {'controller_type': 'pi_controller', 'p_gain': 0.3, 'i_gain': 50}
-    speed_controller = {'controller_type': 'pi_controller', 'p_gain': 1, 'i_gain': 40}
-    current_e_controller = {'controller_type': 'pi_controller', 'p_gain': 5, 'i_gain': 300}
-
-    stages_a = [current_a_controller, speed_controller]
-    stages_e = [current_e_controller]
-
-    stages = [stages_a, stages_e]
-
-    controller = Controller.make(env, external_ref_plots=external_ref_plots, stages=stages)
-
-    state, reference = env.reset()
-
+    state, reference = env.reset(seed=1337)
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)
+        #if i % 100 == 0:
+         #   (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
+        #else:
         (state, reference), reward, terminated, truncated, _ = env.step(action)
+
+
         if terminated:
             env.reset()
             controller.reset()
-
+    
     env.close()

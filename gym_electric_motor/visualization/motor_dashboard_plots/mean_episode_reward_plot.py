@@ -22,8 +22,8 @@ class MeanEpisodeRewardPlot(EpisodePlot):
         self._y_data.append(self._reward_data)
         self._lines.append(self._axis.plot([], self._reward_data, color=self._colors[0])[0])
 
-    def on_step_end(self, k, state, reference, reward, done):
-        super().on_step_end(k, state, reference, reward, done)
+    def on_step_end(self, k, state, reference, reward, terminated):
+        super().on_step_end(k, state, reference, reward, terminated)
         self._reward_sum += reward
         self._episode_length = k
 

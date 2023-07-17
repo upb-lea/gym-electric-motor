@@ -1,7 +1,7 @@
 from gym_electric_motor.core import ElectricMotorVisualization
 from .motor_dashboard_plots import StatePlot, ActionPlot, RewardPlot, TimePlot, EpisodePlot, StepPlot
 import matplotlib.pyplot as plt
-import gym
+import gymnasium
 
 
 class MotorDashboard(ElectricMotorVisualization):
@@ -33,7 +33,7 @@ class MotorDashboard(ElectricMotorVisualization):
 
     def __init__(
         self, state_plots=(), action_plots=(), reward_plot=False, additional_plots=(),
-        update_interval=1000, time_plot_width=10000, style=None
+        update_interval=1000, time_plot_width=10000, style=None, scale_plots = None
     ):
         """
         Args:
@@ -90,6 +90,9 @@ class MotorDashboard(ElectricMotorVisualization):
         self._k = 0
         self._update_render = False
 
+        #self._scale_plots = scale_plots
+
+
     def on_reset_begin(self):
         """Called before the environment is reset. All subplots are reset."""
         for plot in self._plots:
@@ -115,7 +118,7 @@ class MotorDashboard(ElectricMotorVisualization):
         for plot in self._plots:
             plot.on_step_begin(k, action)
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         """The information after the step is passed
 
         Args:
@@ -124,10 +127,10 @@ class MotorDashboard(ElectricMotorVisualization):
             reference(array(float)): The reference corresponding to the state :math:`s^*_k`.
             reward(float): The reward that has been received for the last action that lead to the current state
                 :math:`r_{k}`.
-            done(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k}`.
+            terminated(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k}`.
         """
         for plot in self._plots:
-            plot.on_step_end(k, state, reference, reward, done)
+            plot.on_step_end(k, state, reference, reward, terminated)
         self._k += 1
         if self._k % self._update_interval == 0:
             self._update_render = True
@@ -152,9 +155,9 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._state_plots == 'all':
             self._state_plots = state_names
         if self._action_plots == 'all':
-            if type(env.action_space) is gym.spaces.Discrete:
+            if type(env.action_space) is gymnasium.spaces.Discrete:
                 self._action_plots = [0]
-            elif type(env.action_space) in (gym.spaces.Box, gym.spaces.MultiDiscrete):
+            elif type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.MultiDiscrete):
                 self._action_plots = list(range(env.action_space.shape[0]))
 
         self._time_plots = []
@@ -165,7 +168,7 @@ class MotorDashboard(ElectricMotorVisualization):
                 self._time_plots.append(StatePlot(state))
 
         if len(self._action_plots) > 0:
-            assert type(env.action_space) in (gym.spaces.Box, gym.spaces.Discrete, gym.spaces.MultiDiscrete), \
+            assert type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.Discrete, gymnasium.spaces.MultiDiscrete), \
                 f'Action space of type {type(env.action_space)} not supported for plotting.'
             for action in self._action_plots:
                 ap = ActionPlot(action)
@@ -270,11 +273,14 @@ class MotorDashboard(ElectricMotorVisualization):
             for plot, axis in zip(self._time_plots, axes_step):
                 plot.initialize(axis)
 
+        self._figures[0].align_ylabels()
+
     def _update(self):
         """Called every *update cycle* steps to refresh the figure."""
         for plot in self._plots:
             plot.render()
         for fig in self._figures:
+            #fig.align_ylabels()
             fig.canvas.draw()
             fig.canvas.flush_events()
 

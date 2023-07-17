@@ -1,6 +1,6 @@
 from .plot_external_data import plot
 from gym_electric_motor.physical_systems import SynchronousMotorSystem
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import numpy as np
 
 

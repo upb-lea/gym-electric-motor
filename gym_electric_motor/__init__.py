@@ -5,7 +5,7 @@ from .core import ElectricMotorVisualization
 from .core import ConstraintMonitor
 from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
-from .utils import make, register_superclass
+from .utils import register_superclass
 
 register_superclass(RewardFunction)
 register_superclass(ElectricMotorVisualization)
@@ -18,14 +18,18 @@ import gym_electric_motor.visualization
 import gym_electric_motor.physical_systems
 import gym_electric_motor.envs
 import gym_electric_motor.physical_system_wrappers
+import gym_electric_motor.core
 
-from gym.envs.registration import register
-import gym
+make = core.ElectricMotorEnvironment.make
+
+from gymnasium.envs.registration import register
+import gymnasium
 from packaging import version
 # Add all superclasses of the modules to the registry.
 
-# Deactivate the order enforce wrapper that is put around a created env per default from gym-version 0.21.0 onwards
-registration_kwargs = dict(order_enforce=False) if version.parse(gym.__version__) >= version.parse('0.21.0') else dict()
+# Deactivate the order enforce wrapper that is put around a created env per default from gymnasium-version 0.21.0 onwards
+registration_kwargs = dict(order_enforce=False) if version.parse(gymnasium.__version__) >= version.parse('0.21.0') else dict()
+registration_kwargs['disable_env_checker'] = True
 
 envs_path = 'gym_electric_motor.envs:'
 

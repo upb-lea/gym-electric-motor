@@ -1,4 +1,4 @@
-from gym.spaces import Discrete, MultiDiscrete
+from gymnasium.spaces import Discrete, MultiDiscrete
 
 
 class DiscreteController:

@@ -34,8 +34,8 @@ class RewardPlot(TimePlot):
         super().reset_data()
         self._reward_data = np.full(shape=self._x_data.shape, fill_value=np.nan)
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         idx = self.data_idx
         self._x_data[idx] = self._t
         self._reward_data[idx] = reward
-        super().on_step_end(k, state, reference, reward, done)
+        super().on_step_end(k, state, reference, reward, terminated)

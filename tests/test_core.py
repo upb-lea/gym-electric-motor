@@ -2,12 +2,12 @@ import pytest
 import numpy as np
 from tests.testing_utils import DummyPhysicalSystem, DummyReferenceGenerator, DummyRewardFunction, DummyVisualization,\
     DummyCallback, DummyConstraintMonitor, DummyConstraint, mock_instantiate, instantiate_dict
-from gym.spaces import Tuple, Box
+from gymnasium.spaces import Tuple, Box
 import gym_electric_motor
 from gym_electric_motor.core import ElectricMotorEnvironment, RewardFunction, \
     ReferenceGenerator, PhysicalSystem, ConstraintMonitor, Constraint
 from gym_electric_motor.constraints import LimitConstraint
-import gym
+import gymnasium
 import gym_electric_motor as gem
 
 
@@ -86,6 +86,7 @@ class TestElectricMotorEnvironment:
             state_space = Box(
                 physical_system.state_space.low[state_idxs],
                 physical_system.state_space.high[state_idxs],
+                dtype=float
             )
             assert Tuple(
                 (state_space, reference_generator.reference_space)
@@ -131,7 +132,7 @@ class TestElectricMotorEnvironment:
         for callback in cbs:
             assert callback.step_begin == 0
             assert callback.step_end == 0
-        (state, reference), reward, done, _ = env.step(action)
+        (state, reference), reward, terminated, truncated, _ = env.step(action)
         # Each of callback's step functions were called in step
         for callback in cbs:
             assert callback.step_begin == 1
@@ -143,7 +144,7 @@ class TestElectricMotorEnvironment:
             'State passed to the Reference Generator not equal to Physical System state'
         assert ps.action == action, 'Action passed to Physical System not equal to selected action'
         assert reward == -1 if set_done else 1
-        assert done == set_done
+        assert terminated == set_done
         # If episode terminated, no further step without reset
         if set_done:
             with pytest.raises(Exception):
@@ -254,8 +255,8 @@ class TestReferenceGenerator:
 class TestPhysicalSystem:
 
     def test_initialization(self):
-        action_space = gym.spaces.Discrete(3)
-        state_space = gym.spaces.Box(-1, 1, shape=(3,))
+        action_space = gymnasium.spaces.Discrete(3)
+        state_space = gymnasium.spaces.Box(-1, 1, shape=(3,))
         state_names = [f'dummy_state_{i}' for i in range(3)]
         tau = 1
         ps = PhysicalSystem(action_space, state_space, state_names, tau)

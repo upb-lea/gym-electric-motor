@@ -20,9 +20,9 @@ class CumulativeConstraintViolationPlot(StepPlot):
         super().reset_data()
         self._violations = [0]
 
-    def on_step_end(self, k, state, reference, reward, done):
-        super().on_step_end(k, state, reference, reward, done)
-        if done:
+    def on_step_end(self, k, state, reference, reward, terminated):
+        super().on_step_end(k, state, reference, reward, terminated)
+        if terminated:
             # Add another point for a step-like plot
             self._x_data.append(self._k - 1)
             self._violations.append(self._no_of_violations)

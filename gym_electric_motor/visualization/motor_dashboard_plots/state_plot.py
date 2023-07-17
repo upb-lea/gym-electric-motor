@@ -71,6 +71,10 @@ class StatePlot(TimePlot):
         # Flag, if the passed data is normalized
         self._normalized = True
 
+        self._scale_plots_to_data = False
+
+        
+
     def set_env(self, env):
         # Docstring of superclass
         super().set_env(env)
@@ -96,6 +100,10 @@ class StatePlot(TimePlot):
 
         # Set the y-axis label
         self._label = self.state_labels.get(self._state, self._state)
+
+        self._scale_plots_to_data = env.scale_plots
+
+       
 
     def reset_data(self):
         super().reset_data()
@@ -138,8 +146,8 @@ class StatePlot(TimePlot):
 
         self._y_data = [self._state_data, self._ref_data]
 
-    def on_step_end(self, k, state, reference, reward, done):
-        super().on_step_end(k, state, reference, reward, done)
+    def on_step_end(self, k, state, reference, reward, terminated):
+        super().on_step_end(k, state, reference, reward, terminated)
         # Write the data to the data containers
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]

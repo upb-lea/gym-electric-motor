@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 import numpy as np
 
 import gym_electric_motor as gem
@@ -62,7 +62,7 @@ class FluxObserver(PhysicalSystemWrapper):
         psi_limit = self._l_m * physical_system.limits[physical_system.state_names.index('i_sd')]
         low = np.concatenate((physical_system.state_space.low, [-psi_limit, -np.pi]))
         high = np.concatenate((physical_system.state_space.high, [psi_limit, np.pi]))
-        self.state_space = gym.spaces.Box(low, high, dtype=np.float64)
+        self.state_space = gymnasium.spaces.Box(low, high, dtype=np.float64)
         self._current_indices = [physical_system.state_positions[name] for name in self._current_names]
         self._limits = np.concatenate((physical_system.limits, [psi_limit, np.pi]))
         self._nominal_state = np.concatenate((physical_system.nominal_state, [psi_limit, np.pi]))

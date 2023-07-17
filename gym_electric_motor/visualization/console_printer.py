@@ -54,7 +54,7 @@ class ConsolePrinter(ElectricMotorVisualization):
         self._k = k
         self._action = action
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         """Gets called at each step of the environment.
         Handles per step printing as well es constraint violation printing"""
         self._k = k
@@ -62,7 +62,7 @@ class ConsolePrinter(ElectricMotorVisualization):
         self._reference = reference
         self._reward = reward
         self._cum_reward += reward
-        self._done = done
+        self._done = terminated
 
     def render(self):
         if self._print_freq > 0:
