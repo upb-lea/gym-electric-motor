@@ -141,12 +141,11 @@
 <span class="gp">... </span>    <span class="s1">&#39;Cont-SC-ExtExDc-v0&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">load</span><span class="o">=</span><span class="n">my_poly_static_load</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">terminated</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">terminated</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="n">state</span><span class="p">,</span> <span class="n">reference</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
 </pre></div>
 </div>
 </dd>
@@ -192,7 +191,7 @@ range of the nominal values or a given interval.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>nominal_state</strong> (<em>list</em>) – nominal values for each state given from physical system</p></li>
-<li><p><strong>state_space</strong> (<em>gym.spaces.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_space</strong> (<em>gymnasium.spaces.Box</em>) – normalized state space boundaries</p></li>
 <li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
 </ul>
 </dd>
@@ -300,7 +299,7 @@ dict(float): Mapping of the motor states to their nominal values</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>nominal_state</strong> (<em>list</em>) – nominal values for each state given from
 physical system</p></li>
-<li><p><strong>state_space</strong> (<em>gym.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_space</strong> (<em>gymnasium.Box</em>) – normalized state space boundaries</p></li>
 <li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
 </ul>
 </dd>

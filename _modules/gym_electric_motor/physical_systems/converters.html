@@ -82,7 +82,7 @@
              
   <h1>Source code for gym_electric_motor.physical_systems.converters</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Discrete</span><span class="p">,</span> <span class="n">Box</span><span class="p">,</span> <span class="n">MultiDiscrete</span>
+<span class="kn">from</span> <span class="nn">gymnasium.spaces</span> <span class="kn">import</span> <span class="n">Discrete</span><span class="p">,</span> <span class="n">Box</span><span class="p">,</span> <span class="n">MultiDiscrete</span>
 
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">instantiate</span>
 
@@ -99,11 +99,11 @@
 <span class="sd">        | E.g. (0, 1) - Only positive currents / (-1, 1) Positive and negative currents</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#: gym.Space that defines Minimum, Maximum and Dimension of possible output voltage of the converter</span>
+    <span class="c1">#: gymnasium.Space that defines Minimum, Maximum and Dimension of possible output voltage of the converter</span>
     <span class="n">voltages</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1">#: gym.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</span>
+    <span class="c1">#: gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</span>
     <span class="n">currents</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1">#: gym.Space that defines the set of all possible actions for the converter</span>
+    <span class="c1">#: gymnasium.Space that defines the set of all possible actions for the converter</span>
     <span class="n">action_space</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1">#: Default action that is taken after a reset.</span>
     <span class="n">_reset_action</span> <span class="o">=</span> <span class="kc">None</span>

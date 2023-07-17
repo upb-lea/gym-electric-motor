@@ -81,7 +81,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.physical_system_wrappers.current_sum_processor</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">gym</span>
+<span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">gym_electric_motor.physical_system_wrappers</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
@@ -112,7 +112,7 @@
         <span class="c1"># Define the new state space as concatenation of the old state space and [-1,1] for i_sum</span>
         <span class="n">low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.</span><span class="p">]))</span>
         <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_space</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
         <span class="c1"># Set the new limits /  nominal values of the state vector</span>
         <span class="n">current_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_indices</span><span class="p">])</span>

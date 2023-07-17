@@ -82,7 +82,7 @@
              
   <h1>Source code for gym_electric_motor.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">gymnasium</span>
 
 
 <div class="viewcode-block" id="state_dict_to_state_array"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.state_dict_to_state_array">[docs]</a><span class="k">def</span> <span class="nf">state_dict_to_state_array</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">state_array</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
@@ -102,7 +102,7 @@
     <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state_names</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">state_array</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="c1"># TODO</span>
             <span class="k">pass</span></div>
 
 
@@ -241,8 +241,8 @@
     <span class="k">return</span> <span class="n">new_dict</span></div>
 
 
-<span class="c1">#: Short notation for the gym.make call to avoid the necessary import of gym when making environments.</span>
-<span class="n">make</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span>
+<span class="c1">#: Short notation for the gymnasium.make call to avoid the necessary import of gym when making environments.</span>
+<span class="c1"># make = gymnasium.make</span>
 </pre></div>
 
            </div>
