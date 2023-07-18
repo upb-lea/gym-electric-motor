@@ -137,7 +137,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="n">k</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_action</span> <span class="o">=</span> <span class="n">action</span></div>
 
-<div class="viewcode-block" id="ConsolePrinter.on_step_end"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">):</span>
+<div class="viewcode-block" id="ConsolePrinter.on_step_end"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets called at each step of the environment.</span>
 <span class="sd">        Handles per step printing as well es constraint violation printing&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="n">k</span>
@@ -145,7 +145,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">reference</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span> <span class="o">=</span> <span class="n">reward</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cum_reward</span> <span class="o">+=</span> <span class="n">reward</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span> <span class="o">=</span> <span class="n">terminated</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span> <span class="o">=</span> <span class="n">done</span></div>
 
 <div class="viewcode-block" id="ConsolePrinter.render"><a class="viewcode-back" href="../../../parts/visualizations/console_printer.html#gym_electric_motor.visualization.console_printer.ConsolePrinter.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_print_freq</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
