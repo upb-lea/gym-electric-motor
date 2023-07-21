@@ -1,11 +1,11 @@
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
-from gym_electric_motor.visualization import MotorDashboard
+
 from gym_electric_motor.reference_generators import SinusoidalReferenceGenerator
-import time
+
 import numpy as np
-import json 
+
 
 if __name__ == '__main__':
 
@@ -49,16 +49,9 @@ if __name__ == '__main__':
                                                  episode_lengths = (10001, 10001))
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor, 
-                   visualization=MotorDashboard(additional_plots=external_ref_plots),
-                   scale_plots=True,
-                   render_mode="figure", 
+    env = gem.make(motor,
                    reference_generator = ref_generator)
     
-    env.metadata["filename_prefix"] = "integration-test"
-    env.metadata["filename_suffix"] = ""
-    env.metadata["save_figure_on_close"] = False
-    env.metadata["hold_figure_on_close"] = True
     """
         initialize the controller
 
@@ -74,31 +67,44 @@ if __name__ == '__main__':
 
     state, reference = env.reset(seed=1337)
 
-    ref_states = []
-    ref_reference = []
-    ref_reward = []
-    ref_term = []
-    ref_trunc = []
-    ref_info = []
+    test_states = []
+    test_reference = []
+    test_reward = []
+    test_term = []
+    test_trunc = []
+    test_info = []
 
     # simulate the environment
     for i in range(2001):
         action = controller.control(state, reference)
-        #if i % 100 == 0:
-         #   (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
-        #else:
+
         (state, reference), reward, terminated, truncated, _ = env.step(action)
 
-        ref_states.append(state)
-        ref_reference.append(reference)
-        ref_reward.append(reward)
-        ref_term.append(terminated)
-        ref_trunc.append(truncated)
+        test_states.append(state)
+        test_reference.append(reference)
+        test_reward.append(reward)
+        test_term.append(terminated)
+        test_trunc.append(truncated)
 
         if terminated:
             env.reset()
             controller.reset()
     
-    np.savez('ref_data', states = ref_states, references = ref_reference, rewards = ref_reward, terminations = ref_term, truncations = ref_trunc)
+    np.savez('test_data', 
+             states = test_states, references = test_reference, 
+             rewards = test_reward, 
+             terminations = test_term, 
+             truncations = test_trunc)
 
     env.close()
+
+    test_data = np.load('test_data.npz')
+    ref_data = np.load('ref_data.npz')
+    
+    for i in ref_data.files:
+
+        if np.allclose(ref_data[i], test_data[i], equal_nan= True):
+            print('States are equal - passed')
+        else:
+            print('failed')
+            break
