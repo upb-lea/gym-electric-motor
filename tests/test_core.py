@@ -105,7 +105,7 @@ class TestElectricMotorEnvironment:
         for callback in cbs:
             assert callback.reset_begin == 0
             assert callback.reset_end == 0
-        state, ref = env.reset()
+        (state, ref), _ = env.reset()
         # The corresponding callback functions should've been called
         for callback in cbs:
             assert callback.reset_begin == 1

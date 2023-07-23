@@ -281,7 +281,10 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         reference, next_ref, _ = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
         self._call_callbacks('on_reset_end', state, reference)
-        return state[self.state_filter], next_ref
+
+        observation = (state[self.state_filter], next_ref)
+        info = {}
+        return observation, info
 
     def render(self, *_, **__):
         """
@@ -320,9 +323,10 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         # Call render code
         if self.render_mode == "figure":
             self.render()
-
-        return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, {}
-
+        
+        info = {}
+        return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, info
+    
     def _seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
         components = [

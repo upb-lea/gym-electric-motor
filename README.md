@@ -41,7 +41,7 @@ if __name__ == '__main__':
         (states, references), rewards, done, _ =\ 
         	env.step(env.action_space.sample())  # pick random control actions
         if done:
-            (states, references) = env.reset()
+            (states, references), _ = env.reset()
     env.close()
 ```
 
