@@ -6,43 +6,24 @@ sys.path.append(path)
 
 from classic_controllers import Controller
 
+#import pytest
 import gym_electric_motor as gem
 
 from gym_electric_motor.reference_generators import SinusoidalReferenceGenerator
 
+
 import numpy as np
 
 
-if __name__ == '__main__':
-
-    """
-    motor type:     'PermExDc'  Permanently Excited DC Motor
-                    'ExtExDc'   Externally Excited MC Motor
-                    'SeriesDc'  DC Series Motor
-                    'ShuntDc'   DC Shunt Motor
-                    
-    control type:   'SC'         Speed Control
-                    'TC'         Torque Control
-                    'CC'         Current Control
-                    
-    action_type:    'Cont'      Continuous Action Space
-                    'Finite'    Discrete Action Space
-    """
+def simulate_env(seed = None):
 
     motor_type = 'PermExDc'
     control_type = 'SC'
     action_type = 'Cont'
-
-    motor = action_type + '-' + control_type + '-' + motor_type + '-v0'
-
-    if motor_type in ['PermExDc', 'SeriesDc']:
-        states = ['omega', 'torque', 'i', 'u']
-    elif motor_type == 'ShuntDc':
-        states = ['omega', 'torque', 'i_a', 'i_e', 'u']
-    elif motor_type == 'ExtExDc':
-        states = ['omega', 'torque', 'i_a', 'i_e', 'u_a', 'u_e']
-    else:
-        raise KeyError(motor_type + ' is not available')
+    version = 'v0'
+    
+    env_id = f'{action_type}-{control_type}-{motor_type}-{version}'
+   
 
     # definition of the reference generator
 
@@ -52,7 +33,7 @@ if __name__ == '__main__':
                                                  episode_lengths = (10001, 10001))
 
     # initialize the gym-electric-motor environment
-    env = gem.make(motor,
+    env = gem.make(env_id,
                    reference_generator = ref_generator)
     
     """
@@ -67,8 +48,8 @@ if __name__ == '__main__':
     
     """
     controller = Controller.make(env)
-    
-    state, reference = env.reset(seed=1337)
+
+    state, reference = env.reset(seed)
 
     test_states = []
     test_reference = []
@@ -93,23 +74,21 @@ if __name__ == '__main__':
             env.reset()
             controller.reset()
     
-    np.savez('test_data', 
+    np.savez('./tests/integration_tests/test_data.npz', 
              states = test_states, references = test_reference, 
              rewards = test_reward, 
              terminations = test_term, 
              truncations = test_trunc)
 
-    env.close()
+    #env.close()
 
-    test_data = np.load('test_data.npz')
+def test_simulate_env():
+    simulate_env(1337)
+    test_data = np.load('./tests/integration_tests/test_data.npz')
     ref_data = np.load('./tests/integration_tests/ref_data.npz')
     
     for i in ref_data.files:
 
-        if np.allclose(ref_data[i], test_data[i], equal_nan= True):
-            print('States are equal - passed')
-        else:
-            print('failed')
-            break
-
-    os.remove("test_data.npz")
+        assert(np.allclose(ref_data[i], test_data[i], equal_nan= True))
+   
+    
