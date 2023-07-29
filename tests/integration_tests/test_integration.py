@@ -3,9 +3,7 @@ import sys
 import os
 path = os.getcwd()+'/examples/classic_controllers'
 sys.path.append(path)
-
 from classic_controllers import Controller
-
 #import pytest
 import gym_electric_motor as gem
 
@@ -87,9 +85,18 @@ def test_simulate_env():
     test_data = np.load('./tests/integration_tests/test_data.npz')
     ref_data = np.load('./tests/integration_tests/ref_data.npz')
     
-    for i in ref_data.files:
+    for file in ref_data.files:
+        assert(np.allclose(ref_data[file], test_data[file], equal_nan= True))
 
-        assert(np.allclose(ref_data[i], test_data[i], equal_nan= True))
+    os.remove('./tests/integration_tests/test_data.npz')
+
+    # Anti test
+    simulate_env(1234)
+    test_data = np.load('./tests/integration_tests/test_data.npz')
+
+    # test only states, references and rewards
+    for file in ref_data.files[0:3]:
+        assert((not np.allclose(ref_data[file], test_data[file], equal_nan= True)))
 
     os.remove('./tests/integration_tests/test_data.npz')
    
