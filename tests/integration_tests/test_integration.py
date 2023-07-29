@@ -90,5 +90,7 @@ def test_simulate_env():
     for i in ref_data.files:
 
         assert(np.allclose(ref_data[i], test_data[i], equal_nan= True))
+
+    os.remove('./tests/integration_tests/test_data.npz')
    
     
