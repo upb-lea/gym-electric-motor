@@ -84,7 +84,7 @@
 <span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.core</span> <span class="kn">import</span> <span class="n">ElectricMotorVisualization</span>
 <span class="kn">from</span> <span class="nn">.motor_dashboard_plots</span> <span class="kn">import</span> <span class="n">StatePlot</span><span class="p">,</span> <span class="n">ActionPlot</span><span class="p">,</span> <span class="n">RewardPlot</span><span class="p">,</span> <span class="n">TimePlot</span><span class="p">,</span> <span class="n">EpisodePlot</span><span class="p">,</span> <span class="n">StepPlot</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">gymnasium</span>
 
 
 <div class="viewcode-block" id="MotorDashboard"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard">[docs]</a><span class="k">class</span> <span class="nc">MotorDashboard</span><span class="p">(</span><span class="n">ElectricMotorVisualization</span><span class="p">):</span>
@@ -116,7 +116,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">state_plots</span><span class="o">=</span><span class="p">(),</span> <span class="n">action_plots</span><span class="o">=</span><span class="p">(),</span> <span class="n">reward_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">additional_plots</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">update_interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">time_plot_width</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">update_interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">time_plot_width</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_plots</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -173,6 +173,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_render</span> <span class="o">=</span> <span class="kc">False</span>
 
+        <span class="c1">#self._scale_plots = scale_plots</span>
+
+
 <div class="viewcode-block" id="MotorDashboard.on_reset_begin"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_reset_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_reset_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called before the environment is reset. All subplots are reset.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">:</span>
@@ -198,7 +201,7 @@
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">:</span>
             <span class="n">plot</span><span class="o">.</span><span class="n">on_step_begin</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MotorDashboard.on_step_end"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
+<div class="viewcode-block" id="MotorDashboard.on_step_end"><a class="viewcode-back" href="../../../parts/visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The information after the step is passed</span>
 
 <span class="sd">        Args:</span>
@@ -207,10 +210,10 @@
 <span class="sd">            reference(array(float)): The reference corresponding to the state :math:`s^*_k`.</span>
 <span class="sd">            reward(float): The reward that has been received for the last action that lead to the current state</span>
 <span class="sd">                :math:`r_{k}`.</span>
-<span class="sd">            done(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k}`.</span>
+<span class="sd">            terminated(bool): Flag, that indicates, if the last action lead to a terminal state :math:`t_{k}`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">:</span>
-            <span class="n">plot</span><span class="o">.</span><span class="n">on_step_end</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>
+            <span class="n">plot</span><span class="o">.</span><span class="n">on_step_end</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_render</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -235,9 +238,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_plots</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_state_plots</span> <span class="o">=</span> <span class="n">state_names</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_plots</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="ow">is</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="ow">is</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_action_plots</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">,</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">,</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_action_plots</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_time_plots</span> <span class="o">=</span> <span class="p">[]</span>
@@ -248,7 +251,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_time_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StatePlot</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_plots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">,</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">,</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">),</span> \
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">,</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">,</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">),</span> \
                 <span class="sa">f</span><span class="s1">&#39;Action space of type {type(env.action_space)} not supported for plotting.&#39;</span>
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_plots</span><span class="p">:</span>
                 <span class="n">ap</span> <span class="o">=</span> <span class="n">ActionPlot</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
@@ -353,11 +356,14 @@
             <span class="k">for</span> <span class="n">plot</span><span class="p">,</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_plots</span><span class="p">,</span> <span class="n">axes_step</span><span class="p">):</span>
                 <span class="n">plot</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_figures</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
+
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called every *update cycle* steps to refresh the figure.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="p">:</span>
             <span class="n">plot</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">fig</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_figures</span><span class="p">:</span>
+            <span class="c1">#fig.align_ylabels()</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span></div>
 

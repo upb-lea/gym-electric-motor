@@ -110,12 +110,11 @@
 <span class="sd">        ...     &#39;Cont-SC-ExtExDc-v0&#39;,</span>
 <span class="sd">        ...     load=my_poly_static_load</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; done = True</span>
+<span class="sd">        &gt;&gt;&gt; terminated = True</span>
 <span class="sd">        &gt;&gt;&gt; for _ in range(1000):</span>
-<span class="sd">        &gt;&gt;&gt;     if done:</span>
+<span class="sd">        &gt;&gt;&gt;     if terminated:</span>
 <span class="sd">        &gt;&gt;&gt;         state, reference = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt;     env.render()</span>
-<span class="sd">        &gt;&gt;&gt;     (state, reference), reward, done, _ = env.step(env.action_space.sample())</span>
+<span class="sd">        &gt;&gt;&gt;     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 

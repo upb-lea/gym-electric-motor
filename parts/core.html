@@ -155,7 +155,7 @@ Each of its functions gets called at one point in the <a class="reference intern
 
 <dl class="method">
 <dt id="gym_electric_motor.core.Callback.on_step_end">
-<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">done</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_step_end" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">terminated</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_step_end" title="Permalink to this definition"></a></dt>
 <dd><p>Gets called at the end of each step</p>
 </dd></dl>
 
@@ -260,7 +260,7 @@ violation degrees to a total violation degree.</p>
 
 <dl class="class">
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=()</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=()</em>, <em class="sig-param">constraints=()</em>, <em class="sig-param">physical_system_wrappers=()</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=()</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=()</em>, <em class="sig-param">constraints=()</em>, <em class="sig-param">physical_system_wrappers=()</em>, <em class="sig-param">render_mode=None</em>, <em class="sig-param">scale_plots=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Description:</dt><dd><p>The main class connecting all modules of the gym-electric-motor environments.</p>
 </dd>
@@ -342,6 +342,7 @@ observes the limit on each state.
 <li><p><strong>state_filter</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – Selection of states that are shown in the observation.</p></li>
 <li><p><strong>physical_system_wrappers</strong> (<em>iterable</em><em>(</em><a class="reference internal" href="state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper" title="gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper"><em>PhysicalSystemWrapper</em></a><em>)</em>) – PhysicalSystemWrapper instances to be wrapped around
 the physical system.</p></li>
+<li><p><strong>render_mode</strong> (<em>str</em>) – if visualization is given, render_mode is set to “figure”, else render_mode ist set to None</p></li>
 <li><p><strong>callbacks</strong> (<em>list</em><em>(</em><a class="reference internal" href="#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks being called in the environment</p></li>
 <li><p><strong>**kwargs</strong> – Arguments to be passed to the modules.</p></li>
 </ul>
@@ -362,6 +363,12 @@ the physical system.</p></li>
 <dd class="field-odd"><p>Returns(<a class="reference internal" href="#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor">ConstraintMonitor</a>)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.core.ElectricMotorEnvironment.figure">
+<code class="sig-name descname">figure</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; matplotlib.figure.Figure<a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.figure" title="Permalink to this definition"></a></dt>
+<dd><p>Get main figure (MotorDashboard)</p>
 </dd></dl>
 
 <dl class="method">
@@ -404,7 +411,7 @@ ReferenceGenerator: The ReferenceGenerator of the Environment</p>
 
 <dl class="method">
 <dt id="gym_electric_motor.core.ElectricMotorEnvironment.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reset" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset of the environment and all its modules to an initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -421,30 +428,9 @@ RewardFunction: The RewardFunction of the environment</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.seed">
-<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.seed" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the seed for this env’s random number generator(s).</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Some environments use multiple pseudorandom number generators.
-We want to capture all such seeds used in order to ensure that
-there aren’t accidental correlations between multiple generators.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>Returns the list of seeds used in this env’s random</dt><dd><p>number generators. The first value in the list should be the
-“main” seed, or the value which a reproducer should pass to
-‘seed’. Often, the main seed equals the provided ‘seed’, but
-this won’t be true if seed=None, for example.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list&lt;bigint&gt;</p>
-</dd>
-</dl>
+<dt id="gym_electric_motor.core.ElectricMotorEnvironment.save_fig">
+<code class="sig-name descname">save_fig</code><span class="sig-paren">(</span><em class="sig-param">figure</em>, <em class="sig-param">filetype='png'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.save_fig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.save_fig" title="Permalink to this definition"></a></dt>
+<dd><p>Save figure with timestamped as filename</p>
 </dd></dl>
 
 <dl class="method">
@@ -464,7 +450,7 @@ this won’t be true if seed=None, for example.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Tuple of the new state and the next reference.
 reward(float): Amount of reward received for the last step.
-done(bool): Flag, indicating if a reset is required before new steps can be taken.
+terminated(bool): Flag, indicating if a reset is required before new steps can be taken.
 {}: An empty dictionary for consistency with the OpenAi Gym interface.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
@@ -505,8 +491,8 @@ to the next.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>action_space</strong> (<em>gym.Space</em>) – The set of allowed actions on the system.</p></li>
-<li><p><strong>state_space</strong> (<em>gym.Space</em>) – The set of possible systems states.</p></li>
+<li><p><strong>action_space</strong> (<em>gymnasium.Space</em>) – The set of allowed actions on the system.</p></li>
+<li><p><strong>state_space</strong> (<em>gymnasium.Space</em>) – The set of possible systems states.</p></li>
 <li><p><strong>state_names</strong> (<em>ndarray</em><em>(</em><em>str</em><em>)</em>) – The names of the systems states</p></li>
 <li><p><strong>tau</strong> (<em>float</em>) – The systems simulation time interval.</p></li>
 </ul>
@@ -516,7 +502,7 @@ to the next.</p>
 <dt id="gym_electric_motor.core.PhysicalSystem.action_space">
 <em class="property">property </em><code class="sig-name descname">action_space</code><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.action_space" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
-gym.Space: An OpenAI Gym Space that describes the possible actions on the system.</p>
+gymnasium.Space: An OpenAI Gym Space that describes the possible actions on the system.</p>
 </dd></dl>
 
 <dl class="method">
@@ -597,7 +583,7 @@ dict(int): Dictionary mapping the state names to its positions in the state arra
 <dt id="gym_electric_motor.core.PhysicalSystem.state_space">
 <em class="property">property </em><code class="sig-name descname">state_space</code><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_space" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:
-gym.Space: An OpenAI Gym Space that describes the possible states of the system.</p>
+gymnasium.Space: An OpenAI Gym Space that describes the possible states of the system.</p>
 </dd></dl>
 
 <dl class="method">
