@@ -272,6 +272,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
         Returns:
              The initial observation consisting of the initial state and initial reference.
+             info(dict): Auxiliary information (optional) 
         """
 
         self._seed(seed)
@@ -303,7 +304,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             observation(Tuple(ndarray(float),ndarray(float)): Tuple of the new state and the next reference.
             reward(float): Amount of reward received for the last step.
             terminated(bool): Flag, indicating if a reset is required before new steps can be taken.
-            {}: An empty dictionary for consistency with the OpenAi Gym interface.
+            info(dict): Auxiliary information (optional) 
         """
 
         assert not self._terminated, 'A reset is required before the environment can perform further steps'
@@ -402,7 +403,7 @@ class ReferenceGenerator:
     """The abstract base class for reference generators in gym electric motor environments.
 
     reference_space:
-        Space of reference observations as defined in the OpenAI Gym Toolbox.
+        Space of reference observations as defined in the Farama Gymnasium Toolbox.
 
     The reference generator is called twice per step.
 
@@ -636,7 +637,7 @@ class PhysicalSystem:
     def action_space(self):
         """
         Returns:
-            gymnasium.Space: An OpenAI Gym Space that describes the possible actions on the system.
+            gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.
         """
         return self._action_space
 
@@ -644,7 +645,7 @@ class PhysicalSystem:
     def state_space(self):
         """
         Returns:
-             gymnasium.Space: An OpenAI Gym Space that describes the possible states of the system.
+             gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.
         """
         return self._state_space
 
