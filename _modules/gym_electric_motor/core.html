@@ -355,6 +355,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">             The initial observation consisting of the initial state and initial reference.</span>
+<span class="sd">             info(dict): Auxiliary information (optional) </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
@@ -386,7 +387,7 @@
 <span class="sd">            observation(Tuple(ndarray(float),ndarray(float)): Tuple of the new state and the next reference.</span>
 <span class="sd">            reward(float): Amount of reward received for the last step.</span>
 <span class="sd">            terminated(bool): Flag, indicating if a reset is required before new steps can be taken.</span>
-<span class="sd">            {}: An empty dictionary for consistency with the OpenAi Gym interface.</span>
+<span class="sd">            info(dict): Auxiliary information (optional) </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terminated</span><span class="p">,</span> <span class="s1">&#39;A reset is required before the environment can perform further steps&#39;</span>
@@ -485,7 +486,7 @@
     <span class="sd">&quot;&quot;&quot;The abstract base class for reference generators in gym electric motor environments.</span>
 
 <span class="sd">    reference_space:</span>
-<span class="sd">        Space of reference observations as defined in the OpenAI Gym Toolbox.</span>
+<span class="sd">        Space of reference observations as defined in the Farama Gymnasium Toolbox.</span>
 
 <span class="sd">    The reference generator is called twice per step.</span>
 
@@ -719,7 +720,7 @@
     <span class="k">def</span> <span class="nf">action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
-<span class="sd">            gymnasium.Space: An OpenAI Gym Space that describes the possible actions on the system.</span>
+<span class="sd">            gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span>
 
@@ -727,7 +728,7 @@
     <span class="k">def</span> <span class="nf">state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
-<span class="sd">             gymnasium.Space: An OpenAI Gym Space that describes the possible states of the system.</span>
+<span class="sd">             gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span>
 
