@@ -97,6 +97,156 @@
              
   <div class="section" id="sinusoidal-reference-generator">
 <h1>Sinusoidal Reference Generator<a class="headerlink" href="#sinusoidal-reference-generator" title="Permalink to this headline"></a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">SinusoidalReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">amplitude_range=None</em>, <em class="sig-param">frequency_range=(1</em>, <em class="sig-param">10)</em>, <em class="sig-param">offset_range=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/sinusoidal_reference_generator.html#SinusoidalReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>Reference Generator that generates a sinusoidal wave with a random amplitude, frequency, phase and offset.
+The reference is generated for a certain length and then new parameters are drawn uniformly from a selectable range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>amplitude_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the amplitude.</p></li>
+<li><p><strong>frequency_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the frequency.</p></li>
+<li><p><strong>offset_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the offset</p></li>
+<li><p><strong>kwargs</strong> (<em>any</em>) – Arguments passed to the superclass SubepisodedReferenceGenerator .</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.close" title="Permalink to this definition"></a></dt>
+<dd><p>Called by the environment, when the environment is deleted to close files, store logs, etc.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.get_reference">
+<code class="sig-name descname">get_reference</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.get_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the reference array of the current time step.</p>
+<p>The reference array needs to be in the same shape as the state variables. For referenced states the reference
+value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Current reference array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.get_reference_observation">
+<code class="sig-name descname">get_reference_observation</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.get_reference_observation" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the reference observation for the next time step. This observation needs to fit in the reference space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Observation for the next reference time step.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>value in reference_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.next_generator">
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.next_generator" title="Permalink to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.random_generator">
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.random_generator" title="Permalink to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.reference_names">
+<em class="property">property </em><code class="sig-name descname">reference_names</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.reference_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+reference_names(list(str)): A list containing all names of the referenced states in the reference
+observation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.referenced_states">
+<em class="property">property </em><code class="sig-name descname">referenced_states</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.referenced_states" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.reset" title="Permalink to this definition"></a></dt>
+<dd><p>The references are reset. If an initial reference is passed, this value will be the first reference value of
+the next episode. Otherwise it will be 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The initial state of the physical system.</p></li>
+<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – (Optional) The first reference value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>initial reference array.
+initial_reference_observation(element of reference_space): An initial observation of the next reference.
+trajectory(None): No initial trajectory is passed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>initial_reference(ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.seed" title="Permalink to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.seed_sequence">
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.seed_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.set_modules">
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/sinusoidal_reference_generator.html#SinusoidalReferenceGenerator.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.SinusoidalReferenceGenerator.set_modules" title="Permalink to this definition"></a></dt>
+<dd><p>Announcement of the PhysicalSystem to the ReferenceGenerator.</p>
+<p>In subclasses, store all important information from the physical system to the ReferenceGenerator here.
+The environment announces the physical system to the ReferenceGenerator during its initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

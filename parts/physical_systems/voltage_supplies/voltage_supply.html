@@ -114,6 +114,70 @@
 </div>
 <div class="section" id="voltage-supply-base-class">
 <h2>Voltage Supply Base Class<a class="headerlink" href="#voltage-supply-base-class" title="Permalink to this headline"></a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.voltage_supplies.</code><code class="sig-name descname">VoltageSupply</code><span class="sig-paren">(</span><em class="sig-param">u_nominal</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="Permalink to this definition"></a></dt>
+<dd><p>Base class for all VoltageSupplies to be used in a SCMLSystem.</p>
+<dl class="simple">
+<dt>Parameter:</dt><dd><p>supply_range(Tuple(float,float)): Minimal and maximal possible value for the voltage supply.
+u_nominal(float): Nominal supply voltage</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>u_nominal</strong> (<em>float</em>) – Nominal voltage of the Voltage Supply.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">
+<code class="sig-name descname">get_voltage</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">i_sup</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply.get_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage" title="Permalink to this definition"></a></dt>
+<dd><p>Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_sup</strong> (<em>float</em>) – Supply current floating into the system.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Supply Voltage(s) at time t.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#VoltageSupply.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the voltage supply to an initial state.
+This method is called at every reset of the physical system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The initial supply voltage.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.supply_range">
+<code class="sig-name descname">supply_range</code><em class="property"> = ()</em><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.supply_range" title="Permalink to this definition"></a></dt>
+<dd><p>Minimum and Maximum values of the Supply Voltage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.u_nominal">
+<em class="property">property </em><code class="sig-name descname">u_nominal</code><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.u_nominal" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Nominal Voltage of the Voltage Supply</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 

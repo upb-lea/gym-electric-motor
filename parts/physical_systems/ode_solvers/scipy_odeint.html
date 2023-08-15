@@ -104,6 +104,88 @@
              
   <div class="section" id="scipy-integrate-odeint-solver">
 <h1>scipy.integrate.odeint Solver<a class="headerlink" href="#scipy-integrate-odeint-solver" title="Permalink to this headline"></a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.solvers.</code><code class="sig-name descname">ScipyOdeIntSolver</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/solvers.html#ScipyOdeIntSolver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper class for all ode-solvers in the scipy.integrate.odeint function.</p>
+<p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> (<em>dict</em>) – Arguments to pass to the solver. See the scipy description for further information.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.integrate">
+<code class="sig-name descname">integrate</code><span class="sig-paren">(</span><em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/solvers.html#ScipyOdeIntSolver.integrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.integrate" title="Permalink to this definition"></a></dt>
+<dd><p>Integrate the ODE-System from current time until time t</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Time until the system shall be integrated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New system state at time t</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_f_params">
+<code class="sig-name descname">set_f_params</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_f_params" title="Permalink to this definition"></a></dt>
+<dd><p>Set further arguments for the systems function call like input quantities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>list</em>) – Additional arguments for the next function calls.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_initial_value">
+<code class="sig-name descname">set_initial_value</code><span class="sig-paren">(</span><em class="sig-param">initial_value</em>, <em class="sig-param">t=0</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_initial_value" title="Permalink to this definition"></a></dt>
+<dd><p>Set the new initial system state after reset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_value</strong> (<em>numpy.ndarray</em><em>(</em><em>float</em><em>)</em>) – Initial system state</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Initial system time</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_system_equation">
+<code class="sig-name descname">set_system_equation</code><span class="sig-paren">(</span><em class="sig-param">system_equation</em>, <em class="sig-param">jac=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.set_system_equation" title="Permalink to this definition"></a></dt>
+<dd><p>Setting of the systems equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system_equation</strong> (<em>function_pointer</em>) – Pointer to the systems equation with the parameters (t, y, <a href="#id1"><span class="problematic" id="id2">*</span></a>args)</p></li>
+<li><p><strong>jac</strong> (<em>function_pointer</em>) – Pointer to the systems jacobian with the parameters (t, y, <a href="#id3"><span class="problematic" id="id4">*</span></a>args)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.t">
+<em class="property">property </em><code class="sig-name descname">t</code><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.t" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Current system time t</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.y" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Current system state y</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

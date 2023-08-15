@@ -82,8 +82,57 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="callbacks">
-<h1>Callbacks<a class="headerlink" href="#callbacks" title="Permalink to this headline"></a></h1>
+  <div class="section" id="module-gym_electric_motor.callbacks">
+<span id="callbacks"></span><h1>Callbacks<a class="headerlink" href="#module-gym_electric_motor.callbacks" title="Permalink to this headline"></a></h1>
+<p>This module introduces predefined callbacks for the GEM environment.</p>
+<dl class="class">
+<dt id="gym_electric_motor.callbacks.RampingLimitMargin">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.callbacks.</code><code class="sig-name descname">RampingLimitMargin</code><span class="sig-paren">(</span><em class="sig-param">initial_limit_margin=(-0.1</em>, <em class="sig-param">0.1)</em>, <em class="sig-param">maximum_limit_margin=(-1</em>, <em class="sig-param">1)</em>, <em class="sig-param">step_size=0.1</em>, <em class="sig-param">update_time='episode'</em>, <em class="sig-param">update_freq=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/callbacks.html#RampingLimitMargin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin" title="Permalink to this definition"></a></dt>
+<dd><p>Callback used to adapt the limit margin of a reference generator during runtime.</p>
+<p>Supports all
+<a class="reference internal" href="reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator" title="gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">SubepisodedReferenceGenerator</span></code></a>
+and <code class="xref py py-mod docutils literal notranslate"><span class="pre">SwitchedReferenceGenerator</span></code>
+with only
+<a class="reference internal" href="reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator" title="gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">SubepisodedReferenceGenerator</span></code></a>
+as sub generators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_limit_margin</strong> (<em>tuple</em><em>(</em><em>floats</em><em>)</em>) – The initial limit margin which gets updated by AdaptiveLimitMargin
+until it reaches maximum_limit_margin</p></li>
+<li><p><strong>maximum_limit_margin</strong> (<em>tuple</em><em>(</em><em>floats</em><em>)</em>) – The maximum limit margin. This will be the limit margin after
+AdaptiveLimitMargin’s last update</p></li>
+<li><p><strong>step_size</strong> (<em>float</em>) – The value by which each limit gets updated at each step</p></li>
+<li><p><strong>update_time</strong> (<em>string</em>) – When the update happens. “step” for the end of a step, “episode”
+for the end of an episode</p></li>
+<li><p><strong>update_freq</strong> (<em>int</em>) – After how many cumulative units of update_time an update occurs</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Additional Notes:</dt><dd><p>All limit_margins should be between -1 and 1</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.callbacks.RampingLimitMargin.on_reset_end">
+<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/callbacks.html#RampingLimitMargin.on_reset_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin.on_reset_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the end of each reset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.callbacks.RampingLimitMargin.on_step_end">
+<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">terminated</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/callbacks.html#RampingLimitMargin.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin.on_step_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the end of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.callbacks.RampingLimitMargin.set_env">
+<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/callbacks.html#RampingLimitMargin.set_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin.set_env" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the environment of the motor.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

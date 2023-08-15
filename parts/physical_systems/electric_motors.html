@@ -84,6 +84,248 @@
 <h1>Electric Motors<a class="headerlink" href="#electric-motors" title="Permalink to this headline"></a></h1>
 <div class="section" id="electric-motor-base-class">
 <h2>Electric Motor Base Class<a class="headerlink" href="#electric-motor-base-class" title="Permalink to this headline"></a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">ElectricMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em>, <em class="sig-param">initial_limits=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="Permalink to this definition"></a></dt>
+<dd><p>Base class for all technical electrical motor models.</p>
+<p>A motor consists of the ode-state. These are the dynamic quantities of its ODE.
+For example:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>ODE-State of a DC-shunt motor: `` [i_a, i_e ] ``</dt><dd><ul class="simple">
+<li><p>i_a: Anchor circuit current</p></li>
+<li><p>i_e: Exciting circuit current</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p>Each electric motor can be parametrized by a dictionary of motor parameters,
+the nominal state dictionary and the limit dictionary.</p>
+<p>Initialization is given by initializer(dict). It can be constant state value
+or random value in given interval.
+dict should be like:
+{ ‘states’(dict): with state names and initital values</p>
+<blockquote>
+<div><dl class="simple">
+<dt>‘interval’(array like): boundaries for each state</dt><dd><p>(only for random init), shape(num states, 2)</p>
+</dd>
+</dl>
+<p>‘random_init’(str): ‘uniform’ or ‘normal’
+‘random_params(tuple): mue(float), sigma(int)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Example initializer(dict) for constant initialization:</dt><dd><p>{ ‘states’: {‘omega’: 16.0}}</p>
+</dd>
+<dt>Example  initializer(dict) for random initialization:</dt><dd><p>{ ‘random_init’: ‘normal’}</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor_parameter</strong> – Motor parameter dictionary. Contents specified
+for each motor.</p></li>
+<li><p><strong>nominal_values</strong> – Nominal values for the motor quantities.</p></li>
+<li><p><strong>limit_values</strong> – Limits for the motor quantities.</p></li>
+<li><p><strong>motor_initializer</strong> – <p>Initial motor states (currents)
+(‘constant’, ‘uniform’, ‘gaussian’ sampled from</p>
+<blockquote>
+<div><p>given interval or out of nominal motor values)</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>initial_limits</strong> – limits for of the initial state-value</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS">
+<code class="sig-name descname">CURRENTS</code><em class="property"> = []</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS" title="Permalink to this definition"></a></dt>
+<dd><p>List of the motor currents names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>CURRENTS(list(str))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX">
+<code class="sig-name descname">CURRENTS_IDX</code><em class="property"> = []</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.CURRENTS_IDX" title="Permalink to this definition"></a></dt>
+<dd><p>Indices for accessing all motor currents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>CURRENTS_IDX(list(int))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.HAS_JACOBIAN">
+<code class="sig-name descname">HAS_JACOBIAN</code><em class="property"> = False</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.HAS_JACOBIAN" title="Permalink to this definition"></a></dt>
+<dd><p>Parameter indicating if the class is implementing the optional jacobian function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES">
+<code class="sig-name descname">VOLTAGES</code><em class="property"> = []</em><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.VOLTAGES" title="Permalink to this definition"></a></dt>
+<dd><p>List of the motor input voltages names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>VOLTAGES(list(str))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian">
+<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian" title="Permalink to this definition"></a></dt>
+<dd><p>Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</p></li>
+<li><p><strong>u_in</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The motors input voltages.</p></li>
+<li><p><strong>omega</strong> (<em>float</em>) – Angular velocity of the motor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of all electrical motor states over all electrical motor states shape:(states x states)
+[1]: Derivatives of all electrical motor states over omega shape:(states,)
+[2]: Derivative of Torque over all motor states shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">
+<code class="sig-name descname">electrical_ode</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.electrical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode" title="Permalink to this definition"></a></dt>
+<dd><p>Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</p></li>
+<li><p><strong>u_in</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The motors input voltages.</p></li>
+<li><p><strong>omega</strong> (<em>float</em>) – Angular velocity of the motor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Derivatives of the motors ODE-system for the given inputs.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">
+<code class="sig-name descname">i_in</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.i_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – ODE state of the motor</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of all currents flowing into the motor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initial_limits">
+<em class="property">property </em><code class="sig-name descname">initial_limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initial_limits" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict: nominal motor limits for choosing initial values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes given state values. Values can be given as a constant or
+sampled random out of a statistical distribution. Initial value is in
+range of the nominal values or a given interval. Values are written in
+initial_states attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_space</strong> (<em>gymnasium.Box</em>) – normalized state space boundaries (given by physical system)</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indices of system states (given by physical system)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initializer">
+<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initializer" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict: Motor initial state and additional initializer parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.limits" title="Permalink to this definition"></a></dt>
+<dd><p>Readonly motors limit state array. Entries are set to the maximum physical possible values
+in case of unspecified limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Limits of the motor.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.motor_parameter">
+<em class="property">property </em><code class="sig-name descname">motor_parameter</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.motor_parameter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict(float): The motors parameter dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.nominal_values">
+<em class="property">property </em><code class="sig-name descname">nominal_values</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.nominal_values" title="Permalink to this definition"></a></dt>
+<dd><p>Readonly motors nominal values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Current nominal values of the motor.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/electric_motor.html#ElectricMotor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the motors state to a new initial state. (Default 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_space</strong> (<em>gymnasium.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The initial motor states.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="synchronous-motors">
 <h2>Synchronous Motors<a class="headerlink" href="#synchronous-motors" title="Permalink to this headline"></a></h2>
@@ -132,10 +374,575 @@
 Therefore, data sheet values for line voltages and phase currents has to be transformed such that
 <span class="math notranslate nohighlight">\(U_N=\sqrt(2/3) U_L\)</span> and <span class="math notranslate nohighlight">\(I_N=\sqrt(2) I_S\)</span>.</p>
 <p>Furthermore, the angular velocity is the electrical one and not the mechanical one <span class="math notranslate nohighlight">\(\omega = p \omega_{me}\)</span>.</p>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">SynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_motor.html#SynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor" title="Permalink to this definition"></a></dt>
+<dd><p>The SynchronousMotor and its subclasses implement the technical system of a three phase synchronous motor.</p>
+<p>This includes the system equations, the motor parameters of the equivalent circuit diagram,
+as well as limits and bandwidth.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Parameter</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Default Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>r_s</p></td>
+<td><p>Ohm</p></td>
+<td><p>0.78</p></td>
+<td><p>Stator resistance</p></td>
+</tr>
+<tr class="row-odd"><td><p>l_d</p></td>
+<td><p>H</p></td>
+<td><p>1.2</p></td>
+<td><p>Direct axis inductance</p></td>
+</tr>
+<tr class="row-even"><td><p>l_q</p></td>
+<td><p>H</p></td>
+<td><p>6.3e-3</p></td>
+<td><p>Quadrature axis inductance</p></td>
+</tr>
+<tr class="row-odd"><td><p>psi_p</p></td>
+<td><p>Wb</p></td>
+<td><p>0.0094</p></td>
+<td><p>Effective excitation flux (PMSM only)</p></td>
+</tr>
+<tr class="row-even"><td><p>p</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>Pole pair number</p></td>
+</tr>
+<tr class="row-odd"><td><p>j_rotor</p></td>
+<td><p>kg/m^2</p></td>
+<td><p>0.017</p></td>
+<td><p>Moment of inertia of the rotor</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Currents</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>i_sd</p></td>
+<td><p>A</p></td>
+<td><p>Direct axis current</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_sq</p></td>
+<td><p>A</p></td>
+<td><p>Quadrature axis current</p></td>
+</tr>
+<tr class="row-even"><td><p>i_a</p></td>
+<td><p>A</p></td>
+<td><p>Current through line a</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_b</p></td>
+<td><p>A</p></td>
+<td><p>Current through line b</p></td>
+</tr>
+<tr class="row-even"><td><p>i_c</p></td>
+<td><p>A</p></td>
+<td><p>Current through line c</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_alpha</p></td>
+<td><p>A</p></td>
+<td><p>Current in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_beta</p></td>
+<td><p>A</p></td>
+<td><p>Current in beta axis</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Voltages</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>u_sd</p></td>
+<td><p>V</p></td>
+<td><p>Direct axis voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_sq</p></td>
+<td><p>V</p></td>
+<td><p>Quadrature axis voltage</p></td>
+</tr>
+<tr class="row-even"><td><p>u_a</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line a</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_b</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line b</p></td>
+</tr>
+<tr class="row-even"><td><p>u_c</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line c</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_alpha</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_beta</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage in beta axis</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Limits /</p></th>
+<th class="head"><p>Nominal Value Dictionary Entries:</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Entry</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>i</p></td>
+<td><p>General current limit / nominal value</p></td>
+</tr>
+<tr class="row-even"><td><p>i_a</p></td>
+<td><p>Current in phase a</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_b</p></td>
+<td><p>Current in phase b</p></td>
+</tr>
+<tr class="row-even"><td><p>i_c</p></td>
+<td><p>Current in phase c</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_alpha</p></td>
+<td><p>Current in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_beta</p></td>
+<td><p>Current in beta axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_sd</p></td>
+<td><p>Current in direct axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_sq</p></td>
+<td><p>Current in quadrature axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>omega</p></td>
+<td><p>Mechanical angular Velocity</p></td>
+</tr>
+<tr class="row-even"><td><p>torque</p></td>
+<td><p>Motor generated torque</p></td>
+</tr>
+<tr class="row-odd"><td><p>epsilon</p></td>
+<td><p>Electrical rotational angle</p></td>
+</tr>
+<tr class="row-even"><td><p>u_a</p></td>
+<td><p>Phase voltage in phase a</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_b</p></td>
+<td><p>Phase voltage in phase b</p></td>
+</tr>
+<tr class="row-even"><td><p>u_c</p></td>
+<td><p>Phase voltage in phase c</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_alpha</p></td>
+<td><p>Phase voltage in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_beta</p></td>
+<td><p>Phase voltage in beta axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_sd</p></td>
+<td><p>Phase voltage in direct axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_sq</p></td>
+<td><p>Phase voltage in quadrature axis</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The voltage limits should be the peak-to-peak value of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
+A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
+Typically the root mean square (RMS) value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given as
+<span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span></p>
+<p>The current limits should be the peak-to-peak value of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
+Typically the RMS value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given as
+<span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span></p>
+<p>If not specified, nominal values are equal to their corresponding limit values.
+Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
+the general limits/nominal values (e.g. i)</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor_parameter</strong> – Motor parameter dictionary. Contents specified
+for each motor.</p></li>
+<li><p><strong>nominal_values</strong> – Nominal values for the motor quantities.</p></li>
+<li><p><strong>limit_values</strong> – Limits for the motor quantities.</p></li>
+<li><p><strong>motor_initializer</strong> – <p>Initial motor states (currents)
+(‘constant’, ‘uniform’, ‘gaussian’ sampled from</p>
+<blockquote>
+<div><p>given interval or out of nominal motor values)</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>initial_limits</strong> – limits for of the initial state-value</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.electrical_ode">
+<code class="sig-name descname">electrical_ode</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_dq</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_motor.html#SynchronousMotor.electrical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.electrical_ode" title="Permalink to this definition"></a></dt>
+<dd><p>The differential equation of the Synchronous Motor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – The current state of the motor. [i_sd, i_sq, epsilon]</p></li>
+<li><p><strong>omega</strong> – The mechanical load</p></li>
+<li><p><strong>u_qd</strong> – The input voltages [u_sd, u_sq]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The derivatives of the state vector d/dt([i_sd, i_sq, epsilon])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.i_in">
+<code class="sig-name descname">i_in</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_motor.html#SynchronousMotor.i_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.i_in" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – ODE state of the motor</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of all currents flowing into the motor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.initializer">
+<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.initializer" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict: Motor initial state and additional initializer parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.motor_parameter">
+<em class="property">property </em><code class="sig-name descname">motor_parameter</code><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.motor_parameter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict(float): The motors parameter dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_motor.html#SynchronousMotor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousMotor.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the motors state to a new initial state. (Default 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_space</strong> (<em>gymnasium.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The initial motor states.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 <div class="section" id="synchronous-reluctance-motor">
 <h2>Synchronous Reluctance Motor<a class="headerlink" href="#synchronous-reluctance-motor" title="Permalink to this headline"></a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">SynchronousReluctanceMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_reluctance_motor.html#SynchronousReluctanceMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor" title="Permalink to this definition"></a></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Parameter</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Default Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>r_s</p></td>
+<td><p>Ohm</p></td>
+<td><p>0.57</p></td>
+<td><p>Stator resistance</p></td>
+</tr>
+<tr class="row-odd"><td><p>l_d</p></td>
+<td><p>H</p></td>
+<td><p>10.1e-3</p></td>
+<td><p>Direct axis inductance</p></td>
+</tr>
+<tr class="row-even"><td><p>l_q</p></td>
+<td><p>H</p></td>
+<td><p>4.1e-3</p></td>
+<td><p>Quadrature axis inductance</p></td>
+</tr>
+<tr class="row-odd"><td><p>p</p></td>
+<td><p>1</p></td>
+<td><p>4</p></td>
+<td><p>Pole pair number</p></td>
+</tr>
+<tr class="row-even"><td><p>j_rotor</p></td>
+<td><p>kg/m^2</p></td>
+<td><p>0.8e-3</p></td>
+<td><p>Moment of inertia of the rotor</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Currents</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>i_sd</p></td>
+<td><p>A</p></td>
+<td><p>Direct axis current</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_sq</p></td>
+<td><p>A</p></td>
+<td><p>Quadrature axis current</p></td>
+</tr>
+<tr class="row-even"><td><p>i_a</p></td>
+<td><p>A</p></td>
+<td><p>Current through branch a</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_b</p></td>
+<td><p>A</p></td>
+<td><p>Current through branch b</p></td>
+</tr>
+<tr class="row-even"><td><p>i_c</p></td>
+<td><p>A</p></td>
+<td><p>Current through branch c</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_alpha</p></td>
+<td><p>A</p></td>
+<td><p>Current in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_beta</p></td>
+<td><p>A</p></td>
+<td><p>Current in beta axis</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Voltages</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>u_sd</p></td>
+<td><p>V</p></td>
+<td><p>Direct axis voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_sq</p></td>
+<td><p>V</p></td>
+<td><p>Quadrature axis voltage</p></td>
+</tr>
+<tr class="row-even"><td><p>u_a</p></td>
+<td><p>V</p></td>
+<td><p>Voltage through branch a</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_b</p></td>
+<td><p>V</p></td>
+<td><p>Voltage through branch b</p></td>
+</tr>
+<tr class="row-even"><td><p>u_c</p></td>
+<td><p>V</p></td>
+<td><p>Voltage through branch c</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_alpha</p></td>
+<td><p>V</p></td>
+<td><p>Voltage in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_beta</p></td>
+<td><p>V</p></td>
+<td><p>Voltage in beta axis</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Limits /</p></th>
+<th class="head"><p>Nominal Value Dictionary Entries:</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Entry</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>i</p></td>
+<td><p>General current limit / nominal value</p></td>
+</tr>
+<tr class="row-even"><td><p>i_a</p></td>
+<td><p>Current in phase a</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_b</p></td>
+<td><p>Current in phase b</p></td>
+</tr>
+<tr class="row-even"><td><p>i_c</p></td>
+<td><p>Current in phase c</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_alpha</p></td>
+<td><p>Current in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_beta</p></td>
+<td><p>Current in beta axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_sd</p></td>
+<td><p>Current in direct axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_sq</p></td>
+<td><p>Current in quadrature axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>omega</p></td>
+<td><p>Mechanical angular Velocity</p></td>
+</tr>
+<tr class="row-even"><td><p>epsilon</p></td>
+<td><p>Electrical rotational angle</p></td>
+</tr>
+<tr class="row-odd"><td><p>torque</p></td>
+<td><p>Motor generated torque</p></td>
+</tr>
+<tr class="row-even"><td><p>u_a</p></td>
+<td><p>Voltage in phase a</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_b</p></td>
+<td><p>Voltage in phase b</p></td>
+</tr>
+<tr class="row-even"><td><p>u_c</p></td>
+<td><p>Voltage in phase c</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_alpha</p></td>
+<td><p>Voltage in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_beta</p></td>
+<td><p>Voltage in beta axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_sd</p></td>
+<td><p>Voltage in direct axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_sq</p></td>
+<td><p>Voltage in quadrature axis</p></td>
+</tr>
+</tbody>
+</table>
+<p>Note:
+The voltage limits should be the peak-to-peak value of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
+A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
+Typically the root mean square (RMS) value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given as
+<span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span></p>
+<p>The current limits should be the peak-to-peak value of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
+Typically the RMS value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given as
+<span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span></p>
+<p>If not specified, nominal values are equal to their corresponding limit values.
+Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
+the general limits/nominal values (e.g. i)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor_parameter</strong> – Motor parameter dictionary. Contents specified
+for each motor.</p></li>
+<li><p><strong>nominal_values</strong> – Nominal values for the motor quantities.</p></li>
+<li><p><strong>limit_values</strong> – Limits for the motor quantities.</p></li>
+<li><p><strong>motor_initializer</strong> – <p>Initial motor states (currents)
+(‘constant’, ‘uniform’, ‘gaussian’ sampled from</p>
+<blockquote>
+<div><p>given interval or out of nominal motor values)</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>initial_limits</strong> – limits for of the initial state-value</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.electrical_jacobian">
+<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*_</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/synchronous_reluctance_motor.html#SynchronousReluctanceMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.SynchronousReluctanceMotor.electrical_jacobian" title="Permalink to this definition"></a></dt>
+<dd><p>Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</p></li>
+<li><p><strong>u_in</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The motors input voltages.</p></li>
+<li><p><strong>omega</strong> (<em>float</em>) – Angular velocity of the motor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of all electrical motor states over all electrical motor states shape:(states x states)
+[1]: Derivatives of all electrical motor states over omega shape:(states,)
+[2]: Derivative of Torque over all motor states shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="permanent-magnet-synchronous-motor">
 <h2>Permanent Magnet Synchronous Motor<a class="headerlink" href="#permanent-magnet-synchronous-motor" title="Permalink to this headline"></a></h2>
@@ -189,6 +996,264 @@ and the peak value <span class="math notranslate nohighlight">\(\hat{U}_S=326.6 
 The nominal peak current of a phase is given by <span class="math notranslate nohighlight">\(\hat{I}_S=\sqrt{2} I_S\)</span>.</p>
 <div class="figure align-default">
 <img alt="../../_images/Drehstromtrafo.svg" src="../../_images/Drehstromtrafo.svg" /></div>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.electric_motors.</code><code class="sig-name descname">PermanentMagnetSynchronousMotor</code><span class="sig-paren">(</span><em class="sig-param">motor_parameter=None</em>, <em class="sig-param">nominal_values=None</em>, <em class="sig-param">limit_values=None</em>, <em class="sig-param">motor_initializer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/permanent_magnet_synchronous_motor.html#PermanentMagnetSynchronousMotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor" title="Permalink to this definition"></a></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Parameter</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Default Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>r_s</p></td>
+<td><p>Ohm</p></td>
+<td><p>18e-3</p></td>
+<td><p>Stator resistance</p></td>
+</tr>
+<tr class="row-odd"><td><p>l_d</p></td>
+<td><p>H</p></td>
+<td><p>0.37e-3</p></td>
+<td><p>Direct axis inductance</p></td>
+</tr>
+<tr class="row-even"><td><p>l_q</p></td>
+<td><p>H</p></td>
+<td><p>1.2e-3</p></td>
+<td><p>Quadrature axis inductance</p></td>
+</tr>
+<tr class="row-odd"><td><p>p</p></td>
+<td><p>1</p></td>
+<td><p>3</p></td>
+<td><p>Pole pair number</p></td>
+</tr>
+<tr class="row-even"><td><p>j_rotor</p></td>
+<td><p>kg/m^2</p></td>
+<td><p>0.03883</p></td>
+<td><p>Moment of inertia of the rotor</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Currents</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>i_sd</p></td>
+<td><p>A</p></td>
+<td><p>Direct axis current</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_sq</p></td>
+<td><p>A</p></td>
+<td><p>Quadrature axis current</p></td>
+</tr>
+<tr class="row-even"><td><p>i_a</p></td>
+<td><p>A</p></td>
+<td><p>Current through line a</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_b</p></td>
+<td><p>A</p></td>
+<td><p>Current through line b</p></td>
+</tr>
+<tr class="row-even"><td><p>i_c</p></td>
+<td><p>A</p></td>
+<td><p>Current through line c</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_alpha</p></td>
+<td><p>A</p></td>
+<td><p>Current in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_beta</p></td>
+<td><p>A</p></td>
+<td><p>Current in beta axis</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Motor Voltages</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>u_sd</p></td>
+<td><p>V</p></td>
+<td><p>Direct axis voltage</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_sq</p></td>
+<td><p>V</p></td>
+<td><p>Quadrature axis voltage</p></td>
+</tr>
+<tr class="row-even"><td><p>u_a</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line a</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_b</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line b</p></td>
+</tr>
+<tr class="row-even"><td><p>u_c</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage for line c</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_alpha</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_beta</p></td>
+<td><p>V</p></td>
+<td><p>Phase voltage in beta axis</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Limits /</p></th>
+<th class="head"><p>Nominal Value Dictionary Entries:</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Entry</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>i</p></td>
+<td><p>General current limit / nominal value</p></td>
+</tr>
+<tr class="row-even"><td><p>i_a</p></td>
+<td><p>Current in phase a</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_b</p></td>
+<td><p>Current in phase b</p></td>
+</tr>
+<tr class="row-even"><td><p>i_c</p></td>
+<td><p>Current in phase c</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_alpha</p></td>
+<td><p>Current in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_beta</p></td>
+<td><p>Current in beta axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_sd</p></td>
+<td><p>Current in direct axis</p></td>
+</tr>
+<tr class="row-even"><td><p>i_sq</p></td>
+<td><p>Current in quadrature axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>omega</p></td>
+<td><p>Mechanical angular Velocity</p></td>
+</tr>
+<tr class="row-even"><td><p>torque</p></td>
+<td><p>Motor generated torque</p></td>
+</tr>
+<tr class="row-odd"><td><p>epsilon</p></td>
+<td><p>Electrical rotational angle</p></td>
+</tr>
+<tr class="row-even"><td><p>u_a</p></td>
+<td><p>Phase voltage in phase a</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_b</p></td>
+<td><p>Phase voltage in phase b</p></td>
+</tr>
+<tr class="row-even"><td><p>u_c</p></td>
+<td><p>Phase voltage in phase c</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_alpha</p></td>
+<td><p>Phase voltage in alpha axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_beta</p></td>
+<td><p>Phase voltage in beta axis</p></td>
+</tr>
+<tr class="row-odd"><td><p>u_sd</p></td>
+<td><p>Phase voltage in direct axis</p></td>
+</tr>
+<tr class="row-even"><td><p>u_sq</p></td>
+<td><p>Phase voltage in quadrature axis</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The voltage limits should be the peak-to-peak value of the phase voltage (<span class="math notranslate nohighlight">\(\hat{u}_S\)</span>).
+A phase voltage denotes the potential difference from a line to the neutral point in contrast to the line voltage between two lines.
+Typically the RMS value for the line voltage (<span class="math notranslate nohighlight">\(U_L\)</span>) is given as
+<span class="math notranslate nohighlight">\(\hat{u}_S=\sqrt{2/3}~U_L\)</span></p>
+<p>The current limits should be the peak-to-peak value of the phase current (<span class="math notranslate nohighlight">\(\hat{i}_S\)</span>).
+Typically the RMS value for the phase current (<span class="math notranslate nohighlight">\(I_S\)</span>) is given as
+<span class="math notranslate nohighlight">\(\hat{i}_S = \sqrt{2}~I_S\)</span></p>
+<p>If not specified, nominal values are equal to their corresponding limit values.
+Furthermore, if specific limits/nominal values (e.g. i_a) are not specified they are inferred from
+the general limits/nominal values (e.g. i)</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor_parameter</strong> – Motor parameter dictionary. Contents specified
+for each motor.</p></li>
+<li><p><strong>nominal_values</strong> – Nominal values for the motor quantities.</p></li>
+<li><p><strong>limit_values</strong> – Limits for the motor quantities.</p></li>
+<li><p><strong>motor_initializer</strong> – <p>Initial motor states (currents)
+(‘constant’, ‘uniform’, ‘gaussian’ sampled from</p>
+<blockquote>
+<div><p>given interval or out of nominal motor values)</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>initial_limits</strong> – limits for of the initial state-value</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.electrical_jacobian">
+<code class="sig-name descname">electrical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">u_in</em>, <em class="sig-param">omega</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/electric_motors/permanent_magnet_synchronous_motor.html#PermanentMagnetSynchronousMotor.electrical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.electric_motors.PermanentMagnetSynchronousMotor.electrical_jacobian" title="Permalink to this definition"></a></dt>
+<dd><p>Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The motors state.</p></li>
+<li><p><strong>u_in</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – The motors input voltages.</p></li>
+<li><p><strong>omega</strong> (<em>float</em>) – Angular velocity of the motor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of all electrical motor states over all electrical motor states shape:(states x states)
+[1]: Derivatives of all electrical motor states over omega shape:(states,)
+[2]: Derivative of Torque over all motor states shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 <div class="section" id="references">

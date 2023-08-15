@@ -101,6 +101,96 @@
              
   <div class="section" id="state-plot">
 <h1>State Plot<a class="headerlink" href="#state-plot" title="Permalink to this headline"></a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard_plots.</code><code class="sig-name descname">StatePlot</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/state_plot.html#StatePlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot" title="Permalink to this definition"></a></dt>
+<dd><p>Plot to display the environments states and their references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>str</em>) – Name of the state to plot</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.data_idx">
+<em class="property">property </em><code class="sig-name descname">data_idx</code><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.data_idx" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the current index to access the time and data arrays.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">axis</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/state_plot.html#StatePlot.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Initialization of the plot.</p>
+<p>It is called by the MotorDashboard. Set labels, legends… when overriding this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>axis</strong> (<em>matplotlib.pyplot.axis</em>) – Axis to plot in</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_close">
+<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_close" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of a close</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_reset_begin">
+<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_reset_begin" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of each reset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_reset_end">
+<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_reset_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the end of each reset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_step_begin">
+<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_step_begin" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_step_end">
+<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">terminated</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/state_plot.html#StatePlot.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.on_step_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the end of each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.render" title="Permalink to this definition"></a></dt>
+<dd><p>Update of the plots axis.</p>
+<p>The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
+are scaled dynamically.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.reset_data">
+<code class="sig-name descname">reset_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/state_plot.html#StatePlot.reset_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.reset_data" title="Permalink to this definition"></a></dt>
+<dd><p>Called by the dashboard, when the figures are reset to generate a new figure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_env">
+<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/state_plot.html#StatePlot.set_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_env" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the environment of the motor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_width">
+<code class="sig-name descname">set_width</code><span class="sig-paren">(</span><em class="sig-param">width</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_width" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the width of the plot in data points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>width</strong> (<em>int &gt; 0</em>) – The width of the plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
