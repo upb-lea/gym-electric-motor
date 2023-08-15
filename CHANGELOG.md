@@ -6,12 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ## Added
+## Changed
+## Fixed
+
+## [2.0.0] - 2023-08-15
+## Added
 - Support for Python 3.10
 - Changed API to be compatible with Gymnasium v0.29.0
 - Output a Motor Dashborad graph as PNG or PDF file (with LaTeX font)
 - Automated integration test (run a motor simulation with controller)
-
-
 
 ## Changed
 - Dropped support for Python 3.7 (due to gymnasium not supporting it)
