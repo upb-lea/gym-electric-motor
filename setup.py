@@ -4,7 +4,7 @@ import setuptools
 AUTHORS = [
     'Arne Traue', 'Gerrit Book', 'Praneeth Balakrishna',
     'Pascal Peters', 'Pramod Manjunatha', 'Darius Jakobeit', 'Felix Book', 
-    'Max Schenke', 'Wilhelm Kirchgässner', 'Oliver Wallscheid', 'Barnabas Haucke-Korber",
+    'Max Schenke', 'Wilhelm Kirchgässner', 'Oliver Wallscheid', 'Barnabas Haucke-Korber',
     'Stefan Arndt', 'Marius Köhler'
 ]
 
