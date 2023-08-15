@@ -30,5 +30,4 @@ examples/logs/
 /my_examples/
 .vscode/settings.json
 .vscode/launch.json
-
 plots/
