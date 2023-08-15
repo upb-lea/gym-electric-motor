@@ -1,5 +1,5 @@
 import numpy as np
-from gym.spaces import Box
+from gymnasium.spaces import Box
 
 from ..random_component import RandomComponent
 from ..core import ReferenceGenerator
@@ -47,7 +47,7 @@ class SwitchedReferenceGenerator(ReferenceGenerator, RandomComponent):
             sub_generator.set_modules(physical_system)
         ref_space_low = np.min([sub_generator.reference_space.low for sub_generator in self._sub_generators], axis=0)
         ref_space_high = np.max([sub_generator.reference_space.high for sub_generator in self._sub_generators], axis=0)
-        self.reference_space = Box(ref_space_low, ref_space_high)
+        self.reference_space = Box(ref_space_low, ref_space_high, dtype=float)
         self._referenced_states = self._sub_generators[0].referenced_states
         for sub_generator in self._sub_generators:
             assert np.all(sub_generator.referenced_states == self._referenced_states), \

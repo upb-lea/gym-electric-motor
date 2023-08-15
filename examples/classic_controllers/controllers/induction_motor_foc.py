@@ -1,6 +1,6 @@
 from .flux_observer import FluxObserver
 from .plot_external_data import plot
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import numpy as np
 
 

@@ -49,14 +49,13 @@ if __name__ == '__main__':
 
     controller = Controller.make(env, stages=stages, external_plot=external_ref_plots)
 
-    state, reference = env.reset()
+    (state, reference), _ = env.reset()
 
     # simulate the environment
     for i in range(10001):
-        env.render()
         action = controller.control(state, reference)
-        (state, reference), reward, done, _ = env.step(action)
-        if done:
+        (state, reference), reward, terminated, truncated, _ = env.step(action)
+        if terminated:
             env.reset()
             controller.reset()
     env.close()

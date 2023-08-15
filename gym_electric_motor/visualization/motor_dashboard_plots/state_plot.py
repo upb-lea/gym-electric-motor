@@ -17,20 +17,20 @@ class StatePlot(TimePlot):
         'omega': r'$\omega$/(1/s)',
         'torque': '$T$/Nm',
         'i': '$i$/A',
-        'i_a': '$i_{a}$/A',
-        'i_e': '$i_{e}$/A',
-        'i_b': '$i_{b}$/A',
-        'i_c': '$i_{c}$/A',
-        'i_sq': '$i_{sq}$/A',
-        'i_sd': '$i_{sd}$/A',
+        'i_a': r'$i_{\mathrm{a}}$/A',
+        'i_e': r'$i_{\mathrm{e}}$/A',
+        'i_b': r'$i_{\mathrm{b}}$/A',
+        'i_c': r'$i_{\mathrm{c}}$/A',
+        'i_sq': r'$i_{\mathrm{sq}}$/A',
+        'i_sd': r'$i_{\mathrm{sd}}$/A',
         'u': '$u$/V',
-        'u_a': '$u_{a}$/V',
-        'u_b': '$u_{b}$/V',
-        'u_c': '$u_{c}$/V',
-        'u_sq': '$u_{sq}$/V',
-        'u_sd': '$u_{sd}$/V',
-        'u_e': '$u_{e}$/V',
-        'u_sup': '$u_{sup}$/V',
+        'u_a': r'$u_{\mathrm{a}}$/V',
+        'u_b': r'$u_{\mathrm{b}}$/V',
+        'u_c': r'$u_{\mathrm{c}}$/V',
+        'u_sq': r'$u_{\mathrm{sq}}$/V',
+        'u_sd': r'$u_{\mathrm{sd}}$/V',
+        'u_e': r'$u_{\mathrm{e}}$/V',
+        'u_sup': r'$u_{\mathrm{sup}}$/V',
         'epsilon': r'$\epsilon$/rad'
     }
 
@@ -71,6 +71,10 @@ class StatePlot(TimePlot):
         # Flag, if the passed data is normalized
         self._normalized = True
 
+        self._scale_plots_to_data = False
+
+        
+
     def set_env(self, env):
         # Docstring of superclass
         super().set_env(env)
@@ -96,6 +100,10 @@ class StatePlot(TimePlot):
 
         # Set the y-axis label
         self._label = self.state_labels.get(self._state, self._state)
+
+        self._scale_plots_to_data = env.scale_plots
+
+       
 
     def reset_data(self):
         super().reset_data()
@@ -138,8 +146,8 @@ class StatePlot(TimePlot):
 
         self._y_data = [self._state_data, self._ref_data]
 
-    def on_step_end(self, k, state, reference, reward, done):
-        super().on_step_end(k, state, reference, reward, done)
+    def on_step_end(self, k, state, reference, reward, terminated):
+        super().on_step_end(k, state, reference, reward, terminated)
         # Write the data to the data containers
         state_ = state[self._state_idx]
         ref = reference[self._state_idx]

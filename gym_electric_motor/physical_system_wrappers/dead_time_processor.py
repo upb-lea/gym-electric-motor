@@ -1,7 +1,7 @@
 from collections import deque
 import numpy as np
 
-import gym.spaces
+import gymnasium.spaces
 from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
 
 
@@ -45,11 +45,11 @@ class DeadTimeProcessor(PhysicalSystemWrapper):
         super().set_physical_system(physical_system)
         if self._reset_actions is None:
             action_space = physical_system.action_space
-            if isinstance(action_space, gym.spaces.Discrete):
+            if isinstance(action_space, gymnasium.spaces.Discrete):
                 reset_action = 0
-            elif isinstance(action_space, gym.spaces.MultiDiscrete):
+            elif isinstance(action_space, gymnasium.spaces.MultiDiscrete):
                 reset_action = [np.zeros_like(action_space.nvec)]
-            elif isinstance(action_space, gym.spaces.Box):
+            elif isinstance(action_space, gymnasium.spaces.Box):
                 reset_action = np.zeros(action_space.shape, dtype=np.float64)
             else:
                 raise AssertionError(

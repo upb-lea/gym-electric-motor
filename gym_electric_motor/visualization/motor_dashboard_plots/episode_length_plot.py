@@ -21,7 +21,7 @@ class EpisodeLengthPlot(EpisodePlot):
         super().initialize(axis)
         self._lines.append(self._axis.plot([], [], color=self._colors[0])[0])
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         self._episode_length = k
 
     def reset_data(self):

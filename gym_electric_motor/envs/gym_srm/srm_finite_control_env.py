@@ -1,7 +1,7 @@
-import gym
+import gymnasium
 
 
-class SRMFiniteControlEnv(gym.Env):
+class SRMFiniteControlEnv(gymnasium.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):

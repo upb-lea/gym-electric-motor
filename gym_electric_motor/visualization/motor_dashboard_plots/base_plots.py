@@ -172,10 +172,10 @@ class TimePlot(MotorDashboardPlot):
                 self._reset_memory.append(self._t)
         self._done = False
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         self._k += 1
         self._t += self._tau
-        self._done = done
+        self._done = terminated
 
     def render(self):
         super().render()
@@ -195,6 +195,15 @@ class TimePlot(MotorDashboardPlot):
         lower_lim = upper_lim - self._x_width * self._tau
         self._axis.set_xlim(lower_lim, upper_lim)
 
+    def _scale_y_axis(self):
+        if self._scale_plots_to_data:
+
+            y_min = min(np.nanmin(self._y_data[0]), np.nanmin(self._y_data[1]))
+            y_max = max(np.nanmax(self._y_data[0]), np.nanmax(self._y_data[1]))
+
+            self._axis.set_ylim(y_min-np.sign(y_min)*0.1*y_min,
+                                y_max+np.sign(y_max)*0.1*y_max)
+           
 
 class EpisodePlot(MotorDashboardPlot):
     """Base Plot class that all episode based plots ."""

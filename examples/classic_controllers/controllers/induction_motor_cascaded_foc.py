@@ -2,7 +2,7 @@ from .continuous_controller import ContinuousController
 from .induction_motor_torque_to_current_conversion import InductionMotorTorqueToCurrentConversion
 from .flux_observer import FluxObserver
 from .plot_external_data import plot
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import numpy as np
 
 

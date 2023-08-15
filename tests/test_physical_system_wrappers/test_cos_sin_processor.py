@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 import pytest
 import numpy as np
 import gym_electric_motor as gem
@@ -22,7 +22,7 @@ class TestCosSinProcessor(TestPhysicalSystemWrapper):
     def test_state_space(self, processor, physical_system):
         low = np.concatenate((physical_system.state_space.low, [-1, -1]))
         high = np.concatenate((physical_system.state_space.high, [1, 1]))
-        space = gym.spaces.Box(low, high)
+        space = gymnasium.spaces.Box(low, high, dtype=float)
         assert processor.state_space == space
 
     def test_reset(self, processor, physical_system):

@@ -3,7 +3,7 @@ from ..testing_utils import DummyConverter, DummyLoad, DummyOdeSolver, DummyVolt
     mock_instantiate, instantiate_dict
 from gym_electric_motor.physical_systems import physical_systems as ps, converters as cv, electric_motors as em,\
     mechanical_loads as ml, voltage_supplies as vs, solvers as sv
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import pytest
 
 
@@ -41,7 +41,8 @@ class TestSCMLSystem:
             '_build_state_space',
             lambda _, state_names: Box(
                 low=np.zeros_like(state_names, dtype=float),
-                high=np.zeros_like(state_names, dtype=float)
+                high=np.zeros_like(state_names, dtype=float),
+                dtype=float
             )
         )
         return self.class_to_test(

@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 from numpy.random import seed
 import numpy.random as rd
 import pytest
@@ -196,12 +196,12 @@ class TestSwitchedReferenceGenerator:
         sub_generator[0]._limit_margin = (1, 0)
         sub_generator[1]._limit_margin = (0, 0.5)
 
-        expected_space = gym.spaces.Box(-1, 0.5, shape=(1,))
+        expected_space = gymnasium.spaces.Box(-1, 0.5, shape=(1,))
         self._sub_generator = sub_generator
         test_object = SwitchedReferenceGenerator(sub_generator)
 
         self._physical_system = DummyPhysicalSystem(7)
-        self._physical_system._state_space = gym.spaces.Box(-1, 1, shape=self._physical_system.state_space.shape)
+        self._physical_system._state_space = gymnasium.spaces.Box(-1, 1, shape=self._physical_system.state_space.shape)
         # call function to test
         test_object.set_modules(self._physical_system)
         # verify the expected results
@@ -705,14 +705,14 @@ class TestConstReferenceGenerator(TestReferenceGenerator):
 
     @pytest.fixture
     def reference_generator(self, physical_system):
-        rg = ConstReferenceGenerator(reference_state=physical_system.state_names[1], reference_value=1)
+        rg = ConstReferenceGenerator(reference_state=physical_system.state_names[1], reference_value=1.0)
         rg.set_modules(physical_system)
         return rg
 
     @pytest.mark.parametrize('reference_value, reference_state', [(0.8, 'abc')])
     def test_initialization(self, reference_value, reference_state):
         rg = ConstReferenceGenerator(reference_value=reference_value, reference_state=reference_state)
-        assert rg.reference_space == Box(np.array([reference_value]), np.array([reference_value]))
+        assert rg.reference_space == Box(np.array([reference_value]), np.array([reference_value]), dtype=np.float64)
         assert rg._reference_value == reference_value
         assert rg._reference_state == reference_state
 

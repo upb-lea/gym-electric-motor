@@ -76,7 +76,7 @@ class RampingLimitMargin(Callback):
         else:
             self._env.reference_generator._limit_margin = self._limit_margin
         
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         # See docstring of superclass
         if self._update_time == 'step':
             self._step += 1

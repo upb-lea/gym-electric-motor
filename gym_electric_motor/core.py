@@ -17,17 +17,23 @@ Each ElectricMotorEnvironment contains the five following modules:
     - Visualization of the PhysicalSystems state, reference and reward for the user.
 
 """
-import gym
+import os
+import datetime
+
+import gymnasium
 import numpy as np
-from gym.spaces import Box
+from gymnasium.spaces import Box
 
 from .utils import instantiate
 from .random_component import RandomComponent
 from .constraints import Constraint, LimitConstraint
 import gym_electric_motor as gem
+import matplotlib.pyplot
+from matplotlib.figure import Figure
+import matplotlib
 
 
-class ElectricMotorEnvironment(gym.core.Env):
+class ElectricMotorEnvironment(gymnasium.core.Env):
     """
     Description:
         The main class connecting all modules of the gym-electric-motor environments.
@@ -84,6 +90,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         The reward function can terminate an episode, if a physical limit of the motor has been violated.
     """
 
+    env_id = None
+    metadata = {"render_modes": [None, "figure", "figure_once", "figure_academic"],
+                "save_figure_on_close": False,
+                "hold_figure_on_close": True}
+
     @property
     def physical_system(self):
         """
@@ -109,7 +120,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             reference_generator(ReferenceGenerator): The new reference generator of the environment.
         """
         self._reference_generator = reference_generator
-        self._done = True
+        self._terminated = True
 
     @property
     def reward_function(self):
@@ -128,7 +139,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             reward_function(RewardFunction): The new reward function of the environment.
         """
         self._reward_function = reward_function
-        self._done = True
+        self._terminated = True
 
     @property
     def constraint_monitor(self):
@@ -165,7 +176,7 @@ class ElectricMotorEnvironment(gym.core.Env):
         return self._visualizations
 
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
-                 callbacks=(), constraints=(), physical_system_wrappers=(), **kwargs):
+                 callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, scale_plots = None, **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -186,6 +197,7 @@ class ElectricMotorEnvironment(gym.core.Env):
             state_filter(list(str)): Selection of states that are shown in the observation.
             physical_system_wrappers(iterable(PhysicalSystemWrapper)): PhysicalSystemWrapper instances to be wrapped around
                 the physical system.
+            render_mode(str) : if visualization is given, render_mode is set to "figure", else render_mode ist set to None
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
         """
@@ -219,16 +231,34 @@ class ElectricMotorEnvironment(gym.core.Env):
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high, dtype=np.float64)
-        self.observation_space = gym.spaces.Tuple((
+        self.observation_space = gymnasium.spaces.Tuple((
             state_space,
             self._reference_generator.reference_space
         ))
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
-        self._done = True
+        # new API splits done into two attributes
+        self._terminated = True
+        self._truncated = False
+
+        # Set render mode and metadata
+        assert render_mode in self.metadata["render_modes"]
+        self.render_mode = render_mode
+        
+        self.scale_plots = scale_plots
+
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
+
+    def make(env_id, *args, **kwargs):
+        env = gymnasium.make(env_id, *args, **kwargs)
+        env.metadata["filename_prefix"] = env_id
+
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
+        env.metadata["filename_suffix"] = f"_{timestamp}"
+
+        return env
 
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
@@ -236,20 +266,26 @@ class ElectricMotorEnvironment(gym.core.Env):
             func = getattr(callback, func_name)
             func(*args)
             
-    def reset(self, *_, **__):
+    def reset(self, seed = None,*_, **__):
         """
         Reset of the environment and all its modules to an initial state.
 
         Returns:
              The initial observation consisting of the initial state and initial reference.
+             info(dict): Auxiliary information (optional) 
         """
+
+        self._seed(seed)
         self._call_callbacks('on_reset_begin')
-        self._done = False
+        self._terminated = False
         state = self._physical_system.reset()
-        reference, next_ref, trajectories = self.reference_generator.reset(state)
+        reference, next_ref, _ = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
         self._call_callbacks('on_reset_end', state, reference)
-        return state[self.state_filter], next_ref
+
+        observation = (state[self.state_filter], next_ref)
+        info = {}
+        return observation, info
 
     def render(self, *_, **__):
         """
@@ -267,11 +303,11 @@ class ElectricMotorEnvironment(gym.core.Env):
         Returns:
             observation(Tuple(ndarray(float),ndarray(float)): Tuple of the new state and the next reference.
             reward(float): Amount of reward received for the last step.
-            done(bool): Flag, indicating if a reset is required before new steps can be taken.
-            {}: An empty dictionary for consistency with the OpenAi Gym interface.
+            terminated(bool): Flag, indicating if a reset is required before new steps can be taken.
+            info(dict): Auxiliary information (optional) 
         """
 
-        assert not self._done, 'A reset is required before the environment can perform further steps'
+        assert not self._terminated, 'A reset is required before the environment can perform further steps'
         self._call_callbacks('on_step_begin', self.physical_system.k, action)
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
@@ -279,14 +315,20 @@ class ElectricMotorEnvironment(gym.core.Env):
         reward = self._reward_function.reward(
             state, reference, self._physical_system.k, action, violation_degree
         )
-        self._done = violation_degree >= 1.0
+        self._terminated = violation_degree >= 1.0
         ref_next = self.reference_generator.get_reference_observation(state)
         self._call_callbacks(
-            'on_step_end', self.physical_system.k, state, reference, reward, self._done
+            'on_step_end', self.physical_system.k, state, reference, reward, self._terminated
         )
-        return (state[self.state_filter], ref_next), reward, self._done, {}
 
-    def seed(self, seed=None):
+        # Call render code
+        if self.render_mode == "figure":
+            self.render()
+        
+        info = {}
+        return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, info
+    
+    def _seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
         components = [
             self._physical_system,
@@ -299,6 +341,46 @@ class ElectricMotorEnvironment(gym.core.Env):
             if isinstance(rc, gem.RandomComponent):
                 rc.seed(sub)
         return [sg.entropy]
+    
+    def save_fig(self, figure, filetype="png"):
+        """ Save figure with timestamped as filename """
+        # create output folder if it not exists
+        output_folder_name = "plots"
+        if not os.path.exists(output_folder_name):
+            # Create the folder "gem_output"
+            os.makedirs(output_folder_name)
+
+        filename_prefix = self.metadata["filename_prefix"]
+        filename_suffix = self.metadata["filename_suffix"]
+        filename = f"{output_folder_name}/{filename_prefix}{filename_suffix}.{filetype}"
+        figure.savefig(filename, dpi=300)
+
+    def rendering_on_close(self):
+
+        # Figure Mode
+        if self.render_mode and self.render_mode.startswith("figure"):
+
+            # Academic Mode (latex font)
+            if self.render_mode == "figure_academic":
+                matplotlib.rcParams.update({
+                    "text.usetex": True,
+                    "font.family": "Helvetica"
+                })
+
+            self.render()
+
+            # Save figure with timestamp as filename
+            if self.metadata["save_figure_on_close"]:
+                if self.render_mode == "figure_academic":
+                    self.save_fig(self.figure(), filetype="pdf")
+                else:
+                    self.save_fig(self.figure())
+
+            # Blocking plot call to still interactive with it
+            if self.metadata["hold_figure_on_close"]:
+                matplotlib.pyplot.show(block=True)
+        
+            
 
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
@@ -307,12 +389,21 @@ class ElectricMotorEnvironment(gym.core.Env):
         self._physical_system.close()
         self._reference_generator.close()
 
+        self.rendering_on_close()
+
+
+    def figure(self) -> Figure:
+        """ Get main figure (MotorDashboard) """
+        assert len(self._visualizations) == 1
+        motor_dashboard = self._visualizations[0]
+        assert len(motor_dashboard._figures) == 1
+        return motor_dashboard._figures[0]
 
 class ReferenceGenerator:
     """The abstract base class for reference generators in gym electric motor environments.
 
     reference_space:
-        Space of reference observations as defined in the OpenAI Gym Toolbox.
+        Space of reference observations as defined in the Farama Gymnasium Toolbox.
 
     The reference generator is called twice per step.
 
@@ -546,7 +637,7 @@ class PhysicalSystem:
     def action_space(self):
         """
         Returns:
-            gym.Space: An OpenAI Gym Space that describes the possible actions on the system.
+            gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.
         """
         return self._action_space
 
@@ -554,7 +645,7 @@ class PhysicalSystem:
     def state_space(self):
         """
         Returns:
-             gym.Space: An OpenAI Gym Space that describes the possible states of the system.
+             gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.
         """
         return self._state_space
 
@@ -577,8 +668,8 @@ class PhysicalSystem:
     def __init__(self, action_space, state_space, state_names, tau):
         """
         Args:
-            action_space(gym.Space): The set of allowed actions on the system.
-            state_space(gym.Space): The set of possible systems states.
+            action_space(gymnasium.Space): The set of allowed actions on the system.
+            state_space(gymnasium.Space): The set of possible systems states.
             state_names(ndarray(str)): The names of the systems states
             tau(float): The systems simulation time interval.
         """
@@ -645,7 +736,7 @@ class Callback:
         """Gets called at the beginning of each step"""
         pass
 
-    def on_step_end(self, k, state, reference, reward, done):
+    def on_step_end(self, k, state, reference, reward, terminated):
         """Gets called at the end of each step"""
         pass
 

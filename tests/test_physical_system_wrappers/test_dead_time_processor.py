@@ -1,4 +1,4 @@
-import gym
+import gymnasium
 import pytest
 import numpy as np
 import gym_electric_motor as gem
@@ -32,22 +32,22 @@ class TestDeadTimeProcessor(TestPhysicalSystemWrapper):
         ['action_space', 'actions', 'reset_action'],
         [
          [
-            gym.spaces.Box(-100, 100, shape=(3,)),
+            gymnasium.spaces.Box(-100, 100, shape=(3,)),
             [np.array([1., 2., 3.]), np.array([0., 1., 2.]), np.array([-1, 2, 3])],
             np.array([0., 0., 0.])
          ],
          [
-            gym.spaces.Box(-100, 100, shape=(1,)),
+            gymnasium.spaces.Box(-100, 100, shape=(1,)),
             [np.array([-1.]), np.array([0.]), np.array([-5.]), np.array([-6.]), np.array([-7.])],
             np.array([0.])
          ],
          [
-            gym.spaces.MultiDiscrete([10, 20, 30]),
+            gymnasium.spaces.MultiDiscrete([10, 20, 30]),
             [[5, 8, 7], [3, 4, 5], [0, 0, 1], [0, 1, 1], [0, 0, 1]],
             [0, 0, 0]
          ],
          [
-             gym.spaces.Discrete(12),
+             gymnasium.spaces.Discrete(12),
              [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
              0
          ]
@@ -67,7 +67,7 @@ class TestDeadTimeProcessor(TestPhysicalSystemWrapper):
 
     @pytest.mark.parametrize('processor', [gem.physical_system_wrappers.DeadTimeProcessor()])
     def test_false_action_space(self, processor, physical_system):
-        physical_system._action_space = gym.spaces.MultiBinary(5)
+        physical_system._action_space = gymnasium.spaces.MultiBinary(5)
         with pytest.raises(AssertionError):
             assert processor.set_physical_system(physical_system)
 
