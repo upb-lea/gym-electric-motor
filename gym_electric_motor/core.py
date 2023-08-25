@@ -281,7 +281,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         reference, next_ref, _ = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
         self._call_callbacks('on_reset_end', state, reference)
-        return state[self.state_filter], next_ref
+        return [state[self.state_filter], next_ref], {}
 
     def render(self, *_, **__):
         """
