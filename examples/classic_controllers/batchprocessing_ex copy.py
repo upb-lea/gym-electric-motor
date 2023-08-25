@@ -36,10 +36,15 @@ if __name__ == '__main__':
 
     state, reference = env.reset(seed=42)
 
-    actions = np.array([1, 0, 1])
+    actions = np.array([1, 0])
 
-    for i in range(101): 
+    env_buff = gem.make(motor, visualization=MotorDashboard(additional_plots=external_ref_plots), render_mode="figure")
+    controller1 = Controller.make(env_buff, external_ref_plots=external_ref_plots)
+    controller2 = Controller.make(env_buff, external_ref_plots=external_ref_plots)
+
+    for i in range(10001):
+        actions = [controller1.control(state[0][0], state[1][0]),controller2.control(state[0][1], state[1][1])] 
         observations, rewards, termination, truncation, infos = env.step(actions)
 
-    observations
+    env.close()
 

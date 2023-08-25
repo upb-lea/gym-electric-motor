@@ -51,9 +51,10 @@ if __name__ == '__main__':
     
     """
     visualization = MotorDashboard(additional_plots=external_ref_plots)
+    
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
-    state, reference = env.reset(seed = None)
+    [state, reference], info = env.reset(seed = None)
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)
