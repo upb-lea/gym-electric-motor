@@ -5,14 +5,15 @@ import tests.testing_utils as tu
 
 
 class TestPhysicalSystemWrapper:
-
     @pytest.fixture
     def physical_system(self):
         return tu.DummyPhysicalSystem()
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.physical_system_wrappers.PhysicalSystemWrapper(physical_system=physical_system)
+        return gem.physical_system_wrappers.PhysicalSystemWrapper(
+            physical_system=physical_system
+        )
 
     @pytest.fixture
     def reset_processor(self, processor):
@@ -21,7 +22,9 @@ class TestPhysicalSystemWrapper:
 
     @pytest.fixture
     def double_wrapped(self, processor):
-        return gem.physical_system_wrappers.PhysicalSystemWrapper(physical_system=processor)
+        return gem.physical_system_wrappers.PhysicalSystemWrapper(
+            physical_system=processor
+        )
 
     def test_action_space(self, processor, physical_system):
         assert processor.action_space == physical_system.action_space
@@ -44,7 +47,7 @@ class TestPhysicalSystemWrapper:
     def test_reset(self, processor, physical_system):
         assert all(processor.reset() == physical_system.state)
 
-    @pytest.mark.parametrize(['action'], [[1]])
+    @pytest.mark.parametrize(["action"], [[1]])
     def test_simulate(self, reset_processor, physical_system, action):
         state = reset_processor.simulate(action)
         assert state == physical_system.state

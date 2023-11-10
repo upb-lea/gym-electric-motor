@@ -14,7 +14,7 @@ class DcPermanentlyExcitedMotor(DcMotor):
     psi_e                  Wb          0.165         Magnetic Flux of the permanent magnet
     j_rotor                kg/m^2      0.025         Moment of inertia of the rotor
     =====================  ==========  ============= ===========================================
-    
+
     =============== ====== =============================================
     Motor Currents  Unit   Description
     =============== ====== =============================================
@@ -37,24 +37,28 @@ class DcPermanentlyExcitedMotor(DcMotor):
     u        Circuit Voltage
     ======== ===========================================================
     """
+
     I_IDX = 0
     CURRENTS_IDX = [0]
-    CURRENTS = ['i']
-    VOLTAGES = ['u']
+    CURRENTS = ["i"]
+    VOLTAGES = ["u"]
     HAS_JACOBIAN = True
 
     # Motor parameter, nominal values and limits are based on the following DC Motor:
     # https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor
     _default_motor_parameter = {
-        'r_a': 16e-3, 'l_a': 19e-6, 'psi_e': 0.165, 'j_rotor': 0.025
+        "r_a": 16e-3,
+        "l_a": 19e-6,
+        "psi_e": 0.165,
+        "j_rotor": 0.025,
     }
     _default_nominal_values = dict(omega=300, torque=16.0, i=97, u=60)
     _default_limits = dict(omega=400, torque=38.0, i=210, u=60)
     _default_initializer = {
-        'states': {'i': 0.0},
-        'interval': None,
-        'random_init': None,
-        'random_params': (None, None)
+        "states": {"i": 0.0},
+        "interval": None,
+        "random_init": None,
+        "random_params": (None, None),
     }
 
     # placeholder for omega, currents and u_in
@@ -62,15 +66,13 @@ class DcPermanentlyExcitedMotor(DcMotor):
 
     def torque(self, state):
         # Docstring of superclass
-        return self._motor_parameter['psi_e'] * state[self.I_IDX]
+        return self._motor_parameter["psi_e"] * state[self.I_IDX]
 
     def _update_model(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        self._model_constants = np.array([
-            [-mp['psi_e'], -mp['r_a'], 1.0]
-        ])
-        self._model_constants[self.I_IDX] /= mp['l_a']
+        self._model_constants = np.array([[-mp["psi_e"], -mp["r_a"], 1.0]])
+        self._model_constants[self.I_IDX] /= mp["l_a"]
 
     def i_in(self, state):
         # Docstring of superclass
@@ -78,26 +80,28 @@ class DcPermanentlyExcitedMotor(DcMotor):
 
     def electrical_ode(self, state, u_in, omega, *_):
         # Docstring of superclass
-        self._ode_placeholder[:] = [omega] + np.atleast_1d(state[self.I_IDX]).tolist() + [u_in[0]]
+        self._ode_placeholder[:] = (
+            [omega] + np.atleast_1d(state[self.I_IDX]).tolist() + [u_in[0]]
+        )
         return np.matmul(self._model_constants, self._ode_placeholder)
 
     def electrical_jacobian(self, state, u_in, omega, *_):
         mp = self._motor_parameter
         return (
-            np.array([[-mp['r_a'] / mp['l_a']]]),
-            np.array([-mp['psi_e'] / mp['l_a']]),
-            np.array([mp['psi_e']])
+            np.array([[-mp["r_a"] / mp["l_a"]]]),
+            np.array([-mp["psi_e"] / mp["l_a"]]),
+            np.array([mp["psi_e"]]),
         )
 
     def _update_limits(self):
         # Docstring of superclass
 
         # R_a might be 0, protect against that
-        r_a = 1 if self._motor_parameter['r_a'] == 0 else self._motor_parameter['r_a']
+        r_a = 1 if self._motor_parameter["r_a"] == 0 else self._motor_parameter["r_a"]
 
         limits_agenda = {
-            'u': self._default_limits['u'],
-            'i': self._limits['u'] / r_a,
+            "u": self._default_limits["u"],
+            "i": self._limits["u"] / r_a,
         }
         super()._update_limits(limits_agenda)
 
@@ -105,15 +109,15 @@ class DcPermanentlyExcitedMotor(DcMotor):
         # Docstring of superclass
         lower_limit = 0
         low = {
-            'omega': -1 if input_voltages.low[0] == -1 else 0,
-            'torque': -1 if input_currents.low[0] == -1 else 0,
-            'i': -1 if input_currents.low[0] == -1 else 0,
-            'u': -1 if input_voltages.low[0] == -1 else 0,
+            "omega": -1 if input_voltages.low[0] == -1 else 0,
+            "torque": -1 if input_currents.low[0] == -1 else 0,
+            "i": -1 if input_currents.low[0] == -1 else 0,
+            "u": -1 if input_voltages.low[0] == -1 else 0,
         }
         high = {
-            'omega': 1,
-            'torque': 1,
-            'i': 1,
-            'u': 1,
+            "omega": 1,
+            "torque": 1,
+            "i": 1,
+            "u": 1,
         }
         return low, high

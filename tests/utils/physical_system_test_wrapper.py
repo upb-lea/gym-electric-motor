@@ -2,7 +2,6 @@ import gym_electric_motor as gem
 
 
 class PhysicalSystemTestWrapper(gem.physical_system_wrappers.PhysicalSystemWrapper):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.action = None

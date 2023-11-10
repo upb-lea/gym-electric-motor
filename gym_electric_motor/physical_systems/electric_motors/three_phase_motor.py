@@ -6,23 +6,17 @@ from .electric_motor import ElectricMotor
 
 class ThreePhaseMotor(ElectricMotor):
     """
-            The ThreePhaseMotor and its subclasses implement the technical system of Three Phase Motors.
+    The ThreePhaseMotor and its subclasses implement the technical system of Three Phase Motors.
 
-            This includes the system equations, the motor parameters of the equivalent circuit diagram,
-            as well as limits and bandwidth.
+    This includes the system equations, the motor parameters of the equivalent circuit diagram,
+    as well as limits and bandwidth.
     """
+
     # transformation matrix from abc to alpha-beta representation
-    _t23 = 2 / 3 * np.array([
-        [1, -0.5, -0.5],
-        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]
-    ])
+    _t23 = 2 / 3 * np.array([[1, -0.5, -0.5], [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]])
 
     # transformation matrix from alpha-beta to abc representation
-    _t32 = np.array([
-        [1, 0],
-        [-0.5, 0.5 * np.sqrt(3)],
-        [-0.5, -0.5 * np.sqrt(3)]
-    ])
+    _t32 = np.array([[1, 0], [-0.5, 0.5 * np.sqrt(3)], [-0.5, -0.5 * np.sqrt(3)]])
 
     @staticmethod
     def t_23(quantities):
@@ -64,7 +58,9 @@ class ThreePhaseMotor(ElectricMotor):
         """
         cos = math.cos(epsilon)
         sin = math.sin(epsilon)
-        return cos * quantities[0] - sin * quantities[1], sin * quantities[0] + cos * quantities[1]
+        return cos * quantities[0] - sin * quantities[1], sin * quantities[
+            0
+        ] + cos * quantities[1]
 
     @staticmethod
     def q_inv(quantities, epsilon):
@@ -94,7 +90,7 @@ class ThreePhaseMotor(ElectricMotor):
         Returns:
             Array of the two quantities converted to alpha-beta-representation. Example [u_alpha, u_beta]
         """
-        return self.q(quantities, epsilon * self._motor_parameter['p'])
+        return self.q(quantities, epsilon * self._motor_parameter["p"])
 
     def q_inv_me(self, quantities, epsilon):
         """

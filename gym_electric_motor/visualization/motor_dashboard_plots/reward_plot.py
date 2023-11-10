@@ -12,11 +12,13 @@ class RewardPlot(TimePlot):
         self._reward_line = None
         self._reward_data = None
         self._reward_line_cfg = self._default_time_line_cfg.copy()
-        self._reward_line_cfg['color'] = self._colors[-1]
+        self._reward_line_cfg["color"] = self._colors[-1]
 
     def initialize(self, axis):
         super().initialize(axis)
-        self._reward_line, = self._axis.plot(self._x_data, self._reward_data, **self._reward_line_cfg)
+        (self._reward_line,) = self._axis.plot(
+            self._x_data, self._reward_data, **self._reward_line_cfg
+        )
         self._lines.append(self._reward_line)
 
     def set_env(self, env):
@@ -28,7 +30,7 @@ class RewardPlot(TimePlot):
         max_limit = self._reward_range[1]
         spacing = 0.1 * (max_limit - min_limit)
         self._y_lim = (min_limit - spacing, max_limit + spacing)
-        self._label = 'reward'
+        self._label = "reward"
 
     def reset_data(self):
         super().reset_data()

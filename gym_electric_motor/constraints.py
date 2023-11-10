@@ -41,7 +41,7 @@ class LimitConstraint(Constraint):
 
     """
 
-    def __init__(self, observed_state_names='all_states'):
+    def __init__(self, observed_state_names="all_states"):
         """
         Args:
             observed_state_names(['all_states']/iterable(str)): The states to observe. \n
@@ -59,7 +59,7 @@ class LimitConstraint(Constraint):
 
     def set_modules(self, ps):
         self._limits = ps.limits
-        if 'all_states' in self._observed_state_names:
+        if "all_states" in self._observed_state_names:
             self._observed_state_names = ps.state_names
         if self._observed_state_names is None:
             self._observed_state_names = []
@@ -91,8 +91,14 @@ class SquaredConstraint(Constraint):
     def set_modules(self, ps):
         self._state_indices = [ps.state_positions[state] for state in self._states]
         self._limits = ps.limits[self._state_indices]
-        self._normalized = not np.all(ps.state_space.high[self._state_indices] == self._limits)
+        self._normalized = not np.all(
+            ps.state_space.high[self._state_indices] == self._limits
+        )
 
     def __call__(self, state):
-        state_ = state[self._state_indices] if self._normalized else state[self._state_indices] / self._limits
+        state_ = (
+            state[self._state_indices]
+            if self._normalized
+            else state[self._state_indices] / self._limits
+        )
         return float(np.sum(state_**2) > 1.0)

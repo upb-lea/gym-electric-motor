@@ -6,8 +6,8 @@ from .mechanical_load import MechanicalLoad
 
 class ExternalSpeedLoad(MechanicalLoad):
     """
-       External speed mechanical load system which will set the speed to a
-       predefined speed-function/ speed-profile.
+    External speed mechanical load system which will set the speed to a
+    predefined speed-function/ speed-profile.
     """
 
     HAS_JACOBIAN = False
@@ -20,7 +20,14 @@ class ExternalSpeedLoad(MechanicalLoad):
         """
         return self._omega_initial
 
-    def __init__(self, speed_profile, load_initializer=None, tau=1e-4, speed_profile_kwargs=None, **kwargs):
+    def __init__(
+        self,
+        speed_profile,
+        load_initializer=None,
+        tau=1e-4,
+        speed_profile_kwargs=None,
+        **kwargs,
+    ):
         """
         Args:
             speed_profile(float -> float): A callable(t, **speed_profile_args) -> float
@@ -38,11 +45,12 @@ class ExternalSpeedLoad(MechanicalLoad):
         speed_profile_kwargs = speed_profile_kwargs or {}
         if load_initializer is not None:
             warnings.warn(
-                'Given initializer will be overwritten with starting value '
-                'from speed-profile, to avoid complications at the load reset.'
-                ' It is recommended to choose starting value of'
-                ' load by the defined speed-profile.',
-                UserWarning)
+                "Given initializer will be overwritten with starting value "
+                "from speed-profile, to avoid complications at the load reset."
+                " It is recommended to choose starting value of"
+                " load by the defined speed-profile.",
+                UserWarning,
+            )
 
         self.speed_profile_kwargs = speed_profile_kwargs
         self._speed_profile = speed_profile
@@ -53,11 +61,12 @@ class ExternalSpeedLoad(MechanicalLoad):
     def mechanical_ode(self, t, mechanical_state, torque=None):
         # Docstring of superclass
         # calc next omega with given profile und tau
-        omega_next = self._speed_profile(t=t+self._tau, **self.speed_profile_kwargs)
+        omega_next = self._speed_profile(t=t + self._tau, **self.speed_profile_kwargs)
         # calculated T out of euler-forward, given omega_next and
         # actual omega give from system
-        return np.array([(1 / self._tau) *
-                         (omega_next - mechanical_state[self.OMEGA_IDX])])
+        return np.array(
+            [(1 / self._tau) * (omega_next - mechanical_state[self.OMEGA_IDX])]
+        )
 
     def mechanical_jacobian(self, t, mechanical_state, torque):
         # Docstring of superclass

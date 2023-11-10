@@ -94,7 +94,9 @@ class EulerSolver(OdeSolver):
                 but take also longer to compute.
         """
         self._nsteps = nsteps
-        self._integrate = self._integrate_one_step if nsteps == 1 else self._integrate_nsteps
+        self._integrate = (
+            self._integrate_one_step if nsteps == 1 else self._integrate_nsteps
+        )
 
     def integrate(self, t):
         # Docstring of superclass
@@ -131,7 +133,9 @@ class EulerSolver(OdeSolver):
         Returns:
             ndarray(float):The new state of the system.
         """
-        self._y = self._y + self._system_equation(self._t, self._y, *self._f_params) * (t - self._t)
+        self._y = self._y + self._system_equation(self._t, self._y, *self._f_params) * (
+            t - self._t
+        )
         self._t = t
         return self._y
 
@@ -154,7 +158,7 @@ class ScipyOdeSolver(OdeSolver):
     def y(self):
         return self._ode.y
 
-    def __init__(self, integrator='dopri5', **kwargs):
+    def __init__(self, integrator="dopri5", **kwargs):
         """
         Args:
             integrator(str): String to choose the integrator from the scipy.integrate.ode
@@ -167,7 +171,9 @@ class ScipyOdeSolver(OdeSolver):
     def set_system_equation(self, system_equation, jac=None):
         # Docstring of superclass
         super().set_system_equation(system_equation, jac)
-        self._ode = ode(system_equation, jac).set_integrator(self._integrator, **self._solver_args)
+        self._ode = ode(system_equation, jac).set_integrator(
+            self._integrator, **self._solver_args
+        )
 
     def set_initial_value(self, initial_value, t=0):
         # Docstring of superclass
@@ -197,17 +203,22 @@ class ScipySolveIvpSolver(OdeSolver):
 
     def set_system_equation(self, system_equation, jac=None):
         # Docstring of superclass
-        method = self._solver_kwargs.get('method', None)
+        method = self._solver_kwargs.get("method", None)
         super().set_system_equation(system_equation, jac)
 
         # Only Radau BDF and LSODA support the jacobian.
-        if method in ['Radau', 'BDF', 'LSODA']:
-            self._solver_kwargs['jac'] = self._system_jacobian
+        if method in ["Radau", "BDF", "LSODA"]:
+            self._solver_kwargs["jac"] = self._system_jacobian
 
     def integrate(self, t):
         # Docstring of superclass
         result = solve_ivp(
-            self._system_equation, [self._t, t], self._y, t_eval=[t], args=self._f_params, **self._solver_kwargs
+            self._system_equation,
+            [self._t, t],
+            self._y,
+            t_eval=[t],
+            args=self._f_params,
+            **self._solver_kwargs,
         )
         self._t = t
         self._y = result.y.T[-1]
@@ -230,8 +241,15 @@ class ScipyOdeIntSolver(OdeSolver):
 
     def integrate(self, t):
         # Docstring of superclass
-        result = odeint(self._system_equation, self._y, [self._t, t], args=self._f_params, Dfun=self._system_jacobian,
-                        tfirst=True, **self._solver_args)
+        result = odeint(
+            self._system_equation,
+            self._y,
+            [self._t, t],
+            args=self._f_params,
+            Dfun=self._system_jacobian,
+            tfirst=True,
+            **self._solver_args,
+        )
         self._t = t
         self._y = result[-1]
         return self._y

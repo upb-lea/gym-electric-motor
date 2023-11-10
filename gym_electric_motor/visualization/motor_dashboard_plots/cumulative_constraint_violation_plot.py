@@ -8,7 +8,7 @@ class CumulativeConstraintViolationPlot(StepPlot):
         super().__init__()
         self._no_of_violations = 0
         self._violations = [0]
-        self._label = 'Cum. No. of Constraint Violations'
+        self._label = "Cum. No. of Constraint Violations"
         self._x_data.append(0)
 
     def initialize(self, axis):

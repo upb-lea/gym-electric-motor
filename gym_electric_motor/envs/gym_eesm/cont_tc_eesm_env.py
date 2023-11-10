@@ -1,8 +1,18 @@
-from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
-    ElectricMotorVisualization
-from gym_electric_motor.physical_systems.physical_systems import ExternallyExcitedSynchronousMotorSystem, SynchronousMotorSystem
+from gym_electric_motor.core import (
+    ElectricMotorEnvironment,
+    ReferenceGenerator,
+    RewardFunction,
+    ElectricMotorVisualization,
+)
+from gym_electric_motor.physical_systems.physical_systems import (
+    ExternallyExcitedSynchronousMotorSystem,
+    SynchronousMotorSystem,
+)
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator, MultipleReferenceGenerator
+from gym_electric_motor.reference_generators import (
+    WienerProcessReferenceGenerator,
+    MultipleReferenceGenerator,
+)
 from gym_electric_motor import physical_systems as ps
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
@@ -23,7 +33,7 @@ class ContTorqueControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviron
         - Motor: :py:class:`.ExternallyExcitedSynchronousMotor`
         - Load: :py:class:`.ConstantSpeedLoad`
         - Ode-Solver: :py:class:`.EulerSolver`
-  
+
 
         - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'torque'``
 
@@ -84,10 +94,25 @@ class ContTorqueControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviron
         >>>         state, reference = env.reset()
         >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
-                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=(SquaredConstraint(('i_sq', 'i_sd')), LimitConstraint(('i_e',))), calc_jacobian=True,
-                 tau=1e-4, physical_system_wrappers=(), **kwargs):
+
+    def __init__(
+        self,
+        supply=None,
+        converter=None,
+        motor=None,
+        load=None,
+        ode_solver=None,
+        reward_function=None,
+        reference_generator=None,
+        visualization=None,
+        state_filter=None,
+        callbacks=(),
+        constraints=(SquaredConstraint(("i_sq", "i_sd")), LimitConstraint(("i_e",))),
+        calc_jacobian=True,
+        tau=1e-4,
+        physical_system_wrappers=(),
+        **kwargs,
+    ):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -126,18 +151,24 @@ class ContTorqueControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviron
         """
         default_subconverters = (
             ps.ContB6BridgeConverter(),
-            ps.ContFourQuadrantConverter()
+            ps.ContFourQuadrantConverter(),
         )
         physical_system = ExternallyExcitedSynchronousMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(
+                ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)
+            ),
             converter=initialize(
                 ps.PowerElectronicConverter,
                 converter,
                 ps.ContMultiConverter,
-                dict(subconverters=default_subconverters)
+                dict(subconverters=default_subconverters),
             ),
-            motor=initialize(ps.ElectricMotor, motor, ps.ExternallyExcitedSynchronousMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            motor=initialize(
+                ps.ElectricMotor, motor, ps.ExternallyExcitedSynchronousMotor, dict()
+            ),
+            load=initialize(
+                ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)
+            ),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau,
@@ -146,19 +177,28 @@ class ContTorqueControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnviron
             ReferenceGenerator,
             reference_generator,
             WienerProcessReferenceGenerator,
-            dict(reference_state='torque')
+            dict(reference_state="torque"),
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(torque=1.0))
+            RewardFunction,
+            reward_function,
+            WeightedSumOfErrors,
+            dict(reward_weights=dict(torque=1.0)),
         )
         visualization = initialize(
             ElectricMotorVisualization,
             visualization,
             MotorDashboard,
-            dict(state_plots=('torque',), action_plots='all')
+            dict(state_plots=("torque",), action_plots="all"),
         )
         super().__init__(
-            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            physical_system_wrappers=physical_system_wrappers, **kwargs
+            physical_system=physical_system,
+            reference_generator=reference_generator,
+            reward_function=reward_function,
+            constraints=constraints,
+            visualization=visualization,
+            state_filter=state_filter,
+            callbacks=callbacks,
+            physical_system_wrappers=physical_system_wrappers,
+            **kwargs,
         )

@@ -23,7 +23,9 @@ class LaplaceProcessReferenceGenerator(SubepisodedReferenceGenerator):
 
     def _reset_reference(self):
         self._current_sigma = 10 ** self._get_current_value(np.log10(self._sigma_range))
-        random_values = self.random_generator.laplace(0, self._current_sigma, self._current_episode_length)
+        random_values = self.random_generator.laplace(
+            0, self._current_sigma, self._current_episode_length
+        )
         self._reference = np.zeros_like(random_values)
         reference_value = self._reference_value
         for i in range(self._current_episode_length):
@@ -33,4 +35,3 @@ class LaplaceProcessReferenceGenerator(SubepisodedReferenceGenerator):
             if reference_value < self._limit_margin[0]:
                 reference_value = self._limit_margin[0]
             self._reference[i] = reference_value
-

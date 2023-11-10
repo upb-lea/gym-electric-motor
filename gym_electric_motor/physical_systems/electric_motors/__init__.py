@@ -21,4 +21,3 @@ from .externally_excited_synchronous_motor import ExternallyExcitedSynchronousMo
 from .induction_motor import InductionMotor
 from .squirrel_cage_induction_motor import SquirrelCageInductionMotor
 from .doubly_fed_induction_motor import DoublyFedInductionMotor
-

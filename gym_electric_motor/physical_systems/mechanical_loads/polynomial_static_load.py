@@ -5,7 +5,7 @@ from gym_electric_motor.utils import update_parameter_dict
 
 
 class PolynomialStaticLoad(MechanicalLoad):
-    """ Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.
+    """Mechanical system that models the Mechanical-ODE based on a static polynomial load torque.
 
     Parameter dictionary entries:
         - :math:`a / Nm`: Constant Load Torque coefficient (for modeling static friction)
@@ -35,12 +35,12 @@ class PolynomialStaticLoad(MechanicalLoad):
 
     """
 
-    _load_parameter = dict(a=0.0, b=0.0, c=0., j_load=1e-5)
+    _load_parameter = dict(a=0.0, b=0.0, c=0.0, j_load=1e-5)
     _default_initializer = {
-        'states': {'omega': 0.0},
-        'interval': None,
-        'random_init': None,
-        'random_params': (None, None)
+        "states": {"omega": 0.0},
+        "interval": None,
+        "random_init": None,
+        "random_params": (None, None),
     }
 
     #: Time constant to smoothen the static load functions constant term "a" around 0 velocity
@@ -64,7 +64,6 @@ class PolynomialStaticLoad(MechanicalLoad):
         self._omega_linear_factor = self._j_total / self.tau_decay
         self._omega_lim = self._a / self._j_total * self.tau_decay
 
-
     def __init__(self, load_parameter=None, limits=None, load_initializer=None):
         """
         Args:
@@ -73,12 +72,16 @@ class PolynomialStaticLoad(MechanicalLoad):
             load_initializer(dict): Dictionary to parameterize the initializer.
         """
         load_parameter = load_parameter if load_parameter is not None else dict()
-        self._load_parameter = update_parameter_dict(self._load_parameter, load_parameter)
-        super().__init__(j_load=self._load_parameter['j_load'], load_initializer=load_initializer)
+        self._load_parameter = update_parameter_dict(
+            self._load_parameter, load_parameter
+        )
+        super().__init__(
+            j_load=self._load_parameter["j_load"], load_initializer=load_initializer
+        )
         self._limits.update(limits or {})
-        self._a = self._load_parameter['a']
-        self._b = self._load_parameter['b']
-        self._c = self._load_parameter['c']
+        self._a = self._load_parameter["a"]
+        self._b = self._load_parameter["b"]
+        self._c = self._load_parameter["c"]
         # Speed value at which the linear behavior switches to constant
         self._omega_lim = self._a / self._j_total * self.tau_decay
         # Slope for the linear growth of the constant load part around zero speed
@@ -88,9 +91,11 @@ class PolynomialStaticLoad(MechanicalLoad):
         """Calculation of the load torque for a given speed omega."""
         sign = 1 if omega > 0 else -1 if omega < -0 else 0
         # Limit the constant load term 'a' for velocities around zero for a more stable integration
-        a = sign * self._a \
-            if abs(omega) > self._omega_lim \
+        a = (
+            sign * self._a
+            if abs(omega) > self._omega_lim
             else self._omega_linear_factor * omega
+        )
         return sign * self._c * omega**2 + self._b * omega + a
 
     def mechanical_ode(self, t, mechanical_state, torque):
@@ -105,6 +110,11 @@ class PolynomialStaticLoad(MechanicalLoad):
         omega = mechanical_state[self.OMEGA_IDX]
         sign = 1 if omega > 0 else -1 if omega < 0 else 0
         # Linear region of the constant load term 'a' ?
-        a = 0 if abs(omega) > self._a * self.tau_decay / self._j_total else self._j_total / self.tau_decay
-        return np.array([[(-self._b - 2 * sign * self._c * omega - a) / self._j_total]]), \
-            np.array([1 / self._j_total])
+        a = (
+            0
+            if abs(omega) > self._a * self.tau_decay / self._j_total
+            else self._j_total / self.tau_decay
+        )
+        return np.array(
+            [[(-self._b - 2 * sign * self._c * omega - a) / self._j_total]]
+        ), np.array([1 / self._j_total])

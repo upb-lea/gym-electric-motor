@@ -91,9 +91,11 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
     """
 
     env_id = None
-    metadata = {"render_modes": [None, "figure", "figure_once", "figure_academic"],
-                "save_figure_on_close": False,
-                "hold_figure_on_close": True}
+    metadata = {
+        "render_modes": [None, "figure", "figure_once", "figure_academic"],
+        "save_figure_on_close": False,
+        "hold_figure_on_close": True,
+    }
 
     @property
     def physical_system(self):
@@ -175,8 +177,20 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         """Returns a list of all active motor visualizations."""
         return self._visualizations
 
-    def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
-                 callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, scale_plots = None, **kwargs):
+    def __init__(
+        self,
+        physical_system,
+        reference_generator,
+        reward_function,
+        visualization=(),
+        state_filter=None,
+        callbacks=(),
+        constraints=(),
+        physical_system_wrappers=(),
+        render_mode=None,
+        scale_plots=None,
+        **kwargs,
+    ):
         """
         Setting and initialization of all environments' modules.
 
@@ -202,39 +216,57 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             **kwargs: Arguments to be passed to the modules.
         """
         self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
-        self._reference_generator = instantiate(ReferenceGenerator, reference_generator, **kwargs)
+        self._reference_generator = instantiate(
+            ReferenceGenerator, reference_generator, **kwargs
+        )
         self._reward_function = instantiate(RewardFunction, reward_function, **kwargs)
-        if type(visualization) is str or isinstance(visualization, ElectricMotorVisualization):
+        if type(visualization) is str or isinstance(
+            visualization, ElectricMotorVisualization
+        ):
             visualization = [visualization]
         if visualization is None:
             visualization = []
         visualizations = list(visualization)
-        self._visualizations = [instantiate(ElectricMotorVisualization, visu, **kwargs) for visu in visualizations]
+        self._visualizations = [
+            instantiate(ElectricMotorVisualization, visu, **kwargs)
+            for visu in visualizations
+        ]
         if isinstance(constraints, ConstraintMonitor):
             cm = constraints
         else:
-            limit_constraints = [constraint for constraint in constraints if type(constraint) is str]
-            additional_constraints = [constraint for constraint in constraints if isinstance(constraint, Constraint)]
+            limit_constraints = [
+                constraint for constraint in constraints if type(constraint) is str
+            ]
+            additional_constraints = [
+                constraint
+                for constraint in constraints
+                if isinstance(constraint, Constraint)
+            ]
             cm = ConstraintMonitor(limit_constraints, additional_constraints)
         self._constraint_monitor = cm
 
         # Announcement of the modules among each other
         for physical_system_wrapper in physical_system_wrappers:
-            self._physical_system = physical_system_wrapper.set_physical_system(self._physical_system)
+            self._physical_system = physical_system_wrapper.set_physical_system(
+                self._physical_system
+            )
         self._reference_generator.set_modules(self.physical_system)
         self._constraint_monitor.set_modules(self.physical_system)
-        self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
+        self._reward_function.set_modules(
+            self.physical_system, self._reference_generator, self._constraint_monitor
+        )
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names
-        self.state_filter = [self._physical_system.state_names.index(s) for s in state_filter]
+        self.state_filter = [
+            self._physical_system.state_names.index(s) for s in state_filter
+        ]
         states_low = self._physical_system.state_space.low[self.state_filter]
         states_high = self._physical_system.state_space.high[self.state_filter]
         state_space = Box(states_low, states_high, dtype=np.float64)
-        self.observation_space = gymnasium.spaces.Tuple((
-            state_space,
-            self._reference_generator.reference_space
-        ))
+        self.observation_space = gymnasium.spaces.Tuple(
+            (state_space, self._reference_generator.reference_space)
+        )
         self.action_space = self.physical_system.action_space
         self.reward_range = self._reward_function.reward_range
         # new API splits done into two attributes
@@ -244,12 +276,12 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         # Set render mode and metadata
         assert render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
-        
+
         self.scale_plots = scale_plots
 
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
-        self._call_callbacks('set_env', self)
+        self._call_callbacks("set_env", self)
 
     def make(env_id, *args, **kwargs):
         env = gymnasium.make(env_id, *args, **kwargs)
@@ -265,23 +297,23 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         for callback in self._callbacks:
             func = getattr(callback, func_name)
             func(*args)
-            
-    def reset(self, seed = None,*_, **__):
+
+    def reset(self, seed=None, *_, **__):
         """
         Reset of the environment and all its modules to an initial state.
 
         Returns:
              The initial observation consisting of the initial state and initial reference.
-             info(dict): Auxiliary information (optional) 
+             info(dict): Auxiliary information (optional)
         """
 
         self._seed(seed)
-        self._call_callbacks('on_reset_begin')
+        self._call_callbacks("on_reset_begin")
         self._terminated = False
         state = self._physical_system.reset()
         reference, next_ref, _ = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
-        self._call_callbacks('on_reset_end', state, reference)
+        self._call_callbacks("on_reset_end", state, reference)
 
         observation = (state[self.state_filter], next_ref)
         info = {}
@@ -304,11 +336,13 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             observation(Tuple(ndarray(float),ndarray(float)): Tuple of the new state and the next reference.
             reward(float): Amount of reward received for the last step.
             terminated(bool): Flag, indicating if a reset is required before new steps can be taken.
-            info(dict): Auxiliary information (optional) 
+            info(dict): Auxiliary information (optional)
         """
 
-        assert not self._terminated, 'A reset is required before the environment can perform further steps'
-        self._call_callbacks('on_step_begin', self.physical_system.k, action)
+        assert (
+            not self._terminated
+        ), "A reset is required before the environment can perform further steps"
+        self._call_callbacks("on_step_begin", self.physical_system.k, action)
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
         violation_degree = self._constraint_monitor.check_constraints(state)
@@ -318,32 +352,40 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._terminated = violation_degree >= 1.0
         ref_next = self.reference_generator.get_reference_observation(state)
         self._call_callbacks(
-            'on_step_end', self.physical_system.k, state, reference, reward, self._terminated
+            "on_step_end",
+            self.physical_system.k,
+            state,
+            reference,
+            reward,
+            self._terminated,
         )
 
         # Call render code
         if self.render_mode == "figure":
             self.render()
-        
+
         info = {}
-        return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, info
-    
+        return (
+            state[self.state_filter],
+            ref_next,
+        ), reward, self._terminated, self._truncated, info
+
     def _seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
         components = [
             self._physical_system,
             self._reference_generator,
             self._reward_function,
-            self._constraint_monitor
+            self._constraint_monitor,
         ] + list(self._callbacks)
         sub_sg = sg.spawn(len(components))
         for sub, rc in zip(sub_sg, components):
             if isinstance(rc, gem.RandomComponent):
                 rc.seed(sub)
         return [sg.entropy]
-    
+
     def save_fig(self, figure, filetype="png"):
-        """ Save figure with timestamped as filename """
+        """Save figure with timestamped as filename"""
         # create output folder if it not exists
         output_folder_name = "plots"
         if not os.path.exists(output_folder_name):
@@ -356,16 +398,13 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         figure.savefig(filename, dpi=300)
 
     def rendering_on_close(self):
-
         # Figure Mode
         if self.render_mode and self.render_mode.startswith("figure"):
-
             # Academic Mode (latex font)
             if self.render_mode == "figure_academic":
-                matplotlib.rcParams.update({
-                    "text.usetex": True,
-                    "font.family": "Helvetica"
-                })
+                matplotlib.rcParams.update(
+                    {"text.usetex": True, "font.family": "Helvetica"}
+                )
 
             self.render()
 
@@ -379,25 +418,23 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             # Blocking plot call to still interactive with it
             if self.metadata["hold_figure_on_close"]:
                 matplotlib.pyplot.show(block=True)
-        
-            
 
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
-        self._call_callbacks('on_close')
+        self._call_callbacks("on_close")
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
 
         self.rendering_on_close()
 
-
     def figure(self) -> Figure:
-        """ Get main figure (MotorDashboard) """
+        """Get main figure (MotorDashboard)"""
         assert len(self._visualizations) == 1
         motor_dashboard = self._visualizations[0]
         assert len(motor_dashboard._figures) == 1
         return motor_dashboard._figures[0]
+
 
 class ReferenceGenerator:
     """The abstract base class for reference generators in gym electric motor environments.
@@ -419,7 +456,7 @@ class ReferenceGenerator:
 
     Call of get_reference_observation():
         Returns the reference observation, which is shown to the agent.
-        Any shape and content is generally valid, however, values must be within the declared reference space.        
+        Any shape and content is generally valid, however, values must be within the declared reference space.
         For example, the reference observation may contain future reference values of the next ``n`` steps.
 
         Example:
@@ -505,7 +542,9 @@ class ReferenceGenerator:
             trajectories(dict(list(float)): If available, \
                 generated trajectories for the Visualization can be passed here. Otherwise return None. \
         """
-        return self.get_reference(initial_state), self.get_reference_observation(initial_state), None
+        return self.get_reference(initial_state), self.get_reference_observation(
+            initial_state
+        ), None
 
     def close(self):
         """Called by the environment, when the environment is deleted to close files, store logs, etc."""
@@ -596,7 +635,7 @@ class PhysicalSystem:
     @property
     def unwrapped(self):
         """Returns this instance of the physical system.
-        
+
         If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system."""
         return self
 
@@ -676,7 +715,9 @@ class PhysicalSystem:
         self._action_space = action_space
         self._state_space = state_space
         self._state_names = state_names
-        self._state_positions = {key: index for index, key in enumerate(self._state_names)}
+        self._state_positions = {
+            key: index for index, key in enumerate(self._state_names)
+        }
         self._tau = tau
         self._k = 0
 
@@ -785,7 +826,9 @@ class ConstraintMonitor:
         """Returns the list of all constraints the ConstraintMonitor observes."""
         return self._constraints
 
-    def __init__(self,  limit_constraints=(), additional_constraints=(), merge_violations='max'):
+    def __init__(
+        self, limit_constraints=(), additional_constraints=(), merge_violations="max"
+    ):
         """
         Args:
             limit_constraints(list(str)/'all_states'):
@@ -810,16 +853,18 @@ class ConstraintMonitor:
             self._constraints.append(LimitConstraint(limit_constraints))
 
         assert all(callable(constraint) for constraint in self._constraints)
-        assert merge_violations in ['max', 'product'] or callable(merge_violations)
+        assert merge_violations in ["max", "product"] or callable(merge_violations)
 
         if len(self._constraints) == 0:
             # Without any constraint, always return 0.0 as violation
             self._merge_violations = lambda *violation_degrees: 0.0
-        elif merge_violations == 'max':
+        elif merge_violations == "max":
             self._merge_violations = max
-        elif merge_violations == 'product':
+        elif merge_violations == "product":
+
             def product_merge(*violation_degrees):
                 return 1 - np.prod([(1 - violation) for violation in violation_degrees])
+
             self._merge_violations = product_merge
         elif callable(merge_violations):
             self._merge_violations = merge_violations

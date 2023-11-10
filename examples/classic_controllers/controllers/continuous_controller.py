@@ -3,7 +3,9 @@ class ContinuousController:
 
     @classmethod
     def make(cls, environment, stage, _controllers, **controller_kwargs):
-        controller = _controllers[stage['controller_type']][2](environment, param_dict=stage, **controller_kwargs)
+        controller = _controllers[stage["controller_type"]][2](
+            environment, param_dict=stage, **controller_kwargs
+        )
         return controller
 
     def control(self, state, reference):

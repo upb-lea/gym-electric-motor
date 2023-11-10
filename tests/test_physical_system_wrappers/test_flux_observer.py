@@ -9,15 +9,19 @@ from .test_physical_system_wrapper import TestPhysicalSystemWrapper
 
 
 class TestFluxObserver(TestPhysicalSystemWrapper):
-
     @pytest.fixture
     def physical_system(self):
-        ps = DummyPhysicalSystem(state_names=['omega','i_sa', 'i_sb', 'i_sc','i_sd', 'i_sq'])
-        ps.unwrapped.electrical_motor = gem.physical_systems.electric_motors.SquirrelCageInductionMotor(
-            limit_values=dict(i=20.0),
-            motor_parameter=dict(l_m=10.0)
+        ps = DummyPhysicalSystem(
+            state_names=["omega", "i_sa", "i_sb", "i_sc", "i_sd", "i_sq"]
         )
-        ps.unwrapped._limits[ps.state_names.index('i_sd')] = ps.unwrapped.electrical_motor.limits['i_sd']
+        ps.unwrapped.electrical_motor = (
+            gem.physical_systems.electric_motors.SquirrelCageInductionMotor(
+                limit_values=dict(i=20.0), motor_parameter=dict(l_m=10.0)
+            )
+        )
+        ps.unwrapped._limits[
+            ps.state_names.index("i_sd")
+        ] = ps.unwrapped.electrical_motor.limits["i_sd"]
         return ps
 
     @pytest.fixture
@@ -27,7 +31,9 @@ class TestFluxObserver(TestPhysicalSystemWrapper):
 
     @pytest.fixture
     def processor(self, physical_system):
-        return gem.physical_system_wrappers.FluxObserver(physical_system=physical_system)
+        return gem.physical_system_wrappers.FluxObserver(
+            physical_system=physical_system
+        )
 
     @pytest.fixture
     def reset_processor(self, processor):
@@ -35,10 +41,15 @@ class TestFluxObserver(TestPhysicalSystemWrapper):
         return processor
 
     def test_limits(self, processor, physical_system):
-        assert all(processor.limits == np.concatenate((physical_system.limits, [200., np.pi])))
+        assert all(
+            processor.limits == np.concatenate((physical_system.limits, [200.0, np.pi]))
+        )
 
     def test_nominal_state(self, processor, physical_system):
-        assert all(processor.nominal_state == np.concatenate((physical_system.nominal_state, [200., np.pi])))
+        assert all(
+            processor.nominal_state
+            == np.concatenate((physical_system.nominal_state, [200.0, np.pi]))
+        )
 
     def test_state_space(self, processor, physical_system):
         psi_abs_max = 200.0
@@ -48,10 +59,11 @@ class TestFluxObserver(TestPhysicalSystemWrapper):
         assert processor.state_space == space
 
     def test_reset(self, processor, physical_system):
-        assert all(processor.reset() == np.concatenate((physical_system.state, [0., 0.])))
+        assert all(
+            processor.reset() == np.concatenate((physical_system.state, [0.0, 0.0]))
+        )
 
-    @pytest.mark.parametrize('action', [1, 2, 3, 4])
+    @pytest.mark.parametrize("action", [1, 2, 3, 4])
     def test_simulate(self, reset_processor, physical_system, action):
         state = reset_processor.simulate(action)
         assert all(state[:-2] == physical_system.state)
-

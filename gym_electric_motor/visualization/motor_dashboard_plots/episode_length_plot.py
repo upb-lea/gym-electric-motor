@@ -9,7 +9,7 @@ class EpisodeLengthPlot(EpisodePlot):
         # data container for episode lengths
         self._episode_lengths = []
         self._episode_length = 0
-        self._label = 'Episode Length'
+        self._label = "Episode Length"
         self._axis = None
         # Flag, that is true, if an episode has ended before the rendering.
         self._reset = False

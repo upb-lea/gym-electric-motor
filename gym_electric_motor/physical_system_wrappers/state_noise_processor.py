@@ -29,7 +29,14 @@ class StateNoiseProcessor(PhysicalSystemWrapper):
     def random_kwargs(self, value):
         self._random_kwargs = dict(value)
 
-    def __init__(self, states, random_dist='normal', random_kwargs=(), random_length=1000, physical_system=None):
+    def __init__(
+        self,
+        states,
+        random_dist="normal",
+        random_kwargs=(),
+        random_length=1000,
+        physical_system=None,
+    ):
         """
         Args:
              states(Iterable[string] / 'all'): Names of the states onto which the noise shall be added.
@@ -50,14 +57,17 @@ class StateNoiseProcessor(PhysicalSystemWrapper):
         self._random_dist = random_dist
         self._state_indices = []
         super().__init__(physical_system)
-        assert hasattr(self._random_generator, random_dist), \
-            f'The numpy random number generator has no distribution {random_dist}.'\
-            'Check https://numpy.org/doc/stable/reference/random/generator.html#distributions for distributions.'
+        assert hasattr(self._random_generator, random_dist), (
+            f"The numpy random number generator has no distribution {random_dist}."
+            "Check https://numpy.org/doc/stable/reference/random/generator.html#distributions for distributions."
+        )
 
     def set_physical_system(self, physical_system):
         # Docstring from super class
         super().set_physical_system(physical_system)
-        self._state_indices = [physical_system.state_positions[state_name] for state_name in self._states]
+        self._state_indices = [
+            physical_system.state_positions[state_name] for state_name in self._states
+        ]
         return self
 
     def reset(self):
@@ -79,7 +89,9 @@ class StateNoiseProcessor(PhysicalSystemWrapper):
         Returns:
             numpy.ndarray[float]): The state with additional noise.
         """
-        state[self._state_indices] = state[self._state_indices] + self._noise[self._random_pointer]
+        state[self._state_indices] = (
+            state[self._state_indices] + self._noise[self._random_pointer]
+        )
         self._random_pointer += 1
         return state
 
@@ -87,4 +99,6 @@ class StateNoiseProcessor(PhysicalSystemWrapper):
         """Samples new noise from the random distribution for the next steps."""
         self._random_pointer = 0
         fct = getattr(self._random_generator, self._random_dist)
-        self._noise = fct(size=(self._random_length, len(self._state_indices)), **self._random_kwargs)
+        self._noise = fct(
+            size=(self._random_length, len(self._state_indices)), **self._random_kwargs
+        )

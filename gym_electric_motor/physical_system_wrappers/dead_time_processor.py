@@ -25,14 +25,16 @@ class DeadTimeProcessor(PhysicalSystemWrapper):
 
     def __init__(self, steps=1, reset_action=None, physical_system=None):
         """Args:
-            steps(int): Number of steps to delay the actions.
-            reset_action(callable): A callable that returns a list of length steps to initialize the dead-actions
-                after a reset. Default: See above in the class description
-            physical_system(PhysicalSystem (optional)): The inner physical system of this PhysicalSystemWrapper.
+        steps(int): Number of steps to delay the actions.
+        reset_action(callable): A callable that returns a list of length steps to initialize the dead-actions
+            after a reset. Default: See above in the class description
+        physical_system(PhysicalSystem (optional)): The inner physical system of this PhysicalSystemWrapper.
         """
         self._reset_actions = reset_action
         self._steps = int(steps)
-        assert self._steps > 0, f'The number of steps has to be greater than 0. A "{steps}" has been passed.'
+        assert (
+            self._steps > 0
+        ), f'The number of steps has to be greater than 0. A "{steps}" has been passed.'
         self._action_deque = deque(maxlen=steps)
         super().__init__(physical_system)
 
@@ -53,8 +55,8 @@ class DeadTimeProcessor(PhysicalSystemWrapper):
                 reset_action = np.zeros(action_space.shape, dtype=np.float64)
             else:
                 raise AssertionError(
-                    f'Action Space {action_space} of type {type(action_space)} unsupported.'
-                    'Only Discrete / MultiDiscrete and Box allowed for the dead time processor.'
+                    f"Action Space {action_space} of type {type(action_space)} unsupported."
+                    "Only Discrete / MultiDiscrete and Box allowed for the dead time processor."
                 )
             self._reset_actions = lambda: [reset_action] * self._action_deque.maxlen
         return self

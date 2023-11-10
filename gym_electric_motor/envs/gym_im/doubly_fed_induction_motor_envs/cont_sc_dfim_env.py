@@ -1,6 +1,12 @@
-from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
-    ElectricMotorVisualization
-from gym_electric_motor.physical_systems.physical_systems import DoublyFedInductionMotorSystem
+from gym_electric_motor.core import (
+    ElectricMotorEnvironment,
+    ReferenceGenerator,
+    RewardFunction,
+    ElectricMotorVisualization,
+)
+from gym_electric_motor.physical_systems.physical_systems import (
+    DoublyFedInductionMotorSystem,
+)
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 from gym_electric_motor import physical_systems as ps
@@ -90,10 +96,25 @@ class ContSpeedControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
         >>>         state, reference = env.reset()
         >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
-                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-4,
-                 physical_system_wrappers=(), **kwargs):
+
+    def __init__(
+        self,
+        supply=None,
+        converter=None,
+        motor=None,
+        load=None,
+        ode_solver=None,
+        reward_function=None,
+        reference_generator=None,
+        visualization=None,
+        state_filter=None,
+        callbacks=(),
+        constraints=(SquaredConstraint(("i_sq", "i_sd")),),
+        calc_jacobian=True,
+        tau=1e-4,
+        physical_system_wrappers=(),
+        **kwargs,
+    ):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -132,35 +153,57 @@ class ContSpeedControlDoublyFedInductionMotorEnv(ElectricMotorEnvironment):
         """
         default_sub_converters = (
             ps.ContB6BridgeConverter(),
-            ps.ContB6BridgeConverter()
+            ps.ContB6BridgeConverter(),
         )
         physical_system = DoublyFedInductionMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(
+                ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)
+            ),
             converter=initialize(
                 ps.PowerElectronicConverter,
                 converter,
                 ps.ContMultiConverter,
-                dict(subconverters=default_sub_converters)
+                dict(subconverters=default_sub_converters),
             ),
-            motor=initialize(ps.ElectricMotor, motor, ps.DoublyFedInductionMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
-                load_parameter=dict(a=0.01, b=0.01, c=0.0)
-            )),
+            motor=initialize(
+                ps.ElectricMotor, motor, ps.DoublyFedInductionMotor, dict()
+            ),
+            load=initialize(
+                ps.MechanicalLoad,
+                load,
+                ps.PolynomialStaticLoad,
+                dict(load_parameter=dict(a=0.01, b=0.01, c=0.0)),
+            ),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau,
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
-            dict(reference_state='omega', sigma_range=(1e-3, 1e-2)),
+            ReferenceGenerator,
+            reference_generator,
+            WienerProcessReferenceGenerator,
+            dict(reference_state="omega", sigma_range=(1e-3, 1e-2)),
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
+            RewardFunction,
+            reward_function,
+            WeightedSumOfErrors,
+            dict(reward_weights=dict(omega=1.0)),
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
+            ElectricMotorVisualization,
+            visualization,
+            MotorDashboard,
+            dict(state_plots=("omega",), action_plots="all"),
+        )
         super().__init__(
-            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            physical_system_wrappers=physical_system_wrappers, **kwargs
+            physical_system=physical_system,
+            reference_generator=reference_generator,
+            reward_function=reward_function,
+            constraints=constraints,
+            visualization=visualization,
+            state_filter=state_filter,
+            callbacks=callbacks,
+            physical_system_wrappers=physical_system_wrappers,
+            **kwargs,
         )

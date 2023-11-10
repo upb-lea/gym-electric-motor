@@ -88,13 +88,15 @@ class MechanicalLoad(RandomComponent):
         """
         RandomComponent.__init__(self)
         self._j_total = self._j_load = j_load
-        self._state_names = list(state_names or ['omega'])
+        self._state_names = list(state_names or ["omega"])
         self._limits = {}
         self._nominal_values = {}
         load_initializer = load_initializer or {}
         self._initializer = self._default_initializer.copy()
         self._initializer.update(load_initializer)
-        self._initial_states = self._initializer.get('states', {state: 0.0 for state in self._state_names})
+        self._initial_states = self._initializer.get(
+            "states", {state: 0.0 for state in self._state_names}
+        )
 
     def initialize(self, state_space, state_positions, nominal_state, **__):
         """Initializes the state of the load on an episode start.
@@ -108,13 +110,15 @@ class MechanicalLoad(RandomComponent):
             state_positions(dict): indexes of system states
         """
         # for order and organization purposes
-        interval = self._initializer['interval']
-        random_dist = self._initializer['random_init']
-        random_params = self._initializer['random_params']
+        interval = self._initializer["interval"]
+        random_dist = self._initializer["random_init"]
+        random_params = self._initializer["random_params"]
         if isinstance(nominal_state, (list, np.ndarray)):
             nominal_state = np.asarray(nominal_state, dtype=float)
         elif isinstance(self._nominal_values, dict):
-            nominal_state = [nominal_state[state] for state in self._initial_states.keys()]
+            nominal_state = [
+                nominal_state[state] for state in self._initial_states.keys()
+            ]
             nominal_state = np.asarray(nominal_state)
         # setting nominal values as interval limits
         state_idx = [state_positions[state] for state in self._initial_states.keys()]
@@ -122,34 +126,45 @@ class MechanicalLoad(RandomComponent):
         lower_bound = upper_bound * np.asarray(state_space.low, dtype=float)[state_idx]
         # clip nominal boundaries to user defined
         if interval is not None:
-            lower_bound = np.clip(lower_bound, a_min=np.asarray(interval, dtype=float).T[0], a_max=None)
-            upper_bound = np.clip(upper_bound, a_min=None, a_max=np.asarray(interval, dtype=float).T[1])
+            lower_bound = np.clip(
+                lower_bound, a_min=np.asarray(interval, dtype=float).T[0], a_max=None
+            )
+            upper_bound = np.clip(
+                upper_bound, a_min=None, a_max=np.asarray(interval, dtype=float).T[1]
+            )
         else:
             pass
         # random initialization for each load state (omega)
         if random_dist is not None:
-            if random_dist == 'uniform':
-                initial_value = (upper_bound - lower_bound) \
-                    * self.random_generator.uniform(size=len(self._initial_states.keys())) \
-                    + lower_bound
+            if random_dist == "uniform":
+                initial_value = (
+                    upper_bound - lower_bound
+                ) * self.random_generator.uniform(
+                    size=len(self._initial_states.keys())
+                ) + lower_bound
                 random_states = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[idx]
+                    for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(random_states)
 
-            elif random_dist in ['normal', 'gaussian']:
+            elif random_dist in ["normal", "gaussian"]:
                 # specific input or middle of interval
-                mue = random_params[0] \
-                      or (upper_bound - lower_bound) / 2 + lower_bound
+                mue = random_params[0] or (upper_bound - lower_bound) / 2 + lower_bound
                 sigma = random_params[1] or 1
                 a = (lower_bound - mue) / sigma
                 b = (upper_bound - mue) / sigma
                 initial_value = truncnorm.rvs(
-                    a, b, loc=mue, scale=sigma, size=(len(self._initial_states.keys())),
-                    random_state=self.seed_sequence.pool[0]
+                    a,
+                    b,
+                    loc=mue,
+                    scale=sigma,
+                    size=(len(self._initial_states.keys())),
+                    random_state=self.seed_sequence.pool[0],
                 )
                 random_states = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[idx]
+                    for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(random_states)
             else:
@@ -158,15 +173,18 @@ class MechanicalLoad(RandomComponent):
         elif self._initial_states is not None:
             initial_value = np.atleast_1d(list(self._initial_states.values()))
             # check init_value meets interval boundaries
-            if (lower_bound <= initial_value).all() and (initial_value <= upper_bound).all():
+            if (lower_bound <= initial_value).all() and (
+                initial_value <= upper_bound
+            ).all():
                 initial_states_ = {
-                    state: initial_value[idx] for idx, state in enumerate(self._initial_states.keys())
+                    state: initial_value[idx]
+                    for idx, state in enumerate(self._initial_states.keys())
                 }
                 self._initial_states.update(initial_states_)
             else:
-                raise Exception('Initialization Value have to be in nominal boundaries')
+                raise Exception("Initialization Value have to be in nominal boundaries")
         else:
-            raise Exception('No matching Initialization Case')
+            raise Exception("No matching Initialization Case")
 
     def reset(self, state_space, state_positions, nominal_state, **__):
         """
@@ -235,4 +253,4 @@ class MechanicalLoad(RandomComponent):
         Returns:
             Tuple(dict,dict): Lowest and highest possible values for all states normalized to (-1, 1)
         """
-        return {'omega': omega_range[0]}, {'omega': omega_range[1]}
+        return {"omega": omega_range[0]}, {"omega": omega_range[1]}

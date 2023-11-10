@@ -15,11 +15,13 @@ def state_dict_to_state_array(state_dict, state_array, state_names):
         state_names(list/ndarray(str)): List of the state names.
     """
     state_dict = dict((key.lower(), v) for key, v in state_dict.items())
-    assert all(key in state_names for key in state_dict.keys()), f'A state name in {state_dict.keys()} is invalid.'
+    assert all(
+        key in state_names for key in state_dict.keys()
+    ), f"A state name in {state_dict.keys()} is invalid."
     for ind, key in enumerate(state_names):
         try:
             state_array[ind] = state_dict[key]
-        except KeyError: # TODO
+        except KeyError:  # TODO
             pass
 
 
@@ -52,7 +54,7 @@ def set_state_array(input_values, state_names):
     elif type(input_values) is float or type(input_values) is int:
         state_array = input_values * np.ones_like(state_names, dtype=float)
     else:
-        raise Exception('Incorrect type for the input values.')
+        raise Exception("Incorrect type for the input values.")
     return state_array
 
 
@@ -92,7 +94,7 @@ def instantiate(superclass, instance, **kwargs):
     elif type(instance) is str:
         return make_module(superclass, instance, **kwargs)
     else:
-        raise Exception('Instantiation Error.')
+        raise Exception("Instantiation Error.")
 
 
 # Registry dictionary that stores the keys to instantiate the components with the keystrings
@@ -114,7 +116,9 @@ def make_module(superclass, keystring, **kwargs):
     try:
         return _registry[superclass][keystring](**kwargs)
     except KeyError:
-        raise Exception(f'Key {keystring} or baseclass {superclass.__name__} not found in the registry.')
+        raise Exception(
+            f"Key {keystring} or baseclass {superclass.__name__} not found in the registry."
+        )
 
 
 def register_superclass(superclass):
@@ -152,7 +156,9 @@ def update_parameter_dict(source_dict, update_dict, copy=True):
     source_keys = source_dict.keys()
     for key in update_dict.keys():
         if key not in source_keys:
-            raise KeyError(f'Cannot update_dict the source_dict. The key "{key}" is not available.')
+            raise KeyError(
+                f'Cannot update_dict the source_dict. The key "{key}" is not available.'
+            )
     new_dict = source_dict.copy() if copy else source_dict
     new_dict.update(update_dict)
     return new_dict

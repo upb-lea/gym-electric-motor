@@ -1,5 +1,9 @@
-from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
-    ElectricMotorVisualization
+from gym_electric_motor.core import (
+    ElectricMotorEnvironment,
+    ReferenceGenerator,
+    RewardFunction,
+    ElectricMotorVisualization,
+)
 from gym_electric_motor.physical_systems.physical_systems import DcMotorSystem
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
@@ -82,9 +86,25 @@ class FiniteSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
         >>>         state, reference = env.reset()
         >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
-                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i',), calc_jacobian=True, tau=1e-5, physical_system_wrappers=(), **kwargs):
+
+    def __init__(
+        self,
+        supply=None,
+        converter=None,
+        motor=None,
+        load=None,
+        ode_solver=None,
+        reward_function=None,
+        reference_generator=None,
+        visualization=None,
+        state_filter=None,
+        callbacks=(),
+        constraints=("i",),
+        calc_jacobian=True,
+        tau=1e-5,
+        physical_system_wrappers=(),
+        **kwargs,
+    ):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -122,28 +142,52 @@ class FiniteSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteFourQuadrantConverter, dict()),
+            supply=initialize(
+                ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)
+            ),
+            converter=initialize(
+                ps.PowerElectronicConverter,
+                converter,
+                ps.FiniteFourQuadrantConverter,
+                dict(),
+            ),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
-                load_parameter=dict(a=0.15, b=0.05, c=0.0, j_load=1e-4)
-            )),
+            load=initialize(
+                ps.MechanicalLoad,
+                load,
+                ps.PolynomialStaticLoad,
+                dict(load_parameter=dict(a=0.15, b=0.05, c=0.0, j_load=1e-4)),
+            ),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
-            tau=tau
+            tau=tau,
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
-            dict(reference_state='omega', sigma_range=(1e-3, 5e-3))
+            ReferenceGenerator,
+            reference_generator,
+            WienerProcessReferenceGenerator,
+            dict(reference_state="omega", sigma_range=(1e-3, 5e-3)),
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
+            RewardFunction,
+            reward_function,
+            WeightedSumOfErrors,
+            dict(reward_weights=dict(omega=1.0)),
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
-        super().__init__(
-            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            physical_system_wrappers=physical_system_wrappers, **kwargs
+            ElectricMotorVisualization,
+            visualization,
+            MotorDashboard,
+            dict(state_plots=("omega",), action_plots="all"),
         )
-
+        super().__init__(
+            physical_system=physical_system,
+            reference_generator=reference_generator,
+            reward_function=reward_function,
+            constraints=constraints,
+            visualization=visualization,
+            state_filter=state_filter,
+            callbacks=callbacks,
+            physical_system_wrappers=physical_system_wrappers,
+            **kwargs,
+        )

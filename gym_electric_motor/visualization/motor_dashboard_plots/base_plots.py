@@ -28,7 +28,7 @@ class MotorDashboardPlot(Callback):
         # A list of all lines in the plot
         self._lines = []
         # The y-axis Label
-        self._label = ''
+        self._label = ""
         # The x-axis data (common to all lines)
         self._x_data = []
         # List of all y-axis data of the lines
@@ -39,7 +39,7 @@ class MotorDashboardPlot(Callback):
         self._y_lim = None
 
         # All colors of the current matplotlib style. It is recommended to select one of these for plotting the lines.
-        self._colors = [cycle['color'] for cycle in plt.rcParams['axes.prop_cycle']]
+        self._colors = [cycle["color"] for cycle in plt.rcParams["axes.prop_cycle"]]
 
     def initialize(self, axis):
         """Initialization of the plot.
@@ -103,23 +103,11 @@ class TimePlot(MotorDashboardPlot):
 
     """
 
-    _default_time_line_cfg = {
-        'linestyle': '',
-        'marker': 'o',
-        'markersize': 0.75
-    }
+    _default_time_line_cfg = {"linestyle": "", "marker": "o", "markersize": 0.75}
 
-    _default_violation_line_cfg = {
-        'color': 'red',
-        'linewidth': 1,
-        'linestyle': '-'
-    }
+    _default_violation_line_cfg = {"color": "red", "linewidth": 1, "linestyle": "-"}
 
-    _default_reset_line_cfg = {
-        'color': 'blue',
-        'linewidth': 1,
-        'linestyle': '-'
-    }
+    _default_reset_line_cfg = {"color": "blue", "linewidth": 1, "linestyle": "-"}
 
     @property
     def data_idx(self):
@@ -160,7 +148,9 @@ class TimePlot(MotorDashboardPlot):
         self._t = 0
         self._reset_memory = []
         self._violation_memory = []
-        self._x_data = np.linspace(0, self._x_width * self._tau, self._x_width, endpoint=False)
+        self._x_data = np.linspace(
+            0, self._x_width * self._tau, self._x_width, endpoint=False
+        )
         self._x_lim = (0, self._x_data[-1])
 
     def on_reset_begin(self):
@@ -197,13 +187,14 @@ class TimePlot(MotorDashboardPlot):
 
     def _scale_y_axis(self):
         if self._scale_plots_to_data:
-
             y_min = min(np.nanmin(self._y_data[0]), np.nanmin(self._y_data[1]))
             y_max = max(np.nanmax(self._y_data[0]), np.nanmax(self._y_data[1]))
 
-            self._axis.set_ylim(y_min-np.sign(y_min)*0.1*y_min,
-                                y_max+np.sign(y_max)*0.1*y_max)
-           
+            self._axis.set_ylim(
+                y_min - np.sign(y_min) * 0.1 * y_min,
+                y_max + np.sign(y_max) * 0.1 * y_max,
+            )
+
 
 class EpisodePlot(MotorDashboardPlot):
     """Base Plot class that all episode based plots ."""
@@ -232,7 +223,6 @@ class EpisodePlot(MotorDashboardPlot):
 
 
 class StepPlot(MotorDashboardPlot):
-
     def __init__(self):
         super().__init__()
         self._k = 0

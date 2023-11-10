@@ -44,8 +44,15 @@ class WeightedSumOfErrors(RewardFunction):
     :math:`r_{wse,min}` is the minimal :math:`r_{wse}` (=reward_range[0]) and :math:`\gamma` the agents discount factor.
     """
 
-    def __init__(self, reward_weights=None, normed_reward_weights=False, violation_reward=None,
-                 gamma=0.9, reward_power=1, bias=0.0):
+    def __init__(
+        self,
+        reward_weights=None,
+        normed_reward_weights=False,
+        violation_reward=None,
+        gamma=0.9,
+        reward_power=1,
+        bias=0.0,
+    ):
         """
         Args:
             reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.
@@ -88,13 +95,13 @@ class WeightedSumOfErrors(RewardFunction):
             if np.any(referenced_states):
                 reward_weights = dict.fromkeys(
                     np.array(physical_system.state_names)[referenced_states],
-                    1 / len(np.array(physical_system.state_names)[referenced_states])
+                    1 / len(np.array(physical_system.state_names)[referenced_states]),
                 )
             # If no referenced states and no reward weights passed, uniform reward over all states
             else:
                 reward_weights = dict.fromkeys(
                     np.array(physical_system.state_names),
-                    1 / len(np.array(physical_system.state_names))
+                    1 / len(np.array(physical_system.state_names)),
                 )
         else:
             reward_weights = self._reward_weights
@@ -103,20 +110,27 @@ class WeightedSumOfErrors(RewardFunction):
             warnings.warn("All reward weights sum up to zero", Warning, stacklevel=2)
         rw_sum = sum(self._reward_weights)
         if self._normed:
-            if self._bias == 'positive':
+            if self._bias == "positive":
                 self._bias = 1
             self._reward_weights = self._reward_weights / rw_sum
             self.reward_range = (-1 + self._bias, self._bias)
         else:
-            if self._bias == 'positive':
+            if self._bias == "positive":
                 self._bias = rw_sum
             self.reward_range = (-rw_sum + self._bias, self._bias)
         if self._violation_reward is None:
             self._violation_reward = min(self.reward_range[0] / (1.0 - self._gamma), 0)
 
     def reward(self, state, reference, k=None, action=None, violation_degree=0.0):
-        return (1.0 - violation_degree) * self._wse_reward(state, reference) \
-            + violation_degree * self._violation_reward
+        return (1.0 - violation_degree) * self._wse_reward(
+            state, reference
+        ) + violation_degree * self._violation_reward
 
     def _wse_reward(self, state, reference):
-        return -np.sum(self._reward_weights * (abs(state - reference) / self._state_length) ** self._n) + self._bias
+        return (
+            -np.sum(
+                self._reward_weights
+                * (abs(state - reference) / self._state_length) ** self._n
+            )
+            + self._bias
+        )

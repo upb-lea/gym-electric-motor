@@ -2,7 +2,7 @@ import gymnasium
 
 
 class SRMFiniteControlEnv(gymnasium.Env):
-    metadata = {'render.modes': ['human']}
+    metadata = {"render.modes": ["human"]}
 
     def __init__(self):
         pass
@@ -13,7 +13,7 @@ class SRMFiniteControlEnv(gymnasium.Env):
     def reset(self):
         raise NotImplementedError()
 
-    def render(self, mode='human'):
+    def render(self, mode="human"):
         raise NotImplementedError()
 
     def close(self):

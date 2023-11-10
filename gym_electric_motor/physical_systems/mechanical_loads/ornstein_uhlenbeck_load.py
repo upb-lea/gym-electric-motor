@@ -4,12 +4,13 @@ from .mechanical_load import MechanicalLoad
 
 
 class OrnsteinUhlenbeckLoad(MechanicalLoad):
-    """The Ornstein-Uhlenbeck Load sets the speed to a torque-independent signal specified by the underlying OU-Process.
-    """
+    """The Ornstein-Uhlenbeck Load sets the speed to a torque-independent signal specified by the underlying OU-Process."""
 
     HAS_JACOBIAN = False
 
-    def __init__(self, mu=0, sigma=1e-4, theta=1, tau=1e-4, omega_range=(-200.0, 200.0), **kwargs):
+    def __init__(
+        self, mu=0, sigma=1e-4, theta=1, tau=1e-4, omega_range=(-200.0, 200.0), **kwargs
+    ):
         """
         Args:
             mu(float): Mean value of the underlying gaussian distribution of the OU-Process.
@@ -31,8 +32,9 @@ class OrnsteinUhlenbeckLoad(MechanicalLoad):
         omega = mechanical_state
         max_diff = (self._omega_range[1] - omega) / self.tau
         min_diff = (self._omega_range[0] - omega) / self.tau
-        diff = self.theta * (self.mu - omega) * self.tau \
-            + self.sigma * np.sqrt(self.tau) * np.random.normal(size=1)
+        diff = self.theta * (self.mu - omega) * self.tau + self.sigma * np.sqrt(
+            self.tau
+        ) * np.random.normal(size=1)
         np.clip(diff, min_diff, max_diff, out=diff)
         return diff
 

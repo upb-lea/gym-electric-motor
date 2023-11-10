@@ -5,7 +5,7 @@ from .base_plots import TimePlot
 
 
 class ActionPlot(TimePlot):
-    """ Class to plot the instantaneous actions applied on the environment"""
+    """Class to plot the instantaneous actions applied on the environment"""
 
     def __init__(self, action=0):
         """
@@ -30,13 +30,15 @@ class ActionPlot(TimePlot):
         self._action_type = None
 
         self._action_line_config = self._default_time_line_cfg.copy()
-        self._action_line_config['color'] = self._colors[-2]
+        self._action_line_config["color"] = self._colors[-2]
 
     def initialize(self, axis):
         # Docstring of superclass
         super().initialize(axis)
-        self._action_line, = self._axis.plot(
-            self._x_data, self._action_data, **self._action_line_config,
+        (self._action_line,) = self._axis.plot(
+            self._x_data,
+            self._action_data,
+            **self._action_line_config,
         )
         self._lines.append(self._action_line)
 
@@ -55,19 +57,19 @@ class ActionPlot(TimePlot):
 
         # check for the type of action space: Discrete or Continuous
         if type(self._action_space) is Box:  # for continuous action space
-            self._action_type = 'Continuous'
+            self._action_type = "Continuous"
             # fetch the action range of continuous type actions
             self._action_range_min = self._action_space.low[self._action]
             self._action_range_max = self._action_space.high[self._action]
 
         elif type(self._action_space) is Discrete:
-            self._action_type = 'Discrete'
+            self._action_type = "Discrete"
             # lower bound of discrete action = 0
             self._action_range_min = 0
             # fetch the action range of discrete type actions
             self._action_range_max = self._action_space.n
         elif type(self._action_space) is MultiDiscrete:
-            self._action_type = 'MultiDiscrete'
+            self._action_type = "MultiDiscrete"
             # lower bound of discrete action = 0
             self._action_range_min = 0
             # fetch the action range of discrete type actions
@@ -75,7 +77,7 @@ class ActionPlot(TimePlot):
 
         spacing = 0.1 * (self._action_range_max - self._action_range_min)
         self._y_lim = self._action_range_min - spacing, self._action_range_max + spacing
-        self._label = f'Action {self._action}'
+        self._label = f"Action {self._action}"
 
     def on_step_begin(self, k, action):
         # Docstring of superclass
@@ -84,7 +86,7 @@ class ActionPlot(TimePlot):
         self._x_data[idx] = self._t
 
         if action is not None:
-            if self._action_type == 'Discrete':
+            if self._action_type == "Discrete":
                 self._action_data[idx] = action
             else:
                 self._action_data[idx] = action[self._action]

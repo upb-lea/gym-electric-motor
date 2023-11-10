@@ -25,7 +25,7 @@ class FluxObserver(PhysicalSystemWrapper):
             \Psi_k = \sum_{i=0}^k (\Psi_{k-1} + \Delta\Psi_k) \\tau
     """
 
-    def __init__(self, current_names=('i_sa', 'i_sb', 'i_sc'), physical_system=None):
+    def __init__(self, current_names=("i_sa", "i_sb", "i_sc"), physical_system=None):
         """
         Args:
             current_names(Iterable[string]): Names of the currents to be observed to estimate the flux.
@@ -52,25 +52,39 @@ class FluxObserver(PhysicalSystemWrapper):
 
     def set_physical_system(self, physical_system):
         # Docstring of super class
-        assert isinstance(physical_system.electrical_motor, gem.physical_systems.electric_motors.InductionMotor)
+        assert isinstance(
+            physical_system.electrical_motor,
+            gem.physical_systems.electric_motors.InductionMotor,
+        )
         super().set_physical_system(physical_system)
         mp = physical_system.electrical_motor.motor_parameter
-        self._l_m = mp['l_m']  # Main induction
-        self._l_r = mp['l_m'] + mp['l_sigr']  # Induction of the rotor
-        self._r_r = mp['r_r']  # Rotor resistance
-        self._p = mp['p']  # Pole pair number
-        psi_limit = self._l_m * physical_system.limits[physical_system.state_names.index('i_sd')]
+        self._l_m = mp["l_m"]  # Main induction
+        self._l_r = mp["l_m"] + mp["l_sigr"]  # Induction of the rotor
+        self._r_r = mp["r_r"]  # Rotor resistance
+        self._p = mp["p"]  # Pole pair number
+        psi_limit = (
+            self._l_m
+            * physical_system.limits[physical_system.state_names.index("i_sd")]
+        )
         low = np.concatenate((physical_system.state_space.low, [-psi_limit, -np.pi]))
         high = np.concatenate((physical_system.state_space.high, [psi_limit, np.pi]))
         self.state_space = gymnasium.spaces.Box(low, high, dtype=np.float64)
-        self._current_indices = [physical_system.state_positions[name] for name in self._current_names]
+        self._current_indices = [
+            physical_system.state_positions[name] for name in self._current_names
+        ]
         self._limits = np.concatenate((physical_system.limits, [psi_limit, np.pi]))
-        self._nominal_state = np.concatenate((physical_system.nominal_state, [psi_limit, np.pi]))
-        self._state_names = physical_system.state_names + ['psi_abs', 'psi_angle']
-        self._state_positions = {key: index for index, key in enumerate(self._state_names)}
+        self._nominal_state = np.concatenate(
+            (physical_system.nominal_state, [psi_limit, np.pi])
+        )
+        self._state_names = physical_system.state_names + ["psi_abs", "psi_angle"]
+        self._state_positions = {
+            key: index for index, key in enumerate(self._state_names)
+        }
 
-        self._i_s_idx = [physical_system.state_positions[name] for name in self._current_names]
-        self._omega_idx = physical_system.state_positions['omega']
+        self._i_s_idx = [
+            physical_system.state_positions[name] for name in self._current_names
+        ]
+        self._omega_idx = physical_system.state_positions["omega"]
         return self
 
     def reset(self):
@@ -89,9 +103,17 @@ class FluxObserver(PhysicalSystemWrapper):
         [i_s_alpha, i_s_beta] = self._abc_to_alphabeta_transformation(i_s)
 
         # Calculate delta flux
-        delta_psi = complex(i_s_alpha, i_s_beta) * self._r_r * self._l_m / self._l_r \
-            - self._integrated * complex(self._r_r / self._l_r, -omega)
+        delta_psi = complex(
+            i_s_alpha, i_s_beta
+        ) * self._r_r * self._l_m / self._l_r - self._integrated * complex(
+            self._r_r / self._l_r, -omega
+        )
 
         # Integrate the flux
         self._integrated += delta_psi * self._physical_system.tau
-        return np.concatenate((state, [np.abs(self._integrated), np.angle(self._integrated)])) / self._limits
+        return (
+            np.concatenate(
+                (state, [np.abs(self._integrated), np.angle(self._integrated)])
+            )
+            / self._limits
+        )

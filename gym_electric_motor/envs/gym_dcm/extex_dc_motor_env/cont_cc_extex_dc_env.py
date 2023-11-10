@@ -1,8 +1,15 @@
-from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
-    ElectricMotorVisualization
+from gym_electric_motor.core import (
+    ElectricMotorEnvironment,
+    ReferenceGenerator,
+    RewardFunction,
+    ElectricMotorVisualization,
+)
 from gym_electric_motor.physical_systems.physical_systems import DcMotorSystem
 from gym_electric_motor.visualization import MotorDashboard
-from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator, MultipleReferenceGenerator
+from gym_electric_motor.reference_generators import (
+    WienerProcessReferenceGenerator,
+    MultipleReferenceGenerator,
+)
 from gym_electric_motor import physical_systems as ps
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.utils import initialize
@@ -82,9 +89,25 @@ class ContCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         >>>         state, reference = env.reset()
         >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
     """
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
-                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i_a', 'i_e'), calc_jacobian=True, tau=1e-4, physical_system_wrappers=(), **kwargs):
+
+    def __init__(
+        self,
+        supply=None,
+        converter=None,
+        motor=None,
+        load=None,
+        ode_solver=None,
+        reward_function=None,
+        reference_generator=None,
+        visualization=None,
+        state_filter=None,
+        callbacks=(),
+        constraints=("i_a", "i_e"),
+        calc_jacobian=True,
+        tau=1e-4,
+        physical_system_wrappers=(),
+        **kwargs,
+    ):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -123,37 +146,64 @@ class ContCurrentControlDcExternallyExcitedMotorEnv(ElectricMotorEnvironment):
         """
         default_subconverters = (
             ps.ContFourQuadrantConverter(),
-            ps.ContFourQuadrantConverter()
+            ps.ContFourQuadrantConverter(),
         )
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
+            supply=initialize(
+                ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)
+            ),
             converter=initialize(
                 ps.PowerElectronicConverter,
                 converter,
                 ps.ContMultiConverter,
-                dict(subconverters=default_subconverters)
+                dict(subconverters=default_subconverters),
             ),
-            motor=initialize(ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100)),
+            motor=initialize(
+                ps.ElectricMotor, motor, ps.DcExternallyExcitedMotor, dict()
+            ),
+            load=initialize(
+                ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100)
+            ),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
-            tau=tau
+            tau=tau,
         )
         sub_generators = (
-            WienerProcessReferenceGenerator(reference_state='i_a'),
-            WienerProcessReferenceGenerator(reference_state='i_e')
+            WienerProcessReferenceGenerator(reference_state="i_a"),
+            WienerProcessReferenceGenerator(reference_state="i_e"),
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, MultipleReferenceGenerator, dict(sub_generators=sub_generators)
+            ReferenceGenerator,
+            reference_generator,
+            MultipleReferenceGenerator,
+            dict(sub_generators=sub_generators),
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(i_a=0.5, i_e=0.5))
+            RewardFunction,
+            reward_function,
+            WeightedSumOfErrors,
+            dict(reward_weights=dict(i_a=0.5, i_e=0.5)),
         )
         visualization = initialize(
             (ElectricMotorVisualization, list, tuple),
-            visualization, MotorDashboard, dict(state_plots=('i_a', 'i_e',), action_plots='all'))
+            visualization,
+            MotorDashboard,
+            dict(
+                state_plots=(
+                    "i_a",
+                    "i_e",
+                ),
+                action_plots="all",
+            ),
+        )
         super().__init__(
-            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            physical_system_wrappers=physical_system_wrappers, **kwargs
+            physical_system=physical_system,
+            reference_generator=reference_generator,
+            reward_function=reward_function,
+            constraints=constraints,
+            visualization=visualization,
+            state_filter=state_filter,
+            callbacks=callbacks,
+            physical_system_wrappers=physical_system_wrappers,
+            **kwargs,
         )

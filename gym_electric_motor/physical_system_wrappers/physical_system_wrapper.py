@@ -99,7 +99,9 @@ class PhysicalSystemWrapper(gem.core.PhysicalSystem, gem.core.RandomComponent):
         self._physical_system = physical_system
         self._action_space = physical_system.action_space
         self._state_names = physical_system.state_names
-        self._state_positions = {key: index for index, key in enumerate(self._state_names)}
+        self._state_positions = {
+            key: index for index, key in enumerate(self._state_names)
+        }
         self._tau = physical_system.tau
         return self
 

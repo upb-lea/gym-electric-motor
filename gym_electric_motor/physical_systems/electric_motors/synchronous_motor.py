@@ -88,19 +88,26 @@ class SynchronousMotor(ThreePhaseMotor):
     I_SQ_IDX = 1
     EPSILON_IDX = 2
     CURRENTS_IDX = [0, 1]
-    CURRENTS = ['i_sd', 'i_sq']
-    VOLTAGES = ['u_sd', 'u_sq']
+    CURRENTS = ["i_sd", "i_sq"]
+    VOLTAGES = ["u_sd", "u_sq"]
 
     _model_constants = None
 
     _initializer = None
 
-    def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None):
+    def __init__(
+        self,
+        motor_parameter=None,
+        nominal_values=None,
+        limit_values=None,
+        motor_initializer=None,
+    ):
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
-        super().__init__(motor_parameter, nominal_values,
-                         limit_values, motor_initializer)
+        super().__init__(
+            motor_parameter, nominal_values, limit_values, motor_initializer
+        )
         self._update_model()
         self._update_limits()
 
@@ -119,7 +126,7 @@ class SynchronousMotor(ThreePhaseMotor):
 
     def reset(self, state_space, state_positions, **__):
         # Docstring of superclass
-        if self._initializer and self._initializer['states']:
+        if self._initializer and self._initializer["states"]:
             self.initialize(state_space, state_positions)
             return np.asarray(list(self._initial_states.values()))
         else:
@@ -147,15 +154,20 @@ class SynchronousMotor(ThreePhaseMotor):
         Returns:
             The derivatives of the state vector d/dt([i_sd, i_sq, epsilon])
         """
-        return np.matmul(self._model_constants, np.array([
-            omega,
-            state[self.I_SD_IDX],
-            state[self.I_SQ_IDX],
-            u_dq[0],
-            u_dq[1],
-            omega * state[self.I_SD_IDX],
-            omega * state[self.I_SQ_IDX],
-        ]))
+        return np.matmul(
+            self._model_constants,
+            np.array(
+                [
+                    omega,
+                    state[self.I_SD_IDX],
+                    state[self.I_SQ_IDX],
+                    u_dq[0],
+                    u_dq[1],
+                    omega * state[self.I_SD_IDX],
+                    omega * state[self.I_SQ_IDX],
+                ]
+            ),
+        )
 
     def i_in(self, state):
         # Docstring of superclass
@@ -164,16 +176,20 @@ class SynchronousMotor(ThreePhaseMotor):
     def _update_limits(self):
         # Docstring of superclass
 
-        voltage_limit = 0.5 * self._limits['u']
-        voltage_nominal = 0.5 * self._nominal_values['u']
+        voltage_limit = 0.5 * self._limits["u"]
+        voltage_nominal = 0.5 * self._nominal_values["u"]
 
         limits_agenda = {}
         nominal_agenda = {}
         for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
             limits_agenda[u] = voltage_limit
             nominal_agenda[u] = voltage_nominal
-            limits_agenda[i] = self._limits.get('i', None) \
-                or self._limits[u] / self._motor_parameter['r_s']
-            nominal_agenda[i] = self._nominal_values.get('i', None) \
-                or self._nominal_values[u] / self._motor_parameter['r_s']
+            limits_agenda[i] = (
+                self._limits.get("i", None)
+                or self._limits[u] / self._motor_parameter["r_s"]
+            )
+            nominal_agenda[i] = (
+                self._nominal_values.get("i", None)
+                or self._nominal_values[u] / self._motor_parameter["r_s"]
+            )
         super()._update_limits(limits_agenda, nominal_agenda)

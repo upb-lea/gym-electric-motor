@@ -1,5 +1,9 @@
-from gym_electric_motor.core import ElectricMotorEnvironment, ReferenceGenerator, RewardFunction, \
-    ElectricMotorVisualization
+from gym_electric_motor.core import (
+    ElectricMotorEnvironment,
+    ReferenceGenerator,
+    RewardFunction,
+    ElectricMotorVisualization,
+)
 from gym_electric_motor.physical_systems.physical_systems import DcMotorSystem
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
@@ -10,82 +14,97 @@ from gym_electric_motor.utils import initialize
 
 class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
     """
-        Description:
-            Environment to simulate a continuous control set speed controlled series DC Motor
+    Description:
+        Environment to simulate a continuous control set speed controlled series DC Motor
 
-        Key:
-            ``'Cont-SC-SeriesDc-v0'``
+    Key:
+        ``'Cont-SC-SeriesDc-v0'``
 
-        Default Components:
-            - Supply: :py:class:`.IdealVoltageSupply`
-            - Converter: :py:class:`.ContinuousFourQuadrantConverter`
-            - Motor: :py:class:`.DcSeriesMotor`
-            - Load: :py:class:`.PolynomialStaticLoad`
-            - Ode-Solver: :py:class:`.EulerSolver`
+    Default Components:
+        - Supply: :py:class:`.IdealVoltageSupply`
+        - Converter: :py:class:`.ContinuousFourQuadrantConverter`
+        - Motor: :py:class:`.DcSeriesMotor`
+        - Load: :py:class:`.PolynomialStaticLoad`
+        - Ode-Solver: :py:class:`.EulerSolver`
 
-            - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
+        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
 
-            - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'omega' = 1``
+        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'omega' = 1``
 
-            - Visualization: :py:class:`.MotorDashboard` omega and action plots
+        - Visualization: :py:class:`.MotorDashboard` omega and action plots
 
-            - Constraints: :py:class:`.LimitConstraint` on the current  ``'i'``
+        - Constraints: :py:class:`.LimitConstraint` on the current  ``'i'``
 
-        State Variables:
-            ``['omega' , 'torque', 'i', 'u', 'u_sup']``
+    State Variables:
+        ``['omega' , 'torque', 'i', 'u', 'u_sup']``
 
-        Reference Variables:
-            ``['omega']``
+    Reference Variables:
+        ``['omega']``
 
-        Control Cycle Time:
-            tau = 1e-4 seconds
+    Control Cycle Time:
+        tau = 1e-4 seconds
 
-        Observation Space:
-            Type: Tuple(State_Space, Reference_Space)
+    Observation Space:
+        Type: Tuple(State_Space, Reference_Space)
 
-        State Space:
-            Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
+    State Space:
+        Box(low=[-1, -1, -1, -1, 0], high=[1, 1, 1, 1, 1])
 
-        Reference Space:
-            Box(low=[-1], high=[1])
+    Reference Space:
+        Box(low=[-1], high=[1])
 
-        Action Space:
-            Box(low=[-1],high=[1])
+    Action Space:
+        Box(low=[-1],high=[1])
 
-        Initial State:
-            Zeros on all state variables.
+    Initial State:
+        Zeros on all state variables.
 
-        Example:
-            >>> import gym_electric_motor as gem
-            >>> from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
-            >>>
-            >>> # Select a different converter with default parameters by passing a keystring
-            >>> my_overridden_converter = 'Finite-2QC'
-            >>>
-            >>> # Update the default arguments to the voltage supply by passing a parameter dict
-            >>> my_changed_voltage_supply_args = {'u_nominal': 400.0}
-            >>>
-            >>> # Replace the reference generator by passing a new instance
-            >>> my_new_ref_gen_instance = LaplaceProcessReferenceGenerator(
-            ...     reference_state='omega',
-            ...     sigma_range=(1e-3, 1e-2)
-            ... )
-            >>> env = gem.make(
-            ...     'Cont-SC-SeriesDc-v0',
-            ...     voltage_supply=my_changed_voltage_supply_args,
-            ...     converter=my_overridden_converter,
-            ...     reference_generator=my_new_ref_gen_instance
-            ... )
-            >>> terminated = True
-            >>> for _ in range(1000):
-            >>>     if terminated:
-            >>>         state, reference = env.reset()
-            >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
-        """
+    Example:
+        >>> import gym_electric_motor as gem
+        >>> from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
+        >>>
+        >>> # Select a different converter with default parameters by passing a keystring
+        >>> my_overridden_converter = 'Finite-2QC'
+        >>>
+        >>> # Update the default arguments to the voltage supply by passing a parameter dict
+        >>> my_changed_voltage_supply_args = {'u_nominal': 400.0}
+        >>>
+        >>> # Replace the reference generator by passing a new instance
+        >>> my_new_ref_gen_instance = LaplaceProcessReferenceGenerator(
+        ...     reference_state='omega',
+        ...     sigma_range=(1e-3, 1e-2)
+        ... )
+        >>> env = gem.make(
+        ...     'Cont-SC-SeriesDc-v0',
+        ...     voltage_supply=my_changed_voltage_supply_args,
+        ...     converter=my_overridden_converter,
+        ...     reference_generator=my_new_ref_gen_instance
+        ... )
+        >>> terminated = True
+        >>> for _ in range(1000):
+        >>>     if terminated:
+        >>>         state, reference = env.reset()
+        >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
+    """
 
-    def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
-                 reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
-                 constraints=('i',), calc_jacobian=True, tau=1e-4, physical_system_wrappers=(), **kwargs):
+    def __init__(
+        self,
+        supply=None,
+        converter=None,
+        motor=None,
+        load=None,
+        ode_solver=None,
+        reward_function=None,
+        reference_generator=None,
+        visualization=None,
+        state_filter=None,
+        callbacks=(),
+        constraints=("i",),
+        calc_jacobian=True,
+        tau=1e-4,
+        physical_system_wrappers=(),
+        **kwargs,
+    ):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -123,28 +142,52 @@ class ContSpeedControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContFourQuadrantConverter, dict()),
+            supply=initialize(
+                ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)
+            ),
+            converter=initialize(
+                ps.PowerElectronicConverter,
+                converter,
+                ps.ContFourQuadrantConverter,
+                dict(),
+            ),
             motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(
-                load_parameter=dict(a=0.01, b=0.05, c=0.0, j_load=1e-4)
-            )),
+            load=initialize(
+                ps.MechanicalLoad,
+                load,
+                ps.PolynomialStaticLoad,
+                dict(load_parameter=dict(a=0.01, b=0.05, c=0.0, j_load=1e-4)),
+            ),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
-            tau=tau
+            tau=tau,
         )
         reference_generator = initialize(
-            ReferenceGenerator, reference_generator, WienerProcessReferenceGenerator,
-            dict(reference_state='omega', sigma_range=(1e-3, 2e-2))
+            ReferenceGenerator,
+            reference_generator,
+            WienerProcessReferenceGenerator,
+            dict(reference_state="omega", sigma_range=(1e-3, 2e-2)),
         )
         reward_function = initialize(
-            RewardFunction, reward_function, WeightedSumOfErrors, dict(reward_weights=dict(omega=1.0))
+            RewardFunction,
+            reward_function,
+            WeightedSumOfErrors,
+            dict(reward_weights=dict(omega=1.0)),
         )
         visualization = initialize(
-            ElectricMotorVisualization, visualization, MotorDashboard, dict(state_plots=('omega',), action_plots='all'))
-        super().__init__(
-            physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
-            constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            physical_system_wrappers=physical_system_wrappers, **kwargs
+            ElectricMotorVisualization,
+            visualization,
+            MotorDashboard,
+            dict(state_plots=("omega",), action_plots="all"),
         )
-
+        super().__init__(
+            physical_system=physical_system,
+            reference_generator=reference_generator,
+            reward_function=reward_function,
+            constraints=constraints,
+            visualization=visualization,
+            state_filter=state_filter,
+            callbacks=callbacks,
+            physical_system_wrappers=physical_system_wrappers,
+            **kwargs,
+        )

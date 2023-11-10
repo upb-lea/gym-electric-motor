@@ -29,7 +29,9 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
 
     def _reset_reference(self):
         self._current_sigma = 10 ** self._get_current_value(np.log10(self._sigma_range))
-        random_values = self._random_generator.normal(0, self._current_sigma, self._current_episode_length)
+        random_values = self._random_generator.normal(
+            0, self._current_sigma, self._current_episode_length
+        )
         self._reference = np.zeros_like(random_values)
         reference_value = self._reference_value
         for i in range(self._current_episode_length):
@@ -43,6 +45,7 @@ class WienerProcessReferenceGenerator(SubepisodedReferenceGenerator):
     def reset(self, initial_state=None, initial_reference=None):
         if initial_reference is None:
             initial_reference = np.zeros_like(self._referenced_states, dtype=float)
-            initial_reference[self._referenced_states] =\
-                self.random_generator.uniform(self._initial_range[0], self._initial_range[1], 1)
+            initial_reference[self._referenced_states] = self.random_generator.uniform(
+                self._initial_range[0], self._initial_range[1], 1
+            )
         return super().reset(initial_state, initial_reference)

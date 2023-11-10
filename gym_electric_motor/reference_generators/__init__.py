@@ -12,12 +12,16 @@ from .laplace_process_reference_generator import LaplaceProcessReferenceGenerato
 from ..utils import register_class
 from ..core import ReferenceGenerator
 
-register_class(WienerProcessReferenceGenerator, ReferenceGenerator, 'WienerProcessReference')
-register_class(SwitchedReferenceGenerator, ReferenceGenerator, 'SwitchedReference')
-register_class(StepReferenceGenerator, ReferenceGenerator, 'StepReference')
-register_class(SinusoidalReferenceGenerator, ReferenceGenerator, 'SinusReference')
-register_class(TriangularReferenceGenerator, ReferenceGenerator, 'TriangleReference')
-register_class(SawtoothReferenceGenerator, ReferenceGenerator, 'SawtoothReference')
-register_class(ConstReferenceGenerator, ReferenceGenerator, 'ConstReference')
-register_class(MultipleReferenceGenerator, ReferenceGenerator, 'MultipleReference')
-register_class(SubepisodedReferenceGenerator, ReferenceGenerator, 'SubepisodedReference')
+register_class(
+    WienerProcessReferenceGenerator, ReferenceGenerator, "WienerProcessReference"
+)
+register_class(SwitchedReferenceGenerator, ReferenceGenerator, "SwitchedReference")
+register_class(StepReferenceGenerator, ReferenceGenerator, "StepReference")
+register_class(SinusoidalReferenceGenerator, ReferenceGenerator, "SinusReference")
+register_class(TriangularReferenceGenerator, ReferenceGenerator, "TriangleReference")
+register_class(SawtoothReferenceGenerator, ReferenceGenerator, "SawtoothReference")
+register_class(ConstReferenceGenerator, ReferenceGenerator, "ConstReference")
+register_class(MultipleReferenceGenerator, ReferenceGenerator, "MultipleReference")
+register_class(
+    SubepisodedReferenceGenerator, ReferenceGenerator, "SubepisodedReference"
+)

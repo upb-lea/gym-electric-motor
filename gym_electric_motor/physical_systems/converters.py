@@ -7,7 +7,7 @@ from ..utils import instantiate
 class PowerElectronicConverter:
     """
     Base class for all converters in a SCMLSystem.
- 
+
     Properties:
         | *voltages(tuple(float, float))*: Determines which output voltage polarities the converter can generate.
         | E.g. (0, 1) - Only positive voltages / (-1, 1) Positive and negative voltages
@@ -36,8 +36,8 @@ class PowerElectronicConverter:
 
     def __init__(self, tau, interlocking_time=0.0):
         """
-       :param tau: Discrete time step of the system in seconds
-       :param interlocking_time: Interlocking time of the transistors in seconds
+        :param tau: Discrete time step of the system in seconds
+        :param interlocking_time: Interlocking time of the transistors in seconds
         """
         self._tau = tau
         self._interlocking_time = interlocking_time
@@ -103,9 +103,9 @@ class PowerElectronicConverter:
         Method to calculate the switching pattern and corresponding switching times for the next time step.
         At least, the next time step [t + tau] is returned.
 
-        Args: 
+        Args:
             action(instance of action_space): The action for the next time step.
-            
+
         Returns:
              list(float): Switching times.
         """
@@ -115,6 +115,7 @@ class PowerElectronicConverter:
 
 class NoConverter(PowerElectronicConverter):
     """Dummy Converter class used to directly transfer the supply voltage to the motor"""
+
     # Dummy default values for voltages and currents.
     # No real use other than to fit the current physical system architecture
     voltages = Box(0, 1, shape=(3,), dtype=np.float64)
@@ -144,11 +145,21 @@ class ContDynamicallyAveragedConverter(PowerElectronicConverter):
 
     def set_action(self, action, t):
         # Docstring in base class
-        return super().set_action(min(max(action, self.action_space.low), self.action_space.high), t)
+        return super().set_action(
+            min(max(action, self.action_space.low), self.action_space.high), t
+        )
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return [min(max(self._convert(i_out, t) - self._interlock(i_out, t), self.voltages.low[0]), self.voltages.high[0])]
+        return [
+            min(
+                max(
+                    self._convert(i_out, t) - self._interlock(i_out, t),
+                    self.voltages.low[0],
+                ),
+                self.voltages.high[0],
+            )
+        ]
 
     def _convert(self, i_in, t):
         """
@@ -194,8 +205,9 @@ class FiniteConverter(PowerElectronicConverter):
         super().__init__(tau=tau, **kwargs)
 
     def set_action(self, action, t):
-        assert self.action_space.contains(action), \
-            f"The selected action {action} is not a valid element of the action space {self.action_space}."
+        assert self.action_space.contains(
+            action
+        ), f"The selected action {action} is not a valid element of the action space {self.action_space}."
         return super().set_action(action, t)
 
     def convert(self, i_out, t):
@@ -276,7 +288,7 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
         elif self._switching_state == 2:
             return [0.0]
         else:
-            raise Exception('Invalid switching state of the converter')
+            raise Exception("Invalid switching state of the converter")
 
     def i_sup(self, i_out):
         # Docstring in base class
@@ -287,21 +299,24 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
         elif self._switching_state == 2:
             return 0
         else:
-            raise Exception('Invalid switching state of the converter')
+            raise Exception("Invalid switching state of the converter")
 
     def _set_switching_pattern(self, action):
         # Docstring in base class
         if (
-                action == 0
-                or self._switching_state == 0
-                or action == self._switching_state
-                or self._interlocking_time == 0
+            action == 0
+            or self._switching_state == 0
+            or action == self._switching_state
+            or self._interlocking_time == 0
         ):
             self._switching_pattern = [action]
             return [self._action_start_time + self._tau]
         else:
             self._switching_pattern = [0, action]
-            return [self._action_start_time + self._interlocking_time, self._action_start_time + self._tau]
+            return [
+                self._action_start_time + self._interlocking_time,
+                self._action_start_time + self._tau,
+            ]
 
 
 class FiniteFourQuadrantConverter(FiniteConverter):
@@ -322,6 +337,7 @@ class FiniteFourQuadrantConverter(FiniteConverter):
         | Box(-1, 1, shape=(1,))
         | Box(-1, 1, shape=(1,))
     """
+
     voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
     currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(4)
@@ -329,7 +345,10 @@ class FiniteFourQuadrantConverter(FiniteConverter):
     def __init__(self, **kwargs):
         # Docstring in base class
         super().__init__(**kwargs)
-        self._subconverters = [FiniteTwoQuadrantConverter(**kwargs), FiniteTwoQuadrantConverter(**kwargs)]
+        self._subconverters = [
+            FiniteTwoQuadrantConverter(**kwargs),
+            FiniteTwoQuadrantConverter(**kwargs),
+        ]
 
     def reset(self):
         # Docstring in base class
@@ -339,12 +358,16 @@ class FiniteFourQuadrantConverter(FiniteConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return [self._subconverters[0].convert(i_out, t)[0] - self._subconverters[1].convert([-i_out[0]], t)[0]]
+        return [
+            self._subconverters[0].convert(i_out, t)[0]
+            - self._subconverters[1].convert([-i_out[0]], t)[0]
+        ]
 
     def set_action(self, action, t):
         # Docstring in base class
-        assert self.action_space.contains(action), \
-            f"The selected action {action} is not a valid element of the action space {self.action_space}."
+        assert self.action_space.contains(
+            action
+        ), f"The selected action {action} is not a valid element of the action space {self.action_space}."
         times = []
         action0 = [1, 1, 2, 2][action]
         action1 = [1, 2, 1, 2][action]
@@ -354,7 +377,9 @@ class FiniteFourQuadrantConverter(FiniteConverter):
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[0]])
+        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup(
+            [-i_out[0]]
+        )
 
 
 class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
@@ -372,6 +397,7 @@ class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(0, 1, shape=(1,))
         | currents: Box(0, 1, shape=(1,))
     """
+
     voltages = Box(0, 1, shape=(1,), dtype=np.float64)
     currents = Box(0, 1, shape=(1,), dtype=np.float64)
     action_space = Box(0, 1, shape=(1,), dtype=np.float64)
@@ -405,6 +431,7 @@ class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(0, 1, shape=(1,))
         | currents: Box(-1, 1, shape=(1,))
     """
+
     voltages = Box(0, 1, shape=(1,), dtype=np.float64)
     currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Box(0, 1, shape=(1,), dtype=np.float64)
@@ -418,7 +445,9 @@ class ContTwoQuadrantConverter(ContDynamicallyAveragedConverter):
         interlocking_current = 1 if i_out[0] < 0 else 0
         return (
             self._current_action[0]
-            + self._interlocking_time / self._tau * (interlocking_current - self._current_action[0])
+            + self._interlocking_time
+            / self._tau
+            * (interlocking_current - self._current_action[0])
         ) * i_out[0]
 
 
@@ -442,6 +471,7 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
         | voltages: Box(-1, 1, shape=(1,))
         | currents: Box(-1, 1, shape=(1,))
     """
+
     voltages = Box(-1, 1, shape=(1,), dtype=np.float64)
     currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Box(-1, 1, shape=(1,), dtype=np.float64)
@@ -449,7 +479,10 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
     def __init__(self, **kwargs):
         # Docstring in base class
         super().__init__(**kwargs)
-        self._subconverters = [ContTwoQuadrantConverter(**kwargs), ContTwoQuadrantConverter(**kwargs)]
+        self._subconverters = [
+            ContTwoQuadrantConverter(**kwargs),
+            ContTwoQuadrantConverter(**kwargs),
+        ]
 
     def _convert(self, *_):
         # Not used here
@@ -463,7 +496,10 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
 
     def convert(self, i_out, t):
         # Docstring in base class
-        return [self._subconverters[0].convert(i_out, t)[0] - self._subconverters[1].convert(i_out, t)[0]]
+        return [
+            self._subconverters[0].convert(i_out, t)[0]
+            - self._subconverters[1].convert(i_out, t)[0]
+        ]
 
     def set_action(self, action, t):
         # Docstring in base class
@@ -475,7 +511,9 @@ class ContFourQuadrantConverter(ContDynamicallyAveragedConverter):
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup([-i_out[0]])
+        return self._subconverters[0].i_sup(i_out) + self._subconverters[1].i_sup(
+            [-i_out[0]]
+        )
 
 
 class FiniteMultiConverter(FiniteConverter):
@@ -510,7 +548,6 @@ class FiniteMultiConverter(FiniteConverter):
     def sub_converters(self):
         return self._sub_converters
 
-
     def __init__(self, subconverters, **kwargs):
         """
         Args:
@@ -519,7 +556,8 @@ class FiniteMultiConverter(FiniteConverter):
         """
         super().__init__(**kwargs)
         self._sub_converters = [
-            instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters
+            instantiate(PowerElectronicConverter, subconverter, **kwargs)
+            for subconverter in subconverters
         ]
         self.subsignal_current_space_dims = []
         self.subsignal_voltage_space_dims = []
@@ -531,8 +569,12 @@ class FiniteMultiConverter(FiniteConverter):
 
         # get the limits and space dims from each subconverter
         for subconverter in self._sub_converters:
-            self.subsignal_current_space_dims.append(np.squeeze(subconverter.currents.shape) or 1)
-            self.subsignal_voltage_space_dims.append(np.squeeze(subconverter.voltages.shape) or 1)
+            self.subsignal_current_space_dims.append(
+                np.squeeze(subconverter.currents.shape) or 1
+            )
+            self.subsignal_voltage_space_dims.append(
+                np.squeeze(subconverter.voltages.shape) or 1
+            )
 
             self.action_space.append(subconverter.action_space.n)
 
@@ -561,7 +603,9 @@ class FiniteMultiConverter(FiniteConverter):
         # Docstring in base class
         u_in = []
         subsignal_idx_low = 0
-        for subconverter, subsignal_space_size in zip(self._sub_converters, self.subsignal_voltage_space_dims):
+        for subconverter, subsignal_space_size in zip(
+            self._sub_converters, self.subsignal_voltage_space_dims
+        ):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
             u_in += subconverter.convert(i_out[subsignal_idx_low:subsignal_idx_high], t)
             subsignal_idx_low = subsignal_idx_high
@@ -585,7 +629,9 @@ class FiniteMultiConverter(FiniteConverter):
         # Docstring in base class
         i_sup = 0
         subsignal_idx_low = 0
-        for subconverter, subsignal_space_size in zip(self._sub_converters, self.subsignal_current_space_dims):
+        for subconverter, subsignal_space_size in zip(
+            self._sub_converters, self.subsignal_current_space_dims
+        ):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
             i_sup += subconverter.i_sup(i_out[subsignal_idx_low:subsignal_idx_high])
             subsignal_idx_low = subsignal_idx_high
@@ -630,7 +676,8 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         """
         super().__init__(**kwargs)
         self._sub_converters = [
-            instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters
+            instantiate(PowerElectronicConverter, subconverter, **kwargs)
+            for subconverter in subconverters
         ]
 
         self.subsignal_current_space_dims = []
@@ -644,8 +691,12 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
 
         # get the limits and space dims from each subconverter
         for subconverter in self._sub_converters:
-            self.subsignal_current_space_dims.append(np.squeeze(subconverter.currents.shape) or 1)
-            self.subsignal_voltage_space_dims.append(np.squeeze(subconverter.voltages.shape) or 1)
+            self.subsignal_current_space_dims.append(
+                np.squeeze(subconverter.currents.shape) or 1
+            )
+            self.subsignal_voltage_space_dims.append(
+                np.squeeze(subconverter.voltages.shape) or 1
+            )
 
             action_space_low.append(subconverter.action_space.low)
             action_space_high.append(subconverter.action_space.high)
@@ -679,7 +730,7 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         times = []
         ind = 0
         for subconverter in self._sub_converters:
-            sub_action = action[ind:ind + subconverter.action_space.shape[0]]
+            sub_action = action[ind : ind + subconverter.action_space.shape[0]]
             ind += subconverter.action_space.shape[0]
             times += subconverter.set_action(sub_action, t)
         return sorted(list(set(times)))
@@ -695,7 +746,9 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         # Docstring in base class
         u_in = []
         subsignal_idx_low = 0
-        for subconverter, subsignal_space_size in zip(self._sub_converters, self.subsignal_voltage_space_dims):
+        for subconverter, subsignal_space_size in zip(
+            self._sub_converters, self.subsignal_voltage_space_dims
+        ):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
             u_in += subconverter.convert(i_out[subsignal_idx_low:subsignal_idx_high], t)
             subsignal_idx_low = subsignal_idx_high
@@ -709,7 +762,9 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
         # Docstring in base class
         i_sup = 0
         subsignal_idx_low = 0
-        for subconverter, subsignal_space_size in zip(self._sub_converters, self.subsignal_current_space_dims):
+        for subconverter, subsignal_space_size in zip(
+            self._sub_converters, self.subsignal_current_space_dims
+        ):
             subsignal_idx_high = subsignal_idx_low + subsignal_space_size
             i_sup += subconverter.i_sup(i_out[subsignal_idx_low:subsignal_idx_high])
             subsignal_idx_low = subsignal_idx_high
@@ -770,7 +825,7 @@ class FiniteB6BridgeConverter(FiniteConverter):
         [1, 2, 2],
         [1, 2, 1],
         [1, 1, 2],
-        [1, 1, 1]
+        [1, 1, 1],
     ]
 
     def __init__(self, tau=1e-5, **kwargs):
@@ -795,14 +850,15 @@ class FiniteB6BridgeConverter(FiniteConverter):
         u_out = [
             self._sub_converters[0].convert([i_out[0]], t)[0] - 0.5,
             self._sub_converters[1].convert([i_out[1]], t)[0] - 0.5,
-            self._sub_converters[2].convert([i_out[2]], t)[0] - 0.5
+            self._sub_converters[2].convert([i_out[2]], t)[0] - 0.5,
         ]
         return u_out
 
     def set_action(self, action, t):
         # Docstring in base class
-        assert self.action_space.contains(action), \
-            f"The selected action {action} is not a valid element of the action space {self.action_space}."
+        assert self.action_space.contains(
+            action
+        ), f"The selected action {action} is not a valid element of the action space {self.action_space}."
         subactions = self._subactions[action]
         times = []
         times += self._sub_converters[0].set_action(subactions[0], t)
@@ -812,7 +868,12 @@ class FiniteB6BridgeConverter(FiniteConverter):
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return sum([subconverter.i_sup([i_out_]) for subconverter, i_out_ in zip(self._sub_converters, i_out)])
+        return sum(
+            [
+                subconverter.i_sup([i_out_])
+                for subconverter, i_out_ in zip(self._sub_converters, i_out)
+            ]
+        )
 
 
 class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
@@ -866,7 +927,7 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
         u_out = [
             self._subconverters[0].convert([i_out[0]], t)[0] - 0.5,
             self._subconverters[1].convert([i_out[1]], t)[0] - 0.5,
-            self._subconverters[2].convert([i_out[2]], t)[0] - 0.5
+            self._subconverters[2].convert([i_out[2]], t)[0] - 0.5,
         ]
         return u_out
 
@@ -884,4 +945,9 @@ class ContB6BridgeConverter(ContDynamicallyAveragedConverter):
 
     def i_sup(self, i_out):
         # Docstring in base class
-        return sum([subconverter.i_sup([i_out_]) for subconverter, i_out_ in zip(self._subconverters, i_out)])
+        return sum(
+            [
+                subconverter.i_sup([i_out_])
+                for subconverter, i_out_ in zip(self._subconverters, i_out)
+            ]
+        )

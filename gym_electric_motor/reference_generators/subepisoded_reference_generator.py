@@ -11,7 +11,13 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
     time steps and can pre-calculate their references in these "sub episodes".
     """
 
-    def __init__(self, reference_state='omega', episode_lengths=(500, 2000), limit_margin=None, **kwargs):
+    def __init__(
+        self,
+        reference_state="omega",
+        episode_lengths=(500, 2000),
+        limit_margin=None,
+        **kwargs,
+    ):
         """
         Args:
             reference_state(str): Name of the state that this reference generator is referencing.
@@ -44,8 +50,12 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
         rs = self._referenced_states
         ps = physical_system
         if self._limit_margin is None:
-            upper_margin = (ps.nominal_state[rs] / ps.limits[rs])[0] * ps.state_space.high[rs]
-            lower_margin = (ps.nominal_state[rs] / ps.limits[rs])[0] * ps.state_space.low[rs]
+            upper_margin = (ps.nominal_state[rs] / ps.limits[rs])[
+                0
+            ] * ps.state_space.high[rs]
+            lower_margin = (ps.nominal_state[rs] / ps.limits[rs])[
+                0
+            ] * ps.state_space.low[rs]
             self._limit_margin = lower_margin[0], upper_margin[0]
         elif type(self._limit_margin) in [float, int]:
             upper_margin = self._limit_margin * ps.state_space.high[rs]
@@ -56,8 +66,10 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
             upper_margin = self._limit_margin[1] * ps.state_space.high[rs]
             self._limit_margin = lower_margin[0], upper_margin[0]
         else:
-            raise Exception('Unknown type for the limit margin.')
-        self.reference_space = Box(lower_margin[0], upper_margin[0], shape=(1,), dtype=np.float64)
+            raise Exception("Unknown type for the limit margin.")
+        self.reference_space = Box(
+            lower_margin[0], upper_margin[0], shape=(1,), dtype=np.float64
+        )
 
     def reset(self, initial_state=None, initial_reference=None):
         """
@@ -89,7 +101,9 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
     def get_reference_observation(self, *_, **__):
         if self._k >= self._current_episode_length:
             self._k = 0
-            self._current_episode_length = int(self._get_current_value(self._episode_len_range))
+            self._current_episode_length = int(
+                self._get_current_value(self._episode_len_range)
+            )
             self._reset_reference()
         self._reference_value = self._reference[self._k]
         self._k += 1
@@ -112,4 +126,6 @@ class SubepisodedReferenceGenerator(ReferenceGenerator, RandomComponent):
         if type(value_range) in [int, float]:
             return value_range
         elif type(value_range) in [list, tuple, np.ndarray]:
-            return (value_range[1] - value_range[0]) * self._random_generator.uniform() + value_range[0]
+            return (
+                value_range[1] - value_range[0]
+            ) * self._random_generator.uniform() + value_range[0]

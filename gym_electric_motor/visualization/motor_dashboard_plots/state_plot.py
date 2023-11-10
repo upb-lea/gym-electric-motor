@@ -6,32 +6,28 @@ from .base_plots import TimePlot
 class StatePlot(TimePlot):
     """Plot to display the environments states and their references."""
 
-    _default_limit_line_cfg = {
-        'color': 'red',
-        'linestyle': '--',
-        'linewidth': .75
-    }
+    _default_limit_line_cfg = {"color": "red", "linestyle": "--", "linewidth": 0.75}
 
     # Labels for each state variable.
     state_labels = {
-        'omega': r'$\omega$/(1/s)',
-        'torque': '$T$/Nm',
-        'i': '$i$/A',
-        'i_a': r'$i_{\mathrm{a}}$/A',
-        'i_e': r'$i_{\mathrm{e}}$/A',
-        'i_b': r'$i_{\mathrm{b}}$/A',
-        'i_c': r'$i_{\mathrm{c}}$/A',
-        'i_sq': r'$i_{\mathrm{sq}}$/A',
-        'i_sd': r'$i_{\mathrm{sd}}$/A',
-        'u': '$u$/V',
-        'u_a': r'$u_{\mathrm{a}}$/V',
-        'u_b': r'$u_{\mathrm{b}}$/V',
-        'u_c': r'$u_{\mathrm{c}}$/V',
-        'u_sq': r'$u_{\mathrm{sq}}$/V',
-        'u_sd': r'$u_{\mathrm{sd}}$/V',
-        'u_e': r'$u_{\mathrm{e}}$/V',
-        'u_sup': r'$u_{\mathrm{sup}}$/V',
-        'epsilon': r'$\epsilon$/rad'
+        "omega": r"$\omega$/(1/s)",
+        "torque": "$T$/Nm",
+        "i": "$i$/A",
+        "i_a": r"$i_{\mathrm{a}}$/A",
+        "i_e": r"$i_{\mathrm{e}}$/A",
+        "i_b": r"$i_{\mathrm{b}}$/A",
+        "i_c": r"$i_{\mathrm{c}}$/A",
+        "i_sq": r"$i_{\mathrm{sq}}$/A",
+        "i_sd": r"$i_{\mathrm{sd}}$/A",
+        "u": "$u$/V",
+        "u_a": r"$u_{\mathrm{a}}$/V",
+        "u_b": r"$u_{\mathrm{b}}$/V",
+        "u_c": r"$u_{\mathrm{c}}$/V",
+        "u_sq": r"$u_{\mathrm{sq}}$/V",
+        "u_sd": r"$u_{\mathrm{sd}}$/V",
+        "u_e": r"$u_{\mathrm{e}}$/V",
+        "u_sup": r"$u_{\mathrm{sup}}$/V",
+        "epsilon": r"$\epsilon$/rad",
     }
 
     @property
@@ -73,8 +69,6 @@ class StatePlot(TimePlot):
 
         self._scale_plots_to_data = False
 
-        
-
     def set_env(self, env):
         # Docstring of superclass
         super().set_env(env)
@@ -84,15 +78,26 @@ class StatePlot(TimePlot):
         self._state_idx = ps.state_positions[self._state]
         # The maximal values of the state.
         self._limits = ps.limits[self._state_idx]
-        self._state_space = ps.state_space.low[self._state_idx], ps.state_space.high[self._state_idx]
+        self._state_space = (
+            ps.state_space.low[self._state_idx],
+            ps.state_space.high[self._state_idx],
+        )
         # Bool: if the state is referenced.
         self._referenced = rg.referenced_states[self._state_idx]
         # Bool: if the data is already normalized to an interval of [-1, 1]
         self._normalized = self._limits != self._state_space[1]
         self.reset_data()
 
-        min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
-        max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
+        min_limit = (
+            self._limits * self._state_space[0]
+            if self._normalized
+            else self._state_space[0]
+        )
+        max_limit = (
+            self._limits * self._state_space[1]
+            if self._normalized
+            else self._state_space[1]
+        )
         spacing = 0.1 * (max_limit - min_limit)
 
         # Set the y-axis limits to fixed initital values
@@ -102,8 +107,6 @@ class StatePlot(TimePlot):
         self._label = self.state_labels.get(self._state, self._state)
 
         self._scale_plots_to_data = env.scale_plots
-
-       
 
     def reset_data(self):
         super().reset_data()
@@ -116,33 +119,52 @@ class StatePlot(TimePlot):
         super().initialize(axis)
 
         # Line to plot the state data
-        self._state_line, = self._axis.plot(self._x_data, self._state_data, **self._state_line_config, zorder=2)
+        (self._state_line,) = self._axis.plot(
+            self._x_data, self._state_data, **self._state_line_config, zorder=2
+        )
         self._lines = [self._state_line]
 
         # If the state is referenced plot also the reference line
         if self._referenced:
-            self._reference_line, = self._axis.plot(self._x_data, self._ref_data, **self._ref_line_config, zorder=1)
+            (self._reference_line,) = self._axis.plot(
+                self._x_data, self._ref_data, **self._ref_line_config, zorder=1
+            )
             self._lines.append(self._reference_line)
-        min_limit = self._limits * self._state_space[0] if self._normalized else self._state_space[0]
-        max_limit = self._limits * self._state_space[1] if self._normalized else self._state_space[1]
+        min_limit = (
+            self._limits * self._state_space[0]
+            if self._normalized
+            else self._state_space[0]
+        )
+        max_limit = (
+            self._limits * self._state_space[1]
+            if self._normalized
+            else self._state_space[1]
+        )
         if self._state_space[0] < 0:
             self._axis.axhline(min_limit, **self._limit_line_config)
         lim = self._axis.axhline(max_limit, **self._limit_line_config)
 
         y_label = self._label
-        unit_split = y_label.find('/')
+        unit_split = y_label.find("/")
         if unit_split == -1:
             unit_split = len(y_label)
-        limit_label = y_label[:unit_split] + r'$_{\mathrm{max}}$' + y_label[unit_split:]
+        limit_label = y_label[:unit_split] + r"$_{\mathrm{max}}$" + y_label[unit_split:]
 
         if self._referenced:
-            ref_label = y_label[:unit_split] + r'$^*$' + y_label[unit_split:]
+            ref_label = y_label[:unit_split] + r"$^*$" + y_label[unit_split:]
             self._axis.legend(
-                (self._state_line, self._reference_line, lim), (y_label, ref_label, limit_label), loc='upper left',
-                numpoints=20
+                (self._state_line, self._reference_line, lim),
+                (y_label, ref_label, limit_label),
+                loc="upper left",
+                numpoints=20,
             )
         else:
-            self._axis.legend((self._state_line, lim), (y_label, limit_label), loc='upper left', numpoints=20)
+            self._axis.legend(
+                (self._state_line, lim),
+                (y_label, limit_label),
+                loc="upper left",
+                numpoints=20,
+            )
 
         self._y_data = [self._state_data, self._ref_data]
 
