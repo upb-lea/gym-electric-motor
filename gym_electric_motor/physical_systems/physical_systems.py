@@ -201,7 +201,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         u_in = self._converter.convert(i_in, self._ode_solver.t)
         u_in = [u * u_s for u in u_in for u_s in u_sup]
         self._ode_solver.set_f_params(u_in)
-        ode_state = self._ode_solver.integrate(self._t + self._tau)
+        ode_state = self._ode_solver.integrate(self._t + self.tau)
         self._t = self._ode_solver.t
         self._k += 1
         torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])

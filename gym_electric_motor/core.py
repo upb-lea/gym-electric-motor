@@ -31,6 +31,7 @@ import gym_electric_motor as gem
 import matplotlib.pyplot
 from matplotlib.figure import Figure
 import matplotlib
+from dataclasses import dataclass
 
 
 class ElectricMotorEnvironment(gymnasium.core.Env):
@@ -343,6 +344,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             not self._terminated
         ), "A reset is required before the environment can perform further steps"
         self._call_callbacks("on_step_begin", self.physical_system.k, action)
+        print(f"k:{self.physical_system.k}")
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
         violation_degree = self._constraint_monitor.check_constraints(state)
@@ -366,9 +368,12 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
         info = {}
         return (
-            state[self.state_filter],
-            ref_next,
-        ), reward, self._terminated, self._truncated, info
+            (state[self.state_filter], ref_next),
+            reward,
+            self._terminated,
+            self._truncated,
+            info,
+        )
 
     def _seed(self, seed=None):
         sg = np.random.SeedSequence(seed)
@@ -542,9 +547,11 @@ class ReferenceGenerator:
             trajectories(dict(list(float)): If available, \
                 generated trajectories for the Visualization can be passed here. Otherwise return None. \
         """
-        return self.get_reference(initial_state), self.get_reference_observation(
-            initial_state
-        ), None
+        return (
+            self.get_reference(initial_state),
+            self.get_reference_observation(initial_state),
+            None,
+        )
 
     def close(self):
         """Called by the environment, when the environment is deleted to close files, store logs, etc."""
@@ -628,15 +635,32 @@ class RewardFunction:
         pass
 
 
+@dataclass
+class SimulationEnvironment:
+    tau: float = 0.0  # Simulation interval
+    step: int = 0  # Current simulation step
+
+    # Current simulation time
+    @property
+    def t(self) -> float:
+        return self.tau * self.step
+
+
+@dataclass
 class PhysicalSystem:
     """The Physical System module encapsulates the physical model of the system as well as the simulation from one step
     to the next."""
 
     @property
+    def tau(self):
+        return self._tau
+
+    @property
     def unwrapped(self):
         """Returns this instance of the physical system.
 
-        If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system."""
+        If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.
+        """
         return self
 
     @property
@@ -646,14 +670,6 @@ class PhysicalSystem:
              int: The current systems time step k.
         """
         return self._k
-
-    @property
-    def tau(self):
-        """
-        Returns:
-             float: The systems time constant tau.
-        """
-        return self._tau
 
     @property
     def state_names(self):
