@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import gymnasium
 
 
-class MotorDashboard(ElectricMotorVisualization):
+class MotorDashboardClassic(ElectricMotorVisualization):
     """A dashboard to plot the GEM states into graphs.
 
     Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
@@ -156,11 +156,14 @@ class MotorDashboard(ElectricMotorVisualization):
 
     def render(self):
         """Updates the plots every *update cycle* calls of this method."""
-        if not (
-            self._time_plot_figure
-            or self._episodic_plot_figure
-            or self._step_plot_figure
-        ) and len(self._plots) > 0:
+        if (
+            not (
+                self._time_plot_figure
+                or self._episodic_plot_figure
+                or self._step_plot_figure
+            )
+            and len(self._plots) > 0
+        ):
             self.initialize()
         if self._update_render:
             self._update()
@@ -193,13 +196,10 @@ class MotorDashboard(ElectricMotorVisualization):
                 self._time_plots.append(StatePlot(state))
 
         if len(self._action_plots) > 0:
-            assert (
-                type(env.action_space)
-                in (
-                    gymnasium.spaces.Box,
-                    gymnasium.spaces.Discrete,
-                    gymnasium.spaces.MultiDiscrete,
-                )
+            assert type(env.action_space) in (
+                gymnasium.spaces.Box,
+                gymnasium.spaces.Discrete,
+                gymnasium.spaces.MultiDiscrete,
             ), f"Action space of type {type(env.action_space)} not supported for plotting."
             for action in self._action_plots:
                 ap = ActionPlot(action)
@@ -324,3 +324,33 @@ class MotorDashboard(ElectricMotorVisualization):
             # fig.align_ylabels()
             fig.canvas.draw()
             fig.canvas.flush_events()
+
+
+# Proxy Object for Refactoring
+class MotorDashboard(MotorDashboardClassic):
+    def __init__(self, *args, **kwargs):
+        a = args
+        b = kwargs
+        test = 222
+        super().__init__(*args, **kwargs)
+        # self.on_reset_begin = None
+
+    def set_env(self, env):
+        # Pass what you need
+        myenv = lambda: None
+        myenv.physical_system = lambda: None
+        myenv.physical_system.state_names = env.physical_system.state_names
+        myenv.physical_system.tau = env.physical_system.tau
+        myenv.physical_system.state_positions = env.physical_system.state_positions
+        myenv.physical_system.limits = env.physical_system.limits
+        myenv.physical_system.state_space = env.physical_system.state_space
+        myenv.physical_system.action_space = env.physical_system.action_space
+        # myenv.physical_system.action_space = env.physical_system.action_space
+
+        myenv.reference_generator = env.reference_generator
+        myenv.scale_plots = env.scale_plots
+
+        myenv.action_space = env.action_space
+
+        super().set_env(myenv)
+        pass

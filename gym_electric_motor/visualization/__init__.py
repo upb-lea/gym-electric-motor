@@ -1,6 +1,5 @@
 from .console_printer import ConsolePrinter
 from .motor_dashboard import MotorDashboard
-from .new_motor_dashboard import NewMotorDashboard
 
 from ..utils import register_class
 from .. import ElectricMotorVisualization

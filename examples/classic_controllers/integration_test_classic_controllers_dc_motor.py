@@ -1,7 +1,7 @@
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
-from gym_electric_motor.visualization import MotorDashboard, NewMotorDashboard
+from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.reference_generators import SinusoidalReferenceGenerator
 import time
 from enum import Enum
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     # initialize the gym-electric-motor environment
     env = gem.make(
         motor.get_env_id(),
-        visualization=NewMotorDashboard(additional_plots=external_ref_plots),
+        visualization=MotorDashboard(additional_plots=external_ref_plots),
         scale_plots=True,
         render_mode="figure",
         reference_generator=ref_generator,
@@ -113,8 +113,8 @@ if __name__ == "__main__":
 
     env.metadata["filename_prefix"] = "integration-test"
     env.metadata["filename_suffix"] = ""
-    env.metadata["save_figure_on_close"] = False
-    env.metadata["hold_figure_on_close"] = True
+    env.metadata["save_figure_on_close"] = True
+    env.metadata["hold_figure_on_close"] = False
     """
         initialize the controller
 

@@ -12,12 +12,5 @@ import matplotlib.pyplot as plt
 import gymnasium
 
 
-class NewMotorDashboard2(MotorDashboard):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # self.on_reset_begin = None
-
-
-class NewMotorDashboard:
-    def __init__(self, *args, **kwargs) -> None:
-        pass
+def Object(object):
+    pass
