@@ -34,6 +34,22 @@ import matplotlib
 from dataclasses import dataclass
 
 
+@dataclass
+class Workspace:
+    test = []
+
+
+@dataclass
+class SimulationEnvironment:
+    tau: float = 0.0  # Simulation interval
+    step: int = 0  # Current simulation step
+
+    # Current simulation time
+    @property
+    def t(self) -> float:
+        return self.tau * self.step
+
+
 class ElectricMotorEnvironment(gymnasium.core.Env):
     """
     Description:
@@ -90,6 +106,9 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         A reference generator might terminate an episode, if the reference has ended.
         The reward function can terminate an episode, if a physical limit of the motor has been violated.
     """
+
+    sim = SimulationEnvironment()
+    workspace = Workspace()
 
     env_id = None
     metadata = {
@@ -216,6 +235,9 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
         """
+
+        self.sim.tau = physical_system.tau
+
         self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
         self._reference_generator = instantiate(
             ReferenceGenerator, reference_generator, **kwargs
@@ -633,17 +655,6 @@ class RewardFunction:
     def close(self):
         """Called, when the environment is closed to store logs, close files etc."""
         pass
-
-
-@dataclass
-class SimulationEnvironment:
-    tau: float = 0.0  # Simulation interval
-    step: int = 0  # Current simulation step
-
-    # Current simulation time
-    @property
-    def t(self) -> float:
-        return self.tau * self.step
 
 
 @dataclass

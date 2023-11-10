@@ -63,17 +63,6 @@ class Motor:
         return self.motor_type.states
 
 
-@dataclass
-class Workspace:
-    t = []
-
-
-@dataclass
-class SimulatedEnvironment:
-    t: float = 0.0  # Current simulation time
-    step: int = 0  # Current simulation step
-
-
 if __name__ == "__main__":
     """
     motor type:     'PermExDc'  Permanently Excited DC Motor
