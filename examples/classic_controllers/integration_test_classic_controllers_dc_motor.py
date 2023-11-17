@@ -101,15 +101,16 @@ if __name__ == "__main__":
         offset_range=(0, 0),
         episode_lengths=(10001, 10001),
     )
-
+    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots)
     # initialize the gym-electric-motor environment
     env = gem.make(
         motor.get_env_id(),
-        visualization=MotorDashboard(additional_plots=external_ref_plots),
+        visualization=motor_dashboard,
         scale_plots=True,
         render_mode="figure",
         reference_generator=ref_generator,
     )
+    motor_dashboard.set_env(env)
 
     env.metadata["filename_prefix"] = "integration-test"
     env.metadata["filename_suffix"] = ""
@@ -128,21 +129,27 @@ if __name__ == "__main__":
     """
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
+    motor_dashboard.on_reset_begin()
     (state, reference), _ = env.reset(seed=1337)
+    motor_dashboard.on_reset_end(state, reference)
     # simulate the environment
-    s = 0
     for i in range(10001):
-        s += 1
         action = controller.control(state, reference)
         # if i % 100 == 0:
         #   (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
         # else:
+        motor_dashboard.on_step_begin(i, action)
         (state, reference), reward, terminated, truncated, _ = env.step(action)
-        print(f"step{s}")
+        motor_dashboard.on_step_end(i, state, reference, reward, terminated)
+
         # viz.render()
 
         if terminated:
+            motor_dashboard.on_reset_begin()
             env.reset()
+            motor_dashboard.on_reset_end(state, reference)
+
             controller.reset()
 
     env.close()
+    motor_dashboard.on_close()
