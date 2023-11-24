@@ -152,4 +152,5 @@ if __name__ == "__main__":
             controller.reset()
 
     env.close()
+    motor_dashboard.save_to_file("test")
     motor_dashboard.on_close()

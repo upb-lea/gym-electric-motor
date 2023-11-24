@@ -7,11 +7,14 @@ from .motor_dashboard_plots import (
     EpisodePlot,
     StepPlot,
 )
+import matplotlib
 import matplotlib.pyplot as plt
 import gymnasium
+from enum import Enum
+import os
 
 
-class MotorDashboardClassic(ElectricMotorVisualization):
+class MotorDashboardLegacy(ElectricMotorVisualization):
     """A dashboard to plot the GEM states into graphs.
 
     Every MotorDashboard consists of multiple MotorDashboardPlots that are each responsible for the plots in a single
@@ -327,7 +330,10 @@ class MotorDashboardClassic(ElectricMotorVisualization):
 
 
 # Proxy Object for Refactoring
-class MotorDashboard(MotorDashboardClassic):
+class MotorDashboard(MotorDashboardLegacy):
+    RenderMode = Enum("RenderMode", ["Default", "Academic"])
+    render_mode = RenderMode.Default
+
     def __init__(self, *args, **kwargs):
         a = args
         b = kwargs
@@ -354,3 +360,39 @@ class MotorDashboard(MotorDashboardClassic):
 
         super().set_env(myenv)
         pass
+
+    def figure(self):
+        """Get main figure (MotorDashboard)"""
+        assert len(self._figures) == 1
+        return self._figures[0]
+
+    def show_blocked(self):
+        plt.show(block=True)
+
+    def save_to_file(self, filename=None):
+        # Academic Mode (latex font)
+        if self.render_mode == self.RenderMode.Academic:
+            matplotlib.rcParams.update(
+                {"text.usetex": True, "font.family": "Helvetica"}
+            )
+
+        self.render()
+        self._save_fig(filename)
+
+    def _save_fig(self, filename=None):
+        """Save figure with timestamped as filename"""
+        # create output folder if it not exists
+
+        output_folder_name = "motor_dashboard_plots"
+        if not os.path.exists(output_folder_name):
+            # Create the folder "gem_output"
+            os.makedirs(output_folder_name)
+
+        if self.render_mode == self.RenderMode.Academic:
+            filetype = "pdf"
+        else:
+            filetype = "png"
+
+        filepath = f"{output_folder_name}/{filename}.{filetype}"
+        print(f"Saved figure to file: {filepath}")
+        self.figure().savefig(filepath, dpi=300)
