@@ -335,9 +335,6 @@ class MotorDashboard(MotorDashboardLegacy):
     render_mode = RenderMode.Default
 
     def __init__(self, *args, **kwargs):
-        a = args
-        b = kwargs
-        test = 222
         super().__init__(*args, **kwargs)
         # self.on_reset_begin = None
 
@@ -383,7 +380,7 @@ class MotorDashboard(MotorDashboardLegacy):
         """Save figure with timestamped as filename"""
         # create output folder if it not exists
 
-        output_folder_name = "motor_dashboard_plots"
+        output_folder_name = "saved_plots"
         if not os.path.exists(output_folder_name):
             # Create the folder "gem_output"
             os.makedirs(output_folder_name)
