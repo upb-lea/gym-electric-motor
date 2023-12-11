@@ -129,28 +129,21 @@ if __name__ == "__main__":
     """
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
 
-    motor_dashboard.on_reset_begin()
     (state, reference), _ = env.reset(seed=1337)
-    motor_dashboard.on_reset_end(state, reference)
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)
         # if i % 100 == 0:
         #   (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
         # else:
-        motor_dashboard.on_step_begin(i, action)
         (state, reference), reward, terminated, truncated, _ = env.step(action)
-        motor_dashboard.on_step_end(i, state, reference, reward, terminated)
 
         # viz.render()
 
         if terminated:
-            motor_dashboard.on_reset_begin()
             env.reset()
-            motor_dashboard.on_reset_end(state, reference)
 
             controller.reset()
 
     env.close()
     motor_dashboard.save_to_file("test")
-    motor_dashboard.on_close()

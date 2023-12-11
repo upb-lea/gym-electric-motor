@@ -172,8 +172,6 @@ class StatePlot(TimePlot):
         super().on_step_end(k, state, reference, reward, terminated)
         # Write the data to the data containers
         state_ = state[self._state_idx]
-        reference = list(reference)
-        reference += [0, 0, 0, 0]  # TODO FIXME
         ref = reference[self._state_idx]
         idx = self.data_idx
         self._x_data[idx] = self._t

@@ -109,7 +109,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
     sim = SimulationEnvironment()
     workspace = Workspace()
-    motor_dashboard = None
 
     env_id = None
     metadata = {
@@ -303,8 +302,9 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
         self.scale_plots = scale_plots
 
-        self.motor_dashboard = self._visualizations[0]
-        assert self.motor_dashboard is not None
+        self._callbacks = list(callbacks)
+        self._callbacks += list(self._visualizations)
+        self._call_callbacks("set_env", self)
 
     def make(env_id, *args, **kwargs):
         env = gymnasium.make(env_id, *args, **kwargs)
@@ -317,13 +317,9 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
-        a = func_name
-        b = args
-        print(f"a:{a}, {args.__len__()}")
-
-        print("")
-
-        assert False
+        for callback in self._callbacks:
+            func = getattr(callback, func_name)
+            func(*args)
 
     def reset(self, seed=None, *_, **__):
         """
@@ -335,11 +331,12 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         """
 
         self._seed(seed)
-
+        self._call_callbacks("on_reset_begin")
         self._terminated = False
         state = self._physical_system.reset()
         reference, next_ref, _ = self.reference_generator.reset(state)
         self._reward_function.reset(state, reference)
+        self._call_callbacks("on_reset_end", state, reference)
 
         observation = (state[self.state_filter], next_ref)
         info = {}
@@ -368,7 +365,8 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         assert (
             not self._terminated
         ), "A reset is required before the environment can perform further steps"
-
+        self._call_callbacks("on_step_begin", self.physical_system.k, action)
+        print(f"k:{self.physical_system.k}")
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
         violation_degree = self._constraint_monitor.check_constraints(state)
@@ -377,6 +375,14 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         )
         self._terminated = violation_degree >= 1.0
         ref_next = self.reference_generator.get_reference_observation(state)
+        self._call_callbacks(
+            "on_step_end",
+            self.physical_system.k,
+            state,
+            reference,
+            reward,
+            self._terminated,
+        )
 
         # Call render code
         if self.render_mode == "figure":
@@ -398,7 +404,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             self._reference_generator,
             self._reward_function,
             self._constraint_monitor,
-        ]
+        ] + list(self._callbacks)
         sub_sg = sg.spawn(len(components))
         for sub, rc in zip(sub_sg, components):
             if isinstance(rc, gem.RandomComponent):
@@ -418,35 +424,43 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         filename = f"{output_folder_name}/{filename_prefix}{filename_suffix}.{filetype}"
         figure.savefig(filename, dpi=300)
 
-    # TODO
-    # def rendering_on_close(self):
-    #     # Figure Mode
-    #     if self.render_mode and self.render_mode.startswith("figure"):
-    #         # Academic Mode (latex font)
-    #         if self.render_mode == "figure_academic":
-    #             matplotlib.rcParams.update(
-    #                 {"text.usetex": True, "font.family": "Helvetica"}
-    #             )
+    def rendering_on_close(self):
+        # Figure Mode
+        if self.render_mode and self.render_mode.startswith("figure"):
+            # Academic Mode (latex font)
+            if self.render_mode == "figure_academic":
+                matplotlib.rcParams.update(
+                    {"text.usetex": True, "font.family": "Helvetica"}
+                )
 
-    #         self.render()
+            self.render()
 
-    #         # Save figure with timestamp as filename
-    #         if self.metadata["save_figure_on_close"]:
-    #             if self.render_mode == "figure_academic":
-    #                 self.save_fig(self.figure(), filetype="pdf")
-    #             else:
-    #                 self.save_fig(self.figure())
+            # Save figure with timestamp as filename
+            if self.metadata["save_figure_on_close"]:
+                if self.render_mode == "figure_academic":
+                    self.save_fig(self.figure(), filetype="pdf")
+                else:
+                    self.save_fig(self.figure())
 
-    #         # Blocking plot call to still interactive with it
-    #         if self.metadata["hold_figure_on_close"]:
-    #             matplotlib.pyplot.show(block=True)
+            # Blocking plot call to still interactive with it
+            if self.metadata["hold_figure_on_close"]:
+                matplotlib.pyplot.show(block=True)
 
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
-
+        self._call_callbacks("on_close")
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
+
+        self.rendering_on_close()
+
+    def figure(self) -> Figure:
+        """Get main figure (MotorDashboard)"""
+        assert len(self._visualizations) == 1
+        motor_dashboard = self._visualizations[0]
+        assert len(motor_dashboard._figures) == 1
+        return motor_dashboard._figures[0]
 
 
 class ReferenceGenerator:
