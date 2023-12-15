@@ -366,7 +366,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             not self._terminated
         ), "A reset is required before the environment can perform further steps"
         self._call_callbacks("on_step_begin", self.physical_system.k, action)
-        print(f"k:{self.physical_system.k}")
+
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
         violation_degree = self._constraint_monitor.check_constraints(state)
@@ -411,56 +411,12 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
                 rc.seed(sub)
         return [sg.entropy]
 
-    def save_fig(self, figure, filetype="png"):
-        """Save figure with timestamped as filename"""
-        # create output folder if it not exists
-        output_folder_name = "plots"
-        if not os.path.exists(output_folder_name):
-            # Create the folder "gem_output"
-            os.makedirs(output_folder_name)
-
-        filename_prefix = self.metadata["filename_prefix"]
-        filename_suffix = self.metadata["filename_suffix"]
-        filename = f"{output_folder_name}/{filename_prefix}{filename_suffix}.{filetype}"
-        figure.savefig(filename, dpi=300)
-
-    def rendering_on_close(self):
-        # Figure Mode
-        if self.render_mode and self.render_mode.startswith("figure"):
-            # Academic Mode (latex font)
-            if self.render_mode == "figure_academic":
-                matplotlib.rcParams.update(
-                    {"text.usetex": True, "font.family": "Helvetica"}
-                )
-
-            self.render()
-
-            # Save figure with timestamp as filename
-            if self.metadata["save_figure_on_close"]:
-                if self.render_mode == "figure_academic":
-                    self.save_fig(self.figure(), filetype="pdf")
-                else:
-                    self.save_fig(self.figure())
-
-            # Blocking plot call to still interactive with it
-            if self.metadata["hold_figure_on_close"]:
-                matplotlib.pyplot.show(block=True)
-
     def close(self):
         """Called when the environment is deleted. Closes all its modules."""
         self._call_callbacks("on_close")
         self._reward_function.close()
         self._physical_system.close()
         self._reference_generator.close()
-
-        self.rendering_on_close()
-
-    def figure(self) -> Figure:
-        """Get main figure (MotorDashboard)"""
-        assert len(self._visualizations) == 1
-        motor_dashboard = self._visualizations[0]
-        assert len(motor_dashboard._figures) == 1
-        return motor_dashboard._figures[0]
 
 
 class ReferenceGenerator:
