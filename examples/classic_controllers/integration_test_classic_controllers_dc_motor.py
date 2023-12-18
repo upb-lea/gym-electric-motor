@@ -44,21 +44,18 @@ if __name__ == "__main__":
         offset_range=(0, 0),
         episode_lengths=(10001, 10001),
     )
-    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots)
+    motor_dashboard = MotorDashboard(
+        additional_plots=external_ref_plots, render_mode=RenderMode.FigureOnce
+    )
     # initialize the gym-electric-motor environment
     env = gem.make(
         motor.get_env_id(),
         visualization=motor_dashboard,
         scale_plots=True,
-        render_mode="figure",
         reference_generator=ref_generator,
     )
     motor_dashboard.set_env(env)
 
-    env.metadata["filename_prefix"] = "integration-test"
-    env.metadata["filename_suffix"] = ""
-    env.metadata["save_figure_on_close"] = True
-    env.metadata["hold_figure_on_close"] = False
     """
         initialize the controller
 
@@ -89,5 +86,6 @@ if __name__ == "__main__":
             controller.reset()
 
     env.close()
-    motor_dashboard.show()
+
     motor_dashboard.save_to_file("test")
+    motor_dashboard.show_and_hold()

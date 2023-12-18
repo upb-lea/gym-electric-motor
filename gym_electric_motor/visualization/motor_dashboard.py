@@ -1,4 +1,5 @@
 from gym_electric_motor.core import ElectricMotorVisualization
+from gym_electric_motor.helper import *
 from .motor_dashboard_plots import (
     StatePlot,
     ActionPlot,
@@ -331,11 +332,12 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
 
 # Proxy Object for Refactoring
 class MotorDashboard(MotorDashboardLegacy):
-    RenderMode = Enum("RenderMode", ["Default", "Academic"])
-    render_mode = RenderMode.Default
+    render_mode = RenderMode.Figure
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, render_mode=RenderMode.Figure, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.render_mode = render_mode
+
         # self.on_reset_begin = None
 
     def set_env(self, env):
@@ -356,27 +358,39 @@ class MotorDashboard(MotorDashboardLegacy):
         myenv.action_space = env.action_space
 
         super().set_env(myenv)
-        pass
 
     def figure(self):
         """Get main figure (MotorDashboard)"""
         assert len(self._figures) == 1
         return self._figures[0]
 
-    def show_blocked(self):
+    def on_close(self):
+        super().on_close()
+        if self.render_mode == RenderMode.FigureOnce:
+            self.render()
+
+    def on_step_end(self, k, state, reference, reward, terminated):
+        super().on_step_end(k, state, reference, reward, terminated)
+        if self.render_mode == RenderMode.Figure:
+            self.render()
+
+    def show(self):
+        plt.show(block=False)
+
+    def show_and_hold(self):
         plt.show(block=True)
 
-    def save_to_file(self, filename=None):
+    def save_to_file(self, filename=None, academic_mode=False):
         # Academic Mode (latex font)
-        if self.render_mode == self.RenderMode.Academic:
+        if academic_mode:
             matplotlib.rcParams.update(
                 {"text.usetex": True, "font.family": "Helvetica"}
             )
 
         self.render()
-        self._save_fig(filename)
+        self._save_fig(filename, academic_mode)
 
-    def _save_fig(self, filename=None):
+    def _save_fig(self, filename, academic_mode):
         """Save figure with timestamped as filename"""
         # create output folder if it not exists
 
@@ -385,7 +399,7 @@ class MotorDashboard(MotorDashboardLegacy):
             # Create the folder "gem_output"
             os.makedirs(output_folder_name)
 
-        if self.render_mode == self.RenderMode.Academic:
+        if academic_mode:
             filetype = "pdf"
         else:
             filetype = "png"

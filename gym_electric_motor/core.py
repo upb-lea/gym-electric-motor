@@ -111,11 +111,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
     workspace = Workspace()
 
     env_id = None
-    metadata = {
-        "render_modes": [None, "figure", "figure_once", "figure_academic"],
-        "save_figure_on_close": False,
-        "hold_figure_on_close": True,
-    }
 
     @property
     def physical_system(self):
@@ -207,7 +202,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         callbacks=(),
         constraints=(),
         physical_system_wrappers=(),
-        render_mode=None,
         scale_plots=None,
         **kwargs,
     ):
@@ -231,7 +225,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             state_filter(list(str)): Selection of states that are shown in the observation.
             physical_system_wrappers(iterable(PhysicalSystemWrapper)): PhysicalSystemWrapper instances to be wrapped around
                 the physical system.
-            render_mode(str) : if visualization is given, render_mode is set to "figure", else render_mode ist set to None
             callbacks(list(Callback)): Callbacks being called in the environment
             **kwargs: Arguments to be passed to the modules.
         """
@@ -296,10 +289,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._terminated = True
         self._truncated = False
 
-        # Set render mode and metadata
-        assert render_mode in self.metadata["render_modes"]
-        self.render_mode = render_mode
-
         self.scale_plots = scale_plots
 
         self._callbacks = list(callbacks)
@@ -307,13 +296,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._call_callbacks("set_env", self)
 
     def make(env_id, *args, **kwargs):
-        env = gymnasium.make(env_id, *args, **kwargs)
-        env.metadata["filename_prefix"] = env_id
-
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
-        env.metadata["filename_suffix"] = f"_{timestamp}"
-
-        return env
+        return gymnasium.make(env_id, *args, **kwargs)
 
     def _call_callbacks(self, func_name, *args):
         """Calls each callback's func_name function with *args"""
@@ -383,10 +366,6 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             reward,
             self._terminated,
         )
-
-        # Call render code
-        if self.render_mode == "figure":
-            self.render()
 
         info = {}
         return (

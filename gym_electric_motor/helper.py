@@ -1,7 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass
 
-RenderMode = Enum("RenderMode", ["Figure", "Academic"])
+RenderMode = Enum("RenderMode", ["Figure", "FigureOnce"])
 
 
 MotorType = Enum(
