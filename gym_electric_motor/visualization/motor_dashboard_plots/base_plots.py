@@ -187,6 +187,9 @@ class TimePlot(MotorDashboardPlot):
 
     def _scale_y_axis(self):
         if self._scale_plots_to_data:
+            # nanmin does not reraise RuntimeWarning so we to check for NaNs ourselves
+            if np.isnan(self._y_data[0]).all() or np.isnan(self._y_data[1]).all():
+                return
             y_min = min(np.nanmin(self._y_data[0]), np.nanmin(self._y_data[1]))
             y_max = max(np.nanmax(self._y_data[0]), np.nanmax(self._y_data[1]))
 

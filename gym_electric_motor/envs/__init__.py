@@ -1,3 +1,5 @@
+from .motors import Motor, MotorType, ControlType, ActionType
+
 # Version 1
 from .gym_dcm.permex_dc_motor_env import ContSpeedControlDcPermanentlyExcitedMotorEnv
 from .gym_dcm.permex_dc_motor_env import FiniteSpeedControlDcPermanentlyExcitedMotorEnv

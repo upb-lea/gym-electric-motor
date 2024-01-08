@@ -1,10 +1,10 @@
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
-from gym_electric_motor.visualization import MotorDashboard
+from gym_electric_motor.envs.motors import MotorType, ControlType, ActionType, Motor
+from gym_electric_motor.visualization import MotorDashboard, RenderMode
 from gym_electric_motor.reference_generators import SinusoidalReferenceGenerator
 import time
-from gym_electric_motor.helper import *
 
 if __name__ == "__main__":
     """
@@ -21,10 +21,6 @@ if __name__ == "__main__":
                     'Finite'    Discrete Action Space
     """
 
-    # motor_type = "PermExDc"
-    # control_type = "SC"
-    # action_type = "Cont"
-
     motor = Motor(
         MotorType.PermanentlyExcitedDcMotor,
         ControlType.SpeedControl,
@@ -33,7 +29,7 @@ if __name__ == "__main__":
 
     # definition of the plotted variables
     external_ref_plots = [
-        ExternallyReferencedStatePlot(state) for state in motor.get_state_names()
+        ExternallyReferencedStatePlot(state) for state in motor.state_names()
     ]
 
     # definition of the reference generator
@@ -49,7 +45,7 @@ if __name__ == "__main__":
     )
     # initialize the gym-electric-motor environment
     env = gem.make(
-        motor.get_env_id(),
+        motor.env_id(),
         visualization=motor_dashboard,
         scale_plots=True,
         reference_generator=ref_generator,
@@ -87,5 +83,5 @@ if __name__ == "__main__":
 
     env.close()
 
-    motor_dashboard.save_to_file("test")
+    motor_dashboard.save_to_file(academic_mode=True)
     motor_dashboard.show_and_hold()

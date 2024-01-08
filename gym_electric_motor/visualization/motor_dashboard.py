@@ -1,5 +1,4 @@
 from gym_electric_motor.core import ElectricMotorVisualization
-from gym_electric_motor.helper import *
 from .motor_dashboard_plots import (
     StatePlot,
     ActionPlot,
@@ -8,11 +7,13 @@ from .motor_dashboard_plots import (
     EpisodePlot,
     StepPlot,
 )
+from .render_modes import RenderMode
 import matplotlib
 import matplotlib.pyplot as plt
 import gymnasium
 from enum import Enum
 import os
+import time
 
 
 class MotorDashboardLegacy(ElectricMotorVisualization):
@@ -365,9 +366,9 @@ class MotorDashboard(MotorDashboardLegacy):
         return self._figures[0]
 
     def on_close(self):
-        super().on_close()
         if self.render_mode == RenderMode.FigureOnce:
             self.render()
+        super().on_close()
 
     def on_step_end(self, k, state, reference, reward, terminated):
         super().on_step_end(k, state, reference, reward, terminated)
@@ -380,14 +381,22 @@ class MotorDashboard(MotorDashboardLegacy):
     def show_and_hold(self):
         plt.show(block=True)
 
+    def force_render(self):
+        self._update_render = True
+        self.render()
+
     def save_to_file(self, filename=None, academic_mode=False):
+        if filename is None:
+            timestamp_string = time.strftime("%Y%m%d-%H%M%S")
+            filename = f"gem_plot_{timestamp_string}"
+
         # Academic Mode (latex font)
         if academic_mode:
             matplotlib.rcParams.update(
                 {"text.usetex": True, "font.family": "Helvetica"}
             )
 
-        self.render()
+        self.force_render()
         self._save_fig(filename, academic_mode)
 
     def _save_fig(self, filename, academic_mode):
@@ -396,7 +405,7 @@ class MotorDashboard(MotorDashboardLegacy):
 
         output_folder_name = "saved_plots"
         if not os.path.exists(output_folder_name):
-            # Create the folder "gem_output"
+            print(f"Creating output folder for plots: {output_folder_name}")
             os.makedirs(output_folder_name)
 
         if academic_mode:

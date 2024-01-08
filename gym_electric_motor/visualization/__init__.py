@@ -1,5 +1,6 @@
 from .console_printer import ConsolePrinter
 from .motor_dashboard import MotorDashboard
+from .render_modes import RenderMode
 
 from ..utils import register_class
 from .. import ElectricMotorVisualization
