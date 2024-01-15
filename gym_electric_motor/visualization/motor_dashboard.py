@@ -342,7 +342,7 @@ class MotorDashboard(MotorDashboardLegacy):
         # self.on_reset_begin = None
 
     def set_env(self, env):
-        # Pass what you need
+        # This is the only data we need from the environment
         myenv = lambda: None
         myenv.physical_system = lambda: None
         myenv.physical_system.state_names = env.physical_system.state_names
@@ -351,7 +351,7 @@ class MotorDashboard(MotorDashboardLegacy):
         myenv.physical_system.limits = env.physical_system.limits
         myenv.physical_system.state_space = env.physical_system.state_space
         myenv.physical_system.action_space = env.physical_system.action_space
-        # myenv.physical_system.action_space = env.physical_system.action_space
+        # myenv._plots = env._plots
 
         myenv.reference_generator = env.reference_generator
         myenv.scale_plots = env.scale_plots
@@ -390,16 +390,23 @@ class MotorDashboard(MotorDashboardLegacy):
             timestamp_string = time.strftime("%Y%m%d-%H%M%S")
             filename = f"gem_plot_{timestamp_string}"
 
-        # Academic Mode (latex font)
+        # Academic Mode (latex font), needs some prerequisites to be installed
         if academic_mode:
             matplotlib.rcParams.update(
-                {"text.usetex": True, "font.family": "Helvetica"}
+                {
+                    "text.usetex": True,
+                    "font.family": "sans-serif",
+                    "font.sans-serif": "Helvetica",
+                }
             )
 
         self.force_render()
-        self._save_fig(filename, academic_mode)
+        if academic_mode:
+            self._save_fig(filename, filetype="pdf")
+        else:
+            self._save_fig(filename, filetype="png")
 
-    def _save_fig(self, filename, academic_mode):
+    def _save_fig(self, filename, filetype):
         """Save figure with timestamped as filename"""
         # create output folder if it not exists
 
@@ -407,11 +414,6 @@ class MotorDashboard(MotorDashboardLegacy):
         if not os.path.exists(output_folder_name):
             print(f"Creating output folder for plots: {output_folder_name}")
             os.makedirs(output_folder_name)
-
-        if academic_mode:
-            filetype = "pdf"
-        else:
-            filetype = "png"
 
         filepath = f"{output_folder_name}/{filename}.{filetype}"
         print(f"Saved figure to file: {filepath}")
