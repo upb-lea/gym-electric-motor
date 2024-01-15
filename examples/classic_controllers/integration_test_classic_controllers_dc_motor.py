@@ -1,5 +1,6 @@
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
+from gem_controllers.gem_controller import GemController
 import gym_electric_motor as gem
 from gym_electric_motor.envs.motors import MotorType, ControlType, ActionType, Motor
 from gym_electric_motor.visualization import MotorDashboard, RenderMode
@@ -50,7 +51,6 @@ if __name__ == "__main__":
         scale_plots=True,
         reference_generator=ref_generator,
     )
-    motor_dashboard.set_env(env)
 
     """
         initialize the controller
@@ -63,9 +63,11 @@ if __name__ == "__main__":
             a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
     
     """
-    controller = Controller.make(env, external_ref_plots=external_ref_plots)
+    # controller = Controller.make(env, external_ref_plots=external_ref_plots)
+    controller = GemController.make(env, env_id=motor.env_id())
 
     (state, reference), _ = env.reset(seed=1337)
+    print("state_names: ", motor.state_names())
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)
@@ -83,5 +85,5 @@ if __name__ == "__main__":
 
     env.close()
 
-    motor_dashboard.save_to_file(academic_mode=True)
+    motor_dashboard.save_to_file(filename="integration_test")
     motor_dashboard.show_and_hold()
