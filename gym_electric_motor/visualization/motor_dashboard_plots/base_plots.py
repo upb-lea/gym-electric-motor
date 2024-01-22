@@ -140,6 +140,7 @@ class TimePlot(MotorDashboardPlot):
     def set_env(self, env):
         super().set_env(env)
         self._tau = env.physical_system.tau
+        self._scale_plots_to_data = env.scale_plots
         self.reset_data()
 
     def reset_data(self):

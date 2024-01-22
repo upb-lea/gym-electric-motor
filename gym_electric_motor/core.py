@@ -202,7 +202,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         callbacks=(),
         constraints=(),
         physical_system_wrappers=(),
-        scale_plots=None,
+        scale_plots=False,
         **kwargs,
     ):
         """
