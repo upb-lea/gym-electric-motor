@@ -63,8 +63,8 @@ if __name__ == "__main__":
             a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
     
     """
-    # controller = Controller.make(env, external_ref_plots=external_ref_plots)
-    controller = GemController.make(env, env_id=motor.env_id())
+    controller = Controller.make(env, external_ref_plots=external_ref_plots)
+    # controller = GemController.make(env, env_id=motor.env_id())
 
     (state, reference), _ = env.reset(seed=1337)
     print("state_names: ", motor.state_names())

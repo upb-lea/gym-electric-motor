@@ -1,7 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
 from scipy.interpolate import griddata
 
 
@@ -175,7 +174,9 @@ class TorqueToCurrentConversion:
 
                         # calculate all possible i_q currents for i_d currents
                         i_q = (
-                            np.sqrt(psi_**2 - np.power(self.psi_p + self.l_d * i_d_, 2))
+                            np.sqrt(
+                                psi_**2 - np.power(self.psi_p + self.l_d * i_d_, 2)
+                            )
                             / self.l_q
                         )
                         i_idx = np.where(

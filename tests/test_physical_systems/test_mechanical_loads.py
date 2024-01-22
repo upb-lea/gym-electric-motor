@@ -206,7 +206,7 @@ def test_PolynomialStaticLoad_MechanicalOde(
     test_torque = 2
     load_parameter = dict(j_load=1e-4, a=0.01, b=0.02, c=0.03)
     op = PolynomialStaticLoad(load_parameter=load_parameter)
-    output_val = op.mechanical_ode(test_t, test_mechanical_state, test_torque)
+    output_val = op.mechanical_ode(test_t, test_mechanical_state, test_torque)[0]
     # output_val = concretePolynomialLoad.mechanical_ode(test_t, test_mechanical_state, test_torque)
     assert math.isclose(expected_result, output_val, abs_tol=1e-6)
 
@@ -235,7 +235,7 @@ class TestConstSpeedLoad(TestMechanicalLoad):
         assert load.omega_fixed == 60
 
     def test_mechanical_ode(self, const_speed_load):
-        assert all(const_speed_load.mechanical_ode() == np.array([0]))
+        assert all(const_speed_load.mechanical_ode() == 0)
 
     def test_reset(self, const_speed_load):
         test_positions = {"omega": 0}
@@ -300,7 +300,7 @@ class TestExtSpeedLoad(TestMechanicalLoad):
         test_mechanical_state = np.array([omega])
         test_t = 1
         op = ext_speed_load
-        output_val = op.mechanical_ode(test_t, test_mechanical_state)
+        output_val = op.mechanical_ode(test_t, test_mechanical_state)[0]
         assert math.isclose(expected_result, output_val, abs_tol=1e-6)
 
     def test_reset(self, ext_speed_load):
