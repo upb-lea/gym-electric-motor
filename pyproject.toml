@@ -1,0 +1,37 @@
+[project]
+name = "gym_eletric_motor"
+version = "2.1.0"
+authors = [
+    "Arne Traue",
+    "Gerrit Book",
+    "Praneeth Balakrishna",
+    "Pascal Peters",
+    "Pramod Manjunatha",
+    "Darius Jakobeit",
+    "Felix Book",
+    "Max Schenke",
+    "Wilhelm Kirchgässner",
+    "Oliver Wallscheid",
+    "Barnabas Haucke-Korber",
+    "Stefan Arndt",
+    "Marius Köhler",
+]
+description = "A Farama Gymnasium environment for electric motor control."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/upb-lea/gym-electric-motor"
+Issues = "https://github.com/upb-lea/gym-electric-motor/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 120

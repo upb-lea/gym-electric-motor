@@ -41,7 +41,7 @@ def test_seeding_same_env(
     # Execute the env
     for i in range(no_of_steps):
         if terminated:
-            state, reference = env.reset(seed)
+            state, reference = env.reset(seed=seed)
         (state, reference), reward, terminated, truncated, info = env.step(actions[i])
         rewards1.append(reward)
         states1.append(state)
@@ -56,7 +56,7 @@ def test_seeding_same_env(
     # Execute the environment again
     for i in range(no_of_steps):
         if terminated:
-            state, reference = env.reset(seed)
+            state, reference = env.reset(seed=seed)
         (state, reference), reward, terminated, truncated, info = env.step(actions[i])
         rewards2.append(reward)
         states2.append(state)
@@ -94,7 +94,7 @@ def test_seeding_new_env(
 
     for i in range(no_of_steps):
         if terminated:
-            state, reference = env.reset(seed)
+            state, reference = env.reset(seed=seed)
         (state, reference), reward, terminated, truncated, info = env.step(actions[i])
         rewards1.append(reward)
         states1.append(state)
@@ -110,7 +110,7 @@ def test_seeding_new_env(
 
     for i in range(no_of_steps):
         if terminated:
-            state, reference = env.reset(seed)
+            state, reference = env.reset(seed=seed)
         action = env.action_space.sample()
         assert action in env.action_space
         (state, reference), reward, terminated, truncated, info = env.step(actions[i])

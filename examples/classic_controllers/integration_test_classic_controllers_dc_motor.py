@@ -1,11 +1,11 @@
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
-from gem_controllers.gem_controller import GemController
+
+# from gem_controllers.gem_controller import GemController
 import gym_electric_motor as gem
 from gym_electric_motor.envs.motors import MotorType, ControlType, ActionType, Motor
 from gym_electric_motor.visualization import MotorDashboard, RenderMode
 from gym_electric_motor.reference_generators import SinusoidalReferenceGenerator
-import time
 
 if __name__ == "__main__":
     """
@@ -85,5 +85,5 @@ if __name__ == "__main__":
 
     env.close()
 
-    motor_dashboard.save_to_file(filename="integration_test")
+    # motor_dashboard.save_to_file(filename="integration_test")
     motor_dashboard.show_and_hold()

@@ -1,5 +1,5 @@
 import numpy as np
-import gym
+import gymnasium
 from gym_electric_motor.physical_systems import converters as cv
 
 from .stage import Stage
@@ -82,7 +82,9 @@ class DiscOutputStage(Stage):
             action(np.ndarray): volatge vector
         """
         conditions = [reference <= self.low_level, reference >= self.high_level]
-        return np.select(conditions, [self.low_action, self.high_action], default=self.idle_action)
+        return np.select(
+            conditions, [self.low_action, self.high_action], default=self.idle_action
+        )
 
     def tune(self, env, env_id, **__):
         """
@@ -106,7 +108,7 @@ class DiscOutputStage(Stage):
         self.low_level = -0.33 * (voltage_range[1] - voltage_range[0])
         self.high_level = 0.33 * (voltage_range[1] - voltage_range[0])
 
-        if type(env.action_space) == gym.spaces.MultiDiscrete:
+        if type(env.action_space) == gymnasium.spaces.MultiDiscrete:
             self.output_stage = DiscOutputStage.to_multi_discrete
             self.low_action = []
             self.idle_action = []
@@ -117,14 +119,20 @@ class DiscOutputStage(Stage):
                 self.idle_action.append(idle_action)
                 self.high_action.append(high_action)
 
-        elif type(env.action_space) == gym.spaces.Discrete \
-                and type(env.physical_system.converter) != cv.FiniteB6BridgeConverter:
+        elif (
+            type(env.action_space) == gymnasium.spaces.Discrete
+            and type(env.physical_system.converter) != cv.FiniteB6BridgeConverter
+        ):
             self.output_stage = DiscOutputStage.to_discrete
-            self.low_action, self.idle_action, self.high_action = self._get_actions(env.action_space.n)
+            self.low_action, self.idle_action, self.high_action = self._get_actions(
+                env.action_space.n
+            )
         elif type(env.physical_system.converter) == cv.FiniteB6BridgeConverter:
             self.output_stage = DiscOutputStage.to_b6_discrete
         else:
-            raise Exception(f'No discrete output stage available for action space {env.action_space}.')
+            raise Exception(
+                f"No discrete output stage available for action space {env.action_space}."
+            )
 
     @staticmethod
     def _get_actions(n):

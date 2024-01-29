@@ -73,9 +73,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
         """
         # Basic assertions
         assert type(reward_plot) is bool
-        assert all(
-            isinstance(ap, (TimePlot, EpisodePlot, StepPlot)) for ap in additional_plots
-        )
+        assert all(isinstance(ap, (TimePlot, EpisodePlot, StepPlot)) for ap in additional_plots)
         assert type(update_interval) in [int, float]
         assert update_interval > 0
         assert type(time_plot_width) in [int, float]
@@ -100,12 +98,8 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
         self._reward_plot = reward_plot
 
         # Separate the additional plots into StepPlots, EpisodicPlots and StepPlots
-        self._custom_time_plots = [
-            p for p in additional_plots if isinstance(p, TimePlot)
-        ]
-        self._episodic_plots = [
-            p for p in additional_plots if isinstance(p, EpisodePlot)
-        ]
+        self._custom_time_plots = [p for p in additional_plots if isinstance(p, TimePlot)]
+        self._episodic_plots = [p for p in additional_plots if isinstance(p, EpisodePlot)]
         self._step_plots = [p for p in additional_plots if isinstance(p, StepPlot)]
 
         self._time_plots = []
@@ -162,11 +156,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
     def render(self):
         """Updates the plots every *update cycle* calls of this method."""
         if (
-            not (
-                self._time_plot_figure
-                or self._episodic_plot_figure
-                or self._step_plot_figure
-            )
+            not (self._time_plot_figure or self._episodic_plot_figure or self._step_plot_figure)
             and len(self._plots) > 0
         ):
             self.initialize()
@@ -232,9 +222,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
         a jupyter notebook and the figures shall be plotted below a new cell."""
         for plot in self._plots:
             plot.reset_data()
-        self._episodic_plot_figure = (
-            self._time_plot_figure
-        ) = self._step_plot_figure = None
+        self._episodic_plot_figure = self._time_plot_figure = self._step_plot_figure = None
         self._figures = []
 
     def initialize(self):
@@ -251,9 +239,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
 
     def _initialize_figures_notebook(self):
         # Create all plots below each other: First Time then Episode then Step Plots
-        no_of_plots = (
-            len(self._episodic_plots) + len(self._step_plots) + len(self._time_plots)
-        )
+        no_of_plots = len(self._episodic_plots) + len(self._step_plots) + len(self._time_plots)
 
         if no_of_plots == 0:
             return
@@ -284,9 +270,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
     def _initialize_figures_window(self):
         # create separate figures for time based, step and episode based plots
         if len(self._episodic_plots) > 0:
-            self._episodic_plot_figure, axes_ep = plt.subplots(
-                len(self._episodic_plots), sharex=True
-            )
+            self._episodic_plot_figure, axes_ep = plt.subplots(len(self._episodic_plots), sharex=True)
             axes_ep = [axes_ep] if len(self._episodic_plots) == 1 else axes_ep
             self._episodic_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
             self._episodic_plot_figure.canvas.manager.set_window_title("Episodic Plots")
@@ -296,9 +280,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
                 plot.initialize(axis)
 
         if len(self._step_plots) > 0:
-            self._step_plot_figure, axes_int = plt.subplots(
-                len(self._step_plots), sharex=True
-            )
+            self._step_plot_figure, axes_int = plt.subplots(len(self._step_plots), sharex=True)
             axes_int = [axes_int] if len(self._step_plots) == 1 else axes_int
             self._step_plot_figure.canvas.manager.set_window_title("Step Plots")
             self._step_plot_figure.subplots_adjust(wspace=0.0, hspace=0.02)
@@ -308,9 +290,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
                 plot.initialize(axis)
 
         if len(self._time_plots) > 0:
-            self._time_plot_figure, axes_step = plt.subplots(
-                len(self._time_plots), sharex=True
-            )
+            self._time_plot_figure, axes_step = plt.subplots(len(self._time_plots), sharex=True)
             self._time_plot_figure.canvas.manager.set_window_title("Time Plots")
             axes_step = [axes_step] if len(self._time_plots) == 1 else axes_step
             self._time_plot_figure.subplots_adjust(wspace=0.0, hspace=0.2)
@@ -379,6 +359,7 @@ class MotorDashboard(MotorDashboardLegacy):
         plt.show(block=False)
 
     def show_and_hold(self):
+        self.force_render()
         plt.show(block=True)
 
     def force_render(self):
