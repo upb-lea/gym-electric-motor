@@ -89,14 +89,14 @@ class ContTorqueControlDcSeriesMotorEnv(ElectricMotorEnvironment):
 
     def __init__(
         self,
-        supply=None,
-        converter=None,
-        motor=None,
-        load=None,
-        ode_solver=None,
-        reward_function=None,
-        reference_generator=None,
-        visualization=None,
+        supply=ps.IdealVoltageSupply(u_nominal=60.0),
+        converter=ps.ContFourQuadrantConverter(),
+        motor=ps.DcSeriesMotor(),
+        load=ps.ConstantSpeedLoad(omega_fixed=100.0),
+        ode_solver=ps.ScipyOdeSolver(),
+        reward_function=WeightedSumOfErrors(reward_weights=dict(torque=1.0)),
+        reference_generator=WienerProcessReferenceGenerator(reference_state="torque"),
+        visualization=MotorDashboard(state_plots=("torque",), action_plots="all"),
         state_filter=None,
         callbacks=(),
         constraints=("i",),
@@ -142,37 +142,15 @@ class ContTorqueControlDcSeriesMotorEnv(ElectricMotorEnvironment):
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
         physical_system = DcMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=60.0)),
-            converter=initialize(
-                ps.PowerElectronicConverter,
-                converter,
-                ps.ContFourQuadrantConverter,
-                dict(),
-            ),
-            motor=initialize(ps.ElectricMotor, motor, ps.DcSeriesMotor, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
-            ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
+            supply=supply,
+            converter=converter,
+            motor=motor,
+            load=load,
+            ode_solver=ode_solver,
             calc_jacobian=calc_jacobian,
             tau=tau,
         )
-        reference_generator = initialize(
-            ReferenceGenerator,
-            reference_generator,
-            WienerProcessReferenceGenerator,
-            dict(reference_state="torque"),
-        )
-        reward_function = initialize(
-            RewardFunction,
-            reward_function,
-            WeightedSumOfErrors,
-            dict(reward_weights=dict(torque=1.0)),
-        )
-        visualization = initialize(
-            ElectricMotorVisualization,
-            visualization,
-            MotorDashboard,
-            dict(state_plots=("torque",), action_plots="all"),
-        )
+
         super().__init__(
             physical_system=physical_system,
             reference_generator=reference_generator,

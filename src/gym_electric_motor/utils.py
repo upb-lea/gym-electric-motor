@@ -2,7 +2,7 @@ import gymnasium
 import numpy as np
 
 
-# Dummy for refactoring TODO
+# This hacky function stays for now because, all envs use it and refectoring would be a pain TODO: fix this
 def initialize(base_class, arg, default_class, default_args):
     if arg is None:
         return default_class(**default_args)
