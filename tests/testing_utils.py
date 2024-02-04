@@ -1,6 +1,6 @@
 from tests.conf import *
 from gym_electric_motor.physical_systems import *
-from gym_electric_motor.utils import make_module, set_state_array
+from gym_electric_motor.utils import set_state_array
 from gym_electric_motor import (
     ReferenceGenerator,
     RewardFunction,
@@ -21,7 +21,6 @@ import numpy as np
 from gymnasium.spaces import Box, Discrete
 from scipy.integrate import ode
 from tests.conf import system, jacobian, permex_motor_parameter
-from gym_electric_motor.utils import instantiate
 from gym_electric_motor.core import Callback
 
 

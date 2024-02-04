@@ -3,7 +3,6 @@ from gymnasium.spaces import Box
 
 from ..core import ReferenceGenerator
 from ..random_component import RandomComponent
-from ..utils import instantiate
 
 
 class MultipleReferenceGenerator(ReferenceGenerator, RandomComponent):
@@ -29,10 +28,15 @@ class MultipleReferenceGenerator(ReferenceGenerator, RandomComponent):
             sub_arguments = sub_args
         else:
             sub_arguments = [kwargs] * len(sub_generators)
-        self._sub_generators = [
-            instantiate(ReferenceGenerator, sub_generator, **sub_arg)
-            for sub_generator, sub_arg in zip(sub_generators, sub_arguments)
-        ]
+
+        self._sub_generators = []
+        for sub_generator, sub_arg in zip(sub_generators, sub_arguments):
+            if isinstance(sub_generator, str):
+                raise Exception
+            if isinstance(sub_generator, type):
+                sub_generator = sub_generator(**sub_arg)
+            self._sub_generators.append(sub_generator)
+
         self._reference_names = []
         for sub_gen in self._sub_generators:
             self._reference_names += sub_gen.reference_names

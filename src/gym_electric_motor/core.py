@@ -31,7 +31,6 @@ from matplotlib.figure import Figure
 import gym_electric_motor as gem
 
 from .constraints import Constraint, LimitConstraint
-from .utils import instantiate
 
 
 @dataclass
@@ -231,15 +230,27 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
         self.sim.tau = physical_system.tau
 
-        self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
-        self._reference_generator = instantiate(ReferenceGenerator, reference_generator, **kwargs)
-        self._reward_function = instantiate(RewardFunction, reward_function, **kwargs)
+        # TODO physical_system etc should be initialized by the caller
+        self._physical_system = physical_system(**kwargs) if isinstance(physical_system, type) else physical_system
+        self._reference_generator = (
+            reference_generator(**kwargs) if isinstance(reference_generator, type) else reference_generator
+        )
+        self._reward_function = reward_function(**kwargs) if isinstance(reward_function, type) else reward_function
+
         if isinstance(visualization, str) or isinstance(visualization, ElectricMotorVisualization):
             visualization = [visualization]
         if visualization is None:
             visualization = []
         visualizations = list(visualization)
-        self._visualizations = [instantiate(ElectricMotorVisualization, visu, **kwargs) for visu in visualizations]
+
+        self._visualizations = []
+        for visu in visualizations:
+            if isinstance(visu, str):
+                raise Exception
+            if isinstance(visu, type):
+                visu = visu(**kwargs)
+            self._visualizations.append(visu)
+
         if isinstance(constraints, ConstraintMonitor):
             cm = constraints
         else:
@@ -251,9 +262,9 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         # Announcement of the modules among each other
         for physical_system_wrapper in physical_system_wrappers:
             self._physical_system = physical_system_wrapper.set_physical_system(self._physical_system)
-        self._reference_generator.set_modules(self.physical_system)
-        self._constraint_monitor.set_modules(self.physical_system)
-        self._reward_function.set_modules(self.physical_system, self._reference_generator, self._constraint_monitor)
+        self._reference_generator.set_modules(self._physical_system)
+        self._constraint_monitor.set_modules(self._physical_system)
+        self._reward_function.set_modules(self._physical_system, self._reference_generator, self._constraint_monitor)
 
         # Initialization of the state filter and the spaces
         state_filter = state_filter or self._physical_system.state_names

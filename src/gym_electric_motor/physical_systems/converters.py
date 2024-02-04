@@ -1,8 +1,6 @@
 import numpy as np
 from gymnasium.spaces import Box, Discrete, MultiDiscrete
 
-from ..utils import instantiate
-
 
 class PowerElectronicConverter:
     """

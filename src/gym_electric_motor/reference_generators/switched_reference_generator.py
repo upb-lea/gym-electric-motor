@@ -3,7 +3,6 @@ from gymnasium.spaces import Box
 
 from ..core import ReferenceGenerator
 from ..random_component import RandomComponent
-from ..utils import instantiate
 
 
 class SwitchedReferenceGenerator(ReferenceGenerator, RandomComponent):

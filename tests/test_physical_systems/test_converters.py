@@ -5,7 +5,6 @@ from functools import reduce
 import pytest
 import numpy as np
 import tests.conf as cf
-from gym_electric_motor.utils import make_module
 from random import seed, uniform, randint
 from gymnasium.spaces import Discrete, Box
 from gym_electric_motor.physical_systems import *

@@ -21,13 +21,6 @@ from .core import (
     SimulationEnvironment,
 )
 from .random_component import RandomComponent
-from .utils import register_superclass
-
-register_superclass(RewardFunction)
-register_superclass(ElectricMotorVisualization)
-register_superclass(ReferenceGenerator)
-register_superclass(PhysicalSystem)
-
 
 make = ElectricMotorEnvironment.make
 

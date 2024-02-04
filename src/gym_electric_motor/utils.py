@@ -2,6 +2,22 @@ import gymnasium
 import numpy as np
 
 
+# Dummy for refactoring TODO
+def initialize(base_class, arg, default_class, default_args):
+    if arg is None:
+        return default_class(**default_args)
+    if isinstance(arg, type):
+        raise Exception("Need init")
+    elif isinstance(arg, base_class):
+        return arg
+    elif isinstance(arg, str):
+        raise Exception
+    elif isinstance(arg, dict):
+        raise Exception
+        default_args.update(arg)
+        return default_class(**default_args)
+
+
 def state_dict_to_state_array(state_dict, state_array, state_names):
     """
     Mapping of a passed state dictionary to a fitting state array.
@@ -54,86 +70,6 @@ def set_state_array(input_values, state_names):
     else:
         raise Exception("Incorrect type for the input values.")
     return state_array
-
-
-def initialize(base_class, arg, default_class, default_args):
-    if arg is None:
-        return default_class(**default_args)
-    elif isinstance(arg, base_class):
-        return arg
-    elif isinstance(arg, str):
-        return _registry[base_class][arg]()
-    elif isinstance(arg, dict):
-        default_args.update(arg)
-        return default_class(**default_args)
-
-
-def instantiate(superclass, instance, **kwargs):
-    """
-    Instantiation of an instance that inherits from the passed superclass.
-
-    The instance can be passed as a key-string, a class pointer or an already instantiated object. In the latter case
-    the same object will be simply returned. If a string is passed the corresponding class will be taken from the
-    registry and instantiated with the given kwargs. If a class pointer is passed, then the class is instantiated with
-    with given kwargs, directly.
-
-    Args:
-        superclass(class): Superclass pointer for registry access
-        instance(str, class, object): Instance to instantiate
-        kwargs: Arguments for the instantiation of the object
-
-    Returns:
-        An instantiated object.
-    """
-    if type(instance) is type and issubclass(instance, superclass):
-        return instance(**kwargs)
-    elif isinstance(instance, superclass):
-        return instance
-    elif isinstance(instance, str):
-        return make_module(superclass, instance, **kwargs)
-    else:
-        raise Exception("Instantiation Error.")
-
-
-# Registry dictionary that stores the keys to instantiate the components with the keystrings
-_registry = {}
-
-
-def make_module(superclass, keystring, **kwargs):
-    """
-    Instantiation by an object that is specified by the key-string an its superclass from the registry.
-
-    Args:
-        superclass(class): Superclass pointer for registry access
-        keystring(str): String to access the class pointer in the registry.
-        kwargs: Arguments for the instantiation of the object.
-
-    Returns:
-        An instantiated object.
-    """
-    try:
-        return _registry[superclass][keystring](**kwargs)
-    except KeyError:
-        raise Exception(f"Key {keystring} or baseclass {superclass.__name__} not found in the registry.")
-
-
-def register_superclass(superclass):
-    """
-    Method to register a new superclass that can contain several key-strings for instantiation in the registry.
-
-    Basically, all superclasses in GEM are already registered like the Physical Systems, Reference Generators, ...
-    """
-    return
-    _registry[superclass] = {}
-
-
-def register_class(subclass, superclass, keystring):
-    """
-    Method to register a new class with a key-string into the registry of the superclass
-    to be instantiable with the key-string.
-    """
-    return
-    _registry[superclass][keystring] = subclass
 
 
 def update_parameter_dict(source_dict, update_dict, copy=True):
