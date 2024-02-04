@@ -1,9 +1,11 @@
-from .p_controller import PController
-from .i_controller import IController
+import numpy as np
+
+import gem_controllers as gc
+
 from ... import parameter_reader as reader
 from .e_base_controller_task import EBaseControllerTask
-import gem_controllers as gc
-import numpy as np
+from .i_controller import IController
+from .p_controller import PController
 
 
 class PIController(PController, IController):
@@ -53,7 +55,7 @@ class PIController(PController, IController):
         elif self._control_task == EBaseControllerTask.FC:
             self._tune_flux_controller(env, env_id, a, t_n)
         else:
-            raise Exception(f"No tuning method available.")
+            raise Exception("No tuning method available.")
 
     def _tune_current_controller(self, env, env_id, a=4):
         """

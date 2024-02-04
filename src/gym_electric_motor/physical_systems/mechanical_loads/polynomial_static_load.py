@@ -1,7 +1,8 @@
 import numpy as np
 
-from .mechanical_load import MechanicalLoad
 from gym_electric_motor.utils import update_parameter_dict
+
+from .mechanical_load import MechanicalLoad
 
 
 class PolynomialStaticLoad(MechanicalLoad):

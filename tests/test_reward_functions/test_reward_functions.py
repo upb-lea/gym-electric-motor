@@ -2,10 +2,11 @@ import numpy as np
 import pytest
 
 from gym_electric_motor import RewardFunction
+
 from ..testing_utils import (
-    DummyReferenceGenerator,
-    DummyPhysicalSystem,
     DummyConstraintMonitor,
+    DummyPhysicalSystem,
+    DummyReferenceGenerator,
 )
 
 

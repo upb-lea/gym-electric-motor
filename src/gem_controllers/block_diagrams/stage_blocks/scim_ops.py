@@ -1,5 +1,5 @@
-from control_block_diagram.components import Box, Connection, Text, Circle, Point, Path
-from control_block_diagram.predefined_components import Limit, PIController, IController, Add, Divide
+from control_block_diagram.components import Box, Circle, Connection, Path, Point, Text
+from control_block_diagram.predefined_components import Add, Divide, IController, Limit, PIController
 
 
 class PsiOptBox(Box):

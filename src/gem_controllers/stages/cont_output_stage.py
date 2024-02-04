@@ -1,8 +1,9 @@
 import numpy as np
 
-from .stage import Stage
-from .. import parameter_reader as reader
 import gem_controllers as gc
+
+from .. import parameter_reader as reader
+from .stage import Stage
 
 
 class ContOutputStage(Stage):

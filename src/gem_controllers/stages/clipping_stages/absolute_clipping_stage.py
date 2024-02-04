@@ -1,8 +1,10 @@
-import numpy as np
 from typing import Tuple
 
+import numpy as np
+
 import gem_controllers as gc
-from . import ClippingStage
+
+from .clipping_stage import ClippingStage
 
 
 class AbsoluteClippingStage(ClippingStage):

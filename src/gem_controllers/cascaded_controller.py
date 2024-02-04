@@ -1,7 +1,7 @@
-import gem_controllers as gc
+from .gem_controller import GemController
 
 
-class CascadedController(gc.GemController):
+class CascadedController(GemController):
     """The CascadedController class contains a controller with multiple hierarchically structured stages."""
 
     def control(self, state, reference):

@@ -1,5 +1,5 @@
 import numpy as np
-from gymnasium.spaces import Discrete, Box, MultiDiscrete
+from gymnasium.spaces import Box, Discrete, MultiDiscrete
 
 from ..utils import instantiate
 
@@ -373,7 +373,7 @@ class FiniteFourQuadrantConverter(FiniteConverter):
 class ContOneQuadrantConverter(ContDynamicallyAveragedConverter):
     """
     Key:
-        'Cont-1QC'
+        'Cont1QC'
 
     Action:
         Duty Cycle of the Transistor in [0,1].
@@ -536,9 +536,13 @@ class FiniteMultiConverter(FiniteConverter):
             kwargs(dict): Parameters to pass to the Subconverters and the superclass
         """
         super().__init__(**kwargs)
-        self._sub_converters = [
-            instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters
-        ]
+        self._sub_converters = []
+        for subconverter in subconverters:
+            assert not isinstance(subconverter, str)
+            if isinstance(subconverter, type):
+                subconverter = subconverter(**kwargs)
+            self._sub_converters.append(subconverter)
+
         self.subsignal_current_space_dims = []
         self.subsignal_voltage_space_dims = []
         self.action_space = []
@@ -647,9 +651,12 @@ class ContMultiConverter(ContDynamicallyAveragedConverter):
             kwargs(dict): Parameters to pass to the Subconverters
         """
         super().__init__(**kwargs)
-        self._sub_converters = [
-            instantiate(PowerElectronicConverter, subconverter, **kwargs) for subconverter in subconverters
-        ]
+        self._sub_converters = []
+        for subconverter in subconverters:
+            assert not isinstance(subconverter, str)
+            if isinstance(subconverter, type):
+                subconverter = subconverter(**kwargs)
+            self._sub_converters.append(subconverter)
 
         self.subsignal_current_space_dims = []
         self.subsignal_voltage_space_dims = []

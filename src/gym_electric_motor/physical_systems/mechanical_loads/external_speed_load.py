@@ -1,5 +1,6 @@
-import numpy as np
 import warnings
+
+import numpy as np
 
 from .mechanical_load import MechanicalLoad
 

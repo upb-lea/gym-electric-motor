@@ -1,10 +1,12 @@
-import numpy as np
-from gymnasium.spaces import Box
 import warnings
 
+import numpy as np
+from gymnasium.spaces import Box
+
 import gym_electric_motor as gem
-from ..random_component import RandomComponent
+
 from ..core import PhysicalSystem
+from ..random_component import RandomComponent
 from ..utils import set_state_array
 
 

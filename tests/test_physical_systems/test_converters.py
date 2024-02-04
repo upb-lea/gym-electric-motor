@@ -8,6 +8,7 @@ import tests.conf as cf
 from gym_electric_motor.utils import make_module
 from random import seed, uniform, randint
 from gymnasium.spaces import Discrete, Box
+from gym_electric_motor.physical_systems import *
 
 # region first version tests
 
@@ -305,9 +306,9 @@ def discrete_converter_functions_testing(
 @pytest.mark.parametrize(
     "converter_type, action_space_n, actions, i_ins, test_voltages",
     [
-        ("Finite-1QC", 2, g_actions_1qc, g_i_ins_1qc, g_1qc_test_voltages),
-        ("Finite-2QC", 3, g_actions_2qc, g_i_ins_2qc, g_2qc_test_voltages),
-        ("Finite-4QC", 4, g_actions_4qc, g_i_ins_4qc, g_4qc_test_voltages),
+        (Finite1QC, 2, g_actions_1qc, g_i_ins_1qc, g_1qc_test_voltages),
+        (Finite2QC, 3, g_actions_2qc, g_i_ins_2qc, g_2qc_test_voltages),
+        (Finite4QC, 4, g_actions_4qc, g_i_ins_4qc, g_4qc_test_voltages),
     ],
 )
 def test_discrete_single_power_electronic_converter(
@@ -332,7 +333,7 @@ def test_discrete_single_power_electronic_converter(
     :return:
     """
     # test with default initialization
-    converter = make_module(cv.PowerElectronicConverter, converter_type)
+    converter = converter_type()
     g_times = g_times_4qc
     times = g_times * converter._tau
     discrete_converter_functions_testing(
@@ -350,12 +351,8 @@ def test_discrete_single_power_electronic_converter(
     interlocking_time *= tau
     # setup converter
     # initialize converter with given parameter
-    converter = make_module(
-        cv.PowerElectronicConverter,
-        converter_type,
-        tau=tau,
-        interlocking_time=interlocking_time,
-    )
+    converter = converter_type(tau=tau, interlocking_time=interlocking_time)
+
     assert converter.reset() == [0.0]  # test if reset returns 0.0
     # test the conversion function of the converter
     discrete_converter_functions_testing(
@@ -370,76 +367,6 @@ def test_discrete_single_power_electronic_converter(
     )
 
 
-@pytest.mark.parametrize(
-    "convert, convert_class",
-    [
-        ("Finite-1QC", cv.FiniteOneQuadrantConverter),
-        ("Finite-2QC", cv.FiniteTwoQuadrantConverter),
-        ("Finite-4QC", cv.FiniteFourQuadrantConverter),
-    ],
-)
-@pytest.mark.parametrize("tau", g_taus)
-@pytest.mark.parametrize("interlocking_time", g_interlocking_times)
-def test_discrete_single_initializations(convert, convert_class, tau, interlocking_time):
-    """
-    test of both ways of initialization lead to the same result
-    :param convert: string name of the converter
-    :param convert_class: class name of the converter
-    :return:
-    """
-    # test default initialization
-    converter_1 = make_module(cv.PowerElectronicConverter, convert)
-    converter_2 = convert_class()
-    assert converter_1._tau == converter_2._tau
-    # test with different parameters
-    interlocking_time *= tau
-    # initialize converters
-    converter_1 = make_module(
-        cv.PowerElectronicConverter,
-        convert,
-        tau=tau,
-        interlocking_time=interlocking_time,
-    )
-    converter_2 = convert_class(tau=tau, interlocking_time=interlocking_time)
-    parameter = str(tau) + " " + str(interlocking_time)
-    # test if they are equal
-    assert converter_1.reset() == converter_2.reset()
-    assert converter_1.action_space == converter_2.action_space
-    assert converter_1._tau == converter_2._tau == tau, "Error (tau): " + parameter
-    assert converter_1._interlocking_time == converter_2._interlocking_time == interlocking_time, (
-        "Error (interlocking): " + parameter
-    )
-
-
-@pytest.mark.parametrize("tau", g_taus)
-@pytest.mark.parametrize("interlocking_time", g_interlocking_times)
-def test_discrete_multi_converter_initializations(tau, interlocking_time):
-    """
-    tests different initializations of the converters
-    :return:
-    """
-    # define all converter
-    all_single_disc_converter = ["Finite-1QC", "Finite-2QC", "Finite-4QC", "Finite-B6C"]
-    interlocking_time *= tau
-    # chose every combination of single converters
-    for conv_1 in all_single_disc_converter:
-        for conv_2 in all_single_disc_converter:
-            converter = make_module(
-                cv.PowerElectronicConverter,
-                "Finite-Multi",
-                tau=tau,
-                interlocking_time=interlocking_time,
-                subconverters=[conv_1, conv_2],
-            )
-            # test if both converter have the same parameter
-            assert converter._sub_converters[0]._tau == converter._sub_converters[1]._tau == tau
-            assert (
-                converter._sub_converters[0]._interlocking_time
-                == converter._sub_converters[1]._interlocking_time
-                == interlocking_time
-            )
-
-
 @pytest.mark.parametrize("tau", g_taus)
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
 def test_discrete_multi_power_electronic_converter(tau, interlocking_time):
@@ -448,34 +375,20 @@ def test_discrete_multi_power_electronic_converter(tau, interlocking_time):
     :return:
     """
     # define all converter
-    all_single_disc_converter = ["Finite-1QC", "Finite-2QC", "Finite-4QC", "Finite-B6C"]
+    all_single_disc_converter = [Finite1QC, Finite2QC, Finite4QC, FiniteB6C]
     interlocking_time *= tau
 
     for conv_0 in all_single_disc_converter:
         for conv_1 in all_single_disc_converter:
-            converter = make_module(
-                cv.PowerElectronicConverter,
-                "Finite-Multi",
-                tau=tau,
-                interlocking_time=interlocking_time,
-                subconverters=[conv_0, conv_1],
-            )
-            comparable_converter_0 = make_module(
-                cv.PowerElectronicConverter,
-                conv_0,
-                tau=tau,
-                interlocking_time=interlocking_time,
-            )
-            comparable_converter_1 = make_module(
-                cv.PowerElectronicConverter,
-                conv_1,
-                tau=tau,
-                interlocking_time=interlocking_time,
-            )
+            converter = FiniteMulti(tau=tau, interlocking_time=interlocking_time, subconverters=[conv_0, conv_1])
+
+            comparable_converter_0 = conv_0(tau=tau, interlocking_time=interlocking_time)
+            comparable_converter_1 = conv_1(tau=tau, interlocking_time=interlocking_time)
+
             action_space_n = converter.action_space.nvec
             assert np.all(
                 converter.reset()
-                == np.concatenate([[-0.5, -0.5, -0.5] if ("Finite-B6C" == conv) else [0] for conv in [conv_0, conv_1]])
+                == np.concatenate([[-0.5, -0.5, -0.5] if (conv is FiniteB6C) else [0] for conv in [conv_0, conv_1]])
             )  # test if reset returns 0.0
             actions = [[np.random.randint(0, upper_bound) for upper_bound in action_space_n] for _ in range(100)]
             times = np.arange(100) * tau
@@ -486,12 +399,12 @@ def test_discrete_multi_power_electronic_converter(tau, interlocking_time):
                 for time_step in time_steps_1 + time_steps_2:
                     assert time_step in time_steps
                 for time_step in time_steps:
-                    i_in_0 = np.random.uniform(-1, 1, 3) if conv_0 == "Finite-B6C" else [np.random.uniform(-1, 1)]
-                    i_in_1 = np.random.uniform(-1, 1, 3) if conv_1 == "Finite-B6C" else [np.random.uniform(-1, 1)]
+                    i_in_0 = np.random.uniform(-1, 1, 3) if conv_0 is FiniteB6C else [np.random.uniform(-1, 1)]
+                    i_in_1 = np.random.uniform(-1, 1, 3) if conv_1 is FiniteB6C else [np.random.uniform(-1, 1)]
                     i_in = np.concatenate([i_in_0, i_in_1])
                     voltage = converter.convert(i_in, time_step)
                     # test if the single phase converters work independent and correct for singlephase subsystems
-                    if "Finite-B6C" not in [conv_0, conv_1]:
+                    if FiniteB6C not in [conv_0, conv_1]:
                         voltage_0 = comparable_converter_0.convert(i_in_0, time_step)
                         voltage_1 = comparable_converter_1.convert(i_in_1, time_step)
                         converter.i_sup(i_in)
@@ -504,8 +417,7 @@ def test_discrete_multi_power_electronic_converter(tau, interlocking_time):
 
 # region continuous converter
 
-
-@pytest.mark.parametrize("converter_type", ["Cont-1QC", "Cont-2QC", "Cont-4QC"])
+@pytest.mark.parametrize("converter_type", [Cont1QC, Cont2QC, Cont4QC])
 @pytest.mark.parametrize("tau", g_taus)
 @pytest.mark.parametrize("interlocking_time", g_interlocking_times)
 def test_continuous_power_electronic_converter(converter_type, tau, interlocking_time):
@@ -516,12 +428,7 @@ def test_continuous_power_electronic_converter(converter_type, tau, interlocking
     """
     interlocking_time *= tau
     # setup converter
-    converter = make_module(
-        cv.PowerElectronicConverter,
-        converter_type,
-        tau=tau,
-        interlocking_time=interlocking_time,
-    )
+    converter = converter_type(tau=tau, interlocking_time=interlocking_time)
     assert converter.reset() == [0.0], "Error reset function"
     action_space = converter.action_space
     # take 100 random actions
@@ -551,7 +458,7 @@ def continuous_converter_functions_testing(converter, times, interlocking_time, 
         for time_step in time_steps:
             for i_in in g_i_ins_cont:
                 # test if conversion works
-                if converter_type == "Cont-1QC":
+                if converter_type is Cont1QC:
                     i_in = abs(i_in)
                 conversion = converter.convert([i_in], time_step)
                 voltage = comparable_voltage(
@@ -584,10 +491,10 @@ def continuous_converter_functions_testing(converter, times, interlocking_time, 
 def comparable_voltage(converter_type, action, i_in, tau, interlocking_time, last_action):
     voltage = np.array([action])
     error = np.array([-np.sign(i_in) / tau * interlocking_time])
-    if converter_type == "Cont-2QC":
+    if converter_type is Cont2QC:
         voltage += error
         voltage = max(min(voltage, np.array([1])), np.array([0]))
-    elif converter_type == "Cont-4QC":
+    elif converter_type is Cont4QC:
         voltage_1 = (1 + voltage) / 2 + error
         voltage_2 = (1 - voltage) / 2 + error
         voltage_1 = max(min(voltage_1, 1), 0)
@@ -605,22 +512,17 @@ def test_continuous_multi_power_electronic_converter(tau, interlocking_time):
     :return:
     """
     # define all converter
-    all_single_cont_converter = ["Cont-1QC", "Cont-2QC", "Cont-4QC", "Cont-B6C"]
+    all_single_cont_converter = [Cont1QC, Cont2QC, Cont4QC, ContB6C]
     interlocking_time *= tau
     times = g_times_cont * tau
     for conv_1 in all_single_cont_converter:
         for conv_2 in all_single_cont_converter:
             # setup converter with all possible combinations
-            converter = make_module(
-                cv.PowerElectronicConverter,
-                "Cont-Multi",
-                tau=tau,
-                interlocking_time=interlocking_time,
-                subconverters=[conv_1, conv_2],
-            )
+            converter = ContMulti(tau=tau, interlocking_time=interlocking_time, subconverters=[conv_1, conv_2])
+
             assert all(
                 converter.reset()
-                == np.concatenate([[-0.5, -0.5, -0.5] if ("Cont-B6C" == conv) else [0] for conv in [conv_1, conv_2]])
+                == np.concatenate([[-0.5, -0.5, -0.5] if (conv is ContB6C) else [0] for conv in [conv_1, conv_2]])
             )
             action_space = converter.action_space
             seed(123)
@@ -647,11 +549,11 @@ def continuous_multi_converter_functions_testing(converter, times, interlocking_
         for time_step in time_steps:
             for i_in in g_i_ins_cont:
                 # test if conversion works
-                i_in_0 = [i_in] * 3 if converter_type[0] == "Cont-B6C" else [i_in]
-                i_in_1 = [-i_in] * 3 if converter_type[1] == "Cont-B6C" else [i_in]
-                if converter_type[0] == "Cont-1QC":
+                i_in_0 = [i_in] * 3 if converter_type[0] is ContB6C else [i_in]
+                i_in_1 = [-i_in] * 3 if converter_type[1] is ContB6C else [i_in]
+                if converter_type[0] is Cont1QC:
                     i_in_0 = np.abs(i_in_0)
-                if converter_type[1] == "Cont-1QC":
+                if converter_type[1] is Cont1QC:
                     i_in_1 = np.abs(i_in_1)
                 conversion = converter.convert(np.concatenate([i_in_0, i_in_1]), time_step)
                 params = parameters + "  " + str(i_in) + "  " + str(time_step) + "  " + str(conversion)
@@ -660,7 +562,7 @@ def continuous_multi_converter_functions_testing(converter, times, interlocking_
                     converter.action_space.high.tolist() >= conversion
                 ), "Error, does not hold limits:" + str(params)
                 # test if the single phase converters work independent and correct for singlephase subsystems
-                if "Cont-B6C" not in converter_type:
+                if ContB6C not in converter_type:
                     voltage_0 = comparable_voltage(
                         converter_type[0],
                         action[0],
@@ -696,7 +598,7 @@ def test_discrete_b6_bridge():
 
     tau = cf.converter_parameter["tau"]
     # test default initializations
-    converter_default_init_1 = make_module(cv.PowerElectronicConverter, "Finite-B6C")
+    converter_default_init_1 = FiniteB6C()
     converter_default_init_2 = cv.FiniteB6BridgeConverter()
     assert converter_default_init_1._tau == 1e-5
     for subconverter in converter_default_init_1._sub_converters:
@@ -732,7 +634,7 @@ def test_discrete_b6_bridge():
                     step_counter += 1
 
     # test parametrized converter
-    converter_init_1 = make_module(cv.PowerElectronicConverter, "Finite-B6C", **cf.converter_parameter)
+    converter_init_1 = FiniteB6C(**cf.converter_parameter)
     converter_init_2 = cv.FiniteB6BridgeConverter(**cf.converter_parameter)
     assert converter_init_1._tau == cf.converter_parameter["tau"]
     for subconverter in converter_init_1._sub_converters:
@@ -797,8 +699,8 @@ def test_discrete_b6_bridge():
 
 
 def test_continuous_b6_bridge():
-    converter_default_init_1 = cv.ContB6BridgeConverter()
-    converter_default_init_2 = make_module(cv.PowerElectronicConverter, "Cont-B6C")
+    converter_default_init_1 = ContB6C()
+    converter_default_init_2 = ContB6C()
     converters_default = [converter_default_init_1, converter_default_init_2]
     actions = np.array(
         [
@@ -864,7 +766,7 @@ def test_continuous_b6_bridge():
         ]
     )
     converter_init_1 = cv.ContB6BridgeConverter(**cf.converter_parameter)
-    converter_init_2 = make_module(cv.PowerElectronicConverter, "Cont-B6C", **cf.converter_parameter)
+    converter_init_2 = ContB6C(**cf.converter_parameter)
     converters = [converter_init_1, converter_init_2]
     for converter in converters:
         # parameter testing
@@ -914,11 +816,6 @@ class TestPowerElectronicConverter:
         converter = self.class_to_test(tau=tau, interlocking_time=interlocking_time, **kwargs)
         assert converter._tau == tau
         assert converter._interlocking_time == interlocking_time
-
-    def test_registered(self):
-        if self.key != "":
-            conv = gem.utils.instantiate(cv.PowerElectronicConverter, self.key)
-            assert type(conv) == self.class_to_test
 
     def test_reset(self, converter):
         assert converter._action_start_time == 0
@@ -1286,8 +1183,8 @@ class TestFiniteMultiConverter(TestFiniteConverter):
     @pytest.mark.parametrize(
         "tau, interlocking_time, kwargs",
         [
-            (1, 0.1, {"subconverters": ["Finite-1QC", "Finite-B6C", "Finite-4QC"]}),
-            (0.1, 0.0, {"subconverters": ["Finite-1QC", "Finite-B6C", "Finite-4QC"]}),
+            (1, 0.1, {"subconverters": [Finite1QC, FiniteB6C, Finite4QC]}),
+            (0.1, 0.0, {"subconverters": [Finite1QC, FiniteB6C, Finite4QC]}),
         ],
     )
     def test_initialization(self, tau, interlocking_time, kwargs):
@@ -1307,11 +1204,6 @@ class TestFiniteMultiConverter(TestFiniteConverter):
         for sc in conv._sub_converters:
             assert sc._interlocking_time == interlocking_time
             assert sc._tau == tau
-
-    def test_registered(self):
-        dummy_converters = [DummyConverter(), DummyConverter(), DummyConverter()]
-        conv = gem.utils.instantiate(cv.PowerElectronicConverter, self.key, subconverters=dummy_converters)
-        assert type(conv) == self.class_to_test
 
     def test_reset(self, converter):
         u_in = converter.reset()
@@ -1333,7 +1225,7 @@ class TestFiniteMultiConverter(TestFiniteConverter):
             assert sc2.action_set_time == t
 
     def test_default_init(self):
-        converter = self.class_to_test(subconverters=["Finite-1QC", "Finite-B6C", "Finite-2QC"])
+        converter = self.class_to_test(subconverters=[Finite1QC, FiniteB6C, Finite2QC])
         assert converter._tau == 1e-5
 
     @pytest.mark.parametrize("i_out", [[0, 6, 2, 7, 9], [1, 0.5, 2], [-1, 1]])
@@ -1379,20 +1271,12 @@ class TestContMultiConverter(TestContDynamicallyAveragedConverter):
             ]
         )
 
-    def test_registered(self):
-        dummy_converters = [DummyConverter(), DummyConverter(), DummyConverter()]
-        dummy_converters[0].action_space = Box(-1, 1, shape=(1,))
-        dummy_converters[1].action_space = Box(-1, 1, shape=(3,))
-        dummy_converters[2].action_space = Box(0, 1, shape=(1,))
-        conv = gem.utils.instantiate(cv.PowerElectronicConverter, self.key, subconverters=dummy_converters)
-        assert type(conv) == self.class_to_test
-        assert conv._sub_converters == dummy_converters
 
     @pytest.mark.parametrize(
         "tau, interlocking_time, kwargs",
         [
-            (1, 0.1, {"subconverters": ["Cont-1QC", "Cont-B6C", "Cont-4QC"]}),
-            (0.1, 0.0, {"subconverters": ["Cont-1QC", "Cont-B6C", "Cont-4QC"]}),
+            (1, 0.1, {"subconverters": [Cont1QC, ContB6C, Cont4QC]}),
+            (0.1, 0.0, {"subconverters": [Cont1QC, ContB6C, Cont4QC]}),
         ],
     )
     def test_initialization(self, tau, interlocking_time, kwargs):

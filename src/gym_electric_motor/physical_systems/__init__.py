@@ -1,70 +1,72 @@
-from .physical_systems import (
-    DcMotorSystem,
-    SynchronousMotorSystem,
-    SquirrelCageInductionMotorSystem,
-    DoublyFedInductionMotorSystem,
-    ExternallyExcitedSynchronousMotorSystem,
-    ThreePhaseMotorSystem,
-    SCMLSystem,
-)
-
+from ..core import PhysicalSystem
+from ..utils import register_class, register_superclass
 from .converters import (
-    PowerElectronicConverter,
-    FiniteOneQuadrantConverter,
-    FiniteTwoQuadrantConverter,
-    FiniteFourQuadrantConverter,
-    FiniteMultiConverter,
-    FiniteB6BridgeConverter,
-    ContOneQuadrantConverter,
-    ContTwoQuadrantConverter,
+    ContB6BridgeConverter,
     ContFourQuadrantConverter,
     ContMultiConverter,
-    ContB6BridgeConverter,
+    ContOneQuadrantConverter,
+    ContTwoQuadrantConverter,
+    FiniteB6BridgeConverter,
+    FiniteFourQuadrantConverter,
+    FiniteMultiConverter,
+    FiniteOneQuadrantConverter,
+    FiniteTwoQuadrantConverter,
     NoConverter,
+    PowerElectronicConverter,
 )
-
+from .converters import ContB6BridgeConverter as ContB6C
+from .converters import ContFourQuadrantConverter as Cont4QC
+from .converters import ContMultiConverter as ContMulti
+from .converters import ContOneQuadrantConverter as Cont1QC
+from .converters import ContTwoQuadrantConverter as Cont2QC
+from .converters import FiniteB6BridgeConverter as FiniteB6C
+from .converters import FiniteFourQuadrantConverter as Finite4QC
+from .converters import FiniteMultiConverter as FiniteMulti
+from .converters import FiniteOneQuadrantConverter as Finite1QC
+from .converters import FiniteTwoQuadrantConverter as Finite2QC
 from .electric_motors import (
     DcExternallyExcitedMotor,
-    DcSeriesMotor,
     DcPermanentlyExcitedMotor,
+    DcSeriesMotor,
     DcShuntMotor,
-    PermanentMagnetSynchronousMotor,
-    ElectricMotor,
-    SynchronousReluctanceMotor,
-    SquirrelCageInductionMotor,
     DoublyFedInductionMotor,
+    ElectricMotor,
     ExternallyExcitedSynchronousMotor,
+    PermanentMagnetSynchronousMotor,
+    SquirrelCageInductionMotor,
+    SynchronousReluctanceMotor,
     ThreePhaseMotor,
 )
-
-
 from .mechanical_loads import (
-    MechanicalLoad,
-    PolynomialStaticLoad,
-    ExternalSpeedLoad,
     ConstantSpeedLoad,
+    ExternalSpeedLoad,
+    MechanicalLoad,
     OrnsteinUhlenbeckLoad,
+    PolynomialStaticLoad,
 )
-
+from .physical_systems import (
+    DcMotorSystem,
+    DoublyFedInductionMotorSystem,
+    ExternallyExcitedSynchronousMotorSystem,
+    SCMLSystem,
+    SquirrelCageInductionMotorSystem,
+    SynchronousMotorSystem,
+    ThreePhaseMotorSystem,
+)
 from .solvers import (
-    OdeSolver,
     EulerSolver,
+    OdeSolver,
     ScipyOdeIntSolver,
-    ScipySolveIvpSolver,
     ScipyOdeSolver,
+    ScipySolveIvpSolver,
 )
-
 from .voltage_supplies import (
-    VoltageSupply,
-    IdealVoltageSupply,
-    RCVoltageSupply,
     AC1PhaseSupply,
     AC3PhaseSupply,
+    IdealVoltageSupply,
+    RCVoltageSupply,
+    VoltageSupply,
 )
-
-
-from ..utils import register_class, register_superclass
-from .. import PhysicalSystem
 
 register_superclass(PowerElectronicConverter)
 register_superclass(MechanicalLoad)

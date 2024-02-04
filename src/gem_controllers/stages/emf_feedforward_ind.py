@@ -1,5 +1,6 @@
-from .emf_feedforward import EMFFeedforward
 import numpy as np
+
+from .emf_feedforward import EMFFeedforward
 
 
 class EMFFeedforwardInd(EMFFeedforward):

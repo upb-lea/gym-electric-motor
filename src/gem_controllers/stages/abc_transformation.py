@@ -1,8 +1,10 @@
-from gym_electric_motor.physical_systems.electric_motors import SynchronousMotor
-import gem_controllers as gc
 import numpy as np
-from .stage import Stage
+
+import gem_controllers as gc
+from gym_electric_motor.physical_systems.electric_motors import SynchronousMotor
+
 from .. import parameter_reader as reader
+from .stage import Stage
 
 
 class AbcTransformation(Stage):

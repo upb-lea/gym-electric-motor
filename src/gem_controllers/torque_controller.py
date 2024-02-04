@@ -1,7 +1,7 @@
 import numpy as np
 
-import gym_electric_motor as gem
 import gem_controllers as gc
+import gym_electric_motor as gem
 
 
 class TorqueController(gc.GemController):

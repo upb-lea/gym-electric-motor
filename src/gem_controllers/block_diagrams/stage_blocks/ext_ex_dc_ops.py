@@ -1,5 +1,5 @@
-from control_block_diagram.components import Box, Connection, Circle, Point
-from control_block_diagram.predefined_components import Multiply, Divide, Limit
+from control_block_diagram.components import Box, Circle, Connection, Point
+from control_block_diagram.predefined_components import Divide, Limit, Multiply
 
 
 def ext_ex_dc_ops(start, control_task):

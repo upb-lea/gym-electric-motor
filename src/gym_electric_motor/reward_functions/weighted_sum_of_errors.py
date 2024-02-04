@@ -1,8 +1,9 @@
+import warnings
+
 import numpy as np
 
 from ..core import RewardFunction
 from ..utils import set_state_array
-import warnings
 
 
 class WeightedSumOfErrors(RewardFunction):

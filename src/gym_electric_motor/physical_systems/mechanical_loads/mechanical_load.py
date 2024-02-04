@@ -1,6 +1,7 @@
+import warnings
+
 import numpy as np
 from scipy.stats import truncnorm
-import warnings
 
 from ...random_component import RandomComponent
 

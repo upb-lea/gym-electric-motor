@@ -1,19 +1,22 @@
-from gym_electric_motor.core import ElectricMotorVisualization
-from .motor_dashboard_plots import (
-    StatePlot,
-    ActionPlot,
-    RewardPlot,
-    TimePlot,
-    EpisodePlot,
-    StepPlot,
-)
-from .render_modes import RenderMode
-import matplotlib
-import matplotlib.pyplot as plt
-import gymnasium
-from enum import Enum
 import os
 import time
+from enum import Enum
+
+import gymnasium
+import matplotlib
+import matplotlib.pyplot as plt
+
+from gym_electric_motor.core import ElectricMotorVisualization
+
+from .motor_dashboard_plots import (
+    ActionPlot,
+    EpisodePlot,
+    RewardPlot,
+    StatePlot,
+    StepPlot,
+    TimePlot,
+)
+from .render_modes import RenderMode
 
 
 class MotorDashboardLegacy(ElectricMotorVisualization):
@@ -72,7 +75,7 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
                 Default: None (the already selected style)
         """
         # Basic assertions
-        assert type(reward_plot) is bool
+        assert isinstance(reward_plot, bool)
         assert all(isinstance(ap, (TimePlot, EpisodePlot, StepPlot)) for ap in additional_plots)
         assert type(update_interval) in [int, float]
         assert update_interval > 0
@@ -155,9 +158,10 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
 
     def render(self):
         """Updates the plots every *update cycle* calls of this method."""
-        if not (self._time_plot_figure or self._episodic_plot_figure or self._step_plot_figure) and len(
-            self._plots
-        ) > 0:
+        if (
+            not (self._time_plot_figure or self._episodic_plot_figure or self._step_plot_figure)
+            and len(self._plots) > 0
+        ):
             self.initialize()
         if self._update_render:
             self._update()
@@ -322,7 +326,9 @@ class MotorDashboard(MotorDashboardLegacy):
 
     def set_env(self, env):
         # This is the only data we need from the environment
-        myenv = lambda: None
+        def myenv():
+            return None
+
         myenv.physical_system = lambda: None
         myenv.physical_system.state_names = env.physical_system.state_names
         myenv.physical_system.tau = env.physical_system.tau

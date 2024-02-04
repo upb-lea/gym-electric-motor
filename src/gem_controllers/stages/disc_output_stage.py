@@ -1,11 +1,12 @@
-import numpy as np
 import gymnasium
+import numpy as np
+
+import gem_controllers as gc
 from gym_electric_motor.physical_systems import converters as cv
 
-from .stage import Stage
-from ..utils import non_parameterized
 from .. import parameter_reader as reader
-import gem_controllers as gc
+from ..utils import non_parameterized
+from .stage import Stage
 
 
 class DiscOutputStage(Stage):

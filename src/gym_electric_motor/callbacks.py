@@ -1,10 +1,11 @@
 """This module introduces predefined callbacks for the GEM environment."""
 
-from .core import Callback
 from gym_electric_motor.reference_generators import (
     SubepisodedReferenceGenerator,
     SwitchedReferenceGenerator,
 )
+
+from .core import Callback
 
 
 class RampingLimitMargin(Callback):

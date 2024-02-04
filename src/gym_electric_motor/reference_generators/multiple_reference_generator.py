@@ -2,11 +2,11 @@ import numpy as np
 from gymnasium.spaces import Box
 
 from ..core import ReferenceGenerator
+from ..random_component import RandomComponent
 from ..utils import instantiate
-import gym_electric_motor as gem
 
 
-class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
+class MultipleReferenceGenerator(ReferenceGenerator, RandomComponent):
     """Reference Generator that combines multiple sub reference generators that all have to reference
     different state variables.
     """
@@ -20,9 +20,9 @@ class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
             kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.
         """
         ReferenceGenerator.__init__(self, **kwargs)
-        gem.RandomComponent.__init__(self)
+        RandomComponent.__init__(self)
         self.reference_space = Box(-1, 1, shape=(1,), dtype=np.float64)
-        if type(sub_args) is dict:
+        if isinstance(sub_args, dict):
             sub_arguments = [sub_args] * len(sub_generators)
         elif hasattr(sub_args, "__iter__"):
             assert len(sub_args) == len(sub_generators)
@@ -83,6 +83,6 @@ class MultipleReferenceGenerator(ReferenceGenerator, gem.RandomComponent):
     def seed(self, seed=None):
         super().seed(seed)
         for sub_generator in self._sub_generators:
-            if isinstance(sub_generator, gem.RandomComponent):
+            if isinstance(sub_generator, RandomComponent):
                 seed = self._seed_sequence.spawn(1)[0]
                 sub_generator.seed(seed)

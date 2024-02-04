@@ -1,6 +1,6 @@
-from gym_electric_motor.physical_systems import converters as cv
-
 import numpy as np
+
+from gym_electric_motor.physical_systems import converters as cv
 
 dc_motors = ["SeriesDc", "ShuntDc", "PermExDc", "ExtExDc"]
 synchronous_motors = ["PMSM", "SynRM", "EESM"]
@@ -428,7 +428,7 @@ class MotorSpecification:
         return MotorSpecification._motors[motor_key]
 
     psi = None
-    l = None
+    l = None  # noqa: E741
     l_emf = None
     tau_current_loop = None
     tau_n = None

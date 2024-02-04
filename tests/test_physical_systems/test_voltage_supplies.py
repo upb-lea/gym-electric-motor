@@ -8,12 +8,6 @@ class TestVoltageSupply:
     key = ""
     class_to_test = vs.VoltageSupply
 
-    def test_registered(self):
-        """If a key is provided, tests if the class can be initialized from registry"""
-        if self.key != "":
-            supply = gem.utils.instantiate(vs.VoltageSupply, self.key)
-            assert type(supply) == self.class_to_test
-
     def test_initialization(self):
         """Test the initalization and correct setting of values"""
         u_nominal = 600.0

@@ -216,11 +216,6 @@ class TestMechanicalLoad:
     class_to_test = MechanicalLoad
     kwargs = {}
 
-    def test_registered(self):
-        if self.key != "":
-            load = gem.utils.instantiate(MechanicalLoad, self.key, **self.kwargs)
-            assert type(load) == self.class_to_test
-
 
 class TestConstSpeedLoad(TestMechanicalLoad):
     key = "ConstSpeedLoad"

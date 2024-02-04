@@ -17,21 +17,21 @@ Each ElectricMotorEnvironment contains the five following modules:
     - Visualization of the PhysicalSystems state, reference and reward for the user.
 
 """
-import os
 import datetime
+import os
+from dataclasses import dataclass
 
 import gymnasium
+import matplotlib
+import matplotlib.pyplot
 import numpy as np
 from gymnasium.spaces import Box
-
-from .utils import instantiate
-from .random_component import RandomComponent
-from .constraints import Constraint, LimitConstraint
-import gym_electric_motor as gem
-import matplotlib.pyplot
 from matplotlib.figure import Figure
-import matplotlib
-from dataclasses import dataclass
+
+import gym_electric_motor as gem
+
+from .constraints import Constraint, LimitConstraint
+from .utils import instantiate
 
 
 @dataclass
@@ -234,7 +234,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._physical_system = instantiate(PhysicalSystem, physical_system, **kwargs)
         self._reference_generator = instantiate(ReferenceGenerator, reference_generator, **kwargs)
         self._reward_function = instantiate(RewardFunction, reward_function, **kwargs)
-        if type(visualization) is str or isinstance(visualization, ElectricMotorVisualization):
+        if isinstance(visualization, str) or isinstance(visualization, ElectricMotorVisualization):
             visualization = [visualization]
         if visualization is None:
             visualization = []
@@ -243,7 +243,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         if isinstance(constraints, ConstraintMonitor):
             cm = constraints
         else:
-            limit_constraints = [constraint for constraint in constraints if type(constraint) is str]
+            limit_constraints = [constraint for constraint in constraints if isinstance(constraint, str)]
             additional_constraints = [constraint for constraint in constraints if isinstance(constraint, Constraint)]
             cm = ConstraintMonitor(limit_constraints, additional_constraints)
         self._constraint_monitor = cm

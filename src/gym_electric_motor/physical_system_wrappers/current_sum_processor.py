@@ -1,7 +1,7 @@
 import gymnasium
 import numpy as np
 
-from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
+from .physical_system_wrapper import PhysicalSystemWrapper
 
 
 class CurrentSumProcessor(PhysicalSystemWrapper):

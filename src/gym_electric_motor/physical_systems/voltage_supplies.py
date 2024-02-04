@@ -1,6 +1,8 @@
-from gym_electric_motor.physical_systems.solvers import EulerSolver
 import warnings
+
 import numpy as np
+
+from gym_electric_motor.physical_systems.solvers import EulerSolver
 
 
 class VoltageSupply:

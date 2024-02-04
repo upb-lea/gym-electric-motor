@@ -99,7 +99,6 @@ class DcSeriesMotor(DcMotor):
 
     def get_state_space(self, input_currents, input_voltages):
         # Docstring of superclass
-        lower_limit = 0
         low = {
             "omega": 0,
             "torque": 0,

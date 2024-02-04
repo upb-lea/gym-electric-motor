@@ -1,8 +1,9 @@
 from collections import deque
-import numpy as np
 
 import gymnasium.spaces
-from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
+import numpy as np
+
+from .physical_system_wrapper import PhysicalSystemWrapper
 
 
 class DeadTimeProcessor(PhysicalSystemWrapper):

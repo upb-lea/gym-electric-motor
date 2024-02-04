@@ -1,8 +1,9 @@
 import numpy as np
-import gem_controllers as gc
+
+from .gem_controller import GemController
 
 
-class CurrentController(gc.GemController):
+class CurrentController(GemController):
     """Base class for a current controller"""
 
     def control(self, state, reference):

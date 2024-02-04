@@ -1,6 +1,7 @@
-import pytest
-import gym_electric_motor as gem
 import numpy as np
+import pytest
+
+import gym_electric_motor as gem
 
 control_tasks = ["TC", "SC", "CC"]
 action_types = ["Cont", "Finite"]

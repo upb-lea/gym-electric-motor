@@ -1,8 +1,9 @@
 import numpy as np
 
-from .base_controller import BaseController, EBaseControllerTask
-from ... import parameter_reader as reader
 import gem_controllers as gc
+
+from ... import parameter_reader as reader
+from .base_controller import BaseController, EBaseControllerTask
 
 
 class PController(BaseController):

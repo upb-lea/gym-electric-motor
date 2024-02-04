@@ -1,15 +1,16 @@
-import pytest
 import numpy as np
+import pytest
 
 from gym_electric_motor.reward_functions.weighted_sum_of_errors import (
     WeightedSumOfErrors,
 )
-from .test_reward_functions import TestRewardFunction
+
 from ..testing_utils import (
+    DummyConstraintMonitor,
     DummyPhysicalSystem,
     DummyReferenceGenerator,
-    DummyConstraintMonitor,
 )
+from .test_reward_functions import TestRewardFunction
 
 
 class TestWeightedSumOfErrors(TestRewardFunction):
@@ -18,9 +19,7 @@ class TestWeightedSumOfErrors(TestRewardFunction):
     @pytest.fixture
     def reward_function(self):
         rf = WeightedSumOfErrors()
-        rf.set_modules(
-            DummyPhysicalSystem(), DummyReferenceGenerator(), DummyConstraintMonitor()
-        )
+        rf.set_modules(DummyPhysicalSystem(), DummyReferenceGenerator(), DummyConstraintMonitor())
         return rf
 
     @pytest.mark.parametrize(
@@ -110,13 +109,9 @@ class TestWeightedSumOfErrors(TestRewardFunction):
     )
     @pytest.mark.parametrize("rg", [DummyReferenceGenerator()])
     @pytest.mark.parametrize("cm", [DummyConstraintMonitor()])
-    def test_normed_reward_weights(
-        self, ps, rg, cm, reward_weights, normed_rw, expected_rw
-    ):
+    def test_normed_reward_weights(self, ps, rg, cm, reward_weights, normed_rw, expected_rw):
         rg.set_modules(ps)
-        rf = self.class_to_test(
-            reward_weights=reward_weights, normed_reward_weights=normed_rw
-        )
+        rf = self.class_to_test(reward_weights=reward_weights, normed_reward_weights=normed_rw)
         rf.set_modules(ps, rg, cm)
         assert all(rf._reward_weights == expected_rw)
 
@@ -218,11 +213,6 @@ class TestWeightedSumOfErrors(TestRewardFunction):
         expected_rw,
     ):
         rg.set_modules(ps)
-        rf = self.class_to_test(
-            reward_weights=reward_weights, bias=bias, violation_reward=violation_reward
-        )
+        rf = self.class_to_test(reward_weights=reward_weights, bias=bias, violation_reward=violation_reward)
         rf.set_modules(ps, rg, cm)
-        assert (
-            rf.reward(state, reference, violation_degree=violation_degree)
-            == expected_rw
-        )
+        assert rf.reward(state, reference, violation_degree=violation_degree) == expected_rw

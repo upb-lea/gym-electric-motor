@@ -1,4 +1,4 @@
-from scipy.integrate import ode, solve_ivp, odeint
+from scipy.integrate import ode, odeint, solve_ivp
 
 
 class OdeSolver:

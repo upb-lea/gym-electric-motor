@@ -1,5 +1,6 @@
-from ..core import ElectricMotorVisualization
 import numpy as np
+
+from ..core import ElectricMotorVisualization
 
 
 class ConsolePrinter(ElectricMotorVisualization):
@@ -69,7 +70,7 @@ class ConsolePrinter(ElectricMotorVisualization):
             if self._reset:
                 print(
                     f"\nEpisode {self._episode} ",
-                    f"Constraint Violation! " if self._done else "External Reset. ",
+                    "Constraint Violation! " if self._done else "External Reset. ",
                     f"Number of steps: {self._k: 8d} ",
                     f"Cumulative Reward: {self._cum_reward:7.3f}\n",
                 )

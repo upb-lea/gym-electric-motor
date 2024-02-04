@@ -1,8 +1,9 @@
 import numpy as np
 from scipy.stats import truncnorm
 
-from ...random_component import RandomComponent
 from gym_electric_motor.utils import update_parameter_dict
+
+from ...random_component import RandomComponent
 
 
 class ElectricMotor(RandomComponent):

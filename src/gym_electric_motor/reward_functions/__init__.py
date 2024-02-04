@@ -1,5 +1,5 @@
-from .weighted_sum_of_errors import WeightedSumOfErrors
+from ..core import RewardFunction
 from ..utils import register_class
-from .. import RewardFunction
+from .weighted_sum_of_errors import WeightedSumOfErrors
 
 register_class(WeightedSumOfErrors, RewardFunction, "WSE")

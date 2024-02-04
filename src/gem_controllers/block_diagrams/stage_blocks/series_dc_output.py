@@ -1,5 +1,5 @@
 from control_block_diagram.components import Box, Connection
-from control_block_diagram.predefined_components import DcSeriesMotor, DcConverter, Limit
+from control_block_diagram.predefined_components import DcConverter, DcSeriesMotor, Limit
 
 
 def series_dc_output(emf_feedforward):

@@ -1,4 +1,5 @@
 import math
+
 import numpy as np
 
 from .electric_motor import ElectricMotor

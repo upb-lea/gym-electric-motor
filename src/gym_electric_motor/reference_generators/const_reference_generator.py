@@ -1,7 +1,8 @@
 import numpy as np
+from gymnasium.spaces import Box
+
 from gym_electric_motor.core import ReferenceGenerator
 from gym_electric_motor.utils import set_state_array
-from gymnasium.spaces import Box
 
 
 class ConstReferenceGenerator(ReferenceGenerator):

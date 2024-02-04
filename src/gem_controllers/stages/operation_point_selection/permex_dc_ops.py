@@ -1,8 +1,9 @@
 import numpy as np
 
 import gem_controllers as gc
-from .operation_point_selection import OperationPointSelection
+
 from ... import parameter_reader as reader
+from .operation_point_selection import OperationPointSelection
 
 
 class PermExDcOperationPointSelection(OperationPointSelection):

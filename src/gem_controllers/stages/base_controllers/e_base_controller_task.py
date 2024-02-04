@@ -13,14 +13,14 @@ class EBaseControllerTask(Enum):
 
     @staticmethod
     def equals(value, base_controller_task):
-        if type(value) is str:
+        if isinstance(value, str):
             return EBaseControllerTask(value) == base_controller_task
         else:
             return value == base_controller_task
 
     @staticmethod
     def get_control_task(value):
-        if type(value) is str:
+        if isinstance(value, str):
             return EBaseControllerTask(value)
         elif isinstance(value, EBaseControllerTask):
             return value

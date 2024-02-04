@@ -1,7 +1,9 @@
-import gym_electric_motor as gem
 import numpy as np
-from .foc_operation_point_selection import FieldOrientedControllerOperationPointSelection
+
+import gym_electric_motor as gem
+
 from ..base_controllers import PIController
+from .foc_operation_point_selection import FieldOrientedControllerOperationPointSelection
 
 
 class SCIMOperationPointSelection(FieldOrientedControllerOperationPointSelection):

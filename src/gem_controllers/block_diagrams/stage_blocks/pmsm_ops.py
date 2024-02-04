@@ -1,4 +1,4 @@
-from control_block_diagram.components import Box, Connection, Text, Point, Circle, Path
+from control_block_diagram.components import Box, Circle, Connection, Path, Point, Text
 from control_block_diagram.predefined_components import Add, Divide, IController, Limit
 
 

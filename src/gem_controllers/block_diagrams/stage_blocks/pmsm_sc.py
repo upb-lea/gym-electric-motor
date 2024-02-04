@@ -1,5 +1,5 @@
 from control_block_diagram.components import Connection
-from control_block_diagram.predefined_components import Add, PIController, Limit
+from control_block_diagram.predefined_components import Add, Limit, PIController
 
 
 def pmsm_speed_controller(start, control_task):

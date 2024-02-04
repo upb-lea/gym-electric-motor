@@ -21,8 +21,8 @@ def disc_converter_actions(converter):
     """
     if type(converter) is cv.FiniteMultiConverter:
         high_actions = []
-        idle_actions = []
-        low_actions = []
+        # idle_actions = []
+        # low_actions = []
         for subconverter in converter.subconverters:
             high_actions.append(_converter_actions[subconverter])
 

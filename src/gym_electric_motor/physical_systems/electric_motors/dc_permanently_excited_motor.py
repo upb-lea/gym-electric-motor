@@ -105,7 +105,6 @@ class DcPermanentlyExcitedMotor(DcMotor):
 
     def get_state_space(self, input_currents, input_voltages):
         # Docstring of superclass
-        lower_limit = 0
         low = {
             "omega": -1 if input_voltages.low[0] == -1 else 0,
             "torque": -1 if input_currents.low[0] == -1 else 0,

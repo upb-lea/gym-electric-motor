@@ -1,5 +1,5 @@
 from control_block_diagram.components import Box, Connection
-from control_block_diagram.predefined_components import DcPermExMotor, DcConverter, Limit
+from control_block_diagram.predefined_components import DcConverter, DcPermExMotor, Limit
 
 
 def perm_ex_dc_output(emf_feedforward):

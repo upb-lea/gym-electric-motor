@@ -1,5 +1,6 @@
-import gym_electric_motor.core
 import numpy as np
+
+import gym_electric_motor.core
 
 from ..stage import Stage
 

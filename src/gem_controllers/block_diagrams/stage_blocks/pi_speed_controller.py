@@ -1,5 +1,5 @@
 from control_block_diagram.components import Box, Connection
-from control_block_diagram.predefined_components import Add, PIController, Limit
+from control_block_diagram.predefined_components import Add, Limit, PIController
 
 
 def pi_speed_controller(start, control_task):

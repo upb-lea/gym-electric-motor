@@ -102,7 +102,6 @@ class DcShuntMotor(DcMotor):
         Returns:
              tuple(dict,dict): Dictionaries defining if positive and negative values are possible for each motors state.
         """
-        lower_limit = 0
 
         low = {
             "omega": 0,

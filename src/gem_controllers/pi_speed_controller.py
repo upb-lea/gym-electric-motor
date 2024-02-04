@@ -1,7 +1,10 @@
 import numpy as np
 
-import gym_electric_motor as gem
 import gem_controllers as gc
+import gym_electric_motor as gem
+
+from .stages import BaseController
+from .torque_controller import TorqueController
 
 
 class PISpeedController(gc.GemController):
@@ -17,12 +20,12 @@ class PISpeedController(gc.GemController):
         self._speed_control_stage = value
 
     @property
-    def torque_controller(self) -> gc.TorqueController:
+    def torque_controller(self) -> TorqueController:
         """Subordinated torque controller stage"""
         return self._torque_controller
 
     @torque_controller.setter
-    def torque_controller(self, value: gc.TorqueController):
+    def torque_controller(self, value: TorqueController):
         self._torque_controller = value
 
     @property
@@ -58,7 +61,7 @@ class PISpeedController(gc.GemController):
         self,
         _env: (gem.core.ElectricMotorEnvironment, None) = None,
         env_id: (str, None) = None,
-        torque_controller: (gc.TorqueController, None) = None,
+        torque_controller: (TorqueController, None) = None,
         base_speed_controller: str = "PI",
     ):
         """
@@ -67,7 +70,7 @@ class PISpeedController(gc.GemController):
         Args:
             _env(ElectricMotorEnvironment): The GEM-Environment that the controller shall be created for.
             env_id(str): The corresponding environment-id to specify the concrete environment.
-            torque_controller(gc.TorqueController): The underlying torque control stage
+            torque_controller(TorqueController): The underlying torque control stage
             base_speed_controller(str): Selection which base controller should be used for the speed control stage.
         """
 
@@ -75,7 +78,7 @@ class PISpeedController(gc.GemController):
         self._speed_control_stage = gc.stages.base_controllers.get(base_speed_controller)("SC")
         self._torque_controller = torque_controller
         if torque_controller is None:
-            self._torque_controller = gc.TorqueController()
+            self._torque_controller = TorqueController()
         self._torque_reference = np.array([])
         self._anti_windup_stage = gc.stages.AntiWindup("SC")
         self._clipping_stage = gc.stages.clipping_stages.AbsoluteClippingStage("SC")

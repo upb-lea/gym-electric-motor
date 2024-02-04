@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.interpolate as sp_interpolate
+
 from .foc_operation_point_selection import FieldOrientedControllerOperationPointSelection
 
 

@@ -1,7 +1,9 @@
 import gym_electric_motor as gem
 
+from ..random_component import RandomComponent
 
-class PhysicalSystemWrapper(gem.core.PhysicalSystem, gem.core.RandomComponent):
+
+class PhysicalSystemWrapper(gem.core.PhysicalSystem, RandomComponent):
     """A PhysicalSystemWrapper is a wrapper around the PhysicalSystem of a gem-environment.
 
     It may be used to modify its states and actions. In contrast to gym-wrappers which are put around the whole
@@ -83,7 +85,7 @@ class PhysicalSystemWrapper(gem.core.PhysicalSystem, gem.core.RandomComponent):
                 set_physical_system-method after the initialization.
         """
         gem.core.PhysicalSystem.__init__(self, None, None, (), None)
-        gem.core.RandomComponent.__init__(self)
+        RandomComponent.__init__(self)
         self._physical_system = physical_system
         self._limits = None
         self._nominal_state = None
@@ -105,7 +107,7 @@ class PhysicalSystemWrapper(gem.core.PhysicalSystem, gem.core.RandomComponent):
 
     def seed(self, seed=None):
         # docstring of super class RandomComponent
-        if isinstance(self._physical_system, gem.core.RandomComponent):
+        if isinstance(self._physical_system, RandomComponent):
             self._physical_system.seed(seed)
 
     def __getattr__(self, name):

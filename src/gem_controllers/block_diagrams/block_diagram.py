@@ -1,6 +1,12 @@
 from control_block_diagram import ControllerDiagram
-from control_block_diagram.components import Point, Connection
+from control_block_diagram.components import Connection, Point
+
+import gem_controllers as gc
+
 from .stage_blocks import (
+    eesm_cc,
+    eesm_ops,
+    eesm_output,
     ext_ex_dc_cc,
     ext_ex_dc_ops,
     ext_ex_dc_output,
@@ -11,24 +17,20 @@ from .stage_blocks import (
     pmsm_cc,
     pmsm_ops,
     pmsm_output,
+    pmsm_speed_controller,
     scim_cc,
     scim_ops,
     scim_output,
+    scim_speed_controller,
     series_dc_cc,
     series_dc_ops,
     series_dc_output,
     shunt_dc_cc,
     shunt_dc_ops,
     shunt_dc_output,
-    pmsm_speed_controller,
-    scim_speed_controller,
-    eesm_ops,
-    eesm_cc,
-    eesm_output,
     synrm_cc,
     synrm_output,
 )
-import gem_controllers as gc
 
 
 def build_block_diagram(controller, env_id, save_block_diagram_as):

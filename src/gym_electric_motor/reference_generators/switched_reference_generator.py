@@ -1,8 +1,8 @@
 import numpy as np
 from gymnasium.spaces import Box
 
-from ..random_component import RandomComponent
 from ..core import ReferenceGenerator
+from ..random_component import RandomComponent
 from ..utils import instantiate
 
 

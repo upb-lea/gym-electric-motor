@@ -1,11 +1,26 @@
-from .core import ReferenceGenerator
-from .core import PhysicalSystem
-from .core import RewardFunction
-from .core import ElectricMotorVisualization
-from .core import ConstraintMonitor
-from .core import SimulationEnvironment
-from .random_component import RandomComponent
+import gymnasium
+from gymnasium.envs.registration import register
+from packaging import version
+
+import gym_electric_motor.core
+import gym_electric_motor.envs
+import gym_electric_motor.physical_system_wrappers
+import gym_electric_motor.physical_systems
+import gym_electric_motor.reference_generators
+import gym_electric_motor.reward_functions
+import gym_electric_motor.visualization
+
 from .constraints import Constraint, LimitConstraint
+from .core import (
+    ConstraintMonitor,
+    ElectricMotorEnvironment,
+    ElectricMotorVisualization,
+    PhysicalSystem,
+    ReferenceGenerator,
+    RewardFunction,
+    SimulationEnvironment,
+)
+from .random_component import RandomComponent
 from .utils import register_superclass
 
 register_superclass(RewardFunction)
@@ -13,19 +28,9 @@ register_superclass(ElectricMotorVisualization)
 register_superclass(ReferenceGenerator)
 register_superclass(PhysicalSystem)
 
-import gym_electric_motor.reference_generators
-import gym_electric_motor.reward_functions
-import gym_electric_motor.visualization
-import gym_electric_motor.physical_systems
-import gym_electric_motor.envs
-import gym_electric_motor.physical_system_wrappers
-import gym_electric_motor.core
 
-make = core.ElectricMotorEnvironment.make
+make = ElectricMotorEnvironment.make
 
-from gymnasium.envs.registration import register
-import gymnasium
-from packaging import version
 
 # Add all superclasses of the modules to the registry.
 

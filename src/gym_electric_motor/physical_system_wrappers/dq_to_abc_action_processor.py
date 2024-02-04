@@ -2,7 +2,8 @@ import gymnasium
 import numpy as np
 
 import gym_electric_motor.physical_systems as ps
-from gym_electric_motor.physical_system_wrappers import PhysicalSystemWrapper
+
+from .physical_system_wrapper import PhysicalSystemWrapper
 
 
 class DqToAbcActionProcessor(PhysicalSystemWrapper):

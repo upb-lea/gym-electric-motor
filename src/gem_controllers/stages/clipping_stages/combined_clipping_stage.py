@@ -1,7 +1,9 @@
-import numpy as np
 from typing import Tuple
 
+import numpy as np
+
 import gem_controllers as gc
+
 from . import ClippingStage
 
 

@@ -1,5 +1,6 @@
-from .operation_point_selection import OperationPointSelection
 import numpy as np
+
+from .operation_point_selection import OperationPointSelection
 
 
 class FieldOrientedControllerOperationPointSelection(OperationPointSelection):

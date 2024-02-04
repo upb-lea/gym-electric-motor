@@ -1,4 +1,4 @@
-from control_block_diagram.components import Connection, Circle, Text
+from control_block_diagram.components import Circle, Connection, Text
 from control_block_diagram.predefined_components import EESM, DcConverter
 
 

@@ -1,4 +1,5 @@
 import math
+
 import numpy as np
 
 from .three_phase_motor import ThreePhaseMotor

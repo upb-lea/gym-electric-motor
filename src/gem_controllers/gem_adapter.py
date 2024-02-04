@@ -1,10 +1,12 @@
-import gym_electric_motor as gem
 import numpy as np
 
 import gem_controllers as gc
+import gym_electric_motor as gem
+
+from .gem_controller import GemController
 
 
-class GymElectricMotorAdapter(gc.GemController):
+class GymElectricMotorAdapter(GemController):
     """The GymElectricMotorAdapter wraps a GemController to map the inputs and outputs to the environment."""
 
     @property
@@ -42,19 +44,19 @@ class GymElectricMotorAdapter(gc.GemController):
         self,
         _env: (gem.core.ElectricMotorEnvironment, None) = None,
         env_id: (str, None) = None,
-        controller: (gc.GemController, None) = None,
+        controller: (GemController, None) = None,
     ):
         """
         Args:
             _env(ElectricMotorEnvironment): The GEM-Environment that the controller shall be created for.
             env_id(str): The corresponding environment-id to specify the concrete environment.
-            controller(gc.GemController): The GemController that should be wrapped.
+            controller(GemController): The GemController that should be wrapped.
         """
 
         super().__init__()
         self._input_stage = None
         self._output_stage = None
-        assert isinstance(controller, gc.GemController)
+        assert isinstance(controller, GemController)
         self._controller = controller
         self._input_stage = gc.stages.InputStage()
         action_type = gc.utils.get_action_type(env_id)

@@ -1,7 +1,7 @@
-import gym_electric_motor.core
+import numpy as np
 
 import gem_controllers as gc
-import numpy as np
+import gym_electric_motor.core
 
 
 class GemController:

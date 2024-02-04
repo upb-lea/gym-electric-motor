@@ -1,9 +1,10 @@
 import numpy as np
 
+import gem_controllers as gc
+
+from ... import parameter_reader as reader
 from .base_controller import BaseController
 from .e_base_controller_task import EBaseControllerTask
-from ... import parameter_reader as reader
-import gem_controllers as gc
 
 
 class ThreePointController(BaseController):

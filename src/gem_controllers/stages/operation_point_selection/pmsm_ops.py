@@ -1,6 +1,7 @@
-import gym_electric_motor as gem
 import numpy as np
 import scipy.interpolate as sp_interpolate
+
+import gym_electric_motor as gem
 
 from .foc_operation_point_selection import FieldOrientedControllerOperationPointSelection
 
