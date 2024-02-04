@@ -12,7 +12,7 @@ class VoltageSupply:
     """
 
     #: Minimum and Maximum values of the Supply Voltage.
-    supply_range = ()
+    supply_range = np.empty((1,2))
     # number of output voltages
     voltage_len = 1
 
@@ -24,12 +24,21 @@ class VoltageSupply:
         """
         return self._u_nominal
 
-    def __init__(self, u_nominal):
+    @property
+    def num_supplys(self):
+        """
+        Returns:
+            integer: Number of Voltage Supplys. Default (for non-vector environments) is 1.
+        """
+        return self._num_supplys
+
+    def __init__(self, u_nominal, num_supplys = 1):
         """
         Args:
             u_nominal(float): Nominal voltage of the Voltage Supply.
         """
         self._u_nominal = u_nominal
+        self._num_supplys = num_supplys
 
     def reset(self):
         """
@@ -60,14 +69,15 @@ class IdealVoltageSupply(VoltageSupply):
     Ideal Voltage Supply that supplies with u_nominal independent of the time and the supply current.
     """
 
-    def __init__(self, u_nominal=600.0):
+    def __init__(self, u_nominal=600.0, num_supplys = 1):
         # Docstring of superclass
-        super().__init__(u_nominal)
-        self.supply_range = (u_nominal, u_nominal)
+        super().__init__(u_nominal, num_supplys)
+        tVar = tuple((u_nominal, u_nominal)*2)
+        self.supply_range = 420.0#np.tile(np.array(u_nominal, u_nominal), (self._num_supplys, 1))
 
     def get_voltage(self, *_, **__):
         # Docstring of superclass
-        return [self._u_nominal]
+        return [np.tile(np.array(self._u_nominal), (self._num_supplys,1))]
 
 
 class RCVoltageSupply(VoltageSupply):
@@ -86,20 +96,20 @@ class RCVoltageSupply(VoltageSupply):
             time constant. The resistance R can be considered as a simplified inner resistance model.
         """
         super().__init__(u_nominal)
-        supply_parameter = supply_parameter or {'R': 1, 'C': 4e-3}
+        supply_parameter = supply_parameter or {'R': np.ones(self._num_supplys)*1, 'C': np.ones(self._num_supplys)*4e-3}
         # Supply range is between 0 - capacitor completely unloaded - and u_nominal - capacitor is completely loaded
         assert 'R' in supply_parameter.keys(), "Pass key 'R' for Resistance in your dict"
         assert 'C' in supply_parameter.keys(), "Pass key 'C' for Capacitance in your dict"
         self.supply_range = (0,u_nominal) 
         self._r = supply_parameter['R']
         self._c = supply_parameter['C']
-        if self._r*self._c < 1e-4:
+        if np.any(np.multiply(self._r,self._c) < 1e-4):
             warnings.warn(
                 "The product of R and C might be too small for the correct calculation of the supply voltage. "
                 "You might want to consider R*C as a time constant."
             )
-        self._u_sup = [u_nominal]
-        self._u_0 = u_nominal
+        self._u_sup = [np.ones(self._num_supplys)*u_nominal]
+        self._u_0 = np.ones(self._num_supplys)*u_nominal
         self._solver = EulerSolver()
         self._solver.set_system_equation(self.system_equation)
         

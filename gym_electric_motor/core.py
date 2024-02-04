@@ -96,6 +96,14 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
                 "hold_figure_on_close": True}
 
     @property
+    def num_envs(self):
+        """
+        Returns:
+            num_envs: Number of environmets to simulate
+        """
+        return self._num_envs
+
+    @property
     def physical_system(self):
         """
         Returns:
@@ -176,7 +184,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         return self._visualizations
 
     def __init__(self, physical_system, reference_generator, reward_function, visualization=(), state_filter=None,
-                 callbacks=(), constraints=(), physical_system_wrappers=(), render_mode=None, scale_plots = None, **kwargs):
+                 callbacks=(), constraints=(), physical_system_wrappers=(),num_envs = 1,  render_mode=None, scale_plots = None, **kwargs):
         """
         Setting and initialization of all environments' modules.
 
@@ -250,6 +258,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._callbacks = list(callbacks)
         self._callbacks += list(self._visualizations)
         self._call_callbacks('set_env', self)
+        self._num_envs = num_envs
 
     def make(env_id, *args, **kwargs):
         env = gymnasium.make(env_id, *args, **kwargs)

@@ -1,5 +1,5 @@
 import numpy as np
-from gymnasium.spaces import Discrete, Box, MultiDiscrete
+from gymnasium.spaces import Discrete, Box, MultiDiscrete, Tuple
 
 from ..utils import instantiate
 
@@ -25,6 +25,9 @@ class PowerElectronicConverter:
     #: Default action that is taken after a reset.
     _reset_action = None
 
+    #: number of converters, equal to number of environments
+    _num_converters = None
+
     @property
     def tau(self):
         """Float: Time of one simulation step in seconds."""
@@ -34,7 +37,7 @@ class PowerElectronicConverter:
     def tau(self, value):
         self._tau = float(value)
 
-    def __init__(self, tau, interlocking_time=0.0):
+    def __init__(self, tau, interlocking_time=0.0, num_convertes = 1):
         """
        :param tau: Discrete time step of the system in seconds
        :param interlocking_time: Interlocking time of the transistors in seconds
@@ -43,6 +46,7 @@ class PowerElectronicConverter:
         self._interlocking_time = interlocking_time
         self._action_start_time = 0.0
         self._current_action = self._reset_action
+        self._num_converters = num_convertes
 
     def reset(self):
         """
@@ -110,7 +114,7 @@ class PowerElectronicConverter:
              list(float): Switching times.
         """
         self._switching_pattern = [action]
-        return [self._action_start_time + self._tau]
+        return [self._action_start_time + np.ones(self._num_converters)*self._tau]
 
 
 class NoConverter(PowerElectronicConverter):
@@ -254,10 +258,14 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
         | voltages: Box(0, 1, shape=(1,))
         | currents: Box(-1, 1, shape=(1,))
     """
-
+    
     voltages = Box(0, 1, shape=(1,), dtype=np.float64)
-    currents = Box(-1, 1, shape=(1,), dtype=np.float64)
+    currents = Box(-1, 1, shape=(1,), dtype=np.float64) 
     action_space = Discrete(3)
+
+    #voltages = tuple(Box(0, 1, shape=(1,), dtype=np.float64) for _ in range(self._num_converters))
+    #currents = tuple(Box(-1, 1, shape=(1,), dtype=np.float64)  for _ in range(self._num_converters))
+    #action_space = tuple(Discrete(3) for _ in range(self._num_converters))
 
     def convert(self, i_out, t):
         # Docstring in base class
@@ -291,17 +299,18 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
 
     def _set_switching_pattern(self, action):
         # Docstring in base class
-        if (
-                action == 0
-                or self._switching_state == 0
-                or action == self._switching_state
-                or self._interlocking_time == 0
-        ):
-            self._switching_pattern = [action]
-            return [self._action_start_time + self._tau]
-        else:
-            self._switching_pattern = [0, action]
-            return [self._action_start_time + self._interlocking_time, self._action_start_time + self._tau]
+        for i in range(self._num_converters):
+            if (
+                    action[i] == 0
+                    or self._switching_state[i] == 0
+                    or action[i] == self._switching_state[i]
+                    or self._interlocking_time[i] == 0
+            ):
+                self._switching_pattern[i] = [action[i]]
+                return [self._action_start_time + self._tau] # raus ziehen
+            else:
+                self._switching_pattern[i] = [0, action[i]]
+                return [self._action_start_time + self._interlocking_time, self._action_start_time + self._tau]
 
 
 class FiniteFourQuadrantConverter(FiniteConverter):

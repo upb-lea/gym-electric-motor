@@ -86,7 +86,7 @@ class FiniteCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
     def __init__(self, supply=None, converter=None, motor=None, load=None, ode_solver=None,
                  reward_function=None, reference_generator=None, visualization=None, state_filter=None, callbacks=(),
                  constraints=(SquaredConstraint(('i_sq', 'i_sd')),), calc_jacobian=True, tau=1e-5,
-                 physical_system_wrappers=(), **kwargs):
+                 physical_system_wrappers=(), num_envs = 1, **kwargs):
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -129,7 +129,7 @@ class FiniteCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
         )
 
         physical_system = SynchronousMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),#u_nominal=420.0, num_supplys = num_envs)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteB6BridgeConverter, dict()),
             motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
