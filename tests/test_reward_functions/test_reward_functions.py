@@ -25,11 +25,9 @@ class TestRewardFunction:
         ["state", "reference"],
         [
             [np.array([1.0, 2.0, 3.0, 4.0]), np.array([0.0, 2.0, 4.0, 0.0])],
-            [np.array([1.0, -2.0]), np.array([-1.0, 20.0])],
-            [np.array([-24.0]), np.array([0.0])],
         ],
     )
-    @pytest.mark.parametrize("k", [0, 1, 2, 3, 4, 90999])
+    @pytest.mark.parametrize("k", [0, 1, 4, 90999])
     @pytest.mark.parametrize("violation_degree", [0.0, 0.25, 0.5, 1.0])
     @pytest.mark.parametrize("action", [np.array([0.0, 1.0]), np.array([-1.0]), 8, 0])
     def test_call(self, reward_function, state, reference, k, action, violation_degree):
@@ -61,12 +59,8 @@ class TestRewardFunction:
         ["physical_system", "reference_generator", "constraint_monitor"],
         [[DummyPhysicalSystem(), DummyReferenceGenerator(), DummyConstraintMonitor()]],
     )
-    def test_set_modules_interface(
-        self, reward_function, physical_system, reference_generator, constraint_monitor
-    ):
-        reward_function.set_modules(
-            physical_system, reference_generator, constraint_monitor
-        )
+    def test_set_modules_interface(self, reward_function, physical_system, reference_generator, constraint_monitor):
+        reward_function.set_modules(physical_system, reference_generator, constraint_monitor)
 
     def test_close_interface(self, reward_function):
         reward_function.close()

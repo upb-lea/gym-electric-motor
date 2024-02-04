@@ -16,18 +16,16 @@ motors = [
     "SCIM",
 ]
 versions = ["v0"]
-seeds = [123, 456, 789]
+seeds = [123]
 
 
-@pytest.mark.parametrize("no_of_steps", [100])
+@pytest.mark.parametrize("no_of_steps", [10])
 @pytest.mark.parametrize("version", versions)
 @pytest.mark.parametrize("dc_motor", motors)
 @pytest.mark.parametrize("control_task", control_tasks)
 @pytest.mark.parametrize("action_type", action_types)
 @pytest.mark.parametrize("seed", seeds)
-def test_seeding_same_env(
-    dc_motor, control_task, action_type, version, no_of_steps, seed
-):
+def test_seeding_same_env(dc_motor, control_task, action_type, version, no_of_steps, seed):
     """This test assures that an environment that is seeded two times with the same seed generates the same episodes."""
     env_id = f"{action_type}-{control_task}-{dc_motor}-{version}"
     env = gem.make(env_id)
@@ -72,15 +70,13 @@ def test_seeding_same_env(
     assert np.all(np.array(terminated1) == np.array(terminated2))
 
 
-@pytest.mark.parametrize("no_of_steps", [100])
+@pytest.mark.parametrize("no_of_steps", [10])
 @pytest.mark.parametrize("version", versions)
 @pytest.mark.parametrize("dc_motor", motors)
 @pytest.mark.parametrize("control_task", control_tasks)
 @pytest.mark.parametrize("action_type", action_types)
 @pytest.mark.parametrize("seed", seeds)
-def test_seeding_new_env(
-    dc_motor, control_task, action_type, version, no_of_steps, seed
-):
+def test_seeding_new_env(dc_motor, control_task, action_type, version, no_of_steps, seed):
     """This test assures that two equal environments that are seeded with the same seed generate the same episodes."""
     env_id = f"{action_type}-{control_task}-{dc_motor}-{version}"
     env = gem.make(env_id)

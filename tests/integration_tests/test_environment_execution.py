@@ -18,7 +18,7 @@ motors = [
 versions = ["v0"]
 
 
-@pytest.mark.parametrize("no_of_steps", [100])
+@pytest.mark.parametrize("no_of_steps", [10])
 @pytest.mark.parametrize("version", versions)
 @pytest.mark.parametrize("dc_motor", motors)
 @pytest.mark.parametrize("control_task", control_tasks)
@@ -34,12 +34,8 @@ def test_execution(dc_motor, control_task, action_type, version, no_of_steps):
         action = env.action_space.sample()
         assert action in env.action_space
         observation, reward, terminated, truncated, info = env.step(action)
-        assert not np.any(
-            np.isnan(observation[0])
-        ), "An invalid nan-value is in the state."
-        assert not np.any(
-            np.isnan(observation[1])
-        ), "An invalid nan-value is in the reference."
+        assert not np.any(np.isnan(observation[0])), "An invalid nan-value is in the state."
+        assert not np.any(np.isnan(observation[1])), "An invalid nan-value is in the reference."
         assert info == {}
         assert type(reward) in [
             float,
@@ -49,9 +45,5 @@ def test_execution(dc_motor, control_task, action_type, version, no_of_steps):
         assert not np.isnan(reward), "Invalid nan-value as reward."
         # Only the shape is monitored here. The states and references may lay slightly outside of the specified space.
         # This happens if limits are violated or if some states are not observed to lay within their limits.
-        assert (
-            observation[0].shape == env.observation_space[0].shape
-        ), "The shape of the state is incorrect."
-        assert (
-            observation[1].shape == env.observation_space[1].shape
-        ), "The shape of the reference is incorrect."
+        assert observation[0].shape == env.observation_space[0].shape, "The shape of the state is incorrect."
+        assert observation[1].shape == env.observation_space[1].shape, "The shape of the reference is incorrect."

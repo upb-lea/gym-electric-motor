@@ -2,19 +2,19 @@
 name = "gym_eletric_motor"
 version = "2.1.0"
 authors = [
-    "Arne Traue",
-    "Gerrit Book",
-    "Praneeth Balakrishna",
-    "Pascal Peters",
-    "Pramod Manjunatha",
-    "Darius Jakobeit",
-    "Felix Book",
-    "Max Schenke",
-    "Wilhelm Kirchgässner",
-    "Oliver Wallscheid",
-    "Barnabas Haucke-Korber",
-    "Stefan Arndt",
-    "Marius Köhler",
+    { name = "Arne Traue" },
+    { name = "Gerrit Book" },
+    { name = "Praneeth Balakrishna" },
+    { name = "Pascal Peters" },
+    { name = "Pramod Manjunatha" },
+    { name = "Darius Jakobeit" },
+    { name = "Felix Book" },
+    { name = "Max Schenke" },
+    { name = "Wilhelm Kirchgässner" },
+    { name = "Oliver Wallscheid" },
+    { name = "Barnabas Haucke-Korber" },
+    { name = "Stefan Arndt" },
+    { name = "Marius Köhler" },
 ]
 description = "A Farama Gymnasium environment for electric motor control."
 readme = "README.md"
@@ -33,5 +33,9 @@ Issues = "https://github.com/upb-lea/gym-electric-motor/issues"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["/src/gym_electric_motor", "/src/gem_controllers"]
+
 [tool.ruff]
+src = ["src"]
 line-length = 120
