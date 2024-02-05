@@ -5,8 +5,6 @@ from ..testing_utils import (
     DummyOdeSolver,
     DummyVoltageSupply,
     DummyElectricMotor,
-    mock_instantiate,
-    instantiate_dict,
 )
 from gym_electric_motor.physical_systems import (
     physical_systems as ps,

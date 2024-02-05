@@ -8,8 +8,6 @@ from tests.testing_utils import (
     DummyCallback,
     DummyConstraintMonitor,
     DummyConstraint,
-    mock_instantiate,
-    instantiate_dict,
 )
 from gymnasium.spaces import Tuple, Box
 import gym_electric_motor
