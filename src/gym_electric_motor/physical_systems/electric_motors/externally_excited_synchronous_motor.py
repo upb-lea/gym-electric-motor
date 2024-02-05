@@ -209,7 +209,7 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         else:
             i_n = self.nominal_values["i"]
             _p = mp["l_m"] * i_n / (2 * (mp["l_d"] - mp["l_q"]))
-            _q = -i_n**2 / 2
+            _q = -(i_n**2) / 2
             if mp["l_d"] < mp["l_q"]:
                 i_d_opt = -_p / 2 - np.sqrt((_p / 2) ** 2 - _q)
             else:
