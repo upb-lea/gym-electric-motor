@@ -36,6 +36,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["/src/gym_electric_motor", "/src/gem_controllers"]
 
+[tool.hatch.build.targets.sdist]
+packages = ["/src/gym_electric_motor", "/src/gem_controllers"]
+
 [tool.ruff]
 src = ["src"]
 line-length = 120
