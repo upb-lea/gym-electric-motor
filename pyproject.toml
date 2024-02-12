@@ -42,7 +42,12 @@ build-backend = "hatchling.build"
 packages = ["/src/gym_electric_motor", "/src/gem_controllers"]
 
 [tool.hatch.build.targets.sdist]
-packages = ["/src/gym_electric_motor", "/src/gem_controllers"]
+packages = [
+    "/src/gym_electric_motor",
+    "/src/gem_controllers",
+    "/examples/classic_controllers",
+    "/tests",
+]
 
 [tool.ruff]
 src = ["src"]

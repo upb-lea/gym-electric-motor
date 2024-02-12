@@ -1,12 +1,17 @@
-from classic_controllers import Controller
-from externally_referenced_state_plot import ExternallyReferencedStatePlot
+import os
+import sys
 
-# from gem_controllers.gem_controller import GemController
 import gym_electric_motor as gem
+from gem_controllers import GemController
 from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
+from gym_electric_motor.observers import StateObserver
 from gym_electric_motor.reference_generators import SinusoidalReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard, RenderMode
-from gym_electric_motor.visualization.motor_dashboard_plots import StatePlot
+
+path = os.getcwd() + "/examples/classic_controllers"
+sys.path.append(path)
+from classic_controllers import Controller  # noqa: E402
+from externally_referenced_state_plot import ExternallyReferencedStatePlot  # noqa: E402
 
 if __name__ == "__main__":
     """
@@ -31,6 +36,7 @@ if __name__ == "__main__":
 
     # definition of the plotted variables
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in motor.states()]
+
     # definition of the reference generator
 
     ref_generator = SinusoidalReferenceGenerator(
@@ -39,7 +45,7 @@ if __name__ == "__main__":
         offset_range=(0, 0),
         episode_lengths=(10001, 10001),
     )
-    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots, render_mode=RenderMode.Figure)
+    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots, render_mode=RenderMode.FigureOnce)
     # initialize the gym-electric-motor environment
     env = gem.make(
         motor.env_id(),
@@ -59,7 +65,6 @@ if __name__ == "__main__":
             a (optional)                    tuning parameter of the symmetrical optimum (default: 4)
     
     """
-
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
     # controller = GemController.make(env, env_id=motor.env_id())
 
@@ -68,6 +73,7 @@ if __name__ == "__main__":
     # simulate the environment
     for i in range(10001):
         action = controller.control(state, reference)
+        print(f"{reference}")
         # if i % 100 == 0:
         #   (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
         # else:
@@ -82,5 +88,4 @@ if __name__ == "__main__":
 
     env.close()
 
-    # motor_dashboard.save_to_file(filename="integration_test")
     motor_dashboard.show_and_hold()

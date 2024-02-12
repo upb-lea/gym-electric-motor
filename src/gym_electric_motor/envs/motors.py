@@ -55,5 +55,5 @@ class Motor:
             + "-v0"
         )
 
-    def state_names(self) -> list[str]:
+    def states(self) -> list[str]:
         return self.motor_type.states
