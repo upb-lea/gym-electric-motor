@@ -1,5 +1,5 @@
 [project]
-name = "gym_eletric_motor"
+name = "gym_electric_motor"
 version = "2.1.0"
 authors = [
     { name = "Arne Traue" },
