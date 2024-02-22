@@ -37,7 +37,7 @@ class PowerElectronicConverter:
     def tau(self, value):
         self._tau = float(value)
 
-    def __init__(self, tau, interlocking_time=0.0, num_convertes = 1):
+    def __init__(self, tau, interlocking_time=0.0, num_converters = 1):
         """
        :param tau: Discrete time step of the system in seconds
        :param interlocking_time: Interlocking time of the transistors in seconds
@@ -46,7 +46,7 @@ class PowerElectronicConverter:
         self._interlocking_time = interlocking_time
         self._action_start_time = 0.0
         self._current_action = self._reset_action
-        self._num_converters = num_convertes
+        self._num_converters = num_converters
 
     def reset(self):
         """
@@ -263,9 +263,13 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
     currents = Box(-1, 1, shape=(1,), dtype=np.float64) 
     action_space = Discrete(3)
 
-    #voltages = tuple(Box(0, 1, shape=(1,), dtype=np.float64) for _ in range(self._num_converters))
-    #currents = tuple(Box(-1, 1, shape=(1,), dtype=np.float64)  for _ in range(self._num_converters))
-    #action_space = tuple(Discrete(3) for _ in range(self._num_converters))
+    def __init__(self, **kwargs):
+
+        super().__init__(**kwargs)
+
+        self.voltages = [Box(0, 1, shape=(1,), dtype=np.float64)] * self._num_converters
+        self.currents = [Box(-1, 1, shape=(1,), dtype=np.float64)]  * self._num_converters
+        self.action_space = [Discrete(3)] * self._num_converters
 
     def convert(self, i_out, t):
         # Docstring in base class
@@ -790,6 +794,10 @@ class FiniteB6BridgeConverter(FiniteConverter):
             FiniteTwoQuadrantConverter(tau=tau, **kwargs),
             FiniteTwoQuadrantConverter(tau=tau, **kwargs),
         ]
+
+        self.voltages = tuple(Box(0, 1, shape=(3,), dtype=np.float64) for _ in range(self._num_converters))
+        self.currents = tuple(Box(-1, 1, shape=(3,), dtype=np.float64)  for _ in range(self._num_converters))
+        self.action_space = tuple(Discrete(8) for _ in range(self._num_converters))
 
     def reset(self):
         # Docstring in base class

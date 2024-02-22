@@ -106,20 +106,42 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     def _update_model(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        self._model_constants = np.array([
-            #                 omega,        i_d,        i_q, u_d, u_q,          omega * i_d,          omega * i_q
-            [                     0, -mp['r_s'],          0,   1,   0,                    0, mp['l_q'] * mp['p']],
-            [-mp['psi_p'] * mp['p'],          0, -mp['r_s'],   0,   1, -mp['l_d'] * mp['p'],                   0],
-            [               mp['p'],          0,          0,   0,   0,                    0,                   0],
-        ])
-
-        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
-        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
+        if self._num_motors == 1: 
+            self._model_constants = np.array([
+                #                 omega,        i_d,        i_q, u_d, u_q,          omega * i_d,          omega * i_q
+                [                     0, -mp['r_s'],          0,   1,   0,                    0, mp['l_q'] * mp['p']],
+                [-mp['psi_p'] * mp['p'],          0, -mp['r_s'],   0,   1, -mp['l_d'] * mp['p'],                   0],
+                [               mp['p'],          0,          0,   0,   0,                    0,                   0],
+            ])
+        else:
+            for i in range(self._num_motors):
+                if i == 0:
+                    print(type((-mp['r_s'][i][0])))
+                    self._model_constants = np.array([
+                        #                 omega,        i_d,        i_q, u_d, u_q,          omega * i_d,          omega * i_q
+                        [                           0, -mp['r_s'][i][0],             0,   1,   0,                          0, mp['l_q'][i][0] * mp['p'][i][0]],
+                        [-mp['psi_p'][i][0] * mp['p'][i][0],             0, -mp['r_s'][i][0],   0,   1, -mp['l_d'][i][0] * mp['p'][i][0],                         0],
+                        [                  mp['p'][i][0],             0,             0,   0,   0,                          0,                         0],
+                    ])
+                    self._model_constants = np.expand_dims(self._model_constants, axis = 0)
+                else:
+                    model_constants_buffer = np.array([
+                        #                 omega,        i_d,        i_q, u_d, u_q,          omega * i_d,          omega * i_q
+                        [                     0, -mp['r_s'][i][0],          0,   1,   0,                    0, mp['l_q'][i][0] * mp['p'][i][0]],
+                        [-mp['psi_p'][i][0] * mp['p'][i][0],          0, -mp['r_s'][i][0],   0,   1, -mp['l_d'][i][0] * mp['p'][i][0],                   0],
+                        [               mp['p'][i][0],          0,          0,   0,   0,                    0,                   0],
+                    ]) 
+                    model_constants_buffer = np.expand_dims(model_constants_buffer, axis = 0)
+                    self._model_constants = np.concatenate((self._model_constants, model_constants_buffer),   axis = 0 )
+        print(self._model_constants[:, self.I_SD_IDX,:])
+        print(mp['l_d']) 
+        self._model_constants[:, self.I_SD_IDX,:] = self._model_constants[:,self.I_SD_IDX,:] / mp['l_d']
+        self._model_constants[:,self.I_SQ_IDX,:] = self._model_constants[:,self.I_SQ_IDX,:] / mp['l_q']
 
     def _torque_limit(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        if mp['l_d'] == mp['l_q']:
+        if np.all(mp['l_d']) == np.all(mp['l_q']):
             return self.torque([0, self._limits['i_sq'], 0])
         else:
             i_n = self.nominal_values['i']

@@ -129,9 +129,9 @@ class FiniteCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
         )
 
         physical_system = SynchronousMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),#u_nominal=420.0, num_supplys = num_envs)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteB6BridgeConverter, dict()),
-            motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict()),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0, num_supplys = num_envs)),
+            converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteB6BridgeConverter, dict(num_converters = num_envs)),
+            motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict(num_motors = num_envs)),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
@@ -155,5 +155,5 @@ class FiniteCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
         super().__init__(
             physical_system=physical_system, reference_generator=reference_generator, reward_function=reward_function,
             constraints=constraints, visualization=visualization, state_filter=state_filter, callbacks=callbacks,
-            physical_system_wrappers=physical_system_wrappers, **kwargs
+            physical_system_wrappers=physical_system_wrappers, num_envs = num_envs, **kwargs
         )

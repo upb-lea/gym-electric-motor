@@ -69,15 +69,24 @@ class IdealVoltageSupply(VoltageSupply):
     Ideal Voltage Supply that supplies with u_nominal independent of the time and the supply current.
     """
 
-    def __init__(self, u_nominal=600.0, num_supplys = 1):
+    def __init__(self, u_nominal=600.0, num_supplys = 1): #Bei inkongruenz zw. num_supplys und werten in u_nominal fehler schmeißen
         # Docstring of superclass
         super().__init__(u_nominal, num_supplys)
-        tVar = tuple((u_nominal, u_nominal)*2)
-        self.supply_range = 420.0#np.tile(np.array(u_nominal, u_nominal), (self._num_supplys, 1))
+
+        assert isinstance(u_nominal, (float, np.array)), "u_nominal is neither floar nor np.array, as is required!" 
+
+        if isinstance(u_nominal, float):
+            self.supply_range = np.tile(np.array([u_nominal, u_nominal]), (self._num_supplys, 1))
+            self.voltage = [np.tile(np.array(self._u_nominal), (self._num_supplys,1))]
+        elif isinstance(u_nominal, np.array()):
+            assert u_nominal.size == num_supplys, "Length of u_nominal-vector differs from num_supplys!"
+            self.supply_range = np.tile(u_nominal, (1, 2))
+            self.voltage = u_nominal
+
 
     def get_voltage(self, *_, **__):
         # Docstring of superclass
-        return [np.tile(np.array(self._u_nominal), (self._num_supplys,1))]
+        return self.voltage 
 
 
 class RCVoltageSupply(VoltageSupply):

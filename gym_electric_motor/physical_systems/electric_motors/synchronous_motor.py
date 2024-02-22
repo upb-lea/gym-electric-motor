@@ -95,12 +95,12 @@ class SynchronousMotor(ThreePhaseMotor):
 
     _initializer = None
 
-    def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None):
+    def __init__(self, motor_parameter=None, nominal_values=None, limit_values=None, motor_initializer=None, num_motors = 1):
         # Docstring of superclass
         nominal_values = nominal_values or {}
         limit_values = limit_values or {}
         super().__init__(motor_parameter, nominal_values,
-                         limit_values, motor_initializer)
+                         limit_values, motor_initializer, limit_values, num_motors)
         self._update_model()
         self._update_limits()
 
@@ -163,7 +163,7 @@ class SynchronousMotor(ThreePhaseMotor):
 
     def _update_limits(self):
         # Docstring of superclass
-
+        
         voltage_limit = 0.5 * self._limits['u']
         voltage_nominal = 0.5 * self._nominal_values['u']
 
@@ -172,8 +172,14 @@ class SynchronousMotor(ThreePhaseMotor):
         for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
             limits_agenda[u] = voltage_limit
             nominal_agenda[u] = voltage_nominal
-            limits_agenda[i] = self._limits.get('i', None) \
-                or self._limits[u] / self._motor_parameter['r_s']
-            nominal_agenda[i] = self._nominal_values.get('i', None) \
-                or self._nominal_values[u] / self._motor_parameter['r_s']
+
+            if self._num_motors == 1:
+                limits_agenda[i] = self._limits.get('i', None) \
+                    or self._limits[u] / self._motor_parameter['r_s']
+                nominal_agenda[i] = self._nominal_values.get('i', None) \
+                    or self._nominal_values[u] / self._motor_parameter['r_s']
+            else:
+                limits_agenda[i] = np.where(self._limits.get('i', None) is None, self._limits.get('i', None), self._limits.get('u', None) / self._motor_parameter['r_s'])
+                nominal_agenda[i] = np.where(self._nominal_values.get('i', None) is None, self._nominal_values.get('i', None), self._nominal_values.get('u', None) / self._motor_parameter['r_s'])
+            
         super()._update_limits(limits_agenda, nominal_agenda)
