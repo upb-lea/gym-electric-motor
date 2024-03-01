@@ -70,10 +70,11 @@ if __name__ == "__main__":
 
     (state, reference), _ = env.reset(seed=1337)
     print("state_names: ", motor.states())
+
+    state_observer = StateObserver(env)
     # simulate the environment
-    for i in range(10001):
+    for i in range(100):
         action = controller.control(state, reference)
-        print(f"{reference}")
         # if i % 100 == 0:
         #   (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
         # else:

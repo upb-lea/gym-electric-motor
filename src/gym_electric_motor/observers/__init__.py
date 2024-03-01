@@ -1,1 +1,1 @@
-from .state_observer import StateObserver
+from .observer import StateObserver

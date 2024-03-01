@@ -17,6 +17,7 @@ Each ElectricMotorEnvironment contains the five following modules:
     - Visualization of the PhysicalSystems state, reference and reward for the user.
 
 """
+
 import datetime
 import os
 from dataclasses import dataclass
@@ -108,8 +109,10 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
 
     sim = SimulationEnvironment()
     workspace = Workspace()
-
     env_id = None
+    current_state = None
+    current_reference = None
+    current_next_reference = None
 
     @property
     def physical_system(self):
@@ -339,11 +342,15 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         self._call_callbacks("on_step_begin", self.physical_system.k, action)
 
         state = self._physical_system.simulate(action)
+        self.current_state = state
         reference = self.reference_generator.get_reference(state)
+
         violation_degree = self._constraint_monitor.check_constraints(state)
         reward = self._reward_function.reward(state, reference, self._physical_system.k, action, violation_degree)
         self._terminated = violation_degree >= 1.0
         ref_next = self.reference_generator.get_reference_observation(state)
+        self.current_state + [ref_next]
+
         self._call_callbacks(
             "on_step_end",
             self.physical_system.k,
