@@ -1,4 +1,4 @@
-from .continuous_controller import PController, IController
+from .continuous_controller import IController, PController
 
 
 class PIController(PController, IController):
@@ -8,10 +8,8 @@ class PIController(PController, IController):
     the I-component of the controller accordingly.
     """
 
-    def __init__(
-        self, environment, p_gain=5, i_gain=5, param_dict={}, **controller_kwargs
-    ):
-        self.tau = environment.physical_system.tau
+    def __init__(self, environment, p_gain=5, i_gain=5, param_dict={}, **controller_kwargs):
+        self.tau = environment.unwrapped.physical_system.tau
 
         p_gain = param_dict.get("p_gain", p_gain)
         i_gain = param_dict.get("i_gain", i_gain)
@@ -19,9 +17,7 @@ class PIController(PController, IController):
         IController.__init__(self, i_gain)
 
     def control(self, state, reference):
-        return self.p_gain * (reference - state) + self.i_gain * (
-            self.integrated + (reference - state) * self.tau
-        )
+        return self.p_gain * (reference - state) + self.i_gain * (self.integrated + (reference - state) * self.tau)
 
     def reset(self):
         self.integrated = 0

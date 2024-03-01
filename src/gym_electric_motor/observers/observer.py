@@ -30,8 +30,8 @@ class StateObserver(Observer):
         self.fuse_state_and_next_reference()
 
     def fuse_state_and_next_reference(self):
-        state_names = self.env.state_names
-        reference_names = self.env.reference_names
+        state_names = self.env.unwrapped.state_names
+        reference_names = self.env.unwrapped.reference_names
         for ref_name in reference_names:
             state_names.append(ref_name + "_ref")
         self.state_names = state_names

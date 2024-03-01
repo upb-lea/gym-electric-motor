@@ -28,11 +28,11 @@ make = ElectricMotorEnvironment.make
 # Add all superclasses of the modules to the registry.
 
 # Deactivate the order enforce wrapper that is put around a created env per default from gymnasium-version 0.21.0 onwards
-registration_kwargs = (
-    dict(order_enforce=False) if version.parse(gymnasium.__version__) >= version.parse("0.21.0") else dict()
-)
-registration_kwargs["disable_env_checker"] = True
-# registration_kwargs = dict()
+# registration_kwargs = (
+#    dict(order_enforce=False) if version.parse(gymnasium.__version__) >= version.parse("0.21.0") else dict()
+# )
+# registration_kwargs["disable_env_checker"] = True
+registration_kwargs = dict()
 
 envs_path = "gym_electric_motor.envs:"
 
