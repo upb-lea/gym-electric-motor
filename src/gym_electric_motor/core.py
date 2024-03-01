@@ -297,7 +297,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             func = getattr(callback, func_name)
             func(*args)
 
-    def reset(self, seed=None, options=None, *_, **__):
+    def reset(self, seed=None, *_, **__):
         """
         Reset of the environment and all its modules to an initial state.
 
@@ -349,7 +349,8 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         reward = self._reward_function.reward(state, reference, self._physical_system.k, action, violation_degree)
         self._terminated = violation_degree >= 1.0
         ref_next = self.reference_generator.get_reference_observation(state)
-        self.current_state + [ref_next]
+
+        self.current_observation = (state, ref_next)
 
         self._call_callbacks(
             "on_step_end",
