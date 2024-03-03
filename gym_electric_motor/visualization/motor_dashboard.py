@@ -155,21 +155,37 @@ class MotorDashboard(ElectricMotorVisualization):
         if self._state_plots == 'all':
             self._state_plots = state_names
         if self._action_plots == 'all':
-            if type(env.action_space) is gymnasium.spaces.Discrete:
-                self._action_plots = [0]
-            elif type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.MultiDiscrete):
-                self._action_plots = list(range(env.action_space.shape[0]))
+            if env.physical_system.electrical_motor.num_motors == 1:
+                if type(env.action_space) is gymnasium.spaces.Discrete:
+                    self._action_plots = [0]
+                elif type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.MultiDiscrete):
+                    self._action_plots = list(range(env.action_space.shape[0]))
+            else:
+                for space in env.action_space:    
+                    if type(space) is gymnasium.spaces.Discrete:
+                        self._action_plots = [0]
+                    elif type(space) in (gymnasium.spaces.Box, gymnasium.spaces.MultiDiscrete):
+                        self._action_plots = list(range(env.action_space.shape[0]))
 
         self._time_plots = []
 
         if len(self._state_plots) > 0:
             assert all(state in state_names for state in self._state_plots)
-            for state in self._state_plots:
-                self._time_plots.append(StatePlot(state))
+            if env.physical_system.electrical_motor.num_motors == 1:
+                for state in self._state_plots:
+                    self._time_plots.append(StatePlot(state))
+            else:
+                for state in self._state_plots:
+                    self._time_plots.append(StatePlot(state))
 
         if len(self._action_plots) > 0:
-            assert type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.Discrete, gymnasium.spaces.MultiDiscrete), \
+            if env.physical_system.electrical_motor.num_motors == 1:
+                assert type(env.action_space) in (gymnasium.spaces.Box, gymnasium.spaces.Discrete, gymnasium.spaces.MultiDiscrete), \
                 f'Action space of type {type(env.action_space)} not supported for plotting.'
+            else:
+                for space in env.action_space:
+                    assert type(space) in (gymnasium.spaces.Box, gymnasium.spaces.Discrete, gymnasium.spaces.MultiDiscrete), \
+                        f'Action space of type {type(env.action_space)} not supported for plotting.'
             for action in self._action_plots:
                 ap = ActionPlot(action)
                 self._time_plots.append(ap)

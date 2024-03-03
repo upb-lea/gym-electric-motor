@@ -113,6 +113,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
                 [-mp['psi_p'] * mp['p'],          0, -mp['r_s'],   0,   1, -mp['l_d'] * mp['p'],                   0],
                 [               mp['p'],          0,          0,   0,   0,                    0,                   0],
             ])
+            self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
+            self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
         else:
             for i in range(self._num_motors):
                 if i == 0:
@@ -133,10 +135,8 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
                     ]) 
                     model_constants_buffer = np.expand_dims(model_constants_buffer, axis = 0)
                     self._model_constants = np.concatenate((self._model_constants, model_constants_buffer),   axis = 0 )
-        print(self._model_constants[:, self.I_SD_IDX,:])
-        print(mp['l_d']) 
-        self._model_constants[:, self.I_SD_IDX,:] = self._model_constants[:,self.I_SD_IDX,:] / mp['l_d']
-        self._model_constants[:,self.I_SQ_IDX,:] = self._model_constants[:,self.I_SQ_IDX,:] / mp['l_q']
+            self._model_constants[:, self.I_SD_IDX,:] = self._model_constants[:,self.I_SD_IDX,:] / mp['l_d']
+            self._model_constants[:,self.I_SQ_IDX,:] = self._model_constants[:,self.I_SQ_IDX,:] / mp['l_q']
 
     def _torque_limit(self):
         # Docstring of superclass

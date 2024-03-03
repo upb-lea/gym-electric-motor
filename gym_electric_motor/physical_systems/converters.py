@@ -266,10 +266,14 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
     def __init__(self, **kwargs):
 
         super().__init__(**kwargs)
-
-        self.voltages = [Box(0, 1, shape=(1,), dtype=np.float64)] * self._num_converters
-        self.currents = [Box(-1, 1, shape=(1,), dtype=np.float64)]  * self._num_converters
-        self.action_space = [Discrete(3)] * self._num_converters
+        if self._num_converters == 1:
+            self.voltages = Box(0, 1, shape=(1,), dtype=np.float64)
+            self.currents = Box(-1, 1, shape=(1,), dtype=np.float64)
+            self.action_space = Discrete(3)
+        else:
+            self.voltages = [Box(0, 1, shape=(1,), dtype=np.float64)] * self._num_converters
+            self.currents = [Box(-1, 1, shape=(1,), dtype=np.float64)]  * self._num_converters
+            self.action_space = [Discrete(3)] * self._num_converters
 
     def convert(self, i_out, t):
         # Docstring in base class
@@ -303,18 +307,31 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
 
     def _set_switching_pattern(self, action):
         # Docstring in base class
-        for i in range(self._num_converters):
+        if self._num_converters == 1:
             if (
-                    action[i] == 0
-                    or self._switching_state[i] == 0
-                    or action[i] == self._switching_state[i]
-                    or self._interlocking_time[i] == 0
+                action == 0
+                or self._switching_state == 0
+                or action == self._switching_state
+                or self._interlocking_time == 0
             ):
-                self._switching_pattern[i] = [action[i]]
-                return [self._action_start_time + self._tau] # raus ziehen
+                self._switching_pattern = [action]
+                return [self._action_start_time + self._tau]
             else:
-                self._switching_pattern[i] = [0, action[i]]
+                self._switching_pattern = [0, action]
                 return [self._action_start_time + self._interlocking_time, self._action_start_time + self._tau]
+        else:
+            for i in range(self._num_converters):
+                if (
+                        action[i] == 0
+                        or self._switching_state[i] == 0
+                        or action[i] == self._switching_state[i]
+                        or self._interlocking_time[i] == 0
+                ):
+                    self._switching_pattern[i] = [action[i]]
+                    return [self._action_start_time + self._tau] # raus ziehen
+                else:
+                    self._switching_pattern[i] = [0, action[i]]
+                    return [self._action_start_time + self._interlocking_time, self._action_start_time + self._tau]
 
 
 class FiniteFourQuadrantConverter(FiniteConverter):
@@ -794,11 +811,15 @@ class FiniteB6BridgeConverter(FiniteConverter):
             FiniteTwoQuadrantConverter(tau=tau, **kwargs),
             FiniteTwoQuadrantConverter(tau=tau, **kwargs),
         ]
-
-        self.voltages = tuple(Box(0, 1, shape=(3,), dtype=np.float64) for _ in range(self._num_converters))
-        self.currents = tuple(Box(-1, 1, shape=(3,), dtype=np.float64)  for _ in range(self._num_converters))
-        self.action_space = tuple(Discrete(8) for _ in range(self._num_converters))
-
+        if self._num_converters == 1:
+            self.voltages = Box(0, 1, shape=(3,), dtype=np.float64)
+            self.currents = Box(-1, 1, shape=(3,), dtype=np.float64)
+            self.action_space = Discrete(8)
+        else:
+            self.voltages = tuple(Box(0, 1, shape=(3,), dtype=np.float64) for _ in range(self._num_converters))
+            self.currents = tuple(Box(-1, 1, shape=(3,), dtype=np.float64)  for _ in range(self._num_converters))
+            self.action_space = tuple(Discrete(8) for _ in range(self._num_converters))
+        
     def reset(self):
         # Docstring in base class
         return [

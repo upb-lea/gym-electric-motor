@@ -54,24 +54,44 @@ class ActionPlot(TimePlot):
         self.reset_data()
 
         # check for the type of action space: Discrete or Continuous
-        if type(self._action_space) is Box:  # for continuous action space
-            self._action_type = 'Continuous'
-            # fetch the action range of continuous type actions
-            self._action_range_min = self._action_space.low[self._action]
-            self._action_range_max = self._action_space.high[self._action]
+        if env.physical_system.electrical_motor.num_motors == 1:
+            if type(self._action_space) is Box:  # for continuous action space
+                self._action_type = 'Continuous'
+                # fetch the action range of continuous type actions
+                self._action_range_min = self._action_space.low[self._action]
+                self._action_range_max = self._action_space.high[self._action]
+            elif type(self._action_space) is Discrete:
+                self._action_type = 'Discrete'
+                # lower bound of discrete action = 0
+                self._action_range_min = 0
+                # fetch the action range of discrete type actions
+                self._action_range_max = self._action_space.n
+            elif type(self._action_space) is MultiDiscrete:
+                self._action_type = 'MultiDiscrete'
+                # lower bound of discrete action = 0
+                self._action_range_min = 0
+                # fetch the action range of discrete type actions
+                self._action_range_max = self._action_space.nvec[self._action]
+        else:
+            for space in self._action_space:
+                if type(space) is Box:  # for continuous action space
+                    self._action_type = 'Continuous'
+                    # fetch the action range of continuous type actions
+                    self._action_range_min = space.low[self._action]
+                    self._action_range_max = space.high[self._action]
 
-        elif type(self._action_space) is Discrete:
-            self._action_type = 'Discrete'
-            # lower bound of discrete action = 0
-            self._action_range_min = 0
-            # fetch the action range of discrete type actions
-            self._action_range_max = self._action_space.n
-        elif type(self._action_space) is MultiDiscrete:
-            self._action_type = 'MultiDiscrete'
-            # lower bound of discrete action = 0
-            self._action_range_min = 0
-            # fetch the action range of discrete type actions
-            self._action_range_max = self._action_space.nvec[self._action]
+                elif type(space) is Discrete:
+                    self._action_type = 'Discrete'
+                    # lower bound of discrete action = 0
+                    self._action_range_min = 0
+                    # fetch the action range of discrete type actions
+                    self._action_range_max = space.n
+                elif type(space) is MultiDiscrete:
+                    self._action_type = 'MultiDiscrete'
+                    # lower bound of discrete action = 0
+                    self._action_range_min = 0
+                    # fetch the action range of discrete type actions
+                    self._action_range_max = space.nvec[self._action]
 
         spacing = 0.1 * (self._action_range_max - self._action_range_min)
         self._y_lim = self._action_range_min - spacing, self._action_range_max + spacing

@@ -102,7 +102,10 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         for ind, state in enumerate(self._state_names):
             motor_lim = self._electrical_motor.limits.get(state, np.inf)
             mechanical_lim = self._mechanical_load.limits.get(state, np.inf)
-            self._limits[ind] = min(motor_lim, mechanical_lim)
+            if isinstance(motor_lim, np.ndarray):
+                self._limits[ind] = min(motor_lim.all(), np.array([mechanical_lim] * self.electrical_motor._num_motors).reshape(self.electrical_motor._num_motors, 1).all())
+            else:
+                self._limits[ind] = min(motor_lim, mechanical_lim)
         self._limits[self._state_positions['u_sup']] = self.supply.u_nominal
 
     def _set_nominal_state(self):
@@ -112,7 +115,10 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         for ind, state in enumerate(self._state_names):
             motor_nom = self._electrical_motor.nominal_values.get(state, np.inf)
             mechanical_nom = self._mechanical_load.nominal_values.get(state, np.inf)
-            self._nominal_state[ind] = min(motor_nom, mechanical_nom)
+            if isinstance(motor_nom, np.ndarray):
+                self._nominal_state[ind] = min(motor_nom.all(), np.array([mechanical_nom] * self.electrical_motor._num_motors).reshape(self.electrical_motor._num_motors, 1).all())
+            else:
+                self._nominal_state[ind] = min(motor_nom, mechanical_nom)  
         self._nominal_state[self._state_positions['u_sup']] = self.supply.u_nominal
 
     def _build_state_space(self, state_names):

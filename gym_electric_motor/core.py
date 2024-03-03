@@ -282,15 +282,24 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         Returns:
              The initial observation consisting of the initial state and initial reference.
         """
-
-        self._seed(seed)
-        self._call_callbacks('on_reset_begin')
-        self._terminated = False
-        state = self._physical_system.reset()
-        reference, next_ref, _ = self.reference_generator.reset(state)
-        self._reward_function.reset(state, reference)
-        self._call_callbacks('on_reset_end', state, reference)
-        return state[self.state_filter], next_ref
+        if self._num_envs == 1:
+            self._seed(seed)
+            self._call_callbacks('on_reset_begin')
+            self._terminated = False
+            state = self._physical_system.reset()
+            reference, next_ref, _ = self.reference_generator.reset(state)
+            self._reward_function.reset(state, reference)
+            self._call_callbacks('on_reset_end', state, reference)
+            return state[self.state_filter], next_ref
+        else:
+            self._seed(seed)
+            self._call_callbacks('on_reset_begin')
+            self._terminated = False
+            state = self._physical_system.reset()
+            reference, next_ref, _ = self.reference_generator.reset(state)
+            self._reward_function.reset(state, reference)
+            self._call_callbacks('on_reset_end', state, reference)
+            return state[self.state_filter], next_ref
 
     def render(self, *_, **__):
         """
@@ -333,18 +342,36 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
         return (state[self.state_filter], ref_next), reward, self._terminated, self._truncated, {}
 
     def _seed(self, seed=None):
-        sg = np.random.SeedSequence(seed)
-        components = [
-            self._physical_system,
-            self._reference_generator,
-            self._reward_function,
-            self._constraint_monitor
-        ] + list(self._callbacks)
-        sub_sg = sg.spawn(len(components))
-        for sub, rc in zip(sub_sg, components):
-            if isinstance(rc, gem.RandomComponent):
-                rc.seed(sub)
-        return [sg.entropy]
+        
+        if self._num_envs == 1:
+            
+            sg = np.random.SeedSequence(seed)
+            components = [
+                self._physical_system,
+                self._reference_generator,
+                self._reward_function,
+                self._constraint_monitor
+            ] + list(self._callbacks)
+            sub_sg = sg.spawn(len(components))
+            for sub, rc in zip(sub_sg, components):
+                if isinstance(rc, gem.RandomComponent):
+                    rc.seed(sub)
+            return [sg.entropy]
+        
+        else:
+
+            sg = np.random.SeedSequence(seed)
+            components = [
+                self._physical_system,
+                self._reference_generator,
+                self._reward_function,
+                self._constraint_monitor
+            ] + list(self._callbacks)
+            sub_sg = np.array(sg.spawn(len(components)*self._num_envs)).reshape((len(components), self._num_envs))            
+            for row, rc in zip(sub_sg, components):
+                if isinstance(rc, gem.RandomComponent):
+                    rc.seed(row)
+            return [sg.entropy]
     
     def save_fig(self, figure, filetype="png"):
         """ Save figure with timestamped as filename """

@@ -73,12 +73,12 @@ class IdealVoltageSupply(VoltageSupply):
         # Docstring of superclass
         super().__init__(u_nominal, num_supplys)
 
-        assert isinstance(u_nominal, (float, np.array)), "u_nominal is neither floar nor np.array, as is required!" 
+        assert isinstance(u_nominal, (float, np.array)), "u_nominal is neither float nor np.array, as is required!" 
 
-        if isinstance(u_nominal, float):
-            self.supply_range = np.tile(np.array([u_nominal, u_nominal]), (self._num_supplys, 1))
-            self.voltage = [np.tile(np.array(self._u_nominal), (self._num_supplys,1))]
-        elif isinstance(u_nominal, np.array()):
+        if num_supplys == 1:
+            self.supply_range = (u_nominal, u_nominal)
+            self.voltage = self._u_nominal
+        else:
             assert u_nominal.size == num_supplys, "Length of u_nominal-vector differs from num_supplys!"
             self.supply_range = np.tile(u_nominal, (1, 2))
             self.voltage = u_nominal
@@ -86,7 +86,7 @@ class IdealVoltageSupply(VoltageSupply):
 
     def get_voltage(self, *_, **__):
         # Docstring of superclass
-        return self.voltage 
+        return [self.voltage] 
 
 
 class RCVoltageSupply(VoltageSupply):

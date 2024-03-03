@@ -78,9 +78,16 @@ class RandomComponent:
         """
         if seed is None:
             seed = np.random.SeedSequence()
-        self._seed_sequence = seed
-        self._random_generator = np.random.default_rng(self._seed_sequence.spawn(1)[0])
-        return [self._seed_sequence.entropy]
+        if isinstance(seed, np.ndarray):
+            self._seed_sequence = seed
+            for i in range(len(self._seed_sequence)):
+                rng[i] = np.random.default_rng(self._seed_sequence[i](1)[0])
+            self._random_generator = rng
+            return [self._seed_sequence.entropy]
+        else:
+            self._seed_sequence = seed
+            self._random_generator = np.random.default_rng(self._seed_sequence.spawn(1)[0])
+            return [self._seed_sequence.entropy]
 
     def next_generator(self):
         """Sets a new reference generator for a new episode."""
