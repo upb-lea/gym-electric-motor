@@ -79,7 +79,8 @@ if __name__ == "__main__":
         #   (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
         # else:
         (state, reference), reward, terminated, truncated, _ = env.step(action)
-
+        torque = state_observer.observe("torque")
+        print(f"Toque: {torque}")
         # viz.render()
 
         if terminated:

@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 ## Fixed
 
+## [2.0.1] - Unreleased
+## Added
+- Ruff: Python linter & formatter (see [DEVELOPMENT.md](DEVELOPMENT.md))
+- StateObserver: An easy way to get state values with error checking [example](examples/observers/state_observer_example.py)
+- Integrated gem_controls repository into gem. classic_controllers will be removed in further version
+- Using pyproject.toml, dropping deprecated setup.py
+- Enabled Gymnasium env checker [see here](https://gymnasium.farama.org/api/experimental/wrappers/#gymnasium.experimental.wrappers.PassiveEnvCheckerV0)
+## Changed
+- Linted and formatted all files
+- Changed max. steps in some test files to improve test speed by 30%
+## Fixed
+
 ## [2.0.0] - 2023-08-15
 ## Added
 - Support for Python 3.10

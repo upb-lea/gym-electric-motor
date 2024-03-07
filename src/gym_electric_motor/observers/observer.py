@@ -12,6 +12,7 @@ class Observer:
     def observe(self, *args, **kwargs) -> any:
         result = self.pull(*args, **kwargs)
         self.push(result)
+        return result
 
     @abc.abstractmethod
     def pull(self, *args, **kwargs) -> any:
@@ -51,4 +52,4 @@ class StateObserver(Observer):
             raise ValueError(f"State '{state}' not found in state_names, allowed states are {state_names}")
 
     def push(self, value):
-        print(f"PUSH | {value} \n")
+        pass
