@@ -48,7 +48,7 @@ def simulate_env(seed=None):
     """
     controller = Controller.make(env)
 
-    (state, reference), _ = env.reset(seed)
+    (state, reference), _ = env.reset(seed=seed)
 
     test_states = []
     test_reference = []
