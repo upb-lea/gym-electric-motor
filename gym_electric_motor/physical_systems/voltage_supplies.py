@@ -79,9 +79,13 @@ class IdealVoltageSupply(VoltageSupply):
             self.supply_range = (u_nominal, u_nominal)
             self.voltage = self._u_nominal
         else:
-            assert u_nominal.size == num_supplys, "Length of u_nominal-vector differs from num_supplys!"
-            self.supply_range = np.tile(u_nominal, (1, 2))
-            self.voltage = u_nominal
+            if isinstance(u_nominal, float):
+                self.supply_range = np.tile(u_nominal, (num_supplys, 2))
+                self.voltage = np.array([u_nominal]*num_supplys)
+            else:
+                self.supply_range = np.concatenate((u_nominal,u_nominal), axis=1)
+                self.voltage = np.array([u_nominal]*num_supplys)
+
 
 
     def get_voltage(self, *_, **__):

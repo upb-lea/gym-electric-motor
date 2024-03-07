@@ -283,6 +283,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
              The initial observation consisting of the initial state and initial reference.
         """
         if self._num_envs == 1:
+        
             self._seed(seed)
             self._call_callbacks('on_reset_begin')
             self._terminated = False
@@ -290,8 +291,13 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             reference, next_ref, _ = self.reference_generator.reset(state)
             self._reward_function.reset(state, reference)
             self._call_callbacks('on_reset_end', state, reference)
-            return state[self.state_filter], next_ref
+
+            observation = (state[self.state_filter], next_ref)
+            info = {}
+            return observation, info
+
         else:
+            
             self._seed(seed)
             self._call_callbacks('on_reset_begin')
             self._terminated = False
@@ -299,7 +305,10 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             reference, next_ref, _ = self.reference_generator.reset(state)
             self._reward_function.reset(state, reference)
             self._call_callbacks('on_reset_end', state, reference)
-            return state[self.state_filter], next_ref
+
+            observation = (state[self.state_filter], next_ref)
+            info = {}
+            return observation, info
 
     def render(self, *_, **__):
         """
