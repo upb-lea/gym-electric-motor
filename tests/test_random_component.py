@@ -4,7 +4,6 @@ import numpy as np
 
 
 class TestRandomComponent:
-
     @pytest.fixture
     def random_component(self):
         return gem.RandomComponent()
@@ -44,11 +43,13 @@ class TestRandomComponent:
         # Reseed the environment to the previous state
         random_component.seed(np.random.SeedSequence(123))
         # Test, if the first random numbers of the first episodes are equal
-        assert(np.all(rands_first_ep[:30] == random_component.random_generator.random(30))),\
-            'The random numbers of the initial and reseeded random component differ.'
+        assert np.all(
+            rands_first_ep[:30] == random_component.random_generator.random(30)
+        ), "The random numbers of the initial and reseeded random component differ."
 
         random_component.next_generator()
         # Also the second episode has to be equal. Therefore, the next generator has to be set np matter how many steps
         # have been taken in the first episode.
-        assert(np.all(rands_second_ep == random_component.random_generator.random(64)[:42])),\
-            'The random numbers of the initial and reseeded random component differ.'
+        assert np.all(
+            rands_second_ep == random_component.random_generator.random(64)[:42]
+        ), "The random numbers of the initial and reseeded random component differ."

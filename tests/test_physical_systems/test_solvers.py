@@ -12,7 +12,7 @@ import pytest
 
 g_initial_value = np.array([1, 6])
 g_initial_time = 1
-g_time_steps = [1E-5, 2E-5, 3E-5, 5E-5, 1E-4, 2E-4, 5E-4, 1E-3, 2E-3, 5E-3, 7E-3, 1E-2]
+g_time_steps = [1e-5, 2e-5, 3e-5, 5e-5, 1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 7e-3, 1e-2]
 
 
 def test_euler():
@@ -25,7 +25,7 @@ def test_euler():
         integration_testing(solver)
 
 
-@pytest.mark.parametrize("integrator", ['dopri5', 'dop853'])
+@pytest.mark.parametrize("integrator", ["dopri5", "dop853"])
 # 'vode', 'zvode', 'lsoda', could be added, but does not work due to wrong integration times
 def test_scipyode(integrator):
     """
@@ -34,12 +34,14 @@ def test_scipyode(integrator):
     :return:
     """
     for nsteps in [1, 5]:
-        kwargs = {'nsteps': nsteps, }
+        kwargs = {
+            "nsteps": nsteps,
+        }
         solver = ScipyOdeSolver(integrator, **kwargs)
         integration_testing(solver)
 
 
-@pytest.mark.parametrize("integrator", ['RK45', 'RK23', 'Radau', 'BDF', 'LSODA'])
+@pytest.mark.parametrize("integrator", ["RK45", "RK23", "Radau", "BDF", "LSODA"])
 def test_scipy_ivp(integrator):
     """
     test scipy.solveivp integrator
@@ -56,7 +58,9 @@ def test_scipyodeint():
     :return:
     """
     for nsteps in [1, 5]:
-        kwargs = {'nsteps': nsteps, }
+        kwargs = {
+            "nsteps": nsteps,
+        }
         solver = ScipyOdeIntSolver()
         integration_testing(solver)
 
@@ -92,8 +96,8 @@ def test_compare_solver():
     """
     # initialize all solver
     solver_1 = EulerSolver()
-    solver_2 = ScipyOdeSolver('dopri5')
-    solver_3 = ScipySolveIvpSolver(method='Radau')
+    solver_2 = ScipyOdeSolver("dopri5")
+    solver_3 = ScipySolveIvpSolver(method="Radau")
     solver_4 = ScipyOdeIntSolver()
     solver = [solver_1, solver_2, solver_3, solver_4]
     # define the integration steps
@@ -113,8 +117,15 @@ def test_compare_solver():
         # test if all solver integrated for the same time
         assert solver_1.t == solver_2.t == solver_3.t == solver_4.t
         # test if the relative difference between the states is small
-        abs_values = [sum(abs(solver_1.y)), sum(abs(solver_2.y)), sum(abs(solver_3.y)), sum(abs(solver_4.y))]
-        assert max(abs_values) / min(abs_values) - 1 < 1E-4, "Time step at the error: " + str(steps)
+        abs_values = [
+            sum(abs(solver_1.y)),
+            sum(abs(solver_2.y)),
+            sum(abs(solver_3.y)),
+            sum(abs(solver_4.y)),
+        ]
+        assert max(abs_values) / min(abs_values) - 1 < 1e-4, (
+            "Time step at the error: " + str(steps)
+        )
 
 
 # endregion
@@ -122,10 +133,12 @@ def test_compare_solver():
 
 # region second version tests
 
+
 class TestOdeSolver:
     """
     class for testing OdeSolver
     """
+
     # defined test values
     _initial_time = 0.1
     _initial_state = np.array([15, 0.23, 0.35])
@@ -140,10 +153,12 @@ class TestOdeSolver:
         # call function to test
         test_object.set_initial_value(self._initial_state, self._initial_time)
         # verify the expected results
-        assert all(test_object._y == test_object.y) and all(test_object._y == self._initial_state), 'unexpected state'
-        assert test_object.t == test_object._t == self._initial_time, 'unexpected time'
+        assert all(test_object._y == test_object.y) and all(
+            test_object._y == self._initial_state
+        ), "unexpected state"
+        assert test_object.t == test_object._t == self._initial_time, "unexpected time"
 
-    @pytest.mark.parametrize('jacobian_', [jacobian, None])
+    @pytest.mark.parametrize("jacobian_", [jacobian, None])
     def test_set_system_equation(self, jacobian_):
         """
         test set_system_equation()
@@ -155,10 +170,14 @@ class TestOdeSolver:
         # call function to test
         test_object.set_system_equation(system, jacobian_)
         # verify the expected results
-        assert test_object._system_equation == system, 'system equation is not passed correctly'
-        assert test_object._system_jacobian == jacobian_, 'jacobian is not passed correctly'
+        assert (
+            test_object._system_equation == system
+        ), "system equation is not passed correctly"
+        assert (
+            test_object._system_jacobian == jacobian_
+        ), "jacobian is not passed correctly"
 
-    @pytest.mark.parametrize('args', [[], ['nsteps', 5], 42])
+    @pytest.mark.parametrize("args", [[], ["nsteps", 5], 42])
     def test_set_f_params(self, args):
         """
         test set_f_params()
@@ -170,13 +189,16 @@ class TestOdeSolver:
         # call function to test
         test_object.set_f_params(args)
         # verify the expected results
-        assert test_object._f_params[0] == args, 'arguments are not passed correctly for the system'
+        assert (
+            test_object._f_params[0] == args
+        ), "arguments are not passed correctly for the system"
 
 
 class TestEulerSolver:
     """
     class for testing EulerSolver
     """
+
     # defined test values
     _t = 5e-4
     _state = np.array([1, 6])
@@ -187,10 +209,10 @@ class TestEulerSolver:
         :param t: time
         :return:
         """
-        assert t == self._t, 'unexpected time at the end of the integration'
+        assert t == self._t, "unexpected time at the end of the integration"
         return self._state
 
-    @pytest.mark.parametrize('nsteps, expected_integrate', [(1, 0), (5, 1)])
+    @pytest.mark.parametrize("nsteps, expected_integrate", [(1, 0), (5, 1)])
     def test_init(self, nsteps, expected_integrate):
         """
         test initialization of EulerSolver
@@ -201,9 +223,14 @@ class TestEulerSolver:
         # call function to test
         test_object = EulerSolver(nsteps)
         # verify the expected results
-        integration_functions = [test_object._integrate_one_step, test_object._integrate_nsteps]
-        assert test_object._nsteps == nsteps, 'nsteps argument not passed correctly'
-        assert test_object._integrate == integration_functions[expected_integrate], 'unexpected integrate function'
+        integration_functions = [
+            test_object._integrate_one_step,
+            test_object._integrate_nsteps,
+        ]
+        assert test_object._nsteps == nsteps, "nsteps argument not passed correctly"
+        assert (
+            test_object._integrate == integration_functions[expected_integrate]
+        ), "unexpected integrate function"
 
     def test_integrate(self, monkeypatch):
         """
@@ -213,14 +240,16 @@ class TestEulerSolver:
         """
         # setup test scenario
         test_object = EulerSolver()
-        monkeypatch.setattr(test_object, '_integrate', self.monkey_integrate)
+        monkeypatch.setattr(test_object, "_integrate", self.monkey_integrate)
         # call function to test
         state = test_object.integrate(self._t)
         # verify the expected results
-        assert all(state == self._state), 'unexpected state after integration'
+        assert all(state == self._state), "unexpected state after integration"
 
-    @pytest.mark.parametrize('nsteps, expected_state',
-                             [(1, np.array([1.006, 6.0258])), (3, np.array([1.00596811, 6.025793824]))])
+    @pytest.mark.parametrize(
+        "nsteps, expected_state",
+        [(1, np.array([1.006, 6.0258])), (3, np.array([1.00596811, 6.025793824]))],
+    )
     def test_private_integration(self, nsteps, expected_state):
         """
         test _integration() for different cases
@@ -238,16 +267,19 @@ class TestEulerSolver:
         # call function to test
         state = test_object.integrate(self._t + tau)
         # verify the expected results
-        assert sum(abs(state - expected_state)) < 1E-6, 'unexpected state after integration'
+        assert (
+            sum(abs(state - expected_state)) < 1e-6
+        ), "unexpected state after integration"
 
 
 class TestScipyOdeSolver:
     """
     class for testing ScipyOdeSolver
     """
+
     # defined test values
-    _kwargs = {'nsteps': 5}
-    _integrator = 'dop853'
+    _kwargs = {"nsteps": 5}
+    _integrator = "dop853"
     _args = 2
     _tau = 1e-3
     _initial_time = 0.1
@@ -264,8 +296,10 @@ class TestScipyOdeSolver:
         :param kwargs:
         :return:
         """
-        assert integrator == self._integrator, 'integrator not passed correctly'
-        assert kwargs == self._kwargs, 'unexpected additional arguments. Keep in mind None and {}.'
+        assert integrator == self._integrator, "integrator not passed correctly"
+        assert (
+            kwargs == self._kwargs
+        ), "unexpected additional arguments. Keep in mind None and {}."
 
     def monkey_super_set_system_equation(self, system_equation, jacobian_):
         """
@@ -275,8 +309,8 @@ class TestScipyOdeSolver:
         :return:
         """
         self._monkey_super_set_system_equation_counter += 1
-        assert system_equation == system, 'unexpected system equation'
-        assert jacobian_ == jacobian, 'unexpected jacobian'
+        assert system_equation == system, "unexpected system equation"
+        assert jacobian_ == jacobian, "unexpected jacobian"
 
     def monkey_set_params(self, **args):
         """
@@ -285,7 +319,9 @@ class TestScipyOdeSolver:
         :return:
         """
         self._monkey_set_params_counter += 1
-        assert self._args == (args,), 'unexpected additional arguments. Keep the type in mind'
+        assert self._args == (
+            args,
+        ), "unexpected additional arguments. Keep the type in mind"
 
     def test_init(self):
         """
@@ -295,8 +331,12 @@ class TestScipyOdeSolver:
         # call function to test
         test_object = ScipyOdeSolver(integrator=self._integrator, **self._kwargs)
         assert test_object._solver is None
-        assert test_object._solver_args == self._kwargs, 'unexpected additional arguments. Keep in mind None and {}.'
-        assert test_object._integrator == self._integrator, 'unexpected initialization of integrate function'
+        assert (
+            test_object._solver_args == self._kwargs
+        ), "unexpected additional arguments. Keep in mind None and {}."
+        assert (
+            test_object._integrator == self._integrator
+        ), "unexpected initialization of integrate function"
 
     def test_set_system_equation(self, monkeypatch):
         """
@@ -305,15 +345,23 @@ class TestScipyOdeSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(pss, 'ode', DummyScipyOdeSolver)
+        monkeypatch.setattr(pss, "ode", DummyScipyOdeSolver)
         test_object = ScipyOdeSolver(integrator=self._integrator, **self._kwargs)
-        monkeypatch.setattr(OdeSolver, 'set_system_equation', self.monkey_super_set_system_equation)
+        monkeypatch.setattr(
+            OdeSolver, "set_system_equation", self.monkey_super_set_system_equation
+        )
         # call function to test
         test_object.set_system_equation(system, jacobian)
         # verify the expected results
-        assert isinstance(test_object._ode, DummyScipyOdeSolver), 'the ode is no DummyScipyOdeSolver'
-        assert self._monkey_super_set_system_equation_counter == 1, 'super().set_system_equation() is not called once'
-        assert test_object._ode._set_integrator_counter == 1, 'set_integrator() is not called once'
+        assert isinstance(
+            test_object._ode, DummyScipyOdeSolver
+        ), "the ode is no DummyScipyOdeSolver"
+        assert (
+            self._monkey_super_set_system_equation_counter == 1
+        ), "super().set_system_equation() is not called once"
+        assert (
+            test_object._ode._set_integrator_counter == 1
+        ), "set_integrator() is not called once"
 
     def test_set_initial_value(self, monkeypatch):
         """
@@ -322,13 +370,15 @@ class TestScipyOdeSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(pss, 'ode', DummyScipyOdeSolver)
+        monkeypatch.setattr(pss, "ode", DummyScipyOdeSolver)
         test_object = ScipyOdeSolver(integrator=self._integrator, **self._kwargs)
         test_object.set_system_equation(system, jacobian)
         # call function to test
         test_object.set_initial_value(self._initial_state, self._initial_time)
         # verify the expected results
-        assert test_object._ode._set_initial_value_counter == 1, 'set_initial_value() is not called once'
+        assert (
+            test_object._ode._set_initial_value_counter == 1
+        ), "set_initial_value() is not called once"
 
     def test_set_f_params(self, monkeypatch):
         """
@@ -337,13 +387,15 @@ class TestScipyOdeSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(pss, 'ode', DummyScipyOdeSolver)
+        monkeypatch.setattr(pss, "ode", DummyScipyOdeSolver)
         test_object = ScipyOdeSolver(integrator=self._integrator, **self._kwargs)
         test_object.set_system_equation(system, jacobian)
         # call function to test
         test_object.set_f_params(self._args)
         # verify the expected results
-        assert test_object._ode._set_f_params_counter == 1, 'set_f_params() is not called once'
+        assert (
+            test_object._ode._set_f_params_counter == 1
+        ), "set_f_params() is not called once"
 
     def test_integrate(self, monkeypatch):
         """
@@ -352,7 +404,7 @@ class TestScipyOdeSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(pss, 'ode', DummyScipyOdeSolver)
+        monkeypatch.setattr(pss, "ode", DummyScipyOdeSolver)
         test_object = ScipyOdeSolver(integrator=self._integrator, **self._kwargs)
         test_object.set_system_equation(system, jacobian)
         test_object.set_initial_value(self._initial_state, self._initial_time)
@@ -360,14 +412,19 @@ class TestScipyOdeSolver:
         # call function to test
         result = test_object.integrate(self._tau + self._initial_time)
         # verify the expected results
-        assert all(result == self._initial_state * 2), 'unexpected result of the integration'
-        assert test_object._ode._integrate_counter == 1, '_ode._integrate() is not called once()'
+        assert all(
+            result == self._initial_state * 2
+        ), "unexpected result of the integration"
+        assert (
+            test_object._ode._integrate_counter == 1
+        ), "_ode._integrate() is not called once()"
 
 
 class TestScipySolveIvpSolver:
     """
     class for testing ScipySolveIvpSolver
     """
+
     # defined test values
     _state = np.array([1, 6])
     _tau = 1e-3
@@ -383,8 +440,8 @@ class TestScipySolveIvpSolver:
         :return:
         """
         self._monkey_super_set_system_equation_counter += 1
-        assert system_equation == system, 'unexpected system passed'
-        assert jac == jacobian, 'unexpected jacobian passed'
+        assert system_equation == system, "unexpected system passed"
+        assert jac == jacobian, "unexpected jacobian passed"
 
     def monkey_set_f_params(self):
         """
@@ -405,14 +462,15 @@ class TestScipySolveIvpSolver:
         :param kwargs:
         :return:
         """
-        assert time == [0.0, self._tau], 'unexpected time passed'
-        assert all(state == self._state), 'unexpected state passed'
-        assert t_eval == [self._tau], 'unexpected time for evaluation'
+        assert time == [0.0, self._tau], "unexpected time passed"
+        assert all(state == self._state), "unexpected state passed"
+        assert t_eval == [self._tau], "unexpected time for evaluation"
 
         class Result:
             """
             simple class necessary for correct testing
             """
+
             y = np.array([[7, 1], [4, 6]])
 
         return Result()
@@ -423,11 +481,13 @@ class TestScipySolveIvpSolver:
         :return:
         """
         # setup test scenario
-        _kwargs = {'nsteps': 5}
+        _kwargs = {"nsteps": 5}
         # call function to test
         test_object = ScipySolveIvpSolver(**_kwargs)
         # verify the expected results
-        assert test_object._solver_kwargs == _kwargs, 'unexpected additional arguments. Keep in mind None and {}'
+        assert (
+            test_object._solver_kwargs == _kwargs
+        ), "unexpected additional arguments. Keep in mind None and {}"
 
     def test_set_system_equation(self, monkeypatch):
         """
@@ -436,8 +496,12 @@ class TestScipySolveIvpSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(OdeSolver, 'set_system_equation', self.monkey_super_set_system_equation)
-        monkeypatch.setattr(ScipySolveIvpSolver, 'set_f_params', self.monkey_set_f_params)
+        monkeypatch.setattr(
+            OdeSolver, "set_system_equation", self.monkey_super_set_system_equation
+        )
+        monkeypatch.setattr(
+            ScipySolveIvpSolver, "set_f_params", self.monkey_set_f_params
+        )
         test_object = ScipySolveIvpSolver()
         # call function to test
         test_object.set_system_equation(system, jacobian)
@@ -457,8 +521,12 @@ class TestScipySolveIvpSolver:
         # call function to test
         test_object.set_f_params(args)
         # verify the expected results
-        assert sum(abs(test_object._system_equation(_tau, _state, args) - _expected_result)) < 1E-6,\
-            'unexpected result after set_f_params()'
+        assert (
+            sum(
+                abs(test_object._system_equation(_tau, _state, args) - _expected_result)
+            )
+            < 1e-6
+        ), "unexpected result after set_f_params()"
 
     def test_integrate(self, monkeypatch):
         """
@@ -467,7 +535,7 @@ class TestScipySolveIvpSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(pss, 'solve_ivp', self.monkey_solve_ivp)
+        monkeypatch.setattr(pss, "solve_ivp", self.monkey_solve_ivp)
         test_object = ScipySolveIvpSolver()
         test_object.set_system_equation(system, jacobian)
         test_object.set_initial_value(self._state, 0.0)
@@ -475,13 +543,14 @@ class TestScipySolveIvpSolver:
         # call function to test
         result = test_object.integrate(self._tau)
         # verify the expected results
-        assert all(result == self._state), 'unexpected state after integration'
+        assert all(result == self._state), "unexpected state after integration"
 
 
 class TestScipyOdeIntSolver:
     """
     class for testing ScipyOdeIntSolver
     """
+
     # defined test values
     _state = np.array([1, 6])
     _tau = 1e-3
@@ -499,8 +568,8 @@ class TestScipyOdeIntSolver:
         :return:
         """
         self._monkey_super_set_system_equation_counter += 1
-        assert system_equation == system, 'unexpected system passed'
-        assert jac == jacobian, 'unexpected jacobian passed'
+        assert system_equation == system, "unexpected system passed"
+        assert jac == jacobian, "unexpected jacobian passed"
 
     def monkey_set_f_params(self):
         """
@@ -522,9 +591,9 @@ class TestScipyOdeIntSolver:
         :param kwargs:
         :return:
         """
-        assert all(y == self._state), 'unexpected state before integration'
-        assert time == [0, self._tau], 'unexpected time steps for integration'
-        assert args == (self.args,), 'unexpected arguments'
+        assert all(y == self._state), "unexpected state before integration"
+        assert time == [0, self._tau], "unexpected time steps for integration"
+        assert args == (self.args,), "unexpected arguments"
         assert tfirst
         return np.array([[0, 2], self._state])
 
@@ -534,11 +603,13 @@ class TestScipyOdeIntSolver:
         :return:
         """
         # setup test scenario
-        _kwargs = {'nsteps': 5}
+        _kwargs = {"nsteps": 5}
         # call function to test
         test_object = ScipyOdeIntSolver(**_kwargs)
         # verify the expected results
-        assert test_object._solver_args == _kwargs, 'unexpected additional arguments. Keep the type in mind.'
+        assert (
+            test_object._solver_args == _kwargs
+        ), "unexpected additional arguments. Keep the type in mind."
 
     def test_set_system_equation(self, monkeypatch):
         """
@@ -547,8 +618,10 @@ class TestScipyOdeIntSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(OdeSolver, 'set_system_equation', self.monkey_super_set_system_equation)
-        monkeypatch.setattr(ScipyOdeIntSolver, 'set_f_params', self.monkey_set_f_params)
+        monkeypatch.setattr(
+            OdeSolver, "set_system_equation", self.monkey_super_set_system_equation
+        )
+        monkeypatch.setattr(ScipyOdeIntSolver, "set_f_params", self.monkey_set_f_params)
         test_object = ScipyOdeIntSolver()
         # call function to test
         test_object.set_system_equation(system, jacobian)
@@ -560,7 +633,7 @@ class TestScipyOdeIntSolver:
         :return:
         """
         # setup test scenario
-        monkeypatch.setattr(pss, 'odeint', self.monkey_ode_int)
+        monkeypatch.setattr(pss, "odeint", self.monkey_ode_int)
         test_object = ScipyOdeIntSolver()
         test_object.set_system_equation(system, jacobian)
         test_object.set_initial_value(self._state, 0.0)
@@ -568,7 +641,7 @@ class TestScipyOdeIntSolver:
         # call function to test
         result = test_object.integrate(self._tau)
         # verify the expected results
-        assert all(result == self._state), 'unexpected result after integration'
+        assert all(result == self._state), "unexpected result after integration"
 
 
 # endregion

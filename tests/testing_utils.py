@@ -1,158 +1,39 @@
 from tests.conf import *
 from gym_electric_motor.physical_systems import *
-from gym_electric_motor.utils import make_module, set_state_array
-from gym_electric_motor import ReferenceGenerator, RewardFunction, PhysicalSystem, ElectricMotorVisualization, \
-    ConstraintMonitor
-from gym_electric_motor.physical_systems import PowerElectronicConverter, MechanicalLoad, ElectricMotor, OdeSolver, \
-    VoltageSupply
+from gym_electric_motor.utils import set_state_array
+from gym_electric_motor import (
+    ReferenceGenerator,
+    RewardFunction,
+    PhysicalSystem,
+    ElectricMotorVisualization,
+    ConstraintMonitor,
+)
+from gym_electric_motor.physical_systems import (
+    PowerElectronicConverter,
+    MechanicalLoad,
+    ElectricMotor,
+    OdeSolver,
+    VoltageSupply,
+)
 import gym_electric_motor.physical_systems.converters as cv
 from gym_electric_motor.physical_systems.physical_systems import SCMLSystem
 import numpy as np
 from gymnasium.spaces import Box, Discrete
 from scipy.integrate import ode
 from tests.conf import system, jacobian, permex_motor_parameter
-from gym_electric_motor.utils import instantiate
 from gym_electric_motor.core import Callback
-
-
-# region first version
-
-
-def setup_physical_system(motor_type, converter_type, subconverters=None, three_phase=False):
-    """
-    Function to set up a physical system with test parameters
-    :param motor_type: motor name (string)
-    :param converter_type: converter name (string)
-    :param three_phase: if True, than a synchronous motor system will be instantiated
-    :return: instantiated physical system
-    """
-    # get test parameter
-    tau = converter_parameter['tau']
-    u_sup = test_motor_parameter[motor_type]['motor_parameter']['u_sup']
-    motor_parameter = test_motor_parameter[motor_type]['motor_parameter']  # dict
-    nominal_values = test_motor_parameter[motor_type]['nominal_values']  # dict
-    limit_values = test_motor_parameter[motor_type]['limit_values']  # dict
-    # setup load
-    load = PolynomialStaticLoad(load_parameter=load_parameter['parameter'])
-    # setup voltage supply
-    voltage_supply = IdealVoltageSupply(u_sup)
-    # setup converter
-    if motor_type == 'DcExtEx':
-        if 'Disc' in converter_type:
-            double_converter = 'Disc-Multi'
-        else:
-            double_converter = 'Cont-Multi'
-        converter = make_module(PowerElectronicConverter, double_converter,
-                                subconverters=[converter_type, converter_type],
-                                tau=converter_parameter['tau'],
-                                dead_time=converter_parameter['dead_time'],
-                                interlocking_time=converter_parameter['interlocking_time'])
-    else:
-        converter = make_module(PowerElectronicConverter, converter_type,
-                                subconverters=subconverters,
-                                tau=converter_parameter['tau'],
-                                dead_time=converter_parameter['dead_time'],
-                                interlocking_time=converter_parameter['interlocking_time'])
-    # setup motor
-    motor = make_module(ElectricMotor, motor_type, motor_parameter=motor_parameter, nominal_values=nominal_values,
-                        limit_values=limit_values)
-    # setup solver
-    solver = ScipySolveIvpSolver(method='RK45')
-    # combine all modules to a physical system
-    if three_phase:
-        if motor_type == "SCIM":
-            physical_system = SquirrelCageInductionMotorSystem(converter=converter, motor=motor, ode_solver=solver,
-                                                                supply=voltage_supply, load=load, tau=tau)
-        elif motor_type == "DFIM":
-            physical_system = DoublyFedInductionMotor(converter=converter, motor=motor, ode_solver=solver,
-                                                               supply=voltage_supply, load=load, tau=tau)
-        else:
-            physical_system = SynchronousMotorSystem(converter=converter, motor=motor, ode_solver=solver,
-                                                    supply=voltage_supply, load=load, tau=tau)
-    else:
-        physical_system = DcMotorSystem(converter=converter, motor=motor, ode_solver=solver,
-                                        supply=voltage_supply, load=load, tau=tau)
-    return physical_system
-
-
-def setup_reference_generator(reference_type, physical_system, reference_state='omega'):
-    """
-    Function to setup the reference generator
-    :param reference_type: name of reference generator
-    :param physical_system: instantiated physical system
-    :param reference_state: referenced state name (string)
-    :return: instantiated reference generator
-    """
-    reference_generator = make_module(ReferenceGenerator, reference_type, reference_state=reference_state)
-    reference_generator.set_modules(physical_system)
-    reference_generator.reset()
-    return reference_generator
-
-
-def setup_reward_function(reward_function_type, physical_system, reference_generator, reward_weights, observed_states):
-    reward_function = make_module(RewardFunction, reward_function_type, observed_states=observed_states,
-                                  reward_weights=reward_weights)
-    reward_function.set_modules(physical_system, reference_generator)
-    return reward_function
-
-
-def setup_dc_converter(conv, motor_type, subconverters=None):
-    """
-    This function initializes the converter.
-    It differentiates between single and double converter and can be used for discrete and continuous converters.
-    :param conv: converter name (string)
-    :param motor_type: motor name (string)
-    :return: initialized converter
-    """
-    if motor_type == 'DcExtEx':
-        # setup double converter
-        if 'Disc' in conv:
-            double_converter = 'Disc-Multi'
-        else:
-            double_converter = 'Cont-Multi'
-        converter = make_module(PowerElectronicConverter, double_converter,
-                                interlocking_time=converter_parameter['interlocking_time'],
-                                dead_time=converter_parameter['dead_time'],
-                                subconverters=[make_module(PowerElectronicConverter, conv,
-                                                           tau=converter_parameter['tau'],
-                                                           dead_time=converter_parameter['dead_time'],
-                                                           interlocking_time=converter_parameter['interlocking_time']),
-                                               make_module(PowerElectronicConverter, conv,
-                                                           tau=converter_parameter['tau'],
-                                                           dead_time=converter_parameter['dead_time'],
-                                                           interlocking_time=converter_parameter['interlocking_time'])])
-    else:
-        # setup single converter
-        converter = make_module(PowerElectronicConverter, conv,
-                                subconverters=subconverters,
-                                tau=converter_parameter['tau'],
-                                dead_time=converter_parameter['dead_time'],
-                                interlocking_time=converter_parameter['interlocking_time'])
-    return converter
-
-
-# endregion
-
-# region second version
-
-instantiate_dict = {}
-
-
-def mock_instantiate(superclass, key, **kwargs):
-    # Instantiate the object and log the passed and returned values to validate correct function calls
-    instantiate_dict[superclass] = {}
-    instantiate_dict[superclass]['key'] = key
-    inst = instantiate(superclass, key, **kwargs)
-    instantiate_dict[superclass]['instance'] = inst
-    return inst
-
 
 class DummyReferenceGenerator(ReferenceGenerator):
     _reset_counter = 0
 
-    def __init__(self, reference_observation=np.array([1.]), reference_state='dummy_state_0', **kwargs):
+    def __init__(
+        self,
+        reference_observation=np.array([1.0]),
+        reference_state="dummy_state_0",
+        **kwargs,
+    ):
         super().__init__()
-        self.reference_space = Box(0., 1., shape=(1,), dtype=np.float64)
+        self.reference_space = Box(0.0, 1.0, shape=(1,), dtype=np.float64)
         self.kwargs = kwargs
         self._reference_names = [reference_state]
         self.closed = False
@@ -192,7 +73,6 @@ class DummyReferenceGenerator(ReferenceGenerator):
 
 
 class DummyRewardFunction(RewardFunction):
-
     def __init__(self, **kwargs):
         self.last_state = None
         self.last_reference = None
@@ -227,7 +107,6 @@ class DummyRewardFunction(RewardFunction):
 
 
 class DummyPhysicalSystem(PhysicalSystem):
-
     @property
     def limits(self):
         """
@@ -244,16 +123,17 @@ class DummyPhysicalSystem(PhysicalSystem):
         """
         return self._nominal_values
 
-    def __init__(self, state_length=None, state_names='dummy_state', **kwargs):
-
+    def __init__(self, state_length=None, state_names="dummy_state", **kwargs):
         if isinstance(state_names, str):
             if state_length is None:
                 state_length = 1
-            state_names = [f'{state_names}_{i}' for i in range(state_length)]
+            state_names = [f"{state_names}_{i}" for i in range(state_length)]
         state_length = len(state_names)
         super().__init__(
-            Box(-1, 1, shape=(1,), dtype=np.float64), Box(-1, 1, shape=(state_length,), dtype=np.float64),
-            state_names, 1
+            Box(-1, 1, shape=(1,), dtype=np.float64),
+            Box(-1, 1, shape=(state_length,), dtype=np.float64),
+            state_names,
+            1,
         )
         self._limits = np.array([10 * (i + 1) for i in range(state_length)])
         self._nominal_values = np.array([(i + 1) for i in range(state_length)])
@@ -263,7 +143,7 @@ class DummyPhysicalSystem(PhysicalSystem):
         self.kwargs = kwargs
 
     def reset(self, initial_state=None):
-        self.state = np.array([0.] * len(self._state_names))
+        self.state = np.array([0.0] * len(self._state_names))
         return self.state
 
     def simulate(self, action):
@@ -277,7 +157,6 @@ class DummyPhysicalSystem(PhysicalSystem):
 
 
 class DummyVisualization(ElectricMotorVisualization):
-
     def __init__(self, **kwargs):
         self.closed = False
         self.state = None
@@ -305,7 +184,6 @@ class DummyVisualization(ElectricMotorVisualization):
 
 
 class DummyVoltageSupply(VoltageSupply):
-
     def __init__(self, u_nominal=560, tau=1e-4, **kwargs):
         super().__init__(u_nominal)
         self.i_sup = None
@@ -329,12 +207,19 @@ class DummyVoltageSupply(VoltageSupply):
 
 
 class DummyConverter(PowerElectronicConverter):
-
     voltages = Box(0, 1, shape=(1,), dtype=np.float64)
     currents = Box(-1, 1, shape=(1,), dtype=np.float64)
     action_space = Discrete(4)
 
-    def __init__(self, tau=2E-4, interlocking_time=0, action_space=None, voltages=None, currents=None, **kwargs):
+    def __init__(
+        self,
+        tau=2e-4,
+        interlocking_time=0,
+        action_space=None,
+        voltages=None,
+        currents=None,
+        **kwargs,
+    ):
         super().__init__(tau, interlocking_time)
         self.action_space = action_space or self.action_space
         self.voltages = voltages or self.voltages
@@ -370,21 +255,22 @@ class DummyConverter(PowerElectronicConverter):
         self.i_out = i_out
         self.t = t
         self.convert_counter += 1
-        self.u_in = [self.action] if type(self.action_space) is Discrete else self.action
+        self.u_in = (
+            [self.action] if type(self.action_space) is Discrete else self.action
+        )
         return self.u_in
 
 
 class DummyElectricMotor(ElectricMotor):
-
     # defined test values
-    _default_motor_parameter = permex_motor_parameter['motor_parameter']
+    _default_motor_parameter = permex_motor_parameter["motor_parameter"]
     _default_limits = dict(omega=16, torque=26, u=15, i=26, i_0=26, i_1=21, u_0=15)
     _default_nominal_values = dict(omega=14, torque=20, u=15, i=22, i_0=22, i_1=20)
     HAS_JACOBIAN = True
     electrical_jac_return = None
     CURRENTS_IDX = [0, 1]
-    CURRENTS = ['i_0', 'i_1']
-    VOLTAGES = ['u_0']
+    CURRENTS = ["i_0", "i_1"]
+    VOLTAGES = ["u_0"]
 
     def __init__(self, tau=1e-5, **kwargs):
         self.kwargs = kwargs
@@ -411,7 +297,6 @@ class DummyElectricMotor(ElectricMotor):
 
 
 class PowerElectronicConverterWrapper(cv.PowerElectronicConverter):
-
     def __init__(self, subconverter, **kwargs):
         super().__init__(**kwargs)
         self._converter = subconverter
@@ -452,9 +337,10 @@ class DummyScipyOdeSolver(ode):
     """
     Dummy class for ScipyOdeSolver
     """
+
     # defined test values
-    _kwargs = {'nsteps': 5}
-    _integrator = 'dop853'
+    _kwargs = {"nsteps": 5}
+    _integrator = "dop853"
     _y = np.zeros(2)
     _y_init = np.array([1, 6])
     _t = 0
@@ -507,7 +393,8 @@ class DummyLoad(MechanicalLoad):
     """
     dummy class for mechanical load
     """
-    state_names = ['omega', 'position']
+
+    state_names = ["omega", "position"]
     limits = dict(omega=15, position=10)
     nominal_values = dict(omega=15, position=10)
     mechanical_state = None
@@ -522,7 +409,7 @@ class DummyLoad(MechanicalLoad):
         self.reset_counter = 0
         super().__init__(**kwargs)
 
-    def reset(self, state_space, state_positions, nominal_state,  *_, **__):
+    def reset(self, state_space, state_positions, nominal_state, *_, **__):
         self.reset_counter += 1
         return np.zeros(2)
 
@@ -540,13 +427,14 @@ class DummyLoad(MechanicalLoad):
 
     def get_state_space(self, omega_range):
         self.omega_range = omega_range
-        return {'omega': 0, 'position': -1}, {'omega': 1, 'position': -1}
+        return {"omega": 0, "position": -1}, {"omega": 1, "position": -1}
 
 
 class DummyOdeSolver(OdeSolver):
     """
     Dummy class for ode solver
     """
+
     def __init__(self, **kwargs):
         self.kwargs = kwargs
         super().__init__()
@@ -559,7 +447,6 @@ class DummyOdeSolver(OdeSolver):
 
 
 class DummyConstraint(Constraint):
-
     def __init__(self, violation_degree=0.0):
         super().__init__()
         self.modules_set = False
@@ -574,7 +461,6 @@ class DummyConstraint(Constraint):
 
 
 class DummyConstraintMonitor(ConstraintMonitor):
-
     def __init__(self, no_of_dummy_constraints=1):
         constraints = [DummyConstraint() for _ in range(no_of_dummy_constraints)]
         super().__init__(additional_constraints=constraints)
@@ -584,6 +470,7 @@ class DummySCMLSystem(SCMLSystem):
     """
     dummy class for SCMLSystem
     """
+
     # defined test values
     OMEGA_IDX = 0
     TORQUE_IDX = 1
@@ -598,7 +485,7 @@ class DummySCMLSystem(SCMLSystem):
     _electrical_motor = None
     _mechanical_load = None
 
-    _state_names = ['omega_me', 'torque', 'u', 'i', 'u_sup']
+    _state_names = ["omega_me", "torque", "u", "i", "u_sup"]
     _state_length = 5
 
     # counter
@@ -659,8 +546,19 @@ class DummyRandom:
     _monkey_random_choice_counter = 0
     _monkey_random_normal_counter = 0
 
-    def __init__(self, exp_low=None, exp_high=None, exp_left=None, exp_right=None, exp_mode=None, exp_values=None,
-                 exp_probabilities=None, exp_loc=None, exp_scale=None, exp_size=None):
+    def __init__(
+        self,
+        exp_low=None,
+        exp_high=None,
+        exp_left=None,
+        exp_right=None,
+        exp_mode=None,
+        exp_values=None,
+        exp_probabilities=None,
+        exp_loc=None,
+        exp_scale=None,
+        exp_size=None,
+    ):
         """
         set expected values
         :param exp_low: expected lower value
@@ -746,25 +644,29 @@ class DummyRandom:
 
 class DummyElectricMotorEnvironment(ElectricMotorEnvironment):
     """Dummy environment to test pre implemented callbacks. Extend for further testing cases"""
-    
+
     def __init__(self, reference_generator=None, callbacks=(), **kwargs):
         reference_generator = reference_generator or DummyReferenceGenerator()
-        super().__init__(DummyPhysicalSystem(), reference_generator, DummyRewardFunction(), callbacks=callbacks)
-    
+        super().__init__(
+            DummyPhysicalSystem(),
+            reference_generator,
+            DummyRewardFunction(),
+            callbacks=callbacks,
+        )
+
     def step(self):
-        self._call_callbacks('on_step_begin', 0, 0)
-        self._call_callbacks('on_step_end', 0, 0, 0, 0, 0)
-            
+        self._call_callbacks("on_step_begin", 0, 0)
+        self._call_callbacks("on_step_end", 0, 0, 0, 0, 0)
+
     def reset(self):
-        self._call_callbacks('on_reset_begin')
-        self._call_callbacks('on_reset_end', 0, 0)
-        
+        self._call_callbacks("on_reset_begin")
+        self._call_callbacks("on_reset_end", 0, 0)
+
     def close(self):
-        self._call_callbacks(self._callbacks, 'on_close')
+        self._call_callbacks(self._callbacks, "on_close")
 
 
 class DummyCallback(Callback):
-    
     def __init__(self):
         super().__init__()
         self.reset_begin = 0
@@ -772,7 +674,7 @@ class DummyCallback(Callback):
         self.step_begin = 0
         self.step_end = 0
         self.close = 0
-    
+
     def on_reset_begin(self):
         self.reset_begin += 1
 

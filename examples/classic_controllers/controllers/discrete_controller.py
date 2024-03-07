@@ -3,8 +3,8 @@ from gymnasium.spaces import Discrete, MultiDiscrete
 
 class DiscreteController:
     """
-        The DiscreteController is the base class for the base discrete controllers (OnOff controller and three-point
-        controller).
+    The DiscreteController is the base class for the base discrete controllers (OnOff controller and three-point
+    controller).
     """
 
     @classmethod
@@ -16,8 +16,12 @@ class DiscreteController:
         else:
             action_space_n = 3
 
-        controller = _controllers[stage['controller_type']][2](environment, action_space=action_space_n,
-                                                               param_dict=stage, **controller_kwargs)
+        controller = _controllers[stage["controller_type"]][2](
+            environment,
+            action_space=action_space_n,
+            param_dict=stage,
+            **controller_kwargs,
+        )
         return controller
 
     def control(self, state, reference):

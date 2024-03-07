@@ -25,9 +25,10 @@ def parameterize_three_phase_grid(amplitude, frequency, initial_phase):
         u_abc = [
             amplitude * np.sin(omega * t + phi_initial),
             amplitude * np.sin(omega * t + phi_initial - phi),
-            amplitude * np.sin(omega * t + phi_initial + phi)
-         ]
+            amplitude * np.sin(omega * t + phi_initial + phi),
+        ]
         return u_abc
+
     return grid_voltage
 
 
@@ -35,21 +36,17 @@ def parameterize_three_phase_grid(amplitude, frequency, initial_phase):
 env = gem.make(
     # Choose the squirrel cage induction motor (SCIM) with continuous-control-set
     "Cont-CC-SCIM-v0",
-
     #
     load=gem.physical_systems.PolynomialStaticLoad(
         dict(a=0.0, b=0.0, c=0.0, j_load=1e-6)
     ),
-
     # Define the numerical solver for the simulation
     ode_solver="scipy.ode",
-
     # Define which state variables are to be monitored concerning limit violations
     # "()" means, that limit violation will not necessitate an env.reset()
     constraints=(),
-
     # Set the sampling time
-    tau=1e-5
+    tau=1e-5,
 )
 
 tau = env.physical_system.tau
@@ -97,16 +94,20 @@ TIME *= 1e3
 # STATE[13]: u_sup (DC-link supply voltage)
 
 plt.subplots(2, 2, figsize=(7.45, 2.5))
-plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.08, hspace=0.05)
-plt.rcParams.update({'font.size': 8})
+plt.subplots_adjust(
+    left=None, bottom=None, right=None, top=None, wspace=0.08, hspace=0.05
+)
+plt.rcParams.update({"font.size": 8})
 
 plt.subplot(2, 2, 1)
 plt.plot(TIME, STATE[0])
 plt.ylabel(r"$\omega_\mathrm{me} \, / \, \frac{1}{\mathrm{s}}$")
 plt.xlim([TIME[0], TIME[-1]])
 plt.yticks([0, 50, 100, 150])
-plt.tick_params(axis='x', which='both', labelbottom=False)
-plt.tick_params(axis='both', direction="in", left=True, right=False, bottom=True, top=True)
+plt.tick_params(axis="x", which="both", labelbottom=False)
+plt.tick_params(
+    axis="both", direction="in", left=True, right=False, bottom=True, top=True
+)
 plt.grid()
 
 ax = plt.subplot(2, 2, 2)
@@ -118,8 +119,10 @@ plt.xlim([TIME[0], TIME[-1]])
 plt.yticks([-200, 0, 200])
 ax.yaxis.set_label_position("right")
 ax.yaxis.tick_right()
-plt.tick_params(axis='x', which='both', labelbottom=False)
-plt.tick_params(axis='both', direction="in", left=False, right=True, bottom=True, top=True)
+plt.tick_params(axis="x", which="both", labelbottom=False)
+plt.tick_params(
+    axis="both", direction="in", left=False, right=True, bottom=True, top=True
+)
 plt.grid()
 plt.legend(loc="lower right", ncol=3)
 
@@ -129,7 +132,9 @@ plt.xlabel(r"$t \, / \, \mathrm{ms}$")
 plt.ylabel(r"$T \, / \, \mathrm{Nm}$")
 plt.xlim([TIME[0], TIME[-1]])
 plt.yticks([0, 20])
-plt.tick_params(axis='both', direction="in", left=True, right=False, bottom=True, top=True)
+plt.tick_params(
+    axis="both", direction="in", left=True, right=False, bottom=True, top=True
+)
 plt.grid()
 
 ax = plt.subplot(2, 2, 4)
@@ -140,7 +145,9 @@ plt.ylabel(r"$i \, / \, \mathrm{A}$")
 plt.xlim([TIME[0], TIME[-1]])
 ax.yaxis.set_label_position("right")
 ax.yaxis.tick_right()
-plt.tick_params(axis='both', direction="in", left=False, right=True, bottom=True, top=True)
+plt.tick_params(
+    axis="both", direction="in", left=False, right=True, bottom=True, top=True
+)
 plt.yticks([0, 10, 20, 30])
 plt.grid()
 

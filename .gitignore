@@ -31,3 +31,4 @@ examples/logs/
 .vscode/settings.json
 .vscode/launch.json
 plots/
+saved_plots/
