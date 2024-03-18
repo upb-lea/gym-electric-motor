@@ -1,10 +1,12 @@
-import numpy as np
-from gymnasium.spaces import Box
 import warnings
 
+import numpy as np
+from gymnasium.spaces import Box
+
 import gym_electric_motor as gem
-from ..random_component import RandomComponent
+
 from ..core import PhysicalSystem
+from ..random_component import RandomComponent
 from ..utils import set_state_array
 
 
@@ -247,16 +249,18 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
             self._load_deriv_size = load_derivative.size
         else:
             motor_state = state[self._motor_ode_idx]
-            self._system_eq_placeholder[
-                : self._load_deriv_size
-            ] = self._mechanical_load.mechanical_ode(
-                t, state[self._load_ode_idx], self._electrical_motor.torque(motor_state)
-            ).ravel()
-            self._system_eq_placeholder[
-                self._load_deriv_size :
-            ] = self._electrical_motor.electrical_ode(
-                motor_state, u_in, state[self._omega_ode_idx]
-            ).ravel()
+            self._system_eq_placeholder[: self._load_deriv_size] = (
+                self._mechanical_load.mechanical_ode(
+                    t,
+                    state[self._load_ode_idx],
+                    self._electrical_motor.torque(motor_state),
+                ).ravel()
+            )
+            self._system_eq_placeholder[self._load_deriv_size :] = (
+                self._electrical_motor.electrical_ode(
+                    motor_state, u_in, state[self._omega_ode_idx]
+                ).ravel()
+            )
 
         return self._system_eq_placeholder
 
@@ -276,9 +280,9 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         system_jac = np.zeros((state.shape[0], state.shape[0]))
         system_jac[: load_jac.shape[0], : load_jac.shape[1]] = load_jac
         system_jac[-motor_jac.shape[0] :, -motor_jac.shape[1] :] = motor_jac
-        system_jac[
-            -motor_jac.shape[0] :, [self._omega_ode_idx]
-        ] = el_state_over_omega.reshape((-1, 1))
+        system_jac[-motor_jac.shape[0] :, [self._omega_ode_idx]] = (
+            el_state_over_omega.reshape((-1, 1))
+        )
         system_jac[: load_jac.shape[0], load_jac.shape[1] :] = np.matmul(
             load_over_torque.reshape(-1, 1), torque_over_el_state.reshape(1, -1)
         )
@@ -288,7 +292,7 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         """
         Reset all the systems modules to an initial state.
 
-        Returns:
+        Returns:9
              The new state of the system.
         """
         self.next_generator()

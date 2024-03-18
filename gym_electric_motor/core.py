@@ -17,29 +17,43 @@ Each ElectricMotorEnvironment contains the five following modules:
     - Visualization of the PhysicalSystems state, reference and reward for the user.
 
 """
-import os
+
 import datetime
-
-import gymnasium
-import numpy as np
-from gymnasium.spaces import Box
-
-from .utils import instantiate
-from .random_component import RandomComponent
-from .constraints import Constraint, LimitConstraint
-import gym_electric_motor as gem
-import matplotlib.pyplot
-from matplotlib.figure import Figure
-import matplotlib
+import os
 from dataclasses import dataclass
 
+import gymnasium
+import matplotlib
+import matplotlib.pyplot
+import numpy as np
+from gymnasium.spaces import Box
+from matplotlib.figure import Figure
+
+import gym_electric_motor as gem
+
+from .constraints import Constraint, LimitConstraint
+from .random_component import RandomComponent
+from .utils import instantiate
+
 
 @dataclass
+class Signal:
+    value: any = None
+
+
 class Workspace:
-    test = []
+    table: dict = {}
+
+    def __repr__(self) -> str:
+        return str(self.table)
+
+    def set(self, key, value):
+        self.table[key] = value
+
+    def get(self, key):
+        return self.table[key]
 
 
-@dataclass
 class SimulationEnvironment:
     tau: float = 0.0  # Simulation interval
     step: int = 0  # Current simulation step
@@ -366,7 +380,7 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             not self._terminated
         ), "A reset is required before the environment can perform further steps"
         self._call_callbacks("on_step_begin", self.physical_system.k, action)
-        print(f"k:{self.physical_system.k}")
+
         state = self._physical_system.simulate(action)
         reference = self.reference_generator.get_reference(state)
         violation_degree = self._constraint_monitor.check_constraints(state)
