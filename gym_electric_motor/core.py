@@ -41,6 +41,14 @@ class Signal:
     value: any = None
 
 
+class Input(Signal):
+    pass
+
+
+class Output(Signal):
+    pass
+
+
 class Workspace:
     table: dict = {}
 

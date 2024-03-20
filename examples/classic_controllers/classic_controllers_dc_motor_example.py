@@ -3,7 +3,7 @@ from externally_referenced_state_plot import ExternallyReferencedStatePlot
 
 import gym_electric_motor as gem
 import gym_electric_motor.physical_systems as ps
-from gym_electric_motor.core import Signal
+from gym_electric_motor.core import Input, Output, Signal
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.visualization import MotorDashboard
@@ -15,6 +15,19 @@ class Block:
 
     def step():
         pass
+
+
+class MyRCVoltageSupply(Block):
+    i_sup: Input
+    u_sup: Output
+
+    R: float = 1.0
+    C: float = 4e-3
+
+    supply = ps.RCVoltageSupply(u_nominal=60.0, supply_parameter={"R": R, "C": C})
+
+    def step(self, t):
+        self.u_sup.value = self.supply.get_voltage(t, self.i_sup.value)[0]
 
 
 class MyIdealVoltageSupply(Block):
@@ -90,6 +103,14 @@ class MyEnv(gem.SimulationEnvironment):
     )
     reward_function = WeightedSumOfErrors(reward_weights=dict(torque=1.0))
 
+    drive_train = ps.DcMotorSystem(
+        supply=supply,
+        converter=converter,
+        motor=motor,
+        load=load,
+        ode_solver=ode_solver,
+    )
+
     tau = 1e-4
     calc_jacobian = True
 
@@ -98,7 +119,35 @@ class MyEnv(gem.SimulationEnvironment):
         self
 
     def step(self, action):
-        state = self._physical_system.simulate(action)
+        state = self.drive_train.simulate(action)
+        reference = self.reference_generator.get_reference(state)
+        violation_degree = self._constraint_monitor.check_constraints(state)
+        reward = self._reward_function.reward(
+            state, reference, self._physical_system.k, action, violation_degree
+        )
+        self._terminated = violation_degree >= 1.0
+        ref_next = self.reference_generator.get_reference_observation(state)
+        self._call_callbacks(
+            "on_step_end",
+            self.physical_system.k,
+            state,
+            reference,
+            reward,
+            self._terminated,
+        )
+
+        # Call render code
+        if self.render_mode == "figure":
+            self.render()
+
+        info = {}
+        return (
+            (state[self.state_filter], ref_next),
+            reward,
+            self._terminated,
+            self._truncated,
+            info,
+        )
 
 
 if __name__ == "__main__":
