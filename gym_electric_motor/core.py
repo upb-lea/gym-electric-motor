@@ -20,6 +20,7 @@ Each ElectricMotorEnvironment contains the five following modules:
 
 import datetime
 import os
+from copy import copy
 from dataclasses import dataclass
 
 import gymnasium
@@ -36,9 +37,24 @@ from .random_component import RandomComponent
 from .utils import instantiate
 
 
+class SimTime:
+    seconds: float = 0.0
+
+
 @dataclass
 class Signal:
-    value: any = None
+    _value: any = None
+    _time: SimTime
+    _value_set_at: SimTime
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value_set_at = copy(self._time)
+        self._value = value
 
 
 class Input(Signal):
@@ -63,13 +79,18 @@ class Workspace:
 
 
 class SimulationEnvironment:
-    tau: float = 0.0  # Simulation interval
+    tau: float = 0.02  # Simulation interval
     step: int = 0  # Current simulation step
+
+    sim_time = SimTime(0.0)
 
     # Current simulation time
     @property
     def t(self) -> float:
         return self.tau * self.step
+
+    def create_signal() -> Signal:
+        return Signal()
 
 
 class ElectricMotorEnvironment(gymnasium.core.Env):
