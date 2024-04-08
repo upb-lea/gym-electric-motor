@@ -43,9 +43,7 @@ class SimTime:
 
 @dataclass
 class Signal:
-    _value: any = None
-    _time: SimTime
-    _value_set_at: SimTime
+    value: any = None
 
     @property
     def value(self):
@@ -53,7 +51,6 @@ class Signal:
 
     @value.setter
     def value(self, value):
-        self._value_set_at = copy(self._time)
         self._value = value
 
 
@@ -82,7 +79,7 @@ class SimulationEnvironment:
     tau: float = 0.02  # Simulation interval
     step: int = 0  # Current simulation step
 
-    sim_time = SimTime(0.0)
+    sim_time = SimTime()
 
     # Current simulation time
     @property
