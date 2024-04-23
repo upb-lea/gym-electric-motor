@@ -6,9 +6,9 @@ from .synchronous_motor import SynchronousMotor
 
 class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     """
-    =====================  ==========  ============= ===========================================
+    =====================  ==========  ============= =================================================
     Motor Parameter        Unit        Default Value Description
-    =====================  ==========  ============= ===========================================
+    =====================  ==========  ============= =================================================
     r_s                    mOhm        15.55         Stator resistance
     r_e                    mOhm        7.2           Excitation resistance
     l_d                    mH          1.66          Direct axis inductance
@@ -16,12 +16,13 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     l_m                    mH          1.589         Mutual inductance
     l_e                    mH          1.74          Excitation inductance
     p                      1           3             Pole pair number
+    k                      1           65.21         Transfer ratio of number of windings (N_s / N_e)
     j_rotor                kg/m^2      0.3883        Moment of inertia of the rotor
-    =====================  ==========  ============= ===========================================
+    =====================  ==========  ============= =================================================
 
-    =============== ====== =============================================
+    =============== ====== ===========================================================================
     Motor Currents  Unit   Description
-    =============== ====== =============================================
+    =============== ====== ===========================================================================
     i_sd            A      Direct axis current
     i_sq            A      Quadrature axis current
     i_e             A      Excitation current
@@ -30,10 +31,10 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     i_c             A      Current through branch c
     i_alpha         A      Current in alpha axis
     i_beta          A      Current in beta axis
-    =============== ====== =============================================
-    =============== ====== =============================================
+    =============== ====== ===========================================================================
+    =============== ====== ===========================================================================
     Motor Voltages  Unit   Description
-    =============== ====== =============================================
+    =============== ====== ===========================================================================
     u_sd            V      Direct axis voltage
     u_sq            V      Quadrature axis voltage
     u_e             V      Exciting voltage
@@ -42,13 +43,13 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     u_c             V      Voltage through branch c
     u_alpha         V      Voltage in alpha axis
     u_beta          V      Voltage in beta axis
-    =============== ====== =============================================
+    =============== ====== ===========================================================================
 
-    ======== ===========================================================
+    ======== =========================================================================================
     Limits / Nominal Value Dictionary Entries:
-    -------- -----------------------------------------------------------
+    -------- -----------------------------------------------------------------------------------------
     Entry    Description
-    ======== ===========================================================
+    ======== =========================================================================================
     i        General current limit / nominal value
     i_a      Current in phase a
     i_b      Current in phase b
@@ -69,7 +70,7 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     u_sd     Voltage in direct axis
     u_sq     Voltage in quadrature axis
     u_e      Voltage in excitation circuit
-    ======== ===========================================================
+    ======== =========================================================================================
 
 
     Note:
@@ -105,6 +106,7 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         'j_rotor': 0.3883,
         'r_s': 15.55e-3,
         'r_e': 7.2e-3,
+        'k': 65.21
     }
     HAS_JACOBIAN = True
     _default_limits = dict(omega=12e3 * np.pi / 30, torque=0.0, i=150, i_e=150, epsilon=math.pi, u=320)
@@ -122,20 +124,28 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     def _update_model(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        sigma = 1 - mp['l_m'] ** 2 / (mp['l_d'] * mp['l_e'])
+
+        # Transform rotor quantities to stator side (uppercase index denotes transformation to stator side)
+        mp['r_E'] = mp['k'] ** 2 * 3/2 * mp['r_e']
+        mp['l_M'] = mp['k'] * 3/2 * mp['l_m']
+        mp['l_E'] = mp['k'] ** 2 * 3/2 * mp['l_e']
+
+        mp['i_k_rs'] = 2 / 3 / mp['k'] # ratio (i_E / i_e)
+        mp['sigma'] = 1 - mp['l_M'] ** 2 / (mp['l_d'] * mp['l_E']) * 77
+
         self._model_constants = np.array([
-            #                 omega,                                         i_d,        i_q,                                         i_e,                              u_d, u_q,                              u_e,          omega * i_d,                                            omega * i_q,           omega * i_e
-            [                     0,                          -mp['r_s'] / sigma,          0, mp['l_m'] * mp['r_e'] / (sigma * mp['l_e']),                        1 / sigma,   0, -mp['l_m'] / (sigma * mp['l_e']),                    0,                            mp['l_q'] * mp['p'] / sigma,                    0],
-            [                     0,                                           0, -mp['r_s'],                                           0,                                0,   1,                                0, -mp['l_d'] * mp['p'],                                                      0, -mp['p'] * mp['l_m']],
-            [                     0, mp['l_m'] * mp['r_s'] / (sigma * mp['l_d']),          0,                          -mp['r_e'] / sigma, -mp['l_m'] / (sigma * mp['l_d']),   0,                        1 / sigma,                    0, -mp['p'] * mp['l_m'] * mp['l_q'] / (sigma * mp['l_d']),                    0],
-            [               mp['p'],                                           0,          0,                                           0,                                0,   0,                                0,                    0,                                                      0,                    0],
+            #                 omega,                                               i_d,        i_q,                                                              i_e,                              u_d, u_q,                                                    u_e,          omega * i_d,                                                  omega * i_q,                         omega * i_e
+            [                     0,                          -mp['r_s'] / mp['sigma'],          0, mp['l_M'] * mp['r_E'] / (mp['sigma'] * mp['l_E']) * mp['i_k_rs'],                        1 / mp['sigma'],   0, -mp['l_M'] * mp['k'] / (mp['sigma'] * mp['l_E']),                    0,                            mp['l_q'] * mp['p'] / mp['sigma'],                                   0],
+            [                     0,                                                 0, -mp['r_s'],                                                                0,                                      0,   1,                                                0, -mp['l_d'] * mp['p'],                                                            0, -mp['p'] * mp['l_M'] * mp['i_k_rs']],
+            [                     0, mp['l_M'] * mp['r_s'] / (mp['sigma'] * mp['l_d']),          0,                          -mp['r_E'] / mp['sigma'] * mp['i_k_rs'], -mp['l_M'] / (mp['sigma'] * mp['l_d']),   0,                            mp['k'] / mp['sigma'],                    0, -mp['p'] * mp['l_M'] * mp['l_q'] / (mp['sigma'] * mp['l_d']),                                   0],
+            [               mp['p'],                                                 0,          0,                                                                0,                                      0,   0,                                                0,                    0,                                                            0,                                   0],
         ])
 
         self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp['l_d']
         self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp['l_q']
-        self._model_constants[self.I_E_IDX] = self._model_constants[self.I_E_IDX] / mp['l_e']
+        self._model_constants[self.I_E_IDX] = self._model_constants[self.I_E_IDX] / mp['l_E'] / mp['i_k_rs']
 
-    def electrical_ode(self, state, u_dq, omega, *_):
+    def electrical_ode(self, state, u_dqe, omega, *_):
         """
         The differential equation of the Synchronous Motor.
 
@@ -152,9 +162,9 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
             state[self.I_SD_IDX],
             state[self.I_SQ_IDX],
             state[self.I_E_IDX],
-            u_dq[0],
-            u_dq[1],
-            u_dq[2],
+            u_dqe[0],
+            u_dqe[1],
+            u_dqe[2],
             omega * state[self.I_SD_IDX],
             omega * state[self.I_SQ_IDX],
             omega * state[self.I_E_IDX]
@@ -167,40 +177,39 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
             return self.torque([0, self._limits['i_sq'], self._limits['i_e'], 0])
         else:
             i_n = self.nominal_values['i']
-            _p = mp['l_m'] * i_n / (2 * (mp['l_d'] - mp['l_q']))
+            _p = mp['l_M'] * i_n / (2 * (mp['l_d'] - mp['l_q']))
             _q = - i_n ** 2 / 2
             if mp['l_d'] < mp['l_q']:
-                i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
+                i_d_opt = - _p / 2 - np.sqrt((_p / 2) ** 2 - _q)
             else:
-                i_d_opt = - _p / 2 + np.sqrt( (_p / 2) ** 2 - _q)
+                i_d_opt = - _p / 2 + np.sqrt((_p / 2) ** 2 - _q)
             i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
         return self.torque([i_d_opt, i_q_opt, self._limits['i_e'], 0])
 
     def torque(self, currents):
         # Docstring of superclass
         mp = self._motor_parameter
-        return 1.5 * mp['p'] * (mp['l_m'] * currents[self.I_E_IDX] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+        return 1.5 * mp['p'] * (mp['l_M'] * currents[self.I_E_IDX] * mp['i_k_rs'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
 
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
-        sigma = 1 - mp['l_m'] ** 2 / (mp['l_d'] * mp['l_e'])
         return (
             np.array([ # dx'/dx
-                [                                 -mp['r_s'] / mp['l_d'],                          mp['l_q'] / (sigma * mp['l_d']) * omega * mp['p'], mp['l_m'] * mp['r_e'] / (sigma * mp['l_d'] * mp['l_e']), 0],
-                [               -mp['l_d'] / mp['l_q'] * omega * mp['p'],                                                     -mp['r_s'] / mp['l_q'],                -omega * mp['p'] * mp['l_e'] / mp['l_q'], 0],
-                [mp['l_m'] * mp['r_s'] / (sigma * mp['l_d'] * mp['l_e']), -omega * mp['p'] * mp['l_m'] * mp['l_q'] / (sigma * mp['l_d'] * mp['l_e']),                                  -mp['r_e'] / mp['l_e'], 0],
-                [                                                      0,                                                                          0,                                                       0, 0],
+                [                       -mp['r_s'] / (mp['l_d'] * mp['sigma']),                          mp['l_q'] / (mp['sigma'] * mp['l_d']) * omega * mp['p'], mp['l_M'] * mp['r_e'] / (mp['sigma'] * mp['l_d'] * mp['l_E']) * mp['i_k_rs'], 0],
+                [                     -mp['l_d'] / mp['l_q'] * omega * mp['p'],                                                           -mp['r_s'] / mp['l_q'],                      -omega * mp['p'] * mp['l_E'] / mp['l_q'] * mp['i_k_rs'], 0],
+                [mp['l_M'] * mp['r_s'] / (mp['sigma'] * mp['l_d'] * mp['l_E']), -omega * mp['p'] * mp['l_M'] * mp['l_q'] / (mp['sigma'] * mp['l_d'] * mp['l_E']),                                        -mp['r_E'] / mp['l_E'] * mp['i_k_rs'], 0],
+                [                                                            0,                                                                                0,                                                                            0, 0],
             ]),
             np.array([ # dx'/dw
                 mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
-                -mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['p'] * mp['l_m'] / mp['l_q'] * state[self.I_E_IDX],
-                -mp['p'],
+                -mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['p'] * mp['l_M'] / mp['l_q'] * state[self.I_E_IDX] * mp['i_k_rs'],
+                -mp['p'] * mp['l_M'] * mp['l_q'] / (mp['sigma'] * mp['l_d'] * mp['l_E']),
                 mp['p'],
             ]),
             np.array([ # dT/dx
                 1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
-                1.5 * mp['p'] * (mp['l_e'] * state[self.I_E_IDX] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
-                1.5 * mp['p'] * mp['l_e'] * state[self.I_SQ_IDX],
+                1.5 * mp['p'] * (mp['l_E'] * state[self.I_E_IDX] * mp['i_k_rs'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
+                1.5 * mp['p'] * mp['l_E'] * state[self.I_SQ_IDX],
                 0,
             ])
         )
