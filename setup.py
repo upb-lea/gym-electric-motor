@@ -4,7 +4,8 @@ import setuptools
 AUTHORS = [
     'Arne Traue', 'Gerrit Book', 'Praneeth Balakrishna',
     'Pascal Peters', 'Pramod Manjunatha', 'Darius Jakobeit', 'Felix Book', 
-    'Max Schenke', 'Wilhelm Kirchgässner', 'Oliver Wallscheid',
+    'Max Schenke', 'Wilhelm Kirchgässner', 'Oliver Wallscheid', 'Barnabas Haucke-Korber',
+    'Stefan Arndt', 'Marius Köhler'
 ]
 
 with open('requirements.txt', 'r') as f:
@@ -15,11 +16,11 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='gym_electric_motor',
-      version='1.1.0',
-      description='An Farama Gymnasium environment for electric motor control.',
+      version='2.0.0',
+      description='A Farama Gymnasium environment for electric motor control.',
       packages=setuptools.find_packages(),
       install_requires=requirements,
-      python_requires='>=3.6',
+      python_requires='>=3.8',
       extras_require={'examples': [
                         'keras-rl2',
                         'stable-baselines3',
