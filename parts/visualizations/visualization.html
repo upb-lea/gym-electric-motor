@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualization &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>Visualization &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=4f26b750"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -40,11 +44,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -86,71 +90,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="visualization">
-<h1>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline"></a></h1>
+  <section id="visualization">
+<h1>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Available Visualizations:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Available Visualizations:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="motor_dashboard.html">Motor Dashboard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="console_printer.html">Console Printer</a></li>
 </ul>
 </div>
-<div class="section" id="visualization-base-class">
-<h2>Visualization Base Class<a class="headerlink" href="#visualization-base-class" title="Permalink to this headline"></a></h2>
-<dl class="class">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorVisualization</code><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization" title="Permalink to this definition"></a></dt>
-<dd><p>Base class for all visualizations in GEM.
-The visualization is basically only a Callback that is extended by a render() function to update the figure.
-With the function calls that are inherited by the Callback superclass (e.g. <em>on_step_end</em>),
-the data is passed from the environment to the visualization. In the render() function the passed data can be
-visualized in the desired way.</p>
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_close">
-<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_close" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of a close</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_reset_begin">
-<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_reset_begin" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_reset_end">
-<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_reset_end" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the end of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_step_begin">
-<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_step_begin" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.on_step_end">
-<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">terminated</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_step_end" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the end of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.render">
-<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.render" title="Permalink to this definition"></a></dt>
-<dd><p>Function to update the user interface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorVisualization.set_env">
-<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.set_env" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the environment of the motor.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-</div>
+<section id="visualization-base-class">
+<h2>Visualization Base Class<a class="headerlink" href="#visualization-base-class" title="Permalink to this heading"></a></h2>
+</section>
+</section>
 
 
            </div>

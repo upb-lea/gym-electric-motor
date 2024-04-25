@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Constraint Monitor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>Constraint Monitor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4f26b750"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -40,11 +44,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -87,115 +91,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="constraint-monitor">
-<h1>Constraint Monitor<a class="headerlink" href="#constraint-monitor" title="Permalink to this headline"></a></h1>
+  <section id="constraint-monitor">
+<h1>Constraint Monitor<a class="headerlink" href="#constraint-monitor" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Available Constraints:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Available Constraints:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="constraints/constraint.html">Constraint Base Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="constraints/limit_constraint.html">Limit Constraint</a></li>
 <li class="toctree-l1"><a class="reference internal" href="constraints/squared_constraint.html">Squared Constraint</a></li>
 </ul>
 </div>
-<div class="section" id="usage-guide">
-<h2>Usage Guide<a class="headerlink" href="#usage-guide" title="Permalink to this headline"></a></h2>
+<section id="usage-guide">
+<h2>Usage Guide<a class="headerlink" href="#usage-guide" title="Permalink to this heading"></a></h2>
 <p>ToDo</p>
-</div>
-<div class="section" id="constraint-monitor-api-documentation">
-<h2>Constraint Monitor API Documentation<a class="headerlink" href="#constraint-monitor-api-documentation" title="Permalink to this headline"></a></h2>
-<dl class="class">
-<dt id="gym_electric_motor.core.ConstraintMonitor">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ConstraintMonitor</code><span class="sig-paren">(</span><em class="sig-param">limit_constraints=()</em>, <em class="sig-param">additional_constraints=()</em>, <em class="sig-param">merge_violations='max'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor" title="Permalink to this definition"></a></dt>
-<dd><p>The ConstraintMonitor is used within the ElectricMotorEnvironment to monitor the states for illegal / undesired
-values (e.g. overcurrents).</p>
-<p>It consists of a list of multiple independent constraints. Each constraint gets the current observation of the
-environment as input and returns a <em>violation degree</em> within <span class="math notranslate nohighlight">\([0.0, 1.0]\)</span>.
-All these are merged together and the ConstraintMonitor returns a total violation degree.</p>
-<dl class="simple">
-<dt><strong>Soft Constraints:</strong></dt><dd><p>To enable a higher flexibility, the constraints return a violation degree (float) instead of a simple violation
-flag (bool). So, even before the limits are violated, the reward function can take the limit violation degree
-into account. If the violation degree is at 0.0, no states are in a dangerous region. For values between 0.0 and
-1.0 the reward will be decreased gradually so that the agent will learn to avoid these state regions.
-If the violation degree reaches 1.0 the episode is terminated.</p>
-</dd>
-<dt><strong>Hard Constraints:</strong></dt><dd><p>With the above concept, also hard constraints that directly terminate an episode without any “danger”-region
-can be modeled. Then, the violation degree of the constraint directly changes from 0.0 to 1.0, if a violation
-occurs.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>limit_constraints</strong> (<em>list</em><em>(</em><em>str</em><em>)</em><em>/'all_states'</em>) – <dl class="simple">
-<dt>Shortcut parameter to pass all states that limits shall be observed.</dt><dd><ul>
-<li><dl class="simple">
-<dt>list(str): Pass a list with state_names and all of the states will be observed to stay within</dt><dd><p>their limits.</p>
-</dd>
-</dl>
-</li>
-<li><p>’all_states’: Shortcut for all states are observed to stay within the limits.</p></li>
-</ul>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>additional_constraints</strong> (<em>list</em><em>(</em><em>Constraint/callable</em><em>)</em>) – Further constraints that shall be monitored. These have to be initialized first and passed to the
-ConstraintMonitor. Alternatively, constraints can be defined as a function that takes the current
-state and returns a float within [0.0, 1.0].</p></li>
-<li><p><strong>merge_violations</strong> (‘max’/’product’/callable(<a href="#id3"><span class="problematic" id="id4">*</span></a>violation_degrees) -&gt; float) – <p>Function to merge all single
-violation degrees to a total violation degree.</p>
-<blockquote>
-<div><ul>
-<li><p>’max’: Take the maximal violation degree as total violation degree.</p></li>
-<li><dl class="simple">
-<dt>’product’: Calculates the total violation degree as one minus the product of one minus all single</dt><dd><p>violation degrees.</p>
-</dd>
-</dl>
-</li>
-<li><p>callable(<a href="#id1"><span class="problematic" id="id2">*</span></a>violation_degrees) -&gt; float: User defined function to calculate the total violation.</p></li>
-</ul>
-</div></blockquote>
-</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="gym_electric_motor.core.ConstraintMonitor.check_constraints">
-<code class="sig-name descname">check_constraints</code><span class="sig-paren">(</span><em class="sig-param">state: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.check_constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.check_constraints" title="Permalink to this definition"></a></dt>
-<dd><p>Function to check and merge all constraints.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The current environments state.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The total violation degree in [0,1]</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ConstraintMonitor.constraints">
-<em class="property">property </em><code class="sig-name descname">constraints</code><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.constraints" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the list of all constraints the ConstraintMonitor observes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ConstraintMonitor.set_modules">
-<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">ps: gym_electric_motor.core.PhysicalSystem</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.set_modules" title="Permalink to this definition"></a></dt>
-<dd><p>The PhysicalSystem of the environment is passed to save important parameters like the index of the states.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ps</strong> (<a class="reference internal" href="physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The PhysicalSystem of the environment.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-</div>
+</section>
+<section id="constraint-monitor-api-documentation">
+<h2>Constraint Monitor API Documentation<a class="headerlink" href="#constraint-monitor-api-documentation" title="Permalink to this heading"></a></h2>
+</section>
+</section>
 
 
            </div>

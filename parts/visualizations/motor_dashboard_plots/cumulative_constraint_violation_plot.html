@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cumulative Constraint Violation Plot &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>Cumulative Constraint Violation Plot &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=4f26b750"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -40,11 +44,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -99,77 +103,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="cumulative-constraint-violation-plot">
-<h1>Cumulative Constraint Violation Plot<a class="headerlink" href="#cumulative-constraint-violation-plot" title="Permalink to this headline"></a></h1>
-<dl class="class">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard_plots.</code><code class="sig-name descname">CumulativeConstraintViolationPlot</code><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/cumulative_constraint_violation_plot.html#CumulativeConstraintViolationPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot" title="Permalink to this definition"></a></dt>
-<dd><p>Plots the cumulative number of constraint violations during the runtime of the env. into an axis.</p>
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">axis</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/cumulative_constraint_violation_plot.html#CumulativeConstraintViolationPlot.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.initialize" title="Permalink to this definition"></a></dt>
-<dd><p>Initialization of the plot.</p>
-<p>It is called by the MotorDashboard. Set labels, legends… when overriding this method.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis</strong> (<em>matplotlib.pyplot.axis</em>) – Axis to plot in</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_close">
-<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_close" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of a close</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_reset_begin">
-<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_reset_begin" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_reset_end">
-<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_reset_end" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the end of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_step_begin">
-<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_step_begin" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_step_end">
-<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">terminated</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/cumulative_constraint_violation_plot.html#CumulativeConstraintViolationPlot.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.on_step_end" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the end of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.render">
-<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.render" title="Permalink to this definition"></a></dt>
-<dd><p>Update of the plots axis.</p>
-<p>The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
-are scaled dynamically.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.reset_data">
-<code class="sig-name descname">reset_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/cumulative_constraint_violation_plot.html#CumulativeConstraintViolationPlot.reset_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.reset_data" title="Permalink to this definition"></a></dt>
-<dd><p>Called by the dashboard, when the figures are reset to generate a new figure.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.set_env">
-<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.CumulativeConstraintViolationPlot.set_env" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the environment of the motor.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
+  <section id="cumulative-constraint-violation-plot">
+<h1>Cumulative Constraint Violation Plot<a class="headerlink" href="#cumulative-constraint-violation-plot" title="Permalink to this heading"></a></h1>
+</section>
 
 
            </div>

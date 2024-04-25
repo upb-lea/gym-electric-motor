@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finite Control Set Torque Control Doubly Fed Induction Motor Environment &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>Finite Control Set Torque Control Doubly Fed Induction Motor Environment &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=4f26b750"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -40,11 +44,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../environment.html">Environments</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../permex_dc/permex_dc_envs.html">Permanently Excited DC Motor Environments</a></li>
@@ -106,131 +110,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="finite-control-set-torque-control-doubly-fed-induction-motor-environment">
-<h1>Finite Control Set Torque Control Doubly Fed Induction Motor Environment<a class="headerlink" href="#finite-control-set-torque-control-doubly-fed-induction-motor-environment" title="Permalink to this headline"></a></h1>
-<dl class="class">
-<dt id="gym_electric_motor.envs.FiniteTorqueControlDoublyFedInductionMotorEnv">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.envs.</code><code class="sig-name descname">FiniteTorqueControlDoublyFedInductionMotorEnv</code><span class="sig-paren">(</span><em class="sig-param">supply=None</em>, <em class="sig-param">converter=None</em>, <em class="sig-param">motor=None</em>, <em class="sig-param">load=None</em>, <em class="sig-param">ode_solver=None</em>, <em class="sig-param">reward_function=None</em>, <em class="sig-param">reference_generator=None</em>, <em class="sig-param">visualization=None</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=()</em>, <em class="sig-param">constraints=(&lt;gym_electric_motor.constraints.SquaredConstraint object&gt;</em>, <em class="sig-param">)</em>, <em class="sig-param">calc_jacobian=True</em>, <em class="sig-param">tau=1e-05</em>, <em class="sig-param">physical_system_wrappers=()</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/envs/gym_im/doubly_fed_induction_motor_envs/finite_tc_dfim_env.html#FiniteTorqueControlDoublyFedInductionMotorEnv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.envs.FiniteTorqueControlDoublyFedInductionMotorEnv" title="Permalink to this definition"></a></dt>
-<dd><dl>
-<dt>Description:</dt><dd><p>Environment to simulate a finite control set torque controlled doubly fed induction motor.</p>
-</dd>
-<dt>Key:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-DFIM-v0'</span></code></p>
-</dd>
-<dt>Default Components:</dt><dd><ul class="simple">
-<li><p>Supply: <a class="reference internal" href="../../physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply"><code class="xref py py-class docutils literal notranslate"><span class="pre">IdealVoltageSupply</span></code></a></p></li>
-<li><p>Converter: <a class="reference internal" href="../../physical_systems/converters/DoubleConv.html#gym_electric_motor.physical_systems.converters.FiniteMultiConverter" title="gym_electric_motor.physical_systems.converters.FiniteMultiConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiniteMultiConverter</span></code></a></p></li>
-<li><p>Motor: <a class="reference internal" href="../../physical_systems/electric_motors/dfim.html#gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor" title="gym_electric_motor.physical_systems.electric_motors.DoublyFedInductionMotor"><code class="xref py py-class docutils literal notranslate"><span class="pre">DoublyFedInductionMotor</span></code></a></p></li>
-<li><p>Load: <a class="reference internal" href="../../physical_systems/mechanical_loads/const_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad" title="gym_electric_motor.physical_systems.mechanical_loads.ConstantSpeedLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantSpeedLoad</span></code></a></p></li>
-<li><p>Ode-Solver: <a class="reference internal" href="../../physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver" title="gym_electric_motor.physical_systems.solvers.EulerSolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">EulerSolver</span></code></a></p></li>
-<li><p>Reference Generator: <a class="reference internal" href="../../reference_generators/wiener_process_reference_generator.html#gym_electric_motor.reference_generators.WienerProcessReferenceGenerator" title="gym_electric_motor.reference_generators.WienerProcessReferenceGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WienerProcessReferenceGenerator</span></code></a> <em>Reference Quantity:</em> <code class="docutils literal notranslate"><span class="pre">'torque'</span></code></p></li>
-<li><p>Reward Function: <a class="reference internal" href="../../reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors" title="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors"><code class="xref py py-class docutils literal notranslate"><span class="pre">WeightedSumOfErrors</span></code></a> reward_weights: <code class="docutils literal notranslate"><span class="pre">'torque'</span> <span class="pre">=</span> <span class="pre">1.0</span></code></p></li>
-<li><p>Visualization: <a class="reference internal" href="../../visualizations/motor_dashboard.html#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="gym_electric_motor.visualization.motor_dashboard.MotorDashboard"><code class="xref py py-class docutils literal notranslate"><span class="pre">MotorDashboard</span></code></a> torque and action plots</p></li>
-<li><p>Constraints: <a class="reference internal" href="../../constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint" title="gym_electric_motor.constraints.SquaredConstraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">SquaredConstraint</span></code></a> on the currents  <code class="docutils literal notranslate"><span class="pre">'i_sd',</span> <span class="pre">'i_sq'</span></code></p></li>
-</ul>
-</dd>
-<dt>State Variables:</dt><dd><dl class="simple">
-<dt><a href="#id1"><span class="problematic" id="id2">``</span></a>[</dt><dd><p>‘omega’ , ‘torque’,
-‘i_sa’, ‘i_sb’, ‘i_sc’, ‘i_sd’, ‘i_sq’,
-‘u_sa’, ‘u_sb’, ‘u_sc’, ‘u_sd’, ‘u_sq’,
-‘i_ra’, ‘i_rb’, ‘i_rc’, ‘i_rd’, ‘i_rq’,
-‘u_ra’, ‘u_rb’, ‘u_rc’, ‘u_rd’, ‘u_rq’,
-‘epsilon’, ‘u_sup’</p>
-</dd>
-</dl>
-<p>]``</p>
-</dd>
-<dt>Reference Variables:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['torque']</span></code></p>
-</dd>
-<dt>Control Cycle Time:</dt><dd><p>tau = 1e-5 seconds</p>
-</dd>
-<dt>Observation Space:</dt><dd><p>Type: Tuple(State_Space, Reference_Space)</p>
-</dd>
-<dt>State Space:</dt><dd><p>Box(low=24 * [-1], high=24 * [1])</p>
-</dd>
-<dt>Reference Space:</dt><dd><p>Box(low=[-1], high=[1])</p>
-</dd>
-<dt>Action Space:</dt><dd><p>MultiDiscrete(8, 8)</p>
-</dd>
-<dt>Initial State:</dt><dd><p>Zeros on all state variables.</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gym_electric_motor.reference_generators</span> <span class="kn">import</span> <span class="n">LaplaceProcessReferenceGenerator</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Select a different ode_solver with default parameters by passing a keystring</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_overridden_solver</span> <span class="o">=</span> <span class="s1">&#39;scipy.solve_ivp&#39;</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Update the default arguments to the voltage supply by passing a parameter dict</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_changed_voltage_supply_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;u_nominal&#39;</span><span class="p">:</span> <span class="mf">400.0</span><span class="p">}</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Replace the reference generator by passing a new instance</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_new_ref_gen_instance</span> <span class="o">=</span> <span class="n">LaplaceProcessReferenceGenerator</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;omega&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">sigma_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="s1">&#39;Finite-TC-DFIM-v0&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">voltage_supply</span><span class="o">=</span><span class="n">my_changed_voltage_supply_args</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">ode_solver</span><span class="o">=</span><span class="n">my_overridden_solver</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">reference_generator</span><span class="o">=</span><span class="n">my_new_ref_gen_instance</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">terminated</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">terminated</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="n">state</span><span class="p">,</span> <span class="n">reference</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>supply</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageSupply</span></code></a> for the environment</p></li>
-<li><p><strong>converter</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../physical_systems/converters/converter.html#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="gym_electric_motor.physical_systems.converters.PowerElectronicConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">PowerElectronicConverter</span></code></a> for the environment</p></li>
-<li><p><strong>motor</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor" title="gym_electric_motor.physical_systems.electric_motors.ElectricMotor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricMotor</span></code></a> for the environment</p></li>
-<li><p><strong>load</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../physical_systems/mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">MechanicalLoad</span></code></a> for the environment</p></li>
-<li><p><strong>ode_solver</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">OdeSolver</span></code></a> for the environment</p></li>
-<li><p><strong>reward_function</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction" title="gym_electric_motor.core.RewardFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">RewardFunction</span></code></a> for the environment</p></li>
-<li><p><strong>reference_generator</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferenceGenerator</span></code></a> for the environment</p></li>
-<li><p><strong>visualization</strong> (<em>env-arg</em>) – Specification of the <a class="reference internal" href="../../visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization" title="gym_electric_motor.core.ElectricMotorVisualization"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricMotorVisualization</span></code></a> for the environment</p></li>
-<li><p><strong>constraints</strong> (<em>iterable</em><em>(</em><em>str/Constraint</em><em>)</em>) – <p>All Constraints of the environment.</p>
-<ul>
-<li><p>str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)</p></li>
-</ul>
-<blockquote>
-<div><p>can be directly specified by passing the state name here (e.g. ‘i’, ‘omega’)</p>
-</div></blockquote>
-<ul>
-<li><p>instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and</p></li>
-</ul>
-<blockquote>
-<div><p>passed to the environment.</p>
-</div></blockquote>
-</p></li>
-<li><p><strong>calc_jacobian</strong> (<em>bool</em>) – Flag, if the jacobian of the environment shall be taken into account during the
-simulation. This may lead to speed improvements. Default: True</p></li>
-<li><p><strong>tau</strong> (<em>float</em>) – Duration of one control step in seconds. Default: 1e-4.</p></li>
-<li><p><strong>state_filter</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of states that shall be returned to the agent. Default: None (no filter)</p></li>
-<li><p><strong>callbacks</strong> (<em>list</em><em>(</em><a class="reference internal" href="../../core.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks for user interaction. Default: ()</p></li>
-<li><p><strong>physical_system_wrappers</strong> (<em>list</em><em>(</em><a class="reference internal" href="../../state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper" title="gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper"><em>PhysicalSystemWrapper</em></a><em>)</em>) – List of Physical System Wrappers to modify the</p></li>
-<li><p><strong>to and states from the physical system before they are used in the environment. Default</strong> (<em>actions</em>) – ()</p></li>
-</ul>
-</dd>
-</dl>
-<dl>
-<dt>Note on the env-arg type:</dt><dd><p>All parameters of type env-arg can be selected as one of the following types:</p>
-<p><strong>instance:</strong> Pass an already instantiated object derived from the corresponding base class
-(e.g. <code class="docutils literal notranslate"><span class="pre">reward_function=MyRewardFunction()</span></code>). This is directly used in the environment.</p>
-<p><strong>dict:</strong> Pass a dict to update the default parameters of the default type.
-(e.g. <code class="docutils literal notranslate"><span class="pre">visualization=dict(state_plots=('omega',</span> <span class="pre">'u'))</span></code>)</p>
-<p><strong>str:</strong> Pass a string out of the registered classes to select a different class for the component.
-This class is then initialized with its default parameters.
-The available strings can be looked up in the documentation. (e.g. <code class="docutils literal notranslate"><span class="pre">converter='Finite-2QC'</span></code>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
+  <section id="finite-control-set-torque-control-doubly-fed-induction-motor-environment">
+<h1>Finite Control Set Torque Control Doubly Fed Induction Motor Environment<a class="headerlink" href="#finite-control-set-torque-control-doubly-fed-induction-motor-environment" title="Permalink to this heading"></a></h1>
+</section>
 
 
            </div>

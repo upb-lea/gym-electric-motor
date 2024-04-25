@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Environments &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>Environments &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=4f26b750"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -40,11 +44,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Environments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="permex_dc/permex_dc_envs.html">Permanently Excited DC Motor Environments</a></li>
@@ -93,8 +97,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="environments">
-<h1>Environments<a class="headerlink" href="#environments" title="Permalink to this headline"></a></h1>
+  <section id="environments">
+<h1>Environments<a class="headerlink" href="#environments" title="Permalink to this heading"></a></h1>
 <p>On this page, all environments with their environment-id are listed.
 In general, all environment-ids are structured as follows:</p>
 <p><code class="docutils literal notranslate"><span class="pre">ControlType-ControlTask-MotorType-v0</span></code></p>
@@ -104,10 +108,6 @@ In general, all environment-ids are structured as follows:</p>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">MotorType</span></code> is in <code class="docutils literal notranslate"><span class="pre">{PermExDc</span> <span class="pre">/</span> <span class="pre">ExtExDc</span> <span class="pre">/</span> <span class="pre">SeriesDc</span> <span class="pre">/</span> <span class="pre">ShuntDc</span> <span class="pre">/</span> <span class="pre">PMSM</span> <span class="pre">/</span> <span class="pre">SynRM</span> <span class="pre">/</span> <span class="pre">/</span> <span class="pre">EESM</span> <span class="pre">/</span> <span class="pre">DFIM</span> <span class="pre">/</span> <span class="pre">SCIM</span> <span class="pre">}</span></code></p></li>
 </ul>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 69%" />
-<col style="width: 31%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Environment</p></th>
 <th class="head"><p>environment-id</p></th>
@@ -306,7 +306,7 @@ In general, all environment-ids are structured as follows:</p>
 </tbody>
 </table>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Motor Environments:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Motor Environments:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="permex_dc/permex_dc_envs.html">Permanently Excited DC Motor Environments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="permex_dc/cont_cc_permex.html">Continuous Current Control DC Permanently Excited Motor Environment</a></li>
@@ -400,256 +400,12 @@ In general, all environment-ids are structured as follows:</p>
 </li>
 </ul>
 </div>
-<div class="section" id="module-gym_electric_motor.core">
-<span id="electric-motor-base-environment"></span><h2>Electric Motor Base Environment<a class="headerlink" href="#module-gym_electric_motor.core" title="Permalink to this headline"></a></h2>
-<p>On the core level the electric motor environment and the interface to its submodules are defined. By using these
-interfaces further reference generators, reward functions, visualizations or physical models can be implemented.</p>
-<p>Each ElectricMotorEnvironment contains the five following modules:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>PhysicalSystem</dt><dd><ul>
-<li><p>Specification and simulation of the physical model. Furthermore, specifies limits and nominal values    for all of its <code class="docutils literal notranslate"><span class="pre">state_variables</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ReferenceGenerator</dt><dd><ul>
-<li><p>Calculation of reference trajectories for one or more states of the physical systems <code class="docutils literal notranslate"><span class="pre">state_variables</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ConstraintMonitor</dt><dd><ul>
-<li><p>Observation of the PhysicalSystems state to comply to a set of user defined constraints.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>RewardFunction</dt><dd><ul>
-<li><p>Calculation of the reward based on the physical systems state and the reference.* ElectricMotorVisualization</p></li>
-<li><p>Visualization of the PhysicalSystems state, reference and reward for the user.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-<div class="figure align-default">
-<img alt="../../_images/TopLevelStructure.svg" src="../../_images/TopLevelStructure.svg" /></div>
-<dl class="class">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.core.</code><code class="sig-name descname">ElectricMotorEnvironment</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em>, <em class="sig-param">reference_generator</em>, <em class="sig-param">reward_function</em>, <em class="sig-param">visualization=()</em>, <em class="sig-param">state_filter=None</em>, <em class="sig-param">callbacks=()</em>, <em class="sig-param">constraints=()</em>, <em class="sig-param">physical_system_wrappers=()</em>, <em class="sig-param">render_mode=None</em>, <em class="sig-param">scale_plots=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Description:</dt><dd><p>The main class connecting all modules of the gym-electric-motor environments.</p>
-</dd>
-</dl>
-<p>Modules:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>Physical System:</dt><dd><p>Containing the physical structure and simulation of the drive system as well as information about the
-technical limits and nominal values. Needs to be a subclass of <em>PhysicalSystem</em></p>
-</dd>
-<dt>Reference Generator:</dt><dd><p>Generation of the reference for the motor to follow. Needs to be a subclass of <em>ReferenceGenerator</em></p>
-</dd>
-<dt>Reward Function:</dt><dd><p>Calculation of the reward based on the state of the physical system and the generated reference
-and observation if the motor state is within the limits. Needs to be a subclass of <em>RewardFunction</em>.</p>
-</dd>
-<dt>Visualization:</dt><dd><p>Visualization of the motors states. Needs to be a subclass of <em>ElectricMotorVisualization</em></p>
-</dd>
-<dt>Limits:</dt><dd><p>Returns a list of limits of all states in the observation (called in state_filter) in the same order.</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>State Variables:</dt><dd><p>Each environment has got a list of state variables that are defined by the physical system.
-These define the names and order for all further state arrays in the modules. These states are announced to the
-other modules by announcing the physical system to them, which contains the property <code class="docutils literal notranslate"><span class="pre">state_names</span></code>.</p>
-<dl class="simple">
-<dt>Example:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">['omega',</span> <span class="pre">'torque','i',</span> <span class="pre">'u',</span> <span class="pre">'u_sup']</span></code></p>
-</dd>
-</dl>
-</dd>
-<dt>Observation:</dt><dd><dl class="simple">
-<dt>Type: Tuple(State_Space, Reference_Space)</dt><dd><p>The observation is always a tuple of the State Space of the Physical System and the Reference Space of the
-Reference Generator. In all current Physical Systems and Reference Generators these Spaces are normalized,
-continuous, multidimensional boxes in [-1, 1] or [0, 1].</p>
-</dd>
-</dl>
-</dd>
-<dt>Actions:</dt><dd><dl class="simple">
-<dt>Type: Discrete() / Box()</dt><dd><p>The action space of the environments are the action spaces of the physical systems. In all current physical
-systems the action spaces are specified by its PowerElectronicConverter and either a continuous,
-multidimensional box or discrete.</p>
-</dd>
-</dl>
-</dd>
-<dt>Reward:</dt><dd><p>The reward and the reward range are specified by the RewardFunction. In general the reward is higher the closer
-the motor state follows the reference trajectories.</p>
-</dd>
-<dt>Starting State:</dt><dd><p>The physical system and the reference generator define the starting state.</p>
-</dd>
-<dt>Episode Termination:</dt><dd><p>Episode terminations can be initiated by the reference generator, or the reward function.
-A reference generator might terminate an episode, if the reference has ended.
-The reward function can terminate an episode, if a physical limit of the motor has been violated.</p>
-</dd>
-</dl>
-<p>Setting and initialization of all environments’ modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of this environment.</p></li>
-<li><p><strong>reference_generator</strong> (<a class="reference internal" href="../reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator" title="gym_electric_motor.core.ReferenceGenerator"><em>ReferenceGenerator</em></a>) – The reference generator of this environment.</p></li>
-<li><p><strong>reward_function</strong> (<a class="reference internal" href="../reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction" title="gym_electric_motor.core.RewardFunction"><em>RewardFunction</em></a>) – The reward function of this environment.</p></li>
-<li><p><strong>visualization</strong> (<em>iterable</em><em>(</em><a class="reference internal" href="../visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization" title="gym_electric_motor.core.ElectricMotorVisualization"><em>ElectricMotorVisualization</em></a><em>)</em><em>/None</em>) – The visualization of this environment.</p></li>
-<li><p><strong>constraints</strong> (<em>list</em><em>(</em><em>Constraint/str/callable</em><em>) </em><em>/ ConstraintMonitor</em>) – <p>A list of constraints
-or an already initialized  ConstraintMonitor object can be passed here.</p>
-<blockquote>
-<div><ul>
-<li><p>list(Constraint/str/callable): Pass a list with initialized Constraints and/or state names. Then,</p></li>
-</ul>
-<p>a ConstraintMonitor object with the Constraints and additional LimitConstraints on the passed names
-is created. Furthermore, the string ‘all’ inside the list will create a ConstraintMonitor that
-observes the limit on each state.
-- ConstraintMonitor: Pass an initialized ConstraintMonitor object that will be used directly as</p>
-<blockquote>
-<div><p>ConstraintMonitor in the environment.</p>
-</div></blockquote>
-</div></blockquote>
-</p></li>
-<li><p><strong>visualization</strong> – The visualizations of this environment.</p></li>
-<li><p><strong>state_filter</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – Selection of states that are shown in the observation.</p></li>
-<li><p><strong>physical_system_wrappers</strong> (<em>iterable</em><em>(</em><a class="reference internal" href="../state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper" title="gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper"><em>PhysicalSystemWrapper</em></a><em>)</em>) – PhysicalSystemWrapper instances to be wrapped around
-the physical system.</p></li>
-<li><p><strong>render_mode</strong> (<em>str</em>) – if visualization is given, render_mode is set to “figure”, else render_mode ist set to None</p></li>
-<li><p><strong>callbacks</strong> (<em>list</em><em>(</em><a class="reference internal" href="../core.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks being called in the environment</p></li>
-<li><p><strong>**kwargs</strong> – Arguments to be passed to the modules.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.close" title="Permalink to this definition"></a></dt>
-<dd><p>Called when the environment is deleted. Closes all its modules.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor">
-<em class="property">property </em><code class="sig-name descname">constraint_monitor</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor" title="Permalink to this definition"></a></dt>
-<dd><p>The ConstraintMonitor of the environment.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Returns(<a class="reference internal" href="../core.html#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor">ConstraintMonitor</a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.figure">
-<code class="sig-name descname">figure</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; matplotlib.figure.Figure<a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.figure" title="Permalink to this definition"></a></dt>
-<dd><p>Get main figure (MotorDashboard)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.limits">
-<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.limits" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a list of limits of all states in the observation (called in state_filter) in the same order</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.nominal_state">
-<em class="property">property </em><code class="sig-name descname">nominal_state</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.nominal_state" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a list of nominal values of all states in the observation (called in state_filter) in that order</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.physical_system">
-<em class="property">property </em><code class="sig-name descname">physical_system</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.physical_system" title="Permalink to this definition"></a></dt>
-<dd><p>Returns:
-PhysicalSystem: The Physical System of the Environment</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.reference_generator">
-<em class="property">property </em><code class="sig-name descname">reference_generator</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reference_generator" title="Permalink to this definition"></a></dt>
-<dd><p>Returns:
-ReferenceGenerator: The ReferenceGenerator of the Environment</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.reference_names">
-<em class="property">property </em><code class="sig-name descname">reference_names</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reference_names" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a list of state names of all states in the observation (called in state_filter) in the same order</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.render">
-<code class="sig-name descname">render</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.render" title="Permalink to this definition"></a></dt>
-<dd><p>Update the visualization of the motor.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reset" title="Permalink to this definition"></a></dt>
-<dd><p>Reset of the environment and all its modules to an initial state.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The initial observation consisting of the initial state and initial reference.
-info(dict): Auxiliary information (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.reward_function">
-<em class="property">property </em><code class="sig-name descname">reward_function</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reward_function" title="Permalink to this definition"></a></dt>
-<dd><p>Returns:
-RewardFunction: The RewardFunction of the environment</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.save_fig">
-<code class="sig-name descname">save_fig</code><span class="sig-paren">(</span><em class="sig-param">figure</em>, <em class="sig-param">filetype='png'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.save_fig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.save_fig" title="Permalink to this definition"></a></dt>
-<dd><p>Save figure with timestamped as filename</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.state_names">
-<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.state_names" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a list of state names of all states in the observation (called in state_filter) in the same order</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.step" title="Permalink to this definition"></a></dt>
-<dd><p>Perform one simulation step of the environment with an action of the action space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>action</strong> – Action to play on the environment.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Tuple of the new state and the next reference.
-reward(float): Amount of reward received for the last step.
-terminated(bool): Flag, indicating if a reset is required before new steps can be taken.
-info(dict): Auxiliary information (optional)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>observation(Tuple(ndarray(float),ndarray(float))</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.core.ElectricMotorEnvironment.visualizations">
-<em class="property">property </em><code class="sig-name descname">visualizations</code><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.visualizations" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a list of all active motor visualizations.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-</div>
+<section id="electric-motor-base-environment">
+<h2>Electric Motor Base Environment<a class="headerlink" href="#electric-motor-base-environment" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<img alt="../../_images/TopLevelStructure.svg" src="../../_images/TopLevelStructure.svg" /></figure>
+</section>
+</section>
 
 
            </div>

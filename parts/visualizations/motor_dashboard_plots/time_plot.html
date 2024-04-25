@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Time Plot (Abstract) &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>Time Plot (Abstract) &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=4f26b750"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -40,11 +44,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -99,131 +103,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="time-plot-abstract">
-<h1>Time Plot (Abstract)<a class="headerlink" href="#time-plot-abstract" title="Permalink to this headline"></a></h1>
+  <section id="time-plot-abstract">
+<h1>Time Plot (Abstract)<a class="headerlink" href="#time-plot-abstract" title="Permalink to this heading"></a></h1>
 <p>The TimePlot is the base class for all plots that plot data with the time on the x-axis.</p>
-<dl class="class">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot">
-<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.visualization.motor_dashboard_plots.</code><code class="sig-name descname">TimePlot</code><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#TimePlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot" title="Permalink to this definition"></a></dt>
-<dd><p>Base class for all MotorDashboardPlots that have the cumulative simulated time on the x-Axis.</p>
-<p>These use fixed-size numpy-arrays as x and y data. The plot is moved along the time axis and old data is cut out.
-Furthermore, if the environment is reset manually or a limit violation occurs, a blue or red vertical line is
-plotted to indicate these cases in the timeline.</p>
-<dl class="attribute">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._t">
-<code class="sig-name descname">_t</code><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._t" title="Permalink to this definition"></a></dt>
-<dd><p>The cumulative simulation time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._k">
-<code class="sig-name descname">_k</code><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._k" title="Permalink to this definition"></a></dt>
-<dd><p>The cumulative no of taken steps.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._x_width">
-<code class="sig-name descname">_x_width</code><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot._x_width" title="Permalink to this definition"></a></dt>
-<dd><p>The width of the x-axis plot. (Set automatically by the dashboard)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.data_idx">
-<em class="property">property </em><code class="sig-name descname">data_idx</code><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.data_idx" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the current index to access the time and data arrays.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">axis</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.initialize" title="Permalink to this definition"></a></dt>
-<dd><p>Initialization of the plot.</p>
-<p>It is called by the MotorDashboard. Set labels, legends… when overriding this method.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>axis</strong> (<em>matplotlib.pyplot.axis</em>) – Axis to plot in</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_close">
-<code class="sig-name descname">on_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_close" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of a close</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_begin">
-<code class="sig-name descname">on_reset_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#TimePlot.on_reset_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_begin" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_end">
-<code class="sig-name descname">on_reset_end</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">reference</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_reset_end" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the end of each reset</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_begin">
-<code class="sig-name descname">on_step_begin</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">action</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_begin" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the beginning of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_end">
-<code class="sig-name descname">on_step_end</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">state</em>, <em class="sig-param">reference</em>, <em class="sig-param">reward</em>, <em class="sig-param">terminated</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#TimePlot.on_step_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.on_step_end" title="Permalink to this definition"></a></dt>
-<dd><p>Gets called at the end of each step</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.render">
-<code class="sig-name descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#TimePlot.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.render" title="Permalink to this definition"></a></dt>
-<dd><p>Update of the plots axis.</p>
-<p>The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
-are scaled dynamically.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.reset_data">
-<code class="sig-name descname">reset_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#TimePlot.reset_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.reset_data" title="Permalink to this definition"></a></dt>
-<dd><p>Called by the dashboard, when the figures are reset to generate a new figure.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_env">
-<code class="sig-name descname">set_env</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#TimePlot.set_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_env" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the environment of the motor.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_width">
-<code class="sig-name descname">set_width</code><span class="sig-paren">(</span><em class="sig-param">width</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/base_plots.html#TimePlot.set_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot.set_width" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the width of the plot in data points.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>width</strong> (<em>int &gt; 0</em>) – The width of the plot</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
+</section>
 
 
            </div>
