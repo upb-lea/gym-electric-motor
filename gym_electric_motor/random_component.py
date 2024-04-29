@@ -80,8 +80,10 @@ class RandomComponent:
             seed = np.random.SeedSequence()
         if isinstance(seed, np.ndarray):
             self._seed_sequence = seed
-            for i in range(len(self._seed_sequence)):
-                rng[i] = np.random.default_rng(self._seed_sequence[i](1)[0])
+            #rng = np.empty(len(self._seed_sequence))
+            for i in range(self.electrical_motor._num_motors):
+                input_buf = self._seed_sequence[i]
+                rng = np.random.default_rng(input_buf.spawn(1)[0])
             self._random_generator = rng
             return [self._seed_sequence.entropy]
         else:

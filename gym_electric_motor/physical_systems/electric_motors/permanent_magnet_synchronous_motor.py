@@ -141,15 +141,42 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     def _torque_limit(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        if np.all(mp['l_d']) == np.all(mp['l_q']):
-            return self.torque([0, self._limits['i_sq'], 0])
-        else:
-            i_n = self.nominal_values['i']
+        i_n = self.nominal_values['i']
+
+        def i_d_opt(i_n, mp):
             _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
             _q = - i_n ** 2 / 2
-            i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
-            i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
-            return self.torque([i_d_opt, i_q_opt, 0])
+            return  - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
+
+        def i_q_opt(i_n, mp):
+            return np.sqrt(i_n ** 2 - i_d_opt(i_n, mp) ** 2)
+
+        if self._num_motors == 1:
+
+            if mp['l_d'] == mp['l_q']:
+                return self.torque([0, self._limits['i_sq'], 0])
+            else:
+                return self.torque([i_d_opt(i_n, mp), i_q_opt(i_n, mp), 0])
+
+        else: 
+            #Hiere eine for-loop, da nur einmal genutzt und code bei nutzung von np.where unübersichtlich, ergo schlecht zu warten
+            
+            #Erstelle Vergleichs Array
+            comp_array_l_d_l_q = mp['l_d'] == mp['l_q'] 
+            
+            for value in np.diter(comp_array_l_d_l_q):
+                if value == True:
+                    torque
+
+            if np.all(mp['l_d']) == np.all(mp['l_q']):
+                return self.torque([0, self._limits['i_sq'], 0])
+            else:
+                i_n = self.nominal_values['i']
+                _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
+                _q = - i_n ** 2 / 2
+                i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
+                i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
+                return self.torque([i_d_opt, i_q_opt, 0])
 
     def torque(self, currents):
         # Docstring of superclass

@@ -114,7 +114,10 @@ class PowerElectronicConverter:
              list(float): Switching times.
         """
         self._switching_pattern = [action]
-        return [self._action_start_time + np.ones(self._num_converters)*self._tau]
+        if self._num_converters > 1:
+            return [self._action_start_time + np.ones(self._num_converters)*self._tau]
+        else:
+            return self._action_start_time + self._tau
 
 
 class NoConverter(PowerElectronicConverter):
@@ -271,9 +274,9 @@ class FiniteTwoQuadrantConverter(FiniteConverter):
             self.currents = Box(-1, 1, shape=(1,), dtype=np.float64)
             self.action_space = Discrete(3)
         else:
-            self.voltages = [Box(0, 1, shape=(1,), dtype=np.float64)] * self._num_converters
-            self.currents = [Box(-1, 1, shape=(1,), dtype=np.float64)]  * self._num_converters
-            self.action_space = [Discrete(3)] * self._num_converters
+            self.voltages = tuple([Box(0, 1, shape=(1,), dtype=np.float64)] * self._num_converters)
+            self.currents = tuple([Box(-1, 1, shape=(1,), dtype=np.float64)]  * self._num_converters)
+            self.action_space = tuple([Discrete(3)] * self._num_converters)
 
     def convert(self, i_out, t):
         # Docstring in base class

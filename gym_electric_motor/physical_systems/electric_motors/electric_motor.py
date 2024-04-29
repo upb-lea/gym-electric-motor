@@ -135,79 +135,55 @@ class ElectricMotor(RandomComponent):
 
         RandomComponent.__init__(self)
         
+        motor_parameter = motor_parameter or {}
+        self._motor_parameter = update_parameter_dict(
+                self._default_motor_parameter, motor_parameter)
+        limit_values = limit_values or {}
+        self._limits = update_parameter_dict(
+                self._default_limits, limit_values)
+        nominal_values = nominal_values or {}
+        motor_initializer = motor_initializer or {}
+        self._initializer = update_parameter_dict(
+                self._default_initializer, motor_initializer)
+        self._initial_states = {}
+        if self._initializer['states'] is not None:
+            self._initial_states.update(self._initializer['states'])        
 
         if(num_motors == 1):
 
-            motor_parameter = motor_parameter or {}
             self._motor_parameter = self._default_motor_parameter.copy()
-            self._motor_parameter = update_parameter_dict(
-                self._default_motor_parameter, motor_parameter)
-            limit_values = limit_values or {}
-            self._limits = update_parameter_dict(
-                self._default_limits, limit_values)
-            nominal_values = nominal_values or {}
             self._nominal_values = update_parameter_dict(
                 self._default_nominal_values, nominal_values)
-            motor_initializer = motor_initializer or {}
-            self._initializer = update_parameter_dict(
-                self._default_initializer, motor_initializer)
-            self._initial_states = {}
-            if self._initializer['states'] is not None:
-                self._initial_states.update(self._initializer['states'])
-            # intialize limits, in general they're not needed to be changed
-            # during  training or episodes
-            initial_limits = initial_limits or {}
-            self._initial_limits = self._nominal_values.copy()
-            self._initial_limits.update(initial_limits)
-            # preventing wrong user input for the basic case
-            assert isinstance(self._initializer, dict), 'wrong initializer'
+
 
         else:
-            motor_parameter = motor_parameter or {}
+        
             motor_parameter = {key: [motor_parameter[key]] * num_motors for key in motor_parameter}
-            self._motor_parameter = motor_parameter
-            self._motor_parameter = update_parameter_dict(
-                self._default_motor_parameter, motor_parameter)
             if motor_parameter == {}:    
                 self._motor_parameter = {key: np.array([self._motor_parameter[key]] * num_motors).reshape(num_motors, 1)  for key in self._motor_parameter}
+            else:
+                self._motor_parameter = motor_parameter
 
-            limit_values = limit_values or {}
-            self._limits = update_parameter_dict(
-                self._default_limits, limit_values)
             if limit_values == {}:    
                 self._limits = {key: np.array([self._limits[key]] * num_motors).reshape(num_motors, 1) for key in self._limits}
-
-            nominal_values = nominal_values or {}
             self._nominal_values = update_parameter_dict(
                 self._default_nominal_values, nominal_values)
             if nominal_values == {}:    
                 self._nominal_values = {key: np.array([self._nominal_values[key]] * num_motors).reshape(num_motors, 1)  for key in self._nominal_values}
-            
-            
-            motor_initializer = motor_initializer or {}
-            self._initializer = update_parameter_dict(
-                self._default_initializer, motor_initializer)
             if motor_initializer == {}:
                 for key, sub_dict in self._initializer.items():
                     if isinstance(sub_dict, dict):
                         self._initializer[key] = {sub_key: [sub_dict[sub_key]] * num_motors for sub_key in sub_dict}
                     else: 
                         self._initializer[key] = [self._initializer[key]]*num_motors      
-                
-
-
-
-            self._initial_states = {}
-            if self._initializer['states'] is not None:
-                self._initial_states.update(self._initializer['states'])
-            # intialize limits, in general they're not needed to be changed
-            # during  training or episodes
-            initial_limits = initial_limits or {}
-            self._initial_limits = self._nominal_values.copy()
-
-            self._initial_limits.update(initial_limits)
-            # preventing wrong user input for the basic case
-            assert isinstance(self._initializer, dict), 'wrong initializer'
+        
+        # intialize limits, in general they're not needed to be changed
+        # during  training or episodes
+        initial_limits = initial_limits or {}
+        self._initial_limits = self._nominal_values.copy()
+        self._initial_limits.update(initial_limits)
+        # preventing wrong user input for the basic case
+        assert isinstance(self._initializer, dict), 'wrong initializer'
 
     def electrical_ode(self, state, u_in, omega, *_):
         """Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.
@@ -390,13 +366,18 @@ class ElectricMotor(RandomComponent):
         limits_d.update(dict(omega = np.array([self._default_limits['omega']] * self._num_motors).reshape(self._num_motors, 1)))
 
         for qty, lim in limits_d.items():
-            if np.all(self._limits.get(qty, 0)) == 0 :
-                self._limits[qty] = lim
+            np.where(
+                self._limits.get(qty, 0) == 0,
+                lim,
+                self._limits.get(qty, 0)
+            )
 
         for entry in self._limits.keys():
-            if np.all(self._nominal_values.get(entry, 0)) == 0:
-                self._nominal_values[entry] = nominal_d.get(
-                    entry, self._limits[entry])
+            np.where(
+                self._nominal_values.get(entry, 0) == 0, 
+                nominal_d.get(entry, self._limits[entry]), 
+                self._nominal_values.get(entry, 0)
+            )
 
     def _update_initial_limits(self, nominal_new=None):
         """Complete initial states with further state limits
