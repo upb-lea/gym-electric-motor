@@ -132,7 +132,7 @@ class FiniteCurrentControlPermanentMagnetSynchronousMotorEnv(ElectricMotorEnviro
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0, num_supplys = num_envs)),
             converter=initialize(ps.PowerElectronicConverter, converter, ps.FiniteB6BridgeConverter, dict(num_converters = num_envs)),
             motor=initialize(ps.ElectricMotor, motor, ps.PermanentMagnetSynchronousMotor, dict(num_motors = num_envs)),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0, num_loads = num_envs)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau

@@ -102,11 +102,14 @@ class SCMLSystem(PhysicalSystem, RandomComponent):
         for ind, state in enumerate(self._state_names):
             motor_lim = self._electrical_motor.limits.get(state, np.inf)
             mechanical_lim = self._mechanical_load.limits.get(state, np.inf)
-            if isinstance(motor_lim, np.ndarray):
-                self._limits[ind] = min(motor_lim.all(), np.array([mechanical_lim] * self.electrical_motor._num_motors).reshape(self.electrical_motor._num_motors, 1).all())
-            else:
+            if self._electrical_motor.num_motors == 1:
                 self._limits[ind] = min(motor_lim, mechanical_lim)
-        self._limits[self._state_positions['u_sup']] = self.supply.u_nominal
+            else:
+                if isinstance(motor_lim, np.ndarray):
+                    self._limits[ind] = min(motor_lim.all(), np.array([mechanical_lim] * self.electrical_motor._num_motors).reshape(self.electrical_motor._num_motors, 1).all())
+                else:
+                    self._limits[ind] = min(motor_lim, mechanical_lim)
+        self._limits[self._state_positions['u_sup']] = np.array([self.supply.u_nominal] * self.supply._num_supplys).reshape(self.supply._num_supplys,1)
 
     def _set_nominal_state(self):
         """

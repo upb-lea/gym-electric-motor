@@ -80,13 +80,14 @@ class MechanicalLoad(RandomComponent):
     #: _default_initial_state(dict): Default initial motor-state values
     _default_initializer = {}
 
-    def __init__(self, state_names=None, j_load=0.0, load_initializer=None):
+    def __init__(self, state_names=None, j_load=0.0, load_initializer=None, num_loads = 1):
         """
         Args:
             state_names(list(str)): List of the names of the states in the mechanical-ODE.
             j_load(float): Moment of inertia of the load affecting the motor shaft.
         """
         RandomComponent.__init__(self)
+        self._num_loads = num_loads
         self._j_total = self._j_load = j_load
         self._state_names = list(state_names or ['omega'])
         self._limits = {}

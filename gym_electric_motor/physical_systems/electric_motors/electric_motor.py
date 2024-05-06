@@ -366,14 +366,14 @@ class ElectricMotor(RandomComponent):
         limits_d.update(dict(omega = np.array([self._default_limits['omega']] * self._num_motors).reshape(self._num_motors, 1)))
 
         for qty, lim in limits_d.items():
-            np.where(
+            self._limits[qty] = np.where(
                 self._limits.get(qty, 0) == 0,
                 lim,
                 self._limits.get(qty, 0)
             )
 
         for entry in self._limits.keys():
-            np.where(
+            self._nominal_values[entry] = np.where(
                 self._nominal_values.get(entry, 0) == 0, 
                 nominal_d.get(entry, self._limits[entry]), 
                 self._nominal_values.get(entry, 0)

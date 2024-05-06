@@ -144,19 +144,28 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         i_n = self.nominal_values['i']
 
         def i_d_opt(i_n, mp, idx):
-            _p = mp['psi_p'][idx] / (2 * (mp['l_d'][idx] - mp['l_q'][idx]))
-            _q = - i_n[idx] ** 2 / 2
+            
+            if self.num_motors == 1:
+                _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
+                _q = - i_n ** 2 / 2
+            else:
+                _p = mp['psi_p'][idx] / (2 * (mp['l_d'][idx] - mp['l_q'][idx]))
+                _q = - i_n[idx] ** 2 / 2
+            
             return  - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
 
         def i_q_opt(i_n, mp, idx):
-            return np.sqrt(i_n[idx] ** 2 - i_d_opt(i_n, mp,idx) ** 2)
+            if self.num_motors == 1:
+                return np.sqrt(i_n ** 2 - i_d_opt(i_n, mp,idx) ** 2)
+            else:
+                return np.sqrt(i_n[idx] ** 2 - i_d_opt(i_n, mp,idx) ** 2)
 
         if self._num_motors == 1:
 
             if mp['l_d'] == mp['l_q']:
                 return self.torque([0, self._limits['i_sq'], 0])
             else:
-                return self.torque([i_d_opt(i_n, mp), i_q_opt(i_n, mp), 0])
+                return self.torque([i_d_opt(i_n, mp,0), i_q_opt(i_n, mp,0), 0])
 
         else: 
             #Hiere eine for-loop, da nur einmal genutzt und code bei nutzung von np.where unübersichtlich, ergo schlecht zu warten
