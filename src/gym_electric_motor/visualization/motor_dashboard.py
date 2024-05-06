@@ -8,14 +8,7 @@ import matplotlib.pyplot as plt
 
 from gym_electric_motor.core import ElectricMotorVisualization
 
-from .motor_dashboard_plots import (
-    ActionPlot,
-    EpisodePlot,
-    RewardPlot,
-    StatePlot,
-    StepPlot,
-    TimePlot,
-)
+from .motor_dashboard_plots import ActionPlot, EpisodePlot, RewardPlot, StatePlot, StepPlot, TimePlot
 from .render_modes import RenderMode
 
 
@@ -316,9 +309,9 @@ class MotorDashboardLegacy(ElectricMotorVisualization):
 
 # Proxy Object for Refactoring
 class MotorDashboard(MotorDashboardLegacy):
-    render_mode = RenderMode.Figure
+    render_mode = None
 
-    def __init__(self, render_mode=RenderMode.Figure, *args, **kwargs):
+    def __init__(self, render_mode=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.render_mode = render_mode
 
