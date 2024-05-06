@@ -160,16 +160,16 @@ class ElectricMotor(RandomComponent):
         
             motor_parameter = {key: [motor_parameter[key]] * num_motors for key in motor_parameter}
             if motor_parameter == {}:    
-                self._motor_parameter = {key: np.array([self._motor_parameter[key]] * num_motors).reshape(num_motors, 1)  for key in self._motor_parameter}
+                self._motor_parameter = {key: value * np.ones((num_motors,1))  for key, value in self._motor_parameter.items()}
             else:
                 self._motor_parameter = motor_parameter
 
             if limit_values == {}:    
-                self._limits = {key: np.array([self._limits[key]] * num_motors).reshape(num_motors, 1) for key in self._limits}
+                self._limits = {key: value * np.ones((num_motors,1)) for key, value in self._limits.items()}
             self._nominal_values = update_parameter_dict(
                 self._default_nominal_values, nominal_values)
             if nominal_values == {}:    
-                self._nominal_values = {key: np.array([self._nominal_values[key]] * num_motors).reshape(num_motors, 1)  for key in self._nominal_values}
+                self._nominal_values = {key: value * np.ones((num_motors,1))  for key, value in self._nominal_values.items()}
             if motor_initializer == {}:
                 for key, sub_dict in self._initializer.items():
                     if isinstance(sub_dict, dict):

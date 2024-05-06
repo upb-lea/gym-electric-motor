@@ -345,13 +345,13 @@ class ElectricMotorEnvironment(gymnasium.core.Env):
             self._constraint_monitor
         ] + list(self._callbacks)
 
-        if self._num_envs == 1:
+        # if self._num_envs == 1:
                         
-            sub_sg = sg.spawn(len(components))
+        sub_sg = sg.spawn(len(components))
             
-        else:
+        # else:
 
-            sub_sg = np.array(sg.spawn(len(components)*self._num_envs)).reshape((len(components), self._num_envs))            
+        #     sub_sg = np.array(sg.spawn(len(components)*self._num_envs)).reshape((len(components), self._num_envs))            
         
         for row, rc in zip(sub_sg, components):
             if isinstance(rc, gem.RandomComponent):

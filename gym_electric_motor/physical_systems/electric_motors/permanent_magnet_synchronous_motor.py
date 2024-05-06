@@ -164,22 +164,26 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
             #Erstelle Vergleichs Array
             comp_array_l_d_l_q = mp['l_d'] == mp['l_q'] 
             
-            for value in np.diter(comp_array_l_d_l_q):
-                if value == True:
-                    torque
 
-            if np.all(mp['l_d']) == np.all(mp['l_q']):
-                return self.torque([0, self._limits['i_sq'], 0])
-            else:
-                i_n = self.nominal_values['i']
-                _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
-                _q = - i_n ** 2 / 2
-                i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
-                i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
-                return self.torque([i_d_opt, i_q_opt, 0])
+            for i in range(0,self.num_motors):
+                if comp_array_l_d_l_q[i] == True:
+                    np.vstack((torque, np.array([0, self._limits['i_sq'][i], 0]).reshape(1,3)))
+                else:
+                    i_n = self.nominal_values['i'][i]
+                    _p = mp['psi_p'][i] / (2 * (mp['l_d'][i] - mp['l_q'][i]))
+                    _q = - i_n ** 2 / 2
+                    i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
+                    i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
+                    if i == 0:
+                        currents = np.array([i_d_opt[0], i_q_opt[0], 0]).reshape((1,3))
+                    else:
+                        currents = np.concatenate((currents,np.array([i_d_opt[0], i_q_opt[0], 0]).reshape((1,3))))
+
+            return self.torque(currents)
 
     def torque(self, currents):
         # Docstring of superclass
+        print(currents)
         mp = self._motor_parameter
         return 1.5 * mp['p'] * (mp['psi_p'] + (mp['l_d'] - mp['l_q']) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
 

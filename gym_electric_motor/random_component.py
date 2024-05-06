@@ -78,18 +78,9 @@ class RandomComponent:
         """
         if seed is None:
             seed = np.random.SeedSequence()
-        if isinstance(seed, np.ndarray):
-            self._seed_sequence = seed
-            #rng = np.empty(len(self._seed_sequence))
-            for i in range(self.electrical_motor._num_motors):
-                input_buf = self._seed_sequence[i]
-                rng = np.random.default_rng(input_buf.spawn(1)[0])
-            self._random_generator = rng
-            return [self._seed_sequence.entropy]
-        else:
-            self._seed_sequence = seed
-            self._random_generator = np.random.default_rng(self._seed_sequence.spawn(1)[0])
-            return [self._seed_sequence.entropy]
+        self._seed_sequence = seed
+        self._random_generator = np.random.default_rng(self._seed_sequence.spawn(1)[0])
+        return [self._seed_sequence.entropy]
 
     def next_generator(self):
         """Sets a new reference generator for a new episode."""
