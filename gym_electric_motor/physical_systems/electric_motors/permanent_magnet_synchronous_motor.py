@@ -143,13 +143,13 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
         mp = self._motor_parameter
         i_n = self.nominal_values['i']
 
-        def i_d_opt(i_n, mp):
-            _p = mp['psi_p'] / (2 * (mp['l_d'] - mp['l_q']))
-            _q = - i_n ** 2 / 2
+        def i_d_opt(i_n, mp, idx):
+            _p = mp['psi_p'][idx] / (2 * (mp['l_d'][idx] - mp['l_q'][idx]))
+            _q = - i_n[idx] ** 2 / 2
             return  - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
 
-        def i_q_opt(i_n, mp):
-            return np.sqrt(i_n ** 2 - i_d_opt(i_n, mp) ** 2)
+        def i_q_opt(i_n, mp, idx):
+            return np.sqrt(i_n[idx] ** 2 - i_d_opt(i_n, mp,idx) ** 2)
 
         if self._num_motors == 1:
 
@@ -163,21 +163,18 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
             
             #Erstelle Vergleichs Array
             comp_array_l_d_l_q = mp['l_d'] == mp['l_q'] 
-            
 
             for i in range(0,self.num_motors):
                 if comp_array_l_d_l_q[i] == True:
-                    np.vstack((torque, np.array([0, self._limits['i_sq'][i], 0]).reshape(1,3)))
-                else:
-                    i_n = self.nominal_values['i'][i]
-                    _p = mp['psi_p'][i] / (2 * (mp['l_d'][i] - mp['l_q'][i]))
-                    _q = - i_n ** 2 / 2
-                    i_d_opt = - _p / 2 - np.sqrt( (_p / 2) ** 2 - _q)
-                    i_q_opt = np.sqrt(i_n ** 2 - i_d_opt ** 2)
                     if i == 0:
-                        currents = np.array([i_d_opt[0], i_q_opt[0], 0]).reshape((1,3))
+                        currents = np.array([np.array(0).reshape((1,)), self._limits['i_sq'][i], np.array(0).reshape((1,))]).reshape((1,3))
                     else:
-                        currents = np.concatenate((currents,np.array([i_d_opt[0], i_q_opt[0], 0]).reshape((1,3))))
+                        currents = np.concatenate((currents,np.array([np.array(0).reshape((1,)), self._limits['i_sq'][i], np.array(0).reshape((1,))]).reshape((1,3))))
+                else:
+                    if i == 0:
+                        currents = np.array([i_d_opt(i_n, mp, i), i_q_opt(i_n, mp, i), np.array(0).reshape((1,))]).reshape((1,3))
+                    else:
+                        currents = np.concatenate((currents,np.array([i_d_opt(i_n, mp, i), i_q_opt(i_n, mp, i), np.array(0).reshape((1,))]).reshape((1,3))))
 
             return self.torque(currents)
 
