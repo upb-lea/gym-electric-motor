@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Summary &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
-  
+  <title>Summary &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4f26b750"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -42,11 +38,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -119,16 +115,16 @@ date: 28. May 2020
 bibliography: Literature.bib</p></li>
 </ul>
 <hr class="docutils" />
-<section id="summary">
-<h1>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h1>
+<div class="section" id="summary">
+<h1>Summary<a class="headerlink" href="#summary" title="Permalink to this headline"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">gym-electric-motor</span></code> (<code class="docutils literal notranslate"><span class="pre">GEM</span></code>) library provides simulation environments for electrical drive systems and, therefore, allows to easily design and analyze drive control solutions in Python.
 Since <code class="docutils literal notranslate"><span class="pre">GEM</span></code> is strongly inspired by OpenAI’s <code class="docutils literal notranslate"><span class="pre">gym</span></code> [&#64;gym-whitepaper], it is particularly well-equipped for (but not limited to) applications in the field of reinforcement-learning-based control algorithms.
 In addition, the interface allows to plug in any expert-driven control approach, such as model predictive control, to be tested  and to perform benchmark comparisons.
 The <code class="docutils literal notranslate"><span class="pre">GEM</span></code> package includes a wide variety of motors, power electronic converters and mechanical load models that can be flexibly selected and parameterized via the API.
 A modular structure allows additional system components to be included in the simulation framework.</p>
-</section>
-<section id="statement-of-need">
-<h1>Statement of Need<a class="headerlink" href="#statement-of-need" title="Permalink to this heading"></a></h1>
+</div>
+<div class="section" id="statement-of-need">
+<h1>Statement of Need<a class="headerlink" href="#statement-of-need" title="Permalink to this headline"></a></h1>
 <p>Electric drive systems and their control are an important topic in both academic and industrial research due to their worldwide usage and deployment.
 Control algorithms for these systems have usually been designed, parameterized and tested within <code class="docutils literal notranslate"><span class="pre">MATLAB</span> <span class="pre">-</span> <span class="pre">Simulink</span></code> [&#64;MathWorks], which is developed and promoted specifically for
 such engineering tasks.
@@ -139,9 +135,9 @@ Hence, the built-in OpenAI <code class="docutils literal notranslate"><span clas
 <p>Providing easy access to the non-commercial, open-source <code class="docutils literal notranslate"><span class="pre">GEM</span></code> library allows users from any engineering domain to include accurate drive models into their simulations, also beyond the topic of control applications.
 Considering the prevalence of commercial software like <code class="docutils literal notranslate"><span class="pre">MATLAB</span></code> for educational purposes, a free-of-charge simulation alternative that does not force students or institutions to pay for licenses, has great potential to support and encourage training of new talents in the field of electrical drives and neighbouring domains (e.g. power electronics or energy systems).
 <code class="docutils literal notranslate"><span class="pre">GEM</span></code> has already been used in graduate courses on reinforcement learning [&#64;rl-lecture].</p>
-</section>
-<section id="related-software">
-<h1>Related software<a class="headerlink" href="#related-software" title="Permalink to this heading"></a></h1>
+</div>
+<div class="section" id="related-software">
+<h1>Related software<a class="headerlink" href="#related-software" title="Permalink to this headline"></a></h1>
 <p>Due to the strong dependence of downstream industrial development on simulated environments there is a comprehensive variety of commercial software that enables numerical analysis of every facet of electric drives.
 To name just a few, <code class="docutils literal notranslate"><span class="pre">MATLAB</span> <span class="pre">-</span> <span class="pre">Simulink</span></code> is probably the most popular software environment for numerical analysis in engineering.
 Herein, <code class="docutils literal notranslate"><span class="pre">MATLAB</span></code> is providing for a scientific calculation framework and <code class="docutils literal notranslate"><span class="pre">Simulink</span></code> for a model-driven graphical interface with a very large field of applications.
@@ -153,9 +149,9 @@ Likewise, general purpose component-oriented simulation frameworks like <code cl
 Corresponding commercial simulation environments, like <code class="docutils literal notranslate"><span class="pre">ANSYS</span> <span class="pre">Maxwell</span></code> [&#64;ANSYS], <code class="docutils literal notranslate"><span class="pre">Motor-CAD</span></code> [&#64;MotorDesignLtd] or <code class="docutils literal notranslate"><span class="pre">MotorWizard</span></code> [&#64;ElectroMagneticWorks] and the exemplary non-commercial alternative <code class="docutils literal notranslate"><span class="pre">FEMM</span></code> [&#64;Meeker] are very resource and time consuming because they depend on the finite element method, which is a spatial discretization and numerical integration procedure.
 Hence, these software packages are usually not considered in control development, and complement <code class="docutils literal notranslate"><span class="pre">GEM</span></code> at most.
 This particularly applies in the early control design phase when researching new, innovative control approaches (rapid control prototyping) or when students want to receive quasi-instantaneous simulation feedbacks.</p>
-</section>
-<section id="package-architecture">
-<h1>Package Architecture<a class="headerlink" href="#package-architecture" title="Permalink to this heading"></a></h1>
+</div>
+<div class="section" id="package-architecture">
+<h1>Package Architecture<a class="headerlink" href="#package-architecture" title="Permalink to this headline"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">GEM</span></code> library models an electric drive system by its four main components: voltage supply, power converter, electric motor and mechanical load.
 The general structure of such a system is depicted in autoref{fig:SCML_system}.</p>
 <a class="reference external image-reference" href="../plots/SCML_Setting.eps"><img alt="Simplified structure diagram of an electric drive system\label{fig:SCML_system}" src="../_images/SCML_Setting.eps" /></a>
@@ -174,9 +170,9 @@ The load is characterized by a moment of inertia and by a load torque $T<em>math
 Load torque behavior can be parameterized with respect to the angular velocity $omega</em>mathrm{me}$ in the form of constant, linear and quadratic dependency (and arbitrary combinations thereof).
 Speed changes that result from the difference between motor and load torque are modeled with another ODE which completely covers the mechanical system behavior.
 Alternatively, the motor speed can be set to a fixed value, which can be useful for the investigation of control algorithms concerning generator operation, or it can be set to follow a specified trajectory, which is convenient when inspecting scenarios with defined speed demands like in traction applications.</p>
-</section>
-<section id="features">
-<h1>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h1>
+</div>
+<div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline"></a></h1>
 <p>A large number of different motor systems is already implemented.
 These include DC drives as well as synchronous and induction three-phase drives.
 A complete list can be viewed in the <code class="docutils literal notranslate"><span class="pre">GEM</span></code> documentation [&#64;GEM-docu].
@@ -187,9 +183,9 @@ For the control system scenario, reward is usually defined by the negative dista
 The reward mechanism also allows to take physical limitations of the drive system into account, e.g., in the way of a notably low reward if limit values are surpassed.
 Optionally, the environment can be setup such that a reset of the system is induced in case of a limit violation.
 In addition, built-in visualization and plotting routines allow to monitor the training process of reinforcement learning agents or the performance of expert-driven control approaches.</p>
-</section>
-<section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+</div>
+<div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
 <p>A minimal example of <code class="docutils literal notranslate"><span class="pre">GEM's</span></code> simulation capability is presented in autoref{fig:SCIM<em>example}.
 The plot shows the start-up behavior of a squirrel cage induction motor connected to an idealized three-phase electric grid depicting the angular velocity $omega</em>mathrm{me}$, the torque $T$, the voltage $u<em>{a,b,c}$ and the current $i</em>{d,q}$.
 Here, the voltage is depicted within the physical $abc$-frame while the current is viewed within the simplified $dq$-frame.</p>
@@ -200,10 +196,10 @@ Featured examples:</p>
 <li><p><cite>``GEM_cookbook.ipynb`</cite> &lt;<a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/GEM_cookbook.ipynb">https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/GEM_cookbook.ipynb</a>&gt;`_: a basic tutorial-style notebook that presents the basic interface and usage of GEM</p></li>
 <li><p><cite>``scim_ideal_grid_simulation.py`</cite> &lt;<a class="reference external" href="https://github.com/upb-lea/gym-electric-motor/blob/master/examples/environment_features/scim_ideal_grid_simulation.py">https://github.com/upb-lea/gym-electric-motor/blob/master/examples/environment_features/scim_ideal_grid_simulation.py</a>&gt;`_: a simple motor simulation showcase of the squirrel cage induction motor that was used to create autoref{fig:SCIM_example}</p></li>
 </ul>
-</section>
-<section id="references">
-<h1>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h1>
-</section>
+</div>
+<div class="section" id="references">
+<h1>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h1>
+</div>
 
 
            </div>

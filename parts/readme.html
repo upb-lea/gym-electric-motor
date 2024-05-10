@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Readme File &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
-  
+  <title>Readme File &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4f26b750"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -44,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Readme File</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#gym-electric-motor">Gym Electric Motor</a><ul>
@@ -62,7 +58,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -100,10 +96,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="readme-file">
-<h1>Readme File<a class="headerlink" href="#readme-file" title="Permalink to this heading"></a></h1>
-<section id="gym-electric-motor">
-<h2>Gym Electric Motor<a class="headerlink" href="#gym-electric-motor" title="Permalink to this heading"></a></h2>
+  <div class="section" id="readme-file">
+<h1>Readme File<a class="headerlink" href="#readme-file" title="Permalink to this headline"></a></h1>
+<div class="section" id="gym-electric-motor">
+<h2>Gym Electric Motor<a class="headerlink" href="#gym-electric-motor" title="Permalink to this headline"></a></h2>
 <a class="reference external image-reference" href="docs/plots/Motor_Logo.png"><img alt="" src="parts/docs/plots/Motor_Logo.png" /></a>
 <p><a class="reference external" href="https://joss.theoj.org/papers/10.21105/joss.02498">**Overview paper**</a>
 | <a class="reference external" href="https://arxiv.org/abs/1910.09434">**Reinforcement learning paper**</a>
@@ -117,13 +113,13 @@
 <a class="reference external image-reference" href="https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a>
 <a class="reference external image-reference" href="https://doi.org/10.5281/zenodo.4355691"><img alt="DOI Zenodo" src="https://zenodo.org/badge/DOI/10.5281/zenodo.4355691.svg" /></a>
 <a class="reference external image-reference" href="https://doi.org/10.21105/joss.02498"><img alt="DOI JOSS" src="https://joss.theoj.org/papers/10.21105/joss.02498/status.svg" /></a>
-<section id="overview">
-<h3>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h3>
+<div class="section" id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h3>
 <p>The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
 It is built upon <a class="reference external" href="https://gym.openai.com/">Faram Gymnasium Environments</a>, and, therefore, can be used for both, classical control simulation and <a class="reference external" href="https://github.com/upb-lea/reinforcement_learning_course_materials">reinforcement learning</a> experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html">Deep Deterministic Policy Gradient</a> agents.</p>
-</section>
-<section id="getting-started">
-<h3>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h3>
+</div>
+<div class="section" id="getting-started">
+<h3>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h3>
 <p>An easy way to get started with GEM is by playing around with the following interactive notebooks in Google Colaboratory. Most important features of GEM as well as application demonstrations are showcased, and give a kickstart for engineers in industry and academia.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master//examples/environment_features/GEM_cookbook.ipynb">GEM cookbook</a></p></li>
@@ -146,9 +142,9 @@ It is built upon <a class="reference external" href="https://gym.openai.com/">Fa
     <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="installation">
-<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h3>
+</div>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Install gym-electric-motor from PyPI (recommended):</p></li>
 </ul>
@@ -166,9 +162,9 @@ It is built upon <a class="reference external" href="https://gym.openai.com/">Fa
 <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
 </pre></div>
 </div>
-</section>
-<section id="building-blocks">
-<h3>Building Blocks<a class="headerlink" href="#building-blocks" title="Permalink to this heading"></a></h3>
+</div>
+<div class="section" id="building-blocks">
+<h3>Building Blocks<a class="headerlink" href="#building-blocks" title="Permalink to this headline"></a></h3>
 <p>A GEM environment consists of following building blocks:</p>
 <ul class="simple">
 <li><p>Physical structure:</p>
@@ -181,8 +177,8 @@ It is built upon <a class="reference external" href="https://gym.openai.com/">Fa
 </li>
 <li><p>Utility functions for reference generation, reward calculation and visualization</p></li>
 </ul>
-<section id="information-flow-in-a-gem-environment">
-<h4>Information Flow in a GEM Environment<a class="headerlink" href="#information-flow-in-a-gem-environment" title="Permalink to this heading"></a></h4>
+<div class="section" id="information-flow-in-a-gem-environment">
+<h4>Information Flow in a GEM Environment<a class="headerlink" href="#information-flow-in-a-gem-environment" title="Permalink to this headline"></a></h4>
 <a class="reference external image-reference" href="docs/plots/SCML_Overview.png"><img alt="" src="parts/docs/plots/SCML_Overview.png" /></a>
 <p>Among various DC-motor models, the following AC motors - together with their power electronic counterparts - are available:</p>
 <ul class="simple">
@@ -192,13 +188,13 @@ It is built upon <a class="reference external" href="https://gym.openai.com/">Fa
 <li><p>Doubly-fed induction motor (DFIM)</p></li>
 </ul>
 <p>The converters can be driven by means of a duty cycle (continuous control set) or switching commands (finite control set).</p>
-</section>
-<section id="citation">
-<h4>Citation<a class="headerlink" href="#citation" title="Permalink to this heading"></a></h4>
+</div>
+<div class="section" id="citation">
+<h4>Citation<a class="headerlink" href="#citation" title="Permalink to this headline"></a></h4>
 <p>A white paper for the general toolbox in the context of drive simulation and control prototyping can be found in the <a class="reference external" href="https://joss.theoj.org/papers/10.21105/joss.02498">Journal of Open Sorce Software (JOSS)</a>. Please use the following BibTeX entry for citing it:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">Balakrishna2021</span><span class="p">,</span>
-    <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="mf">.02498</span><span class="p">},</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="mf">.02498</span><span class="p">},</span>
+    <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="o">.</span><span class="mi">02498</span><span class="p">},</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="o">.</span><span class="mi">02498</span><span class="p">},</span>
     <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2021</span><span class="p">},</span>
     <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">Open</span> <span class="n">Journal</span><span class="p">},</span>
     <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">},</span>
@@ -219,12 +215,12 @@ It is built upon <a class="reference external" href="https://gym.openai.com/">Fa
   <span class="n">volume</span><span class="o">=</span><span class="p">{</span><span class="mi">33</span><span class="p">},</span>
   <span class="n">number</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">},</span>
   <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">919</span><span class="o">-</span><span class="mi">928</span><span class="p">},</span>
-  <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">TNNLS</span><span class="mf">.2020.3029573</span><span class="p">}}</span>
+  <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">TNNLS</span><span class="o">.</span><span class="mf">2020.3029573</span><span class="p">}}</span>
 </pre></div>
 </div>
-</section>
-<section id="running-unit-tests-with-pytest">
-<h4>Running Unit Tests with Pytest<a class="headerlink" href="#running-unit-tests-with-pytest" title="Permalink to this heading"></a></h4>
+</div>
+<div class="section" id="running-unit-tests-with-pytest">
+<h4>Running Unit Tests with Pytest<a class="headerlink" href="#running-unit-tests-with-pytest" title="Permalink to this headline"></a></h4>
 <p>To run the unit tests ‘’pytest’’ is required.
 All tests can be found in the ‘’tests’’ folder.
 Execute pytest in the project’s root folder:</p>
@@ -236,10 +232,10 @@ Execute pytest in the project’s root folder:</p>
 </pre></div>
 </div>
 <p>All tests shall pass.</p>
-</section>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
+</div>
 
 
            </div>

@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>scipy.integrate.ode Solver &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-
-  
+  <title>scipy.integrate.ode Solver &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=4f26b750"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -44,11 +40,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -106,9 +102,94 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="scipy-integrate-ode-solver">
-<h1>scipy.integrate.ode Solver<a class="headerlink" href="#scipy-integrate-ode-solver" title="Permalink to this heading"></a></h1>
-</section>
+  <div class="section" id="scipy-integrate-ode-solver">
+<h1>scipy.integrate.ode Solver<a class="headerlink" href="#scipy-integrate-ode-solver" title="Permalink to this headline"></a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.solvers.</code><code class="sig-name descname">ScipyOdeSolver</code><span class="sig-paren">(</span><em class="sig-param">integrator='dopri5'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/solvers.html#ScipyOdeSolver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper class for all ode-solvers in the scipy.integrate.ode package.</p>
+<p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>integrator</strong> (<em>str</em>) – String to choose the integrator from the scipy.integrate.ode</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – All parameters that can be set in the “set_integrator”-method of scipy.integrate.ode</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.integrate">
+<code class="sig-name descname">integrate</code><span class="sig-paren">(</span><em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/solvers.html#ScipyOdeSolver.integrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.integrate" title="Permalink to this definition"></a></dt>
+<dd><p>Integrate the ODE-System from current time until time t</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Time until the system shall be integrated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New system state at time t</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_f_params">
+<code class="sig-name descname">set_f_params</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/solvers.html#ScipyOdeSolver.set_f_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_f_params" title="Permalink to this definition"></a></dt>
+<dd><p>Set further arguments for the systems function call like input quantities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>list</em>) – Additional arguments for the next function calls.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_initial_value">
+<code class="sig-name descname">set_initial_value</code><span class="sig-paren">(</span><em class="sig-param">initial_value</em>, <em class="sig-param">t=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/solvers.html#ScipyOdeSolver.set_initial_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_initial_value" title="Permalink to this definition"></a></dt>
+<dd><p>Set the new initial system state after reset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_value</strong> (<em>numpy.ndarray</em><em>(</em><em>float</em><em>)</em>) – Initial system state</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Initial system time</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_system_equation">
+<code class="sig-name descname">set_system_equation</code><span class="sig-paren">(</span><em class="sig-param">system_equation</em>, <em class="sig-param">jac=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/solvers.html#ScipyOdeSolver.set_system_equation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_system_equation" title="Permalink to this definition"></a></dt>
+<dd><p>Setting of the systems equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system_equation</strong> (<em>function_pointer</em>) – Pointer to the systems equation with the parameters (t, y, <a href="#id1"><span class="problematic" id="id2">*</span></a>args)</p></li>
+<li><p><strong>jac</strong> (<em>function_pointer</em>) – Pointer to the systems jacobian with the parameters (t, y, <a href="#id3"><span class="problematic" id="id4">*</span></a>args)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.t">
+<em class="property">property </em><code class="sig-name descname">t</code><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.t" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Current system time t</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.y" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Current system state y</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 
 
            </div>

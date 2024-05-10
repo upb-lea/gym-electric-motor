@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AC 3 Phase Supply &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-
-  
+  <title>AC 3 Phase Supply &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=4f26b750"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -44,11 +40,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -106,9 +102,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ac-3-phase-supply">
-<h1>AC 3 Phase Supply<a class="headerlink" href="#ac-3-phase-supply" title="Permalink to this heading"></a></h1>
-</section>
+  <div class="section" id="ac-3-phase-supply">
+<h1>AC 3 Phase Supply<a class="headerlink" href="#ac-3-phase-supply" title="Permalink to this headline"></a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.voltage_supplies.</code><code class="sig-name descname">AC3PhaseSupply</code><span class="sig-paren">(</span><em class="sig-param">u_nominal=400</em>, <em class="sig-param">supply_parameter=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#AC3PhaseSupply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply" title="Permalink to this definition"></a></dt>
+<dd><p>AC three phase voltage supply</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_nominal</strong> (<em>float</em>) – Three phasic effective value of the voltage supply</p></li>
+<li><p><strong>supply_parameter</strong> (<em>dict</em>) – Consists of frequency f in Hz and phase phi in range of [0,2*pi) in case you wish for a fixed phase</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.get_voltage">
+<code class="sig-name descname">get_voltage</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#AC3PhaseSupply.get_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.get_voltage" title="Permalink to this definition"></a></dt>
+<dd><p>Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_sup</strong> (<em>float</em>) – Supply current floating into the system.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Supply Voltage(s) at time t.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/voltage_supplies.html#AC3PhaseSupply.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the voltage supply to an initial state.
+This method is called at every reset of the physical system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The initial supply voltage.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.u_nominal">
+<em class="property">property </em><code class="sig-name descname">u_nominal</code><a class="headerlink" href="#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.u_nominal" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Nominal Voltage of the Voltage Supply</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 
 
            </div>

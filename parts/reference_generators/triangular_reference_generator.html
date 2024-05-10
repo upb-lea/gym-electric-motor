@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Triangular Reference Generator &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-
-  
+  <title>Triangular Reference Generator &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=4f26b750"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -44,11 +40,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference_generator.html">Reference Generators</a><ul class="current">
@@ -99,9 +95,160 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="triangular-reference-generator">
-<h1>Triangular Reference Generator<a class="headerlink" href="#triangular-reference-generator" title="Permalink to this heading"></a></h1>
-</section>
+  <div class="section" id="triangular-reference-generator">
+<h1>Triangular Reference Generator<a class="headerlink" href="#triangular-reference-generator" title="Permalink to this headline"></a></h1>
+<dl class="class">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.reference_generators.</code><code class="sig-name descname">TriangularReferenceGenerator</code><span class="sig-paren">(</span><em class="sig-param">amplitude_range=None</em>, <em class="sig-param">frequency_range=(1</em>, <em class="sig-param">10)</em>, <em class="sig-param">offset_range=None</em>, <em class="sig-param">*_</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/triangle_reference_generator.html#TriangularReferenceGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>Reference Generator that generates a triangular waveform with random asymmetry. The Amplitude, frequency and offset
+are also randomized within a specified range.
+The reference is generated for a certain length and then new parameters are drawn uniformly from a selectable range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>amplitude_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the amplitude.</p></li>
+<li><p><strong>frequency_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the frequency.</p></li>
+<li><p><strong>offset_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the offset</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Arguments passed to the superclass SubepisodedReferenceGenerator .</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.close" title="Permalink to this definition"></a></dt>
+<dd><p>Called by the environment, when the environment is deleted to close files, store logs, etc.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference">
+<code class="sig-name descname">get_reference</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the reference array of the current time step.</p>
+<p>The reference array needs to be in the same shape as the state variables. For referenced states the reference
+value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Current reference array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference_observation">
+<code class="sig-name descname">get_reference_observation</code><span class="sig-paren">(</span><em class="sig-param">*_</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference_observation" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the reference observation for the next time step. This observation needs to fit in the reference space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Observation for the next reference time step.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>value in reference_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.next_generator">
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.next_generator" title="Permalink to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.random_generator">
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.random_generator" title="Permalink to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.reference_names">
+<em class="property">property </em><code class="sig-name descname">reference_names</code><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.reference_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+reference_names(list(str)): A list containing all names of the referenced states in the reference
+observation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.referenced_states">
+<em class="property">property </em><code class="sig-name descname">referenced_states</code><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.referenced_states" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">initial_state=None</em>, <em class="sig-param">initial_reference=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.reset" title="Permalink to this definition"></a></dt>
+<dd><p>The references are reset. If an initial reference is passed, this value will be the first reference value of
+the next episode. Otherwise it will be 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The initial state of the physical system.</p></li>
+<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – (Optional) The first reference value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>initial reference array.
+initial_reference_observation(element of reference_space): An initial observation of the next reference.
+trajectory(None): No initial trajectory is passed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>initial_reference(ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed" title="Permalink to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed_sequence">
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.set_modules">
+<code class="sig-name descname">set_modules</code><span class="sig-paren">(</span><em class="sig-param">physical_system</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/triangle_reference_generator.html#TriangularReferenceGenerator.set_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.set_modules" title="Permalink to this definition"></a></dt>
+<dd><p>Announcement of the PhysicalSystem to the ReferenceGenerator.</p>
+<p>In subclasses, store all important information from the physical system to the ReferenceGenerator here.
+The environment announces the physical system to the ReferenceGenerator during its initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 
 
            </div>

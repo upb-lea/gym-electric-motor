@@ -1,24 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Technical Background &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
-  
+  <title>Technical Background &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4f26b750"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -43,11 +38,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -85,8 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="technical-background">
-<h1>Technical Background<a class="headerlink" href="#technical-background" title="Permalink to this heading"></a></h1>
+  <div class="section" id="technical-background">
+<h1>Technical Background<a class="headerlink" href="#technical-background" title="Permalink to this headline"></a></h1>
 <p>The package contains different electric motors, power electronic converters and load models.
 In this part the technical models are described and references to more detailed explanations are given.
 All included electric motors can be represented by a system of differential equations and those are the same for the
@@ -106,16 +101,16 @@ action space is specified.</p>
 <li><p>synchronous reluctance motor (SynRM)</p></li>
 </ul>
 <p>are included. The figure below shows the basic structure of converter, motor and load that is modeled.</p>
-<figure class="align-default">
-<img alt="../_images/FigureConvMotorLoad6.svg" src="../_images/FigureConvMotorLoad6.svg" /></figure>
+<div class="figure align-default">
+<img alt="../_images/FigureConvMotorLoad6.svg" src="../_images/FigureConvMotorLoad6.svg" /></div>
 <p>Further information about electrical motor and power electronic converters can be found in <a class="reference internal" href="#boecker2018a" id="id1"><span>[Boecker2018a]</span></a>, <a class="reference internal" href="#boecker2018b" id="id2"><span>[Boecker2018b]</span></a> and <a class="reference internal" href="#chiasson2005" id="id3"><span>[Chiasson2005]</span></a>.</p>
-<section id="dc-motors">
-<h2>DC Motors<a class="headerlink" href="#dc-motors" title="Permalink to this heading"></a></h2>
-<section id="externally-excited-motor">
-<h3>Externally Excited Motor<a class="headerlink" href="#externally-excited-motor" title="Permalink to this heading"></a></h3>
+<div class="section" id="dc-motors">
+<h2>DC Motors<a class="headerlink" href="#dc-motors" title="Permalink to this headline"></a></h2>
+<div class="section" id="externally-excited-motor">
+<h3>Externally Excited Motor<a class="headerlink" href="#externally-excited-motor" title="Permalink to this headline"></a></h3>
 <p>The figure shows the circuit diagram of this motor <a class="reference internal" href="#boecker2018a" id="id4"><span>[Boecker2018a]</span></a>.</p>
-<figure class="align-default">
-<img alt="../_images/ESBdcExtEx.svg" src="../_images/ESBdcExtEx.svg" /></figure>
+<div class="figure align-default">
+<img alt="../_images/ESBdcExtEx1.svg" src="../_images/ESBdcExtEx1.svg" /></div>
 <p>The equations are</p>
 <p><span class="math notranslate nohighlight">\(u_A=\mathit{\Psi}^\prime_E \omega + L_A \frac{\mathrm{d} i_A}{\mathrm{d} t} +R_A i_A\)</span></p>
 <p><span class="math notranslate nohighlight">\(u_E=L_E \frac{\mathrm{d} i_E}{\mathrm{d} t} + R_E i_E\)</span></p>
@@ -146,39 +141,39 @@ action space is specified.</p>
 <li><p><span class="math notranslate nohighlight">\(\mathit{\Psi}^\prime_E\)</span> effective excitation flux</p></li>
 </ul>
 <p>Other motors are build on this motor with different connections of armature and excitation circuit.</p>
-</section>
-<section id="series-motor">
-<h3>Series Motor<a class="headerlink" href="#series-motor" title="Permalink to this heading"></a></h3>
+</div>
+<div class="section" id="series-motor">
+<h3>Series Motor<a class="headerlink" href="#series-motor" title="Permalink to this headline"></a></h3>
 <p>In this type both circuits are in series connection, <span class="math notranslate nohighlight">\(i=i_A=i_E\)</span> and <span class="math notranslate nohighlight">\(u=u_A+u_E\)</span>,  as shown in the figure <a class="reference internal" href="#boecker2018a" id="id5"><span>[Boecker2018a]</span></a>.</p>
-<figure class="align-default">
-<img alt="../_images/ESBseries.svg" src="../_images/ESBseries.svg" /></figure>
+<div class="figure align-default">
+<img alt="../_images/ESBseries1.svg" src="../_images/ESBseries1.svg" /></div>
 <p>The equation for this motor are</p>
 <p><span class="math notranslate nohighlight">\(\frac{\mathrm{d} i}{\mathrm{d} t}=-\frac{L^\prime_E}{L_A+L_E} i \omega -\frac{R_A+R_E}{L_A+L_E} i + \frac{1}{L_A+L_E} u\)</span></p>
 <p><span class="math notranslate nohighlight">\(\frac{\mathrm{d} \omega}{\mathrm{d} t}=\frac{L^\prime_E}{J} i^2-\frac{1}{J}T_L(\omega)\)</span></p>
 <p>The torque equation is the same as before.</p>
-</section>
-<section id="shunt-motor">
-<h3>Shunt Motor<a class="headerlink" href="#shunt-motor" title="Permalink to this heading"></a></h3>
+</div>
+<div class="section" id="shunt-motor">
+<h3>Shunt Motor<a class="headerlink" href="#shunt-motor" title="Permalink to this headline"></a></h3>
 <p>In this type the circuits are connected in parallel, <span class="math notranslate nohighlight">\(i=i_A+i_E\)</span> and <span class="math notranslate nohighlight">\(u=u_A=u_E\)</span>,  as shown in the figure <a class="reference internal" href="#boecker2018a" id="id6"><span>[Boecker2018a]</span></a>.</p>
-<figure class="align-default">
-<img alt="../_images/ESBshunt.svg" src="../_images/ESBshunt.svg" /></figure>
+<div class="figure align-default">
+<img alt="../_images/ESBshunt1.svg" src="../_images/ESBshunt1.svg" /></div>
 <p>The equation for this motor are</p>
 <p><span class="math notranslate nohighlight">\(\frac{\mathrm{d} i_A}{\mathrm{d} t}=\frac{u-L^\prime_E \omega i_E -R_A i_A}{L_A}\)</span></p>
 <p><span class="math notranslate nohighlight">\(\frac{\mathrm{d} i_E}{\mathrm{d} t}=\frac{u-R_E i_E}{L_E}\)</span></p>
 <p><span class="math notranslate nohighlight">\(\frac{\mathrm{d} \omega}{\mathrm{d} t}=\frac{L^\prime_E i_A i_E -T_L(\omega)}{J}\)</span></p>
 <p>and the torque equation is the same as before.</p>
-</section>
-<section id="permanently-excited-motor">
-<h3>Permanently Excited Motor<a class="headerlink" href="#permanently-excited-motor" title="Permalink to this heading"></a></h3>
+</div>
+<div class="section" id="permanently-excited-motor">
+<h3>Permanently Excited Motor<a class="headerlink" href="#permanently-excited-motor" title="Permalink to this headline"></a></h3>
 <p>In this type the excitation <span class="math notranslate nohighlight">\(\mathit{\Psi}^\prime_E\)</span> is constant and therefore it only contains the armature circuit of the
 externally excited motor.</p>
 <p>The equations are</p>
 <p><span class="math notranslate nohighlight">\(\frac{\mathrm{d} i}{\mathrm{d} t}=\frac{u-\mathit{\Psi}^\prime_E \omega -R_A i}{L_A}\)</span></p>
 <p><span class="math notranslate nohighlight">\(\frac{\mathrm{d} \omega}{\mathrm{d} t}=\frac{L^\prime_E i^2 -T_L(\omega)}{J}\)</span></p>
-</section>
-</section>
-<section id="permanent-magnet-synchronous-motor-pmsm">
-<h2>Permanent Magnet Synchronous Motor (PMSM)<a class="headerlink" href="#permanent-magnet-synchronous-motor-pmsm" title="Permalink to this heading"></a></h2>
+</div>
+</div>
+<div class="section" id="permanent-magnet-synchronous-motor-pmsm">
+<h2>Permanent Magnet Synchronous Motor (PMSM)<a class="headerlink" href="#permanent-magnet-synchronous-motor-pmsm" title="Permalink to this headline"></a></h2>
 <p>The PMSM is a three phase motor with a permanent magnet in the rotor as shown in the figure <a class="reference internal" href="#boecker2018b" id="id7"><span>[Boecker2018b]</span></a>. The input of this motor are
 the voltages <span class="math notranslate nohighlight">\(u_a\)</span>, <span class="math notranslate nohighlight">\(u_b\)</span> and <span class="math notranslate nohighlight">\(u_c\)</span>.</p>
 <p>The quantities are:</p>
@@ -202,16 +197,16 @@ the voltages <span class="math notranslate nohighlight">\(u_a\)</span>, <span cl
 <li><p><span class="math notranslate nohighlight">\(J\)</span> moment of inertia</p></li>
 </ul>
 <p>The electrical angular velocity and the mechanical angular velocity are related such that <span class="math notranslate nohighlight">\(\omega=\omega_{me} p\)</span>.</p>
-<figure class="align-default">
-<img alt="../_images/GDAFig29.svg" src="../_images/GDAFig29.svg" /></figure>
+<div class="figure align-default">
+<img alt="../_images/GDAFig291.svg" src="../_images/GDAFig291.svg" /></div>
 <p>The circuit diagram of the phases are similar to each other and the armature circuit of the externally excited motor.</p>
-<figure class="align-default">
-<img alt="../_images/pmsmMotorB6.png" src="../_images/pmsmMotorB6.png" />
-</figure>
+<div class="figure align-default">
+<img alt="../_images/pmsmMotorB61.png" src="../_images/pmsmMotorB61.png" />
+</div>
 <p>For an easy computation the three phases are first transformed to the quantities <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> and
 afterwards to <span class="math notranslate nohighlight">\(d/q\)</span> coordinates that rotated with the rotor as given in <a class="reference internal" href="#boecker2018b" id="id8"><span>[Boecker2018b]</span></a>.</p>
-<figure class="align-default">
-<img alt="../_images/ESBdq.svg" src="../_images/ESBdq.svg" /></figure>
+<div class="figure align-default">
+<img alt="../_images/ESBdq2.svg" src="../_images/ESBdq2.svg" /></div>
 <p>This results in the equations:</p>
 <p><span class="math notranslate nohighlight">\(u_{sd}=R_s i_{sd}+L_d \frac{\mathrm{d} i_{sd}}{\mathrm{d} t}-\omega_{me}p L_q i_{sq}\)</span></p>
 <p><span class="math notranslate nohighlight">\(u_{sq}=R_s i_{sq}+L_q \frac{\mathrm{d} i_{sq}}{\mathrm{d} t}+\omega_{me}p L_d i_{sd}+\omega_{me}p \mathit{\Psi}_p\)</span></p>
@@ -226,77 +221,71 @@ Furthermore, the supply voltage is typically the same <span class="math notransl
 For example, a line voltage of <span class="math notranslate nohighlight">\(U_L=400~\text{V}\)</span> is given, the rms phase voltage is <span class="math notranslate nohighlight">\(U_S=\sqrt{\frac{1}{3}}U_L = 230.9 \text{ V}\)</span>
 and the peak value <span class="math notranslate nohighlight">\(\hat{U}_S=326.6 \text{ V}\)</span>.
 The nominal peak current of a phase is given by <span class="math notranslate nohighlight">\(\hat{I}_S=\sqrt{2} I_S\)</span>.</p>
-<figure class="align-default">
-<img alt="../_images/Drehstromtrafo.svg" src="../_images/Drehstromtrafo.svg" /></figure>
-</section>
-<section id="converter">
-<h2>Converter<a class="headerlink" href="#converter" title="Permalink to this heading"></a></h2>
+<div class="figure align-default">
+<img alt="../_images/Drehstromtrafo1.svg" src="../_images/Drehstromtrafo1.svg" /></div>
+</div>
+<div class="section" id="converter">
+<h2>Converter<a class="headerlink" href="#converter" title="Permalink to this headline"></a></h2>
 <p>The DC input voltage of the converter is named supply voltage <span class="math notranslate nohighlight">\(u_{sup}\)</span> in the package and the output voltage and
 current are the input quantities of the motor and therefore are named as <span class="math notranslate nohighlight">\(u_{in}\)</span> and <span class="math notranslate nohighlight">\(i_{in}\)</span>.
 All converter contain a dead time of one sampling interval and an interlocking times can be considered.
 More details can be found in <a class="reference internal" href="#boecker2018a" id="id9"><span>[Boecker2018a]</span></a>, <a class="reference internal" href="#boecker2018b" id="id10"><span>[Boecker2018b]</span></a> and <a class="reference internal" href="#chiasson2005" id="id11"><span>[Chiasson2005]</span></a>.</p>
-<section id="quadrant-converter-1qc">
-<h3>1 Quadrant Converter (1QC)<a class="headerlink" href="#quadrant-converter-1qc" title="Permalink to this heading"></a></h3>
+<div class="section" id="quadrant-converter-1qc">
+<h3>1 Quadrant Converter (1QC)<a class="headerlink" href="#quadrant-converter-1qc" title="Permalink to this headline"></a></h3>
 <p>This converter can provide positive voltages and positive currents at the output <a class="reference internal" href="#boecker2018a" id="id12"><span>[Boecker2018a]</span></a>.</p>
 <p><span class="math notranslate nohighlight">\(u_{in} \geq 0\)</span></p>
 <p><span class="math notranslate nohighlight">\(i_{in} \geq 0\)</span></p>
-<figure class="align-default">
-<img alt="../_images/1QC.svg" src="../_images/1QC.svg" /></figure>
-</section>
-<section id="quadrant-converter-2qc">
-<h3>2 Quadrant Converter (2QC)<a class="headerlink" href="#quadrant-converter-2qc" title="Permalink to this heading"></a></h3>
+<div class="figure align-default">
+<img alt="../_images/1QC1.svg" src="../_images/1QC1.svg" /></div>
+</div>
+<div class="section" id="quadrant-converter-2qc">
+<h3>2 Quadrant Converter (2QC)<a class="headerlink" href="#quadrant-converter-2qc" title="Permalink to this headline"></a></h3>
 <p>This converter can provide positive voltages and both current directions at the output <a class="reference internal" href="#boecker2018a" id="id13"><span>[Boecker2018a]</span></a>.</p>
 <p><span class="math notranslate nohighlight">\(u_{in} \geq 0\)</span></p>
 <p><span class="math notranslate nohighlight">\(i_{in}\)</span> both signs</p>
-<figure class="align-default">
-<img alt="../_images/2QCigbt.svg" src="../_images/2QCigbt.svg" /></figure>
-</section>
-<section id="quadrant-converter-4qc">
-<h3>4 Quadrant Converter (4QC)<a class="headerlink" href="#quadrant-converter-4qc" title="Permalink to this heading"></a></h3>
+<div class="figure align-default">
+<img alt="../_images/2QCigbt.svg" src="../_images/2QCigbt.svg" /></div>
+</div>
+<div class="section" id="quadrant-converter-4qc">
+<h3>4 Quadrant Converter (4QC)<a class="headerlink" href="#quadrant-converter-4qc" title="Permalink to this headline"></a></h3>
 <p>This converter can provide both voltage and currents polarities at the output <a class="reference internal" href="#boecker2018a" id="id14"><span>[Boecker2018a]</span></a>.</p>
 <p><span class="math notranslate nohighlight">\(u_{in}\)</span> both signs</p>
 <p><span class="math notranslate nohighlight">\(i_{in}\)</span> both signs</p>
-<figure class="align-default">
-<img alt="../_images/4QC.svg" src="../_images/4QC.svg" /></figure>
-</section>
-<section id="three-phase-voltage-source-inverter">
-<h3>Three-Phase Voltage Source Inverter<a class="headerlink" href="#three-phase-voltage-source-inverter" title="Permalink to this heading"></a></h3>
+<div class="figure align-default">
+<img alt="../_images/4QC1.svg" src="../_images/4QC1.svg" /></div>
+</div>
+<div class="section" id="three-phase-voltage-source-inverter">
+<h3>Three-Phase Voltage Source Inverter<a class="headerlink" href="#three-phase-voltage-source-inverter" title="Permalink to this headline"></a></h3>
 <p>This converter is also called B6 bridge and is used for three phase motors as the PMSM. The supply voltage is DC and it
 consists of three parallel half bridges, one for each phase <span class="math notranslate nohighlight">\(u_a\)</span>, <span class="math notranslate nohighlight">\(u_b\)</span> and <span class="math notranslate nohighlight">\(u_c\)</span>. Due to this 8
 different switching states are possible. A dead time of one sampling time step and
 interlocking times can be considered. A symmetric B6 bridge with a voltage range of <span class="math notranslate nohighlight">\([-u_{DC}/2,~+u_{DC}/2]\)</span> is used.
 <a class="reference internal" href="#boecker2018b" id="id15"><span>[Boecker2018b]</span></a></p>
-<figure class="align-default">
-<img alt="../_images/B6.svg" src="../_images/B6.svg" /></figure>
-</section>
-</section>
-<section id="load-models">
-<h2>Load Models<a class="headerlink" href="#load-models" title="Permalink to this heading"></a></h2>
+<div class="figure align-default">
+<img alt="../_images/B61.svg" src="../_images/B61.svg" /></div>
+</div>
+</div>
+<div class="section" id="load-models">
+<h2>Load Models<a class="headerlink" href="#load-models" title="Permalink to this headline"></a></h2>
 <p>The package can deal with polynomial load equations</p>
 <p><span class="math notranslate nohighlight">\(T_L(\omega_{me})=\mathrm{sign}(\omega_{me})(c \omega^2_{me} + b \vert\omega_{me}\vert + a)\)</span>.</p>
 <p>Furthermore an additional moment of inertia <span class="math notranslate nohighlight">\(J_{Load}\)</span> of the load can be set.</p>
-</section>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
-<div role="list" class="citation-list">
-<div class="citation" id="boecker2018a" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Boecker2018a<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id4">2</a>,<a role="doc-backlink" href="#id5">3</a>,<a role="doc-backlink" href="#id6">4</a>,<a role="doc-backlink" href="#id9">5</a>,<a role="doc-backlink" href="#id12">6</a>,<a role="doc-backlink" href="#id13">7</a>,<a role="doc-backlink" href="#id14">8</a>)</span>
-<p>Böcker, Joachim; Elektrische Antriebstechnik; 2018; Paderborn University</p>
 </div>
-<div class="citation" id="boecker2018b" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Boecker2018b<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id8">3</a>,<a role="doc-backlink" href="#id10">4</a>,<a role="doc-backlink" href="#id15">5</a>)</span>
-<p>Böcker, Joachim; Controlled Three-Phase Drives; 2018; Paderborn University</p>
-</div>
-<div class="citation" id="chiasson2005" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Chiasson2005<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id11">2</a>)</span>
-<p>Chiasson, John; Modeling and High-Performance Control of Electric Machines; 2005; Hoboken, NJ, USA</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
+<dl class="citation">
+<dt class="label" id="boecker2018a"><span class="brackets">Boecker2018a</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>,<a href="#id5">3</a>,<a href="#id6">4</a>,<a href="#id9">5</a>,<a href="#id12">6</a>,<a href="#id13">7</a>,<a href="#id14">8</a>)</span></dt>
+<dd><p>Böcker, Joachim; Elektrische Antriebstechnik; 2018; Paderborn University</p>
+</dd>
+<dt class="label" id="boecker2018b"><span class="brackets">Boecker2018b</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id7">2</a>,<a href="#id8">3</a>,<a href="#id10">4</a>,<a href="#id15">5</a>)</span></dt>
+<dd><p>Böcker, Joachim; Controlled Three-Phase Drives; 2018; Paderborn University</p>
+</dd>
+<dt class="label" id="chiasson2005"><span class="brackets">Chiasson2005</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id11">2</a>)</span></dt>
+<dd><p>Chiasson, John; Modeling and High-Performance Control of Electric Machines; 2005; Hoboken, NJ, USA</p>
+</dd>
+</dl>
 </div>
 </div>
-</section>
-</section>
 
 
            </div>

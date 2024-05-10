@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>External Speed Load &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
-
-  
+  <title>External Speed Load &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=4f26b750"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -44,11 +40,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -106,12 +102,229 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="external-speed-load">
-<h1>External Speed Load<a class="headerlink" href="#external-speed-load" title="Permalink to this heading"></a></h1>
-<section id="class-description">
-<h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this heading"></a></h2>
-</section>
-</section>
+  <div class="section" id="external-speed-load">
+<h1>External Speed Load<a class="headerlink" href="#external-speed-load" title="Permalink to this headline"></a></h1>
+<div class="section" id="class-description">
+<h2>Class Description<a class="headerlink" href="#class-description" title="Permalink to this headline"></a></h2>
+<dl class="class">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad">
+<em class="property">class </em><code class="sig-prename descclassname">gym_electric_motor.physical_systems.mechanical_loads.</code><code class="sig-name descname">ExternalSpeedLoad</code><span class="sig-paren">(</span><em class="sig-param">speed_profile</em>, <em class="sig-param">load_initializer=None</em>, <em class="sig-param">tau=0.0001</em>, <em class="sig-param">speed_profile_kwargs=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad" title="Permalink to this definition"></a></dt>
+<dd><p>External speed mechanical load system which will set the speed to a
+predefined speed-function/ speed-profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speed_profile</strong> (<em>float -&gt; float</em>) – <p>A callable(t, <a href="#id1"><span class="problematic" id="id2">**</span></a>speed_profile_args) -&gt; float
+which takes a timestep t and custom further arguments and returns a speed omega
+.. rubric:: Example</p>
+<p>(lambda t, amplitude, freq: amplitude*numpy.sin(2*pi*f)))
+with additional parameters:</p>
+<blockquote>
+<div><p>amplitude(float), freq(float), time(float)</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>tau</strong> (<em>float</em>) – discrete time step of the system</p></li>
+<li><p><strong>speed_profile_kwargs</strong> (<em>dict</em>) – further arguments for speed_profile</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Arguments to be passed to superclass <a class="reference internal" href="mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">MechanicalLoad</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.get_state_space">
+<code class="sig-name descname">get_state_space</code><span class="sig-paren">(</span><em class="sig-param">omega_range</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.get_state_space" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>omega_range</strong> (<em>Tuple</em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em>) – Lower and upper values the motor can generate for omega normalized to (-1, 1)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Lowest and highest possible values for all states normalized to (-1, 1)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(dict,dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">state_space</em>, <em class="sig-param">state_positions</em>, <em class="sig-param">nominal_state</em>, <em class="sig-param">**__</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes the state of the load on an episode start.</p>
+<p>Values can be given as a constant or sampled random out of a statistical distribution. Initial value is in
+range of the nominal values or a given interval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nominal_state</strong> (<em>list</em>) – nominal values for each state given from physical system</p></li>
+<li><p><strong>state_space</strong> (<em>gymnasium.spaces.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initializer">
+<em class="property">property </em><code class="sig-name descname">initializer</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.initializer" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict: The motors initial state and additional initializer parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.j_total">
+<em class="property">property </em><code class="sig-name descname">j_total</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.j_total" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Total moment of inertia affecting the motor shaft.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.limits">
+<em class="property">property </em><code class="sig-name descname">limits</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.limits" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict(float): Mapping of the motor states to their limit values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_jacobian">
+<code class="sig-name descname">mechanical_jacobian</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.mechanical_jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_jacobian" title="Permalink to this definition"></a></dt>
+<dd><p>Calculation of the jacobians of the mechanical-ODE for each of the mechanical state.</p>
+<p>Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also
+be set to True. Otherwise, the jacobian will not be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>mechanical_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state of the mechanical system.</p></li>
+<li><p><strong>torque</strong> (<em>float</em>) – Generated input torque by the electrical motor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0]: Derivatives of the mechanical_state-odes over the mechanical_states shape:(states x states)
+[1]: Derivatives of the mechanical_state-odes over the torque shape:(states,)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple(ndarray, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_ode">
+<code class="sig-name descname">mechanical_ode</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">mechanical_state</em>, <em class="sig-param">torque=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.mechanical_ode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.mechanical_ode" title="Permalink to this definition"></a></dt>
+<dd><p>Calculation of the derivatives of the mechanical-ODE for each of the mechanical states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>mechanical_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state of the mechanical system.</p></li>
+<li><p><strong>torque</strong> (<em>float</em>) – Generated input torque by the electrical motor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Derivatives of the mechanical state for the given input torque.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.next_generator">
+<code class="sig-name descname">next_generator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.next_generator" title="Permalink to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.nominal_values">
+<em class="property">property </em><code class="sig-name descname">nominal_values</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.nominal_values" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict(float): Mapping of the motor states to their nominal values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.omega">
+<em class="property">property </em><code class="sig-name descname">omega</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.omega" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+float: Function-value for omega in rad/s at time-step t.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.random_generator">
+<em class="property">property </em><code class="sig-name descname">random_generator</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.random_generator" title="Permalink to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/mechanical_loads/external_speed_load.html#ExternalSpeedLoad.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the motors state to a new initial state. (Default 0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nominal_state</strong> (<em>list</em>) – nominal values for each state given from
+physical system</p></li>
+<li><p><strong>state_space</strong> (<em>gymnasium.Box</em>) – normalized state space boundaries</p></li>
+<li><p><strong>state_positions</strong> (<em>dict</em>) – indexes of system states</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The initial motor states.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed" title="Permalink to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed_sequence">
+<em class="property">property </em><code class="sig-name descname">seed_sequence</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.seed_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.set_j_rotor">
+<code class="sig-name descname">set_j_rotor</code><span class="sig-paren">(</span><em class="sig-param">j_rotor</em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.set_j_rotor" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>j_rotor</strong> (<em>float</em>) – The moment of inertia of the rotor shaft of the motor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.state_names">
+<em class="property">property </em><code class="sig-name descname">state_names</code><a class="headerlink" href="#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad.state_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+list(str): Names of the states in the mechanical-ODE.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
 
 
            </div>
