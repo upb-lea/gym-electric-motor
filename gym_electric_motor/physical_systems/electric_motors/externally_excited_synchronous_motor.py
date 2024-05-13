@@ -131,7 +131,7 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         mp['l_E'] = mp['k'] ** 2 * 3/2 * mp['l_e']
 
         mp['i_k_rs'] = 2 / 3 / mp['k'] # ratio (i_E / i_e)
-        mp['sigma'] = 1 - mp['l_M'] ** 2 / (mp['l_d'] * mp['l_E']) * 77
+        mp['sigma'] = 1 - mp['l_M'] ** 2 / (mp['l_d'] * mp['l_E'])
 
         self._model_constants = np.array([
             #                 omega,                                               i_d,        i_q,                                                              i_e,                              u_d, u_q,                                                    u_e,          omega * i_d,                                                  omega * i_q,                         omega * i_e
