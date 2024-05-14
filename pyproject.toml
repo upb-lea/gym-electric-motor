@@ -1,0 +1,64 @@
+[project]
+name = "gym_electric_motor"
+version = "2.0.1"
+authors = [
+    { name = "Arne Traue" },
+    { name = "Gerrit Book" },
+    { name = "Praneeth Balakrishna" },
+    { name = "Pascal Peters" },
+    { name = "Pramod Manjunatha" },
+    { name = "Darius Jakobeit" },
+    { name = "Felix Book" },
+    { name = "Max Schenke" },
+    { name = "Wilhelm Kirchgässner" },
+    { name = "Oliver Wallscheid" },
+    { name = "Barnabas Haucke-Korber" },
+    { name = "Stefan Arndt" },
+    { name = "Marius Köhler" },
+]
+description = "A Farama Gymnasium environment for electric motor control."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["dependencies", "optional-dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies = { dev = { file = ["requirements-dev.txt"] } }
+
+[project.urls]
+Homepage = "https://github.com/upb-lea/gym-electric-motor"
+Issues = "https://github.com/upb-lea/gym-electric-motor/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["/src/gym_electric_motor", "/src/gem_controllers"]
+
+[tool.hatch.build.targets.sdist]
+packages = [
+    "/src/gym_electric_motor",
+    "/src/gem_controllers",
+    "/examples/classic_controllers",
+    "/tests",
+]
+
+[tool.ruff]
+src = ["src"]
+line-length = 120
+exclude = ["tests"]
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+# I for isort
+select = ["E4", "E7", "E9", "F", "I"]
+ignore = ["F401"]                     # imported but unused
+ignore-init-module-imports = true     # ignore imports in __init__.py
