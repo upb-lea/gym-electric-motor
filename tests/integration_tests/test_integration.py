@@ -93,6 +93,7 @@ def test_simulate_env():
     for file in ref_data.files:
         assert np.allclose(ref_data[file], test_data[file], equal_nan=True)
 
+    test_data.close()
     os.remove("./tests/integration_tests/test_data.npz")
 
     # Anti test
@@ -103,4 +104,5 @@ def test_simulate_env():
     for file in ref_data.files[0:3]:
         assert not np.allclose(ref_data[file], test_data[file], equal_nan=True)
 
+    test_data.close()
     os.remove("./tests/integration_tests/test_data.npz")
