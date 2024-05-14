@@ -18,7 +18,7 @@ versions = ["v0"]
 def test_tau(motor, control_task, action_type, version, tau):
     env_id = f"{action_type}-{control_task}-{motor}-{version}"
     env = gem.make(env_id)
-    assert env.physical_system.tau == tau
+    assert env.unwrapped.physical_system.tau == tau
 
 
 @pytest.mark.parametrize("version", versions)
@@ -33,4 +33,4 @@ def test_referenced_states_ac(
 ):
     env_id = f"{action_type}-{control_task}-{ac_motor}-{version}"
     env = gem.make(env_id)
-    assert env.reference_generator.reference_names == referenced_states
+    assert env.unwrapped.reference_generator.reference_names == referenced_states
