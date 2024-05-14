@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.1] - Unreleased
 ## Added
+- Support for Python 3.11
 - Ruff: Python linter & formatter (see [DEVELOPMENT.md](DEVELOPMENT.md))
 - StateObserver: An easy way to get state values with error checking [example](examples/observers/state_observer_example.py)
 - Integrated gem_controls repository into gem. classic_controllers will be removed in further version
