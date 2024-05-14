@@ -1,3 +1,5 @@
+import sys
+
 import gymnasium
 from gymnasium.envs.registration import register
 from packaging import version
@@ -32,7 +34,12 @@ make = ElectricMotorEnvironment.make
 #    dict(order_enforce=False) if version.parse(gymnasium.__version__) >= version.parse("0.21.0") else dict()
 # )
 # registration_kwargs["disable_env_checker"] = True
+
 registration_kwargs = dict()
+# disable the environment checker for pytest
+if "pytest" in sys.modules:
+    registration_kwargs["disable_env_checker"] = True
+
 
 envs_path = "gym_electric_motor.envs:"
 

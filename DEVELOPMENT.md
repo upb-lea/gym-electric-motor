@@ -7,6 +7,9 @@ Build: `python -m build`
 Run: `pytest --sw`
 > --sw, --stepwise      Exit on test failure and continue from last failing test next time
 
+Warning as error:
+> python -W error -m pytest --sw -v
+
 # Linter and Formater
 Ruff: https://docs.astral.sh/ruff/installation/
 
