@@ -293,78 +293,24 @@ class InductionMotor(ThreePhaseMotor):
         tau_r = l_r / mp["r_r"]
         tau_sig = sigma * l_s / (mp["r_s"] + mp["r_r"] * (mp["l_m"] ** 2) / (l_r**2))
 
-        self._model_constants = np.array(
-            [
-                # omega, i_alpha, i_beta, psi_ralpha, psi_rbeta, omega * psi_ralpha, omega * psi_rbeta, u_salpha, u_sbeta, u_ralpha, u_rbeta,
-                [
-                    0,
-                    -1 / tau_sig,
-                    0,
-                    mp["l_m"] * mp["r_r"] / (sigma * l_s * l_r**2),
-                    0,
-                    0,
-                    +mp["l_m"] * mp["p"] / (sigma * l_r * l_s),
-                    1 / (sigma * l_s),
-                    0,
-                    -mp["l_m"] / (sigma * l_r * l_s),
-                    0,
-                ],  # i_ralpha_dot
-                [
-                    0,
-                    0,
-                    -1 / tau_sig,
-                    0,
-                    mp["l_m"] * mp["r_r"] / (sigma * l_s * l_r**2),
-                    -mp["l_m"] * mp["p"] / (sigma * l_r * l_s),
-                    0,
-                    0,
-                    1 / (sigma * l_s),
-                    0,
-                    -mp["l_m"] / (sigma * l_r * l_s),
-                ],
-                # i_rbeta_dot
-                [
-                    0,
-                    mp["l_m"] / tau_r,
-                    0,
-                    -1 / tau_r,
-                    0,
-                    0,
-                    -mp["p"],
-                    0,
-                    0,
-                    1,
-                    0,
-                ],  # psi_ralpha_dot
-                [
-                    0,
-                    0,
-                    mp["l_m"] / tau_r,
-                    0,
-                    -1 / tau_r,
-                    mp["p"],
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                ],
-                # psi_rbeta_dot
-                [
-                    mp["p"],
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                ],  # epsilon_dot
-            ]
-        )
+        # fmt: off
+        self._model_constants = np.array([
+            # omega, i_alpha, i_beta, psi_ralpha, psi_rbeta, omega * psi_ralpha, omega * psi_rbeta, u_salpha, u_sbeta, u_ralpha, u_rbeta,
+            [0, -1 / tau_sig, 0,mp['l_m'] * mp['r_r'] / (sigma * l_s * l_r ** 2), 0, 0,
+             +mp['l_m'] * mp['p'] / (sigma * l_r * l_s), 1 / (sigma * l_s), 0,
+             -mp['l_m'] / (sigma * l_r * l_s), 0, ],  # i_ralpha_dot
+            [0, 0, -1 / tau_sig, 0,
+             mp['l_m'] * mp['r_r'] / (sigma * l_s * l_r ** 2),
+             -mp['l_m'] * mp['p'] / (sigma * l_r * l_s), 0, 0,
+             1 / (sigma * l_s), 0, -mp['l_m'] / (sigma * l_r * l_s), ],
+            # i_rbeta_dot
+            [0, mp['l_m'] / tau_r, 0, -1 / tau_r, 0, 0, -mp['p'], 0, 0, 1,
+             0, ],  # psi_ralpha_dot
+            [0, 0, mp['l_m'] / tau_r, 0, -1 / tau_r, mp['p'], 0, 0, 0, 0, 1, ],
+            # psi_rbeta_dot
+            [mp['p'], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ],  # epsilon_dot
+        ])
+        # fmt: on
 
     def electrical_jacobian(self, state, u_in, omega, *args):
         mp = self._motor_parameter
