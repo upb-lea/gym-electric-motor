@@ -107,15 +107,14 @@ class PermanentMagnetSynchronousMotor(SynchronousMotor):
     def _update_model(self):
         # Docstring of superclass
         mp = self._motor_parameter
-        self._model_constants = np.array(
-            [
-                #                 omega,        i_d,        i_q, u_d, u_q,          omega * i_d,          omega * i_q
-                [0, -mp["r_s"], 0, 1, 0, 0, mp["l_q"] * mp["p"]],
-                [-mp["psi_p"] * mp["p"], 0, -mp["r_s"], 0, 1, -mp["l_d"] * mp["p"], 0],
-                [mp["p"], 0, 0, 0, 0, 0, 0],
-            ]
-        )
-
+        # fmt: off
+        self._model_constants = np.array([
+            #                 omega,        i_d,        i_q, u_d, u_q,          omega * i_d,          omega * i_q
+            [                     0, -mp['r_s'],          0,   1,   0,                    0, mp['l_q'] * mp['p']],
+            [-mp['psi_p'] * mp['p'],          0, -mp['r_s'],   0,   1, -mp['l_d'] * mp['p'],                   0],
+            [               mp['p'],          0,          0,   0,   0,                    0,                   0],
+        ])
+        # fmt: on
         self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp["l_d"]
         self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp["l_q"]
 

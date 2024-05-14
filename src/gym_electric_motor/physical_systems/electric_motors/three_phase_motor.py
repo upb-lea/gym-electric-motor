@@ -13,11 +13,20 @@ class ThreePhaseMotor(ElectricMotor):
     as well as limits and bandwidth.
     """
 
+    # fmt: off
     # transformation matrix from abc to alpha-beta representation
-    _t23 = 2 / 3 * np.array([[1, -0.5, -0.5], [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]])
+    _t23 = 2 / 3 * np.array([
+        [1, -0.5, -0.5],
+        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]
+    ])
 
     # transformation matrix from alpha-beta to abc representation
-    _t32 = np.array([[1, 0], [-0.5, 0.5 * np.sqrt(3)], [-0.5, -0.5 * np.sqrt(3)]])
+    _t32 = np.array([
+        [1, 0],
+        [-0.5, 0.5 * np.sqrt(3)],
+        [-0.5, -0.5 * np.sqrt(3)]
+    ])
+    # fmt: on
 
     @staticmethod
     def t_23(quantities):
