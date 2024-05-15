@@ -130,7 +130,7 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         mp['l_M'] = mp['k'] * 3/2 * mp['l_m']
         mp['l_E'] = mp['k'] ** 2 * 3/2 * mp['l_e']
 
-        mp['i_k_rs'] = 2 / 3 / mp['k'] # ratio (i_E / i_e)
+        mp['i_k_rs'] = 2 / 3 / mp['k']  # ratio (i_E / i_e)
         mp['sigma'] = 1 - mp['l_M'] ** 2 / (mp['l_d'] * mp['l_E'])
 
         self._model_constants = np.array([
@@ -195,21 +195,21 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         mp = self._motor_parameter
         return (
             np.array([ # dx'/dx
-                [                       -mp['r_s'] / (mp['l_d'] * mp['sigma']),                          mp['l_q'] / (mp['sigma'] * mp['l_d']) * omega * mp['p'], mp['l_M'] * mp['r_e'] / (mp['sigma'] * mp['l_d'] * mp['l_E']) * mp['i_k_rs'], 0],
-                [                     -mp['l_d'] / mp['l_q'] * omega * mp['p'],                                                           -mp['r_s'] / mp['l_q'],                      -omega * mp['p'] * mp['l_E'] / mp['l_q'] * mp['i_k_rs'], 0],
-                [mp['l_M'] * mp['r_s'] / (mp['sigma'] * mp['l_d'] * mp['l_E']), -omega * mp['p'] * mp['l_M'] * mp['l_q'] / (mp['sigma'] * mp['l_d'] * mp['l_E']),                                        -mp['r_E'] / mp['l_E'] * mp['i_k_rs'], 0],
-                [                                                            0,                                                                                0,                                                                            0, 0],
+                [                                      -mp['r_s'] / (mp['l_d'] * mp['sigma']),                                         mp['l_q'] / (mp['sigma'] * mp['l_d']) * omega * mp['p'], mp['l_M'] * mp['r_E'] / (mp['sigma'] * mp['l_d'] * mp['l_E']) * mp['i_k_rs'], 0],
+                [                                    -mp['l_d'] / mp['l_q'] * omega * mp['p'],                                                                          -mp['r_s'] / mp['l_q'],                      -omega * mp['p'] * mp['l_M'] / mp['l_q'] * mp['i_k_rs'], 0],
+                [mp['l_M'] * mp['r_s'] / (mp['sigma'] * mp['l_d'] * mp['l_E'] * mp["i_k_rs"]), -omega * mp['p'] * mp['l_M'] * mp['l_q'] / (mp['sigma'] * mp['l_d'] * mp['l_E'] * mp["i_k_rs"]),                                       -mp['r_E'] / (mp['sigma'] * mp['l_E']), 0],
+                [                                                                           0,                                                                                               0,                                                                                           0, 0],
             ]),
             np.array([ # dx'/dw
-                mp['p'] * mp['l_q'] / mp['l_d'] * state[self.I_SQ_IDX],
+                mp['p'] * mp['l_q'] / (mp['l_d'] * mp['sigma']) * state[self.I_SQ_IDX],
                 -mp['p'] * mp['l_d'] / mp['l_q'] * state[self.I_SD_IDX] - mp['p'] * mp['l_M'] / mp['l_q'] * state[self.I_E_IDX] * mp['i_k_rs'],
-                -mp['p'] * mp['l_M'] * mp['l_q'] / (mp['sigma'] * mp['l_d'] * mp['l_E']),
+                -mp['p'] * mp['l_M'] * mp['l_q'] / (mp['sigma'] * mp['l_d'] * mp['l_E'] * mp['i_k_rs']) * state[self.I_SQ_IDX],
                 mp['p'],
             ]),
             np.array([ # dT/dx
                 1.5 * mp['p'] * (mp['l_d'] - mp['l_q']) * state[self.I_SQ_IDX],
-                1.5 * mp['p'] * (mp['l_E'] * state[self.I_E_IDX] * mp['i_k_rs'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
-                1.5 * mp['p'] * mp['l_E'] * state[self.I_SQ_IDX],
+                1.5 * mp['p'] * (mp['l_M'] * state[self.I_E_IDX] * mp['i_k_rs'] + (mp['l_d'] - mp['l_q']) * state[self.I_SD_IDX]),
+                1.5 * mp['p'] * mp['l_M'] * mp['i_k_rs'] * state[self.I_SQ_IDX],
                 0,
             ])
         )
