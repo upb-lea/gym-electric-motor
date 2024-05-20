@@ -2,18 +2,17 @@ import gymnasium
 import numpy as np
 
 
-# This hacky function stays for now because, all envs use it and refectoring would be a pain TODO: fix this
+# This hacky function stays for now because all envs uses it and refectoring would be a pain
 def initialize(base_class, arg, default_class, default_args):
     if arg is None:
         return default_class(**default_args)
     if isinstance(arg, type):
-        raise Exception("Need init")
+        raise Exception("Need initialization value")
     elif isinstance(arg, base_class):
         return arg
-    elif isinstance(arg, str):
-        raise Exception
-    elif isinstance(arg, dict):
-        raise Exception
+    elif type(arg) is str:
+        raise Exception("Deprecated in version 2.0")
+    elif type(arg) is dict:
         default_args.update(arg)
         return default_class(**default_args)
 
