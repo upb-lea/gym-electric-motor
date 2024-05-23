@@ -2,7 +2,6 @@ import gymnasium
 import numpy as np
 
 
-# This hacky function stays for now because all envs uses it and refectoring would be a pain
 def initialize(base_class, arg, default_class, default_args):
     if arg is None:
         return default_class(**default_args)
