@@ -1,7 +1,6 @@
 import math
 
 import numpy as np
-import warnings
 
 from .synchronous_motor import SynchronousMotor
 
