@@ -1,6 +1,7 @@
 import math
 
 import numpy as np
+import warnings
 
 from .synchronous_motor import SynchronousMotor
 
@@ -102,11 +103,11 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         'p': 3,
         'l_d': 1.66e-3,
         'l_q': 0.35e-3,
-        'l_m': 1.589e-3,
-        'l_e': 1.74e-3,
+        'l_M': 1.589e-3,
+        'l_E': 1.74e-3,
         'j_rotor': 0.3883,
         'r_s': 15.55e-3,
-        'r_e': 7.2e-3,
+        'r_E': 7.2e-3,
         'k': 65.21,
     }
     HAS_JACOBIAN = True
@@ -126,10 +127,31 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
         # Docstring of superclass
         mp = self._motor_parameter
 
-        # Transform rotor quantities to stator side (uppercase index denotes transformation to stator side)
-        mp['r_E'] = mp['k'] ** 2 * 3/2 * mp['r_e']
-        mp['l_M'] = mp['k'] * 3/2 * mp['l_m']
-        mp['l_E'] = mp['k'] ** 2 * 3/2 * mp['l_e']
+        if all(key in mp for key in ['r_e', 'l_m', 'l_e']):
+            print("Transforming r_e, l_m and l_e to stator side.")
+            print("To specify stator-side quantities, make use of keys r_E, l_M and l_E instead.")
+
+            # Transform rotor quantities to stator side (uppercase index denotes transformation to stator side)
+            mp['r_E'] = 3 / 2 * mp['k'] ** 2 * mp['r_e']
+            mp['l_M'] = 3 / 2 * mp['k'] * mp['l_m']
+            mp['l_E'] = 3 / 2 * mp['k'] ** 2 * mp['l_e']
+
+        elif all(key in mp for key in ['r_E', 'l_M', 'l_E']):
+
+            if mp != self._default_motor_parameter:
+                print("Assuming r_E, l_M and l_E are already transformed to stator side.")
+                print("To specify rotor-side quantities, make use of keys r_e, l_m and l_e instead.")
+
+            # Transform rotor quantities to rotor side (only for completing the mp dict, not needed for calculation)
+            mp['r_e'] = 2 / 3 * mp['r_E'] / (mp['k'] ** 2)
+            mp['l_m'] = 2 / 3 * mp['l_M'] / mp['k']
+            mp['l_e'] = 2 / 3 * mp['l_E'] / (mp['k'] ** 2)
+
+        else:
+            raise KeyError("Rotor quantities are not specified in a consistent frame or are incomplete."
+                           "Specify either r_e, l_m and l_e (rotor-side) or r_E, l_M and l_E (stator-side).")
+
+
 
         mp['i_k_rs'] = 2 / 3 / mp['k']  # ratio (i_E / i_e)
         mp['sigma'] = 1 - mp['l_M'] ** 2 / (mp['l_d'] * mp['l_E'])
