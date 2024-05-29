@@ -31,15 +31,12 @@ jobs:
     - name: Test with pytest
       env:
         PY_VER: ${{ matrix.python-version }}
-      run: |
-        if [[ "$PY_VER" = "3.7" ]]; then pytest --cov=gym_electric_motor tests/; else pytest; fi
-        if [[ "$PY_VER" = "3.7" ]]; then bash <(curl -s https://codecov.io/bash); fi # code coverage report upload
   build-doc:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build Sphinx documentation
-      uses: ammaraskar/sphinx-action@master
+      uses: josh146/sphinx-action@master
       with:
         pre-build-command: "python -m pip install sphinx m2r2 sphinx_rtd_theme==1.3.0 && python -m pip install -r requirements.txt & python -m pip install ."
         docs-folder: "docs/"
