@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Supply Converter Motor Load System (SCML) &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>Supply Converter Motor Load System (SCML) &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -40,11 +42,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -94,15 +96,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="supply-converter-motor-load-system-scml">
-<h1>Supply Converter Motor Load System (SCML)<a class="headerlink" href="#supply-converter-motor-load-system-scml" title="Permalink to this headline"></a></h1>
+  <section id="supply-converter-motor-load-system-scml">
+<h1>Supply Converter Motor Load System (SCML)<a class="headerlink" href="#supply-converter-motor-load-system-scml" title="Permalink to this heading"></a></h1>
 <p>The technical structure of the SCML-Systems in the GEM-toolbox can bee seen in the figure below.</p>
-<div class="figure align-default">
-<img alt="../../_images/SCML_Setting.svg" src="../../_images/SCML_Setting.svg" /></div>
+<figure class="align-default">
+<img alt="../../_images/SCML_Setting.svg" src="../../_images/SCML_Setting.svg" /></figure>
 <p>The system consists of a Voltage Supply, a Power Electronic Converter, an Electrical Motor and the Mechanical Load.
 Additionally, each SCML-System has got an ODE-Solver for the simulation.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Subcomponents of the SCML:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Subcomponents of the SCML:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="converters/converter.html">Power Electronic Converters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mechanical_loads/mechanical_load.html">Mechanical Loads</a></li>
@@ -114,19 +116,19 @@ Additionally, each SCML-System has got an ODE-Solver for the simulation.</p>
 </div>
 <p>The abstract SCML-System defines the overall structure. From this, the DcMotorSystem and the SynchronousMotorSystem
 derive. They only implement private methods. Therefore, the interface to the user stays the same in all cases.</p>
-<div class="section" id="dc-motor-system">
-<h2>Dc Motor System<a class="headerlink" href="#dc-motor-system" title="Permalink to this headline"></a></h2>
-</div>
-<div class="section" id="synchronous-motor-system">
-<h2>Synchronous Motor System<a class="headerlink" href="#synchronous-motor-system" title="Permalink to this headline"></a></h2>
-</div>
-<div class="section" id="squirrel-cage-induction-motor-system">
-<h2>Squirrel Cage Induction Motor System<a class="headerlink" href="#squirrel-cage-induction-motor-system" title="Permalink to this headline"></a></h2>
-</div>
-<div class="section" id="doubly-fed-induction-motor-system">
-<h2>Doubly Fed Induction Motor System<a class="headerlink" href="#doubly-fed-induction-motor-system" title="Permalink to this headline"></a></h2>
-</div>
-</div>
+<section id="dc-motor-system">
+<h2>Dc Motor System<a class="headerlink" href="#dc-motor-system" title="Permalink to this heading"></a></h2>
+</section>
+<section id="synchronous-motor-system">
+<h2>Synchronous Motor System<a class="headerlink" href="#synchronous-motor-system" title="Permalink to this heading"></a></h2>
+</section>
+<section id="squirrel-cage-induction-motor-system">
+<h2>Squirrel Cage Induction Motor System<a class="headerlink" href="#squirrel-cage-induction-motor-system" title="Permalink to this heading"></a></h2>
+</section>
+<section id="doubly-fed-induction-motor-system">
+<h2>Doubly Fed Induction Motor System<a class="headerlink" href="#doubly-fed-induction-motor-system" title="Permalink to this heading"></a></h2>
+</section>
+</section>
 
 
            </div>

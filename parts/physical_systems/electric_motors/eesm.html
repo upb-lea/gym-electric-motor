@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Externally Excited Synchronous Motor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>Externally Excited Synchronous Motor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -40,11 +43,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -111,20 +114,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="externally-excited-synchronous-motor">
-<h1>Externally Excited Synchronous Motor<a class="headerlink" href="#externally-excited-synchronous-motor" title="Permalink to this headline"></a></h1>
-<div class="section" id="schematic">
-<h2>Schematic<a class="headerlink" href="#schematic" title="Permalink to this headline"></a></h2>
-<div class="figure align-default">
-<img alt="../../../_images/ESB_EESM_dq.svg" src="../../../_images/ESB_EESM_dq.svg" /></div>
+  <section id="externally-excited-synchronous-motor">
+<h1>Externally Excited Synchronous Motor<a class="headerlink" href="#externally-excited-synchronous-motor" title="Permalink to this heading"></a></h1>
+<section id="schematic">
+<h2>Schematic<a class="headerlink" href="#schematic" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<img alt="../../../_images/ESB_EESM_dq.svg" src="../../../_images/ESB_EESM_dq.svg" /></figure>
 <div class="math notranslate nohighlight">
 \[\begin{split}L_{\sigma \mathrm{d}} &amp;= L_\mathrm{d} - L_\mathrm{m} \\
 L_{\sigma \mathrm{e}} &amp;= L_\mathrm{e} - L_\mathrm{m} \\
 \psi_\mathrm{d} &amp;= L_\mathrm{d} i_\mathrm{sd} + L_\mathrm{m} i_\mathrm{e} \\
 \psi_\mathrm{q} &amp;= L_\mathrm{q} i_\mathrm{sq}\end{split}\]</div>
-</div>
-<div class="section" id="electrical-ode">
-<h2>Electrical ODE<a class="headerlink" href="#electrical-ode" title="Permalink to this headline"></a></h2>
+</section>
+<section id="electrical-ode">
+<h2>Electrical ODE<a class="headerlink" href="#electrical-ode" title="Permalink to this heading"></a></h2>
 <div class="math notranslate nohighlight">
 \[\sigma = \frac{L_\mathrm{d} L_\mathrm{e} - L_\mathrm{m}^2}{L_\mathrm{d} L_\mathrm{e}}\]</div>
 <div class="math notranslate nohighlight">
@@ -132,16 +135,16 @@ L_{\sigma \mathrm{e}} &amp;= L_\mathrm{e} - L_\mathrm{m} \\
 \frac{\mathrm{d} i_\mathrm{sq}}{\mathrm{d} t} &amp;= -\frac{L_\mathrm{d}}{L_\mathrm{q}} p \omega_\mathrm{me} i_\mathrm{sd} - \frac{R_\mathrm{s}}{L_\mathrm{q}} i_\mathrm{sq} - \frac{L_\mathrm{m}}{L_\mathrm{q}} p \omega_\mathrm{me} i_\mathrm{e} + \frac{1}{L_\mathrm{q}} u_\mathrm{q} \\
 \frac{\mathrm{d} i_\mathrm{e}}{\mathrm{d} t} &amp;= \frac{L_\mathrm{m} R_\mathrm{s}}{\sigma L_\mathrm{d} L_\mathrm{e}} i_\mathrm{sd} - \frac{L_\mathrm{m} L_\mathrm{q}}{ \sigma L_\mathrm{d} L_\mathrm{e}} p \omega_\mathrm{me} i_\mathrm{sq} - \frac{R_\mathrm{s}}{ \sigma L_\mathrm{e}} i_\mathrm{e} - \frac{L_\mathrm{m}}{\sigma L_\mathrm{d}L_\mathrm{e}} u_\mathrm{d} + \frac{1}{\sigma L_\mathrm{e}} u_\mathrm{e}   \\
 \frac{\mathrm{d} \varepsilon_\mathrm{el}}{\mathrm{d} t} &amp;= p \omega_\mathrm{me} \\\end{split}\]</div>
-</div>
-<div class="section" id="torque-equation">
-<h2>Torque Equation<a class="headerlink" href="#torque-equation" title="Permalink to this headline"></a></h2>
+</section>
+<section id="torque-equation">
+<h2>Torque Equation<a class="headerlink" href="#torque-equation" title="Permalink to this heading"></a></h2>
 <div class="math notranslate nohighlight">
 \[T = 1.5 p (L_\mathrm{m}  i_\mathrm{e} + (L_\mathrm{d} - L_\mathrm{q})  i_\mathrm{sd})  i_\mathrm{sq}\]</div>
-</div>
-<div class="section" id="code-documentation">
-<h2>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline"></a></h2>
-</div>
-</div>
+</section>
+<section id="code-documentation">
+<h2>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this heading"></a></h2>
+</section>
+</section>
 
 
            </div>

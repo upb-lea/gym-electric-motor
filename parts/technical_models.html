@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Technical Models &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>Technical Models &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -38,11 +41,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -80,23 +83,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="technical-models">
-<h1>Technical Models<a class="headerlink" href="#technical-models" title="Permalink to this headline"></a></h1>
+  <section id="technical-models">
+<h1>Technical Models<a class="headerlink" href="#technical-models" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
 <p>The technical models contain the technical properties of the motor, the power electronic converter and the load.</p>
 <p>The motors and the loads can be parametrized by either choosing the number of its default set in the environment
 initialization or by passing a new Load or Motor parameter dictionary as described below.
 The parameters of the power electronic converter are directly included in the initialization.</p>
-<div class="section" id="dc-motor-parameter-dictionary">
-<h3>DC Motor Parameter Dictionary<a class="headerlink" href="#dc-motor-parameter-dictionary" title="Permalink to this headline"></a></h3>
+<section id="dc-motor-parameter-dictionary">
+<h3>DC Motor Parameter Dictionary<a class="headerlink" href="#dc-motor-parameter-dictionary" title="Permalink to this heading"></a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 32%" />
-<col style="width: 68%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
 <th class="head"><p><strong>Description</strong></p></th>
@@ -153,15 +152,10 @@ The parameters of the power electronic converter are directly included in the in
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="pmsm-and-synrm-parameter-dictionary">
-<h3>PMSM and SynRM Parameter Dictionary<a class="headerlink" href="#pmsm-and-synrm-parameter-dictionary" title="Permalink to this headline"></a></h3>
+</section>
+<section id="pmsm-and-synrm-parameter-dictionary">
+<h3>PMSM and SynRM Parameter Dictionary<a class="headerlink" href="#pmsm-and-synrm-parameter-dictionary" title="Permalink to this heading"></a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 55%" />
-<col style="width: 24%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
 <th class="head"><p><strong>Description</strong></p></th>
@@ -199,14 +193,10 @@ The parameters of the power electronic converter are directly included in the in
 Therefore, data sheet values for line voltages and phase currents has to be transformed such that
 <span class="math notranslate nohighlight">\(U_N=\sqrt(2/3) U_L\)</span> and <span class="math notranslate nohighlight">\(I_N=\sqrt(2) I_S\)</span>.</p>
 <p>Furthermore, the angular velocity is the electrical one and not the mechanical one <span class="math notranslate nohighlight">\(\omega = p \omega_{me}\)</span>.</p>
-</div>
-<div class="section" id="load-parameter-dictionary">
-<h3>Load Parameter Dictionary<a class="headerlink" href="#load-parameter-dictionary" title="Permalink to this headline"></a></h3>
+</section>
+<section id="load-parameter-dictionary">
+<h3>Load Parameter Dictionary<a class="headerlink" href="#load-parameter-dictionary" title="Permalink to this heading"></a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 67%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
 <th class="head"><p><strong>Description</strong></p></th>
@@ -227,14 +217,10 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="dc-shunt-default-models">
-<h3>DC Shunt Default Models<a class="headerlink" href="#dc-shunt-default-models" title="Permalink to this headline"></a></h3>
+</section>
+<section id="dc-shunt-default-models">
+<h3>DC Shunt Default Models<a class="headerlink" href="#dc-shunt-default-models" title="Permalink to this heading"></a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 48%" />
-<col style="width: 52%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
 <th class="head"><p><strong>No 0</strong></p></th>
@@ -261,14 +247,10 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="dc-series-default-models">
-<h3>DC Series Default Models<a class="headerlink" href="#dc-series-default-models" title="Permalink to this headline"></a></h3>
+</section>
+<section id="dc-series-default-models">
+<h3>DC Series Default Models<a class="headerlink" href="#dc-series-default-models" title="Permalink to this heading"></a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 48%" />
-<col style="width: 52%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
 <th class="head"><p><strong>No 0</strong></p></th>
@@ -295,14 +277,10 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="dc-permanently-excited-default-models">
-<h3>DC Permanently Excited Default Models<a class="headerlink" href="#dc-permanently-excited-default-models" title="Permalink to this headline"></a></h3>
+</section>
+<section id="dc-permanently-excited-default-models">
+<h3>DC Permanently Excited Default Models<a class="headerlink" href="#dc-permanently-excited-default-models" title="Permalink to this heading"></a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 48%" />
-<col style="width: 52%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
 <th class="head"><p><strong>No 0</strong></p></th>
@@ -326,14 +304,10 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="dc-externally-excited-default-models">
-<h3>DC Externally Excited Default Models<a class="headerlink" href="#dc-externally-excited-default-models" title="Permalink to this headline"></a></h3>
+</section>
+<section id="dc-externally-excited-default-models">
+<h3>DC Externally Excited Default Models<a class="headerlink" href="#dc-externally-excited-default-models" title="Permalink to this heading"></a></h3>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 48%" />
-<col style="width: 52%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
 <th class="head"><p><strong>No 0</strong></p></th>
@@ -381,9 +355,9 @@ Therefore, data sheet values for line voltages and phase currents has to be tran
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
