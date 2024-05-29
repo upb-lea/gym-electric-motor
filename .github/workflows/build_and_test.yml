@@ -31,6 +31,8 @@ jobs:
     - name: Test with pytest
       env:
         PY_VER: ${{ matrix.python-version }}
+      run: |
+        pytest; fi
   build-doc:
     runs-on: ubuntu-latest
     steps:
