@@ -84,6 +84,6 @@ class CosSinProcessor(PhysicalSystemWrapper):
         return np.concatenate(
             (
                 state,
-                [np.cos(state[self._angle_index]), np.sin(state[self._angle_index])],
+                [np.cos(state[self._angle_index]*np.pi), np.sin(state[self._angle_index])*np.pi],
             )
         )
