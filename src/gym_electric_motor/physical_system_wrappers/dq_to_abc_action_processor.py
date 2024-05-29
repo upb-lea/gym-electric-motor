@@ -61,7 +61,7 @@ class DqToAbcActionProcessor(PhysicalSystemWrapper):
         super().set_physical_system(physical_system)
         self._omega_index = physical_system.state_names.index('omega')
         self._angle_index = physical_system.state_names.index(self._angle_name)
-        self._pole_pair_number = physical_system._electrical_motor.motor_parameter['p']
+        self._pole_pair_number = physical_system.electrical_motor.motor_parameter['p']
         assert self._angle_name in physical_system.state_names, \
             f'Angle {self._angle_name} not in the states of the physical system. ' \
             f'Probably a flux observer is required.'
