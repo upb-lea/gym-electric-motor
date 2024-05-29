@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.physical_system_wrappers.dq_to_abc_action_processor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.physical_system_wrappers.dq_to_abc_action_processor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -85,17 +86,18 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">gym_electric_motor.physical_systems</span> <span class="k">as</span> <span class="nn">ps</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.physical_system_wrappers</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
+
+<span class="kn">from</span> <span class="nn">.physical_system_wrapper</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
 
 
 <div class="viewcode-block" id="DqToAbcActionProcessor"><a class="viewcode-back" href="../../../parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor">[docs]</a><span class="k">class</span> <span class="nc">DqToAbcActionProcessor</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The DqToAbcActionProcessor converts an inner system with an AC motor and actions in abc coordinates to a</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The DqToAbcActionProcessor converts an inner system with an AC motor and actions in abc coordinates to a</span>
 <span class="sd">    system to which actions in the dq-coordinate system can be applied.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_transformation</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Transforms the action in dq-space to an action in the abc-space for the use in the inner system.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms the action in dq-space to an action in the abc-space for the use in the inner system.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            action(numpy.ndarray[float]): action in the dq-space</span>
@@ -113,17 +115,18 @@
         <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">callable_</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">motor_type</span> <span class="ow">in</span> <span class="n">motor_types</span><span class="p">:</span>
                 <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">[</span><span class="n">motor_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">callable_</span>
+
         <span class="k">return</span> <span class="n">wrapper</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">motor_type</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">motor_type</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="sa">f</span><span class="s1">&#39;Not supported motor_type </span><span class="si">{motor_type}</span><span class="s1">.&#39;</span>
+        <span class="k">assert</span> <span class="n">motor_type</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Not supported motor_type </span><span class="si">{</span><span class="n">motor_type</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="n">class_</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">[</span><span class="n">motor_type</span><span class="p">]</span>
         <span class="n">inst</span> <span class="o">=</span> <span class="n">class_</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">inst</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle_name</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            angle_name(string): Name of the state that defines the current angle of the AC-motor</span>
 <span class="sd">            physical_system(PhysicalSystem(optional)): The inner physical system.</span>
@@ -139,19 +142,21 @@
 
 <div class="viewcode-block" id="DqToAbcActionProcessor.set_physical_system"><a class="viewcode-back" href="../../../parts/state_action_processors/dq_to_abc_action_processor.html#gym_electric_motor.physical_system_wrappers.DqToAbcActionProcessor.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ThreePhaseMotor</span><span class="p">),</span> \
-            <span class="s1">&#39;The motor in the system has to derive from the ThreePhaseMotor to define transformations.&#39;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ThreePhaseMotor</span>
+        <span class="p">),</span> <span class="s2">&quot;The motor in the system has to derive from the ThreePhaseMotor to define transformations.&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_index</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;omega&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_index</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;omega&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_angle_index</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_angle_name</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle_name</span> <span class="ow">in</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">,</span> \
-            <span class="sa">f</span><span class="s1">&#39;Angle </span><span class="si">{self._angle_name}</span><span class="s1"> not in the states of the physical system. &#39;</span> \
-            <span class="sa">f</span><span class="s1">&#39;Probably a flux observer is required.&#39;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle_name</span> <span class="ow">in</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">,</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Angle </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_angle_name</span><span class="si">}</span><span class="s2"> not in the states of the physical system. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Probably a flux observer is required.&quot;</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_angle_advance</span> <span class="o">=</span> <span class="mf">0.5</span>
 
         <span class="c1"># If dead time has been added to the system increase the angle advance by the amount of dead time steps</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">physical_system</span><span class="p">,</span> <span class="s1">&#39;dead_time&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">physical_system</span><span class="p">,</span> <span class="s2">&quot;dead_time&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_angle_advance</span> <span class="o">+=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">dead_time</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -166,12 +171,10 @@
         <span class="k">return</span> <span class="n">normalized_state</span></div>
 
     <span class="k">def</span> <span class="nf">_advance_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_angle_index</span><span class="p">]</span> \
-            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle_advance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_omega_index</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_angle_index</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle_advance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_omega_index</span><span class="p">]</span></div>
 
 
 <span class="k">class</span> <span class="nc">_ClassicDqToAbcActionProcessor</span><span class="p">(</span><span class="n">DqToAbcActionProcessor</span><span class="p">):</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -185,29 +188,28 @@
         <span class="k">return</span> <span class="n">normalized_state</span>
 
 
-<span class="n">DqToAbcActionProcessor</span><span class="o">.</span><span class="n">register_transformation</span><span class="p">([</span><span class="s1">&#39;PMSM&#39;</span><span class="p">])(</span>
-    <span class="k">lambda</span> <span class="n">angle_name</span><span class="o">=</span><span class="s1">&#39;epsilon&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_ClassicDqToAbcActionProcessor</span><span class="p">(</span><span class="n">angle_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">DqToAbcActionProcessor</span><span class="o">.</span><span class="n">register_transformation</span><span class="p">([</span><span class="s2">&quot;PMSM&quot;</span><span class="p">])(</span>
+    <span class="k">lambda</span> <span class="n">angle_name</span><span class="o">=</span><span class="s2">&quot;epsilon&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_ClassicDqToAbcActionProcessor</span><span class="p">(</span><span class="n">angle_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="n">DqToAbcActionProcessor</span><span class="o">.</span><span class="n">register_transformation</span><span class="p">([</span><span class="s1">&#39;SCIM&#39;</span><span class="p">])(</span>
-    <span class="k">lambda</span> <span class="n">angle_name</span><span class="o">=</span><span class="s1">&#39;psi_angle&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_ClassicDqToAbcActionProcessor</span><span class="p">(</span><span class="n">angle_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">DqToAbcActionProcessor</span><span class="o">.</span><span class="n">register_transformation</span><span class="p">([</span><span class="s2">&quot;SCIM&quot;</span><span class="p">])(</span>
+    <span class="k">lambda</span> <span class="n">angle_name</span><span class="o">=</span><span class="s2">&quot;psi_angle&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_ClassicDqToAbcActionProcessor</span><span class="p">(</span><span class="n">angle_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="p">)</span>
 
 
-<span class="nd">@DqToAbcActionProcessor</span><span class="o">.</span><span class="n">register_transformation</span><span class="p">([</span><span class="s1">&#39;DFIM&#39;</span><span class="p">])</span>
+<span class="nd">@DqToAbcActionProcessor</span><span class="o">.</span><span class="n">register_transformation</span><span class="p">([</span><span class="s2">&quot;DFIM&quot;</span><span class="p">])</span>
 <span class="k">class</span> <span class="nc">_DFIMDqToAbcActionProcessor</span><span class="p">(</span><span class="n">DqToAbcActionProcessor</span><span class="p">):</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,))</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;epsilon&#39;</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_flux_angle_name</span> <span class="o">=</span> <span class="s1">&#39;psi_abs&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;epsilon&quot;</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flux_angle_name</span> <span class="o">=</span> <span class="s2">&quot;psi_abs&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_flux_angle_index</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Dq to abc space transformation function for doubly fed induction motor environments.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dq to abc space transformation function for doubly fed induction motor environments.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            action: The actions for the stator and rotor circuit in dq-coordinates.</span>
@@ -226,7 +228,7 @@
 
     <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_flux_angle_index</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;psi_angle&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flux_angle_index</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;psi_angle&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 

@@ -16,6 +16,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -92,6 +93,32 @@
              
   <section id="squared-constraint">
 <h1>Squared Constraint<a class="headerlink" href="#squared-constraint" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_electric_motor.constraints.SquaredConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.constraints.</span></span><span class="sig-name descname"><span class="pre">SquaredConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#SquaredConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.constraints.SquaredConstraint" title="Permalink to this definition"></a></dt>
+<dd><p>A squared constraint on multiple states as it is required oftentimes for the dq-currents in synchronous and
+asynchronous electric motors.</p>
+<div class="math notranslate nohighlight">
+\[1.0 &lt;= \sum_{i \in S} (s_i / s_{i,max})^2\]</div>
+<p><span class="math notranslate nohighlight">\(S\)</span>: Set of the observed PhysicalSystems states</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>states</strong> (<em>iterable</em><em>(</em><em>str</em><em>)</em>) – Names of all states to be observed within the SquaredConstraint.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.constraints.SquaredConstraint.set_modules">
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#SquaredConstraint.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.constraints.SquaredConstraint.set_modules" title="Permalink to this definition"></a></dt>
+<dd><p>Called by the environment that the Constraint can read information from the PhysicalSystem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ps</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – PhysicalSystem of the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

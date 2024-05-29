@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.reference_generators.multiple_reference_generator &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.reference_generators.multiple_reference_generator &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -85,17 +86,16 @@
 <span class="kn">from</span> <span class="nn">gymnasium.spaces</span> <span class="kn">import</span> <span class="n">Box</span>
 
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ReferenceGenerator</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">instantiate</span>
-<span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
+<span class="kn">from</span> <span class="nn">..random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 
 
-<div class="viewcode-block" id="MultipleReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/multiple_ref_generator.html#gym_electric_motor.reference_generators.MultipleReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">MultipleReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">RandomComponent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Reference Generator that combines multiple sub reference generators that all have to reference</span>
+<div class="viewcode-block" id="MultipleReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/multiple_ref_generator.html#gym_electric_motor.reference_generators.MultipleReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">MultipleReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reference Generator that combines multiple sub reference generators that all have to reference</span>
 <span class="sd">    different state variables.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            sub_generators(list(str/class/object)): List of keys, classes or objects to instantiate the sub_generators</span>
 <span class="sd">            sub_args(dict/list(dict)/None): (Optional) Arguments to pass to the sub_converters. If not passed all kwargs</span>
@@ -103,23 +103,30 @@
 <span class="sd">            kwargs: All kwargs of the environment. Passed to the sub_generators, if no sub_args are passed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ReferenceGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">gem</span><span class="o">.</span><span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sub_args</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_args</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">sub_arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">sub_args</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sub_args</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sub_args</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
             <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_args</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
             <span class="n">sub_arguments</span> <span class="o">=</span> <span class="n">sub_args</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sub_arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span> <span class="o">=</span> <span class="p">[</span><span class="n">instantiate</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="o">**</span><span class="n">sub_arg</span><span class="p">)</span>
-                                <span class="k">for</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="n">sub_arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_arguments</span><span class="p">)]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sub_generator</span><span class="p">,</span> <span class="n">sub_arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sub_generators</span><span class="p">,</span> <span class="n">sub_arguments</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_generator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_generator</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+                <span class="n">sub_generator</span> <span class="o">=</span> <span class="n">sub_generator</span><span class="p">(</span><span class="o">**</span><span class="n">sub_arg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub_generator</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">sub_gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span> <span class="o">+=</span> <span class="n">sub_gen</span><span class="o">.</span><span class="n">reference_names</span>
 
 <div class="viewcode-block" id="MultipleReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/multiple_ref_generator.html#gym_electric_motor.reference_generators.MultipleReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            physical_system(PhysicalSystem): The physical system of the environment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -128,14 +135,17 @@
             <span class="n">sub_generator</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
 
         <span class="c1"># Ensure that all referenced states are different</span>
-        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">sub_generator</span><span class="o">.</span><span class="n">referenced_states</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">),</span> \
-            <span class="s1">&#39;Some of the passed reference generators share the same reference variable&#39;</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">sum</span><span class="p">([</span><span class="n">sub_generator</span><span class="o">.</span><span class="n">referenced_states</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">2</span>
+        <span class="p">),</span> <span class="s2">&quot;Some of the passed reference generators share the same reference variable&quot;</span>
 
         <span class="n">ref_space_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">sub_generator</span><span class="o">.</span><span class="n">reference_space</span><span class="o">.</span><span class="n">low</span> <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">])</span>
         <span class="n">ref_space_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">sub_generator</span><span class="o">.</span><span class="n">reference_space</span><span class="o">.</span><span class="n">high</span> <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">ref_space_low</span><span class="p">,</span> <span class="n">ref_space_high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">sub_generator</span><span class="o">.</span><span class="n">referenced_states</span> <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">[</span><span class="n">sub_generator</span><span class="o">.</span><span class="n">referenced_states</span> <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="MultipleReferenceGenerator.reset"><a class="viewcode-back" href="../../../parts/reference_generators/multiple_ref_generator.html#gym_electric_motor.reference_generators.MultipleReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -161,7 +171,7 @@
 <div class="viewcode-block" id="MultipleReferenceGenerator.seed"><a class="viewcode-back" href="../../../parts/reference_generators/multiple_ref_generator.html#gym_electric_motor.reference_generators.MultipleReferenceGenerator.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">sub_generator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_generators</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_generator</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">RandomComponent</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_generator</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
                 <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_sequence</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">sub_generator</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div></div>
 </pre></div>

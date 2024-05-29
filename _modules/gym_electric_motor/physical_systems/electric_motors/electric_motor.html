@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.physical_systems.electric_motors.electric_motor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.physical_systems.electric_motors.electric_motor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+  
         <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -84,34 +85,35 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">truncnorm</span>
 
-<span class="kn">from</span> <span class="nn">...random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 <span class="kn">from</span> <span class="nn">gym_electric_motor.utils</span> <span class="kn">import</span> <span class="n">update_parameter_dict</span>
+
+<span class="kn">from</span> <span class="nn">...random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 
 
 <div class="viewcode-block" id="ElectricMotor"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotor</span><span class="p">(</span><span class="n">RandomComponent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for all technical electrical motor models.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all technical electrical motor models.</span>
 
-<span class="sd">        A motor consists of the ode-state. These are the dynamic quantities of its ODE.</span>
-<span class="sd">        For example:</span>
-<span class="sd">            ODE-State of a DC-shunt motor: `` [i_a, i_e ] ``</span>
-<span class="sd">                * i_a: Anchor circuit current</span>
-<span class="sd">                * i_e: Exciting circuit current</span>
+<span class="sd">    A motor consists of the ode-state. These are the dynamic quantities of its ODE.</span>
+<span class="sd">    For example:</span>
+<span class="sd">        ODE-State of a DC-shunt motor: `` [i_a, i_e ] ``</span>
+<span class="sd">            * i_a: Anchor circuit current</span>
+<span class="sd">            * i_e: Exciting circuit current</span>
 
-<span class="sd">        Each electric motor can be parametrized by a dictionary of motor parameters,</span>
-<span class="sd">        the nominal state dictionary and the limit dictionary.</span>
+<span class="sd">    Each electric motor can be parametrized by a dictionary of motor parameters,</span>
+<span class="sd">    the nominal state dictionary and the limit dictionary.</span>
 
-<span class="sd">        Initialization is given by initializer(dict). It can be constant state value</span>
-<span class="sd">        or random value in given interval.</span>
-<span class="sd">        dict should be like:</span>
-<span class="sd">        { &#39;states&#39;(dict): with state names and initital values</span>
-<span class="sd">                  &#39;interval&#39;(array like): boundaries for each state</span>
-<span class="sd">                            (only for random init), shape(num states, 2)</span>
-<span class="sd">                  &#39;random_init&#39;(str): &#39;uniform&#39; or &#39;normal&#39;</span>
-<span class="sd">                  &#39;random_params(tuple): mue(float), sigma(int)</span>
-<span class="sd">        Example initializer(dict) for constant initialization:</span>
-<span class="sd">            { &#39;states&#39;: {&#39;omega&#39;: 16.0}}</span>
-<span class="sd">        Example  initializer(dict) for random initialization:</span>
-<span class="sd">            { &#39;random_init&#39;: &#39;normal&#39;}</span>
+<span class="sd">    Initialization is given by initializer(dict). It can be constant state value</span>
+<span class="sd">    or random value in given interval.</span>
+<span class="sd">    dict should be like:</span>
+<span class="sd">    { &#39;states&#39;(dict): with state names and initital values</span>
+<span class="sd">              &#39;interval&#39;(array like): boundaries for each state</span>
+<span class="sd">                        (only for random init), shape(num states, 2)</span>
+<span class="sd">              &#39;random_init&#39;(str): &#39;uniform&#39; or &#39;normal&#39;</span>
+<span class="sd">              &#39;random_params(tuple): mue(float), sigma(int)</span>
+<span class="sd">    Example initializer(dict) for constant initialization:</span>
+<span class="sd">        { &#39;states&#39;: {&#39;omega&#39;: 16.0}}</span>
+<span class="sd">    Example  initializer(dict) for random initialization:</span>
+<span class="sd">        { &#39;random_init&#39;: &#39;normal&#39;}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">#: Parameter indicating if the class is implementing the optional jacobian function</span>
@@ -133,17 +135,17 @@
     <span class="n">_default_limits</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1">#: _default_initial_state(dict): Default initial motor-state values</span>
     <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;random_params&#39;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="s2">&quot;states&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;random_init&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;random_params&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="c1">#: _default_initial_limits(dict): Default limit for initialization</span>
     <span class="n">_default_initial_limits</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">nominal_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Readonly motors nominal values.</span>
 
 <span class="sd">        Returns:</span>
@@ -153,7 +155,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Readonly motors limit state array. Entries are set to the maximum physical possible values</span>
 <span class="sd">        in case of unspecified limits.</span>
 
@@ -164,7 +166,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">motor_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">             dict(float): The motors parameter dictionary</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -172,7 +174,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">initializer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: Motor initial state and additional initializer parameter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -180,17 +182,21 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">initial_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: nominal motor limits for choosing initial values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">motor_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nominal_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">initial_limits</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">motor_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nominal_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">limit_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">motor_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">initial_limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param  motor_parameter: Motor parameter dictionary. Contents specified</span>
 <span class="sd">                for each motor.</span>
 <span class="sd">        :param  nominal_values: Nominal values for the motor quantities.</span>
@@ -203,30 +209,26 @@
         <span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">motor_parameter</span> <span class="o">=</span> <span class="n">motor_parameter</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_motor_parameter</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_default_motor_parameter</span><span class="p">,</span> <span class="n">motor_parameter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_motor_parameter</span><span class="p">,</span> <span class="n">motor_parameter</span><span class="p">)</span>
         <span class="n">limit_values</span> <span class="o">=</span> <span class="n">limit_values</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">,</span> <span class="n">limit_values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">,</span> <span class="n">limit_values</span><span class="p">)</span>
         <span class="n">nominal_values</span> <span class="o">=</span> <span class="n">nominal_values</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_default_nominal_values</span><span class="p">,</span> <span class="n">nominal_values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_nominal_values</span><span class="p">,</span> <span class="n">nominal_values</span><span class="p">)</span>
         <span class="n">motor_initializer</span> <span class="o">=</span> <span class="n">motor_initializer</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_default_initializer</span><span class="p">,</span> <span class="n">motor_initializer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span> <span class="o">=</span> <span class="n">update_parameter_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_initializer</span><span class="p">,</span> <span class="n">motor_initializer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">])</span>
         <span class="c1"># intialize limits, in general they&#39;re not needed to be changed</span>
         <span class="c1"># during  training or episodes</span>
         <span class="n">initial_limits</span> <span class="o">=</span> <span class="n">initial_limits</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initial_limits</span><span class="p">)</span>
         <span class="c1"># preventing wrong user input for the basic case</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="s1">&#39;wrong initializer&#39;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="s2">&quot;wrong initializer&quot;</span>
 
 <div class="viewcode-block" id="ElectricMotor.electrical_ode"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            state(ndarray(float)): The motors state.</span>
@@ -239,7 +241,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="ElectricMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</span>
 
 <span class="sd">        Overriding this method is optional for each subclass. If it is overridden, the parameter HAS_JACOBIAN must also</span>
@@ -259,7 +261,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="ElectricMotor.initialize"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes given state values. Values can be given as a constant or</span>
 <span class="sd">        sampled random out of a statistical distribution. Initial value is in</span>
 <span class="sd">        range of the nominal values or a given interval. Values are written in</span>
@@ -270,20 +272,23 @@
 <span class="sd">            state_positions(dict): indices of system states (given by physical system)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># for organization purposes</span>
-        <span class="n">interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;interval&#39;</span><span class="p">]</span>
-        <span class="n">random_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;random_init&#39;</span><span class="p">]</span>
-        <span class="n">random_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;random_params&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_initializer</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">])</span>
+        <span class="n">interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;interval&quot;</span><span class="p">]</span>
+        <span class="n">random_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;random_init&quot;</span><span class="p">]</span>
+        <span class="n">random_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;random_params&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">])</span>
 
         <span class="c1"># different limits for InductionMotor</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;psi_ralpha&#39;</span><span class="p">,</span> <span class="s1">&#39;psi_rbeta&#39;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;psi_ralpha&quot;</span><span class="p">,</span> <span class="s2">&quot;psi_rbeta&quot;</span><span class="p">]):</span>
             <span class="c1"># caution: _initial_limits sometimes contains singleton ndarrays, they must be</span>
             <span class="c1">#  extracted with .item()</span>
-            <span class="n">nominal_values_</span> <span class="o">=</span>\
-                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="p">[</span><span class="n">state</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="p">[</span><span class="n">state</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
-                 <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="p">]</span>
+            <span class="n">nominal_values_</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="p">[</span><span class="n">state</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="p">[</span><span class="n">state</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="p">[</span><span class="n">state</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span>
+            <span class="p">]</span>
             <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">nominal_values_</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
             <span class="c1"># state space for Induction Envs based on documentation</span>
             <span class="c1"># [&#39;i_salpha&#39;, &#39;i_sbeta&#39;, &#39;psi_ralpha&#39;, &#39;psi_rbeta&#39;, &#39;epsilon&#39;]</span>
@@ -292,58 +297,44 @@
             <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">upper_bound</span> <span class="o">*</span> <span class="n">state_space_low</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="n">nominal_values_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="n">state</span><span class="p">]</span>
-                                   <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+                <span class="n">nominal_values_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
                 <span class="n">nominal_values_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">nominal_values_</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">nominal_values_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">)</span>
 
-            <span class="n">state_space_idx</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">state_positions</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-            <span class="p">]</span>
+            <span class="n">state_space_idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">state_positions</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 
             <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">nominal_values_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-            <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">upper_bound</span> <span class="o">*</span> \
-                <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[</span><span class="n">state_space_idx</span><span class="p">]</span>
+            <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">upper_bound</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[</span><span class="n">state_space_idx</span><span class="p">]</span>
         <span class="c1"># clip nominal boundaries to user defined</span>
         <span class="k">if</span> <span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-                <span class="n">lower_bound</span><span class="p">,</span>
-                <span class="n">a_min</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
-            <span class="p">)</span>
-            <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-                <span class="n">upper_bound</span><span class="p">,</span>
-                <span class="n">a_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">a_max</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="p">)</span>
+            <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="c1"># random initialization for each motor state (current, epsilon)</span>
         <span class="k">if</span> <span class="n">random_dist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">random_dist</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
-                <span class="n">initial_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span> \
-                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> \
-                    <span class="o">+</span> <span class="n">lower_bound</span>
+            <span class="k">if</span> <span class="n">random_dist</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+                <span class="n">initial_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+                    <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="p">)</span> <span class="o">+</span> <span class="n">lower_bound</span>
                 <span class="c1"># writing initial values in initial_states dict</span>
-                <span class="n">random_states</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="n">state</span><span class="p">:</span> <span class="n">initial_value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="p">}</span>
+                <span class="n">random_states</span> <span class="o">=</span> <span class="p">{</span><span class="n">state</span><span class="p">:</span> <span class="n">initial_value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">random_states</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="n">random_dist</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">]:</span>
+            <span class="k">elif</span> <span class="n">random_dist</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">]:</span>
                 <span class="c1"># specific input or middle of interval</span>
-                <span class="n">mue</span> <span class="o">=</span> <span class="n">random_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="p">(</span>
-                    <span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">lower_bound</span>
+                <span class="n">mue</span> <span class="o">=</span> <span class="n">random_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">lower_bound</span>
                 <span class="n">sigma</span> <span class="o">=</span> <span class="n">random_params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">1</span>
                 <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">lower_bound</span> <span class="o">-</span> <span class="n">mue</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">,</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">mue</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
                 <span class="n">initial_value</span> <span class="o">=</span> <span class="n">truncnorm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span>
-                    <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mue</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span>
-                        <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                    <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed_sequence</span><span class="o">.</span><span class="n">pool</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">a</span><span class="p">,</span>
+                    <span class="n">b</span><span class="p">,</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="n">mue</span><span class="p">,</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed_sequence</span><span class="o">.</span><span class="n">pool</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                 <span class="p">)</span>
                 <span class="c1"># writing initial values in initial_states dict</span>
-                <span class="n">random_states</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="n">state</span><span class="p">:</span> <span class="n">initial_value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                <span class="p">}</span>
+                <span class="n">random_states</span> <span class="o">=</span> <span class="p">{</span><span class="n">state</span><span class="p">:</span> <span class="n">initial_value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">random_states</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
@@ -352,20 +343,16 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">initial_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
             <span class="c1"># check init_value meets interval boundaries</span>
-            <span class="k">if</span> <span class="p">((</span><span class="n">lower_bound</span> <span class="o">&lt;=</span> <span class="n">initial_value</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-                    <span class="ow">and</span> <span class="p">(</span><span class="n">initial_value</span> <span class="o">&lt;=</span> <span class="n">upper_bound</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
-                <span class="n">initial_states_</span> <span class="o">=</span> \
-                    <span class="p">{</span><span class="n">state</span><span class="p">:</span> <span class="n">initial_value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-                     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">lower_bound</span> <span class="o">&lt;=</span> <span class="n">initial_value</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">initial_value</span> <span class="o">&lt;=</span> <span class="n">upper_bound</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="n">initial_states_</span> <span class="o">=</span> <span class="p">{</span><span class="n">state</span><span class="p">:</span> <span class="n">initial_value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initial_states_</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="s1">&#39;Initialization value has to be within nominal boundaries&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Initialization value has to be within nominal boundaries&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No matching Initialization Case&#39;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No matching Initialization Case&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ElectricMotor.reset"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reset the motors state to a new initial state. (Default 0)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the motors state to a new initial state. (Default 0)</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            state_space(gymnasium.Box): normalized state space boundaries</span>
@@ -375,14 +362,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># check for valid initializer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">next_generator</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ElectricMotor.i_in"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            state(ndarray(float)): ODE state of the motor</span>
 
@@ -392,7 +379,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
     <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limits_d</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nominal_d</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Replace missing limits and nominal values with physical maximums.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace missing limits and nominal values with physical maximums.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            limits_d(dict): Mapping: quantity to its limit if not specified</span>
@@ -402,7 +389,7 @@
         <span class="k">if</span> <span class="n">nominal_d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">nominal_d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="c1"># omega is replaced the same way for all motor types</span>
-        <span class="n">limits_d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]))</span>
+        <span class="n">limits_d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s2">&quot;omega&quot;</span><span class="p">]))</span>
 
         <span class="k">for</span> <span class="n">qty</span><span class="p">,</span> <span class="n">lim</span> <span class="ow">in</span> <span class="n">limits_d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">qty</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -410,11 +397,10 @@
 
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span> <span class="o">=</span> <span class="n">nominal_d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="n">entry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">entry</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span> <span class="o">=</span> <span class="n">nominal_d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">entry</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_update_initial_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nominal_new</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Complete initial states with further state limits</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Complete initial states with further state limits</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            nominal_new(dict): new/further state limits</span>

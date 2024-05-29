@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.physical_system_wrappers.flux_observer &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.physical_system_wrappers.flux_observer &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -85,11 +86,12 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.physical_system_wrappers</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
+
+<span class="kn">from</span> <span class="nn">.physical_system_wrapper</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
 
 
 <div class="viewcode-block" id="FluxObserver"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver">[docs]</a><span class="k">class</span> <span class="nc">FluxObserver</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The FluxObserver extends the systems state vector of induction machine environments by estimated flux states</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The FluxObserver extends the systems state vector of induction machine environments by estimated flux states</span>
 <span class="sd">    ``psi_abs``, and ``psi_angle``. The flux is estimated as follows:</span>
 
 <span class="sd">        .. math:: psi_{abs} =  |\Psi|</span>
@@ -108,8 +110,8 @@
 <span class="sd">            \Psi_k = \sum_{i=0}^k (\Psi_{k-1} + \Delta\Psi_k) \\tau</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;i_sa&#39;</span><span class="p">,</span> <span class="s1">&#39;i_sb&#39;</span><span class="p">,</span> <span class="s1">&#39;i_sc&#39;</span><span class="p">),</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;i_sa&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sb&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sc&quot;</span><span class="p">),</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            current_names(Iterable[string]): Names of the currents to be observed to estimate the flux.</span>
 <span class="sd">                (Default: ``(&#39;i_sa&#39;, &#39;i_sb&#39;, &#39;i_sc&#39;)``)</span>
@@ -135,25 +137,28 @@
 
 <div class="viewcode-block" id="FluxObserver.set_physical_system"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">physical_systems</span><span class="o">.</span><span class="n">electric_motors</span><span class="o">.</span><span class="n">InductionMotor</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="p">,</span>
+            <span class="n">gem</span><span class="o">.</span><span class="n">physical_systems</span><span class="o">.</span><span class="n">electric_motors</span><span class="o">.</span><span class="n">InductionMotor</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="o">.</span><span class="n">motor_parameter</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_l_m</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_m&#39;</span><span class="p">]</span>  <span class="c1"># Main induction</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_l_r</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_m&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_sigr&#39;</span><span class="p">]</span>  <span class="c1"># Induction of the rotor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_r_r</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_r&#39;</span><span class="p">]</span>  <span class="c1"># Rotor resistance</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_p</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">]</span>  <span class="c1"># Pole pair number</span>
-        <span class="n">psi_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_m</span> <span class="o">*</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;i_sd&#39;</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_l_m</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_m&quot;</span><span class="p">]</span>  <span class="c1"># Main induction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_l_r</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_m&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_sigr&quot;</span><span class="p">]</span>  <span class="c1"># Induction of the rotor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_r_r</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_r&quot;</span><span class="p">]</span>  <span class="c1"># Rotor resistance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span>  <span class="c1"># Pole pair number</span>
+        <span class="n">psi_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_m</span> <span class="o">*</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;i_sd&quot;</span><span class="p">)]</span>
         <span class="n">low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">psi_limit</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]))</span>
         <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="p">[</span><span class="n">psi_limit</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state_space</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_names</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">physical_system</span><span class="o">.</span><span class="n">limits</span><span class="p">,</span> <span class="p">[</span><span class="n">psi_limit</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">physical_system</span><span class="o">.</span><span class="n">nominal_state</span><span class="p">,</span> <span class="p">[</span><span class="n">psi_limit</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;psi_abs&#39;</span><span class="p">,</span> <span class="s1">&#39;psi_angle&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;psi_abs&quot;</span><span class="p">,</span> <span class="s2">&quot;psi_angle&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_positions</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">)}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_names</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_idx</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_idx</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="s2">&quot;omega&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FluxObserver.reset"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -172,8 +177,9 @@
         <span class="p">[</span><span class="n">i_s_alpha</span><span class="p">,</span> <span class="n">i_s_beta</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abc_to_alphabeta_transformation</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
 
         <span class="c1"># Calculate delta flux</span>
-        <span class="n">delta_psi</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">i_s_alpha</span><span class="p">,</span> <span class="n">i_s_beta</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r_r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_m</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_r</span> \
-            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span> <span class="o">*</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_r_r</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_r</span><span class="p">,</span> <span class="o">-</span><span class="n">omega</span><span class="p">)</span>
+        <span class="n">delta_psi</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">i_s_alpha</span><span class="p">,</span> <span class="n">i_s_beta</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r_r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_m</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_r</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span> <span class="o">*</span> <span class="nb">complex</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_r_r</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_l_r</span><span class="p">,</span> <span class="o">-</span><span class="n">omega</span>
+        <span class="p">)</span>
 
         <span class="c1"># Integrate the flux</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span> <span class="o">+=</span> <span class="n">delta_psi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span>

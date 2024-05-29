@@ -99,6 +99,157 @@
              
   <section id="triangular-reference-generator">
 <h1>Triangular Reference Generator<a class="headerlink" href="#triangular-reference-generator" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.reference_generators.</span></span><span class="sig-name descname"><span class="pre">TriangularReferenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amplitude_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/triangle_reference_generator.html#TriangularReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>Reference Generator that generates a triangular waveform with random asymmetry. The Amplitude, frequency and offset
+are also randomized within a specified range.
+The reference is generated for a certain length and then new parameters are drawn uniformly from a selectable range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>amplitude_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the amplitude.</p></li>
+<li><p><strong>frequency_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the frequency.</p></li>
+<li><p><strong>offset_range</strong> (<em>tuple</em><em>(</em><em>float</em><em>,</em><em>float</em><em>)</em>) – Lower and upper limit for the offset</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Arguments passed to the superclass SubepisodedReferenceGenerator .</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.close" title="Permalink to this definition"></a></dt>
+<dd><p>Called by the environment, when the environment is deleted to close files, store logs, etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference">
+<span class="sig-name descname"><span class="pre">get_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the reference array of the current time step.</p>
+<p>The reference array needs to be in the same shape as the state variables. For referenced states the reference
+value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Current reference array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference_observation">
+<span class="sig-name descname"><span class="pre">get_reference_observation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.get_reference_observation" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the reference observation for the next time step. This observation needs to fit in the reference space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – Current state array of the environment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Observation for the next reference time step.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>value in reference_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.next_generator">
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.next_generator" title="Permalink to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.random_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.random_generator" title="Permalink to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.reference_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_names</span></span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.reference_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+reference_names(list(str)): A list containing all names of the referenced states in the reference
+observation.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.referenced_states">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">referenced_states</span></span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.referenced_states" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.reset" title="Permalink to this definition"></a></dt>
+<dd><p>The references are reset. If an initial reference is passed, this value will be the first reference value of
+the next episode. Otherwise it will be 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The initial state of the physical system.</p></li>
+<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – (Optional) The first reference value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>initial reference array.
+initial_reference_observation(element of reference_space): An initial observation of the next reference.
+trajectory(None): No initial trajectory is passed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>initial_reference(ndarray(float))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed" title="Permalink to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed_sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.seed_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.reference_generators.TriangularReferenceGenerator.set_modules">
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reference_generators/triangle_reference_generator.html#TriangularReferenceGenerator.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reference_generators.TriangularReferenceGenerator.set_modules" title="Permalink to this definition"></a></dt>
+<dd><p>Announcement of the PhysicalSystem to the ReferenceGenerator.</p>
+<p>In subclasses, store all important information from the physical system to the ReferenceGenerator here.
+The environment announces the physical system to the ReferenceGenerator during its initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The physical system of the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

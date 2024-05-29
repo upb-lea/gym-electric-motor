@@ -91,6 +91,73 @@
              
   <section id="console-printer">
 <h1>Console Printer<a class="headerlink" href="#console-printer" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.visualization.console_printer.</span></span><span class="sig-name descname"><span class="pre">ConsolePrinter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter" title="Permalink to this definition"></a></dt>
+<dd><p>Prints current training values of the environment on the console.</p>
+<p>These include environment state and reference values as well as the number of training steps, the rewards
+and the cumulative reward. It also shows why an episode has terminated (external, constraint violation)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>verbose</strong> (<em>Int</em>) – <p>Integer indicating whether and at which frequency the console will be printed.
+Options:</p>
+<blockquote>
+<div><p>0: No Printing
+1: Printing after an episode has terminated
+2: Printing at each step of an episode</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>update_freq</strong> (<em>Int</em>) – Unsigned Integer setting the update frequency if verbose is 2.
+It’s value n means that each nth step the corresponding output will be printed</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_close">
+<span class="sig-name descname"><span class="pre">on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_close" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of a close</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_begin">
+<span class="sig-name descname"><span class="pre">on_reset_begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_reset_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_begin" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called on environment reset. Handles internal value reset and External reset printing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_end">
+<span class="sig-name descname"><span class="pre">on_reset_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_reset_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_reset_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the end of each reset</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_begin">
+<span class="sig-name descname"><span class="pre">on_step_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_step_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_begin" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of each step</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_end">
+<span class="sig-name descname"><span class="pre">on_step_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.on_step_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.on_step_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at each step of the environment.
+Handles per step printing as well es constraint violation printing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.render" title="Permalink to this definition"></a></dt>
+<dd><p>Function to update the user interface.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.console_printer.ConsolePrinter.set_env">
+<span class="sig-name descname"><span class="pre">set_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/console_printer.html#ConsolePrinter.set_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.console_printer.ConsolePrinter.set_env" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the limits of the current physical system for accurate printing</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

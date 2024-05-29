@@ -84,6 +84,173 @@
              
   <section id="current-sum-processor">
 <h1>Current Sum Processor<a class="headerlink" href="#current-sum-processor" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_system_wrappers.current_sum_processor.</span></span><span class="sig-name descname"><span class="pre">CurrentSumProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/current_sum_processor.html#CurrentSumProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor" title="Permalink to this definition"></a></dt>
+<dd><p>Adds an <code class="docutils literal notranslate"><span class="pre">i_sum</span></code> state to the systems state vector that adds up currents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currents</strong> (<em>Iterable</em><em>[</em><em>string</em><em>]</em>) – Iterable of the names of the currents to be summed up.</p></li>
+<li><p><strong>limit</strong> (<em>'max'/'sum'</em>) – Selection if the limit and nominal values of <code class="docutils literal notranslate"><span class="pre">i_sum</span></code> are calculated by the maximum of
+the limits / nominal values of the source currents or their summation.</p></li>
+<li><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a><em>(</em><em>optional</em><em>)</em>) – The inner PhysicalSystem of this processor.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.action_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.action_space" title="Permalink to this definition"></a></dt>
+<dd><p>The processed action space.</p>
+<p>If it is unset, the action space of the inner physical system is returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.close" title="Permalink to this definition"></a></dt>
+<dd><p>Called, when the environment is closed.
+Close the System and all of its submodules by closing files, saving logs etc.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.k" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+int: The current systems time step k.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.limits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.limits" title="Permalink to this definition"></a></dt>
+<dd><p>The processed physical system limits.</p>
+<p>If it is unset, the inner limits are returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.next_generator">
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.next_generator" title="Permalink to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.nominal_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.nominal_state" title="Permalink to this definition"></a></dt>
+<dd><p>The processed physical system nominal state.</p>
+<p>If it is unset, the inner nominal state is returned.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.physical_system">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">physical_system</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>The next inner physical_system or the next inner physical_system_wrapper.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.random_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.random_generator" title="Permalink to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/current_sum_processor.html#CurrentSumProcessor.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the physical system to an initial state before a new episode starts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The initial systems state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>element of state_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.seed" title="Permalink to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.seed_sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.seed_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.set_physical_system">
+<span class="sig-name descname"><span class="pre">set_physical_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/current_sum_processor.html#CurrentSumProcessor.set_physical_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.set_physical_system" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the inner physical system of this PhysicalSystemWrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>physical_system</strong> (<a class="reference internal" href="../physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The inner physical system or Physical System Wrapper.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_system_wrappers/current_sum_processor.html#CurrentSumProcessor.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.simulate" title="Permalink to this definition"></a></dt>
+<dd><p>Simulation of the Physical System for one time step with the input action.
+This method is called in the environment in every step to update the systems state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>element</em><em> of </em><em>action_space</em>) – The action to play on the system for the next time step.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The systems state after the action was applied.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>element of state_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_names" title="Permalink to this definition"></a></dt>
+<dd><p>The processed physical system state names.</p>
+<p>If it is unset, the state names of the inner physical system are returned.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_positions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_positions" title="Permalink to this definition"></a></dt>
+<dd><p>Returns:
+dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.state_space" title="Permalink to this definition"></a></dt>
+<dd><p>The processed state space.</p>
+<p>If it is unset, the state space of the inner physical system is returned.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.unwrapped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.physical_system_wrappers.current_sum_processor.CurrentSumProcessor.unwrapped" title="Permalink to this definition"></a></dt>
+<dd><p>The innermost physical system within all Physical System Wrappers.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

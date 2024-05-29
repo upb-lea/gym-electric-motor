@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.envs.gym_pmsm.cont_sc_pmsm_env &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.envs.gym_pmsm.cont_sc_pmsm_env &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+  
         <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -81,19 +82,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.envs.gym_pmsm.cont_sc_pmsm_env</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.core</span> <span class="kn">import</span> <span class="n">ElectricMotorEnvironment</span><span class="p">,</span> <span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">RewardFunction</span><span class="p">,</span> \
-    <span class="n">ElectricMotorVisualization</span>
+<span></span><span class="kn">from</span> <span class="nn">gym_electric_motor</span> <span class="kn">import</span> <span class="n">physical_systems</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">from</span> <span class="nn">gym_electric_motor.constraints</span> <span class="kn">import</span> <span class="n">SquaredConstraint</span>
+<span class="kn">from</span> <span class="nn">gym_electric_motor.core</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ElectricMotorEnvironment</span><span class="p">,</span>
+    <span class="n">ElectricMotorVisualization</span><span class="p">,</span>
+    <span class="n">ReferenceGenerator</span><span class="p">,</span>
+    <span class="n">RewardFunction</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems.physical_systems</span> <span class="kn">import</span> <span class="n">SynchronousMotorSystem</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization</span> <span class="kn">import</span> <span class="n">MotorDashboard</span>
 <span class="kn">from</span> <span class="nn">gym_electric_motor.reference_generators</span> <span class="kn">import</span> <span class="n">WienerProcessReferenceGenerator</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor</span> <span class="kn">import</span> <span class="n">physical_systems</span> <span class="k">as</span> <span class="n">ps</span>
 <span class="kn">from</span> <span class="nn">gym_electric_motor.reward_functions</span> <span class="kn">import</span> <span class="n">WeightedSumOfErrors</span>
 <span class="kn">from</span> <span class="nn">gym_electric_motor.utils</span> <span class="kn">import</span> <span class="n">initialize</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.constraints</span> <span class="kn">import</span> <span class="n">SquaredConstraint</span>
+<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization</span> <span class="kn">import</span> <span class="n">MotorDashboard</span>
 
 
 <div class="viewcode-block" id="ContSpeedControlPermanentMagnetSynchronousMotorEnv"><a class="viewcode-back" href="../../../../parts/environments/pmsm/cont_sc_pmsm.html#gym_electric_motor.envs.ContSpeedControlPermanentMagnetSynchronousMotorEnv">[docs]</a><span class="k">class</span> <span class="nc">ContSpeedControlPermanentMagnetSynchronousMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description:</span>
 <span class="sd">        Environment to simulate a abc-domain continuous control set speed controlled permanent magnet synchr. motor.</span>
 
@@ -166,11 +171,26 @@
 <span class="sd">        &gt;&gt;&gt;         state, reference = env.reset()</span>
 <span class="sd">        &gt;&gt;&gt;     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">motor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ode_solver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">reward_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">(),</span>
-                 <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="n">SquaredConstraint</span><span class="p">((</span><span class="s1">&#39;i_sq&#39;</span><span class="p">,</span> <span class="s1">&#39;i_sd&#39;</span><span class="p">)),),</span> <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
-                 <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">motor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ode_solver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">reward_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">reference_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">visualization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="n">SquaredConstraint</span><span class="p">((</span><span class="s2">&quot;i_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sd&quot;</span><span class="p">)),),</span>
+        <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="p">(),</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment</span>
 <span class="sd">            converter(env-arg): Specification of the :py:class:`.PowerElectronicConverter` for the environment</span>
@@ -210,25 +230,44 @@
             <span class="n">supply</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">VoltageSupply</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">IdealVoltageSupply</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">u_nominal</span><span class="o">=</span><span class="mf">420.0</span><span class="p">)),</span>
             <span class="n">converter</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">PowerElectronicConverter</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ContB6BridgeConverter</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
             <span class="n">motor</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">ElectricMotor</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">PermanentMagnetSynchronousMotor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
-            <span class="n">load</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">MechanicalLoad</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">PolynomialStaticLoad</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span>
-                <span class="n">load_parameter</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-            <span class="p">)),</span>
+            <span class="n">load</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span>
+                <span class="n">ps</span><span class="o">.</span><span class="n">MechanicalLoad</span><span class="p">,</span>
+                <span class="n">load</span><span class="p">,</span>
+                <span class="n">ps</span><span class="o">.</span><span class="n">PolynomialStaticLoad</span><span class="p">,</span>
+                <span class="nb">dict</span><span class="p">(</span><span class="n">load_parameter</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)),</span>
+            <span class="p">),</span>
             <span class="n">ode_solver</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">OdeSolver</span><span class="p">,</span> <span class="n">ode_solver</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ScipyOdeSolver</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
             <span class="n">calc_jacobian</span><span class="o">=</span><span class="n">calc_jacobian</span><span class="p">,</span>
             <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">reference_generator</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">WienerProcessReferenceGenerator</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;omega&#39;</span><span class="p">)</span>
+            <span class="n">ReferenceGenerator</span><span class="p">,</span>
+            <span class="n">reference_generator</span><span class="p">,</span>
+            <span class="n">WienerProcessReferenceGenerator</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s2">&quot;omega&quot;</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">reward_function</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">RewardFunction</span><span class="p">,</span> <span class="n">reward_function</span><span class="p">,</span> <span class="n">WeightedSumOfErrors</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reward_weights</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mf">1.0</span><span class="p">))</span>
+            <span class="n">RewardFunction</span><span class="p">,</span>
+            <span class="n">reward_function</span><span class="p">,</span>
+            <span class="n">WeightedSumOfErrors</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">reward_weights</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)),</span>
         <span class="p">)</span>
         <span class="n">visualization</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">ElectricMotorVisualization</span><span class="p">,</span> <span class="n">visualization</span><span class="p">,</span> <span class="n">MotorDashboard</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">state_plots</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;omega&#39;</span><span class="p">,),</span> <span class="n">action_plots</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">))</span>
+            <span class="n">ElectricMotorVisualization</span><span class="p">,</span>
+            <span class="n">visualization</span><span class="p">,</span>
+            <span class="n">MotorDashboard</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">state_plots</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;omega&quot;</span><span class="p">,),</span> <span class="n">action_plots</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="o">=</span><span class="n">reference_generator</span><span class="p">,</span> <span class="n">reward_function</span><span class="o">=</span><span class="n">reward_function</span><span class="p">,</span>
-            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span> <span class="n">state_filter</span><span class="o">=</span><span class="n">state_filter</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-            <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="n">physical_system_wrappers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">,</span>
+            <span class="n">reference_generator</span><span class="o">=</span><span class="n">reference_generator</span><span class="p">,</span>
+            <span class="n">reward_function</span><span class="o">=</span><span class="n">reward_function</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span>
+            <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span>
+            <span class="n">state_filter</span><span class="o">=</span><span class="n">state_filter</span><span class="p">,</span>
+            <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+            <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="n">physical_system_wrappers</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span></div>
 </pre></div>
 

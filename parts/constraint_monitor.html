@@ -16,6 +16,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -105,6 +106,97 @@
 </section>
 <section id="constraint-monitor-api-documentation">
 <h2>Constraint Monitor API Documentation<a class="headerlink" href="#constraint-monitor-api-documentation" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ConstraintMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_violations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor" title="Permalink to this definition"></a></dt>
+<dd><p>The ConstraintMonitor is used within the ElectricMotorEnvironment to monitor the states for illegal / undesired
+values (e.g. overcurrents).</p>
+<p>It consists of a list of multiple independent constraints. Each constraint gets the current observation of the
+environment as input and returns a <em>violation degree</em> within <span class="math notranslate nohighlight">\([0.0, 1.0]\)</span>.
+All these are merged together and the ConstraintMonitor returns a total violation degree.</p>
+<dl class="simple">
+<dt><strong>Soft Constraints:</strong></dt><dd><p>To enable a higher flexibility, the constraints return a violation degree (float) instead of a simple violation
+flag (bool). So, even before the limits are violated, the reward function can take the limit violation degree
+into account. If the violation degree is at 0.0, no states are in a dangerous region. For values between 0.0 and
+1.0 the reward will be decreased gradually so that the agent will learn to avoid these state regions.
+If the violation degree reaches 1.0 the episode is terminated.</p>
+</dd>
+<dt><strong>Hard Constraints:</strong></dt><dd><p>With the above concept, also hard constraints that directly terminate an episode without any “danger”-region
+can be modeled. Then, the violation degree of the constraint directly changes from 0.0 to 1.0, if a violation
+occurs.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>limit_constraints</strong> (<em>list</em><em>(</em><em>str</em><em>)</em><em>/'all_states'</em>) – <dl class="simple">
+<dt>Shortcut parameter to pass all states that limits shall be observed.</dt><dd><ul>
+<li><dl class="simple">
+<dt>list(str): Pass a list with state_names and all of the states will be observed to stay within</dt><dd><p>their limits.</p>
+</dd>
+</dl>
+</li>
+<li><p>’all_states’: Shortcut for all states are observed to stay within the limits.</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>additional_constraints</strong> (<em>list</em><em>(</em><em>Constraint/callable</em><em>)</em>) – Further constraints that shall be monitored. These have to be initialized first and passed to the
+ConstraintMonitor. Alternatively, constraints can be defined as a function that takes the current
+state and returns a float within [0.0, 1.0].</p></li>
+<li><p><strong>merge_violations</strong> (‘max’/’product’/callable(<a href="#id3"><span class="problematic" id="id4">*</span></a>violation_degrees) -&gt; float) – <p>Function to merge all single
+violation degrees to a total violation degree.</p>
+<blockquote>
+<div><ul>
+<li><p>’max’: Take the maximal violation degree as total violation degree.</p></li>
+<li><dl class="simple">
+<dt>’product’: Calculates the total violation degree as one minus the product of one minus all single</dt><dd><p>violation degrees.</p>
+</dd>
+</dl>
+</li>
+<li><p>callable(<a href="#id1"><span class="problematic" id="id2">*</span></a>violation_degrees) -&gt; float: User defined function to calculate the total violation.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor.check_constraints">
+<span class="sig-name descname"><span class="pre">check_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.check_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.check_constraints" title="Permalink to this definition"></a></dt>
+<dd><p>Function to check and merge all constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><em>float</em><em>)</em>) – The current environments state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The total violation degree in [0,1]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor.constraints">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraints</span></span><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.constraints" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the list of all constraints the ConstraintMonitor observes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor.set_modules">
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><span class="pre">PhysicalSystem</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.set_modules" title="Permalink to this definition"></a></dt>
+<dd><p>The PhysicalSystem of the environment is passed to save important parameters like the index of the states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ps</strong> (<a class="reference internal" href="physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><em>PhysicalSystem</em></a>) – The PhysicalSystem of the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

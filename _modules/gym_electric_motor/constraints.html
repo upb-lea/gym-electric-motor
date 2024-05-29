@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.constraints &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.constraints &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -87,10 +88,10 @@
 
 
 <span class="k">class</span> <span class="nc">Constraint</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Base class for all constraints in the ConstraintMonitor.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all constraints in the ConstraintMonitor.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Function that is called to check the constraint.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that is called to check the constraint.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            state(numpy.ndarray(float)): The current physical systems state.</span>
@@ -104,7 +105,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Called by the environment that the Constraint can read information from the PhysicalSystem.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called by the environment that the Constraint can read information from the PhysicalSystem.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            ps(PhysicalSystem): PhysicalSystem of the environment.</span>
@@ -113,7 +114,7 @@
 
 
 <div class="viewcode-block" id="LimitConstraint"><a class="viewcode-back" href="../../parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint">[docs]</a><span class="k">class</span> <span class="nc">LimitConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Constraint to observe the limits on one or more system states.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constraint to observe the limits on one or more system states.</span>
 
 <span class="sd">    This constraint observes if any of the systems state values exceeds the limit specified in the PhysicalSystem.</span>
 
@@ -124,8 +125,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed_state_names</span><span class="o">=</span><span class="s1">&#39;all_states&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observed_state_names</span><span class="o">=</span><span class="s2">&quot;all_states&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            observed_state_names([&#39;all_states&#39;]/iterable(str)): The states to observe. \n</span>
 <span class="sd">                - [&#39;all_states&#39;]: Shortcut for observing all states.</span>
@@ -142,17 +143,17 @@
 
 <div class="viewcode-block" id="LimitConstraint.set_modules"><a class="viewcode-back" href="../../parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span>
-        <span class="k">if</span> <span class="s1">&#39;all_states&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;all_states&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span>
-            <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observed_states</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="nb">bool</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="SquaredConstraint"><a class="viewcode-back" href="../../parts/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint">[docs]</a><span class="k">class</span> <span class="nc">SquaredConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A squared constraint on multiple states as it is required oftentimes for the dq-currents in synchronous and</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A squared constraint on multiple states as it is required oftentimes for the dq-currents in synchronous and</span>
 <span class="sd">    asynchronous electric motors.</span>
 
 <span class="sd">    .. math::</span>
@@ -162,7 +163,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="p">()):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            states(iterable(str)): Names of all states to be observed within the SquaredConstraint.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

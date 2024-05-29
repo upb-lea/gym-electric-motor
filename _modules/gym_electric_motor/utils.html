@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.utils &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.utils &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -81,12 +82,26 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">gymnasium</span>
+<span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">base_class</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">default_class</span><span class="p">,</span> <span class="n">default_args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default_class</span><span class="p">(</span><span class="o">**</span><span class="n">default_args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Need initialization value&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">base_class</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">arg</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Deprecated in version 2.0&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">default_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">default_class</span><span class="p">(</span><span class="o">**</span><span class="n">default_args</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="state_dict_to_state_array"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.state_dict_to_state_array">[docs]</a><span class="k">def</span> <span class="nf">state_dict_to_state_array</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">state_array</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mapping of a passed state dictionary to a fitting state array.</span>
 
 <span class="sd">    This function is mainly used in the initialization phase to map a dictionary of passed state_name, state_value pairs</span>
@@ -98,16 +113,16 @@
 <span class="sd">        state_names(list/ndarray(str)): List of the state names.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">state_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">state_names</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="sa">f</span><span class="s1">&#39;A state name in {state_dict.keys()} is invalid.&#39;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">state_names</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="sa">f</span><span class="s2">&quot;A state name in </span><span class="si">{</span><span class="n">state_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2"> is invalid.&quot;</span>
     <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state_names</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">state_array</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="c1"># TODO</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>  <span class="c1"># TODO</span>
             <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="set_state_array"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.set_state_array">[docs]</a><span class="k">def</span> <span class="nf">set_state_array</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setting of the input values to a valid state array with the shape of the physical systems state.</span>
 
 <span class="sd">    The input values can be passed as dict with state_name: value pairs or as list  / ndarray. In the latter case the</span>
@@ -123,102 +138,24 @@
 <span class="sd">        the state_names and zero otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">state_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">state_dict_to_state_array</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="n">state_array</span><span class="p">,</span> <span class="n">state_names</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">state_names</span><span class="p">)</span>
         <span class="n">state_array</span> <span class="o">=</span> <span class="n">input_values</span>
-    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">state_names</span><span class="p">)</span>
         <span class="n">state_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_values</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">state_array</span> <span class="o">=</span> <span class="n">input_values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Incorrect type for the input values.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incorrect type for the input values.&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">state_array</span></div>
 
 
-<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">base_class</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">default_class</span><span class="p">,</span> <span class="n">default_args</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">default_class</span><span class="p">(</span><span class="o">**</span><span class="n">default_args</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">base_class</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">arg</span>
-    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_registry</span><span class="p">[</span><span class="n">base_class</span><span class="p">][</span><span class="n">arg</span><span class="p">]()</span>
-    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="n">default_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">default_class</span><span class="p">(</span><span class="o">**</span><span class="n">default_args</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="instantiate"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.instantiate">[docs]</a><span class="k">def</span> <span class="nf">instantiate</span><span class="p">(</span><span class="n">superclass</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Instantiation of an instance that inherits from the passed superclass.</span>
-
-<span class="sd">    The instance can be passed as a key-string, a class pointer or an already instantiated object. In the latter case</span>
-<span class="sd">    the same object will be simply returned. If a string is passed the corresponding class will be taken from the</span>
-<span class="sd">    registry and instantiated with the given kwargs. If a class pointer is passed, then the class is instantiated with</span>
-<span class="sd">    with given kwargs, directly.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        superclass(class): Superclass pointer for registry access</span>
-<span class="sd">        instance(str, class, object): Instance to instantiate</span>
-<span class="sd">        kwargs: Arguments for the instantiation of the object</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        An instantiated object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">superclass</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">instance</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">superclass</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">instance</span>
-    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">make_module</span><span class="p">(</span><span class="n">superclass</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Instantiation Error.&#39;</span><span class="p">)</span></div>
-
-
-<span class="c1"># Registry dictionary that stores the keys to instantiate the components with the keystrings</span>
-<span class="n">_registry</span> <span class="o">=</span> <span class="p">{}</span>
-
-
-<div class="viewcode-block" id="make_module"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.make_module">[docs]</a><span class="k">def</span> <span class="nf">make_module</span><span class="p">(</span><span class="n">superclass</span><span class="p">,</span> <span class="n">keystring</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Instantiation by an object that is specified by the key-string an its superclass from the registry.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        superclass(class): Superclass pointer for registry access</span>
-<span class="sd">        keystring(str): String to access the class pointer in the registry.</span>
-<span class="sd">        kwargs: Arguments for the instantiation of the object.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        An instantiated object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_registry</span><span class="p">[</span><span class="n">superclass</span><span class="p">][</span><span class="n">keystring</span><span class="p">](</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Key </span><span class="si">{keystring}</span><span class="s1"> or baseclass </span><span class="si">{superclass.__name__}</span><span class="s1"> not found in the registry.&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="register_superclass"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.register_superclass">[docs]</a><span class="k">def</span> <span class="nf">register_superclass</span><span class="p">(</span><span class="n">superclass</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Method to register a new superclass that can contain several key-strings for instantiation in the registry.</span>
-
-<span class="sd">    Basically, all superclasses in GEM are already registered like the Physical Systems, Reference Generators, ...</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_registry</span><span class="p">[</span><span class="n">superclass</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
-
-
-<div class="viewcode-block" id="register_class"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.register_class">[docs]</a><span class="k">def</span> <span class="nf">register_class</span><span class="p">(</span><span class="n">subclass</span><span class="p">,</span> <span class="n">superclass</span><span class="p">,</span> <span class="n">keystring</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Method to register a new class with a key-string into the registry of the superclass</span>
-<span class="sd">    to be instantiable with the key-string.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_registry</span><span class="p">[</span><span class="n">superclass</span><span class="p">][</span><span class="n">keystring</span><span class="p">]</span> <span class="o">=</span> <span class="n">subclass</span></div>
-
-
 <div class="viewcode-block" id="update_parameter_dict"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.update_parameter_dict">[docs]</a><span class="k">def</span> <span class="nf">update_parameter_dict</span><span class="p">(</span><span class="n">source_dict</span><span class="p">,</span> <span class="n">update_dict</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Merges two dictionaries (source and update) together.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merges two dictionaries (source and update) together.</span>
 
 <span class="sd">    It is similar to pythons dict.update() method. Furthermore, it assures that all keys in the update dictionary are</span>
 <span class="sd">    already present in the source dictionary. Otherwise a KeyError is thrown.</span>
@@ -235,7 +172,7 @@
     <span class="n">source_keys</span> <span class="o">=</span> <span class="n">source_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">update_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source_keys</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot update_dict the source_dict. The key &quot;</span><span class="si">{key}</span><span class="s1">&quot; is not available.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot update_dict the source_dict. The key &quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot; is not available.&#39;</span><span class="p">)</span>
     <span class="n">new_dict</span> <span class="o">=</span> <span class="n">source_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">source_dict</span>
     <span class="n">new_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">update_dict</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">new_dict</span></div>

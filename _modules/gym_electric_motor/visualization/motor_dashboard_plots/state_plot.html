@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.visualization.motor_dashboard_plots.state_plot &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.visualization.motor_dashboard_plots.state_plot &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+  
         <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -87,34 +88,30 @@
 
 
 <div class="viewcode-block" id="StatePlot"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot">[docs]</a><span class="k">class</span> <span class="nc">StatePlot</span><span class="p">(</span><span class="n">TimePlot</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Plot to display the environments states and their references.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot to display the environments states and their references.&quot;&quot;&quot;</span>
 
-    <span class="n">_default_limit_line_cfg</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;linestyle&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">75</span>
-    <span class="p">}</span>
+    <span class="n">_default_limit_line_cfg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;linewidth&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">}</span>
 
     <span class="c1"># Labels for each state variable.</span>
     <span class="n">state_labels</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\omega$/(1/s)&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="s1">&#39;$T$/Nm&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="s1">&#39;$i$/A&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;i_a&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_{\mathrm</span><span class="si">{a}</span><span class="s1">}$/A&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;i_e&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_{\mathrm</span><span class="si">{e}</span><span class="s1">}$/A&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;i_b&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_{\mathrm</span><span class="si">{b}</span><span class="s1">}$/A&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;i_c&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_{\mathrm</span><span class="si">{c}</span><span class="s1">}$/A&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;i_sq&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_{\mathrm</span><span class="si">{sq}</span><span class="s1">}$/A&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;i_sd&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$i_{\mathrm</span><span class="si">{sd}</span><span class="s1">}$/A&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="s1">&#39;$u$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u_a&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{\mathrm</span><span class="si">{a}</span><span class="s1">}$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u_b&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{\mathrm</span><span class="si">{b}</span><span class="s1">}$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u_c&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{\mathrm</span><span class="si">{c}</span><span class="s1">}$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u_sq&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{\mathrm</span><span class="si">{sq}</span><span class="s1">}$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u_sd&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{\mathrm</span><span class="si">{sd}</span><span class="s1">}$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{\mathrm</span><span class="si">{e}</span><span class="s1">}$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;u_sup&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$u_{\mathrm</span><span class="si">{sup}</span><span class="s1">}$/V&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$/rad&#39;</span>
+        <span class="s2">&quot;omega&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$\omega$/(1/s)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;torque&quot;</span><span class="p">:</span> <span class="s2">&quot;$T$/Nm&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="s2">&quot;$i$/A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i_a&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$i_{\mathrm</span><span class="si">{a}</span><span class="s2">}$/A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i_e&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$i_{\mathrm</span><span class="si">{e}</span><span class="s2">}$/A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i_b&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$i_{\mathrm</span><span class="si">{b}</span><span class="s2">}$/A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i_c&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$i_{\mathrm</span><span class="si">{c}</span><span class="s2">}$/A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i_sq&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$i_{\mathrm</span><span class="si">{sq}</span><span class="s2">}$/A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i_sd&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$i_{\mathrm</span><span class="si">{sd}</span><span class="s2">}$/A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="s2">&quot;$u$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u_a&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{a}</span><span class="s2">}$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u_b&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{b}</span><span class="s2">}$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u_c&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{c}</span><span class="s2">}$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u_sq&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{sq}</span><span class="s2">}$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u_sd&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{sd}</span><span class="s2">}$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u_e&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{e}</span><span class="s2">}$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u_sup&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{sup}</span><span class="s2">}$/V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;epsilon&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$\epsilon$/rad&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="nd">@property</span>
@@ -122,7 +119,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            state(str): Name of the state to plot</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -156,8 +153,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_scale_plots_to_data</span> <span class="o">=</span> <span class="kc">False</span>
 
-        
-
 <div class="viewcode-block" id="StatePlot.set_env"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -167,7 +162,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">]</span>
         <span class="c1"># The maximal values of the state.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">],</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">],</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">],</span>
+        <span class="p">)</span>
         <span class="c1"># Bool: if the state is referenced.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">referenced_states</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_idx</span><span class="p">]</span>
         <span class="c1"># Bool: if the data is already normalized to an interval of [-1, 1]</span>
@@ -186,8 +184,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_scale_plots_to_data</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">scale_plots</span></div>
 
-       
-
 <div class="viewcode-block" id="StatePlot.reset_data"><a class="viewcode-back" href="../../../../parts/visualizations/motor_dashboard_plots/state_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.reset_data">[docs]</a>    <span class="k">def</span> <span class="nf">reset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset_data</span><span class="p">()</span>
         <span class="c1"># Initialize the data containers</span>
@@ -199,12 +195,12 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
 
         <span class="c1"># Line to plot the state data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line_config</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line_config</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">]</span>
 
         <span class="c1"># If the state is referenced plot also the reference line</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">,</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_ref_line_config</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">,)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_ref_line_config</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">)</span>
         <span class="n">min_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">max_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -213,19 +209,26 @@
         <span class="n">lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">max_limit</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_limit_line_config</span><span class="p">)</span>
 
         <span class="n">y_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span>
-        <span class="n">unit_split</span> <span class="o">=</span> <span class="n">y_label</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">unit_split</span> <span class="o">=</span> <span class="n">y_label</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">unit_split</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">unit_split</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span>
-        <span class="n">limit_label</span> <span class="o">=</span> <span class="n">y_label</span><span class="p">[:</span><span class="n">unit_split</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;$_{\mathrm</span><span class="si">{max}</span><span class="s1">}$&#39;</span> <span class="o">+</span> <span class="n">y_label</span><span class="p">[</span><span class="n">unit_split</span><span class="p">:]</span>
+        <span class="n">limit_label</span> <span class="o">=</span> <span class="n">y_label</span><span class="p">[:</span><span class="n">unit_split</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;$_{\mathrm</span><span class="si">{max}</span><span class="s2">}$&quot;</span> <span class="o">+</span> <span class="n">y_label</span><span class="p">[</span><span class="n">unit_split</span><span class="p">:]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced</span><span class="p">:</span>
-            <span class="n">ref_label</span> <span class="o">=</span> <span class="n">y_label</span><span class="p">[:</span><span class="n">unit_split</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;$^*$&#39;</span> <span class="o">+</span> <span class="n">y_label</span><span class="p">[</span><span class="n">unit_split</span><span class="p">:]</span>
+            <span class="n">ref_label</span> <span class="o">=</span> <span class="n">y_label</span><span class="p">[:</span><span class="n">unit_split</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;$^*$&quot;</span> <span class="o">+</span> <span class="n">y_label</span><span class="p">[</span><span class="n">unit_split</span><span class="p">:]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">,</span> <span class="n">lim</span><span class="p">),</span> <span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">ref_label</span><span class="p">,</span> <span class="n">limit_label</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span>
-                <span class="n">numpoints</span><span class="o">=</span><span class="mi">20</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_line</span><span class="p">,</span> <span class="n">lim</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">ref_label</span><span class="p">,</span> <span class="n">limit_label</span><span class="p">),</span>
+                <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span>
+                <span class="n">numpoints</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="n">lim</span><span class="p">),</span> <span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">limit_label</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_line</span><span class="p">,</span> <span class="n">lim</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">limit_label</span><span class="p">),</span>
+                <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span>
+                <span class="n">numpoints</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_y_data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref_data</span><span class="p">]</span></div>
 

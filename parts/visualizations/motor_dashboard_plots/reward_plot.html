@@ -103,6 +103,91 @@
              
   <section id="reward-plot">
 <h1>Reward Plot<a class="headerlink" href="#reward-plot" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.visualization.motor_dashboard_plots.</span></span><span class="sig-name descname"><span class="pre">RewardPlot</span></span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/reward_plot.html#RewardPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot" title="Permalink to this definition"></a></dt>
+<dd><p>Plot to display the instantaneous reward during the episode</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.data_idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_idx</span></span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.data_idx" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the current index to access the time and data arrays.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/reward_plot.html#RewardPlot.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Initialization of the plot.</p>
+<p>It is called by the MotorDashboard. Set labels, legends… when overriding this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>axis</strong> (<em>matplotlib.pyplot.axis</em>) – Axis to plot in</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_close">
+<span class="sig-name descname"><span class="pre">on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_close" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of a close</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_reset_begin">
+<span class="sig-name descname"><span class="pre">on_reset_begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_reset_begin" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of each reset</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_reset_end">
+<span class="sig-name descname"><span class="pre">on_reset_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_reset_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the end of each reset</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_step_begin">
+<span class="sig-name descname"><span class="pre">on_step_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_step_begin" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the beginning of each step</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_step_end">
+<span class="sig-name descname"><span class="pre">on_step_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/reward_plot.html#RewardPlot.on_step_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.on_step_end" title="Permalink to this definition"></a></dt>
+<dd><p>Gets called at the end of each step</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.render" title="Permalink to this definition"></a></dt>
+<dd><p>Update of the plots axis.</p>
+<p>The current x and y-data are written onto the respective lines in this methods. Furthermore the x- and y-axes
+are scaled dynamically.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.reset_data">
+<span class="sig-name descname"><span class="pre">reset_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/reward_plot.html#RewardPlot.reset_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.reset_data" title="Permalink to this definition"></a></dt>
+<dd><p>Called by the dashboard, when the figures are reset to generate a new figure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.set_env">
+<span class="sig-name descname"><span class="pre">set_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/reward_plot.html#RewardPlot.set_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.set_env" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the environment of the motor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.set_width">
+<span class="sig-name descname"><span class="pre">set_width</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.set_width" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the width of the plot in data points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>width</strong> (<em>int &gt; 0</em>) – The width of the plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

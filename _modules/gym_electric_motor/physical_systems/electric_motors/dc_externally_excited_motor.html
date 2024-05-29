@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.physical_systems.electric_motors.dc_externally_excited_motor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.physical_systems.electric_motors.dc_externally_excited_motor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+  
         <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -93,29 +94,33 @@
 <div class="viewcode-block" id="DcExternallyExcitedMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-                <span class="p">[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_a&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_a&#39;</span><span class="p">],</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_a&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">],</span>
-                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_e&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e&#39;</span><span class="p">]]</span>
-            <span class="p">]),</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_a&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">]),</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">],</span>
-                      <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_A_IDX</span><span class="p">]])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="p">[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">],</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_e&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e&quot;</span><span class="p">]],</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">]),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">],</span>
+                    <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_A_IDX</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
 
         <span class="c1"># R_a might be 0, protect against that</span>
-        <span class="n">r_a</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_a&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_a&#39;</span><span class="p">]</span>
+        <span class="n">r_a</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span>
 
-        <span class="n">limit_agenda</span> <span class="o">=</span> \
-            <span class="p">{</span><span class="s1">&#39;u_a&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">],</span>
-             <span class="s1">&#39;u_e&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">],</span>
-             <span class="s1">&#39;i_a&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">r_a</span><span class="p">,</span>
-             <span class="s1">&#39;i_e&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_e&#39;</span><span class="p">],</span>
-             <span class="p">}</span>
+        <span class="n">limit_agenda</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;u_a&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;u_e&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;i_a&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">r_a</span><span class="p">,</span>
+            <span class="s2">&quot;i_e&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_e&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">limit_agenda</span><span class="p">)</span></div>
 </pre></div>
 

@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.physical_system_wrappers.physical_system_wrapper &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.physical_system_wrappers.physical_system_wrapper &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -83,9 +84,11 @@
   <h1>Source code for gym_electric_motor.physical_system_wrappers.physical_system_wrapper</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
 
+<span class="kn">from</span> <span class="nn">..random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 
-<div class="viewcode-block" id="PhysicalSystemWrapper"><a class="viewcode-back" href="../../../parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper">[docs]</a><span class="k">class</span> <span class="nc">PhysicalSystemWrapper</span><span class="p">(</span><span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">RandomComponent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A PhysicalSystemWrapper is a wrapper around the PhysicalSystem of a gem-environment.</span>
+
+<div class="viewcode-block" id="PhysicalSystemWrapper"><a class="viewcode-back" href="../../../parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper">[docs]</a><span class="k">class</span> <span class="nc">PhysicalSystemWrapper</span><span class="p">(</span><span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A PhysicalSystemWrapper is a wrapper around the PhysicalSystem of a gem-environment.</span>
 
 <span class="sd">    It may be used to modify its states and actions. In contrast to gym-wrappers which are put around the whole</span>
 <span class="sd">    environment, modified states by the PhysicalSystemWrappers can be referenced, rewarded and visualized by the</span>
@@ -98,7 +101,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The processed action space.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The processed action space.</span>
 
 <span class="sd">        If it is unset, the action space of the inner physical system is returned.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -111,7 +114,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The processed state space.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The processed state space.</span>
 
 <span class="sd">        If it is unset, the state space of the inner physical system is returned.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_space</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -124,12 +127,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The next inner physical_system or the next inner physical_system_wrapper.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The next inner physical_system or the next inner physical_system_wrapper.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The processed physical system limits.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The processed physical system limits.</span>
 
 <span class="sd">        If it is unset, the inner limits are returned.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -138,12 +141,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">unwrapped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The innermost physical system within all Physical System Wrappers.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The innermost physical system within all Physical System Wrappers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">unwrapped</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">nominal_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The processed physical system nominal state.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The processed physical system nominal state.</span>
 
 <span class="sd">        If it is unset, the inner nominal state is returned.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -152,7 +155,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">state_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The processed physical system state names.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The processed physical system state names.</span>
 
 <span class="sd">        If it is unset, the state names of the inner physical system are returned.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -160,13 +163,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            physical_system(PhysicalSystem): (Optional) The inner physical system can be passed to directly call the</span>
 <span class="sd">                set_physical_system-method after the initialization.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">PhysicalSystem</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">RandomComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">physical_system</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_state</span> <span class="o">=</span> <span class="kc">None</span>
@@ -174,7 +177,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PhysicalSystemWrapper.set_physical_system"><a class="viewcode-back" href="../../../parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sets the inner physical system of this PhysicalSystemWrapper.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the inner physical system of this PhysicalSystemWrapper.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            physical_system(PhysicalSystem): The inner physical system or Physical System Wrapper.</span>
@@ -188,7 +191,7 @@
 
 <div class="viewcode-block" id="PhysicalSystemWrapper.seed"><a class="viewcode-back" href="../../../parts/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># docstring of super class RandomComponent</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">RandomComponent</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>

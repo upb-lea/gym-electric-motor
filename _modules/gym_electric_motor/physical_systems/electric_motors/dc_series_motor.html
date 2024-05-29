@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.physical_systems.electric_motors.dc_series_motor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.physical_systems.electric_motors.dc_series_motor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+  
         <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -87,66 +88,72 @@
 
 
 <div class="viewcode-block" id="DcSeriesMotor"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor">[docs]</a><span class="k">class</span> <span class="nc">DcSeriesMotor</span><span class="p">(</span><span class="n">DcMotor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The DcSeriesMotor is a DcMotor with an armature and exciting circuit connected in series to one input voltage.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The DcSeriesMotor is a DcMotor with an armature and exciting circuit connected in series to one input voltage.</span>
 
-<span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        Motor Parameter        Unit        Default Value Description</span>
-<span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        r_a                    Ohm         16e-3         Armature circuit resistance</span>
-<span class="sd">        r_e                    Ohm         48e-3         Exciting circuit resistance</span>
-<span class="sd">        l_a                    H           19e-6         Armature circuit inductance</span>
-<span class="sd">        l_e                    H           5.4e-3        Exciting circuit inductance</span>
-<span class="sd">        l_e_prime              H           1.7e-3        Effective excitation inductance</span>
-<span class="sd">        j_rotor                kg/m^2      0.025         Moment of inertia of the rotor</span>
-<span class="sd">        =====================  ==========  ============= ===========================================</span>
-<span class="sd">        </span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        Motor Currents  Unit   Description</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        i               A      Circuit current</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        Motor Voltages  Unit   Description</span>
-<span class="sd">        =============== ====== =============================================</span>
-<span class="sd">        u               V      Circuit voltage</span>
-<span class="sd">        =============== ====== =============================================</span>
+<span class="sd">    =====================  ==========  ============= ===========================================</span>
+<span class="sd">    Motor Parameter        Unit        Default Value Description</span>
+<span class="sd">    =====================  ==========  ============= ===========================================</span>
+<span class="sd">    r_a                    Ohm         16e-3         Armature circuit resistance</span>
+<span class="sd">    r_e                    Ohm         48e-3         Exciting circuit resistance</span>
+<span class="sd">    l_a                    H           19e-6         Armature circuit inductance</span>
+<span class="sd">    l_e                    H           5.4e-3        Exciting circuit inductance</span>
+<span class="sd">    l_e_prime              H           1.7e-3        Effective excitation inductance</span>
+<span class="sd">    j_rotor                kg/m^2      0.025         Moment of inertia of the rotor</span>
+<span class="sd">    =====================  ==========  ============= ===========================================</span>
 
-<span class="sd">        ======== ===========================================================</span>
-<span class="sd">        Limits / Nominal Value Dictionary Entries:</span>
-<span class="sd">        -------- -----------------------------------------------------------</span>
-<span class="sd">        Entry    Description</span>
-<span class="sd">        ======== ===========================================================</span>
-<span class="sd">        i        Circuit Current</span>
-<span class="sd">        omega    Angular Velocity</span>
-<span class="sd">        torque   Motor generated torque</span>
-<span class="sd">        u        Circuit Voltage</span>
-<span class="sd">        ======== ===========================================================</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    Motor Currents  Unit   Description</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    i               A      Circuit current</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    Motor Voltages  Unit   Description</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    u               V      Circuit voltage</span>
+<span class="sd">    =============== ====== =============================================</span>
+
+<span class="sd">    ======== ===========================================================</span>
+<span class="sd">    Limits / Nominal Value Dictionary Entries:</span>
+<span class="sd">    -------- -----------------------------------------------------------</span>
+<span class="sd">    Entry    Description</span>
+<span class="sd">    ======== ===========================================================</span>
+<span class="sd">    i        Circuit Current</span>
+<span class="sd">    omega    Angular Velocity</span>
+<span class="sd">    torque   Motor generated torque</span>
+<span class="sd">    u        Circuit Voltage</span>
+<span class="sd">    ======== ===========================================================</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">I_IDX</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">CURRENTS_IDX</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">]</span>
-    <span class="n">VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
+    <span class="n">CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">]</span>
+    <span class="n">VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span>
 
     <span class="c1"># Motor parameter, nominal values and limits are based on the following DC Motor:</span>
     <span class="c1"># https://www.heinzmann-electric-motors.com/en/products/dc-motors/pmg-132-dc-motor</span>
     <span class="n">_default_motor_parameter</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;r_a&#39;</span><span class="p">:</span> <span class="mf">16e-3</span><span class="p">,</span> <span class="s1">&#39;r_e&#39;</span><span class="p">:</span> <span class="mf">48e-3</span><span class="p">,</span> <span class="s1">&#39;l_a&#39;</span><span class="p">:</span> <span class="mf">19e-6</span><span class="p">,</span> <span class="s1">&#39;l_e_prime&#39;</span><span class="p">:</span> <span class="mf">1.7e-3</span><span class="p">,</span> <span class="s1">&#39;l_e&#39;</span><span class="p">:</span> <span class="mf">5.4e-3</span><span class="p">,</span> <span class="s1">&#39;j_rotor&#39;</span><span class="p">:</span> <span class="mf">0.0025</span>
+        <span class="s2">&quot;r_a&quot;</span><span class="p">:</span> <span class="mf">16e-3</span><span class="p">,</span>
+        <span class="s2">&quot;r_e&quot;</span><span class="p">:</span> <span class="mf">48e-3</span><span class="p">,</span>
+        <span class="s2">&quot;l_a&quot;</span><span class="p">:</span> <span class="mf">19e-6</span><span class="p">,</span>
+        <span class="s2">&quot;l_e_prime&quot;</span><span class="p">:</span> <span class="mf">1.7e-3</span><span class="p">,</span>
+        <span class="s2">&quot;l_e&quot;</span><span class="p">:</span> <span class="mf">5.4e-3</span><span class="p">,</span>
+        <span class="s2">&quot;j_rotor&quot;</span><span class="p">:</span> <span class="mf">0.0025</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">_default_nominal_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">16.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">97</span><span class="p">,</span> <span class="n">i_a</span><span class="o">=</span><span class="mi">97</span><span class="p">,</span> <span class="n">i_e</span><span class="o">=</span><span class="mi">97</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">u_a</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">u_e</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
     <span class="n">_default_limits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">38.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span> <span class="n">i_a</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span> <span class="n">i_e</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">u_a</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">u_e</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
-                            <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="s1">&#39;random_params&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}</span>
+    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;states&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+        <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;random_init&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;random_params&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-            <span class="p">[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_a&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_e&#39;</span><span class="p">],</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_a&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_e&quot;</span><span class="p">],</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
@@ -156,11 +163,7 @@
         <span class="c1"># Docstring of superclass</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">,</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-                <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">],</span>
-                <span class="n">omega</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">],</span>
-                <span class="n">u_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">],</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">],</span> <span class="n">u_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="DcSeriesMotor.i_in"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
@@ -171,38 +174,35 @@
         <span class="c1"># Docstring of superclass</span>
 
         <span class="c1"># R_a might be 0, protect against that</span>
-        <span class="n">r_a</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_a&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_a&#39;</span><span class="p">]</span>
+        <span class="n">r_a</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span>
         <span class="n">limits_agenda</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">r_a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s1">&#39;r_e&#39;</span><span class="p">]),</span>
+            <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">r_a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_e&quot;</span><span class="p">]),</span>
         <span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">limits_agenda</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DcSeriesMotor.get_state_space"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.get_state_space">[docs]</a>    <span class="k">def</span> <span class="nf">get_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_currents</span><span class="p">,</span> <span class="n">input_voltages</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="n">lower_limit</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">low</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">input_currents</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">input_voltages</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;omega&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;torque&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">input_currents</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">input_voltages</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">high</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;omega&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;torque&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span></div>
 
 <div class="viewcode-block" id="DcSeriesMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/series.html#gym_electric_motor.physical_systems.electric_motors.DcSeriesMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_a&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_e&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
-                    <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_a&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e&#39;</span><span class="p">])]]),</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span>
-                    <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_a&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e&#39;</span><span class="p">])]),</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_e_prime&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_e&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e&quot;</span><span class="p">])]]),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e&quot;</span><span class="p">])]),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_e_prime&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]]),</span>
         <span class="p">)</span></div></div>
 </pre></div>
 

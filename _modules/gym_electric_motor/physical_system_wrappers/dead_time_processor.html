@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.physical_system_wrappers.dead_time_processor &mdash; gym-electric-motor 2021 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>gym_electric_motor.physical_system_wrappers.dead_time_processor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -38,11 +39,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
-<p class="caption"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -82,14 +83,15 @@
              
   <h1>Source code for gym_electric_motor.physical_system_wrappers.dead_time_processor</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">gymnasium.spaces</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.physical_system_wrappers</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.physical_system_wrapper</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
 
 
 <div class="viewcode-block" id="DeadTimeProcessor"><a class="viewcode-back" href="../../../parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor">[docs]</a><span class="k">class</span> <span class="nc">DeadTimeProcessor</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The DeadTimeProcessor delays the actions to the physical system for a parameterizable amount of steps.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The DeadTimeProcessor delays the actions to the physical system for a parameterizable amount of steps.</span>
 
 <span class="sd">    Reset Actions:</span>
 <span class="sd">        When the environment is reset, no valid previous actions are available. Per default, constant reset actions are</span>
@@ -103,24 +105,24 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dead_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;int: The number of delayed steps.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;int: The number of delayed steps.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_steps</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">reset_action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Args:</span>
-<span class="sd">            steps(int): Number of steps to delay the actions.</span>
-<span class="sd">            reset_action(callable): A callable that returns a list of length steps to initialize the dead-actions</span>
-<span class="sd">                after a reset. Default: See above in the class description</span>
-<span class="sd">            physical_system(PhysicalSystem (optional)): The inner physical system of this PhysicalSystemWrapper.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Args:</span>
+<span class="sd">        steps(int): Number of steps to delay the actions.</span>
+<span class="sd">        reset_action(callable): A callable that returns a list of length steps to initialize the dead-actions</span>
+<span class="sd">            after a reset. Default: See above in the class description</span>
+<span class="sd">        physical_system(PhysicalSystem (optional)): The inner physical system of this PhysicalSystemWrapper.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset_actions</span> <span class="o">=</span> <span class="n">reset_action</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_steps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;The number of steps has to be greater than 0. A &quot;</span><span class="si">{steps}</span><span class="s1">&quot; has been passed.&#39;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_steps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;The number of steps has to be greater than 0. A &quot;</span><span class="si">{</span><span class="n">steps</span><span class="si">}</span><span class="s1">&quot; has been passed.&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_action_deque</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DeadTimeProcessor.set_physical_system"><a class="viewcode-back" href="../../../parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sets the inner PhysicalSystem of the DeadTimeProcessor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the inner PhysicalSystem of the DeadTimeProcessor.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            physical_system(PhysicalSystem): The physical system to be set.</span>
@@ -136,14 +138,14 @@
                 <span class="n">reset_action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">action_space</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;Action Space </span><span class="si">{action_space}</span><span class="s1"> of type {type(action_space)} unsupported.&#39;</span>
-                    <span class="s1">&#39;Only Discrete / MultiDiscrete and Box allowed for the dead time processor.&#39;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Action Space </span><span class="si">{</span><span class="n">action_space</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">action_space</span><span class="p">)</span><span class="si">}</span><span class="s2"> unsupported.&quot;</span>
+                    <span class="s2">&quot;Only Discrete / MultiDiscrete and Box allowed for the dead time processor.&quot;</span>
                 <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_reset_actions</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="n">reset_action</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_deque</span><span class="o">.</span><span class="n">maxlen</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="DeadTimeProcessor.reset"><a class="viewcode-back" href="../../../parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Resets the processor and the inner physical system for a new episode.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the processor and the inner physical system for a new episode.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            numpy.ndarray[float]: The initial state of the system.</span>
@@ -154,7 +156,7 @@
         <span class="k">return</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="DeadTimeProcessor.simulate"><a class="viewcode-back" href="../../../parts/state_action_processors/dead_time_processor.html#gym_electric_motor.physical_system_wrappers.DeadTimeProcessor.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Saves the action, applies the dead-time action and simulates the system for one time step.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the action, applies the dead-time action and simulates the system for one time step.</span>
 
 <span class="sd">         Args:</span>
 <span class="sd">             action(element of the action_space): The next action for the system.</span>
