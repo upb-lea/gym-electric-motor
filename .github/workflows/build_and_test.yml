@@ -32,7 +32,7 @@ jobs:
       env:
         PY_VER: ${{ matrix.python-version }}
       run: |
-        pytest; fi
+        pytest
   build-doc:
     runs-on: ubuntu-latest
     steps:
