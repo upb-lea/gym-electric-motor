@@ -40,7 +40,7 @@ jobs:
     - name: Build Sphinx documentation
       uses: josh146/sphinx-action@master
       with:
-        pre-build-command: "python -m pip install sphinx m2r2 sphinx_rtd_theme==1.3.0 && python -m pip install -r requirements.txt & python -m pip install ."
+        pre-build-command: "python -m pip install sphinx m2r2 sphinx_rtd_theme==1.3.0 && pip install --upgrade jinja2 && python -m pip install -r requirements.txt & python -m pip install ."
         docs-folder: "docs/"
     # Publish built docs to gh-pages branch.
     # ===============================
