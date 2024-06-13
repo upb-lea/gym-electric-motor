@@ -97,21 +97,21 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
     CURRENTS = ["i_sd", "i_sq", "i_e"]
     VOLTAGES = ["u_sd", "u_sq", "u_e"]
 
-    #### Parameters taken from DOI: 10.1109/ICELMACH.2014.6960287 (C. D. Nguyen; W. Hofmann)
+    #### Parameters derived from DOI: 10.1109/ICPE.2015.7168165 (Q. K. Nguyen; J. Schuster; J. Roth-Stielow)
     _default_motor_parameter = {
-        'p': 3,
-        'l_d': 1.66e-3,
-        'l_q': 0.35e-3,
-        'l_M': 1.589e-3,
-        'l_E': 1.74e-3,
+        'p': 2,
+        'l_d': 3.78e-3,
+        'l_q': 1.21e-3,
+        'l_m': 40e-3,
+        'l_e': 870e-3,
         'j_rotor': 0.3883,
-        'r_s': 15.55e-3,
-        'r_E': 7.2e-3,
-        'k': 65.21,
+        'r_s': 123e-3,
+        'r_e': 15.6,
+        'k': 0.057,
     }
     HAS_JACOBIAN = True
-    _default_limits = dict(omega=12e3 * np.pi / 30, torque=0.0, i=150, i_e=150, epsilon=math.pi, u=320)
-    _default_nominal_values = dict(omega=4.3e3 * np.pi / 30, torque=0.0, i=120, i_e=150, epsilon=math.pi, u=320)
+    _default_limits = dict(omega=12e3 * np.pi / 30, torque=0.0, i=25, i_e=25, epsilon=math.pi, u=200, u_e=200)
+    _default_nominal_values = dict(omega=4.3e3 * np.pi / 30, torque=0.0, i=25, i_e=25, epsilon=math.pi, u=200, u_e=200)
     _default_initializer = {
         "states": {"i_sq": 0.0, "i_sd": 0.0, "i_e": 0.0, "epsilon": 0.0},
         "interval": None,
@@ -151,14 +151,13 @@ class ExternallyExcitedSynchronousMotor(SynchronousMotor):
                            "Specify either r_e, l_m and l_e (rotor-side) or r_E, l_M and l_E (stator-side).")
 
 
-
         mp['i_k_rs'] = 2 / 3 / mp['k']  # ratio (i_E / i_e)
         mp['sigma'] = 1 - mp['l_M'] ** 2 / (mp['l_d'] * mp['l_E'])
 
         # fmt: off
 
         self._model_constants = np.array([
-            #                 omega,                                               i_d,        i_q,                                                              i_e,                              u_d, u_q,                                                    u_e,          omega * i_d,                                                  omega * i_q,                         omega * i_e
+            #                 omega,                                               i_d,        i_q,                                                              i_e,                                    u_d, u_q,                                              u_e,          omega * i_d,                                                  omega * i_q,                         omega * i_e
             [                     0,                          -mp["r_s"] / mp["sigma"],          0, mp["l_M"] * mp["r_E"] / (mp["sigma"] * mp["l_E"]) * mp["i_k_rs"],                        1 / mp["sigma"],   0, -mp["l_M"] * mp["k"] / (mp["sigma"] * mp["l_E"]),                    0,                            mp["l_q"] * mp["p"] / mp["sigma"],                                   0],
             [                     0,                                                 0, -mp["r_s"],                                                                0,                                      0,   1,                                                0, -mp["l_d"] * mp["p"],                                                            0, -mp["p"] * mp["l_M"] * mp["i_k_rs"]],
             [                     0, mp["l_M"] * mp["r_s"] / (mp["sigma"] * mp["l_d"]),          0,                          -mp["r_E"] / mp["sigma"] * mp["i_k_rs"], -mp["l_M"] / (mp["sigma"] * mp["l_d"]),   0,                            mp["k"] / mp["sigma"],                    0, -mp["p"] * mp["l_M"] * mp["l_q"] / (mp["sigma"] * mp["l_d"]),                                   0],
