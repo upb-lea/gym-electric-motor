@@ -45,6 +45,6 @@ class TestCosSinProcessor(TestPhysicalSystemWrapper):
         assert all(
             state
             == np.concatenate(
-                (ps_state, [np.cos(cos_sin_state), np.sin(cos_sin_state)])
+                (ps_state, [np.cos(cos_sin_state*np.pi), np.sin(cos_sin_state*np.pi)])
             )
         )
