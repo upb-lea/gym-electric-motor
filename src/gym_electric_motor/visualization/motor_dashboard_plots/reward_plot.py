@@ -29,6 +29,7 @@ class RewardPlot(TimePlot):
         spacing = 0.1 * (max_limit - min_limit)
         self._y_lim = (min_limit - spacing, max_limit + spacing)
         self._label = "reward"
+        self._scale_plots_to_data = env.scale_plots
 
     def reset_data(self):
         super().reset_data()
