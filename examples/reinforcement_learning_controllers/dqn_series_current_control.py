@@ -9,10 +9,12 @@ from rl.agents.dqn import DQNAgent
 from rl.policy import LinearAnnealedPolicy, EpsGreedyQPolicy
 from rl.memory import SequentialMemory
 from gymnasium.wrappers import FlattenObservation
+from gym_electric_motor.physical_systems import Finite1QC
 import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join("..")))
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 import gym_electric_motor as gem
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
 from gym_electric_motor.visualization import MotorDashboard
@@ -27,13 +29,18 @@ We use a deep Q learning agent to determine which action must be taken on a fini
 if __name__ == "__main__":
     # Define the drive environment
     # Default DcSeries Motor Parameters are changed to have more dynamic system and to see faster learning result
+    motor =Motor(MotorType.SeriesDc,
+                 ControlType.CurrentControl,
+                 ActionType.Finite)
+
     env = gem.make(
         # Define the series DC motor with finite-control-set
-        "Finite-CC-SeriesDc-v0",
+        #"Finite-CC-SeriesDc-v0",
+        motor.env_id(),
         # Defines the utilized power converter, which determines the action space
         # 'Disc-1QC' is our notation for a discontinuous one-quadrant converter,
         # which is a one-phase buck converter with available actions 'switch on' and 'switch off'
-        converter="Finite-1QC",
+        converter=Finite1QC(),#"Finite-1QC"
         # Define which states will be shown in the state observation (what we can "measure")
         state_filter=["omega", "i"],
     )

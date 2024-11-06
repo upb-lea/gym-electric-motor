@@ -14,6 +14,7 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join("..")))
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 import gym_electric_motor as gem
 from gym_electric_motor.reference_generators import WienerProcessReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
@@ -27,9 +28,13 @@ determine which action must be taken on a continuous-control-set
 
 if __name__ == "__main__":
     # Define the drive environment
+    #"Cont-SC-SeriesDc-v0"
+    motor = Motor(MotorType.SeriesDc,
+              ControlType.SpeedControl,
+              ActionType.Continuous)
     env = gem.make(
         # Define the speed control series DC motor environment with continuous-control-set
-        "Cont-SC-SeriesDc-v0",
+        motor.env_id(),
     )
 
     # For data processing we want to flatten the env output,

@@ -17,12 +17,14 @@ from gym_electric_motor.reference_generators import (
     ConstReferenceGenerator,
     WienerProcessReferenceGenerator,
 )
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.visualization.motor_dashboard_plots import MeanEpisodeRewardPlot
 from gym_electric_motor.physical_systems.mechanical_loads import ConstantSpeedLoad
 from gymnasium.core import Wrapper
 from gymnasium.spaces import Box, Tuple
 from gym_electric_motor.constraints import SquaredConstraint
+from gym_electric_motor.physical_systems.solvers import ScipySolveIvpSolver
 from gym_electric_motor.physical_system_wrappers import (
     DqToAbcActionProcessor,
     DeadTimeProcessor,
@@ -116,23 +118,28 @@ if __name__ == "__main__":
         DeadTimeProcessor(),
         DqToAbcActionProcessor.make("PMSM"),
     )
-
-    # Create the environment
-    env = gem.make(
-        # Choose the permanent magnet synchronous motor with continuous-control-set
-        "Cont-CC-PMSM-v0",
-        # Pass a class with extra parameters
-        physical_system_wrappers=physical_system_wrappers,
-        visualization=MotorDashboard(
+    visu = MotorDashboard(
             state_plots=["i_sq", "i_sd"],
             action_plots="all",
             reward_plot=True,
             additional_plots=[MeanEpisodeRewardPlot()],
         ),
+    motor = Motor(MotorType.PermanentMagnetSynchronousMotor,
+              ControlType.CurrentControl,
+              ActionType.Continuous)
+    # motor.env_id()
+    # Create the environment
+    env = gem.make(
+        # Choose the permanent magnet synchronous motor with continuous-control-set
+        #"Cont-CC-PMSM-v0",
+        motor.env_id(),
+        # Pass a class with extra parameters
+        physical_system_wrappers=physical_system_wrappers,
+        visualization=visu,
         # Set the mechanical load to have constant speed
         load=ConstantSpeedLoad(omega_fixed=1000 * np.pi / 30),
         # Define which numerical solver is to be used for the simulation
-        ode_solver="scipy.ode",
+        ode_solver=ScipySolveIvpSolver(),#"scipy.ode"
         # Pass the previously defined reference generator
         reference_generator=rg,
         reward_function=dict(
