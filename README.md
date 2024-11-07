@@ -4,6 +4,7 @@
 
 [**Overview paper**](https://joss.theoj.org/papers/10.21105/joss.02498)
 | [**Reinforcement learning paper**](https://arxiv.org/abs/1910.09434)
+| [**GEM control paper**](https://ieeexplore.ieee.org/document/10239044)
 | [**Quickstart**](#getting-started)
 | [**Install guide**](#installation)
 | [**Reference docs**](https://upb-lea.github.io/gym-electric-motor/)
@@ -18,7 +19,8 @@
 
 ## Overview
 The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
-It is built upon [Faram Gymnasium Environments](https://gym.openai.com/), and, therefore, can be used for both, classical control simulation and [reinforcement learning](https://github.com/upb-lea/reinforcement_learning_course_materials) experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
+It is built upon [Faram Gymnasium Environments](https://gymnasium.farama.org/), and, therefore, can be used for both, classical control simulation and [reinforcement learning](https://github.com/upb-lea/reinforcement_learning_course_materials) experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
+Since v2.0.1, gym-electric-motor control is integrated in gym-electric-motor and provide automated classical control structures for the environment of the Toolbox.
 
 ## Getting Started
 An easy way to get started with GEM is by playing around with the following interactive notebooks in Google Colaboratory. Most important features of GEM as well as application demonstrations are showcased, and give a kickstart for engineers in industry and academia.
@@ -114,6 +116,19 @@ A white paper for the utilization of this framework within reinforcement learnin
   number={3},
   pages={919-928},
   doi={10.1109/TNNLS.2020.3029573}}
+```
+
+A white paper for the classical control approaches of gym-electric-motor control is available at [IEEE-Xplore](https://ieeexplore.ieee.org/document/10239044). Please use the following BibTeX entry for citing it:
+```
+@INPROCEEDINGS{10239044,
+  author={Book, Felix and Traue, Arne and Schenke, Maximilian and Haucke-Korber, Barnabas and Wallscheid, Oliver},
+  booktitle={2023 IEEE International Electric Machines & Drives Conference (IEMDC)}, 
+  title={Gym-Electric-Motor (GEM) Control: An Automated Open-Source Controller Design Suite for Drives}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={1-7},
+  doi={10.1109/IEMDC55163.2023.10239044}}
 ```
 
 ### Running Unit Tests with Pytest

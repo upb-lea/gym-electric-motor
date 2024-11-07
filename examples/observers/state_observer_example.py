@@ -13,6 +13,7 @@ sys.path.append(path)
 from classic_controllers import Controller  # noqa: E402
 from externally_referenced_state_plot import ExternallyReferencedStatePlot  # noqa: E402
 
+
 if __name__ == "__main__":
     """
     motor type:     'PermExDc'  Permanently Excited DC Motor
@@ -27,7 +28,7 @@ if __name__ == "__main__":
     action_type:    'Cont'      Continuous Action Space
                     'Finite'    Discrete Action Space
     """
-
+    
     motor = Motor(
         MotorType.PermanentlyExcitedDcMotor,
         ControlType.SpeedControl,
@@ -66,7 +67,6 @@ if __name__ == "__main__":
     
     """
     controller = Controller.make(env, external_ref_plots=external_ref_plots)
-    # controller = GemController.make(env, env_id=motor.env_id())
 
     (state, reference), _ = env.reset(seed=1337)
     print("state_names: ", motor.states())

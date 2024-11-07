@@ -332,6 +332,7 @@ class MotorDashboard(MotorDashboardLegacy):
         # myenv._plots = env._plots
 
         myenv.reference_generator = env.reference_generator
+        myenv.reward_range = env.reward_range
         myenv.scale_plots = env.scale_plots
 
         myenv.action_space = env.action_space

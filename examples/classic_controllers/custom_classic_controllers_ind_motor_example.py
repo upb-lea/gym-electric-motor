@@ -1,3 +1,4 @@
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 from external_plot import ExternalPlot
@@ -15,25 +16,34 @@ if __name__ == "__main__":
 
         action_type:    'Cont'      Continuous Action Space
     """
-
+    
+    """
     motor_type = "SCIM"
     control_type = "SC"
     action_type = "Cont"
+    """
 
-    env_id = action_type + "-" + control_type + "-" + motor_type + "-v0"
+    motor = Motor(
+        MotorType.SquirrelCageInductionMotor,
+        ControlType.SpeedControl,
+        ActionType.Continuous,
+    )
 
     # definition of the plotted variables
     states = ["omega", "torque", "i_sd", "i_sq", "u_sd", "u_sq"]
     external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
     external_plot = [
-        ExternalPlot(referenced=control_type != "CC"),
+        ExternalPlot(referenced=ControlType.SpeedControl != "CC"),
         ExternalPlot(min=-np.pi, max=np.pi),
     ]
     external_ref_plots += external_plot
 
+    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots)
+
     # initialize the gym-electric-motor environment
     env = gem.make(
-        env_id, visualization=MotorDashboard(additional_plots=external_ref_plots)
+        motor.env_id(), 
+        visualization=motor_dashboard
     )
 
     """
@@ -67,4 +77,6 @@ if __name__ == "__main__":
         if terminated:
             env.reset()
             controller.reset()
+
+    motor_dashboard.show_and_hold()
     env.close()

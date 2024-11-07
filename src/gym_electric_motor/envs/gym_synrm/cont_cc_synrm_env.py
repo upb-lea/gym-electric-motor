@@ -22,7 +22,7 @@ class ContCurrentControlSynchronousReluctanceMotorEnv(ElectricMotorEnvironment):
         Environment to simulate a abc-domain continuous control set current controlled synchronous reluctance motor.
 
     Key:
-        ``'Cont-CC-PMSM-v0'``
+        ``'Cont-CC-SynRM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`

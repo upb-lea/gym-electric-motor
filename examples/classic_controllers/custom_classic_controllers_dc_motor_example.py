@@ -1,7 +1,9 @@
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 from gym_electric_motor.visualization import MotorDashboard
+from gym_electric_motor.visualization.render_modes import RenderMode
 
 if __name__ == "__main__":
     """
@@ -19,29 +21,27 @@ if __name__ == "__main__":
     """
 
     # following manual controller design addresses an ExtExDc. Other motor types require different controller stages
+    """
     motor_type = "ExtExDc"
     control_type = "CC"
     action_type = "Cont"
+    """
 
-    motor = action_type + "-" + control_type + "-" + motor_type + "-v0"
+    motor = Motor(MotorType.ExternallyExcitedDcMotor,
+        ControlType.CurrentControl,
+        ActionType.Continuous,)
 
-    if motor_type in ["PermExDc", "SeriesDc"]:
-        states = ["omega", "torque", "i", "u"]
-    elif motor_type == "ShuntDc":
-        states = ["omega", "torque", "i_a", "i_e", "u"]
-    elif motor_type == "ExtExDc":
-        states = ["omega", "torque", "i_a", "i_e", "u_a", "u_e"]
-    else:
-        raise KeyError(motor_type + " is not available")
 
     # definition of the plotted variables
-    external_ref_plots = [ExternallyReferencedStatePlot(state) for state in states]
+    external_ref_plots = [ExternallyReferencedStatePlot(state) for state in motor.states()]
+
+    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots, render_mode=RenderMode.Figure)
 
     # initialize the gym-electric-motor environment
     env = gem.make(
-        motor,
-        visualization=MotorDashboard(additional_plots=external_ref_plots),
-        render_mode="figure",
+        motor.env_id(),
+        visualization=motor_dashboard
+        
     )
 
     """
@@ -92,4 +92,5 @@ if __name__ == "__main__":
             env.reset()
             controller.reset()
 
+    motor_dashboard.show_and_hold()
     env.close()

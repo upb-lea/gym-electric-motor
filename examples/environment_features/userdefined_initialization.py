@@ -1,6 +1,8 @@
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
+from gym_electric_motor.physical_systems.solvers import ScipySolveIvpSolver
 import time
 
 """
@@ -39,15 +41,17 @@ uniform_init = {
 # initializer for a specific speed
 load_init = {"states": {"omega": 20}}
 
+motor = Motor(motor_type=MotorType.SeriesDc, control_type=ControlType.CurrentControl, action_type=ActionType.Continuous)
+
 if __name__ == "__main__":
     env = gem.make(
-        "Cont-CC-SeriesDc-v0",
+        motor.env_id(),
         visualization=MotorDashboard(state_plots=["omega", "i"]),
         motor=dict(
             motor_parameter=dict(j_rotor=0.001), motor_initializer=gaussian_init
         ),
         load=dict(j_load=0.001, load_initializer=uniform_init),
-        ode_solver="scipy.solve_ivp",
+        ode_solver=ScipySolveIvpSolver(),
         reference_generator=rg.SwitchedReferenceGenerator(
             sub_generators=[
                 rg.SinusoidalReferenceGenerator(reference_state="omega"),
@@ -63,7 +67,7 @@ if __name__ == "__main__":
     cum_rew = 0
 
     for j in range(10):
-        state, reference = env.reset()
+        (state, reference), _ = env.reset()
 
         # Print the initial states:
         denorm_state = state * env.limits

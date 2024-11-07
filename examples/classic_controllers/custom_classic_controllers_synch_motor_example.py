@@ -1,3 +1,4 @@
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
@@ -16,15 +17,18 @@ if __name__ == "__main__":
         action_type:    'Cont'   Continuous Action Space in ABC-Coordinates
                         'Finite'    Discrete Action Space
     """
-
+    """
     motor_type = "PMSM"
     control_type = "SC"
     action_type = "Cont"
+    """
 
-    env_id = action_type + "-" + control_type + "-" + motor_type + "-v0"
+    motor = Motor(MotorType.PermanentMagnetSynchronousMotor,
+                  ControlType.SpeedControl,
+                  ActionType.Continuous)
 
     # definition of the motor parameters
-    psi_p = 0 if motor_type == "SynRM" else 45e-3
+    psi_p = 0 if "SynRM" in motor.env_id() else 45e-3
     limit_values = dict(omega=12e3 * np.pi / 30, torque=100, i=280, u=320)
     nominal_values = dict(
         omega=10e3 * np.pi / 30, torque=95.0, i=240, epsilon=np.pi, u=300
@@ -39,9 +43,10 @@ if __name__ == "__main__":
         for state in ["omega", "torque", "i_sd", "i_sq", "u_sd", "u_sq"]
     ]
 
+    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots)
     # initialize the gym-electric-motor environment
     env = gem.make(
-        env_id,
+        motor.env_id(),
         visualization=MotorDashboard(additional_plots=external_ref_plots),
         motor=dict(
             limit_values=limit_values,
@@ -140,5 +145,5 @@ if __name__ == "__main__":
         if terminated:
             env.reset()
             controller.reset()
-
+ 
     env.close()
