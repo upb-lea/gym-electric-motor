@@ -105,6 +105,7 @@
 <a class="reference external image-reference" href="docs/plots/Motor_Logo.png"><img alt="" src="parts/docs/plots/Motor_Logo.png" /></a>
 <p><a class="reference external" href="https://joss.theoj.org/papers/10.21105/joss.02498">**Overview paper**</a>
 | <a class="reference external" href="https://arxiv.org/abs/1910.09434">**Reinforcement learning paper**</a>
+| <a class="reference external" href="https://ieeexplore.ieee.org/document/10239044">**GEM control paper**</a>
 | <a class="reference external" href="#getting-started">**Quickstart**</a>
 | <a class="reference external" href="#installation">**Install guide**</a>
 | <a class="reference external" href="https://upb-lea.github.io/gym-electric-motor/">**Reference docs**</a>
@@ -118,7 +119,8 @@
 <section id="overview">
 <h3>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h3>
 <p>The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
-It is built upon <a class="reference external" href="https://gym.openai.com/">Faram Gymnasium Environments</a>, and, therefore, can be used for both, classical control simulation and <a class="reference external" href="https://github.com/upb-lea/reinforcement_learning_course_materials">reinforcement learning</a> experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html">Deep Deterministic Policy Gradient</a> agents.</p>
+It is built upon <a class="reference external" href="https://gymnasium.farama.org/">Faram Gymnasium Environments</a>, and, therefore, can be used for both, classical control simulation and <a class="reference external" href="https://github.com/upb-lea/reinforcement_learning_course_materials">reinforcement learning</a> experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html">Deep Deterministic Policy Gradient</a> agents.
+Since v2.0.1, gym-electric-motor control is integrated in gym-electric-motor and provide automated classical control structures for the environment of the Toolbox.</p>
 </section>
 <section id="getting-started">
 <h3>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h3>
@@ -218,6 +220,18 @@ It is built upon <a class="reference external" href="https://gym.openai.com/">Fa
   <span class="n">number</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">},</span>
   <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">919</span><span class="o">-</span><span class="mi">928</span><span class="p">},</span>
   <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">TNNLS</span><span class="mf">.2020.3029573</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>A white paper for the classical control approaches of gym-electric-motor control is available at <a class="reference external" href="https://ieeexplore.ieee.org/document/10239044">IEEE-Xplore</a>. Please use the following BibTeX entry for citing it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@INPROCEEDINGS</span><span class="p">{</span><span class="mi">10239044</span><span class="p">,</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Book</span><span class="p">,</span> <span class="n">Felix</span> <span class="ow">and</span> <span class="n">Traue</span><span class="p">,</span> <span class="n">Arne</span> <span class="ow">and</span> <span class="n">Schenke</span><span class="p">,</span> <span class="n">Maximilian</span> <span class="ow">and</span> <span class="n">Haucke</span><span class="o">-</span><span class="n">Korber</span><span class="p">,</span> <span class="n">Barnabas</span> <span class="ow">and</span> <span class="n">Wallscheid</span><span class="p">,</span> <span class="n">Oliver</span><span class="p">},</span>
+  <span class="n">booktitle</span><span class="o">=</span><span class="p">{</span><span class="mi">2023</span> <span class="n">IEEE</span> <span class="n">International</span> <span class="n">Electric</span> <span class="n">Machines</span> <span class="o">&amp;</span> <span class="n">Drives</span> <span class="n">Conference</span> <span class="p">(</span><span class="n">IEMDC</span><span class="p">)},</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">Gym</span><span class="o">-</span><span class="n">Electric</span><span class="o">-</span><span class="n">Motor</span> <span class="p">(</span><span class="n">GEM</span><span class="p">)</span> <span class="n">Control</span><span class="p">:</span> <span class="n">An</span> <span class="n">Automated</span> <span class="n">Open</span><span class="o">-</span><span class="n">Source</span> <span class="n">Controller</span> <span class="n">Design</span> <span class="n">Suite</span> <span class="k">for</span> <span class="n">Drives</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2023</span><span class="p">},</span>
+  <span class="n">volume</span><span class="o">=</span><span class="p">{},</span>
+  <span class="n">number</span><span class="o">=</span><span class="p">{},</span>
+  <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">7</span><span class="p">},</span>
+  <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">IEMDC55163</span><span class="mf">.2023.10239044</span><span class="p">}}</span>
 </pre></div>
 </div>
 </section>
