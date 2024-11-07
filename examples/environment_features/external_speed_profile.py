@@ -2,6 +2,8 @@ import numpy as np
 import gym_electric_motor as gem
 from gym_electric_motor import reference_generators as rg
 from gym_electric_motor.visualization import MotorDashboard
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
+from gym_electric_motor.physical_systems.solvers import ScipySolveIvpSolver
 
 import time
 from scipy import signal
@@ -67,11 +69,19 @@ load_init = ({"random_init": "uniform"},)
 # inital value is given by bias of the profile
 sampling_time = 1e-4
 
+#define the motor env object
+motor = Motor(
+    motor_type=MotorType.SeriesDc,
+    control_type=ControlType.CurrentControl,
+    action_type=ActionType.Continuous,
+)
+
+
 if __name__ == "__main__":
     # Create the environment
     env = gem.make(
-        "Cont-CC-SeriesDc-v0",
-        ode_solver="scipy.solve_ivp",
+        motor.env_id(),
+        ode_solver=ScipySolveIvpSolver(),
         tau=sampling_time,
         reference_generator=const_switch_gen,
         visualization=MotorDashboard(state_plots=["omega", "i"], reward_plot=True),

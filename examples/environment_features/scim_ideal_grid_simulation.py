@@ -6,6 +6,8 @@ the applied voltage in three-phase abc-coordinates, and the measured current in 
 
 import numpy as np
 import gym_electric_motor as gem
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
+from gym_electric_motor.physical_systems.solvers import ScipyOdeSolver
 import matplotlib.pyplot as plt
 
 
@@ -31,17 +33,18 @@ def parameterize_three_phase_grid(amplitude, frequency, initial_phase):
 
     return grid_voltage
 
+motor = Motor(motor_type=MotorType.SquirrelCageInductionMotor, control_type=ControlType.CurrentControl, action_type=ActionType.Continuous)
 
 # Create the environment
 env = gem.make(
     # Choose the squirrel cage induction motor (SCIM) with continuous-control-set
-    "Cont-CC-SCIM-v0",
+    motor.env_id(),
     #
     load=gem.physical_systems.PolynomialStaticLoad(
         dict(a=0.0, b=0.0, c=0.0, j_load=1e-6)
     ),
     # Define the numerical solver for the simulation
-    ode_solver="scipy.ode",
+    ode_solver=ScipyOdeSolver(),
     # Define which state variables are to be monitored concerning limit violations
     # "()" means, that limit violation will not necessitate an env.reset()
     constraints=(),
@@ -53,7 +56,7 @@ tau = env.physical_system.tau
 limits = env.physical_system.limits
 
 # reset the environment such that the simulation can be started
-(state, reference) = env.reset()
+(state, reference),_ = env.reset()
 
 # We define these arrays in order to save our simulation results in them
 # Initial state and initial time are directly inserted
