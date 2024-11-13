@@ -26,8 +26,8 @@ Since v2.0.1, gym-electric-motor control is integrated in gym-electric-motor and
 An easy way to get started with GEM is by playing around with the following interactive notebooks in Google Colaboratory. Most important features of GEM as well as application demonstrations are showcased, and give a kickstart for engineers in industry and academia.
 
 * [GEM cookbook](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master//examples/environment_features/GEM_cookbook.ipynb)
-* [Keras-rl2 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/keras_rl2_dqn_disc_pmsm_example.ipynb)
-* [Stable-baselines3 example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb)
+* [Stable-baselines3 DDPG example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_ddpg_pmsm_dq_current_control.ipynb)
+* [Stable-baselines3 DQN example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb)
 * [MPC  example](https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/pmsm_mpc_dq_current_control.ipynb)
 
 There is a list of [standalone example scripts](examples/) as well for minimalistic demonstrations.
@@ -80,8 +80,9 @@ A GEM environment consists of following building blocks:
 ![](docs/plots/SCML_Overview.png)
 
 Among various DC-motor models, the following AC motors - together with their power electronic counterparts - are available:
-- Permanent magnet synchronous motor (PMSM), 
+- Permanent magnet synchronous motor (PMSM) 
 - Synchronous reluctance motor (SynRM)
+- Externally exited synchronous motor (EESM)
 - Squirrel cage induction motor (SCIM)
 - Doubly-fed induction motor (DFIM)
 
