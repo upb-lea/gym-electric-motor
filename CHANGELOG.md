@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 ## Fixed
 
-## [2.0.1] - Unreleased
+## [3.0.0] - Unreleased
 ## Added
 - Support for Python 3.11
 - Ruff: Python linter & formatter (see [DEVELOPMENT.md](DEVELOPMENT.md))
@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linted and formatted all files
 - Changed max. steps in some test files to improve test speed by 30%
 ## Fixed
+- Sphinx docu build
+- EESM ODE
+- dq to abc action processor 
+- cos sin processor
+- all examples to the current syntax
 
 ## [2.0.0] - 2023-08-15
 ## Added
