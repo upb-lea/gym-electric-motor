@@ -21,11 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linted and formatted all files
 - Changed max. steps in some test files to improve test speed by 30%
 ## Fixed
-- Sphinx docu build
-- EESM ODE
-- dq to abc action processor 
-- cos sin processor
-- all examples to the current syntax
+- #244 Sphinx docu build
+- #233 EESM ODE update
+- #224 DqToAbcActionProcessor uses now the correct angle to apply the dq to abc transformation 
+- #223 CosSinProcessor uses now the denormalized angel for calculating the sin and cos
+- #253 #256 all examples to the current syntax
 
 ## [2.0.0] - 2023-08-15
 ## Added
