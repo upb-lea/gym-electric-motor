@@ -120,7 +120,7 @@
 <h3>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h3>
 <p>The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
 It is built upon <a class="reference external" href="https://gymnasium.farama.org/">Faram Gymnasium Environments</a>, and, therefore, can be used for both, classical control simulation and <a class="reference external" href="https://github.com/upb-lea/reinforcement_learning_course_materials">reinforcement learning</a> experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html">Deep Deterministic Policy Gradient</a> agents.
-Since v2.0.1, gym-electric-motor control is integrated in gym-electric-motor and provide automated classical control structures for the environment of the Toolbox.</p>
+In addition, an automated framework for classical control structures based on PI controllers is provided.</p>
 </section>
 <section id="getting-started">
 <h3>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h3>
@@ -173,7 +173,7 @@ Since v2.0.1, gym-electric-motor control is integrated in gym-electric-motor and
 <ul class="simple">
 <li><p>Physical structure:</p>
 <ul>
-<li><p>Supply voltage</p></li>
+<li><p>Voltage supply</p></li>
 <li><p>Converter</p></li>
 <li><p>Electric motor</p></li>
 <li><p>Load model</p></li>
