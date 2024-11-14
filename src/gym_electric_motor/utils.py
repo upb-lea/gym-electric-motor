@@ -10,7 +10,7 @@ def initialize(base_class, arg, default_class, default_args):
     elif isinstance(arg, base_class):
         return arg
     elif type(arg) is str:
-        raise Exception("Deprecated in version 2.0")
+        raise Exception("Deprecated in version 3.0.0")
     elif type(arg) is dict:
         default_args.update(arg)
         return default_class(**default_args)
