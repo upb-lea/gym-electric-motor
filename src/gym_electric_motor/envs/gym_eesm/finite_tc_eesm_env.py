@@ -149,7 +149,7 @@ class FiniteTorqueControlExternallyExcitedSynchronousMotorEnv(ElectricMotorEnvir
             ps.FiniteFourQuadrantConverter(),
         )
         physical_system = ExternallyExcitedSynchronousMotorSystem(
-            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=420.0)),
+            supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=200.0)),
             converter=initialize(
                 ps.PowerElectronicConverter,
                 converter,
