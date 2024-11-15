@@ -153,7 +153,7 @@ class GemController:
             render_env(bool): Flag, if the states of the environment should be plotted.
         """
 
-        state, reference = env.reset()
+        (state, reference), _ = env.reset()
         if self.block_diagram:
             self.block_diagram.open()
         self.reset()
@@ -165,7 +165,7 @@ class GemController:
             (state, reference), _, done, _ = env.step(action)  # Simulate one step of the environment
             if done or current_episode_length >= max_episode_length:
                 # Reset the environment and controller
-                state, reference = env.reset()
+                (state, reference), _ = env.reset()
                 self.reset()
                 current_episode_length = 0
             current_episode_length = current_episode_length + 1
