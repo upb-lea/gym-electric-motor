@@ -162,8 +162,8 @@ class GemController:
             if render_env:
                 env.render()  # Plot the states
             action = self.control(state, reference)  # Calculate the action
-            (state, reference), _, done, _ = env.step(action)  # Simulate one step of the environment
-            if done or current_episode_length >= max_episode_length:
+            (state, reference), _, trun, done, _ = env.step(action)  # Simulate one step of the environment
+            if done or trun or current_episode_length >= max_episode_length:
                 # Reset the environment and controller
                 (state, reference), _ = env.reset()
                 self.reset()
