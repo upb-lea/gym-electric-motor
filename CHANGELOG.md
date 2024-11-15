@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dropped support for Python 3.8
 - Linted and formatted all files
 - Changed max. steps in some test files to improve test speed by 30%
+- Changed the syntax from gem_controller.py to be compatible with the gymnasium interface
 ## Fixed
 - #244 Sphinx docu build
 - #233 EESM ODE update
