@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 ## Fixed
 
+## [3.0.0] - Unreleased
+## Added
+- Support for Python 3.11, 3.12, 3.13
+- Ruff: Python linter & formatter (see [DEVELOPMENT.md](DEVELOPMENT.md))
+- StateObserver: An easy way to get state values with error checking [example](examples/observers/state_observer_example.py)
+- Integrated gem_controls repository into gem. classic_controllers will be removed in further version
+- Using pyproject.toml, dropping deprecated setup.py
+- Enabled Gymnasium env checker [see here](https://gymnasium.farama.org/api/experimental/wrappers/#gymnasium.experimental.wrappers.PassiveEnvCheckerV0)
+## Changed
+- Dropped support for Python 3.8
+- Linted and formatted all files
+- Changed max. steps in some test files to improve test speed by 30%
+- Changed the syntax from gem_controller.py to be compatible with the gymnasium interface
+## Fixed
+- #244 Sphinx docu build
+- #233 EESM ODE update
+- #224 DqToAbcActionProcessor uses now the correct angle to apply the dq to abc transformation 
+- #223 CosSinProcessor uses now the denormalized angel for calculating the sin and cos
+- #253 #256 all examples to the current syntax
+
 ## [2.0.0] - 2023-08-15
 ## Added
 - Support for Python 3.10

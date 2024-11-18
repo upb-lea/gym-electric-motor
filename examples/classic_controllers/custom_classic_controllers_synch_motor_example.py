@@ -1,11 +1,11 @@
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 from classic_controllers import Controller
 from externally_referenced_state_plot import ExternallyReferencedStatePlot
 import gym_electric_motor as gem
 from gym_electric_motor.visualization import MotorDashboard
 import numpy as np
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     """
         motor type:     'PMSM'      Permanent Magnet Synchronous Motor
                         'SynRM'     Synchronous Reluctance Motor
@@ -17,26 +17,44 @@ if __name__ == '__main__':
         action_type:    'Cont'   Continuous Action Space in ABC-Coordinates
                         'Finite'    Discrete Action Space
     """
+    """
+    motor_type = "PMSM"
+    control_type = "SC"
+    action_type = "Cont"
+    """
 
-    motor_type = 'PMSM'
-    control_type = 'SC'
-    action_type = 'Cont'
-
-    env_id = action_type + '-' + control_type + '-' + motor_type + '-v0'
+    motor = Motor(MotorType.PermanentMagnetSynchronousMotor,
+                  ControlType.SpeedControl,
+                  ActionType.Continuous)
 
     # definition of the motor parameters
-    psi_p = 0 if motor_type == 'SynRM' else 45e-3
+    psi_p = 0 if "SynRM" in motor.env_id() else 45e-3
     limit_values = dict(omega=12e3 * np.pi / 30, torque=100, i=280, u=320)
-    nominal_values = dict(omega=10e3 * np.pi / 30, torque=95.0, i=240, epsilon=np.pi, u=300)
-    motor_parameter = dict(p=3, l_d=0.37e-3, l_q=1.2e-3, j_rotor=0.03883, r_s=18e-3, psi_p=psi_p)
+    nominal_values = dict(
+        omega=10e3 * np.pi / 30, torque=95.0, i=240, epsilon=np.pi, u=300
+    )
+    motor_parameter = dict(
+        p=3, l_d=0.37e-3, l_q=1.2e-3, j_rotor=0.03883, r_s=18e-3, psi_p=psi_p
+    )
 
     # definition of the plotted variables
-    external_ref_plots = [ExternallyReferencedStatePlot(state) for state in ['omega', 'torque', 'i_sd', 'i_sq', 'u_sd', 'u_sq']]
+    external_ref_plots = [
+        ExternallyReferencedStatePlot(state)
+        for state in ["omega", "torque", "i_sd", "i_sq", "u_sd", "u_sq"]
+    ]
 
+    motor_dashboard = MotorDashboard(additional_plots=external_ref_plots)
     # initialize the gym-electric-motor environment
-    env = gem.make(env_id, visualization=MotorDashboard(additional_plots=external_ref_plots),
-                   motor=dict(limit_values=limit_values, nominal_values=nominal_values, motor_parameter=motor_parameter),
-                   render_mode = 'figure')
+    env = gem.make(
+        motor.env_id(),
+        visualization=MotorDashboard(additional_plots=external_ref_plots),
+        motor=dict(
+            limit_values=limit_values,
+            nominal_values=nominal_values,
+            motor_parameter=motor_parameter,
+        ),
+        render_mode="figure",
+    )
 
     """
     initialize the controller
@@ -90,16 +108,33 @@ if __name__ == '__main__':
         
     """
 
-    current_d_controller = {'controller_type': 'pi_controller', 'p_gain': 1, 'i_gain': 500}
-    current_q_controller = {'controller_type': 'pi_controller', 'p_gain': 3, 'i_gain': 1400}
-    speed_controller = {'controller_type': 'pi_controller', 'p_gain': 12, 'i_gain': 1300}
+    current_d_controller = {
+        "controller_type": "pi_controller",
+        "p_gain": 1,
+        "i_gain": 500,
+    }
+    current_q_controller = {
+        "controller_type": "pi_controller",
+        "p_gain": 3,
+        "i_gain": 1400,
+    }
+    speed_controller = {
+        "controller_type": "pi_controller",
+        "p_gain": 12,
+        "i_gain": 1300,
+    }
 
     current_controller = [current_d_controller, current_q_controller]
     overlaid_controller = [speed_controller]
 
     stages = [current_controller, overlaid_controller]
 
-    controller = Controller.make(env, stages=stages, external_ref_plots=external_ref_plots, torque_control='analytical')
+    controller = Controller.make(
+        env,
+        stages=stages,
+        external_ref_plots=external_ref_plots,
+        torque_control="analytical",
+    )
 
     (state, reference), _ = env.reset()
 
@@ -110,5 +145,5 @@ if __name__ == '__main__':
         if terminated:
             env.reset()
             controller.reset()
-
+ 
     env.close()
