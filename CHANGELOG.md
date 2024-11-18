@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 ## Fixed
 
-## [3.0.0] - Unreleased
+## [3.0.0] - 2024-11-18
 ## Added
 - Support for Python 3.11, 3.12, 3.13
 - Ruff: Python linter & formatter (see [DEVELOPMENT.md](DEVELOPMENT.md))
