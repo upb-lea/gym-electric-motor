@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 ## Fixed
 
+## [3.0.2] - 2024-11-19
+## Added
+## Changed
+## Fixed
+- Fixed the packaging in the pyproject.toml to successful instal gym-electric-motor from the pypi database
+
 ## [3.0.0] - 2024-11-18
 ## Added
 - Support for Python 3.11, 3.12, 3.13
