@@ -8,26 +8,26 @@ class FluxObserver:
     """
 
     def __init__(self, env):
-        mp = env.physical_system.electrical_motor.motor_parameter
+        mp = env.unwrapped.physical_system.electrical_motor.motor_parameter
         self.l_m = mp["l_m"]  # Main induction
         self.l_r = mp["l_m"] + mp["l_sigr"]  # Induction of the rotor
         self.r_r = mp["r_r"]  # Rotor resistance
         self.p = mp["p"]  # Pole pair number
-        self.tau = env.physical_system.tau  # Sampling time
+        self.tau = env.unwrapped.physical_system.tau  # Sampling time
 
         # function to transform the currents from abc to alpha/beta coordinates
         self.abc_to_alphabeta_transformation = (
-            env.physical_system.abc_to_alphabeta_space
+            env.unwrapped.physical_system.abc_to_alphabeta_space
         )
 
         # Integrated values of the flux for the two directions (Re: alpha, Im: beta)
         self.integrated = np.complex(0, 0)
         self.i_s_idx = [
-            env.state_names.index("i_sa"),
-            env.state_names.index("i_sb"),
-            env.state_names.index("i_sc"),
+            env.get_wrapper_attr('state_names').index("i_sa"),
+            env.get_wrapper_attr('state_names').index("i_sb"),
+            env.get_wrapper_attr('state_names').index("i_sc"),
         ]
-        self.omega_idx = env.state_names.index("omega")
+        self.omega_idx = env.get_wrapper_attr('state_names').index("omega")
 
     def estimate(self, state):
         """
