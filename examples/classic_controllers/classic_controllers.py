@@ -154,7 +154,7 @@ class Controller:
                 else:
                     controller_type = stages
                     _stages = [{"controller_type": stages}]
-        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
+        elif isinstance(environment.unwrapped.physical_system, SynchronousMotorSystem):
             if len(stages) == 2:
                 if len(stages[1]) == 1 and "i_sq" in controller_kwargs["ref_states"]:
                     controller_type = "foc_controller"
@@ -163,7 +163,7 @@ class Controller:
             else:
                 controller_type = "cascaded_foc_controller"
 
-        elif isinstance(environment.physical_system.unwrapped, SquirrelCageInductionMotorSystem):
+        elif isinstance(environment.unwrapped.physical_system, SquirrelCageInductionMotorSystem):
             if len(stages) == 2:
                 if len(stages[1]) == 1 and "i_sq" in controller_kwargs["ref_states"]:
                     controller_type = "foc_rotor_flux_observer"
@@ -172,7 +172,7 @@ class Controller:
             else:
                 controller_type = "cascaded_foc_rotor_flux_observer"
 
-        elif isinstance(environment.physical_system.unwrapped, DoublyFedInductionMotorSystem):
+        elif isinstance(environment.unwrapped.physical_system, DoublyFedInductionMotorSystem):
             if len(stages) == 2:
                 if len(stages[1]) == 1 and "i_sq" in controller_kwargs["ref_states"]:
                     controller_type = "foc_rotor_flux_observer"
@@ -187,7 +187,7 @@ class Controller:
     def automated_controller_design(environment, **controller_kwargs):
         """This method automatically designs the controller based on the given motor environment and control task."""
 
-        action_space_type = type(environment.action_space)
+        action_space_type = type(environment.unwrapped.action_space)
         ref_states = controller_kwargs["ref_states"]
         stages = []
         if isinstance(environment.unwrapped.physical_system.unwrapped, DcMotorSystem):  # Checking type of motor
@@ -253,7 +253,7 @@ class Controller:
                     ]
 
         elif isinstance(
-            environment.physical_system.unwrapped,
+            environment.unwrapped.physical_system.unwrapped,
             (SquirrelCageInductionMotorSystem, DoublyFedInductionMotorSystem),
         ):
             if "i_sq" in ref_states or "torque" in ref_states:
@@ -323,19 +323,19 @@ class Controller:
             u_a_lim = limits[environment.unwrapped.physical_system.VOLTAGES_IDX[0]]
             u_e_lim = limits[environment.unwrapped.physical_system.VOLTAGES_IDX[-1]]
 
-        elif isinstance(environment.physical_system.unwrapped, SynchronousMotorSystem):
-            i_sd_lim = limits[environment.state_names.index("i_sd")]
-            i_sq_lim = limits[environment.state_names.index("i_sq")]
-            u_sd_lim = limits[environment.state_names.index("u_sd")]
-            u_sq_lim = limits[environment.state_names.index("u_sq")]
-            torque_lim = limits[environment.state_names.index("torque")]
+        elif isinstance(environment.unwrapped.physical_system, SynchronousMotorSystem):
+            i_sd_lim = limits[environment.get_wrapper_attr('state_names').index("i_sd")]
+            i_sq_lim = limits[environment.get_wrapper_attr('state_names').index("i_sq")]
+            u_sd_lim = limits[environment.get_wrapper_attr('state_names').index("u_sd")]
+            u_sq_lim = limits[environment.get_wrapper_attr('state_names').index("u_sq")]
+            torque_lim = limits[environment.get_wrapper_attr('state_names').index("torque")]
 
         else:
-            i_sd_lim = limits[environment.state_names.index("i_sd")]
-            i_sq_lim = limits[environment.state_names.index("i_sq")]
-            u_sd_lim = limits[environment.state_names.index("u_sd")]
-            u_sq_lim = limits[environment.state_names.index("u_sq")]
-            torque_lim = limits[environment.state_names.index("torque")]
+            i_sd_lim = limits[environment.get_wrapper_attr('state_names').index("i_sd")]
+            i_sq_lim = limits[environment.get_wrapper_attr('state_names').index("i_sq")]
+            u_sd_lim = limits[environment.get_wrapper_attr('state_names').index("u_sd")]
+            u_sq_lim = limits[environment.get_wrapper_attr('state_names').index("u_sq")]
+            torque_lim = limits[environment.get_wrapper_attr('state_names').index("torque")]
 
         # The parameter a is a design parameter when designing a controller according to the SO
         a = controller_kwargs.get("a", 4)
@@ -361,14 +361,14 @@ class Controller:
                 stages_a = stages[0]
                 stages_e = stages[1]
 
-                p_gain = mp["l_e"] / (environment.physical_system.tau * a) / u_e_lim * i_e_lim
-                i_gain = p_gain / (environment.physical_system.tau * a**2)
+                p_gain = mp["l_e"] / (environment.unwrapped.physical_system.tau * a) / u_e_lim * i_e_lim
+                i_gain = p_gain / (environment.unwrapped.physical_system.tau * a**2)
 
                 stages_e[0]["p_gain"] = stages_e[0].get("p_gain", p_gain)
                 stages_e[0]["i_gain"] = stages_e[0].get("i_gain", i_gain)
 
                 if stages_e[0]["controller_type"] == PIDController:
-                    d_gain = p_gain * environment.physical_system.tau
+                    d_gain = p_gain * environment.unwrapped.physical_system.tau
                     stages_e[0]["d_gain"] = stages_e[0].get("d_gain", d_gain)
             elif type(environment) in finite_extex_envs:
                 stages_a = stages[0]
@@ -379,19 +379,19 @@ class Controller:
 
             if _controllers[controller_type][0] == ContinuousActionController:
                 if "i" in ref_states or "i_a" in ref_states or "torque" in ref_states:
-                    p_gain = mp["l"] / (environment.physical_system.tau * a) / u_a_lim * i_a_lim
-                    i_gain = p_gain / (environment.physical_system.tau * a**2)
+                    p_gain = mp["l"] / (environment.unwrapped.physical_system.tau * a) / u_a_lim * i_a_lim
+                    i_gain = p_gain / (environment.unwrapped.physical_system.tau * a**2)
 
                     stages_a[0]["p_gain"] = stages_a[0].get("p_gain", p_gain)
                     stages_a[0]["i_gain"] = stages_a[0].get("i_gain", i_gain)
 
                     if _controllers[controller_type][2] == PIDController:
-                        d_gain = p_gain * environment.physical_system.tau
+                        d_gain = p_gain * environment.unwrapped.physical_system.tau
                         stages_a[0]["d_gain"] = stages_a[0].get("d_gain", d_gain)
 
                 elif "omega" in ref_states:
                     p_gain = (
-                        environment.physical_system.mechanical_load.j_total
+                        environment.unwrapped.physical_system.mechanical_load.j_total
                         * mp["r_a"] ** 2
                         / (a * mp["l"])
                         / u_a_lim
@@ -403,7 +403,7 @@ class Controller:
                     stages_a[0]["i_gain"] = stages_a[0].get("i_gain", i_gain)
 
                     if _controllers[controller_type][2] == PIDController:
-                        d_gain = p_gain * environment.physical_system.tau
+                        d_gain = p_gain * environment.unwrapped.physical_system.tau
                         stages_a[0]["d_gain"] = stages_a[0].get("d_gain", d_gain)
 
             elif _controllers[controller_type][0] == CascadedController:
@@ -445,7 +445,7 @@ class Controller:
                                 i_gain = p_gain / (environment.unwrapped.physical_system.tau * a**2)
 
                                 if _controllers[stages_a[i]["controller_type"]][2] == PIDController:
-                                    d_gain = p_gain * environment.physical_system.tau
+                                    d_gain = p_gain * environment.unwrapped.physical_system.tau
                                     stages_a[i]["d_gain"] = stages_a[i].get("d_gain", d_gain)
 
                             elif i == 1:
@@ -467,15 +467,15 @@ class Controller:
                 stages = stages_a if not stages_e else [stages_a, stages_e]
 
             elif _controllers[controller_type][0] == FieldOrientedController:
-                if type(environment.action_space) == Box:
+                if type(environment.unwrapped.action_space) == Box:
                     stage_d = stages[0][0]
                     stage_q = stages[0][1]
                     if "i_sq" in ref_states and _controllers[stage_q["controller_type"]][1] == ContinuousController:
-                        p_gain_d = mp["l_d"] / (1.5 * environment.physical_system.tau * a) / u_sd_lim * i_sd_lim
-                        i_gain_d = p_gain_d / (1.5 * environment.physical_system.tau * a**2)
+                        p_gain_d = mp["l_d"] / (1.5 * environment.unwrapped.physical_system.tau * a) / u_sd_lim * i_sd_lim
+                        i_gain_d = p_gain_d / (1.5 * environment.unwrapped.physical_system.tau * a**2)
 
-                        p_gain_q = mp["l_q"] / (1.5 * environment.physical_system.tau * a) / u_sq_lim * i_sq_lim
-                        i_gain_q = p_gain_q / (1.5 * environment.physical_system.tau * a**2)
+                        p_gain_q = mp["l_q"] / (1.5 * environment.unwrapped.physical_system.tau * a) / u_sq_lim * i_sq_lim
+                        i_gain_q = p_gain_q / (1.5 * environment.unwrapped.physical_system.tau * a**2)
 
                         stage_d["p_gain"] = stage_d.get("p_gain", p_gain_d)
                         stage_d["i_gain"] = stage_d.get("i_gain", i_gain_d)
@@ -484,26 +484,26 @@ class Controller:
                         stage_q["i_gain"] = stage_q.get("i_gain", i_gain_q)
 
                         if _controllers[stage_d["controller_type"]][2] == PIDController:
-                            d_gain_d = p_gain_d * environment.physical_system.tau
+                            d_gain_d = p_gain_d * environment.unwrapped.physical_system.tau
                             stage_d["d_gain"] = stage_d.get("d_gain", d_gain_d)
 
                         if _controllers[stage_q["controller_type"]][2] == PIDController:
-                            d_gain_q = p_gain_q * environment.physical_system.tau
+                            d_gain_q = p_gain_q * environment.unwrapped.physical_system.tau
                             stage_q["d_gain"] = stage_q.get("d_gain", d_gain_q)
                         stages = [[stage_d, stage_q]]
 
             elif _controllers[controller_type][0] == CascadedFieldOrientedController:
-                if type(environment.action_space) is Box:
+                if type(environment.unwrapped.action_space) is Box:
                     stage_d = stages[0][0]
                     stage_q = stages[0][1]
                     if "torque" not in controller_kwargs["ref_states"]:
                         overlaid = stages[1]
 
-                    p_gain_d = mp["l_d"] / (1.5 * environment.physical_system.tau * a) / u_sd_lim * i_sd_lim
-                    i_gain_d = p_gain_d / (1.5 * environment.physical_system.tau * a**2)
+                    p_gain_d = mp["l_d"] / (1.5 * environment.unwrapped.physical_system.tau * a) / u_sd_lim * i_sd_lim
+                    i_gain_d = p_gain_d / (1.5 * environment.unwrapped.physical_system.tau * a**2)
 
-                    p_gain_q = mp["l_q"] / (1.5 * environment.physical_system.tau * a) / u_sq_lim * i_sq_lim
-                    i_gain_q = p_gain_q / (1.5 * environment.physical_system.tau * a**2)
+                    p_gain_q = mp["l_q"] / (1.5 * environment.unwrapped.physical_system.tau * a) / u_sq_lim * i_sq_lim
+                    i_gain_q = p_gain_q / (1.5 * environment.unwrapped.physical_system.tau * a**2)
 
                     stage_d["p_gain"] = stage_d.get("p_gain", p_gain_d)
                     stage_d["i_gain"] = stage_d.get("i_gain", i_gain_d)
@@ -512,11 +512,11 @@ class Controller:
                     stage_q["i_gain"] = stage_q.get("i_gain", i_gain_q)
 
                     if _controllers[stage_d["controller_type"]][2] == PIDController:
-                        d_gain_d = p_gain_d * environment.physical_system.tau
+                        d_gain_d = p_gain_d * environment.unwrapped.physical_system.tau
                         stage_d["d_gain"] = stage_d.get("d_gain", d_gain_d)
 
                     if _controllers[stage_q["controller_type"]][2] == PIDController:
-                        d_gain_q = p_gain_q * environment.physical_system.tau
+                        d_gain_q = p_gain_q * environment.unwrapped.physical_system.tau
                         stage_q["d_gain"] = stage_q.get("d_gain", d_gain_q)
 
                     if (
@@ -524,7 +524,7 @@ class Controller:
                         and _controllers[overlaid[0]["controller_type"]][1] == ContinuousController
                     ):
                         t_n = p_gain_d / i_gain_d
-                        j_total = environment.physical_system.mechanical_load.j_total
+                        j_total = environment.unwrapped.physical_system.mechanical_load.j_total
                         p_gain = j_total / (a**2 * t_n) / torque_lim * omega_lim
                         i_gain = p_gain / (a * t_n)
 
@@ -532,7 +532,7 @@ class Controller:
                         overlaid[0]["i_gain"] = overlaid[0].get("i_gain", i_gain)
 
                         if _controllers[overlaid[0]["controller_type"]][2] == PIDController:
-                            d_gain = p_gain * environment.physical_system.tau
+                            d_gain = p_gain * environment.unwrapped.physical_system.tau
                             overlaid[0]["d_gain"] = overlaid[0].get("d_gain", d_gain)
 
                         stages = [[stage_d, stage_q], overlaid]
@@ -546,18 +546,18 @@ class Controller:
                         and _controllers[stages[3][0]["controller_type"]][1] == ContinuousController
                     ):
                         p_gain = (
-                            environment.physical_system.mechanical_load.j_total
+                            environment.unwrapped.physical_system.mechanical_load.j_total
                             / (1.5 * a**2 * mp["p"] * np.abs(mp["l_d"] - mp["l_q"]))
                             / i_sq_lim
                             * omega_lim
                         )
-                        i_gain = p_gain / (1.5 * environment.physical_system.tau * a)
+                        i_gain = p_gain / (1.5 * environment.unwrapped.physical_system.tau * a)
 
                         stages[3][0]["p_gain"] = stages[3][0].get("p_gain", p_gain)
                         stages[3][0]["i_gain"] = stages[3][0].get("i_gain", i_gain)
 
                         if _controllers[stages[3][0]["controller_type"]][2] == PIDController:
-                            d_gain = p_gain * environment.physical_system.tau
+                            d_gain = p_gain * environment.unwrapped.physical_system.tau
                             stages[3][0]["d_gain"] = stages[3][0].get("d_gain", d_gain)
 
             elif _controllers[controller_type][0] == InductionMotorFieldOrientedController:
@@ -612,7 +612,7 @@ class Controller:
                     and _controllers[overlaid[0]["controller_type"]][1] == ContinuousController
                 ):
                     t_n = p_gain / i_gain
-                    j_total = environment.physical_system.mechanical_load.j_total
+                    j_total = environment.unwrapped.physical_system.mechanical_load.j_total
                     p_gain = j_total / (a**2 * t_n) / torque_lim * omega_lim
                     i_gain = p_gain / (a * t_n)
 
@@ -620,7 +620,7 @@ class Controller:
                     overlaid[0]["i_gain"] = overlaid[0].get("i_gain", i_gain)
 
                     if _controllers[overlaid[0]["controller_type"]][2] == PIDController:
-                        d_gain = p_gain * environment.physical_system.tau
+                        d_gain = p_gain * environment.unwrapped.physical_system.tau
                         overlaid[0]["d_gain"] = overlaid[0].get("d_gain", d_gain)
 
                     stages = [stages[0], overlaid]
