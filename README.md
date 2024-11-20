@@ -19,7 +19,7 @@
 
 ## Overview
 The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
-It is built upon [Faram Gymnasium Environments](https://gymnasium.farama.org/), and, therefore, can be used for both, classical control simulation and [reinforcement learning](https://github.com/upb-lea/reinforcement_learning_course_materials) experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
+It is built upon [Farama Gymnasium Environments](https://gymnasium.farama.org/), and, therefore, can be used for both, classical control simulation and [reinforcement learning](https://github.com/upb-lea/reinforcement_learning_course_materials) experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to [Deep Deterministic Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/ddpg.html) agents.
 In addition, an automated framework for classical control structures based on PI controllers is provided.
 
 ## Getting Started
@@ -82,14 +82,14 @@ A GEM environment consists of following building blocks:
 Among various DC-motor models, the following AC motors - together with their power electronic counterparts - are available:
 - Permanent magnet synchronous motor (PMSM) 
 - Synchronous reluctance motor (SynRM)
-- Externally exited synchronous motor (EESM)
+- Externally excited synchronous motor (EESM)
 - Squirrel cage induction motor (SCIM)
 - Doubly-fed induction motor (DFIM)
 
 The converters can be driven by means of a duty cycle (continuous control set) or switching commands (finite control set). 
 
 ### Citation
-A white paper for the general toolbox in the context of drive simulation and control prototyping can be found in the [Journal of Open Sorce Software (JOSS)](https://joss.theoj.org/papers/10.21105/joss.02498). Please use the following BibTeX entry for citing it:
+A white paper for the general toolbox in the context of drive simulation and control prototyping can be found in the [Journal of Open Source Software (JOSS)](https://joss.theoj.org/papers/10.21105/joss.02498). Please use the following BibTeX entry for citing it:
 ```
 @article{Balakrishna2021,
     doi = {10.21105/joss.02498},
