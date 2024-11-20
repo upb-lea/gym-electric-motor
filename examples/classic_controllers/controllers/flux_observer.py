@@ -21,7 +21,7 @@ class FluxObserver:
         )
 
         # Integrated values of the flux for the two directions (Re: alpha, Im: beta)
-        self.integrated = np.complex(0, 0)
+        self.integrated = complex(0, 0)
         self.i_s_idx = [
             env.get_wrapper_attr('state_names').index("i_sa"),
             env.get_wrapper_attr('state_names').index("i_sb"),
@@ -47,9 +47,9 @@ class FluxObserver:
         [i_s_alpha, i_s_beta] = self.abc_to_alphabeta_transformation(i_s)
 
         # Calculate delta flux
-        delta = np.complex(
+        delta = complex(
             i_s_alpha, i_s_beta
-        ) * self.r_r * self.l_m / self.l_r - self.integrated * np.complex(
+        ) * self.r_r * self.l_m / self.l_r - self.integrated * complex(
             self.r_r / self.l_r, -omega
         )
 
@@ -59,4 +59,4 @@ class FluxObserver:
 
     def reset(self):
         # Reset the integrated value
-        self.integrated = np.complex(0, 0)
+        self.integrated = complex(0, 0)
