@@ -66,22 +66,22 @@ class FieldOrientedControllerOperationPointSelection(OperationPointSelection):
         super().tune(env, env_id, current_safety_margin)
 
         # set the state indices
-        self.omega_idx = env.state_names.index("omega")
-        self.u_sd_idx = env.state_names.index("u_sd")
-        self.u_sq_idx = env.state_names.index("u_sq")
-        self.torque_idx = env.state_names.index("torque")
-        self.epsilon_idx = env.state_names.index("epsilon")
-        self.i_sd_idx = env.state_names.index("i_sd")
-        self.i_sq_idx = env.state_names.index("i_sq")
-        u_a = "u_a" if "u_a" in env.state_names else "u_sa"
-        self.u_a_idx = env.state_names.index(u_a)
+        self.omega_idx = env.get_wrapper_attr('state_names').index("omega")
+        self.u_sd_idx = env.get_wrapper_attr('state_names').index("u_sd")
+        self.u_sq_idx = env.get_wrapper_attr('state_names').index("u_sq")
+        self.torque_idx = env.get_wrapper_attr('state_names').index("torque")
+        self.epsilon_idx = env.get_wrapper_attr('state_names').index("epsilon")
+        self.i_sd_idx = env.get_wrapper_attr('state_names').index("i_sd")
+        self.i_sq_idx = env.get_wrapper_attr('state_names').index("i_sq")
+        u_a = "u_a" if "u_a" in env.get_wrapper_attr('state_names') else "u_sa"
+        self.u_a_idx = env.get_wrapper_attr('state_names').index(u_a)
 
         # set the motor parameters and limits
-        self.mp = env.physical_system.electrical_motor.motor_parameter
+        self.mp = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.p = self.mp["p"]
-        self.tau = env.physical_system.tau
-        self.limit = env.physical_system.limits
-        self.nominal_value = env.physical_system.nominal_state
+        self.tau = env.get_wrapper_attr('physical_system').tau
+        self.limit = env.get_wrapper_attr('physical_system').limits
+        self.nominal_value = env.get_wrapper_attr('physical_system').nominal_state
         self.i_sd_limit = self.limit[self.i_sd_idx] * (1 - current_safety_margin)
         self.i_sq_limit = self.limit[self.i_sq_idx] * (1 - current_safety_margin)
 

@@ -69,12 +69,12 @@ class AbcTransformation(Stage):
             env_id(str): The corresponding environment-id to specify the concrete environment.
         """
         if gc.utils.get_motor_type(env_id) in gc.parameter_reader.induction_motors:
-            self.angle_idx = env.state_names.index("psi_angle")
+            self.angle_idx = env.get_wrapper_attr('state_names').index("psi_angle")
         else:
-            self.angle_idx = env.state_names.index("epsilon")
-        self.omega_idx = env.state_names.index("omega")
-        if hasattr(env.physical_system.converter, "dead_time"):
-            self._advance_factor = 1.5 if env.physical_system.converter.dead_time else 0.5
+            self.angle_idx = env.get_wrapper_attr('state_names').index("epsilon")
+        self.omega_idx = env.get_wrapper_attr('state_names').index("omega")
+        if hasattr(env.get_wrapper_attr('physical_system').converter, "dead_time"):
+            self._advance_factor = 1.5 if env.get_wrapper_attr('physical_system').converter.dead_time else 0.5
         else:
             self._advance_factor = 0.5
         action_type, _, motor_type = gc.utils.split_env_id(env_id)

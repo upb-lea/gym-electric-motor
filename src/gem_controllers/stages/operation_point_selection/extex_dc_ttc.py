@@ -90,10 +90,10 @@ class ExtExDcOperationPointSelection(OperationPointSelection):
 
         super().tune(env, env_id, current_safety_margin)
         motor_type = gc.utils.get_motor_type(env_id)
-        self._i_e_idx = env.state_names.index("i_e")
-        self._i_a_idx = env.state_names.index("i_a")
+        self._i_e_idx = env.get_wrapper_attr('state_names').index("i_e")
+        self._i_a_idx = env.get_wrapper_attr('state_names').index("i_a")
         self._cross_inductance = reader.l_prime_reader[motor_type](env)
-        mp = env.physical_system.electrical_motor.motor_parameter
+        mp = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self._r_a_sqrt = np.sqrt(mp["r_a"])
         self._r_e_sqrt = np.sqrt(mp["r_e"])
         self._l_e_prime = mp["l_e_prime"]
