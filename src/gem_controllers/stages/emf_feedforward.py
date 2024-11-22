@@ -95,16 +95,16 @@ class EMFFeedforward(Stage):
         """
 
         motor_type = gc.utils.get_motor_type(env_id)
-        omega_idx = env.state_names.index("omega")
-        current_indices = [env.state_names.index(current) for current in reader.emf_currents[motor_type]]
+        omega_idx = env.get_wrapper_attr('state_names').index("omega")
+        current_indices = [env.get_wrapper_attr('state_names').index(current) for current in reader.emf_currents[motor_type]]
         self.omega_idx = omega_idx
         self.current_indices = current_indices
         self.inductance = reader.l_emf_reader[motor_type](env)
         self.psi = reader.psi_reader[motor_type](env)
         self._p = reader.p_reader[motor_type](env)
         voltages = reader.voltages[motor_type]
-        voltage_indices = [env.state_names.index(voltage) for voltage in voltages]
-        voltage_limits = env.limits[voltage_indices]
+        voltage_indices = [env.get_wrapper_attr('state_names').index(voltage) for voltage in voltages]
+        voltage_limits = env.get_wrapper_attr('limits')[voltage_indices]
         self._action_range = (
             env.observation_space[0].low[voltage_indices] * voltage_limits,
             env.observation_space[0].high[voltage_indices] * voltage_limits,

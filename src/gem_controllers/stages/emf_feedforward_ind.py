@@ -54,9 +54,9 @@ class EMFFeedforwardInd(EMFFeedforward):
         """
 
         super().tune(env, env_id, **_)
-        mp = env.physical_system.electrical_motor.motor_parameter
+        mp = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.r_r = mp["r_r"]
         self.l_m = mp["l_m"]
         self.l_r = mp["l_sigr"] + self.l_m
-        self.i_sq_idx = env.state_names.index("i_sq")
-        self.psi_abs_idx = env.state_names.index("psi_abs")
+        self.i_sq_idx = env.get_wrapper_attr('state_names').index("i_sq")
+        self.psi_abs_idx = env.get_wrapper_attr('state_names').index("psi_abs")

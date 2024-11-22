@@ -3,5 +3,5 @@ numpy>=1.16.4
 scipy>=1.4.1
 pytest>=5.2.2
 pytest-cov
-gymnasium>=0.29.0
+gymnasium>=0.29.1
 pathspec>=0.12.0

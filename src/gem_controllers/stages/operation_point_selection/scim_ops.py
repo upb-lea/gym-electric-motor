@@ -116,7 +116,7 @@ class SCIMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.i_sd_count = 500
         self.i_sq_count = 1000
 
-        self.psi_abs_idx = env.state_names.index("psi_abs")
+        self.psi_abs_idx = env.get_wrapper_attr('state_names').index("psi_abs")
 
         self.t_minimum = -self.limit[self.torque_idx]
         self.t_maximum = self.limit[self.torque_idx]
@@ -127,7 +127,7 @@ class SCIMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.r_r = self.mp["r_r"]
         self.r_s = self.mp["r_s"]
         self.p = self.mp["p"]
-        self.tau = env.physical_system.tau
+        self.tau = env.get_wrapper_attr('physical_system').tau
         self.psi_controller.tune(env, env_id, 4, self.l_s / self.r_s)
 
         self.psi_opt_t = self._psi_opt()

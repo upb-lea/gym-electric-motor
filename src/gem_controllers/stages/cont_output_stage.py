@@ -36,5 +36,5 @@ class ContOutputStage(Stage):
         """
         action_type, _, motor_type = gc.utils.split_env_id(env_id)
         voltages = reader.get_output_voltages(motor_type, action_type)
-        voltage_indices = [env.state_names.index(voltage) for voltage in voltages]
-        self.voltage_limit = env.limits[voltage_indices]
+        voltage_indices = [env.get_wrapper_attr('state_names').index(voltage) for voltage in voltages]
+        self.voltage_limit = env.get_wrapper_attr('limits')[voltage_indices]

@@ -96,8 +96,8 @@ class DiscOutputStage(Stage):
 
         action_type, _, motor_type = gc.utils.split_env_id(env_id)
         voltages = reader.get_output_voltages(motor_type, action_type)
-        voltage_indices = [env.state_names.index(voltage) for voltage in voltages]
-        voltage_limits = env.limits[voltage_indices]
+        voltage_indices = [env.get_wrapper_attr('state_names').index(voltage) for voltage in voltages]
+        voltage_limits = env.get_wrapper_attr('limits')[voltage_indices]
 
         voltage_range = (
             env.observation_space[0].low[voltage_indices] * voltage_limits,
@@ -120,11 +120,11 @@ class DiscOutputStage(Stage):
 
         elif (
             type(env.action_space) == gymnasium.spaces.Discrete
-            and type(env.physical_system.converter) != cv.FiniteB6BridgeConverter
+            and type(env.get_wrapper_attr('physical_system').converter) != cv.FiniteB6BridgeConverter
         ):
             self.output_stage = DiscOutputStage.to_discrete
             self.low_action, self.idle_action, self.high_action = self._get_actions(env.action_space.n)
-        elif type(env.physical_system.converter) == cv.FiniteB6BridgeConverter:
+        elif type(env.get_wrapper_attr('physical_system').converter) == cv.FiniteB6BridgeConverter:
             self.output_stage = DiscOutputStage.to_b6_discrete
         else:
             raise Exception(f"No discrete output stage available for action space {env.action_space}.")
