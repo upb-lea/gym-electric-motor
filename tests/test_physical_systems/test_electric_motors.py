@@ -12,7 +12,7 @@ import numpy as np
 #parameters for dc motor
 test_dcmotor_parameter = {"r_a": 16e-2, "r_e": 16e-1, "l_a": 19e-5, "l_e_prime": 1.7e-2, "l_e": 5.4e-1, "j_rotor": 0.025}
 test_dcmotor_nominal_values = dict(omega=350, torque=16.5, i=100, i_a=96, i_e=87, u=65, u_a=65, u_e=61)
-test_dcmotor_limits = dict(omega=350, torque=38.0, i=210, i_a=210, i_e=215, u=60, u_a=60, u_e=65)
+test_dcmotor_limits = dict(omega=400, torque=38.0, i=210, i_a=210, i_e=215, u=100, u_a=100, u_e=100)
 test_dcmotor_default_initializer = {
         "states": {"i_a": 10.0, "i_e": 15.0},
         "interval": None,

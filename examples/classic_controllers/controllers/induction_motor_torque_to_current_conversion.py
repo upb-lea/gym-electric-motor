@@ -24,18 +24,18 @@ class InductionMotorTorqueToCurrentConversion:
         update_interval=1000,
     ):
         self.env = environment
-        self.nominal_values = self.env.unwrapped.physical_system.nominal_state
-        self.state_space = self.env.unwrapped.physical_system.state_space
+        self.nominal_values = self.env.get_wrapper_attr('physical_system').nominal_state
+        self.state_space = self.env.get_wrapper_attr('physical_system').state_space
 
         # Calculate parameters of the motor
-        mp = self.env.unwrapped.physical_system.electrical_motor.motor_parameter
+        mp = self.env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.l_m = mp["l_m"]
         self.l_r = self.l_m + mp["l_sigr"]
         self.l_s = self.l_m + mp["l_sigs"]
         self.r_r = mp["r_r"]
         self.r_s = mp["r_s"]
         self.p = mp["p"]
-        self.tau = self.env.unwrapped.physical_system.tau
+        self.tau = self.env.get_wrapper_attr('physical_system').tau
         tau_s = self.l_s / self.r_s
 
         self.i_sd_idx = self.env.get_wrapper_attr('state_names').index("i_sd")
@@ -45,7 +45,7 @@ class InductionMotorTorqueToCurrentConversion:
         self.u_sd_idx = environment.get_wrapper_attr('state_names').index("u_sd")
         self.u_sq_idx = environment.get_wrapper_attr('state_names').index("u_sq")
         self.omega_idx = environment.get_wrapper_attr('state_names').index("omega")
-        self.limits = self.env.unwrapped.physical_system.limits
+        self.limits = self.env.get_wrapper_attr('physical_system').limits
 
         p_gain = stages[0][1]["p_gain"] * 2 * tau_s**2  # flux controller p gain
         i_gain = p_gain / self.tau  # flux controller i gain

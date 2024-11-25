@@ -28,9 +28,9 @@ class InductionMotorCascadedFieldOrientedController:
         **controller_kwargs,
     ):
         self.env = environment
-        self.action_space = environment.unwrapped.action_space
+        self.action_space = environment.get_wrapper_attr('action_space')
         self.has_cont_action_space = type(self.action_space) is Box
-        self.state_space = environment.unwrapped.physical_system.state_space
+        self.state_space = environment.get_wrapper_attr('physical_system').state_space
         self.state_names = environment.get_wrapper_attr('state_names')
 
         self.stages = stages
@@ -43,7 +43,7 @@ class InductionMotorCascadedFieldOrientedController:
         self.omega_idx = self.env.get_wrapper_attr('state_names').index("omega")
         self.torque_idx = self.env.get_wrapper_attr('state_names').index("torque")
 
-        mp = self.env.unwrapped.physical_system.electrical_motor.motor_parameter
+        mp = self.env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.p = mp["p"]
         self.l_m = mp["l_m"]
         self.l_sigma_s = mp["l_sigs"]
@@ -53,14 +53,14 @@ class InductionMotorCascadedFieldOrientedController:
         self.r_s = mp["r_s"]
         self.tau_r = self.l_r / self.r_r
         self.sigma = (self.l_s * self.l_r - self.l_m**2) / (self.l_s * self.l_r)
-        self.limits = self.env.unwrapped.physical_system.limits
-        self.nominal_values = self.env.unwrapped.physical_system.nominal_state
+        self.limits = self.env.get_wrapper_attr('physical_system').limits
+        self.nominal_values = self.env.get_wrapper_attr('physical_system').nominal_state
         self.tau_sigma = (
             self.sigma * self.l_s / (self.r_s + self.r_r * self.l_m**2 / self.l_r**2)
         )
-        self.tau = self.env.unwrapped.physical_system.tau
+        self.tau = self.env.get_wrapper_attr('physical_system').tau
 
-        self.dq_to_abc_transformation = environment.unwrapped.physical_system.dq_to_abc_space
+        self.dq_to_abc_transformation = environment.get_wrapper_attr('physical_system').dq_to_abc_space
 
         self.torque_control = "torque" in ref_states or "omega" in ref_states
         self.current_control = "i_sd" in ref_states
@@ -89,7 +89,7 @@ class InductionMotorCascadedFieldOrientedController:
         self.external_ref_plots = external_ref_plots
         self.external_ref_plots = external_ref_plots
         plot_ref = np.append(
-            np.array([environment.unwrapped.state_names[i] for i in self.ref_state_idx]),
+            np.array([environment.get_wrapper_attr('state_names')[i] for i in self.ref_state_idx]),
             ref_states,
         )
         for ext_ref_plot in self.external_ref_plots:

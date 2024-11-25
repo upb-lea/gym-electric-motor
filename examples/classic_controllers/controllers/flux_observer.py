@@ -8,16 +8,16 @@ class FluxObserver:
     """
 
     def __init__(self, env):
-        mp = env.unwrapped.physical_system.electrical_motor.motor_parameter
+        mp = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.l_m = mp["l_m"]  # Main induction
         self.l_r = mp["l_m"] + mp["l_sigr"]  # Induction of the rotor
         self.r_r = mp["r_r"]  # Rotor resistance
         self.p = mp["p"]  # Pole pair number
-        self.tau = env.unwrapped.physical_system.tau  # Sampling time
+        self.tau = env.get_wrapper_attr('physical_system').tau  # Sampling time
 
         # function to transform the currents from abc to alpha/beta coordinates
         self.abc_to_alphabeta_transformation = (
-            env.unwrapped.physical_system.abc_to_alphabeta_space
+            env.get_wrapper_attr('physical_system').abc_to_alphabeta_space
         )
 
         # Integrated values of the flux for the two directions (Re: alpha, Im: beta)

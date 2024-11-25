@@ -28,9 +28,9 @@ class TorqueToCurrentConversion:
         update_interval=1000,
         torque_control="interpolate",
     ):
-        self.mp = environment.unwrapped.physical_system.electrical_motor.motor_parameter
-        self.limit = environment.unwrapped.physical_system.limits
-        self.nominal_values = environment.unwrapped.physical_system.nominal_state
+        self.mp = environment.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
+        self.limit = environment.get_wrapper_attr('physical_system').limits
+        self.nominal_values = environment.get_wrapper_attr('physical_system').nominal_state
         self.torque_control = torque_control
 
         self.l_d = self.mp["l_d"]
@@ -38,7 +38,7 @@ class TorqueToCurrentConversion:
         self.p = self.mp["p"]
         self.psi_p = self.mp.get("psi_p", 0)
         self.invert = -1 if (self.psi_p == 0 and self.l_q < self.l_d) else 1
-        self.tau = environment.unwrapped.physical_system.tau
+        self.tau = environment.get_wrapper_attr('physical_system').tau
 
         self.omega_idx = environment.get_wrapper_attr('state_names').index("omega")
         self.i_sd_idx = environment.get_wrapper_attr('state_names').index("i_sd")
