@@ -19,7 +19,7 @@ class OnOffController(DiscreteController):
 
         self.switch_off_level = 2 if action_space in [3, 4] and not control_e else 0
         if cascaded:
-            self.switch_off_level = int(environment.physical_system.state_space.low[0])
+            self.switch_off_level = int(environment.get_wrapper_attr('physical_system').state_space.low[0])
 
         self.action = self.switch_on_level
 

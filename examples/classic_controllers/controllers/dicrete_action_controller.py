@@ -19,20 +19,20 @@ class DiscreteActionController:
         external_ref_plots=(),
         **controller_kwargs,
     ):
-        assert type(environment.action_space) in [
+        assert type(environment.get_wrapper_attr('action_space')) in [
             Discrete,
             MultiDiscrete,
         ] and isinstance(
-            environment.physical_system, DcMotorSystem
+            environment.get_wrapper_attr('physical_system'), DcMotorSystem
         ), "No suitable action space for Discrete Action Controller"
 
         self.ref_idx = np.where(ref_states != "i_e")[0][0]
-        self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
-        self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
+        self.ref_state_idx = environment.get_wrapper_attr('state_names').index(ref_states[self.ref_idx])
+        self.i_idx = environment.get_wrapper_attr('physical_system').CURRENTS_IDX[-1]
         self.control_e = isinstance(
-            environment.physical_system.electrical_motor, DcExternallyExcitedMotor
+            environment.get_wrapper_attr('physical_system').electrical_motor, DcExternallyExcitedMotor
         )
-        self.state_names = environment.state_names
+        self.state_names = environment.get_wrapper_attr('state_names')
 
         self.external_ref_plots = external_ref_plots
         for ext_ref_plot in self.external_ref_plots:

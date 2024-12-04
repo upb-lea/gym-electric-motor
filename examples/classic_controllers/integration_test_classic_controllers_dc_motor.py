@@ -83,4 +83,4 @@ if __name__ == "__main__":
     env.close()
 
     # motor_dashboard.save_to_file(filename="integration_test")
-    motor_dashboard.show_and_hold()
+    motor_dashboard.show()

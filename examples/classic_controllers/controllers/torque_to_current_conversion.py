@@ -28,9 +28,9 @@ class TorqueToCurrentConversion:
         update_interval=1000,
         torque_control="interpolate",
     ):
-        self.mp = environment.physical_system.electrical_motor.motor_parameter
-        self.limit = environment.physical_system.limits
-        self.nominal_values = environment.physical_system.nominal_state
+        self.mp = environment.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
+        self.limit = environment.get_wrapper_attr('physical_system').limits
+        self.nominal_values = environment.get_wrapper_attr('physical_system').nominal_state
         self.torque_control = torque_control
 
         self.l_d = self.mp["l_d"]
@@ -38,15 +38,15 @@ class TorqueToCurrentConversion:
         self.p = self.mp["p"]
         self.psi_p = self.mp.get("psi_p", 0)
         self.invert = -1 if (self.psi_p == 0 and self.l_q < self.l_d) else 1
-        self.tau = environment.physical_system.tau
+        self.tau = environment.get_wrapper_attr('physical_system').tau
 
-        self.omega_idx = environment.state_names.index("omega")
-        self.i_sd_idx = environment.state_names.index("i_sd")
-        self.i_sq_idx = environment.state_names.index("i_sq")
-        self.u_sd_idx = environment.state_names.index("u_sd")
-        self.u_sq_idx = environment.state_names.index("u_sq")
-        self.torque_idx = environment.state_names.index("torque")
-        self.epsilon_idx = environment.state_names.index("epsilon")
+        self.omega_idx = environment.get_wrapper_attr('state_names').index("omega")
+        self.i_sd_idx = environment.get_wrapper_attr('state_names').index("i_sd")
+        self.i_sq_idx = environment.get_wrapper_attr('state_names').index("i_sq")
+        self.u_sd_idx = environment.get_wrapper_attr('state_names').index("u_sd")
+        self.u_sq_idx = environment.get_wrapper_attr('state_names').index("u_sq")
+        self.torque_idx = environment.get_wrapper_attr('state_names').index("torque")
+        self.epsilon_idx = environment.get_wrapper_attr('state_names').index("epsilon")
 
         self.a_max = 2 / np.sqrt(3)  # maximum modulation level
         self.k_ = 0.95
@@ -56,7 +56,7 @@ class TorqueToCurrentConversion:
             1 / (self.mp["l_q"] / (1.25 * self.mp["r_s"])) * (alpha - 1) / alpha**2
         )
 
-        self.u_a_idx = environment.state_names.index("u_a")
+        self.u_a_idx = environment.get_wrapper_attr('state_names').index("u_a")
         self.u_dc = np.sqrt(3) * self.limit[self.u_a_idx]
         self.limited = False
         self.integrated = 0

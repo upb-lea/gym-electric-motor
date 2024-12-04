@@ -24,40 +24,40 @@ class FieldOrientedController:
         **controller_kwargs,
     ):
         assert isinstance(
-            environment.physical_system, SynchronousMotorSystem
+            environment.get_wrapper_attr('physical_system'), SynchronousMotorSystem
         ), "No suitable Environment for FOC Controller"
 
-        t32 = environment.physical_system.electrical_motor.t_32
-        q = environment.physical_system.electrical_motor.q
+        t32 = environment.get_wrapper_attr('physical_system').electrical_motor.t_32
+        q = environment.get_wrapper_attr('physical_system').electrical_motor.q
         self.backward_transformation = lambda quantities, eps: t32(q(quantities, eps))
 
-        self.tau = environment.physical_system.tau
+        self.tau = environment.get_wrapper_attr('physical_system').tau
 
         self.ref_d_idx = np.where(ref_states == "i_sd")[0][0]
         self.ref_q_idx = np.where(ref_states == "i_sq")[0][0]
 
-        self.d_idx = environment.state_names.index(ref_states[self.ref_d_idx])
-        self.q_idx = environment.state_names.index(ref_states[self.ref_q_idx])
+        self.d_idx = environment.get_wrapper_attr('state_names').index(ref_states[self.ref_d_idx])
+        self.q_idx = environment.get_wrapper_attr('state_names').index(ref_states[self.ref_q_idx])
 
-        self.action_space = environment.action_space
-        self.state_space = environment.physical_system.state_space
-        self.state_names = environment.state_names
+        self.action_space = environment.get_wrapper_attr('action_space')
+        self.state_space = environment.get_wrapper_attr('physical_system').state_space
+        self.state_names = environment.get_wrapper_attr('state_names')
 
-        self.i_sd_idx = environment.state_names.index("i_sd")
-        self.i_sq_idx = environment.state_names.index("i_sq")
-        self.u_sd_idx = environment.state_names.index("u_sd")
-        self.u_sq_idx = environment.state_names.index("u_sq")
-        self.u_a_idx = environment.state_names.index("u_a")
-        self.u_b_idx = environment.state_names.index("u_b")
-        self.u_c_idx = environment.state_names.index("u_c")
-        self.omega_idx = environment.state_names.index("omega")
-        self.eps_idx = environment.state_names.index("epsilon")
+        self.i_sd_idx = environment.get_wrapper_attr('state_names').index("i_sd")
+        self.i_sq_idx = environment.get_wrapper_attr('state_names').index("i_sq")
+        self.u_sd_idx = environment.get_wrapper_attr('state_names').index("u_sd")
+        self.u_sq_idx = environment.get_wrapper_attr('state_names').index("u_sq")
+        self.u_a_idx = environment.get_wrapper_attr('state_names').index("u_a")
+        self.u_b_idx = environment.get_wrapper_attr('state_names').index("u_b")
+        self.u_c_idx = environment.get_wrapper_attr('state_names').index("u_c")
+        self.omega_idx = environment.get_wrapper_attr('state_names').index("omega")
+        self.eps_idx = environment.get_wrapper_attr('state_names').index("epsilon")
 
-        self.limit = environment.physical_system.limits
-        self.mp = environment.physical_system.electrical_motor.motor_parameter
+        self.limit = environment.get_wrapper_attr('physical_system').limits
+        self.mp = environment.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.psi_p = self.mp.get("psi_p", 0)
         self.dead_time = (
-            1.5 if environment.physical_system.converter._dead_time else 0.5
+            1.5 if environment.get_wrapper_attr('physical_system').converter._dead_time else 0.5
         )
 
         self.has_cont_action_space = type(self.action_space) is Box
@@ -89,7 +89,7 @@ class FieldOrientedController:
                 for i in range(3)
             ]
             self.i_abc_idx = [
-                environment.state_names.index(state) for state in ["i_a", "i_b", "i_c"]
+                environment.get_wrapper_attr('state_names').index(state) for state in ["i_a", "i_b", "i_c"]
             ]
 
     def control(self, state, reference):
