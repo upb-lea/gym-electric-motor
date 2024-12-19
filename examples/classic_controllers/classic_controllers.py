@@ -106,7 +106,7 @@ class Controller:
             controller_kwargs["external_plot"] = ext_plot
             controller_kwargs["external_ref_plots"] = ref_plot
 
-        for visualization in environment.get_wrapper_attr('state_names'):
+        for visualization in environment.get_wrapper_attr('visualizations'):
             if isinstance(visualization, MotorDashboard):
                 controller_kwargs["update_interval"] = visualization.update_interval
                 controller_kwargs["visualization"] = True
