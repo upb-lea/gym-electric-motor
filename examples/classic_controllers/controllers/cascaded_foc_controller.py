@@ -28,25 +28,25 @@ class CascadedFieldOrientedController:
         torque_control="interpolate",
         **controller_kwargs,
     ):
-        t32 = environment.physical_system.electrical_motor.t_32
-        q = environment.physical_system.electrical_motor.q
+        t32 = environment.get_wrapper_attr('physical_system').electrical_motor.t_32
+        q = environment.get_wrapper_attr('physical_system').electrical_motor.q
         self.backward_transformation = lambda quantities, eps: t32(q(quantities, eps))
-        self.tau = environment.physical_system.tau
+        self.tau = environment.get_wrapper_attr('physical_system').tau
 
-        self.action_space = environment.action_space
-        self.state_space = environment.physical_system.state_space
-        self.state_names = environment.state_names
+        self.action_space = environment.get_wrapper_attr('action_space')
+        self.state_space = environment.get_wrapper_attr('physical_system').state_space
+        self.state_names = environment.get_wrapper_attr('state_names')
 
-        self.i_sd_idx = environment.state_names.index("i_sd")
-        self.i_sq_idx = environment.state_names.index("i_sq")
-        self.u_sd_idx = environment.state_names.index("u_sd")
-        self.u_sq_idx = environment.state_names.index("u_sq")
-        self.u_a_idx = environment.state_names.index("u_a")
-        self.u_b_idx = environment.state_names.index("u_b")
-        self.u_c_idx = environment.state_names.index("u_c")
-        self.omega_idx = environment.state_names.index("omega")
-        self.eps_idx = environment.state_names.index("epsilon")
-        self.torque_idx = environment.state_names.index("torque")
+        self.i_sd_idx = environment.get_wrapper_attr('state_names').index("i_sd")
+        self.i_sq_idx = environment.get_wrapper_attr('state_names').index("i_sq")
+        self.u_sd_idx = environment.get_wrapper_attr('state_names').index("u_sd")
+        self.u_sq_idx = environment.get_wrapper_attr('state_names').index("u_sq")
+        self.u_a_idx = environment.get_wrapper_attr('state_names').index("u_a")
+        self.u_b_idx = environment.get_wrapper_attr('state_names').index("u_b")
+        self.u_c_idx = environment.get_wrapper_attr('state_names').index("u_c")
+        self.omega_idx = environment.get_wrapper_attr('state_names').index("omega")
+        self.eps_idx = environment.get_wrapper_attr('state_names').index("epsilon")
+        self.torque_idx = environment.get_wrapper_attr('state_names').index("torque")
         self.external_ref_plots = external_ref_plots
 
         self.torque_control = "torque" in ref_states or "omega" in ref_states
@@ -59,10 +59,10 @@ class CascadedFieldOrientedController:
         self.omega_control = "omega" in ref_states and type(environment)
         self.has_cont_action_space = type(self.action_space) is Box
 
-        self.limit = environment.physical_system.limits
-        self.nominal_values = environment.physical_system.nominal_state
+        self.limit = environment.get_wrapper_attr('physical_system').limits
+        self.nominal_values = environment.get_wrapper_attr('physical_system').nominal_state
 
-        self.mp = environment.physical_system.electrical_motor.motor_parameter
+        self.mp = environment.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.psi_p = self.mp.get("psi_p", 0)
         self.dead_time = 0.5
         self.decoupling = controller_kwargs.get("decoupling", True)
@@ -136,7 +136,7 @@ class CascadedFieldOrientedController:
                 for i in range(3)
             ]
             self.i_abc_idx = [
-                environment.state_names.index(state) for state in ["i_a", "i_b", "i_c"]
+                environment.get_wrapper_attr('state_names').index(state) for state in ["i_a", "i_b", "i_c"]
             ]
 
         self.ref = np.zeros(
@@ -145,7 +145,7 @@ class CascadedFieldOrientedController:
 
         # Set up the plots
         plot_ref = np.append(
-            np.array([environment.state_names[i] for i in self.ref_state_idx]),
+            np.array([environment.get_wrapper_attr('state_names')[i] for i in self.ref_state_idx]),
             ref_states,
         )
         for ext_ref_plot in self.external_ref_plots:

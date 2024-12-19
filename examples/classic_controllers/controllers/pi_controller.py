@@ -9,7 +9,7 @@ class PIController(PController, IController):
     """
 
     def __init__(self, environment, p_gain=5, i_gain=5, param_dict={}, **controller_kwargs):
-        self.tau = environment.unwrapped.physical_system.tau
+        self.tau = environment.get_wrapper_attr('physical_system').tau
 
         p_gain = param_dict.get("p_gain", p_gain)
         i_gain = param_dict.get("i_gain", i_gain)
