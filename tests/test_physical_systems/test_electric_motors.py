@@ -757,8 +757,7 @@ def test_InductionMotor_el_jacobian(concreteInductionMotor):
         assert np.array_equal(expectedJacobian[1],concreteInductionMotor.electrical_jacobian(state,u_in,omega)[1])
         assert np.array_equal(expectedJacobian[2],concreteInductionMotor.electrical_jacobian(state,u_in,omega)[2])
 
-
-"""
+'''
 def test_InductionMotor_reset(concreteInductionMotor):
      #_nominal_values ---> _initial_limits
      new_initial_state = {"i_salpha": 5.0,"i_sbeta": 6.0,"psi_ralpha": 0.0,"psi_rbeta": 0.0,"epsilon": 10.0,}
@@ -779,7 +778,7 @@ def test_InductionMotor_reset(concreteInductionMotor):
      assert concreteInductionMotor._initial_states == new_initial_state
      InductionMotor_state_space = Box(low=-1, high=1, shape=(8,), dtype=np.float64)
      assert np.array_equal(concreteInductionMotor.reset(InductionMotor_state_space,InductionMotor_state_positions),default_initial_state_array)
-"""
+'''
 def test_InitDoublyFedIM():
      defaultDoublyFedIM = DoublyFedInductionMotor()
 
@@ -1114,10 +1113,3 @@ def test_PermMagSyncMotor_el_Jacobian():
         )
      assert np.array_equal(expectedJacobian[0],defaultPermMagSyncMotor.electrical_jacobian(state,u_in,omega)[0])
 
-def test_PermMagSyncMotor_el_ODE():
-      defaultPermMagSyncMotor = PermanentMagnetSynchronousMotor()
-      state = [5, 5]
-      omega = 60
-      u_in = [50, 60]
-      state = [5, 5]
-      #assert defaultPermMagSyncMotor.electrical_ode(state,u_in,omega) == SynchronousMotor.electrical_ode(state,u_in,omega)
