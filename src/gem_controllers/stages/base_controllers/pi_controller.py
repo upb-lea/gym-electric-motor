@@ -69,12 +69,12 @@ class PIController(PController, IController):
 
         action_type, control_task, motor_type = gc.utils.split_env_id(env_id)
         PController._tune_current_controller(self, env, env_id, a)
-        tau = env.physical_system.tau
+        tau = env.get_wrapper_attr('physical_system').tau
         currents = reader.currents[motor_type]
         voltages = reader.voltages[motor_type]
-        voltage_indices = [env.state_names.index(voltage) for voltage in voltages]
-        current_indices = [env.state_names.index(current) for current in currents]
-        voltage_limits = env.limits[voltage_indices]
+        voltage_indices = [env.get_wrapper_attr('state_names').index(voltage) for voltage in voltages]
+        current_indices = [env.get_wrapper_attr('state_names').index(current) for current in currents]
+        voltage_limits = env.get_wrapper_attr('limits')[voltage_indices]
         i_gain = self.p_gain / (tau * a**2)
 
         action_range = (
@@ -99,8 +99,8 @@ class PIController(PController, IController):
 
         PController._tune_speed_controller(self, env, env_id, a, t_n)
         self.i_gain = self.p_gain / (a * t_n)
-        self.tau = env.physical_system.tau
-        speed_index = env.state_names.index("omega")
+        self.tau = env.get_wrapper_attr('physical_system').tau
+        speed_index = env.get_wrapper_attr('state_names').index("omega")
         self.state_indices = [speed_index]
 
     def _tune_flux_controller(self, env, env_id, a=4, t_n=None):
@@ -114,7 +114,7 @@ class PIController(PController, IController):
             t_n(float): Time constant of the underlying torque controller.
         """
 
-        self.tau = env.physical_system.tau
+        self.tau = env.get_wrapper_attr('physical_system').tau
         self.p_gain = np.array([a * t_n**2])
         self.i_gain = self.p_gain / self.tau
         self.state_indices = [0]

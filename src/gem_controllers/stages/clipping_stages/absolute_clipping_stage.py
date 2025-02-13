@@ -64,8 +64,8 @@ class AbsoluteClippingStage(ClippingStage):
             action_names = ["torque"]
         else:
             raise AttributeError(f"Control task is {self._control_task} but has to be one of [SC, TC, CC].")
-        action_indices = [env.state_names.index(action_name) for action_name in action_names]
-        limits = env.limits[action_indices] * (1 - margin)
+        action_indices = [env.get_wrapper_attr('state_names').index(action_name) for action_name in action_names]
+        limits = env.get_wrapper_attr('limits')[action_indices] * (1 - margin)
         state_space = env.observation_space[0]
         lower_action_limit = state_space.low[action_indices] * limits
         upper_action_limit = state_space.high[action_indices] * limits

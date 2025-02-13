@@ -66,9 +66,9 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.r_s = self.mp["r_s"]
         self.r_e = self.mp["r_e"]
         self.p = self.mp["p"]
-        self.i_e_lim = env.limits[env.state_names.index("i_e")] * (1 - current_safety_margin)
-        self.i_q_lim = env.limits[env.state_names.index("i_sq")] * (1 - current_safety_margin)
-        self.t_lim = env.limits[env.state_names.index("torque")]
+        self.i_e_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("i_e")] * (1 - current_safety_margin)
+        self.i_q_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("i_sq")] * (1 - current_safety_margin)
+        self.t_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("torque")]
 
         self.t_count = 50
         self.psi_count = 100
