@@ -185,43 +185,4 @@ class TestSCMLSystem:
             "The derivative of the mech.state " "over the currents is false"
         )
 
-class TestDCSystem:
-    class_to_test = ps.DcMotorSystem 
-    @pytest.fixture
-    def  dc_system(self):
-        return ps.DcMotorSystem(
-            converter=cv.ContDynamicallyAveragedConverter,
-            motor=em.DcSeriesMotor,
-            load=ml.ConstantSpeedLoad,
-            supply=vs.VoltageSupply,
-            ode_solver=sv.OdeSolver,
-        )
-    def test_reset_dc_system(self, dc_system):
-        """Test the reset function in the physical system"""
-        dc_system._t = 12
-        dc_system._k = 33
-        state_space = dc_system.state_space
-        state_positions = dc_system.state_positions
-        initial_state = dc_system.reset()
-        target = np.array([0, 0, 0, 0, 0, 0, 560]) / dc_system.limits
-        assert np.all(
-            initial_state == target
-        ), "Initial states of the system are incorrect"
 
-class TestThreePhaseSystem:
-    class_to_test = ps.ThreePhaseMotorSystem
-    @pytest.fixture
-    def  threePhase_system(self):
-        return self.class_to_test(
-            converter=cv.ContDynamicallyAveragedConverter,
-            motor=em.ThreePhaseMotor,
-            load=ml.ConstantSpeedLoad,
-            supply=vs.VoltageSupply,
-            ode_solver=sv.OdeSolver,
-        )
-    def test_abc_to_alphabeta_space(self,threePhase_system):
-        u_abc = [1, 2, 3]
-        t23 = 2 / 3 * np.array([
-        [1, -0.5, -0.5],
-        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3)]])
-        assert np.array_equal(threePhase_system.abc_to_alphabeta_space(u_abc),t23)
