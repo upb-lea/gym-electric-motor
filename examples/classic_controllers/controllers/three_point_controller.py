@@ -28,7 +28,7 @@ class ThreePointController(DiscreteController):
 
         self.negative = 2 if action_space in [3, 4, 8] and not control_e else 0
         if cascaded:
-            self.negative = int(environment.physical_system.state_space.low[0])
+            self.negative = int(environment.get_wrapper_attr('physical_system').state_space.low[0])
         self.positive = 1
         self.neutral = 0
 

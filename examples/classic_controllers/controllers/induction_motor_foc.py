@@ -23,10 +23,10 @@ class InductionMotorFieldOrientedController:
         **controller_kwargs,
     ):
         self.env = environment
-        self.action_space = environment.action_space
+        self.action_space = environment.get_wrapper_attr('action_space')
         self.has_cont_action_space = type(self.action_space) is Box
-        self.state_space = environment.physical_system.state_space
-        self.state_names = environment.state_names
+        self.state_space = environment.get_wrapper_attr('physical_system').state_space
+        self.state_names = environment.get_wrapper_attr('state_names')
 
         self.stages = stages
         self.flux_observer = FluxObserver(self.env)

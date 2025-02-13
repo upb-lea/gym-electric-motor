@@ -20,28 +20,28 @@ class ContinuousActionController:
         external_ref_plots=(),
         **controller_kwargs,
     ):
-        assert type(environment.action_space) is Box and isinstance(
-            environment.physical_system, DcMotorSystem
+        assert type(environment.get_wrapper_attr('action_space')) is Box and isinstance(
+            environment.get_wrapper_attr('physical_system'), DcMotorSystem
         ), "No suitable action space for Continuous Action Controller"
-        self.action_space = environment.action_space
-        self.state_names = environment.state_names
+        self.action_space = environment.get_wrapper_attr('action_space')
+        self.state_names = environment.get_wrapper_attr('state_names')
 
         self.ref_idx = np.where(ref_states != "i_e")[0][0]
-        self.ref_state_idx = environment.state_names.index(ref_states[self.ref_idx])
-        self.i_idx = environment.physical_system.CURRENTS_IDX[-1]
-        self.u_idx = environment.physical_system.VOLTAGES_IDX[-1]
-        self.limit = environment.physical_system.limits[environment.state_filter]
-        self.nominal_values = environment.physical_system.nominal_state[
-            environment.state_filter
+        self.ref_state_idx = environment.get_wrapper_attr('state_names').index(ref_states[self.ref_idx])
+        self.i_idx = environment.get_wrapper_attr('physical_system').CURRENTS_IDX[-1]
+        self.u_idx = environment.get_wrapper_attr('physical_system').VOLTAGES_IDX[-1]
+        self.limit = environment.get_wrapper_attr('physical_system').limits[environment.get_wrapper_attr('state_filter')]
+        self.nominal_values = environment.get_wrapper_attr('physical_system').nominal_state[
+            environment.get_wrapper_attr('state_filter')
         ]
         self.omega_idx = self.state_names.index("omega")
 
         self.action = np.zeros(self.action_space.shape[0])
         self.control_e = isinstance(
-            environment.physical_system.electrical_motor, DcExternallyExcitedMotor
+            environment.get_wrapper_attr('physical_system').electrical_motor, DcExternallyExcitedMotor
         )
 
-        mp = environment.physical_system.electrical_motor.motor_parameter
+        mp = environment.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.psi_e = mp.get("psi_e", None)
         self.l_e = mp.get("l_e_prime", None)
 
