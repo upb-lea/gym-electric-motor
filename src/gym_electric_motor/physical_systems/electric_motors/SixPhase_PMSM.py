@@ -42,6 +42,9 @@ class SixPhasePMSM(SixPhaseMotor):
     Motor Voltages  Unit   Description
     =============== ====== =============================================
     u_sd            V      Direct axis voltage
+    u_sq            V      Quadrature axis voltage
+    u_sx            V
+    u_sx            V
     =============== ====== =============================================
 
     ======== ===========================================================
@@ -53,22 +56,13 @@ class SixPhasePMSM(SixPhaseMotor):
     ======== ===========================================================
         
     """
-#### Parameters taken from  https://ieeexplore.ieee.org/document/10372153
-    _default_motor_parameter = {
-        "p": 5,
-        "l_d": 125e-6,
-        "l_q": 126e-6,
-        "l_x": 39e-6,
-        "l_y": 35e-6,
-        "r_s": 64.3e-3,
-        "psi_PM": 4.7e-3,
-    }
-    #_default_limits = ?
-    #_default_nominal_values = ?
-    #_model_constants = None
-    #_default_initializer = {"states": {?},"interval": None,"random_init": None,"random_params": (None, None),}
-
-
+    I_SD_IDX = 0
+    I_SQ_IDX = 1
+    I_SX_IDX = 2
+    I_SY_IDX = 3
+    CURRENTS_IDX = [0, 1, 2, 3]
+    CURRENTS = ["i_sd", "i_sq", "i_sx", "i_sy"]
+    VOLTAGES = ["u_sd", "u_sq", "u_sx", "u_sx"]
 
     @property
     def motor_parameter(self):
@@ -79,3 +73,97 @@ class SixPhasePMSM(SixPhaseMotor):
     def initializer(self):
         # Docstring of superclass
         return self._initializer
+
+   #### Parameters taken from  https://ieeexplore.ieee.org/document/10372153
+    _default_motor_parameter = {"p": 5, "l_d": 125e-6, "l_q": 126e-6, "l_x": 39e-6, "l_y": 35e-6, "r_s": 64.3e-3, "psi_PM": 4.7e-3,}
+    #_default_limits = ?
+    #_default_nominal_values = ?
+    _default_initializer = {
+        "states": {"i_sd": 0.0, "i_sq": 0.0, "i_sx": 0.0, "i_sy": 0.0},
+        "interval": None,
+        "random_init": None,
+        "random_params": (None, None),
+    }
+
+    _model_constants = None
+
+    _initializer = None
+
+    def __init__(
+        self,
+        motor_parameter=None,
+        nominal_values=None,
+        limit_values=None,
+        motor_initializer=None,
+    ):
+        # Docstring of superclass
+        nominal_values = nominal_values or {}
+        limit_values = limit_values or {}
+        super().__init__(motor_parameter, nominal_values, limit_values, motor_initializer)
+        self._update_model()
+        self._update_limits()
+    
+    def _update_model(self):
+        """Updates the motor's model parameters with the motor parameters.
+
+        Called internally when the motor parameters are changed or the motor is initialized.
+        """
+        mp = self._motor_parameter
+        self._model_constants = np.array([
+            [-mp['r_s'], mp['l_q'], 1,          0,          0,             0, 0,         0,           0, 0,         0,         0,  0],
+            [         0,         0, 0, -mp['r_s'], -mp['l_d'], -mp['psi_PM'], 1,         0,           0, 0,         0,         0,  0],
+            [         0,         0, 0,          0,          0,             0, 0, -mp['r_s'], -mp['l_y'], 1,         0,         0,  0],
+            [         0,         0, 0,          0,          0,             0, 0,          0,          0, 0, -mp['r_s'], mp['l_x'], 1]
+
+        ])
+        self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp["l_d"]
+        self._model_constants[self.I_SQ_IDX] = self._model_constants[self.I_SQ_IDX] / mp["l_q"]
+        self._model_constants[self.I_SX_IDX] = self._model_constants[self.I_SX_IDX] / mp["l_x"]
+        self._model_constants[self.I_SY_IDX] = self._model_constants[self.I_SY_IDX] / mp["l_y"]
+
+
+    def electrical_ode(self, state, u_dqxy, omega, *_):
+        """
+        The differential equation of the Six phase PMSM.
+
+        Args:
+            state: The current state of the motor. [i_sd, i_sq, i_sx, i_sy]
+            omega: electrical rotational speed
+            u_qdxy: The input voltages [u_sd, u_sq, u_sx, u_sy]
+
+        Returns:
+            The derivatives of the state vector d/dt([i_sd, i_sq, i_sx, i_sy])
+        """
+        return np.matmul(
+            self._model_constants,
+            np.array(
+                [
+                    state[self.I_SD_IDX],
+                    omega * state[self.I_SQ_IDX],
+                    u_dqxy[0],
+                    state[self.I_SQ_IDX],
+                    omega * state[self.I_SD_IDX],
+                    omega,
+                    u_dqxy[1],
+                    state[self.I_SX_IDX],
+                    omega * state[self.I_SY_IDX],
+                    u_dqxy[2],
+                    state[self.I_SY_IDX],
+                    omega * state[self.I_SX_IDX],
+                    u_dqxy[3]
+                ]
+            ),
+        )
+
+
+    def i_in(self, state):
+        # Docstring of superclass
+        return state[self.CURRENTS_IDX]
+    
+    def reset(self, state_space, state_positions, **__):
+        # Docstring of superclass
+        if self._initializer and self._initializer["states"]:
+            self.initialize(state_space, state_positions)
+            return np.asarray(list(self._initial_states.values()))
+        else:
+            return np.zeros(len(self.CURRENTS) + 1)

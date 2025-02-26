@@ -1111,3 +1111,41 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             ]
         )
         return system_state / self._limits
+
+class SixPhaseMotorSystem(SCMLSystem):
+    """
+    SCML-System that implements the basic transformations needed for six phase drives.
+    """
+
+    def abc_to_alphabeta_space(self, abc_quantities):
+        """
+        Transformation from abc to alphabeta space
+
+        Args:
+            abc_quantities: The properties in the abc representation like ''[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]''
+
+        Returns:
+            The converted quantities in the alpha-beta representation like ''[i_salpha, i_sbeta, i_sX, i_sY]''
+        """
+        alphabeta_quantity = self._electrical_motor.t_46(abc_quantities)
+        return alphabeta_quantity
+    
+    def abc_to_dq_space(self, abc_quantities,epsilon):
+        """
+        Transformation of the abc representation into dq using the electrical angle
+
+        Args:
+            abc_quantities: the properties in the abc representation like ''[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]''
+            epsilon: electrical rotor position
+
+        Returns:
+            The converted quantities in the dq representation like ''[i_sd, i_sq, i_sx, i_sy,]''.
+        """
+        dqxy_quantity = self._electrical_motor.q(abc_quantities,epsilon)
+        return dqxy_quantity
+    
+class SixPhasePMSM(SixPhaseMotorSystem): 
+    def _build_state_space(self, state_names):
+       raise NotImplementedError
+
+    #def _build_state_names(self): ?
