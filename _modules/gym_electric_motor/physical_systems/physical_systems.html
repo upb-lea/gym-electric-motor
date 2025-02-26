@@ -1195,6 +1195,44 @@
             <span class="p">]</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+
+<span class="k">class</span> <span class="nc">SixPhaseMotorSystem</span><span class="p">(</span><span class="n">SCMLSystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SCML-System that implements the basic transformations needed for six phase drives.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">abc_to_alphabeta_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abc_quantities</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation from abc to alphabeta space</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            abc_quantities: The properties in the abc representation like &#39;&#39;[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]&#39;&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The converted quantities in the alpha-beta representation like &#39;&#39;[i_salpha, i_sbeta, i_sX, i_sY]&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alphabeta_quantity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">t_46</span><span class="p">(</span><span class="n">abc_quantities</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">alphabeta_quantity</span>
+    
+    <span class="k">def</span> <span class="nf">abc_to_dq_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abc_quantities</span><span class="p">,</span><span class="n">epsilon</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transformation of the abc representation into dq using the electrical angle</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            abc_quantities: the properties in the abc representation like &#39;&#39;[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]&#39;&#39;</span>
+<span class="sd">            epsilon: electrical rotor position</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The converted quantities in the dq representation like &#39;&#39;[i_sd, i_sq, i_sx, i_sy,]&#39;&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dqxy_quantity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">q</span><span class="p">(</span><span class="n">abc_quantities</span><span class="p">,</span><span class="n">epsilon</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dqxy_quantity</span>
+    
+<span class="k">class</span> <span class="nc">SixPhasePMSM</span><span class="p">(</span><span class="n">SixPhaseMotorSystem</span><span class="p">):</span> 
+    <span class="k">def</span> <span class="nf">_build_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
+       <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="c1">#def _build_state_names(self): ?</span>
 </pre></div>
 
            </div>
