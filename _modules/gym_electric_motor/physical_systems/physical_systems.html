@@ -1229,10 +1229,73 @@
         <span class="k">return</span> <span class="n">dqxy_quantity</span>
     
 <span class="k">class</span> <span class="nc">SixPhasePMSM</span><span class="p">(</span><span class="n">SixPhaseMotorSystem</span><span class="p">):</span> 
-    <span class="k">def</span> <span class="nf">_build_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
-       <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-    <span class="c1">#def _build_state_names(self): ?</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_space</span><span class="o">=</span><span class="s2">&quot;dqxy&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            control_space(str):(&#39;abc&#39; or &#39;dq&#39;) Choose, if actions the actions space is in dq or abc space</span>
+<span class="sd">            kwargs: Further arguments to pass tp SCMLSystem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_space</span> <span class="o">=</span> <span class="n">control_space</span>
+        <span class="k">if</span> <span class="n">control_space</span> <span class="o">==</span> <span class="s2">&quot;dqxy&quot;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="o">==</span> <span class="n">Box</span>
+            <span class="p">),</span> <span class="s2">&quot;&quot;</span>
+            <span class="c1">#self._action_space = ? how does it differ from a converter action space, what is the significance</span>
+    
+  <span class="k">def</span> <span class="nf">_build_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">low</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">state_names</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+  
+  <span class="k">def</span> <span class="nf">_build_state_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">state_names</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="s2">&quot;torque&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_a1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_b1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_c1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_a2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_b2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_c2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_sd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_sq&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_sx&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;i_sy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_a1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_b1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_c1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_a2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_b2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_c2&quot;</span>
+            <span class="s2">&quot;u_sd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_sq&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_sx&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_sy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;epsilon&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;u_sup&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+  <span class="c1">#how to do - logic/know how ?</span>
+  <span class="k">def</span> <span class="nf">_set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_set_indices</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_omega_ode_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">OMEGA_IDX</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">state_names</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">range</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_load_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">CURRENTS</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span> <span class="o">+=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">OMEGA_IDX</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanical_load</span><span class="o">.</span><span class="n">OMEGA_IDX</span>
+        <span class="c1">#know why ?</span>
+        <span class="c1">#currents_lower = self.TORQUE_IDX + 1</span>
+        <span class="c1">#currents_upper = currents_lower + 5</span>
 </pre></div>
 
            </div>
