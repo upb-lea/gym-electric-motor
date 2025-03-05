@@ -48,6 +48,7 @@ class SixPhaseMotor(ElectricMotor):
             The converted quantities in the dq representation like ''[i_sd, i_sq, i_sx, i_sy, i_s0+, i_s0-]''.
             since 2N topology is considered (case where the neutral points are not connected) i_s0+, i_s0- will not be taken into account 
         """
+        """
         t_vsd = 1/ 3 * np.array([
             [1, -0.5, -0.5, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0],
             [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0.5, 0.5, -1],
@@ -56,8 +57,6 @@ class SixPhaseMotor(ElectricMotor):
             [1, 1, 1, 0, 0, 0],
             [0, 0, 0, 1, 1, 1]
         ])
-        cos = math.cos(epsilon)
-        sin = math.sin(epsilon)
         tp_alphaBetaXY = np.array([
                  [cos, sin, 0, 0, 0, 0],
                  [-sin, cos, 0, 0, 0, 0],
@@ -66,8 +65,31 @@ class SixPhaseMotor(ElectricMotor):
                  [0, 0, 0, 0, 1, 0]
                  [0, 0, 0, 0, 0, 1]
         ])
+        """
+        t_vsd = 1/ 3 * np.array([
+            [1, -0.5, -0.5, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0],
+            [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0.5, 0.5, -1],
+            [1, -0.5, -0.5, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0],
+            [0, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0.5, 0.5, -1],
+        ])
+
+        def rotation_matrix(theta):
+           return np.array([
+        [math.cos(theta), math.sin(theta)],
+        [-math.sin(theta), math.cos(theta)]
+        ])
+        
+        t1 = rotation_matrix(epsilon)
+        t2 = rotation_matrix(-epsilon)
+        tp_alphaBetaXY = np.block([
+            [t1, np.zeros(t1.shape[0],t1.shape[1])],
+            [np.zeros(t2.shape[0],t2.shape[1]), t2],
+        ])
         tp_vsd = np.matmul(tp_alphaBetaXY, t_vsd)
         return np.matmul(tp_vsd, quantities)
+       
+        
+       
 
     def _torque_limit(self):
         """

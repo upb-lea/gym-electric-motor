@@ -1145,7 +1145,70 @@ class SixPhaseMotorSystem(SCMLSystem):
         return dqxy_quantity
     
 class SixPhasePMSM(SixPhaseMotorSystem): 
-    def _build_state_space(self, state_names):
-       raise NotImplementedError
-
-    #def _build_state_names(self): ?
+  def __init__(self, control_space="dqxy", **kwargs):
+        """
+        Args:
+            control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
+            kwargs: Further arguments to pass tp SCMLSystem
+        """
+        super().__init__(**kwargs)
+        self.control_space = control_space
+        if control_space == "dqxy":
+            assert (
+                type(self._converter.action_space) == Box
+            ), ""
+            #self._action_space = ? how does it differ from a converter action space, what is the significance
+    
+  def _build_state_space(self, state_names):
+        # Docstring of superclass
+        low = -1 * np.ones_like(state_names, dtype=float)
+        low[self.U_SUP_IDX] = 0.0
+        high = np.ones_like(state_names, dtype=float)
+        return Box(low, high, dtype=np.float64)
+  
+  def _build_state_names(self):
+        # Docstring of superclass
+        return self._mechanical_load.state_names + [
+            "torque",
+            "i_a1",
+            "i_b1",
+            "i_c1",
+            "i_a2",
+            "i_b2",
+            "i_c2",
+            "i_sd",
+            "i_sq",
+            "i_sx",
+            "i_sy",
+            "u_a1",
+            "u_b1",
+            "u_c1",
+            "u_a2",
+            "u_b2",
+            "u_c2"
+            "u_sd",
+            "u_sq",
+            "u_sx",
+            "u_sy",
+            "epsilon",
+            "u_sup",
+        ]
+  #how to do - logic/know how ?
+  def _set_indices(self):
+        # Docstring of superclass
+        super()._set_indices()
+        self._omega_ode_idx = self._mechanical_load.OMEGA_IDX
+        self._load_ode_idx = list(range(len(self._mechanical_load.state_names)))
+        self._ode_currents_idx = list(
+            range(
+                self._load_ode_idx[-1] + 1,
+                self._load_ode_idx[-1] + 1 + len(self._electrical_motor.CURRENTS),
+            )
+        )
+        self._motor_ode_idx = self._ode_currents_idx
+        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
+        self._ode_currents_idx = self._motor_ode_idx[:-1]
+        self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
+        #know why ?
+        #currents_lower = self.TORQUE_IDX + 1
+        #currents_upper = currents_lower + 5

@@ -45,6 +45,12 @@ class SixPhasePMSM(SixPhaseMotor):
     u_sq            V      Quadrature axis voltage
     u_sx            V
     u_sx            V
+    u_a1            V
+    u_a2            V
+    u_b1            V
+    u_b2            V
+    u_c1            V
+    u_c2            V
     =============== ====== =============================================
 
     ======== ===========================================================
@@ -62,7 +68,7 @@ class SixPhasePMSM(SixPhaseMotor):
     I_SY_IDX = 3
     CURRENTS_IDX = [0, 1, 2, 3]
     CURRENTS = ["i_sd", "i_sq", "i_sx", "i_sy"]
-    VOLTAGES = ["u_sd", "u_sq", "u_sx", "u_sx"]
+    VOLTAGES = ["u_sd", "u_sq", "u_sx", "u_sy"]
 
     @property
     def motor_parameter(self):
@@ -76,8 +82,8 @@ class SixPhasePMSM(SixPhaseMotor):
 
    #### Parameters taken from  https://ieeexplore.ieee.org/document/10372153
     _default_motor_parameter = {"p": 5, "l_d": 125e-6, "l_q": 126e-6, "l_x": 39e-6, "l_y": 35e-6, "r_s": 64.3e-3, "psi_PM": 4.7e-3,}
-    #_default_limits = ?
-    #_default_nominal_values = ?
+    #_default_limits = ?maximum
+    #_default_nominal_values = ?rated
     _default_initializer = {
         "states": {"i_sd": 0.0, "i_sq": 0.0, "i_sx": 0.0, "i_sy": 0.0},
         "interval": None,
@@ -110,10 +116,11 @@ class SixPhasePMSM(SixPhaseMotor):
         """
         mp = self._motor_parameter
         self._model_constants = np.array([
-            [-mp['r_s'], mp['l_q'], 1,          0,          0,             0, 0,         0,           0, 0,         0,         0,  0],
-            [         0,         0, 0, -mp['r_s'], -mp['l_d'], -mp['psi_PM'], 1,         0,           0, 0,         0,         0,  0],
-            [         0,         0, 0,          0,          0,             0, 0, -mp['r_s'], -mp['l_y'], 1,         0,         0,  0],
-            [         0,         0, 0,          0,          0,             0, 0,          0,          0, 0, -mp['r_s'], mp['l_x'], 1]
+            #        omega,         i_d,         i_q,         i_x,        i_y, u_d, u_q, u_x, u_y, omega * i_d, omega * i_q, omega * i_x,  omega * i_y
+            [            0,   -mp['r_s'],          0,           0,          0,   1,   0,   0,   0,           0,   mp['l_q'],           0,          0],
+            [-mp['psi_PM'],            0,  -mp['r_s'],          0,          0,   0,   1,   0,   0,   -mp['l_d'],          0,           0,          0],
+            [            0,            0,           0, -mp['r_s'],          0,   0,   0,   1,   0,            0,          0,           0, -mp['l_y']],
+            [            0,            0,           0,          0, -mp['r_s'],   0,   0,   0,   1,            0,          0,   mp['l_x'],          0]
 
         ])
         self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp["l_d"]
@@ -138,19 +145,19 @@ class SixPhasePMSM(SixPhaseMotor):
             self._model_constants,
             np.array(
                 [
-                    state[self.I_SD_IDX],
-                    omega * state[self.I_SQ_IDX],
-                    u_dqxy[0],
-                    state[self.I_SQ_IDX],
-                    omega * state[self.I_SD_IDX],
                     omega,
-                    u_dqxy[1],
+                    state[self.I_SD_IDX],
+                    state[self.I_SQ_IDX],
                     state[self.I_SX_IDX],
-                    omega * state[self.I_SY_IDX],
-                    u_dqxy[2],
                     state[self.I_SY_IDX],
+                    u_dqxy[0],
+                    u_dqxy[1],
+                    u_dqxy[2],
+                    u_dqxy[3],
+                    omega * state[self.I_SD_IDX],
+                    omega * state[self.I_SQ_IDX],
                     omega * state[self.I_SX_IDX],
-                    u_dqxy[3]
+                    omega * state[self.I_SY_IDX],
                 ]
             ),
         )
@@ -167,3 +174,14 @@ class SixPhasePMSM(SixPhaseMotor):
             return np.asarray(list(self._initial_states.values()))
         else:
             return np.zeros(len(self.CURRENTS) + 1)
+        
+    #from pmsm
+    def torque(self, currents):
+        # Docstring of superclass
+        mp = self._motor_parameter
+        return (
+            1.5 * mp["p"] * (mp["psi_PM "] + (mp["l_d"] - mp["l_q"]) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+        )
+    
+    #torque limit ?
+    
