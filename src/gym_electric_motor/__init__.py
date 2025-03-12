@@ -281,3 +281,8 @@ register(
 register(
     id="Cont-SC-DFIM-v0", entry_point=envs_path + "ContSpeedControlDoublyFedInductionMotorEnv", **registration_kwargs
 )
+
+#sixphase machines
+register(
+    id="Cont-CC-SIXPMSM-v0", entry_point=envs_path + "ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv", **registration_kwargs
+)

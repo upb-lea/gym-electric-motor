@@ -88,8 +88,41 @@ class SixPhaseMotor(ElectricMotor):
         tp_vsd = np.matmul(tp_alphaBetaXY, t_vsd)
         return np.matmul(tp_vsd, quantities)
        
-        
-       
+    
+    @staticmethod
+    def q_inv(quantities, epsilon):
+        """
+        Transformation of the dq representation into abc
+
+        Args:
+            quantities: the properties in the dq representation like ''[i_sd, i_sq, i_sx, i_sy, i_s0+, i_s0-]''.
+            epsilon: electrical rotor position
+
+        Returns:
+            The converted quantities in the abc representation like ''[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]''.
+
+        """
+        t_vsd = 1/ 3 * np.array([
+            [1, -0.5, -0.5, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0],
+            [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0.5, 0.5, -1],
+            [1, -0.5, -0.5, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0],
+            [0, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0.5, 0.5, -1],
+            [1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1]
+        ])
+        cos = math.cos(epsilon)
+        sin = math.sin(epsilon)
+        tp_alphaBetaXY = np.array([
+                 [cos, sin, 0, 0, 0, 0],
+                 [-sin, cos, 0, 0, 0, 0],
+                 [0, 0, cos, -sin, 0, 0],
+                 [0, 0, sin, cos, 0, 0],
+                 [0, 0, 0, 0, 1, 0],
+                 [0, 0, 0, 0, 0, 1],
+        ])
+        tp_vsd = np.matmul(tp_alphaBetaXY, t_vsd)
+        inv_tpVsd = np.linalg.inv(tp_vsd)
+        return np.matmul(inv_tpVsd, quantities)
 
     def _torque_limit(self):
         """

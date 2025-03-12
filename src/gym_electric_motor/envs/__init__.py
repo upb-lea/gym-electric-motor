@@ -50,6 +50,9 @@ from .gym_eesm.finite_sc_eesm_env import (
 from .gym_eesm.finite_tc_eesm_env import (
     FiniteTorqueControlExternallyExcitedSynchronousMotorEnv,
 )
+from .gym_sixphase_pmsm.cont_cc_sixpmsm_env import (
+    ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv,
+)
 from .gym_im import (
     ContCurrentControlDoublyFedInductionMotorEnv,
     ContCurrentControlSquirrelCageInductionMotorEnv,

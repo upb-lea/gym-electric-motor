@@ -81,8 +81,9 @@ class SixPhasePMSM(SixPhaseMotor):
         return self._initializer
 
    #### Parameters taken from  https://ieeexplore.ieee.org/document/10372153
-    _default_motor_parameter = {"p": 5, "l_d": 125e-6, "l_q": 126e-6, "l_x": 39e-6, "l_y": 35e-6, "r_s": 64.3e-3, "psi_PM": 4.7e-3,}
-    #_default_limits = ?maximum
+    _default_motor_parameter = {"p": 5, "l_d": 125e-6, "l_q": 126e-6, "l_x": 39e-6, "l_y": 35e-6, "r_s": 64.3e-3, "psi_PM": 4.7e-3,  "j_rotor": 0.0110,}
+    #
+    _default_limits =dict(omega=4e3 * np.pi / 30, torque=0.0, i=400, epsilon=math.pi, u=300)
     #_default_nominal_values = ?rated
     _default_initializer = {
         "states": {"i_sd": 0.0, "i_sq": 0.0, "i_sx": 0.0, "i_sy": 0.0},
