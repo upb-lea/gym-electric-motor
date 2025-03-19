@@ -3,7 +3,7 @@ import math
 import numpy as np
 
 from .electric_motor import ElectricMotor
-
+from scipy.linalg import block_diag
 
 class SixPhaseMotor(ElectricMotor):
     """
@@ -60,8 +60,8 @@ class SixPhaseMotor(ElectricMotor):
         tp_alphaBetaXY = np.array([
                  [cos, sin, 0, 0, 0, 0],
                  [-sin, cos, 0, 0, 0, 0],
-                 [0, 0, cos, sin, 0, 0],
-                 [0, 0, -sin, cos, 0, 0],
+                 [0, 0, cos, -sin, 0, 0],
+                 [0, 0, sin, cos, 0, 0],
                  [0, 0, 0, 0, 1, 0]
                  [0, 0, 0, 0, 0, 1]
         ])
@@ -81,10 +81,7 @@ class SixPhaseMotor(ElectricMotor):
         
         t1 = rotation_matrix(epsilon)
         t2 = rotation_matrix(-epsilon)
-        tp_alphaBetaXY = np.block([
-            [t1, np.zeros(t1.shape[0],t1.shape[1])],
-            [np.zeros(t2.shape[0],t2.shape[1]), t2],
-        ])
+        tp_alphaBetaXY = block_diag(t1,t2)
         tp_vsd = np.matmul(tp_alphaBetaXY, t_vsd)
         return np.matmul(tp_vsd, quantities)
        
@@ -122,11 +119,7 @@ class SixPhaseMotor(ElectricMotor):
         ])
         tp_vsd = np.matmul(tp_alphaBetaXY, t_vsd)
         inv_tpVsd = np.linalg.inv(tp_vsd)
-        return np.matmul(inv_tpVsd, quantities)
+        modified_inv_tpVsd = np.delete(inv_tpVsd, [4, 5], axis=1)
+        return np.matmul(modified_inv_tpVsd, quantities)
 
-    def _torque_limit(self):
-        """
-        Returns:
-             Maximal possible torque for the given limits in self._limits
-        """
-        raise NotImplementedError()
+  

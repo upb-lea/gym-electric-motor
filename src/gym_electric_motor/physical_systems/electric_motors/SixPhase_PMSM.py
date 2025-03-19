@@ -44,7 +44,7 @@ class SixPhasePMSM(SixPhaseMotor):
     u_sd            V      Direct axis voltage
     u_sq            V      Quadrature axis voltage
     u_sx            V
-    u_sx            V
+    u_sy            V
     u_a1            V
     u_a2            V
     u_b1            V
@@ -82,16 +82,17 @@ class SixPhasePMSM(SixPhaseMotor):
 
    #### Parameters taken from  https://ieeexplore.ieee.org/document/10372153
     _default_motor_parameter = {"p": 5, "l_d": 125e-6, "l_q": 126e-6, "l_x": 39e-6, "l_y": 35e-6, "r_s": 64.3e-3, "psi_PM": 4.7e-3,  "j_rotor": 0.0110,}
-    #
-    _default_limits =dict(omega=4e3 * np.pi / 30, torque=0.0, i=400, epsilon=math.pi, u=300)
-    #_default_nominal_values = ?rated
+    HAS_JACOBIAN = True
+    _default_limits =dict(omega=4e3 * np.pi / 30, torque=10.0, i=400, epsilon=math.pi, u=300)
+    _default_nominal_values = dict(omega=3e3 * np.pi / 30, torque=0.0, i=240, epsilon=math.pi, u=300)
     _default_initializer = {
-        "states": {"i_sd": 0.0, "i_sq": 0.0, "i_sx": 0.0, "i_sy": 0.0},
+        "states": {"i_sd": 0.0, "i_sq": 0.0, "i_sx": 0.0, "i_sy": 0.0, "epsilon": 0.0},
         "interval": None,
         "random_init": None,
         "random_params": (None, None),
     }
-
+    IO_VOLTAGES = ["u_a1", "u_b1", "u_c1", "u_a2", "u_b2", "u_c2", "u_sd", "u_sq", "u_sx", "u_sy"]
+    IO_CURRENTS = ["i_a1", "i_b1", "i_a2", "i_b2", "i_c2",  "i_c1", "i_sd", "i_sq", "i_sx", "i_sy"]
     _model_constants = None
 
     _initializer = None
@@ -121,7 +122,8 @@ class SixPhasePMSM(SixPhaseMotor):
             [            0,   -mp['r_s'],          0,           0,          0,   1,   0,   0,   0,           0,   mp['l_q'],           0,          0],
             [-mp['psi_PM'],            0,  -mp['r_s'],          0,          0,   0,   1,   0,   0,   -mp['l_d'],          0,           0,          0],
             [            0,            0,           0, -mp['r_s'],          0,   0,   0,   1,   0,            0,          0,           0, -mp['l_y']],
-            [            0,            0,           0,          0, -mp['r_s'],   0,   0,   0,   1,            0,          0,   mp['l_x'],          0]
+            [            0,            0,           0,          0, -mp['r_s'],   0,   0,   0,   1,            0,          0,   mp['l_x'],          0],
+            [      mp['p'],            0,           0,          0,          0,   0,   0,   0,   0,            0,          0,           0,          0],
 
         ])
         self._model_constants[self.I_SD_IDX] = self._model_constants[self.I_SD_IDX] / mp["l_d"]
@@ -135,12 +137,12 @@ class SixPhasePMSM(SixPhaseMotor):
         The differential equation of the Six phase PMSM.
 
         Args:
-            state: The current state of the motor. [i_sd, i_sq, i_sx, i_sy]
+            state: The current state of the motor. [i_sd, i_sq, i_sx, i_sy, epsilon]
             omega: electrical rotational speed
             u_qdxy: The input voltages [u_sd, u_sq, u_sx, u_sy]
 
         Returns:
-            The derivatives of the state vector d/dt([i_sd, i_sq, i_sx, i_sy])
+            The derivatives of the state vector d/dt([i_sd, i_sq, i_sx, i_sy, epsilon])
         """
         return np.matmul(
             self._model_constants,
@@ -162,7 +164,62 @@ class SixPhasePMSM(SixPhaseMotor):
                 ]
             ),
         )
-
+    def electrical_jacobian(self, state, u_in, omega, *args):
+        mp = self._motor_parameter
+        return (
+            np.array(
+                [  # dx'/dx
+                    # i_sd          i_sq               i_sx                                    i_sy                                   epsilon
+                    [
+                        -mp["r_s"] / mp["l_d"],
+                        mp["l_q"] / mp["l_d"] * omega, 
+                        0, 
+                        0, 
+                        0
+                    ],
+                    [
+                        -mp["l_d"] / mp["l_q"] * omega,
+                        -mp["r_s"] / mp["l_q"],
+                        0,
+                        0,
+                        0
+                    ],
+                    [
+                        0,
+                        0,
+                        -mp["r_s"] / mp["l_x"],
+                        -mp["l_y"] / mp["l_x"] * omega,
+                        0
+                    ],
+                    [
+                        0,
+                        0,
+                        mp["l_x"] / mp["l_y"] * omega,
+                        -mp["r_s"] / mp["l_y"],
+                        0
+                    ],
+                    [0, 0, 0, 0, 0],
+                ]
+            ),
+            np.array(
+                [  # dx'/dw
+                    mp["l_q"] / mp["l_d"],
+                    -mp["l_d"] / mp["l_q"],
+                    -mp["l_y"] / mp["l_x"],
+                    mp["l_x"] / mp["l_y"],
+                    mp["p"],
+                ]
+            ),
+            np.array(
+                [  # dT/dx
+                    1.5 * mp["p"] * (mp["l_d"] - mp["l_q"]) * state[self.I_SQ_IDX],
+                    1.5 * mp["p"] * (mp["psi_PM"] + (mp["l_d"] - mp["l_q"]) * state[self.I_SD_IDX]),
+                    0,
+                    0,
+                    0
+                ]
+            ),
+        )
 
     def i_in(self, state):
         # Docstring of superclass
@@ -176,13 +233,30 @@ class SixPhasePMSM(SixPhaseMotor):
         else:
             return np.zeros(len(self.CURRENTS) + 1)
         
+        
     #from pmsm
     def torque(self, currents):
         # Docstring of superclass
         mp = self._motor_parameter
         return (
-            1.5 * mp["p"] * (mp["psi_PM "] + (mp["l_d"] - mp["l_q"]) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
+            1.5 * mp["p"] * (mp["psi_PM"] + (mp["l_d"] - mp["l_q"]) * currents[self.I_SD_IDX]) * currents[self.I_SQ_IDX]
         )
     
     #torque limit ?
     
+    def _update_limits(self):
+        # Docstring of superclass
+
+        voltage_limit = 0.5 * self._limits["u"]
+        voltage_nominal = 0.5 * self._nominal_values["u"]
+
+        limits_agenda = {}
+        nominal_agenda = {}
+        for u, i in zip(self.IO_VOLTAGES, self.IO_CURRENTS):
+            limits_agenda[u] = voltage_limit
+            nominal_agenda[u] = voltage_nominal
+            limits_agenda[i] = self._limits.get("i", None) or self._limits[u] / self._motor_parameter["r_s"]
+            nominal_agenda[i] = (
+                self._nominal_values.get("i", None) or self._nominal_values[u] / self._motor_parameter["r_s"]
+            )
+        super()._update_limits(limits_agenda, nominal_agenda)
