@@ -1167,7 +1167,7 @@ class SixPhasePMSM(SixPhaseMotorSystem):
         """
         super().__init__(**kwargs)
         self.control_space = control_space
-        if control_space == "abc":
+        if control_space == "dq":
             assert (
                 type(self._converter.action_space) == Box
             ), ""
@@ -1199,7 +1199,7 @@ class SixPhasePMSM(SixPhaseMotorSystem):
             "u_c1",
             "u_a2",
             "u_b2",
-            "u_c2"
+            "u_c2",
             "u_sd",
             "u_sq",
             "u_sx",
@@ -1272,8 +1272,9 @@ class SixPhasePMSM(SixPhaseMotorSystem):
             eps -= 2 * np.pi
 
         system_state = np.concatenate((mechanical_state, [torque], i_abc, i_dq, u_in, u_dq, [eps], u_sup))
+        print(system_state / self._limits)
         return system_state / self._limits
-  
+       
   def reset(self, *_):
         # Docstring of superclass
         motor_state = self._electrical_motor.reset(state_space=self.state_space, state_positions=self.state_positions)

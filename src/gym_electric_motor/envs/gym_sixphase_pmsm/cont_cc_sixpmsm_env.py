@@ -42,14 +42,18 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
             WienerProcessReferenceGenerator(reference_state="i_sd"),
             WienerProcessReferenceGenerator(reference_state="i_sq"),
             WienerProcessReferenceGenerator(reference_state="i_sx"),
-            WienerProcessReferenceGenerator(reference_state="i_sy")
+            WienerProcessReferenceGenerator(reference_state="i_sy"),
         )
+        default_sub_converters = (
+            ps.ContB6BridgeConverter(),
+            ps.ContB6BridgeConverter(),
+          )
 
         physical_system = SixPhasePMSM(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=300.0)),
-            converter=initialize(ps.PowerElectronicConverter, converter, ps.ContB6BridgeConverter, dict()),
+            converter=initialize(ps.PowerElectronicConverter,converter,ps.ContMultiConverter,dict(subconverters=default_sub_converters),),
             motor=initialize(ps.ElectricMotor, motor, ps.electric_motors.SixPhasePMSM, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(load_parameter=dict(a=0.01, b=0.01, c=0.0))),
+            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau,
