@@ -1251,7 +1251,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">control_space</span> <span class="o">=</span> <span class="n">control_space</span>
-        <span class="k">if</span> <span class="n">control_space</span> <span class="o">==</span> <span class="s2">&quot;abc&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">control_space</span> <span class="o">==</span> <span class="s2">&quot;dq&quot;</span><span class="p">:</span>
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span> <span class="o">==</span> <span class="n">Box</span>
             <span class="p">),</span> <span class="s2">&quot;&quot;</span>
@@ -1283,7 +1283,7 @@
             <span class="s2">&quot;u_c1&quot;</span><span class="p">,</span>
             <span class="s2">&quot;u_a2&quot;</span><span class="p">,</span>
             <span class="s2">&quot;u_b2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;u_c2&quot;</span>
+            <span class="s2">&quot;u_c2&quot;</span><span class="p">,</span>
             <span class="s2">&quot;u_sd&quot;</span><span class="p">,</span>
             <span class="s2">&quot;u_sq&quot;</span><span class="p">,</span>
             <span class="s2">&quot;u_sx&quot;</span><span class="p">,</span>
@@ -1356,8 +1356,9 @@
             <span class="n">eps</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
         <span class="n">system_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">mechanical_state</span><span class="p">,</span> <span class="p">[</span><span class="n">torque</span><span class="p">],</span> <span class="n">i_abc</span><span class="p">,</span> <span class="n">i_dq</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_dq</span><span class="p">,</span> <span class="p">[</span><span class="n">eps</span><span class="p">],</span> <span class="n">u_sup</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
-  
+       
   <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">motor_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">state_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state_positions</span><span class="p">)</span>
