@@ -17,17 +17,17 @@ from gym_electric_motor.utils import initialize
 from gym_electric_motor.visualization import MotorDashboard
 
 
-class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
+class FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
    """
     Description:
-        Environment to simulate an abc-domain continuous control set current controlled six phase permanent magnet synchr. motor.
+        Environment to simulate finite control set current controlled six phase permanent magnet synchr. motor.
 
     Key:
-        ``'Cont-CC-SIXPMSM-v0'``
+        ``'Finite-CC-SIXPMSM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
-        - Converter: :py:class:`.ContB6BridgeConverter`
+        - Converter: :py:class:`.FiniteB6BridgeConverter`
         - Motor: :py:class:`.SixPhasePMSM`
         - Load: :py:class:`.ConstantSpeedLoad`
         - Ode-Solver: :py:class:`.ScipyOdeSolver`
@@ -59,7 +59,7 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         Box(low=[-1, -1], high=[1, 1])
 
     Action Space:
-       Box(low=[-1] * 6, high=[1] * 6)
+       
 
     Initial State:
         Zeros on all state variables.
@@ -76,7 +76,7 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         ...     sigma_range=(1e-3, 1e-2)
         ... )
         >>> env = gem.make(
-        ...     "Cont-CC-SIXPMSM-v0",
+        ...     "Finite-CC-SIXPMSM-v0",
         ...     voltage_supply=my_changed_voltage_supply_args,
         ...     reference_generator=my_new_ref_gen_instance
         ... )
@@ -99,7 +99,7 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         visualization=None,
         state_filter=None,
         callbacks=(),
-        constraints=(SquaredConstraint(("i_sd", "i_sq", "i_sx", "i_sy")),),
+        constraints=(SquaredConstraint(("i_sq", "i_sd", "i_sx", "i_sy")),),
         calc_jacobian=True,
         tau=1e-4,
         physical_system_wrappers=(),
@@ -149,13 +149,13 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
             WienerProcessReferenceGenerator(reference_state="i_sy"),
         )
         default_sub_converters = (
-            ps.ContB6BridgeConverter(),
-            ps.ContB6BridgeConverter(),
+            ps.FiniteB6BridgeConverter(),
+            ps.FiniteB6BridgeConverter(),
           )
 
         physical_system = SixPhasePMSM(
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=300.0)),
-            converter=initialize(ps.PowerElectronicConverter,converter,ps.ContMultiConverter,dict(subconverters=default_sub_converters),),
+            converter=initialize(ps.PowerElectronicConverter,converter,ps.FiniteMultiConverter,dict(subconverters=default_sub_converters),),
             motor=initialize(ps.ElectricMotor, motor, ps.electric_motors.SixPhasePMSM, dict()),
             load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),

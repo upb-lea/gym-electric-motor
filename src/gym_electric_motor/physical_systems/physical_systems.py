@@ -1176,7 +1176,7 @@ class SixPhasePMSM(SixPhaseMotorSystem):
   def _build_state_space(self, state_names):
         # Docstring of superclass
         low = -1 * np.ones_like(state_names, dtype=float)
-        low[self.U_SUP_IDX -1] = 0.0
+        low[self.U_SUP_IDX] = 0.0
         high = np.ones_like(state_names, dtype=float)
         return Box(low, high, dtype=np.float64)
   
