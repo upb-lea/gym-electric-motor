@@ -52,7 +52,24 @@ from .gym_eesm.finite_tc_eesm_env import (
 )
 from .gym_sixphase_pmsm.cont_cc_sixpmsm_env import (
     ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv,
+    
 )
+from .gym_sixphase_pmsm.cont_sc_sixpmsm_env import (
+    ContSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv,
+)
+from .gym_sixphase_pmsm.cont_tc_sixpmsm_env import (
+    ContTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv,
+)
+from .gym_sixphase_pmsm.finite_cc_sixpmsm_env import (
+    FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv,
+)
+from .gym_sixphase_pmsm.finite_sc_sixpmsm_env import (
+    FiniteSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv,
+)
+from .gym_sixphase_pmsm.finite_tc_sixpmsm_env import (
+    FiniteTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv,
+)
+
 from .gym_im import (
     ContCurrentControlDoublyFedInductionMotorEnv,
     ContCurrentControlSquirrelCageInductionMotorEnv,

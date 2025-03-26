@@ -286,3 +286,18 @@ register(
 register(
     id="Cont-CC-SIXPMSM-v0", entry_point=envs_path + "ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv", **registration_kwargs
 )
+register(
+    id="Cont-SC-SIXPMSM-v0", entry_point=envs_path + "ContSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv", **registration_kwargs
+)
+register(
+    id="Cont-TC-SIXPMSM-v0", entry_point=envs_path + "ContTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv", **registration_kwargs
+)
+register(
+    id="Finite-CC-SIXPMSM-v0", entry_point=envs_path + "FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv", **registration_kwargs
+)
+register(
+    id="Finite-SC-SIXPMSM-v0", entry_point=envs_path + "FiniteSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv", **registration_kwargs
+)
+register(
+    id="Finite-TC-SIXPMSM-v0", entry_point=envs_path + "FiniteTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv", **registration_kwargs
+)

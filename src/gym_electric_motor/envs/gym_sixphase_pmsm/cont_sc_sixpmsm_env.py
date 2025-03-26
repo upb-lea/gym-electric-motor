@@ -9,7 +9,6 @@ from gym_electric_motor.core import (
 )
 from gym_electric_motor.physical_systems.physical_systems import SixPhasePMSM
 from gym_electric_motor.reference_generators import (
-    MultipleReferenceGenerator,
     WienerProcessReferenceGenerator,
 )
 from gym_electric_motor.reward_functions import WeightedSumOfErrors
@@ -17,24 +16,24 @@ from gym_electric_motor.utils import initialize
 from gym_electric_motor.visualization import MotorDashboard
 
 
-class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
+class ContSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotorEnvironment):
    """
     Description:
-        Environment to simulate an abc-domain continuous control set current controlled six phase permanent magnet synchr. motor.
+        Environment to simulate an abc-domain continuous control set speed controlled six phase permanent magnet synchr. motor.
 
     Key:
-        ``'Cont-CC-SIXPMSM-v0'``
+        ``'Cont-SC-SIXPMSM-v0'``
 
     Default Components:
         - Supply: :py:class:`.IdealVoltageSupply`
         - Converter: :py:class:`.ContB6BridgeConverter`
         - Motor: :py:class:`.SixPhasePMSM`
-        - Load: :py:class:`.ConstantSpeedLoad`
+        - Load: :py:class:`.PolynomialStaticLoad`
         - Ode-Solver: :py:class:`.ScipyOdeSolver`
 
-        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'i_sd', 'i_sq', 'i_sx', 'i_sy'``
+        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``'omega'``
 
-        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'i_sd' = 0.5, 'i_sq' = 0.5, 'i_sx' = 0.5, 'i_sy' = 0.5``
+        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``'omega' = 1.0``
 
         - Visualization: :py:class:`.MotorDashboard` current and action plots
 
@@ -44,7 +43,7 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         ``['omega' , 'torque', 'i_a1', 'i_b1', 'i_c1', 'i_a2', 'i_b2', 'i_c2', 'i_sd', 'i_sq', 'i_sx', 'i_sy', 'u_a1', 'u_b1', 'u_c1', 'u_a2', 'u_b2', 'u_c2', 'u_sd', 'u_sq', 'u_sx', 'u_sy', 'epsilon', 'u_sup']``
 
     Reference Variables:
-        ``['i_sd', 'i_sq', 'i_sx', 'i_sy']``
+        ``['omega']``
 
     Control Cycle Time:
         tau = 1e-4 seconds
@@ -76,7 +75,7 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         ...     sigma_range=(1e-3, 1e-2)
         ... )
         >>> env = gem.make(
-        ...     "Cont-CC-SIXPMSM-v0",
+        ...     "Cont-SC-SIXPMSM-v0",
         ...     voltage_supply=my_changed_voltage_supply_args,
         ...     reference_generator=my_new_ref_gen_instance
         ... )
@@ -86,7 +85,6 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         >>>         state, reference = env.reset()
         >>>     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())
     """
-   
    def __init__(
         self,
         supply=None,
@@ -99,12 +97,12 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         visualization=None,
         state_filter=None,
         callbacks=(),
-        constraints=(SquaredConstraint(("i_sd", "i_sq", "i_sx", "i_sy")),),
+        constraints=(SquaredConstraint(("i_sq", "i_sd", "i_sx", "i_sy")),),
         calc_jacobian=True,
         tau=1e-4,
         physical_system_wrappers=(),
         **kwargs,
-    ):
+    ): 
         """
         Args:
             supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment
@@ -142,12 +140,6 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
             The available strings can be looked up in the documentation. (e.g. ``converter='Finite-2QC'``)
         """
  
-        default_subgenerators = (
-            WienerProcessReferenceGenerator(reference_state="i_sd"),
-            WienerProcessReferenceGenerator(reference_state="i_sq"),
-            WienerProcessReferenceGenerator(reference_state="i_sx"),
-            WienerProcessReferenceGenerator(reference_state="i_sy"),
-        )
         default_sub_converters = (
             ps.ContB6BridgeConverter(),
             ps.ContB6BridgeConverter(),
@@ -157,7 +149,7 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
             supply=initialize(ps.VoltageSupply, supply, ps.IdealVoltageSupply, dict(u_nominal=300.0)),
             converter=initialize(ps.PowerElectronicConverter,converter,ps.ContMultiConverter,dict(subconverters=default_sub_converters),),
             motor=initialize(ps.ElectricMotor, motor, ps.electric_motors.SixPhasePMSM, dict()),
-            load=initialize(ps.MechanicalLoad, load, ps.ConstantSpeedLoad, dict(omega_fixed=100.0)),
+            load=initialize(ps.MechanicalLoad, load, ps.PolynomialStaticLoad, dict(load_parameter=dict(a=0.01, b=0.01, c=0.0))),
             ode_solver=initialize(ps.OdeSolver, ode_solver, ps.ScipyOdeSolver, dict()),
             calc_jacobian=calc_jacobian,
             tau=tau,
@@ -165,20 +157,20 @@ class ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv(ElectricMotor
         reference_generator = initialize(
             ReferenceGenerator,
             reference_generator,
-            MultipleReferenceGenerator,
-            dict(sub_generators=default_subgenerators),
+            WienerProcessReferenceGenerator,
+            dict(reference_state="omega"),
         )
         reward_function = initialize(
             RewardFunction,
             reward_function,
             WeightedSumOfErrors,
-            dict(reward_weights=dict(i_sd=0.5, i_sq=0.5, i_sx=0.5, i_sy=0.5,)),
+            dict(reward_weights=dict(omega=1.0)),
         )
         visualization = initialize(
             ElectricMotorVisualization,
             visualization,
             MotorDashboard,
-            dict(state_plots=("i_sd", "i_sq"), action_plots="all"),
+            dict(state_plots=("omega",), action_plots="all"),
         )
         super().__init__(
             physical_system=physical_system,
