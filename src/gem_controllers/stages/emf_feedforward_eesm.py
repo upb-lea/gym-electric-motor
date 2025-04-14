@@ -45,15 +45,15 @@ class EMFFeedforwardEESM(EMFFeedforward):
         """
 
         super().tune(env, env_id, **_)
-        l_m = env.physical_system.electrical_motor.motor_parameter["l_m"]
-        l_d = env.physical_system.electrical_motor.motor_parameter["l_d"]
-        l_e = env.physical_system.electrical_motor.motor_parameter["l_e"]
-        r_s = env.physical_system.electrical_motor.motor_parameter["r_s"]
-        r_e = env.physical_system.electrical_motor.motor_parameter["r_e"]
+        l_m = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
+        l_d = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"]
+        l_e = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"]
+        r_s = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+        r_e = env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"]
 
         self._l_m = l_m
-        self._i_e_idx = env.state_names.index("i_e")
+        self._i_e_idx = env.get_wrapper_attr('state_names').index("i_e")
         self._decoupling_params = np.array([-l_m * r_e / l_e, 0, -l_m * r_s / l_d])
         self._action_decoupling = np.array([l_m / l_e, 0, l_m / l_d])
-        self._currents_idx = [env.state_names.index("i_e"), 0, env.state_names.index("i_sd")]
+        self._currents_idx = [env.get_wrapper_attr('state_names').index("i_e"), 0, env.get_wrapper_attr('state_names').index("i_sd")]
         self._action_idx = [2, 1, 0]

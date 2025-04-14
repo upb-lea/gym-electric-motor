@@ -53,6 +53,6 @@ class InputStage(Stage):
             env_id(str): The corresponding environment-id to specify the concrete environment.
         """
 
-        self._state_limits = env.limits
-        reference_indices = [env.state_names.index(reference) for reference in env.reference_names]
-        self.reference_limits = env.limits[reference_indices]
+        self._state_limits = env.get_wrapper_attr('limits')
+        reference_indices = [env.get_wrapper_attr('state_names').index(reference) for reference in env.get_wrapper_attr('reference_names')]
+        self.reference_limits = env.get_wrapper_attr('limits')[reference_indices]

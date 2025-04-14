@@ -101,7 +101,7 @@ class ShuntDcOperationPointSelection(OperationPointSelection):
 
         super().tune(env, env_id, current_safety_margin)
         self._cross_inductance = reader.l_prime_reader["ShuntDc"](env)
-        self._i_e_idx = env.state_names.index("i_e")
-        self._i_a_idx = env.state_names.index("i_a")
-        self._i_a_limit = env.limits[self._i_a_idx] * (1 - current_safety_margin)
-        self._i_e_limit = env.limits[self._i_e_idx] * (1 - current_safety_margin)
+        self._i_e_idx = env.get_wrapper_attr('state_names').index("i_e")
+        self._i_a_idx = env.get_wrapper_attr('state_names').index("i_a")
+        self._i_a_limit = env.get_wrapper_attr('limits')[self._i_a_idx] * (1 - current_safety_margin)
+        self._i_e_limit = env.get_wrapper_attr('limits')[self._i_e_idx] * (1 - current_safety_margin)

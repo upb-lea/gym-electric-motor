@@ -23,7 +23,7 @@ class ReferencePlotter:
 
         """
         if plot_references:
-            for visualization in env.visualizations:
+            for visualization in env.get_wrapper_attr('visualizations'):
                 for time_plot in visualization._time_plots:
                     if isinstance(time_plot, StatePlot):
                         if time_plot.state in referenced_states:

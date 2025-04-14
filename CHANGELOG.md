@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 ## Fixed
 
+## [3.0.3] - unreleased
+## Added
+- Automated testing of the existing examples
+- Automated testing of the electric motors
+## Changed
+- Changed minimal required gymnasium version to 0.29.1.
+- updated the code of gem-control to be compatible with gymnasium v1.0.0
+## Fixed
+- Updated syntax in the classic_controllers to run with gymnasium v1.0.0 
+- #263 updated the sb3, mpc and gem-control examples to run with gymnasium v1.0.0 
+
 ## [3.0.2] - 2024-11-19
 ## Added
 ## Changed

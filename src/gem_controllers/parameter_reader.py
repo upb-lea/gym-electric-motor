@@ -15,9 +15,9 @@ ac_actions = ["Finite", "DqCont", "AbcCont"]
 psi_reader = {
     "SeriesDc": lambda env: np.array([0.0]),
     "ShuntDc": lambda env: np.array([0.0]),
-    "PermExDc": lambda env: np.array([env.physical_system.electrical_motor.motor_parameter["psi_e"]]),
+    "PermExDc": lambda env: np.array([env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["psi_e"]]),
     "ExtExDc": lambda env: np.array([0.0, 0.0]),
-    "PMSM": lambda env: np.array([0.0, env.physical_system.electrical_motor.motor_parameter["psi_p"]]),
+    "PMSM": lambda env: np.array([0.0, env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["psi_p"]]),
     "SynRM": lambda env: np.array([0.0, 0.0]),
     "SCIM": lambda env: np.array([0.0, 0.0]),
     "EESM": lambda env: np.array([0.0, 0.0, 0.0]),
@@ -28,126 +28,126 @@ p_reader = {
     "ShuntDc": lambda env: 1,
     "ExtExDc": lambda env: 0,
     "PermExDc": lambda env: 0,
-    "PMSM": lambda env: env.physical_system.electrical_motor.motor_parameter["p"],
-    "SynRM": lambda env: env.physical_system.electrical_motor.motor_parameter["p"],
-    "SCIM": lambda env: env.physical_system.electrical_motor.motor_parameter["p"],
-    "EESM": lambda env: env.physical_system.electrical_motor.motor_parameter["p"],
+    "PMSM": lambda env: env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["p"],
+    "SynRM": lambda env: env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["p"],
+    "SCIM": lambda env: env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["p"],
+    "EESM": lambda env: env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["p"],
 }
 
 l_reader = {
     "SeriesDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_a"]
-            + env.physical_system.electrical_motor.motor_parameter["l_e"]
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"]
+            + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"]
         ]
     ),
     "ShuntDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"],
         ]
     ),
     "ExtExDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_a"],
-            env.physical_system.electrical_motor.motor_parameter["l_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"],
         ]
     ),
     "PermExDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"],
         ]
     ),
     "PMSM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_d"],
-            env.physical_system.electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
         ]
     ),
     "SynRM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_d"],
-            env.physical_system.electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
         ]
     ),
     "SCIM": lambda env: np.array(
         [
             (
-                env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                + env.physical_system.electrical_motor.motor_parameter["l_m"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
             )
-            / env.physical_system.electrical_motor.motor_parameter["r_r"],
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_r"],
             (
-                env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                + env.physical_system.electrical_motor.motor_parameter["l_m"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
             )
-            / env.physical_system.electrical_motor.motor_parameter["r_r"],
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_r"],
         ]
     ),
     "EESM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_d"],
-            env.physical_system.electrical_motor.motor_parameter["l_q"],
-            env.physical_system.electrical_motor.motor_parameter["l_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"],
         ]
     ),
 }
 
 l_emf_reader = {
-    "SeriesDc": lambda env: np.array([env.physical_system.electrical_motor.motor_parameter["l_e_prime"]]),
+    "SeriesDc": lambda env: np.array([env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e_prime"]]),
     "ShuntDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_e_prime"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e_prime"],
         ]
     ),
-    "ExtExDc": lambda env: np.array([env.physical_system.electrical_motor.motor_parameter["l_e_prime"], 0.0]),
+    "ExtExDc": lambda env: np.array([env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e_prime"], 0.0]),
     "PermExDc": lambda env: np.array([0.0]),
     "PMSM": lambda env: np.array(
         [
-            -env.physical_system.electrical_motor.motor_parameter["l_q"],
-            env.physical_system.electrical_motor.motor_parameter["l_d"],
+            -env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
         ]
     ),
     "SynRM": lambda env: np.array(
         [
-            -env.physical_system.electrical_motor.motor_parameter["l_q"],
-            env.physical_system.electrical_motor.motor_parameter["l_d"],
+            -env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
         ]
     ),
     "SCIM": lambda env: np.array(
         [
             -(
-                env.physical_system.electrical_motor.motor_parameter["l_sigs"]
-                * env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                + env.physical_system.electrical_motor.motor_parameter["l_sigs"]
-                * env.physical_system.electrical_motor.motor_parameter["l_m"]
-                + env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                * env.physical_system.electrical_motor.motor_parameter["l_m"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigs"]
+                * env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigs"]
+                * env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                * env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
             )
             / (
-                env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                + env.physical_system.electrical_motor.motor_parameter["l_m"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
             ),
             (
-                env.physical_system.electrical_motor.motor_parameter["l_sigs"]
-                * env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                + env.physical_system.electrical_motor.motor_parameter["l_sigs"]
-                * env.physical_system.electrical_motor.motor_parameter["l_m"]
-                + env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                * env.physical_system.electrical_motor.motor_parameter["l_m"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigs"]
+                * env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigs"]
+                * env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                * env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
             )
             / (
-                env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-                + env.physical_system.electrical_motor.motor_parameter["l_m"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
             ),
         ]
     ),
     "EESM": lambda env: np.array(
         [
-            -env.physical_system.electrical_motor.motor_parameter["l_q"],
-            env.physical_system.electrical_motor.motor_parameter["l_d"],
-            env.physical_system.electrical_motor.motor_parameter["l_m"]
-            * env.physical_system.electrical_motor.motor_parameter["l_q"]
-            / env.physical_system.electrical_motor.motor_parameter["l_d"],
+            -env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_m"]
+            * env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
         ]
     ),
 }
@@ -156,65 +156,65 @@ tau_current_loop_reader = {
     "SeriesDc": lambda env: np.array(
         [
             (
-                env.physical_system.electrical_motor.motor_parameter["l_e"]
-                + env.physical_system.electrical_motor.motor_parameter["l_a"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"]
             )
             / (
-                env.physical_system.electrical_motor.motor_parameter["r_e"]
-                + env.physical_system.electrical_motor.motor_parameter["r_a"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
             )
         ]
     ),
     "ShuntDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_a"]
-            / env.physical_system.electrical_motor.motor_parameter["r_a"]
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
         ]
     ),
     "ExtExDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_a"]
-            / env.physical_system.electrical_motor.motor_parameter["r_a"],
-            env.physical_system.electrical_motor.motor_parameter["l_e"]
-            / env.physical_system.electrical_motor.motor_parameter["r_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"],
         ]
     ),
     "PermExDc": lambda env: np.array(
-        env.physical_system.electrical_motor.motor_parameter["l_a"]
-        / env.physical_system.electrical_motor.motor_parameter["r_a"]
+        env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"]
+        / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
     ),
     "PMSM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_q"]
-            / env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["l_d"]
-            / env.physical_system.electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
         ]
     ),
     "SynRM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_q"]
-            / env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["l_d"]
-            / env.physical_system.electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
         ]
     ),
     "SCIM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_sigs"]
-            / env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["l_sigr"]
-            / env.physical_system.electrical_motor.motor_parameter["r_r"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigs"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_r"],
         ]
     ),
     "EESM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["l_q"]
-            / env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["l_d"]
-            / env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["l_e"]
-            / env.physical_system.electrical_motor.motor_parameter["r_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"],
         ]
     ),
 }
@@ -222,49 +222,49 @@ tau_current_loop_reader = {
 r_reader = {
     "SeriesDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_a"]
-            + env.physical_system.electrical_motor.motor_parameter["r_e"]
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
+            + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"]
         ]
     ),
     "ShuntDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"],
         ]
     ),
     "ExtExDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_a"],
-            env.physical_system.electrical_motor.motor_parameter["r_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"],
         ]
     ),
     "PermExDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"],
         ]
     ),
     "PMSM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
         ]
     ),
     "SynRM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
         ]
     ),
     "SCIM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["r_r"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_r"],
         ]
     ),
     "EESM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["r_s"],
-            env.physical_system.electrical_motor.motor_parameter["r_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"],
         ]
     ),
 }
@@ -273,67 +273,67 @@ tau_n_reader = {
     "SeriesDc": lambda env: np.array(
         [
             (
-                env.physical_system.electrical_motor.motor_parameter["r_a"]
-                + env.physical_system.electrical_motor.motor_parameter["r_e"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"]
             )
             / (
-                env.physical_system.electrical_motor.motor_parameter["l_a"]
-                + env.physical_system.electrical_motor.motor_parameter["l_e"]
+                env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"]
+                + env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"]
             )
         ]
     ),
     "ShuntDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_a"]
-            / env.physical_system.electrical_motor.motor_parameter["l_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"],
         ]
     ),
     "ExtExDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_a"]
-            / env.physical_system.electrical_motor.motor_parameter["l_a"],
-            env.physical_system.electrical_motor.motor_parameter["r_e"]
-            / env.physical_system.electrical_motor.motor_parameter["l_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"],
         ]
     ),
     "PermExDc": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_a"]
-            / env.physical_system.electrical_motor.motor_parameter["l_a"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_a"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_a"],
         ]
     ),
     "PMSM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"]
-            / env.physical_system.electrical_motor.motor_parameter["l_d"],
-            env.physical_system.electrical_motor.motor_parameter["r_s"]
-            / env.physical_system.electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
         ]
     ),
     "SynRM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"]
-            / env.physical_system.electrical_motor.motor_parameter["l_d"],
-            env.physical_system.electrical_motor.motor_parameter["r_s"]
-            / env.physical_system.electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
         ]
     ),
     "SCIM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"]
-            / env.physical_system.electrical_motor.motor_parameter["l_sigs"],
-            env.physical_system.electrical_motor.motor_parameter["r_r"]
-            / env.physical_system.electrical_motor.motor_parameter["l_sigr"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigs"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_r"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sigr"],
         ]
     ),
     "EESM": lambda env: np.array(
         [
-            env.physical_system.electrical_motor.motor_parameter["r_s"]
-            / env.physical_system.electrical_motor.motor_parameter["l_d"],
-            env.physical_system.electrical_motor.motor_parameter["r_s"]
-            / env.physical_system.electrical_motor.motor_parameter["l_q"],
-            env.physical_system.electrical_motor.motor_parameter["r_e"]
-            / env.physical_system.electrical_motor.motor_parameter["l_e"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_d"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_s"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_q"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["r_e"]
+            / env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e"],
         ]
     ),
 }
@@ -388,15 +388,15 @@ def get_output_voltages(motor_type, action_type):
 
 
 l_prime_reader = {
-    "SeriesDc": lambda env: np.array([env.physical_system.electrical_motor.motor_parameter["l_e_prime"]]),
-    "ShuntDc": lambda env: np.array([env.physical_system.electrical_motor.motor_parameter["l_e_prime"]]),
-    "ExtExDc": lambda env: np.array([env.physical_system.electrical_motor.motor_parameter["l_e_prime"]]),
+    "SeriesDc": lambda env: np.array([env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e_prime"]]),
+    "ShuntDc": lambda env: np.array([env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e_prime"]]),
+    "ExtExDc": lambda env: np.array([env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_e_prime"]]),
     "PermExDc": lambda env: np.array([0.0]),
     "PMSM": lambda env: np.array([0.0, 0.0]),
     "SynRM": lambda env: np.array(
         [
-            -env.physical_system.electrical_motor.motor_parameter["l_sq"],
-            env.physical_system.electrical_motor.motor_parameter["l_sd"],
+            -env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sq"],
+            env.get_wrapper_attr('physical_system').electrical_motor.motor_parameter["l_sd"],
         ]
     ),
     "SCIM": lambda env: np.array([0, 0]),

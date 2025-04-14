@@ -86,6 +86,6 @@ class PermExDcOperationPointSelection(OperationPointSelection):
         motor = gc.utils.get_motor_type(env_id)
         self._magnetic_flux = reader.psi_reader[motor](env)
         voltages = reader.voltages[motor]
-        voltage_indices = [env.state_names.index(voltage) for voltage in voltages]
-        self._voltage_limit = env.limits[voltage_indices]
-        self._omega_index = env.state_names.index("omega")
+        voltage_indices = [env.get_wrapper_attr('state_names').index(voltage) for voltage in voltages]
+        self._voltage_limit = env.get_wrapper_attr('limits')[voltage_indices]
+        self._omega_index = env.get_wrapper_attr('state_names').index("omega")

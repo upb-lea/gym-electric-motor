@@ -27,7 +27,7 @@ class AntiWindup:
             env(ElectricMotorEnvironment): The GEM-Environment that the controller shall be created for.
             env_id(str): The corresponding environment-id to specify the concrete environment.
         """
-        self._tau = env.physical_system.tau
+        self._tau = env.get_wrapper_attr('physical_system').tau
         motor_type = gc.utils.get_motor_type(env_id)
         states = []
         if self._control_task == "CC":
@@ -36,7 +36,7 @@ class AntiWindup:
             states = ["torque"]
         elif self._control_task == "SC":
             states = ["omega"]
-        self._state_indices = [env.state_names.index(state) for state in states]
+        self._state_indices = [env.get_wrapper_attr('state_names').index(state) for state in states]
 
     def __call__(self, state, reference, clipping_difference):
         """Limits the integrative part in the base-controllers.

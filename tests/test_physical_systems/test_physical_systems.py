@@ -70,6 +70,7 @@ class TestSCMLSystem:
             supply=DummyVoltageSupply(),
             ode_solver=DummyOdeSolver(),
         )
+   
 
     def test_reset(self, scml_system):
         """Test the reset function in the physical system"""
@@ -183,3 +184,5 @@ class TestSCMLSystem:
         assert np.all(sys_jac[:-2, 2:] == np.array([[72, 84], [78, 91]])), (
             "The derivative of the mech.state " "over the currents is false"
         )
+
+
