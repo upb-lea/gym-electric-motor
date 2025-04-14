@@ -1272,7 +1272,6 @@ class SixPhasePMSM(SixPhaseMotorSystem):
             eps -= 2 * np.pi
 
         system_state = np.concatenate((mechanical_state, [torque], i_abc, i_dq, u_in, u_dq, [eps], u_sup))
-        print(system_state / self._limits)
         return system_state / self._limits
        
   def reset(self, *_):

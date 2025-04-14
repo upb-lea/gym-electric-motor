@@ -23,4 +23,4 @@ from .synchronous_reluctance_motor import SynchronousReluctanceMotor
 from .three_phase_motor import ThreePhaseMotor
 
 #six phase motors
-from .SixPhase_PMSM import SixPhasePMSM
+from .six_phase_PMSM import SixPhasePMSM

@@ -8,7 +8,7 @@ In general, all environment-ids are structured as follows:
 
 - The ``ControlType`` is in ``{Finite / Cont}`` for finite control set and continuous control set action spaces
 - The ``ControlTask`` is in ``{TC / SC / CC}`` (Torque / Speed / Current Control)
-- The ``MotorType`` is in ``{PermExDc / ExtExDc / SeriesDc / ShuntDc / PMSM / SynRM / / EESM / DFIM / SCIM }``
+- The ``MotorType`` is in ``{PermExDc / ExtExDc / SeriesDc / ShuntDc / PMSM / SynRM / / EESM / DFIM / SCIM / SIXPMSM }``
 
 
 =================================================================== ==============================
@@ -96,6 +96,15 @@ Speed Control DFIM Environment                                       ``'Cont-SC-
 Finite Current Control DFIM Environment                              ``'Finite-CC-DFIM-v0'``
 Current Control DFIM Environment                                     ``'Cont-CC-DFIM-v0'``
 
+**Six Phase Permanent Magnet Synchronous Motor (SIXPMSM) Environments**
+
+Finite Torque Control SIXPMSM Environment                               ``'Finite-TC-SIXPMSM-v0'``
+Torque Control SIXPMSM Environment                                      ``'Cont-TC-SIXPMSM-v0'``
+Finite Speed Control SIXPMSM Environment                                ``'Finite-SC-SIXPMSM-v0'``
+Speed Control SIXPMSM Environment                                       ``'Cont-SC-SIXPMSM-v0'``
+Finite Current Control SIXPMSM Environment                              ``'Finite-CC-SIXPMSM-v0'``
+Current Control SIXPMSM Environment                                     ``'Cont-CC-SIXPMSM-v0'``
+
 =================================================================== ==============================
 
 .. toctree::
@@ -112,6 +121,7 @@ Current Control DFIM Environment                                     ``'Cont-CC-
    synrm/synrm_envs
    scim/scim_envs
    dfim/dfim_envs
+   sixpmsm/sixpmsm_envs
 
 
 Electric Motor Base Environment

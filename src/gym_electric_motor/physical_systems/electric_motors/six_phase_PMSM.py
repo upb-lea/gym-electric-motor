@@ -24,18 +24,18 @@ class SixPhasePMSM(SixPhaseMotor):
     =============== ====== =============================================
     i_sd            A      Direct axis current
     i_sq            A      Quadrature axis current
-    i_sx            A
-    i_sy            A
+    i_sx            A      Stator current in the counter-rotating system
+    i_sy            A      Stator current in the counter-rotating system
     i_salpha        A      Stator current in alpha direction
     i_sbeta         A      Stator current in beta direction
-    i_sX            A
-    i_sY            A
-    i_sa1           A
-    i_sa2           A
-    i_sb1           A
-    i_sb2           A
-    i_sc1           A
-    i_sc2           A
+    i_sX            A      Stator current in X direction
+    i_sY            A      Stator current in Y direction
+    i_sa1           A      Stator current in phase a1
+    i_sa2           A      Stator current in phase a2
+    i_sb1           A      Stator current in phase b1
+    i_sb2           A      Stator current in phase b2
+    i_sc1           A      Stator current in phase c1
+    i_sc2           A      Stator current in phase c2
 
     =============== ====== =============================================
     =============== ====== =============================================
@@ -43,14 +43,14 @@ class SixPhasePMSM(SixPhaseMotor):
     =============== ====== =============================================
     u_sd            V      Direct axis voltage
     u_sq            V      Quadrature axis voltage
-    u_sx            V
-    u_sy            V
-    u_a1            V
-    u_a2            V
-    u_b1            V
-    u_b2            V
-    u_c1            V
-    u_c2            V
+    u_sx            V      voltage in the counter-rotating system
+    u_sy            V      voltage in the counter-rotating system
+    u_a1            V      Phase voltage in phase a1
+    u_a2            V      Phase voltage in phase a2
+    u_b1            V      Phase voltage in phase b1
+    u_b2            V      Phase voltage in phase b2
+    u_c1            V      Phase voltage in phase c1
+    u_c2            V      Phase voltage in phase c2
     =============== ====== =============================================
 
     ======== ===========================================================
