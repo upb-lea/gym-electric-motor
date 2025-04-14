@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_electric_motor.physical_systems.electric_motors.six_phase_PMSM &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_electric_motor.physical_systems.electric_motors.six_phase_PMSM</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_electric_motor.physical_systems.electric_motors.six_phase_PMSM</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.six_phase_motor</span> <span class="kn">import</span> <span class="n">SixPhaseMotor</span>
+
+
+<div class="viewcode-block" id="SixPhasePMSM"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/sixphase_pmsm.html#gym_electric_motor.physical_systems.electric_motors.SixPhasePMSM">[docs]</a><span class="k">class</span> <span class="nc">SixPhasePMSM</span><span class="p">(</span><span class="n">SixPhaseMotor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    =====================  ==========  ============= ===========================================</span>
+<span class="sd">    Motor Parameter        Unit        Default Value Description</span>
+<span class="sd">    =====================  ==========  ============= ===========================================</span>
+<span class="sd">    r_s                    Ohm         64.3e-3       Stator resistance</span>
+<span class="sd">    l_d                    H           125e-6        Direct axis inductance</span>
+<span class="sd">    l_q                    H           126e-6        Quadrature axis inductance</span>
+<span class="sd">    l_x                    H           39e-6         x-axis inductance</span>
+<span class="sd">    l_y                    H           35e-6         y-axis inductance</span>
+<span class="sd">    p                      1            5            Pole pair number</span>
+<span class="sd">    psi_PM                 Vs          4.7e-3        flux linkage of the permanent magnets</span>
+<span class="sd">    =====================  ==========  ============= ===========================================</span>
+
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    Motor Currents  Unit   Description</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    i_sd            A      Direct axis current</span>
+<span class="sd">    i_sq            A      Quadrature axis current</span>
+<span class="sd">    i_sx            A      Stator current in the counter-rotating system</span>
+<span class="sd">    i_sy            A      Stator current in the counter-rotating system</span>
+<span class="sd">    i_salpha        A      Stator current in alpha direction</span>
+<span class="sd">    i_sbeta         A      Stator current in beta direction</span>
+<span class="sd">    i_sX            A      Stator current in X direction</span>
+<span class="sd">    i_sY            A      Stator current in Y direction</span>
+<span class="sd">    i_sa1           A      Stator current in phase a1</span>
+<span class="sd">    i_sa2           A      Stator current in phase a2</span>
+<span class="sd">    i_sb1           A      Stator current in phase b1</span>
+<span class="sd">    i_sb2           A      Stator current in phase b2</span>
+<span class="sd">    i_sc1           A      Stator current in phase c1</span>
+<span class="sd">    i_sc2           A      Stator current in phase c2</span>
+
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    Motor Voltages  Unit   Description</span>
+<span class="sd">    =============== ====== =============================================</span>
+<span class="sd">    u_sd            V      Direct axis voltage</span>
+<span class="sd">    u_sq            V      Quadrature axis voltage</span>
+<span class="sd">    u_sx            V      voltage in the counter-rotating system</span>
+<span class="sd">    u_sy            V      voltage in the counter-rotating system</span>
+<span class="sd">    u_a1            V      Phase voltage in phase a1</span>
+<span class="sd">    u_a2            V      Phase voltage in phase a2</span>
+<span class="sd">    u_b1            V      Phase voltage in phase b1</span>
+<span class="sd">    u_b2            V      Phase voltage in phase b2</span>
+<span class="sd">    u_c1            V      Phase voltage in phase c1</span>
+<span class="sd">    u_c2            V      Phase voltage in phase c2</span>
+<span class="sd">    =============== ====== =============================================</span>
+
+<span class="sd">    ======== ===========================================================</span>
+<span class="sd">    Limits / Nominal Value Dictionary Entries:</span>
+<span class="sd">    -------- -----------------------------------------------------------</span>
+<span class="sd">    Entry    Description</span>
+<span class="sd">    ======== ===========================================================</span>
+<span class="sd">    i        General current limit / nominal value</span>
+<span class="sd">    ======== ===========================================================</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">I_SD_IDX</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">I_SQ_IDX</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">I_SX_IDX</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">I_SY_IDX</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">CURRENTS_IDX</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="n">CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;i_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sx&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sy&quot;</span><span class="p">]</span>
+    <span class="n">VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sx&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sy&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">motor_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">initializer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span>
+
+   <span class="c1">#### Parameters taken from  https://ieeexplore.ieee.org/document/10372153</span>
+    <span class="n">_default_motor_parameter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;l_d&quot;</span><span class="p">:</span> <span class="mf">125e-6</span><span class="p">,</span> <span class="s2">&quot;l_q&quot;</span><span class="p">:</span> <span class="mf">126e-6</span><span class="p">,</span> <span class="s2">&quot;l_x&quot;</span><span class="p">:</span> <span class="mf">39e-6</span><span class="p">,</span> <span class="s2">&quot;l_y&quot;</span><span class="p">:</span> <span class="mf">35e-6</span><span class="p">,</span> <span class="s2">&quot;r_s&quot;</span><span class="p">:</span> <span class="mf">64.3e-3</span><span class="p">,</span> <span class="s2">&quot;psi_PM&quot;</span><span class="p">:</span> <span class="mf">4.7e-3</span><span class="p">,</span>  <span class="s2">&quot;j_rotor&quot;</span><span class="p">:</span> <span class="mf">0.0110</span><span class="p">,}</span>
+    <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">_default_limits</span> <span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mf">4e3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">30</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">_default_nominal_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mf">3e3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">30</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">240</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">_default_initializer</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;states&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;i_sd&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;i_sq&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;i_sx&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;i_sy&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;epsilon&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+        <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;random_init&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;random_params&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">IO_VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u_a1&quot;</span><span class="p">,</span> <span class="s2">&quot;u_b1&quot;</span><span class="p">,</span> <span class="s2">&quot;u_c1&quot;</span><span class="p">,</span> <span class="s2">&quot;u_a2&quot;</span><span class="p">,</span> <span class="s2">&quot;u_b2&quot;</span><span class="p">,</span> <span class="s2">&quot;u_c2&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sx&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sy&quot;</span><span class="p">]</span>
+    <span class="n">IO_CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;i_a1&quot;</span><span class="p">,</span> <span class="s2">&quot;i_b1&quot;</span><span class="p">,</span> <span class="s2">&quot;i_a2&quot;</span><span class="p">,</span> <span class="s2">&quot;i_b2&quot;</span><span class="p">,</span> <span class="s2">&quot;i_c2&quot;</span><span class="p">,</span>  <span class="s2">&quot;i_c1&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sx&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sy&quot;</span><span class="p">]</span>
+    <span class="n">_model_constants</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">_initializer</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">motor_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nominal_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">limit_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">motor_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">nominal_values</span> <span class="o">=</span> <span class="n">nominal_values</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">limit_values</span> <span class="o">=</span> <span class="n">limit_values</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">motor_parameter</span><span class="p">,</span> <span class="n">nominal_values</span><span class="p">,</span> <span class="n">limit_values</span><span class="p">,</span> <span class="n">motor_initializer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_model</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the motor&#39;s model parameters with the motor parameters.</span>
+
+<span class="sd">        Called internally when the motor parameters are changed or the motor is initialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="c1">#        omega,         i_d,         i_q,         i_x,        i_y, u_d, u_q, u_x, u_y, omega * i_d, omega * i_q, omega * i_x,  omega * i_y</span>
+            <span class="p">[</span>            <span class="mi">0</span><span class="p">,</span>   <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_s&#39;</span><span class="p">],</span>          <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span>   <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_q&#39;</span><span class="p">],</span>           <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;psi_PM&#39;</span><span class="p">],</span>            <span class="mi">0</span><span class="p">,</span>  <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_s&#39;</span><span class="p">],</span>          <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_d&#39;</span><span class="p">],</span>          <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span>            <span class="mi">0</span><span class="p">,</span>            <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_s&#39;</span><span class="p">],</span>          <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>            <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_y&#39;</span><span class="p">]],</span>
+            <span class="p">[</span>            <span class="mi">0</span><span class="p">,</span>            <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s1">&#39;r_s&#39;</span><span class="p">],</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>            <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span>   <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;l_x&#39;</span><span class="p">],</span>          <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span>      <span class="n">mp</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">],</span>            <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>            <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">,</span>           <span class="mi">0</span><span class="p">,</span>          <span class="mi">0</span><span class="p">],</span>
+
+        <span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SX_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SX_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_x&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SY_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SY_IDX</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_y&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="SixPhasePMSM.electrical_ode"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/sixphase_pmsm.html#gym_electric_motor.physical_systems.electric_motors.SixPhasePMSM.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_dqxy</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The differential equation of the Six phase PMSM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: The current state of the motor. [i_sd, i_sq, i_sx, i_sy, epsilon]</span>
+<span class="sd">            omega: electrical rotational speed</span>
+<span class="sd">            u_qdxy: The input voltages [u_sd, u_sq, u_sx, u_sy]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The derivatives of the state vector d/dt([i_sd, i_sq, i_sx, i_sy, epsilon])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">omega</span><span class="p">,</span>
+                    <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">],</span>
+                    <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">],</span>
+                    <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SX_IDX</span><span class="p">],</span>
+                    <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SY_IDX</span><span class="p">],</span>
+                    <span class="n">u_dqxy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">u_dqxy</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">u_dqxy</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="n">u_dqxy</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="n">omega</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">],</span>
+                    <span class="n">omega</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">],</span>
+                    <span class="n">omega</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SX_IDX</span><span class="p">],</span>
+                    <span class="n">omega</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SY_IDX</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+<div class="viewcode-block" id="SixPhasePMSM.electrical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/sixphase_pmsm.html#gym_electric_motor.physical_systems.electric_motors.SixPhasePMSM.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>  <span class="c1"># dx&#39;/dx</span>
+                    <span class="c1"># i_sd          i_sq               i_sx                                    i_sy                                   epsilon</span>
+                    <span class="p">[</span>
+                        <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_s&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">],</span>
+                        <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">,</span> 
+                        <span class="mi">0</span><span class="p">,</span> 
+                        <span class="mi">0</span><span class="p">,</span> 
+                        <span class="mi">0</span>
+                    <span class="p">],</span>
+                    <span class="p">[</span>
+                        <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">,</span>
+                        <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_s&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">],</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="mi">0</span>
+                    <span class="p">],</span>
+                    <span class="p">[</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_s&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_x&quot;</span><span class="p">],</span>
+                        <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_y&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_x&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">,</span>
+                        <span class="mi">0</span>
+                    <span class="p">],</span>
+                    <span class="p">[</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_x&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_y&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">omega</span><span class="p">,</span>
+                        <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_s&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_y&quot;</span><span class="p">],</span>
+                        <span class="mi">0</span>
+                    <span class="p">],</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>  <span class="c1"># dx&#39;/dw</span>
+                    <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">],</span>
+                    <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">],</span>
+                    <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_y&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_x&quot;</span><span class="p">],</span>
+                    <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_x&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_y&quot;</span><span class="p">],</span>
+                    <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>  <span class="c1"># dT/dx</span>
+                    <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">],</span>
+                    <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;psi_PM&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">]),</span>
+                    <span class="mi">0</span><span class="p">,</span>
+                    <span class="mi">0</span><span class="p">,</span>
+                    <span class="mi">0</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SixPhasePMSM.i_in"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/sixphase_pmsm.html#gym_electric_motor.physical_systems.electric_motors.SixPhasePMSM.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">return</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS_IDX</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="SixPhasePMSM.reset"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/sixphase_pmsm.html#gym_electric_motor.physical_systems.electric_motors.SixPhasePMSM.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_states</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
+        
+        
+    <span class="c1">#from pmsm</span>
+    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;psi_PM&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">]</span>
+        <span class="p">)</span>
+    
+    <span class="c1">#torque limit ?</span>
+    
+    <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Docstring of superclass</span>
+
+        <span class="n">voltage_limit</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span>
+        <span class="n">voltage_nominal</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span>
+
+        <span class="n">limits_agenda</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">nominal_agenda</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">IO_VOLTAGES</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">IO_CURRENTS</span><span class="p">):</span>
+            <span class="n">limits_agenda</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">voltage_limit</span>
+            <span class="n">nominal_agenda</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">voltage_nominal</span>
+            <span class="n">limits_agenda</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_s&quot;</span><span class="p">]</span>
+            <span class="n">nominal_agenda</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal_values</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_s&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">limits_agenda</span><span class="p">,</span> <span class="n">nominal_agenda</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

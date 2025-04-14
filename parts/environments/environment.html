@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="synrm/synrm_envs.html">Synchronous Reluctance Motor Environments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scim/scim_envs.html">Squirrel Cage Induction Motor Environments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dfim/dfim_envs.html">Doubly Fed Induction Motor Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sixpmsm/sixpmsm_envs.html">Six Phase Permanent Magnet Synchronous Motor Environments</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
@@ -103,206 +104,8 @@ In general, all environment-ids are structured as follows:</p>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">ControlType</span></code> is in <code class="docutils literal notranslate"><span class="pre">{Finite</span> <span class="pre">/</span> <span class="pre">Cont}</span></code> for finite control set and continuous control set action spaces</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">ControlTask</span></code> is in <code class="docutils literal notranslate"><span class="pre">{TC</span> <span class="pre">/</span> <span class="pre">SC</span> <span class="pre">/</span> <span class="pre">CC}</span></code> (Torque / Speed / Current Control)</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">MotorType</span></code> is in <code class="docutils literal notranslate"><span class="pre">{PermExDc</span> <span class="pre">/</span> <span class="pre">ExtExDc</span> <span class="pre">/</span> <span class="pre">SeriesDc</span> <span class="pre">/</span> <span class="pre">ShuntDc</span> <span class="pre">/</span> <span class="pre">PMSM</span> <span class="pre">/</span> <span class="pre">SynRM</span> <span class="pre">/</span> <span class="pre">/</span> <span class="pre">EESM</span> <span class="pre">/</span> <span class="pre">DFIM</span> <span class="pre">/</span> <span class="pre">SCIM</span> <span class="pre">}</span></code></p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">MotorType</span></code> is in <code class="docutils literal notranslate"><span class="pre">{PermExDc</span> <span class="pre">/</span> <span class="pre">ExtExDc</span> <span class="pre">/</span> <span class="pre">SeriesDc</span> <span class="pre">/</span> <span class="pre">ShuntDc</span> <span class="pre">/</span> <span class="pre">PMSM</span> <span class="pre">/</span> <span class="pre">SynRM</span> <span class="pre">/</span> <span class="pre">/</span> <span class="pre">EESM</span> <span class="pre">/</span> <span class="pre">DFIM</span> <span class="pre">/</span> <span class="pre">SCIM</span> <span class="pre">/</span> <span class="pre">SIXPMSM</span> <span class="pre">}</span></code></p></li>
 </ul>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Environment</p></th>
-<th class="head"><p>environment-id</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>Permanently Excited DC Motor Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Discrete Torque Control Permanently Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-PermExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Continuous Torque Control Permanently Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-PermExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Discrete Speed Control Permanently Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-PermExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Continuous Speed Control Permanently Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-PermExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Discrete Current Control Permanently Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-PermExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Continuous Current Control Permanently Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-PermExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Externally Excited DC Motor Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>Discrete Torque Control Externally Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-ExtExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Continuous Torque Control Externally Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-ExtExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Discrete Speed Control Externally Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-ExtExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Continuous Speed Control Externally Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-ExtExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Discrete Current Control Externally Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-ExtExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Continuous Current Control Externally Excited DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-ExtExDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Series DC Motor Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Discrete Torque Control Series DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-SeriesDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Discrete Torque Control Series DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-SeriesDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Discrete Speed Control  Series DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-SeriesDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Continuous Speed Control Series DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-SeriesDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Discrete Current Control Series DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-SeriesDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Continuous Current Control Series DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-SeriesDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Shunt DC Motor Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>Discrete Torque Control Shunt DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-ShuntDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Continuous Torque Control Shunt DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-ShuntDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Discrete Speed Control Shunt DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-ShuntDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Continuous Speed Control Shunt DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-ShuntDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Discrete Current Control Shunt DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-ShuntDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Continuous Current Control Shunt DC Motor Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-ShuntDc-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Permanent Magnet Synchronous Motor (PMSM) Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Torque Control PMSM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-PMSM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Torque Control PMSM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-PMSM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Speed Control PMSM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-PMSM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Speed Control PMSM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-PMSM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Current Control PMSM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-PMSM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Current Control PMSM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-PMSM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Externally Excited Synchronous Motor (EESM) Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>Finite Torque Control EESM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-EESM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Torque Control EESM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-EESM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Finite Speed Control EESM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-EESM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Speed Control EESM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-EESM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Finite Current Control EESM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-EESM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Current Control EESM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-EESM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Synchronous Reluctance Motor (SynRM) Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Torque Control SynRM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-SynRM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Torque Control SynRM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-SynRM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Speed Control SynRM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-SynRM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Speed Control SynRM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-SynRM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Current Control SynRM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-SynRM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Current Control SynRM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-SynRM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Squirrel Cage Induction Motor (SCIM) Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>Finite Torque Control SCIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-SCIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Torque Control SCIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-SCIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Finite Speed Control SCIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-SCIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Speed Control SCIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-SCIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Finite Current Control SCIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-SCIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Current Control SCIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-SCIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Doubly Fed Induction Motor (DFIM) Environments</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Torque Control DFIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-TC-DFIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Torque Control DFIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-TC-DFIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Speed Control DFIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-DFIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Speed Control DFIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-SC-DFIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Finite Current Control DFIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Finite-CC-DFIM-v0'</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Current Control DFIM Environment</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">'Cont-CC-DFIM-v0'</span></code></p></td>
-</tr>
-</tbody>
-</table>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Motor Environments:</span></p>
 <ul>
@@ -554,6 +357,33 @@ In general, all environment-ids are structured as follows:</p>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dfim/finite_tc_dfim.html">Finite Control Set Torque Control Doubly Fed Induction Motor Environment</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="dfim/finite_tc_dfim.html#gym_electric_motor.envs.FiniteTorqueControlDoublyFedInductionMotorEnv"><code class="docutils literal notranslate"><span class="pre">FiniteTorqueControlDoublyFedInductionMotorEnv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sixpmsm/sixpmsm_envs.html">Six Phase Permanent Magnet Synchronous Motor Environments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sixpmsm/cont_cc_sixpmsm.html">Current Control Six Phase Permanent Magnet Synchronous Motor Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sixpmsm/cont_cc_sixpmsm.html#gym_electric_motor.envs.ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv"><code class="docutils literal notranslate"><span class="pre">ContCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sixpmsm/cont_sc_sixpmsm.html">Speed Control Six Phase Permanent Magnet Synchronous Motor Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sixpmsm/cont_sc_sixpmsm.html#gym_electric_motor.envs.ContSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv"><code class="docutils literal notranslate"><span class="pre">ContSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sixpmsm/cont_tc_sixpmsm.html">Torque Control Six Phase Permanent Magnet Synchronous Motor Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sixpmsm/cont_tc_sixpmsm.html#gym_electric_motor.envs.ContTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv"><code class="docutils literal notranslate"><span class="pre">ContTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sixpmsm/finite_cc_sixpmsm.html">Finite Control Set Current Control Six Phase Permanent Magnet Synchronous Motor Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sixpmsm/finite_cc_sixpmsm.html#gym_electric_motor.envs.FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv"><code class="docutils literal notranslate"><span class="pre">FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sixpmsm/finite_sc_sixpmsm.html">Finite Control Set Speed Control Six Phase Permanent Magnet Synchronous Motor Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sixpmsm/finite_sc_sixpmsm.html#gym_electric_motor.envs.FiniteSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv"><code class="docutils literal notranslate"><span class="pre">FiniteSpeedControlSixPhasePermanentMagnetSynchronousMotorEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sixpmsm/finite_tc_sixpmsm.html">Finite Control Set Torque Control Six Phase Permanent Magnet Synchronous Motor Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sixpmsm/finite_tc_sixpmsm.html#gym_electric_motor.envs.FiniteTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv"><code class="docutils literal notranslate"><span class="pre">FiniteTorqueControlSixPhasePermanentMagnetSynchronousMotorEnv</span></code></a></li>
 </ul>
 </li>
 </ul>

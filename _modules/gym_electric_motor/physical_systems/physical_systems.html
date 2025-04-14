@@ -1356,7 +1356,6 @@
             <span class="n">eps</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
         <span class="n">system_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">mechanical_state</span><span class="p">,</span> <span class="p">[</span><span class="n">torque</span><span class="p">],</span> <span class="n">i_abc</span><span class="p">,</span> <span class="n">i_dq</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_dq</span><span class="p">,</span> <span class="p">[</span><span class="n">eps</span><span class="p">],</span> <span class="n">u_sup</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
        
   <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
