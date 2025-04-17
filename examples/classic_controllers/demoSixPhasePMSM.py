@@ -1,4 +1,5 @@
 import gym_electric_motor as gem
+from gym_electric_motor.envs.motors import ActionType, ControlType, Motor, MotorType
 from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator
 from gym_electric_motor.visualization import MotorDashboard
 from gym_electric_motor.visualization.render_modes import RenderMode
@@ -9,8 +10,13 @@ from gym_electric_motor.physical_systems import ConstantSpeedLoad
 my_changed_voltage_supply_args = {'u_nominal': 200.0}
 motor_dashboard = MotorDashboard(state_plots=("i_a1","i_a2"),render_mode=RenderMode.Figure)
 load = ConstantSpeedLoad(omega_fixed=200)
+motor = Motor(
+        MotorType.SixPhasePMSM,
+        ControlType.CurrentControl,
+        ActionType.Continuous,
+    )
 env = gem.make(
-         "Cont-CC-SIXPMSM-v0",
+         motor.env_id(),
          supply = my_changed_voltage_supply_args,
          load = load,
          visualization = motor_dashboard)
