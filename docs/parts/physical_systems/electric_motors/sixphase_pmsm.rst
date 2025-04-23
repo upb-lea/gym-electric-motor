@@ -6,10 +6,10 @@ Electrical ODE
 **************
 
 .. math::
-    \frac{\mathrm{d} i_s^d}{\mathrm{d} t} = \frac{u_s^d + \omega_\mathrm{el} L_s^q i_s^q - R_s i_s^d}{L_s^d} \\
-    \frac{\mathrm{d} i_s^q}{\mathrm{d} t} = \frac{u_s^q - \omega_\mathrm{el} L_s^d i_s^d - R_s i_s^q - \omega_\mathrm{el} psi_\mathrm{PM}}{L_s^q} \\
-    \frac{\mathrm{d} i_s^x}{\mathrm{d} t} = \frac{u_s^x - \omega_\mathrm{el} L_s^y i_s^y - R_s i_s^x}{L_s^x} \\
-    \frac{\mathrm{d} i_s^y}{\mathrm{d} t} = \frac{u_s^y + \omega_\mathrm{el} L_s^x i_s^x - R_s i_s^y}{L_s^y} \\
+    \frac{\mathrm{d} i_\mathrm{d}}{\mathrm{d} t}&= \frac{u_\mathrm{d} + \omega_\mathrm{el} L_\mathrm{q} i_\mathrm{q} - R_\mathrm{s} i_\mathrm{d}}{L_\mathrm{d}} \\
+    \frac{\mathrm{d} i_\mathrm{q}}{\mathrm{d} t}&= \frac{u_\mathrm{q} - \omega_\mathrm{el} L_\mathrm{d} i_\mathrm{d} - R_\mathrm{s} i_\mathrm{q} - \omega_\mathrm{el} \psi_\mathrm{PM}}{L_\mathrm{q}} \\
+    \frac{\mathrm{d} i_\mathrm{x}}{\mathrm{d} t}&= \frac{u_\mathrm{x} - \omega_\mathrm{el} L_\mathrm{y} i_\mathrm{y} - R_\mathrm{s} i_\mathrm{x}}{L_\mathrm{x}} \\
+    \frac{\mathrm{d} i_\mathrm{y}}{\mathrm{d} t}&= \frac{u_\mathrm{y} + \omega_\mathrm{el} L_\mathrm{x} i_\mathrm{x} - R_\mathrm{s} i_\mathrm{y}}{L_\mathrm{y}} \\
 
 
 
