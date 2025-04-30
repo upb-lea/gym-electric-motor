@@ -19,6 +19,11 @@ class SixPhasePMSM(SixPhaseMotor):
     psi_PM                 Vs          4.7e-3        flux linkage of the permanent magnets
     =====================  ==========  ============= ===========================================
 
+    The default parameters originate from:
+    L. Broghammer et al., "Reinforcement Learning Control of Six-Phase Permanent Magnet Synchronous Machines,"
+    2023 13th International Electric Drives Production Conference (EDPC), Regensburg, Germany, 2023,pp. 1-8,
+    doi: 10.1109/EDPC60603.2023.10372153.
+
     =============== ====== =============================================
     Motor Currents  Unit   Description
     =============== ====== =============================================

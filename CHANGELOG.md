@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Added
 - Automated testing of the existing examples
 - Automated testing of the electric motors
+- 2x3 phase PMSM environment with tests and documentation
 ## Changed
 - Changed minimal required gymnasium version to 0.29.1.
 - updated the code of gem-control to be compatible with gymnasium v1.0.0
