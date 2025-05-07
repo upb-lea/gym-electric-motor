@@ -16,6 +16,7 @@ authors = [
     { name = "Stefan Arndt" },
     { name = "Marius Köhler" },
     { name = "Ranil Thomas" },
+    { name = "Manjeet Jha" },
 ]
 description = "A Farama Gymnasium environment for electric motor control."
 readme = "README.md"
