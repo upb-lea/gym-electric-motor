@@ -66,6 +66,7 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.r_s = self.mp["r_s"]
         self.r_e = self.mp["r_e"]
         self.p = self.mp["p"]
+        self
         self.i_e_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("i_e")] * (1 - current_safety_margin)
         self.i_q_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("i_sq")] * (1 - current_safety_margin)
         self.t_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("torque")]
@@ -145,30 +146,55 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.t_max_psi = np.zeros(self.psi_count)
 
         for t in torque:
-            losses = []
-            parameter = []
+            best_loss = np.inf
+            best_param = None
             for idx, psi in enumerate(np.linspace(0, self.psi_max, self.psi_count)):
-                losses_psi = []
-                parameter_psi = []
+                best_loss_psi = np.inf
+                best_param_psi = None
                 for i_e in np.linspace(0, self.i_e_lim, self.i_e_count):
                     i_d, i_q = self.solve_analytical(t, psi, i_e)
-                    if np.sqrt(i_d**2 + i_q**2) < self.i_q_lim:
-                        loss = self.loss(i_d, i_q, i_e)
-                        params = np.array([t, psi, i_d, i_q, i_e])
-                        losses.append(loss)
-                        losses_psi.append(loss)
-                        parameter.append(params)
-                        parameter_psi.append(params)
-                        self.t_max_psi[idx] = t
-                if len(losses_psi) > 0:
-                    minimum_loss_psi.append(min(losses_psi))
-                    best_params_psi.append(parameter_psi[losses_psi.index(minimum_loss_psi[-1])])
-            if len(losses) > 0:
-                minimum_loss.append(min(losses))
-                best_params.append(parameter[losses.index(minimum_loss[-1])])
 
-        best_params = np.array(best_params)
-        best_params_psi = np.array(best_params_psi)
+            # Check current limits
+                    if abs(i_d) > self.i_d_lim or i_e < 0 or i_e > self.i_e_lim:
+                        continue
+
+            # Voltage constraint
+                    flux_d = self.l_d * i_d + self.l_m * i_e
+                    flux_q = self.l_q * i_q
+                    psi_dq = np.sqrt(flux_d**2 + flux_q**2)
+                    v_limit = self.v_dc / (np.sqrt(3) * self.omega_k)  # ω_k must be defined elsewhere
+
+                    if psi_dq > v_limit:
+                        continue
+
+                    # Compute actual torque
+                    actual_torque = self.torque(i_d, i_q, i_e)
+
+            # If exact torque not achievable, minimize torque error
+                    if abs(actual_torque - t) > self.torque_tol:  # define self.torque_tol ≈ small, e.g. 1.0 Nm
+                        continue
+
+            # Compute losses and store best case
+            loss = self.loss(i_d, i_q, i_e)
+            params = np.array([actual_torque, psi, i_d, i_q, i_e])
+
+            if loss < best_loss:
+                best_loss = loss
+                best_param = params
+
+            if loss < best_loss_psi:
+                best_loss_psi = loss
+                best_param_psi = params
+
+        # Store best for fixed psi
+        if best_param_psi is not None:
+            minimum_loss_psi.append(best_loss_psi)
+            best_params_psi.append(best_param_psi)
+
+    # Store best for fixed torque
+            if best_param is not None:
+                minimum_loss.append(best_loss)
+                best_params.append(best_param)
 
         self.t_max_psi = sp_interpolate.interp1d(
             np.linspace(0, self.psi_max, self.psi_count), 0.99 * self.t_max_psi, kind="linear"
@@ -266,3 +292,4 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
     def reset(self):
         """Reset the EESM operation point selection"""
         super().reset()
+
