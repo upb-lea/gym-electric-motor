@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gym Electric Motor &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Readme File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="random_component.html">Random Component</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Gym Electric Motor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/parts/read_me.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gym-electric-motor">
+<h1>Gym Electric Motor<a class="headerlink" href="#gym-electric-motor" title="Permalink to this heading"></a></h1>
+<a class="reference external image-reference" href="docs/plots/Motor_Logo.png"><img alt="" src="parts/docs/plots/Motor_Logo.png" /></a>
+<p><a class="reference external" href="https://joss.theoj.org/papers/10.21105/joss.02498">**Overview paper**</a>
+| <a class="reference external" href="https://arxiv.org/abs/1910.09434">**Reinforcement learning paper**</a>
+| <a class="reference external" href="https://ieeexplore.ieee.org/document/10239044">**GEM control paper**</a>
+| <a class="reference external" href="#getting-started">**Quickstart**</a>
+| <a class="reference external" href="#installation">**Install guide**</a>
+| <a class="reference external" href="https://upb-lea.github.io/gym-electric-motor/">**Reference docs**</a>
+| <a class="reference external" href="https://github.com/upb-lea/gym-electric-motor/releases">**Release notes**</a></p>
+<a class="reference external image-reference" href="https://github.com/upb-lea/gym-electric-motor/actions/workflows/build_and_test.yml"><img alt="Build Status" src="https://github.com/upb-lea/gym-electric-motor/actions/workflows/build_and_test.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/upb-lea/gym-electric-motor"><img alt="codecov" src="https://codecov.io/gh/upb-lea/gym-electric-motor/branch/master/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/gym-electric-motor/"><img alt="PyPI version shields.io" src="https://img.shields.io/pypi/v/gym-electric-motor.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/upb-lea/gym-electric-motor/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a>
+<a class="reference external image-reference" href="https://doi.org/10.5281/zenodo.4355691"><img alt="DOI Zenodo" src="https://zenodo.org/badge/DOI/10.5281/zenodo.4355691.svg" /></a>
+<a class="reference external image-reference" href="https://doi.org/10.21105/joss.02498"><img alt="DOI JOSS" src="https://joss.theoj.org/papers/10.21105/joss.02498/status.svg" /></a>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>The gym-electric-motor (GEM) package is a Python toolbox for the simulation and control of various electric motors.
+It is built upon <a class="reference external" href="https://gymnasium.farama.org/">Farama Gymnasium Environments</a>, and, therefore, can be used for both, classical control simulation and <a class="reference external" href="https://github.com/upb-lea/reinforcement_learning_course_materials">reinforcement learning</a> experiments. It allows you to construct a typical drive train with the usual building blocks, i.e., supply voltages, converters, electric motors and load models, and obtain not only a closed-loop simulation of this physical structure, but also a rich interface for plugging in any decision making algorithm, from linear feedback control to <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html">Deep Deterministic Policy Gradient</a> agents.
+In addition, an automated framework for classical control structures based on PI controllers is provided.</p>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
+<p>An easy way to get started with GEM is by playing around with the following interactive notebooks in Google Colaboratory. Most important features of GEM as well as application demonstrations are showcased, and give a kickstart for engineers in industry and academia.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master//examples/environment_features/GEM_cookbook.ipynb">GEM cookbook</a></p></li>
+<li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_ddpg_pmsm_dq_current_control.ipynb">Stable-baselines3 DDPG example</a></p></li>
+<li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/reinforcement_learning_controllers/stable_baselines3_dqn_disc_pmsm_example.ipynb">Stable-baselines3 DQN example</a></p></li>
+<li><p><a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/model_predictive_controllers/pmsm_mpc_dq_current_control.ipynb">MPC  example</a></p></li>
+</ul>
+<p>There is a list of <a class="reference external" href="examples/">standalone example scripts</a> as well for minimalistic demonstrations.</p>
+<p>A basic routine is as simple as:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Finite-CC-PMSM-v0&quot;</span><span class="p">)</span>  <span class="c1"># instantiate a discretely controlled PMSM</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">references</span><span class="p">),</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>  <span class="c1"># pick random control actions</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">references</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Install gym-electric-motor from PyPI (recommended):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">gym</span><span class="o">-</span><span class="n">electric</span><span class="o">-</span><span class="n">motor</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Install from Github source:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">upb</span><span class="o">-</span><span class="n">lea</span><span class="o">/</span><span class="n">gym</span><span class="o">-</span><span class="n">electric</span><span class="o">-</span><span class="n">motor</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">gym</span><span class="o">-</span><span class="n">electric</span><span class="o">-</span><span class="n">motor</span>
+<span class="c1"># Then either</span>
+<span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+<span class="c1"># or alternatively</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="building-blocks">
+<h2>Building Blocks<a class="headerlink" href="#building-blocks" title="Permalink to this heading"></a></h2>
+<p>A GEM environment consists of following building blocks:</p>
+<ul class="simple">
+<li><p>Physical structure:</p>
+<ul>
+<li><p>Voltage supply</p></li>
+<li><p>Converter</p></li>
+<li><p>Electric motor</p></li>
+<li><p>Load model</p></li>
+</ul>
+</li>
+<li><p>Utility functions for reference generation, reward calculation and visualization</p></li>
+</ul>
+<section id="information-flow-in-a-gem-environment">
+<h3>Information Flow in a GEM Environment<a class="headerlink" href="#information-flow-in-a-gem-environment" title="Permalink to this heading"></a></h3>
+<a class="reference external image-reference" href="docs/plots/SCML_Overview.png"><img alt="" src="parts/docs/plots/SCML_Overview.png" /></a>
+<p>Among various DC-motor models, the following AC motors - together with their power electronic counterparts - are available:</p>
+<ul class="simple">
+<li><p>Permanent magnet synchronous motor (PMSM)</p></li>
+<li><p>Synchronous reluctance motor (SynRM)</p></li>
+<li><p>Externally excited synchronous motor (EESM)</p></li>
+<li><p>Squirrel cage induction motor (SCIM)</p></li>
+<li><p>Doubly-fed induction motor (DFIM)</p></li>
+</ul>
+<p>The converters can be driven by means of a duty cycle (continuous control set) or switching commands (finite control set).</p>
+</section>
+<section id="citation">
+<h3>Citation<a class="headerlink" href="#citation" title="Permalink to this heading"></a></h3>
+<p>A white paper for the general toolbox in the context of drive simulation and control prototyping can be found in the <a class="reference external" href="https://joss.theoj.org/papers/10.21105/joss.02498">Journal of Open Source Software (JOSS)</a>. Please use the following BibTeX entry for citing it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">Balakrishna2021</span><span class="p">,</span>
+    <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="mf">.02498</span><span class="p">},</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.21105</span><span class="o">/</span><span class="n">joss</span><span class="mf">.02498</span><span class="p">},</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2021</span><span class="p">},</span>
+    <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">Open</span> <span class="n">Journal</span><span class="p">},</span>
+    <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">},</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">58</span><span class="p">},</span>
+    <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2498</span><span class="p">},</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Praneeth</span> <span class="p">{</span><span class="n">Balakrishna</span><span class="p">}</span> <span class="ow">and</span> <span class="n">Gerrit</span> <span class="p">{</span><span class="n">Book</span><span class="p">}</span> <span class="ow">and</span> <span class="n">Wilhelm</span> <span class="p">{</span><span class="n">Kirchgässner</span><span class="p">}</span> <span class="ow">and</span> <span class="n">Maximilian</span> <span class="p">{</span><span class="n">Schenke</span><span class="p">}</span> <span class="ow">and</span> <span class="n">Arne</span> <span class="p">{</span><span class="n">Traue</span><span class="p">}</span> <span class="ow">and</span> <span class="n">Oliver</span> <span class="p">{</span><span class="n">Wallscheid</span><span class="p">}},</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">gym</span><span class="o">-</span><span class="n">electric</span><span class="o">-</span><span class="n">motor</span> <span class="p">(</span><span class="n">GEM</span><span class="p">):</span> <span class="n">A</span> <span class="n">Python</span> <span class="n">toolbox</span> <span class="k">for</span> <span class="n">the</span> <span class="n">simulation</span> <span class="n">of</span> <span class="n">electric</span> <span class="n">drive</span> <span class="n">systems</span><span class="p">},</span>
+    <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Journal</span> <span class="n">of</span> <span class="n">Open</span> <span class="n">Source</span> <span class="n">Software</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A white paper for the utilization of this framework within reinforcement learning is available at <a class="reference external" href="https://ieeexplore.ieee.org/document/9241851">IEEE-Xplore</a> (preprint: <a class="reference external" href="https://arxiv.org/abs/1910.09434">arxiv.org/abs/1910.09434</a>). Please use the following BibTeX entry for citing it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="mi">9241851</span><span class="p">,</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Traue</span><span class="p">,</span> <span class="n">Arne</span> <span class="ow">and</span> <span class="n">Book</span><span class="p">,</span> <span class="n">Gerrit</span> <span class="ow">and</span> <span class="n">Kirchgässner</span><span class="p">,</span> <span class="n">Wilhelm</span> <span class="ow">and</span> <span class="n">Wallscheid</span><span class="p">,</span> <span class="n">Oliver</span><span class="p">},</span>
+  <span class="n">journal</span><span class="o">=</span><span class="p">{</span><span class="n">IEEE</span> <span class="n">Transactions</span> <span class="n">on</span> <span class="n">Neural</span> <span class="n">Networks</span> <span class="ow">and</span> <span class="n">Learning</span> <span class="n">Systems</span><span class="p">},</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">Toward</span> <span class="n">a</span> <span class="n">Reinforcement</span> <span class="n">Learning</span> <span class="n">Environment</span> <span class="n">Toolbox</span> <span class="k">for</span> <span class="n">Intelligent</span> <span class="n">Electric</span> <span class="n">Motor</span> <span class="n">Control</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2022</span><span class="p">},</span>
+  <span class="n">volume</span><span class="o">=</span><span class="p">{</span><span class="mi">33</span><span class="p">},</span>
+  <span class="n">number</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">},</span>
+  <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">919</span><span class="o">-</span><span class="mi">928</span><span class="p">},</span>
+  <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">TNNLS</span><span class="mf">.2020.3029573</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>A white paper for the classical control approaches of gym-electric-motor control is available at <a class="reference external" href="https://ieeexplore.ieee.org/document/10239044">IEEE-Xplore</a>. Please use the following BibTeX entry for citing it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@INPROCEEDINGS</span><span class="p">{</span><span class="mi">10239044</span><span class="p">,</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Book</span><span class="p">,</span> <span class="n">Felix</span> <span class="ow">and</span> <span class="n">Traue</span><span class="p">,</span> <span class="n">Arne</span> <span class="ow">and</span> <span class="n">Schenke</span><span class="p">,</span> <span class="n">Maximilian</span> <span class="ow">and</span> <span class="n">Haucke</span><span class="o">-</span><span class="n">Korber</span><span class="p">,</span> <span class="n">Barnabas</span> <span class="ow">and</span> <span class="n">Wallscheid</span><span class="p">,</span> <span class="n">Oliver</span><span class="p">},</span>
+  <span class="n">booktitle</span><span class="o">=</span><span class="p">{</span><span class="mi">2023</span> <span class="n">IEEE</span> <span class="n">International</span> <span class="n">Electric</span> <span class="n">Machines</span> <span class="o">&amp;</span> <span class="n">Drives</span> <span class="n">Conference</span> <span class="p">(</span><span class="n">IEMDC</span><span class="p">)},</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">Gym</span><span class="o">-</span><span class="n">Electric</span><span class="o">-</span><span class="n">Motor</span> <span class="p">(</span><span class="n">GEM</span><span class="p">)</span> <span class="n">Control</span><span class="p">:</span> <span class="n">An</span> <span class="n">Automated</span> <span class="n">Open</span><span class="o">-</span><span class="n">Source</span> <span class="n">Controller</span> <span class="n">Design</span> <span class="n">Suite</span> <span class="k">for</span> <span class="n">Drives</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2023</span><span class="p">},</span>
+  <span class="n">volume</span><span class="o">=</span><span class="p">{},</span>
+  <span class="n">number</span><span class="o">=</span><span class="p">{},</span>
+  <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">7</span><span class="p">},</span>
+  <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">IEMDC55163</span><span class="mf">.2023.10239044</span><span class="p">}}</span>
+</pre></div>
+</div>
+</section>
+<section id="running-unit-tests-with-pytest">
+<h3>Running Unit Tests with Pytest<a class="headerlink" href="#running-unit-tests-with-pytest" title="Permalink to this heading"></a></h3>
+<p>To run the unit tests ‘’pytest’’ is required.
+All tests can be found in the ‘’tests’’ folder.
+Execute pytest in the project’s root folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pytest</span>
+</pre></div>
+</div>
+<p>or with test coverage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pytest</span> <span class="o">--</span><span class="n">cov</span><span class="o">=./</span>
+</pre></div>
+</div>
+<p>All tests shall pass.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
