@@ -34,4 +34,4 @@ plots/
 saved_plots/
 
 #debug files
-src/debug/*
+*/debug.ipynb
