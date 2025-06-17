@@ -15,9 +15,12 @@ from gym_electric_motor.physical_systems.electric_motors import (
     SynchronousMotor,
     SynchronousReluctanceMotor,
     ExternallyExcitedSynchronousMotor,
-    PermanentMagnetSynchronousMotor
+    PermanentMagnetSynchronousMotor,
+    SixPhasePMSM
 )
+from gym_electric_motor.physical_systems.electric_motors.six_phase_motor import SixPhaseMotor
 from gymnasium.spaces import Box
+from scipy.linalg import block_diag
 import numpy as np
 
 #parameters for dc motor
@@ -50,6 +53,13 @@ test_ExtExcSyncMotor_initializer = {
     }
 test_PermMagSyncMotor_parameter = {"p": 3,"l_d": 0.37e-6,"l_q": 1.2e-6,"j_rotor": 0.03883,"r_s": 18,"psi_p": 66e-6,}
 test_PermMagSyncMotor_initializer = {"states": {"i_sq": 10.0, "i_sd": 5.0, "epsilon": 10.0},
+        "interval": None,
+        "random_init": None,
+        "random_params": (None, None),
+    }
+test_SixPhasePMSM_parameter = {"p": 6, "l_d": 125e-5, "l_q": 126e-5, "l_x": 39e-3, "l_y": 35e-3, "r_s": 64.3e-6, "psi_PM": 4.7e-6,  "j_rotor": 0.0110,}
+test_SixPhasePMSM_initializer = {
+        "states": {"i_sd": 10.0, "i_sq": 20.0, "i_sx": 10.0, "i_sy": 20.0, "epsilon": 0.0},
         "interval": None,
         "random_init": None,
         "random_params": (None, None),
@@ -1116,3 +1126,192 @@ def test_PermMagSyncMotor_el_Jacobian():
         )
      assert np.array_equal(expectedJacobian[0],defaultPermMagSyncMotor.electrical_jacobian(state,u_in,omega)[0])
 
+def test_SixPhaseMotor_t_46():
+     defaultSixPhaseMotor = SixPhaseMotor()
+     t46 = 1/ 3 * np.array([
+        [1, -0.5, -0.5, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0],
+        [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0.5, 0.5, -1],
+        [1, -0.5, -0.5, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0],
+        [0, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0.5, 0.5, -1]
+    ])
+     i_abc = [1, 2, 3, 1, 2, 3] #[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]
+     expectedI_out = np.matmul(t46, i_abc) # [i_salpha, i_sbeta, i_sX, i_sY]
+     assert np.array_equal(defaultSixPhaseMotor.t_46(i_abc),expectedI_out)
+
+def test_SixPhaseMotor_q():
+     defaultSixPhaseMotor = SixPhaseMotor()
+     t_vsd = 1/ 3 * np.array([
+            [1, -0.5, -0.5, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0],
+            [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0.5, 0.5, -1],
+            [1, -0.5, -0.5, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0],
+            [0, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0.5, 0.5, -1],
+        ])
+     def rotation_matrix(theta):
+           return np.array([
+        [math.cos(theta), math.sin(theta)],
+        [-math.sin(theta), math.cos(theta)]
+        ])
+     epsilon = 10
+     t1 = rotation_matrix(epsilon)
+     t2 = rotation_matrix(-epsilon)
+     tp_alphaBetaXY = block_diag(t1,t2)
+     tp_vsd = np.matmul(tp_alphaBetaXY, t_vsd)
+     i_abc = [1, 2, 3, 1, 2, 3] #[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]
+     expectedI_out = np.matmul(tp_vsd, i_abc) # [i_sd, i_sq, i_sx, i_sy]
+     assert np.array_equal(defaultSixPhaseMotor.q(i_abc,epsilon),expectedI_out)
+
+def test_SixPhaseMotor_q_inv():
+     defaultSixPhaseMotor = SixPhaseMotor()
+     t_vsd = 1/ 3 * np.array([
+            [1, -0.5, -0.5, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0],
+            [0, 0.5 * np.sqrt(3), -0.5 * np.sqrt(3), 0.5, 0.5, -1],
+            [1, -0.5, -0.5, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0],
+            [0, -0.5 * np.sqrt(3), 0.5 * np.sqrt(3), 0.5, 0.5, -1],
+            [1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1]
+        ])
+     epsilon = 0.5
+     cos = math.cos(epsilon)
+     sin = math.sin(epsilon)
+     tp_alphaBetaXY = np.array([
+                 [cos, sin, 0, 0, 0, 0],
+                 [-sin, cos, 0, 0, 0, 0],
+                 [0, 0, cos, -sin, 0, 0],
+                 [0, 0, sin, cos, 0, 0],
+                 [0, 0, 0, 0, 1, 0],
+                 [0, 0, 0, 0, 0, 1],
+        ])
+     tp_vsd = np.matmul(tp_alphaBetaXY, t_vsd)
+     inv_tpVsd = np.linalg.inv(tp_vsd)
+     modified_inv_tpVsd = np.delete(inv_tpVsd, [4, 5], axis=1)
+     quantities_dqxy = [1,2,2,1]
+     expected_abc = np.matmul(modified_inv_tpVsd, quantities_dqxy)
+     assert np.array_equal(defaultSixPhaseMotor.q_inv(quantities_dqxy,epsilon),expected_abc)
+
+def test_InitSixPhasePMSM():
+     defaultSixPhasePMSM = SixPhasePMSM()
+     assert defaultSixPhasePMSM._default_motor_parameter == {"p": 5, "l_d": 125e-6, "l_q": 126e-6, "l_x": 39e-6, "l_y": 35e-6, "r_s": 64.3e-3, "psi_PM": 4.7e-3,  "j_rotor": 0.0110,}
+     assert defaultSixPhasePMSM.HAS_JACOBIAN
+     assert defaultSixPhasePMSM.motor_parameter == defaultSixPhasePMSM._default_motor_parameter
+     assert defaultSixPhasePMSM._initial_states == defaultSixPhasePMSM._default_initializer["states"]
+     concreteSixPhasePMSM = SixPhasePMSM(test_SixPhasePMSM_parameter,None,None,test_SixPhasePMSM_initializer)
+     assert concreteSixPhasePMSM.motor_parameter == test_SixPhasePMSM_parameter
+     assert concreteSixPhasePMSM.initializer == test_SixPhasePMSM_initializer
+     assert concreteSixPhasePMSM._initial_states == test_SixPhasePMSM_initializer["states"]
+     assert defaultSixPhasePMSM.CURRENTS_IDX == SixPhasePMSM.CURRENTS_IDX
+     assert defaultSixPhasePMSM.CURRENTS == SixPhasePMSM.CURRENTS
+     assert defaultSixPhasePMSM.IO_VOLTAGES == SixPhasePMSM.IO_VOLTAGES
+
+
+def test_SixPhasePMSM_el_ode():
+     defaultSixPhasePMSM = SixPhasePMSM()
+     state = [6, 5, 10, 2, 1]#[i_sd, i_sq, i_sx, i_sy, epsilon]
+     omega = 60
+     u_dqxy = [50, 60, 50, 50]#[u_sd, u_sq, u_sx, u_sy]
+     expectedOde = np.matmul(
+            defaultSixPhasePMSM._model_constants,
+            np.array(
+                [
+                    omega,
+                    state[defaultSixPhasePMSM.I_SD_IDX],
+                    state[defaultSixPhasePMSM.I_SQ_IDX],
+                    state[defaultSixPhasePMSM.I_SX_IDX],
+                    state[defaultSixPhasePMSM.I_SY_IDX],
+                    u_dqxy[0],
+                    u_dqxy[1],
+                    u_dqxy[2],
+                    u_dqxy[3],
+                    omega * state[defaultSixPhasePMSM.I_SD_IDX],
+                    omega * state[defaultSixPhasePMSM.I_SQ_IDX],
+                    omega * state[defaultSixPhasePMSM.I_SX_IDX],
+                    omega * state[defaultSixPhasePMSM.I_SY_IDX],
+                ]
+            )
+        )
+     assert np.array_equal(defaultSixPhasePMSM.electrical_ode(state,u_dqxy,omega),expectedOde)
+
+def test_SixPhasePMSM_el_jacobian():
+     defaultSixPhasePMSM = SixPhasePMSM()
+     mp = defaultSixPhasePMSM._motor_parameter
+     state = [6, 5, 10, 2, 1]#[i_sd, i_sq, i_sx, i_sy, epsilon]
+     omega = 60
+     u_dqxy = [50, 60, 50, 50]#[u_sd, u_sq, u_sx, u_sy]
+     expectedJacobian = (
+            np.array(
+                [  # dx'/dx
+                    # i_sd          i_sq               i_sx                                    i_sy                                   epsilon
+                    [
+                        -mp["r_s"] / mp["l_d"],
+                        mp["l_q"] / mp["l_d"] * omega, 
+                        0, 
+                        0, 
+                        0
+                    ],
+                    [
+                        -mp["l_d"] / mp["l_q"] * omega,
+                        -mp["r_s"] / mp["l_q"],
+                        0,
+                        0,
+                        0
+                    ],
+                    [
+                        0,
+                        0,
+                        -mp["r_s"] / mp["l_x"],
+                        -mp["l_y"] / mp["l_x"] * omega,
+                        0
+                    ],
+                    [
+                        0,
+                        0,
+                        mp["l_x"] / mp["l_y"] * omega,
+                        -mp["r_s"] / mp["l_y"],
+                        0
+                    ],
+                    [0, 0, 0, 0, 0],
+                ]
+            ),
+            np.array(
+                [  # dx'/dw
+                    mp["l_q"] / mp["l_d"],
+                    -mp["l_d"] / mp["l_q"],
+                    -mp["l_y"] / mp["l_x"],
+                    mp["l_x"] / mp["l_y"],
+                    mp["p"],
+                ]
+            ),
+            np.array(
+                [  # dT/dx
+                    1.5 * mp["p"] * (mp["l_d"] - mp["l_q"]) * state[defaultSixPhasePMSM.I_SQ_IDX],
+                    1.5 * mp["p"] * (mp["psi_PM"] + (mp["l_d"] - mp["l_q"]) * state[defaultSixPhasePMSM.I_SD_IDX]),
+                    0,
+                    0,
+                    0
+                ]
+            ),
+        )
+     assert np.array_equal(expectedJacobian[0],defaultSixPhasePMSM.electrical_jacobian(state,u_dqxy,omega)[0])
+     assert np.array_equal(expectedJacobian[1],defaultSixPhasePMSM.electrical_jacobian(state,u_dqxy,omega)[1])
+     assert np.array_equal(expectedJacobian[2],defaultSixPhasePMSM.electrical_jacobian(state,u_dqxy,omega)[2])
+
+def test_SixPhasePMSM_torque():
+     defaultSixPhasePMSM = SixPhasePMSM()
+     mp = defaultSixPhasePMSM._motor_parameter
+     currents = [3,1,2,3]
+     expectedTorque =  (
+            1.5 * mp["p"] * (mp["psi_PM"] + (mp["l_d"] - mp["l_q"]) * currents[defaultSixPhasePMSM.I_SD_IDX]) * currents[defaultSixPhasePMSM.I_SQ_IDX]
+        )
+     assert defaultSixPhasePMSM.torque(currents) == expectedTorque
+
+def test_SixPMSM_reset():
+     defaultSixPhasePMSM = SixPhasePMSM()
+     default_initial_state = {"i_sd": 0.0, "i_sq": 0.0, "i_sx": 0.0, "i_sy": 0.0, "epsilon": 0.0}
+     default_Initial_state_array = [0,0,0,0,0]
+     new_initial_state = {"i_sd": 10.0, "i_sq": 20.0, "i_sx": 10.0, "i_sy": 10.0, "epsilon": 10.0}
+     assert defaultSixPhasePMSM._initial_states == default_initial_state
+     defaultSixPhasePMSM_state_positions = {"i_sd": 0, "i_sq": 1, "i_sx": 2, "i_sy": 3, "epsilon": 4, "torque": 5,"omega": 6,"u": 7}
+     defaultSixPhasePMSM_state_space = Box(low=-1, high=1, shape=(8,), dtype=np.float64)
+     assert (defaultSixPhasePMSM.reset(defaultSixPhasePMSM_state_space,defaultSixPhasePMSM_state_positions),default_Initial_state_array)
+     defaultSixPhasePMSM._initial_states = new_initial_state
+     defaultSixPhasePMSM.reset(defaultSixPhasePMSM_state_space,defaultSixPhasePMSM_state_positions)
+     assert defaultSixPhasePMSM._initial_states == new_initial_state

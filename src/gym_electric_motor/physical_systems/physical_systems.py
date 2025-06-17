@@ -1111,3 +1111,201 @@ class DoublyFedInductionMotorSystem(ThreePhaseMotorSystem):
             ]
         )
         return system_state / self._limits
+
+class SixPhaseMotorSystem(SCMLSystem):
+    """
+    SCML-System that implements the basic transformations needed for six phase drives.
+    """
+
+    def abc_to_alphabeta_space(self, abc_quantities):
+        """
+        Transformation from abc to alphabeta space
+
+        Args:
+            abc_quantities: The properties in the abc representation like ''[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]''
+
+        Returns:
+            The converted quantities in the alpha-beta representation like ''[i_salpha, i_sbeta, i_sX, i_sY]''
+        """
+        alphabeta_quantity = self._electrical_motor.t_46(abc_quantities)
+        return alphabeta_quantity
+    
+    def abc_to_dq_space(self, abc_quantities,epsilon):
+        """
+        Transformation of the abc representation into dq using the electrical angle
+
+        Args:
+            abc_quantities: the properties in the abc representation like ''[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]''
+            epsilon: electrical rotor position
+
+        Returns:
+            The converted quantities in the dq representation like ''[i_sd, i_sq, i_sx, i_sy,]''.
+        """
+        dqxy_quantity = self._electrical_motor.q(abc_quantities,epsilon)
+        return dqxy_quantity
+    
+    def dq_to_abc_space(self, dq_quantities,epsilon):
+        """
+        Transformation of the dq representation into abc using the electrical angle
+
+        Args:
+            dq_quantities: the properties in the dq representation like ''[i_sd, i_sq, i_sx, i_sy, i_s0+, i_s0-]''.
+            epsilon: electrical rotor position
+
+        Returns:
+            The converted quantities in the abc representation like ''[i_sa1, i_sb1, i_sc1, i_sa2, i_sb2, i_sc2]''.
+        """
+        abc_quantity = self._electrical_motor.q_inv(dq_quantities,epsilon)
+        return abc_quantity
+    
+class SixPhasePMSM(SixPhaseMotorSystem): 
+  def __init__(self, control_space="abc", **kwargs):
+        """
+        Args:
+            control_space(str):('abc' or 'dq') Choose, if actions the actions space is in dq or abc space
+            kwargs: Further arguments to pass tp SCMLSystem
+        """
+        super().__init__(**kwargs)
+        self.control_space = control_space
+        if control_space == "dq":
+            assert (
+                type(self._converter.action_space) == Box
+            ), ""
+            self._action_space = Box(-1, 1, shape=(4,), dtype=np.float64)
+    
+  def _build_state_space(self, state_names):
+        # Docstring of superclass
+        low = -1 * np.ones_like(state_names, dtype=float)
+        low[self.U_SUP_IDX] = 0.0
+        high = np.ones_like(state_names, dtype=float)
+        return Box(low, high, dtype=np.float64)
+  
+  def _build_state_names(self):
+        # Docstring of superclass
+        return self._mechanical_load.state_names + [
+            "torque",
+            "i_a1",
+            "i_b1",
+            "i_c1",
+            "i_a2",
+            "i_b2",
+            "i_c2",
+            "i_sd",
+            "i_sq",
+            "i_sx",
+            "i_sy",
+            "u_a1",
+            "u_b1",
+            "u_c1",
+            "u_a2",
+            "u_b2",
+            "u_c2",
+            "u_sd",
+            "u_sq",
+            "u_sx",
+            "u_sy",
+            "epsilon",
+            "u_sup",
+        ]
+  #how to do - logic/know how ?
+  def _set_indices(self):
+        # Docstring of superclass
+        super()._set_indices()
+        self._omega_ode_idx = self._mechanical_load.OMEGA_IDX
+        self._load_ode_idx = list(range(len(self._mechanical_load.state_names)))
+        self._ode_currents_idx = list(
+            range(
+                self._load_ode_idx[-1] + 1,
+                self._load_ode_idx[-1] + 1 + len(self._electrical_motor.CURRENTS),
+            )
+        )
+        self._motor_ode_idx = self._ode_currents_idx
+        self._motor_ode_idx += [self._motor_ode_idx[-1] + 1]
+        self._ode_currents_idx = self._motor_ode_idx[:-1]
+        self.OMEGA_IDX = self.mechanical_load.OMEGA_IDX
+        self.TORQUE_IDX = len(self.mechanical_load.state_names)
+        currents_lower = self.TORQUE_IDX + 1
+        currents_upper = currents_lower + 10 # considering six stator currents in abc and four currents in dqxy
+        self.CURRENTS_IDX = list(range(currents_lower, currents_upper))
+        voltages_lower = currents_upper
+        voltages_upper = voltages_lower + 10
+        self.VOLTAGES_IDX = list(range(voltages_lower, voltages_upper))
+        self.EPSILON_IDX = voltages_upper
+        self.U_SUP_IDX = self.EPSILON_IDX + 1
+        self._ode_epsilon_idx = self._motor_ode_idx[-1]
+
+  def simulate(self, action, *_, **__):
+        # Docstring of superclass
+        ode_state = self._ode_solver.y
+        eps = ode_state[self._ode_epsilon_idx]
+        if self.control_space == "dq":
+            action = self.dq_to_abc_space(action, eps)
+        i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
+        switching_times = self._converter.set_action(action, self._t)
+
+        for t in switching_times[:-1]:
+            i_sup = self._converter.i_sup(i_in)
+            u_sup = self._supply.get_voltage(self._t, i_sup)
+            u_in = self._converter.convert(i_in, self._ode_solver.t)
+            u_in = [u * u_s for u in u_in for u_s in u_sup]
+            u_dq = self.abc_to_dq_space(u_in, eps)
+            self._ode_solver.set_f_params(u_dq)
+            ode_state = self._ode_solver.integrate(t)
+            eps = ode_state[self._ode_epsilon_idx]
+            i_in = self.dq_to_abc_space(self._electrical_motor.i_in(ode_state[self._ode_currents_idx]), eps)
+
+        i_sup = self._converter.i_sup(i_in)
+        u_sup = self._supply.get_voltage(self._t, i_sup)
+        u_in = self._converter.convert(i_in, self._ode_solver.t)
+        u_in = [u * u_s for u in u_in for u_s in u_sup]
+        u_dq = self.abc_to_dq_space(u_in, eps)
+        self._ode_solver.set_f_params(u_dq)
+        ode_state = self._ode_solver.integrate(self._t + self._tau)
+        self._t = self._ode_solver.t
+        self._k += 1
+        torque = self._electrical_motor.torque(ode_state[self._motor_ode_idx])
+        mechanical_state = ode_state[self._load_ode_idx]
+        i_dq = ode_state[self._ode_currents_idx]
+        i_abc = list(self.dq_to_abc_space(i_dq, eps))
+        eps = ode_state[self._ode_epsilon_idx] % (2 * np.pi)
+        if eps > np.pi:
+            eps -= 2 * np.pi
+
+        system_state = np.concatenate((mechanical_state, [torque], i_abc, i_dq, u_in, u_dq, [eps], u_sup))
+        return system_state / self._limits
+       
+  def reset(self, *_):
+        # Docstring of superclass
+        motor_state = self._electrical_motor.reset(state_space=self.state_space, state_positions=self.state_positions)
+        mechanical_state = self._mechanical_load.reset(
+            state_positions=self.state_positions,
+            state_space=self.state_space,
+            nominal_state=self.nominal_state,
+        )
+        ode_state = np.concatenate((mechanical_state, motor_state))
+        u_sup = self.supply.reset()
+        eps = ode_state[self._ode_epsilon_idx]
+        if eps > np.pi:
+            eps -= 2 * np.pi
+        u_abc = self.converter.reset()
+        u_abc = [u * u_s for u in u_abc for u_s in u_sup]
+        u_dq = self.abc_to_dq_space(u_abc, eps)
+        i_dq = ode_state[self._ode_currents_idx]
+        i_abc = self.dq_to_abc_space(i_dq, eps)
+        torque = self.electrical_motor.torque(motor_state)
+        self._t = 0
+        self._k = 0
+        self._ode_solver.set_initial_value(ode_state, self._t)
+        system_state = np.concatenate(
+            (
+                mechanical_state,
+                [torque],
+                i_abc,
+                i_dq,
+                u_abc,
+                u_dq,
+                [eps],
+                u_sup,
+            )
+        )
+        return system_state / self._limits
