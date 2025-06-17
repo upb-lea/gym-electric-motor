@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usage Guides &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/read_me.html">Gym Electric Motor</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Usage Guides</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/parts_gem/usage_guide/usgae_guides.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="usage-guides">
+<h1>Usage Guides<a class="headerlink" href="#usage-guides" title="Permalink to this heading"></a></h1>
+<section id="create-a-gem-environment">
+<h2>Create a GEM environment<a class="headerlink" href="#create-a-gem-environment" title="Permalink to this heading"></a></h2>
+<p>To create a GEM environment use the gem.make() command. First of all, the type of the environment is defined by
+the env_id. This specifies the action space (<cite>‘Finite’</cite> or <cite>‘Cont’</cite>), the control task ( <cite>‘SC’</cite> for speed control,
+<cite>‘TC’</cite> for torque control or <cite>‘CC’</cite> for current control) and the motor type. There are many parameters to customize
+the environment. In the following code block, an example for the initialization of a speed control of an PMSM is
+shown. A detailed description for the configuration of a GEM environment can be found in the
+<a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/GEM_cookbook.ipynb">GEM Cookbook</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
+<span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems</span> <span class="kn">import</span> <span class="n">ConstantSpeedLoad</span>
+<span class="kn">from</span> <span class="nn">gym_electric_motor.reference_generators</span> <span class="kn">import</span> <span class="n">WienerProcessReferenceGenerator</span>
+<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization</span> <span class="kn">import</span> <span class="n">MotorDashboard</span>
+
+<span class="n">env_id</span> <span class="o">=</span> <span class="s1">&#39;Cont-SC-PMSM-v0&#39;</span>
+
+<span class="c1"># Define the motor parameters</span>
+<span class="n">motor_parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">r_s</span><span class="o">=</span><span class="mf">17.932e-3</span><span class="p">,</span> <span class="n">l_d</span><span class="o">=</span><span class="mf">0.37e-3</span><span class="p">,</span> <span class="n">l_q</span><span class="o">=</span><span class="mf">1.2e-3</span><span class="p">,</span> <span class="n">psi_p</span><span class="o">=</span><span class="mf">65.65e-3</span><span class="p">)</span>
+
+<span class="c1"># Define the nominal and limit values of the states</span>
+<span class="n">nominal_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="mi">4000</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">60</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">350</span><span class="p">)</span>
+<span class="n">limit_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">nomin</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">nomin</span> <span class="ow">in</span> <span class="n">nominal_values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+<span class="c1"># Define the mechanical load</span>
+<span class="n">load</span> <span class="o">=</span> <span class="n">ConstantSpeedLoad</span><span class="p">(</span><span class="n">load_initializer</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;random_init&#39;</span><span class="p">:</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;interval&#39;</span><span class="p">:[</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">]</span> <span class="p">})</span>
+
+<span class="c1"># Define the reference generator</span>
+<span class="n">rg</span> <span class="o">=</span> <span class="n">WienerProcessReferenceGenerator</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s1">&#39;torque&#39;</span><span class="p">,</span> <span class="n">sigma_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">))</span>
+
+<span class="c1"># Define the states to be plotted</span>
+<span class="n">visualization</span> <span class="o">=</span> <span class="n">MotorDashboard</span><span class="p">(</span><span class="n">state_plots</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;torque&#39;</span><span class="p">,</span> <span class="s1">&#39;i_sd&#39;</span><span class="p">,</span> <span class="s1">&#39;i_sq&#39;</span><span class="p">,</span> <span class="s1">&#39;u_sd&#39;</span><span class="p">,</span> <span class="s1">&#39;u_sq&#39;</span><span class="p">))</span>
+
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+             <span class="n">env_id</span><span class="p">,</span>
+             <span class="n">tau</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>   <span class="c1"># Sampling time</span>
+             <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span>
+             <span class="n">motor</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                 <span class="n">motor_parameter</span><span class="o">=</span><span class="n">motor_parameter</span><span class="p">,</span>
+                 <span class="n">limit_values</span><span class="o">=</span><span class="n">limit_values</span><span class="p">,</span>
+                 <span class="n">nominal_values</span><span class="o">=</span><span class="n">nominal_values</span><span class="p">,</span>
+             <span class="p">),</span>
+             <span class="n">load</span><span class="o">=</span><span class="n">load</span><span class="p">,</span>
+             <span class="n">reference_generator</span><span class="o">=</span><span class="n">rg</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-a-gem-controller">
+<h2>Create a GEM controller<a class="headerlink" href="#create-a-gem-controller" title="Permalink to this heading"></a></h2>
+<p>To create a GEM Controller the <cite>GemControllers.make()</cite> command is used. There are some keyword arguments to adjust the controller.
+For a detailed description see the <a class="reference external" href="https://colab.research.google.com/github/upb-lea/gem-control/blob/sphinx_doc/examples/GEM_Control_Cookbook.ipynb">GEM Control Cookbook</a>.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>env</strong></dt><dd><p>The GEM environment that should be controlled.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>env_id</strong></dt><dd><p>The id of the GEM environment, that includes the action space, the control task and the motor type.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>decoupling</strong></dt><dd><p>Boolean to indicate, if an EMF-Feedforward corretion stage should be used.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>current_safety_margin</strong></dt><dd><p>Float to define a maximum current for the operation point selection.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>base_speed_controller</strong></dt><dd><p>Selection of the basic control algorithm for the speed control stage. Available control algorithms are ‘PI’, ‘PID’, ‘P’, ‘ThreePoint’.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>base_current_controller</strong></dt><dd><p>Selection of the basic control algorithm for the current control stage. Available control algorithms are ‘PI’, ‘PID’, ‘P’, ‘ThreePoint’.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>a</strong></dt><dd><p>Tuning parameter of the symmetrical optimum, that has to be larger than 1. A small value leads to a fast response, but also to a high overshoot.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>plot_references</strong></dt><dd><p>Boolean to indicate, if the reference values of the subordinated stages should be plotted. Therefore the referenced states of the subordinated stages have to be plotted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>block_diagram</strong></dt><dd><p>Boolean to indicate, if a block diagram of the controller should be generated.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>save_block_diagram_as</strong></dt><dd><p>Selection of the data type for saving the block diagram. Also a tuple of data types can be passed. The available data types are ‘pdf’ and ‘tex’. A window to select the folder and the file name will be opened.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gem_controllers</span> <span class="k">as</span> <span class="nn">gc</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">GemController</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
+                          <span class="n">env_id</span><span class="o">=</span><span class="n">env_id</span><span class="p">,</span>
+                          <span class="n">decoupling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">current_safety_margin</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+                          <span class="n">base_speed_controller</span><span class="o">=</span><span class="s1">&#39;PI&#39;</span><span class="p">,</span>
+                          <span class="n">base_current_controller</span><span class="o">=</span><span class="s1">&#39;PI&#39;</span><span class="p">,</span>
+                          <span class="n">a</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                          <span class="n">plot_reference</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">block_diagram</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">save_block_diagram_as</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;pdf&#39;</span><span class="p">,),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="control-a-gem-environment">
+<h2>Control a GEM environment<a class="headerlink" href="#control-a-gem-environment" title="Permalink to this heading"></a></h2>
+<p>To use a GEM controller for controlling a GEM environment, the function c.control_environment() is available. If block_diagram
+is <cite>True</cite>, a window will open, that shows the block diagram. There are some arguments, that could be passed.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>env</strong></dt><dd><p>The GEM environment to be controlled. This should be the same environment, that was used for the make command of the controller</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>n_steps</strong></dt><dd><p>The number of iteration steps.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>max_episode_length</strong></dt><dd><p>The maximum number of steps, before the environment and the controller are reset.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>render_env</strong></dt><dd><p>Boolean to indicate, if the states of the environment should be plotted.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">c</span><span class="o">.</span><span class="n">control_environment</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
+                      <span class="n">n_steps</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                      <span class="n">max_episode_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                      <span class="n">render_env</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

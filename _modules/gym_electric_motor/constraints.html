@@ -41,20 +41,24 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/read_me.html">Gym Electric Motor</a></li>
 </ul>
 
         </div>
@@ -113,7 +117,7 @@
         <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="LimitConstraint"><a class="viewcode-back" href="../../parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint">[docs]</a><span class="k">class</span> <span class="nc">LimitConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="LimitConstraint"><a class="viewcode-back" href="../../parts_gem/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint">[docs]</a><span class="k">class</span> <span class="nc">LimitConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Constraint to observe the limits on one or more system states.</span>
 
 <span class="sd">    This constraint observes if any of the systems state values exceeds the limit specified in the PhysicalSystem.</span>
@@ -141,7 +145,7 @@
         <span class="n">violation</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">observed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">violation</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LimitConstraint.set_modules"><a class="viewcode-back" href="../../parts/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
+<div class="viewcode-block" id="LimitConstraint.set_modules"><a class="viewcode-back" href="../../parts_gem/constraints/limit_constraint.html#gym_electric_motor.constraints.LimitConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span>
         <span class="k">if</span> <span class="s2">&quot;all_states&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_observed_state_names</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span>
@@ -152,7 +156,7 @@
         <span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="SquaredConstraint"><a class="viewcode-back" href="../../parts/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint">[docs]</a><span class="k">class</span> <span class="nc">SquaredConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="SquaredConstraint"><a class="viewcode-back" href="../../parts_gem/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint">[docs]</a><span class="k">class</span> <span class="nc">SquaredConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A squared constraint on multiple states as it is required oftentimes for the dq-currents in synchronous and</span>
 <span class="sd">    asynchronous electric motors.</span>
 
@@ -172,7 +176,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="SquaredConstraint.set_modules"><a class="viewcode-back" href="../../parts/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
+<div class="viewcode-block" id="SquaredConstraint.set_modules"><a class="viewcode-back" href="../../parts_gem/constraints/squared_constraint.html#gym_electric_motor.constraints.SquaredConstraint.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">ps</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_normalized</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">)</span></div>

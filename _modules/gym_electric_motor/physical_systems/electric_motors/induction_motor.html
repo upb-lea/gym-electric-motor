@@ -41,20 +41,24 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/read_me.html">Gym Electric Motor</a></li>
 </ul>
 
         </div>
@@ -89,7 +93,7 @@
 <span class="kn">from</span> <span class="nn">.three_phase_motor</span> <span class="kn">import</span> <span class="n">ThreePhaseMotor</span>
 
 
-<div class="viewcode-block" id="InductionMotor"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor">[docs]</a><span class="k">class</span> <span class="nc">InductionMotor</span><span class="p">(</span><span class="n">ThreePhaseMotor</span><span class="p">):</span>
+<div class="viewcode-block" id="InductionMotor"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor">[docs]</a><span class="k">class</span> <span class="nc">InductionMotor</span><span class="p">(</span><span class="n">ThreePhaseMotor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The InductionMotor and its subclasses implement the technical system of a three phase induction motor.</span>
 
 <span class="sd">    This includes the system equations, the motor parameters of the equivalent circuit diagram,</span>
@@ -259,7 +263,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_model</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">_limit_values</span><span class="p">,</span> <span class="n">_nominal_values</span><span class="p">)</span>
 
-<div class="viewcode-block" id="InductionMotor.reset"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="InductionMotor.reset"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_initial_limits</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">)</span>
@@ -268,7 +272,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FLUXES</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="InductionMotor.electrical_ode"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_sr_alphabeta</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="InductionMotor.electrical_ode"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_sr_alphabeta</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The differential equation of the Induction Motor.</span>
 
@@ -300,7 +304,7 @@
             <span class="p">),</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="InductionMotor.i_in"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<div class="viewcode-block" id="InductionMotor.i_in"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">return</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS_IDX</span><span class="p">]</span></div>
 
@@ -396,7 +400,7 @@
         <span class="p">])</span>
         <span class="c1"># fmt: on</span>
 
-<div class="viewcode-block" id="InductionMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="InductionMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/induction_base.html#gym_electric_motor.physical_systems.electric_motors.InductionMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="n">l_s</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_m&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_sigs&quot;</span><span class="p">]</span>
         <span class="n">l_r</span> <span class="o">=</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_m&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_sigr&quot;</span><span class="p">]</span>

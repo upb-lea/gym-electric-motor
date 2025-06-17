@@ -41,20 +41,24 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/read_me.html">Gym Electric Motor</a></li>
 </ul>
 
         </div>
@@ -100,7 +104,7 @@
         <span class="k">return</span> <span class="n">default_class</span><span class="p">(</span><span class="o">**</span><span class="n">default_args</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="state_dict_to_state_array"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.state_dict_to_state_array">[docs]</a><span class="k">def</span> <span class="nf">state_dict_to_state_array</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">state_array</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
+<div class="viewcode-block" id="state_dict_to_state_array"><a class="viewcode-back" href="../../parts_gem/utils.html#gym_electric_motor.utils.state_dict_to_state_array">[docs]</a><span class="k">def</span> <span class="nf">state_dict_to_state_array</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">state_array</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mapping of a passed state dictionary to a fitting state array.</span>
 
@@ -121,7 +125,7 @@
             <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="set_state_array"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.set_state_array">[docs]</a><span class="k">def</span> <span class="nf">set_state_array</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
+<div class="viewcode-block" id="set_state_array"><a class="viewcode-back" href="../../parts_gem/utils.html#gym_electric_motor.utils.set_state_array">[docs]</a><span class="k">def</span> <span class="nf">set_state_array</span><span class="p">(</span><span class="n">input_values</span><span class="p">,</span> <span class="n">state_names</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setting of the input values to a valid state array with the shape of the physical systems state.</span>
 
@@ -154,7 +158,7 @@
     <span class="k">return</span> <span class="n">state_array</span></div>
 
 
-<div class="viewcode-block" id="update_parameter_dict"><a class="viewcode-back" href="../../parts/utils.html#gym_electric_motor.utils.update_parameter_dict">[docs]</a><span class="k">def</span> <span class="nf">update_parameter_dict</span><span class="p">(</span><span class="n">source_dict</span><span class="p">,</span> <span class="n">update_dict</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="update_parameter_dict"><a class="viewcode-back" href="../../parts_gem/utils.html#gym_electric_motor.utils.update_parameter_dict">[docs]</a><span class="k">def</span> <span class="nf">update_parameter_dict</span><span class="p">(</span><span class="n">source_dict</span><span class="p">,</span> <span class="n">update_dict</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Merges two dictionaries (source and update) together.</span>
 
 <span class="sd">    It is similar to pythons dict.update() method. Furthermore, it assures that all keys in the update dictionary are</span>

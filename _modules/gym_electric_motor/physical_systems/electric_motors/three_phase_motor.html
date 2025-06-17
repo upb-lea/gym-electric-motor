@@ -41,20 +41,24 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/read_me.html">Gym Electric Motor</a></li>
 </ul>
 
         </div>
@@ -89,7 +93,7 @@
 <span class="kn">from</span> <span class="nn">.electric_motor</span> <span class="kn">import</span> <span class="n">ElectricMotor</span>
 
 
-<div class="viewcode-block" id="ThreePhaseMotor"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor">[docs]</a><span class="k">class</span> <span class="nc">ThreePhaseMotor</span><span class="p">(</span><span class="n">ElectricMotor</span><span class="p">):</span>
+<div class="viewcode-block" id="ThreePhaseMotor"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor">[docs]</a><span class="k">class</span> <span class="nc">ThreePhaseMotor</span><span class="p">(</span><span class="n">ElectricMotor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The ThreePhaseMotor and its subclasses implement the technical system of Three Phase Motors.</span>
 
@@ -112,7 +116,7 @@
     <span class="p">])</span>
     <span class="c1"># fmt: on</span>
 
-<div class="viewcode-block" id="ThreePhaseMotor.t_23"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.t_23">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ThreePhaseMotor.t_23"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.t_23">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">t_23</span><span class="p">(</span><span class="n">quantities</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transformation from abc representation to alpha-beta representation</span>
@@ -125,7 +129,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">ThreePhaseMotor</span><span class="o">.</span><span class="n">_t23</span><span class="p">,</span> <span class="n">quantities</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ThreePhaseMotor.t_32"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.t_32">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ThreePhaseMotor.t_32"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.t_32">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">t_32</span><span class="p">(</span><span class="n">quantities</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transformation from alpha-beta representation to abc representation</span>
@@ -138,7 +142,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">ThreePhaseMotor</span><span class="o">.</span><span class="n">_t32</span><span class="p">,</span> <span class="n">quantities</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ThreePhaseMotor.q"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ThreePhaseMotor.q"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transformation of the dq-representation into alpha-beta using the electrical angle</span>
@@ -154,7 +158,7 @@
         <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">quantities</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="ThreePhaseMotor.q_inv"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q_inv">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ThreePhaseMotor.q_inv"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q_inv">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">q_inv</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Transformation of the alpha-beta-representation into dq using the electrical angle</span>
 
@@ -171,7 +175,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ThreePhaseMotor</span><span class="o">.</span><span class="n">q</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="o">-</span><span class="n">epsilon</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ThreePhaseMotor.q_me"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q_me">[docs]</a>    <span class="k">def</span> <span class="nf">q_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+<div class="viewcode-block" id="ThreePhaseMotor.q_me"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q_me">[docs]</a>    <span class="k">def</span> <span class="nf">q_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transformation of the dq-representation into alpha-beta using the mechanical angle</span>
 
@@ -184,7 +188,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="ThreePhaseMotor.q_inv_me"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q_inv_me">[docs]</a>    <span class="k">def</span> <span class="nf">q_inv_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+<div class="viewcode-block" id="ThreePhaseMotor.q_inv_me"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/three_phase_base.html#gym_electric_motor.physical_systems.electric_motors.ThreePhaseMotor.q_inv_me">[docs]</a>    <span class="k">def</span> <span class="nf">q_inv_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transformation of the alpha-beta-representation into dq using the mechanical angle</span>
 

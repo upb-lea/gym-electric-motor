@@ -41,20 +41,24 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/read_me.html">Gym Electric Motor</a></li>
 </ul>
 
         </div>
@@ -118,12 +122,12 @@
 <span class="kn">from</span> <span class="nn">.constraints</span> <span class="kn">import</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">LimitConstraint</span>
 
 
-<div class="viewcode-block" id="Workspace"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Workspace">[docs]</a><span class="nd">@dataclass</span>
+<div class="viewcode-block" id="Workspace"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Workspace">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Workspace</span><span class="p">:</span>
     <span class="n">test</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
-<div class="viewcode-block" id="SimulationEnvironment"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.SimulationEnvironment">[docs]</a><span class="nd">@dataclass</span>
+<div class="viewcode-block" id="SimulationEnvironment"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.SimulationEnvironment">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">SimulationEnvironment</span><span class="p">:</span>
     <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Simulation interval</span>
     <span class="n">step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Current simulation step</span>
@@ -134,7 +138,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span></div>
 
 
-<div class="viewcode-block" id="ElectricMotorEnvironment"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotorEnvironment</span><span class="p">(</span><span class="n">gymnasium</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotorEnvironment"><a class="viewcode-back" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotorEnvironment</span><span class="p">(</span><span class="n">gymnasium</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description:</span>
 <span class="sd">        The main class connecting all modules of the gym-electric-motor environments.</span>
@@ -381,7 +385,7 @@
             <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
             <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ElectricMotorEnvironment.reset"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotorEnvironment.reset"><a class="viewcode-back" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset of the environment and all its modules to an initial state.</span>
 
@@ -402,14 +406,14 @@
         <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">return</span> <span class="n">observation</span><span class="p">,</span> <span class="n">info</span></div>
 
-<div class="viewcode-block" id="ElectricMotorEnvironment.render"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotorEnvironment.render"><a class="viewcode-back" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the visualization of the motor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">visualization</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visualizations</span><span class="p">:</span>
             <span class="n">visualization</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ElectricMotorEnvironment.step"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotorEnvironment.step"><a class="viewcode-back" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform one simulation step of the environment with an action of the action space.</span>
 
 <span class="sd">        Args:</span>
@@ -468,7 +472,7 @@
                 <span class="n">rc</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">sg</span><span class="o">.</span><span class="n">entropy</span><span class="p">]</span>
 
-<div class="viewcode-block" id="ElectricMotorEnvironment.close"><a class="viewcode-back" href="../../parts/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotorEnvironment.close"><a class="viewcode-back" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when the environment is deleted. Closes all its modules.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks</span><span class="p">(</span><span class="s2">&quot;on_close&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reward_function</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -476,7 +480,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_generator</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="ReferenceGenerator"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">ReferenceGenerator</span><span class="p">:</span>
+<div class="viewcode-block" id="ReferenceGenerator"><a class="viewcode-back" href="../../parts_gem/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">ReferenceGenerator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The abstract base class for reference generators in gym electric motor environments.</span>
 
 <span class="sd">    reference_space:</span>
@@ -529,7 +533,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span>
 
-<div class="viewcode-block" id="ReferenceGenerator.set_modules"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceGenerator.set_modules"><a class="viewcode-back" href="../../parts_gem/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Announcement of the PhysicalSystem to the ReferenceGenerator.</span>
 
 <span class="sd">        In subclasses, store all important information from the physical system to the ReferenceGenerator here.</span>
@@ -540,7 +544,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span> <span class="o">=</span> <span class="n">physical_system</span></div>
 
-<div class="viewcode-block" id="ReferenceGenerator.get_reference"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceGenerator.get_reference"><a class="viewcode-back" href="../../parts_gem/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the reference array of the current time step.</span>
 
 <span class="sd">        The reference array needs to be in the same shape as the state variables. For referenced states the reference</span>
@@ -554,7 +558,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="ReferenceGenerator.get_reference_observation"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference_observation">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceGenerator.get_reference_observation"><a class="viewcode-back" href="../../parts_gem/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.get_reference_observation">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the reference observation for the next time step. This observation needs to fit in the reference space.</span>
 
@@ -566,7 +570,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="ReferenceGenerator.reset"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceGenerator.reset"><a class="viewcode-back" href="../../parts_gem/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset of references for a new episode.</span>
 
@@ -588,12 +592,12 @@
             <span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="ReferenceGenerator.close"><a class="viewcode-back" href="../../parts/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceGenerator.close"><a class="viewcode-back" href="../../parts_gem/reference_generators/reference_generator.html#gym_electric_motor.core.ReferenceGenerator.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called by the environment, when the environment is deleted to close files, store logs, etc.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 
 
-<div class="viewcode-block" id="RewardFunction"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction">[docs]</a><span class="k">class</span> <span class="nc">RewardFunction</span><span class="p">:</span>
+<div class="viewcode-block" id="RewardFunction"><a class="viewcode-back" href="../../parts_gem/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction">[docs]</a><span class="k">class</span> <span class="nc">RewardFunction</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The abstract base class for reward functions in gym electric motor environments.</span>
 
@@ -624,7 +628,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">violation_degree</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RewardFunction.set_modules"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">constraint_monitor</span><span class="p">):</span>
+<div class="viewcode-block" id="RewardFunction.set_modules"><a class="viewcode-back" href="../../parts_gem/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">constraint_monitor</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Setting of the physical system, to set state arrays fitting to the environments states</span>
 
@@ -635,7 +639,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="RewardFunction.reward"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward">[docs]</a>    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">violation_degree</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<div class="viewcode-block" id="RewardFunction.reward"><a class="viewcode-back" href="../../parts_gem/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reward">[docs]</a>    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">violation_degree</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reward calculation. If limits have been violated the reward is calculated with a separate function.</span>
 
@@ -654,7 +658,7 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="RewardFunction.reset"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RewardFunction.reset"><a class="viewcode-back" href="../../parts_gem/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is called by the environment when reset.</span>
 
 <span class="sd">        Inner states of the reward function can be reset here, if necessary.</span>
@@ -665,12 +669,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="RewardFunction.close"><a class="viewcode-back" href="../../parts/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RewardFunction.close"><a class="viewcode-back" href="../../parts_gem/reward_functions/reward_function.html#gym_electric_motor.core.RewardFunction.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called, when the environment is closed to store logs, close files etc.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 
 
-<div class="viewcode-block" id="PhysicalSystem"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem">[docs]</a><span class="nd">@dataclass</span>
+<div class="viewcode-block" id="PhysicalSystem"><a class="viewcode-back" href="../../parts_gem/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PhysicalSystem</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The Physical System module encapsulates the physical model of the system as well as the simulation from one step</span>
 <span class="sd">    to the next.&quot;&quot;&quot;</span>
@@ -759,7 +763,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">tau</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="PhysicalSystem.reset"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PhysicalSystem.reset"><a class="viewcode-back" href="../../parts_gem/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the physical system to an initial state before a new episode starts.</span>
 
@@ -768,7 +772,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="PhysicalSystem.simulate"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="PhysicalSystem.simulate"><a class="viewcode-back" href="../../parts_gem/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Simulation of the Physical System for one time step with the input action.</span>
 <span class="sd">        This method is called in the environment in every step to update the systems state.</span>
@@ -781,7 +785,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="PhysicalSystem.close"><a class="viewcode-back" href="../../parts/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PhysicalSystem.close"><a class="viewcode-back" href="../../parts_gem/physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Called, when the environment is closed.</span>
 <span class="sd">        Close the System and all of its submodules by closing files, saving logs etc.</span>
@@ -789,7 +793,7 @@
         <span class="k">pass</span></div></div>
 
 
-<div class="viewcode-block" id="Callback"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Callback">[docs]</a><span class="k">class</span> <span class="nc">Callback</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Callback">[docs]</a><span class="k">class</span> <span class="nc">Callback</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The abstract base class for Callbacks in GEM.</span>
 <span class="sd">    Each of its functions gets called at one point in the :mod:`~gym_electric_motor.core.ElectricMotorEnvironment`.</span>
 <span class="sd">    Attributes:</span>
@@ -799,32 +803,32 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Callback.set_env"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Callback.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+<div class="viewcode-block" id="Callback.set_env"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Callback.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the environment of the motor.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="n">env</span></div>
 
-<div class="viewcode-block" id="Callback.on_reset_begin"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Callback.on_reset_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_reset_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Callback.on_reset_begin"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Callback.on_reset_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_reset_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets called at the beginning of each reset&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_reset_end"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Callback.on_reset_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_reset_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+<div class="viewcode-block" id="Callback.on_reset_end"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Callback.on_reset_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_reset_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets called at the end of each reset&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_step_begin"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Callback.on_step_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="Callback.on_step_begin"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Callback.on_step_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets called at the beginning of each step&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_step_end"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Callback.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">):</span>
+<div class="viewcode-block" id="Callback.on_step_end"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Callback.on_step_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_step_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets called at the end of each step&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_close"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.Callback.on_close">[docs]</a>    <span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Callback.on_close"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.Callback.on_close">[docs]</a>    <span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets called at the beginning of a close&quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 
 
-<div class="viewcode-block" id="ElectricMotorVisualization"><a class="viewcode-back" href="../../parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotorVisualization</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotorVisualization"><a class="viewcode-back" href="../../parts_gem/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotorVisualization</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all visualizations in GEM.</span>
 <span class="sd">    The visualization is basically only a Callback that is extended by a render() function to update the figure.</span>
 <span class="sd">    With the function calls that are inherited by the Callback superclass (e.g. *on_step_end*),</span>
@@ -832,12 +836,12 @@
 <span class="sd">    visualized in the desired way.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ElectricMotorVisualization.render"><a class="viewcode-back" href="../../parts/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotorVisualization.render"><a class="viewcode-back" href="../../parts_gem/visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to update the user interface.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
-<div class="viewcode-block" id="ConstraintMonitor"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.ConstraintMonitor">[docs]</a><span class="k">class</span> <span class="nc">ConstraintMonitor</span><span class="p">:</span>
+<div class="viewcode-block" id="ConstraintMonitor"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.ConstraintMonitor">[docs]</a><span class="k">class</span> <span class="nc">ConstraintMonitor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The ConstraintMonitor is used within the ElectricMotorEnvironment to monitor the states for illegal / undesired</span>
 <span class="sd">    values (e.g. overcurrents).</span>
 
@@ -905,7 +909,7 @@
         <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">merge_violations</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_merge_violations</span> <span class="o">=</span> <span class="n">merge_violations</span>
 
-<div class="viewcode-block" id="ConstraintMonitor.set_modules"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.ConstraintMonitor.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">:</span> <span class="n">PhysicalSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstraintMonitor.set_modules"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.ConstraintMonitor.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps</span><span class="p">:</span> <span class="n">PhysicalSystem</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The PhysicalSystem of the environment is passed to save important parameters like the index of the states.</span>
 
 <span class="sd">        Args:</span>
@@ -915,7 +919,7 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">):</span>
                 <span class="n">constraint</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConstraintMonitor.check_constraints"><a class="viewcode-back" href="../../parts/core.html#gym_electric_motor.core.ConstraintMonitor.check_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">check_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstraintMonitor.check_constraints"><a class="viewcode-back" href="../../parts_gem/core.html#gym_electric_motor.core.ConstraintMonitor.check_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">check_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to check and merge all constraints.</span>
 
 <span class="sd">        Args:</span>
