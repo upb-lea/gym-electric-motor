@@ -41,24 +41,20 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/read_me.html">Gym Electric Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
         </div>
@@ -91,7 +87,7 @@
 <span class="kn">from</span> <span class="nn">.subepisoded_reference_generator</span> <span class="kn">import</span> <span class="n">SubepisodedReferenceGenerator</span>
 
 
-<div class="viewcode-block" id="StepReferenceGenerator"><a class="viewcode-back" href="../../../parts_gem/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">StepReferenceGenerator</span><span class="p">(</span><span class="n">SubepisodedReferenceGenerator</span><span class="p">):</span>
+<div class="viewcode-block" id="StepReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">StepReferenceGenerator</span><span class="p">(</span><span class="n">SubepisodedReferenceGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reference Generator that generates a step function with a random amplitude, frequency, phase and offset.</span>
 <span class="sd">    The reference is generated for a certain length and then new parameters are drawn uniformly from a selectable range.</span>
@@ -114,7 +110,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_frequency_range</span> <span class="o">=</span> <span class="n">frequency_range</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_offset_range</span> <span class="o">=</span> <span class="n">offset_range</span> <span class="ow">or</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
 
-<div class="viewcode-block" id="StepReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts_gem/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="StepReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/step_reference_generator.html#gym_electric_motor.reference_generators.StepReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude_range</span><span class="p">,</span>

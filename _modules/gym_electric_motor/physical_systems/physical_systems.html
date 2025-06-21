@@ -41,24 +41,20 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/read_me.html">Gym Electric Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
         </div>
@@ -98,7 +94,7 @@
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">set_state_array</span>
 
 
-<div class="viewcode-block" id="SCMLSystem"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem">[docs]</a><span class="k">class</span> <span class="nc">SCMLSystem</span><span class="p">(</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+<div class="viewcode-block" id="SCMLSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem">[docs]</a><span class="k">class</span> <span class="nc">SCMLSystem</span><span class="p">(</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of</span>
 <span class="sd">    a technical setting consisting of these components and a solver for the electrical ODE of the motor and mechanical</span>
@@ -249,14 +245,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">VOLTAGES_IDX</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">voltages_lower</span><span class="p">,</span> <span class="n">voltages_upper</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">voltages_upper</span><span class="p">,</span> <span class="n">voltages_upper</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">voltage_len</span><span class="p">))</span>
 
-<div class="viewcode-block" id="SCMLSystem.seed"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SCMLSystem.seed"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">RandomComponent</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
         <span class="n">sub_seeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed_sequence</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">component</span><span class="p">,</span> <span class="n">sub_seed</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="p">,</span> <span class="n">sub_seeds</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">RandomComponent</span><span class="p">):</span>
                 <span class="n">component</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">sub_seed</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SCMLSystem.simulate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="SCMLSystem.simulate"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">ode_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">y</span>
         <span class="n">i_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">i_in</span><span class="p">(</span><span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_currents_idx</span><span class="p">])</span>
@@ -341,7 +337,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">system_jac</span>
 
-<div class="viewcode-block" id="SCMLSystem.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="SCMLSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset all the systems modules to an initial state.</span>
 
@@ -375,7 +371,7 @@
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
 
 
-<div class="viewcode-block" id="DcMotorSystem"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">DcMotorSystem</span><span class="p">(</span><span class="n">SCMLSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="DcMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">DcMotorSystem</span><span class="p">(</span><span class="n">SCMLSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    SCML-System that can be used for all DC Motors.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -503,7 +499,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">q</span><span class="p">(</span><span class="n">dq_quantities</span><span class="p">,</span> <span class="n">epsilon_el</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="SynchronousMotorSystem"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    SCML-System that can be used with all Synchronous Motors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -572,7 +568,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">U_SUP_IDX</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">EPSILON_IDX</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">EPSILON_IDX</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supply</span><span class="o">.</span><span class="n">voltage_len</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode_epsilon_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_ode_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-<div class="viewcode-block" id="SynchronousMotorSystem.simulate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMotorSystem.simulate"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">ode_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">y</span>
         <span class="n">eps</span> <span class="o">=</span> <span class="n">ode_state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ode_epsilon_idx</span><span class="p">]</span>
@@ -612,7 +608,7 @@
         <span class="n">system_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">mechanical_state</span><span class="p">,</span> <span class="p">[</span><span class="n">torque</span><span class="p">],</span> <span class="n">i_abc</span><span class="p">,</span> <span class="n">i_dq</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_dq</span><span class="p">,</span> <span class="p">[</span><span class="n">eps</span><span class="p">],</span> <span class="n">u_sup</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
 
-<div class="viewcode-block" id="SynchronousMotorSystem.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMotorSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">motor_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrical_motor</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">state_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state_positions</span><span class="p">)</span>
         <span class="n">mechanical_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span>
@@ -781,7 +777,7 @@
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span>
 
 
-<div class="viewcode-block" id="SquirrelCageInductionMotorSystem"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">SquirrelCageInductionMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="SquirrelCageInductionMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">SquirrelCageInductionMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    SCML-System for the Squirrel Cage Induction Motor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -856,7 +852,7 @@
         <span class="n">eps_fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">psi_rbeta</span><span class="p">,</span> <span class="n">psi_ralpha</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">eps_fs</span>
 
-<div class="viewcode-block" id="SquirrelCageInductionMotorSystem.simulate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="SquirrelCageInductionMotorSystem.simulate"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">ode_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_solver</span><span class="o">.</span><span class="n">y</span>
 
@@ -901,7 +897,7 @@
         <span class="n">system_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">mechanical_state</span><span class="p">,</span> <span class="p">[</span><span class="n">torque</span><span class="p">],</span> <span class="n">i_abc</span><span class="p">,</span> <span class="n">i_dq</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">u_dq</span><span class="p">,</span> <span class="p">[</span><span class="n">eps</span><span class="p">],</span> <span class="n">u_sup</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
 
-<div class="viewcode-block" id="SquirrelCageInductionMotorSystem.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="SquirrelCageInductionMotorSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mechanical_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span>
             <span class="n">state_positions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state_positions</span><span class="p">,</span>
@@ -935,7 +931,7 @@
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
 
 
-<div class="viewcode-block" id="DoublyFedInductionMotorSystem"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">DoublyFedInductionMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="DoublyFedInductionMotorSystem"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem">[docs]</a><span class="k">class</span> <span class="nc">DoublyFedInductionMotorSystem</span><span class="p">(</span><span class="n">ThreePhaseMotorSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    SCML-System for the Doubly Fed Induction Motor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1053,7 +1049,7 @@
         <span class="n">i_rbeta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">l_r</span> <span class="o">*</span> <span class="n">psi_rbeta</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_m&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">l_r</span> <span class="o">*</span> <span class="n">i_sbeta</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">i_ralpha</span><span class="p">,</span> <span class="n">i_rbeta</span><span class="p">]</span>
 
-<div class="viewcode-block" id="DoublyFedInductionMotorSystem.simulate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="DoublyFedInductionMotorSystem.simulate"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
 
         <span class="c1"># Coordinate Systems used here:</span>
@@ -1141,7 +1137,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">system_state</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
 
-<div class="viewcode-block" id="DoublyFedInductionMotorSystem.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="DoublyFedInductionMotorSystem.reset"><a class="viewcode-back" href="../../../parts/physical_systems/scml_system.html#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mechanical_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mechanical_load</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span>
             <span class="n">state_positions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state_positions</span><span class="p">,</span>

@@ -41,24 +41,20 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Gym Electric Controller Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/read_me.html">Gym Electric Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
         </div>
@@ -93,7 +89,7 @@
 <span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems.solvers</span> <span class="kn">import</span> <span class="n">EulerSolver</span>
 
 
-<div class="viewcode-block" id="VoltageSupply"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">VoltageSupply</span><span class="p">:</span>
+<div class="viewcode-block" id="VoltageSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">VoltageSupply</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all VoltageSupplies to be used in a SCMLSystem.</span>
 
 <span class="sd">    Parameter:</span>
@@ -121,7 +117,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span> <span class="o">=</span> <span class="n">u_nominal</span>
 
-<div class="viewcode-block" id="VoltageSupply.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VoltageSupply.reset"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the voltage supply to an initial state.</span>
 <span class="sd">        This method is called at every reset of the physical system.</span>
@@ -131,7 +127,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="VoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">):</span>
+<div class="viewcode-block" id="VoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the supply voltage based on the floating supply current i_sup, the time t and optional further arguments.</span>
 
@@ -145,7 +141,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
-<div class="viewcode-block" id="IdealVoltageSupply"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">IdealVoltageSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
+<div class="viewcode-block" id="IdealVoltageSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">IdealVoltageSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ideal Voltage Supply that supplies with u_nominal independent of the time and the supply current.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -155,12 +151,12 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_nominal</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supply_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">u_nominal</span><span class="p">,</span> <span class="n">u_nominal</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IdealVoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="IdealVoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ideal_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.IdealVoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span><span class="p">]</span></div></div>
 
 
-<div class="viewcode-block" id="RCVoltageSupply"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">RCVoltageSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
+<div class="viewcode-block" id="RCVoltageSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply">[docs]</a><span class="k">class</span> <span class="nc">RCVoltageSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;DC voltage supply modeled as RC element&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mf">600.0</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -197,21 +193,21 @@
         <span class="c1"># ODE for derivate of u_sup</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">u_0</span> <span class="o">-</span> <span class="n">u_sup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="o">*</span> <span class="n">i_sup</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">c</span><span class="p">)])</span>
 
-<div class="viewcode-block" id="RCVoltageSupply.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RCVoltageSupply.reset"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="c1"># On reset the capacitor is loaded again</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_0</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_0</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span></div>
 
-<div class="viewcode-block" id="RCVoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">):</span>
+<div class="viewcode-block" id="RCVoltageSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/rc_voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.RCVoltageSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_u_0</span><span class="p">,</span> <span class="n">i_sup</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span></div></div>
 
 
-<div class="viewcode-block" id="AC1PhaseSupply"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply">[docs]</a><span class="k">class</span> <span class="nc">AC1PhaseSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
+<div class="viewcode-block" id="AC1PhaseSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply">[docs]</a><span class="k">class</span> <span class="nc">AC1PhaseSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;AC one phase voltage supply&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nominal</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span> <span class="n">supply_parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -243,18 +239,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supply_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">]</span>
 
-<div class="viewcode-block" id="AC1PhaseSupply.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AC1PhaseSupply.reset"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AC1PhaseSupply.get_voltage"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="AC1PhaseSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_1_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC1PhaseSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span><span class="p">)]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span></div></div>
 
 
-<div class="viewcode-block" id="AC3PhaseSupply"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply">[docs]</a><span class="k">class</span> <span class="nc">AC3PhaseSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
+<div class="viewcode-block" id="AC3PhaseSupply"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply">[docs]</a><span class="k">class</span> <span class="nc">AC3PhaseSupply</span><span class="p">(</span><span class="n">VoltageSupply</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;AC three phase voltage supply&quot;&quot;&quot;</span>
 
     <span class="n">voltage_len</span> <span class="o">=</span> <span class="mi">3</span>
@@ -287,13 +283,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_nominal</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supply_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span><span class="p">]</span>
 
-<div class="viewcode-block" id="AC3PhaseSupply.reset"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AC3PhaseSupply.reset"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_phi</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AC3PhaseSupply.get_voltage"><a class="viewcode-back" href="../../../parts_gem/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="AC3PhaseSupply.get_voltage"><a class="viewcode-back" href="../../../parts/physical_systems/voltage_supplies/ac_3_phase_supply.html#gym_electric_motor.physical_systems.voltage_supplies.AC3PhaseSupply.get_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_u_sup</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_max_amp</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
