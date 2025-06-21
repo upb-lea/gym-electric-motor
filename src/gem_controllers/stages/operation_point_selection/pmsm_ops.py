@@ -236,8 +236,8 @@ class PMSMOperationPointSelection(FieldOrientedControllerOperationPointSelection
 
             # Define the grid for the torque and fluxes
             self.t_grid, self.psi_grid = np.mgrid[
-                np.amin(t) : np.amax(t) : np.complex(0, self.t_count),
-                self.psi_min : self.psi_max : np.complex(self.psi_count),
+                np.amin(t) : np.amax(t) : np.complex128(0, self.t_count),
+                self.psi_min : self.psi_max : np.complex128(self.psi_count),
             ]
 
             # Interpolate the functions
