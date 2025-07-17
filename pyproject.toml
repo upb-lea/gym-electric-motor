@@ -15,7 +15,9 @@ authors = [
     { name = "Barnabas Haucke-Korber" },
     { name = "Stefan Arndt" },
     { name = "Marius Köhler" },
-    { name = "Ranil Thomas" },
+    { name = "Ranil Thomas" },  
+    { name = "Valliammai Annamalai" },
+    { name = "Mounica Vadivelu" },
 ]
 description = "A Farama Gymnasium environment for electric motor control."
 readme = "README.md"
