@@ -4,6 +4,7 @@ import gem_controllers as gc
 import gym_electric_motor.core
 
 
+
 class GemController:
     """The GemController is the base for all motor controllers in the gem-control package.
 
@@ -66,13 +67,23 @@ class GemController:
         control_task = gc.utils.get_control_task(env_id)
         tuner_kwargs = dict()
 
-        # Initialize the current control stage
-        controller = gc.PICurrentController(
-            env,
-            env_id,
-            base_current_controller=base_current_controller,
-            decoupling=decoupling,
-        )
+        # Initialize the current control stage        
+        if base_current_controller == "PI":
+            controller = gc.PICurrentController(
+                env,
+                env_id,
+                base_current_controller=base_current_controller,
+                decoupling=decoupling,
+            )
+            tuner_kwargs["a"] = a
+            tuner_kwargs["plot_references"] = plot_references
+
+        elif base_current_controller == "MPC":
+            controller = gc.MPCCurrentController(env, env_id)            
+
+        else:
+            raise NotImplementedError(f"Unsupported base_current_controller: {base_current_controller}")
+
         tuner_kwargs["a"] = a
         tuner_kwargs["plot_references"] = plot_references
         if control_task in ["TC", "SC"]:
