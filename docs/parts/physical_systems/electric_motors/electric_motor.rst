@@ -18,6 +18,8 @@ Electric Motors
     three_phase_base
     synchronous_base
     induction_base
+    sixphase_base
+    sixphase_pmsm
 
 Electric Motor Base Class
 *************************************

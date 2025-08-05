@@ -32,3 +32,5 @@ examples/logs/
 .vscode/launch.json
 plots/
 saved_plots/
+
+*/debug.ipynb
