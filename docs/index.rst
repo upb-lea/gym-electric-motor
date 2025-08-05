@@ -76,7 +76,6 @@ ________
    :maxdepth: 1
    :caption: Gym Electric Controller Contents:
 
-   parts_gc/read_me
    parts_gc/usage_guide/usage_guides
    parts_gc/api_documentation/gem_control
 
