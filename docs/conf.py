@@ -44,6 +44,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
+    'sphinx_mdinclude',
     'm2r2'
 ]
 
@@ -110,7 +111,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'LEA-RLdoc'
+htmlhelp_basename = 'GEM-doc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -141,8 +142,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'LEA-RL.tex', 'LEA-RL Documentation',
-     'Arne Traue, Gerrit Book', 'manual'),
+    (master_doc, 'gem-doc.tex', 'GEM Documentation',
+     'Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid', 'manual'),
 ]
 
 
@@ -151,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'lea-rl', 'LEA-RL Documentation',
+    (master_doc, 'gem', 'GEM Documentation',
      [author], 1)
 ]
 
@@ -162,8 +163,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'LEA-RL', 'LEA-RL Documentation',
-     author, 'LEA-RL', 'One line description of project.',
+    (master_doc, 'GEM', 'GEM Documentation',
+     author, 'GEM', 'A package to simulate and control electrical drives.',
      'Miscellaneous'),
 ]
 

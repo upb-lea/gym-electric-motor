@@ -1,3 +1,5 @@
+GEM Control API Documentation
+
 .. toctree::
    :maxdepth: 1
    :caption: Subcomponents of a GEM Controller:
