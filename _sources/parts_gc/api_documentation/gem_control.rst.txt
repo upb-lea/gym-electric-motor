@@ -5,6 +5,7 @@ GEM Control API Documentation
    :caption: Subcomponents of a GEM Controller:
 
    stages/stages
+   block_diagrams/block_diagrams
    pi_current_controller
    torque_controller
    pi_speed_controller
