@@ -52,17 +52,16 @@ documentation specifies the basic interfaces inside a physical system.
     parts_gem/random_component
 
 
-GEM-control Content
+GEM-Control Content
 *******
-The GEM-control is a collection of control methods to control the gym-electric-motor(GEM) environments.
+The GEM-control is a collection of control methods to control the GEM-environments.
 Currently, classic PI controllers are available for most of the environment types.
 
-Contents
-________
 
 .. toctree::
-   :maxdepth: 4
-   :caption: Gym Electric Controller Contents:
+   :maxdepth: 2
+   :titlesonly:
+   :caption: GEM-Control Contents:
 
    parts_gc/usage_guide/usage_guides
    parts_gc/api_documentation/gem_control
