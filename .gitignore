@@ -33,5 +33,5 @@ examples/logs/
 plots/
 saved_plots/
 
-#debug files
+# debug files
 */debug.ipynb
