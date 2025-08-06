@@ -11,5 +11,5 @@
    reference_plotter
    utils
 
-   .. autoclass:: gem_controllers.gem_controller.GemController
+.. autoclass:: gem_controllers.gem_controller.GemController
    :members: make, control, reset, tune, control_environment, signals, signal_names, get_signal_value, stages
