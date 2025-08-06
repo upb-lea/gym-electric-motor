@@ -22,7 +22,7 @@ A quick start guide can be found in the following Readme-File.
    parts_gem/readme
 
 
-Content
+GEM Content
 *******
 
 In the environments section all available GEM-environments are presented with their default configuration.
@@ -51,6 +51,24 @@ documentation specifies the basic interfaces inside a physical system.
     parts_gem/callbacks
     parts_gem/random_component
 
+
+GEM-control Content
+*******
+The GEM-control is a collection of control methods to control the gym-electric-motor(GEM) environments.
+Currently, classic PI controllers are available for most of the environment types.
+
+Contents
+________
+
+.. toctree::
+   :maxdepth: 4
+   :caption: Gym Electric Controller Contents:
+
+   parts_gc/usage_guide/usage_guides
+   parts_gc/api_documentation/gem_control
+
+
+
 Indices and tables
 ==================
 
@@ -63,19 +81,5 @@ Indices and tables
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to GEM-controls documentation!
-===================================================
 
-The GEM-control package is a collection of control methods to control the gym-electric-motor(GEM) environments.
-Currently, classic PI controllers are available for most of the environment types.
-
-Contents
-________
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Gym Electric Controller Contents:
-
-   parts_gc/usage_guide/usage_guides
-   parts_gc/api_documentation/gem_control
 
