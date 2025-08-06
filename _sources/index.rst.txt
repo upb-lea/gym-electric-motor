@@ -59,8 +59,7 @@ Currently, classic PI controllers are available for most of the environment type
 
 
 .. toctree::
-   :maxdepth: 2
-   :titlesonly:
+   :maxdepth: 1
    :caption: GEM-Control Contents:
 
    parts_gc/usage_guide/usage_guides
