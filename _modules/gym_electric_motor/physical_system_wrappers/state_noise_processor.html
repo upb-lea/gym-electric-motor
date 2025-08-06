@@ -41,20 +41,20 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 
         </div>
@@ -85,7 +85,7 @@
 <span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.physical_system_wrappers</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
 
 
-<div class="viewcode-block" id="StateNoiseProcessor"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor">[docs]</a><span class="k">class</span> <span class="nc">StateNoiseProcessor</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
+<div class="viewcode-block" id="StateNoiseProcessor"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor">[docs]</a><span class="k">class</span> <span class="nc">StateNoiseProcessor</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The StateNoiseProcessor puts additional noise onto the systems state.</span>
 
 <span class="sd">    The random distribution of the noise can be selected by those available in the numpy random generator:</span>
@@ -146,19 +146,19 @@
             <span class="s2">&quot;Check https://numpy.org/doc/stable/reference/random/generator.html#distributions for distributions.&quot;</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="StateNoiseProcessor.set_physical_system"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="StateNoiseProcessor.set_physical_system"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="c1"># Docstring from super class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="n">state_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="StateNoiseProcessor.reset"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StateNoiseProcessor.reset"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring from super class</span>
         <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_new_noise</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_noise</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StateNoiseProcessor.simulate"><a class="viewcode-back" href="../../../parts/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="StateNoiseProcessor.simulate"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="c1"># Docstring from super class</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_length</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_new_noise</span><span class="p">()</span>

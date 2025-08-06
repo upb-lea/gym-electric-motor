@@ -41,20 +41,20 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 
         </div>
@@ -85,7 +85,7 @@
 <span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">ode</span><span class="p">,</span> <span class="n">odeint</span><span class="p">,</span> <span class="n">solve_ivp</span>
 
 
-<div class="viewcode-block" id="OdeSolver"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver">[docs]</a><span class="k">class</span> <span class="nc">OdeSolver</span><span class="p">:</span>
+<div class="viewcode-block" id="OdeSolver"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver">[docs]</a><span class="k">class</span> <span class="nc">OdeSolver</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface and base class for all used OdeSolvers in gym-electric-motor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -117,7 +117,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span>
 
-<div class="viewcode-block" id="OdeSolver.set_initial_value"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_initial_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="OdeSolver.set_initial_value"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_initial_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the new initial system state after reset.</span>
 
@@ -128,7 +128,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">initial_value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span></div>
 
-<div class="viewcode-block" id="OdeSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="OdeSolver.integrate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Integrate the ODE-System from current time until time t</span>
 
@@ -139,7 +139,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="OdeSolver.set_system_equation"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="OdeSolver.set_system_equation"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Setting of the systems equation.</span>
 
@@ -150,7 +150,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span> <span class="o">=</span> <span class="n">system_equation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span> <span class="o">=</span> <span class="n">jac</span></div>
 
-<div class="viewcode-block" id="OdeSolver.set_f_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_f_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="OdeSolver.set_f_params"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver.set_f_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set further arguments for the systems function call like input quantities.</span>
 
@@ -160,7 +160,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_f_params</span> <span class="o">=</span> <span class="n">args</span></div></div>
 
 
-<div class="viewcode-block" id="EulerSolver"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver">[docs]</a><span class="k">class</span> <span class="nc">EulerSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
+<div class="viewcode-block" id="EulerSolver"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver">[docs]</a><span class="k">class</span> <span class="nc">EulerSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Solves a system of differential equations of first order for a given time step with linear approximation.</span>
 
@@ -180,7 +180,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_nsteps</span> <span class="o">=</span> <span class="n">nsteps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_integrate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrate_one_step</span> <span class="k">if</span> <span class="n">nsteps</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrate_nsteps</span>
 
-<div class="viewcode-block" id="EulerSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="EulerSolver.integrate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/euler.html#gym_electric_motor.physical_systems.solvers.EulerSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_integrate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
 
@@ -220,7 +220,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span></div>
 
 
-<div class="viewcode-block" id="ScipyOdeSolver"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver">[docs]</a><span class="k">class</span> <span class="nc">ScipyOdeSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipyOdeSolver"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver">[docs]</a><span class="k">class</span> <span class="nc">ScipyOdeSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class for all ode-solvers in the scipy.integrate.ode package.</span>
 
@@ -248,27 +248,27 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver_args</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_integrator</span> <span class="o">=</span> <span class="n">integrator</span>
 
-<div class="viewcode-block" id="ScipyOdeSolver.set_system_equation"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipyOdeSolver.set_system_equation"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_system_equation</span><span class="p">(</span><span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span> <span class="o">=</span> <span class="n">ode</span><span class="p">(</span><span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span><span class="o">.</span><span class="n">set_integrator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrator</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_solver_args</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ScipyOdeSolver.set_initial_value"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_initial_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipyOdeSolver.set_initial_value"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_initial_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">initial_value</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ScipyOdeSolver.set_f_params"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_f_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipyOdeSolver.set_f_params"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.set_f_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_f_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span><span class="o">.</span><span class="n">set_jac_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ScipyOdeSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipyOdeSolver.integrate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_ode.html#gym_electric_motor.physical_systems.solvers.ScipyOdeSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ScipySolveIvpSolver"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver">[docs]</a><span class="k">class</span> <span class="nc">ScipySolveIvpSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipySolveIvpSolver"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver">[docs]</a><span class="k">class</span> <span class="nc">ScipySolveIvpSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class for all ode-solvers in the scipy.integrate.solve_ivp function</span>
 
@@ -279,7 +279,7 @@
         <span class="c1"># Docstring of superclass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
-<div class="viewcode-block" id="ScipySolveIvpSolver.set_system_equation"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipySolveIvpSolver.set_system_equation"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.set_system_equation">[docs]</a>    <span class="k">def</span> <span class="nf">set_system_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_system_equation</span><span class="p">(</span><span class="n">system_equation</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span>
@@ -288,7 +288,7 @@
         <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Radau&quot;</span><span class="p">,</span> <span class="s2">&quot;BDF&quot;</span><span class="p">,</span> <span class="s2">&quot;LSODA&quot;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_solver_kwargs</span><span class="p">[</span><span class="s2">&quot;jac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_system_jacobian</span></div>
 
-<div class="viewcode-block" id="ScipySolveIvpSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipySolveIvpSolver.integrate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_solve_ivp.html#gym_electric_motor.physical_systems.solvers.ScipySolveIvpSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span><span class="p">,</span>
@@ -303,7 +303,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span></div></div>
 
 
-<div class="viewcode-block" id="ScipyOdeIntSolver"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver">[docs]</a><span class="k">class</span> <span class="nc">ScipyOdeIntSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipyOdeIntSolver"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver">[docs]</a><span class="k">class</span> <span class="nc">ScipyOdeIntSolver</span><span class="p">(</span><span class="n">OdeSolver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class for all ode-solvers in the scipy.integrate.odeint function.</span>
 
@@ -317,7 +317,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver_args</span> <span class="o">=</span> <span class="n">kwargs</span>
 
-<div class="viewcode-block" id="ScipyOdeIntSolver.integrate"><a class="viewcode-back" href="../../../parts/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="ScipyOdeIntSolver.integrate"><a class="viewcode-back" href="../../../parts_gem/physical_systems/ode_solvers/scipy_odeint.html#gym_electric_motor.physical_systems.solvers.ScipyOdeIntSolver.integrate">[docs]</a>    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_system_equation</span><span class="p">,</span>
