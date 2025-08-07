@@ -1,3 +1,7 @@
+EMF Feedforward
+========================
+
+
 ..  toctree::
     :maxdepth: 1
     :caption: Subcomponent of the EMF Feedforward:

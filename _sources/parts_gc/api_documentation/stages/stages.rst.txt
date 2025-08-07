@@ -1,3 +1,7 @@
+Stages
+========================
+
+
 .. toctree::
    :maxdepth: 1
    :caption: Available Stages:
