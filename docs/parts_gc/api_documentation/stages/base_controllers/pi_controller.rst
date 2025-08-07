@@ -1,3 +1,7 @@
+PI Controller
+========================
+
+
 .. autoclass:: gem_controllers.stages.base_controllers.pi_controller.PIController
    :members:
    :special-members: __call__

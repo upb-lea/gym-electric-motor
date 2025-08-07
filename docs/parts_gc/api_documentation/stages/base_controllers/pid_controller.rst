@@ -1,3 +1,7 @@
+PID Controller
+========================
+
+
 .. autoclass:: gem_controllers.stages.base_controllers.pid_controller.PIDController
    :members:
    :special-members: __call__

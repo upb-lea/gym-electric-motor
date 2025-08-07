@@ -1,3 +1,6 @@
+Base Controller
+========================
+
 .. toctree::
    :maxdepth: 1
    :caption: Subcomponents of a Base Controller

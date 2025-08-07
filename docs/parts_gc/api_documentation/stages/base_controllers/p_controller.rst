@@ -1,3 +1,7 @@
+P Controller
+========================
+
+
 .. autoclass:: gem_controllers.stages.base_controllers.p_controller.PController
    :members:
    :special-members: __call__
