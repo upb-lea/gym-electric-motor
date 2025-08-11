@@ -1,5 +1,5 @@
 Base Controller
-========================
+===============
 
 .. toctree::
    :maxdepth: 1
@@ -11,6 +11,12 @@ Base Controller
    pid_controller
    three_point_controller
 
-   .. autoclass:: gem_controllers.stages.base_controllers.base_controller.BaseController
+.. currentmodule:: gem_controllers.stages.base_controllers.base_controller
+
+.. autoclass:: BaseController
    :members:
-   :special-members: __call__
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: _call_
+   :member-order: groupwise

@@ -11,7 +11,7 @@ train and test reinforcement learning motor controllers and to compare them with
 
 
 Getting started
-***************************
+***************
 
 A quick start guide can be found in the following Readme-File.
 
@@ -23,7 +23,7 @@ A quick start guide can be found in the following Readme-File.
 
 
 GEM Content
-*******
+***********
 
 In the environments section all available GEM-environments are presented with their default configuration.
 For quick start, one of these can be selected and used out of the box.
@@ -43,7 +43,6 @@ documentation specifies the basic interfaces inside a physical system.
     parts_gem/reference_generators/reference_generator
     parts_gem/reward_functions/reward_function
     parts_gem/physical_systems/physical_system
-    parts_gem/physical_system_wrappers/physical_system_wrapper
     parts_gem/visualizations/visualization
     parts_gem/constraint_monitor
     parts_gem/core
@@ -53,7 +52,7 @@ documentation specifies the basic interfaces inside a physical system.
 
 
 GEM-Control Content
-*******
+*******************
 The GEM-control is a collection of control methods to control the GEM-environments.
 Currently, classic PI controllers are available for most of the environment types.
 
