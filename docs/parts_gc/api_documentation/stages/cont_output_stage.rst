@@ -1,5 +1,5 @@
-Continuous Output Stage
-=============
+Continous Output Stage
+======================
 
 .. autoclass:: gem_controllers.stages.cont_output_stage.ContOutputStage
    :members:
