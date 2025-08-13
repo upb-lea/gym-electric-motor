@@ -73,6 +73,9 @@ source_suffix = {
     ".md": "myst",
 }
 # source_suffix = '.rst'
+myst_enable_extensions = [
+    "colon_fence", "deflist", "dollarmath", "amsmath", "front_matter"
+]
 
 # The master toctree document.
 master_doc = 'index'
