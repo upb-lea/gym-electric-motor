@@ -166,4 +166,5 @@ texinfo_documents = [
      author, 'GEM', 'A package to simulate and control electrical drives.',
      'Miscellaneous'),
 ]
+
 # -- Extension configuration -------------------------------------------------
