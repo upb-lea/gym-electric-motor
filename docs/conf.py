@@ -166,6 +166,7 @@ texinfo_documents = [
      author, 'GEM', 'A package to simulate and control electrical drives.',
      'Miscellaneous'),
 ]
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'JOSS/*', 'JOSS/paper.md']
 
 
 # -- Extension configuration -------------------------------------------------
