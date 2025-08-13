@@ -166,7 +166,39 @@ texinfo_documents = [
      author, 'GEM', 'A package to simulate and control electrical drives.',
      'Miscellaneous'),
 ]
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'JOSS/*', 'JOSS/paper.md']
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinx_rtd_theme",
+    "myst_parser",           # ← use MyST instead of m2r2
+]
+
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "myst",
+}
+
+# (nice-to-have)
+myst_enable_extensions = ["colon_fence", "deflist", "dollarmath", "amsmath"]
+myst_heading_anchors = 3
+
+# Headless & import-safe
+import os
+os.environ.setdefault("MPLBACKEND", "Agg")
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+except Exception:
+    pass
+
+autodoc_mock_imports = [
+    "tkinter", "tkinter.ttk", "tkinter.filedialog",
+    "IPython", "IPython.display",   # safety net even though we install ipython
+]
+
 
 
 # -- Extension configuration -------------------------------------------------
