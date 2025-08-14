@@ -36,13 +36,29 @@ jobs:
   build-doc:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Build Sphinx documentation
+      id: builddocs
       uses: nicholasphair/sphinx-action@7.0.0
       with:
         pre-build-command: export QT_QPA_PLATFORM=offscreen && apt-get update && apt-get install -y git python3-tk tcl8.6 tk8.6 libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 libnss3 libxcomposite1 libxcursor1 libxdamage1 libxi6 libxtst6 && python -m pip install --upgrade pip setuptools wheel && python -m pip install sphinx sphinx_rtd_theme==1.3.0 myst-parser ipython m2r2 && python -m pip install -r requirements.txt && python -m pip install git+https://github.com/upb-lea/gem-control@main && python -m pip install git+https://github.com/upb-lea/control-block-diagram && python -m pip install .
         docs-folder: docs
         build-command: sphinx-build -b html -W -n -T -v docs _build/html
+
+    - name: Print Sphinx log on failure
+      if: failure()
+      run: |
+        echo "===== /tmp/sphinx-log ====="
+        cat /tmp/sphinx-log || true
+        echo "===== END /tmp/sphinx-log ====="
+
+    - name: Upload Sphinx log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: sphinx-log
+        path: /tmp/sphinx-log
+        if-no-files-found: ignore
     - name: Commit documentation changes
       run: |
         git clone https://github.com/upb-lea/gym-electric-motor.git --branch gh-pages --single-branch gh-pages
