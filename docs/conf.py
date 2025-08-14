@@ -29,6 +29,12 @@ autodoc_mock_imports = [
     # If needed later:
     # "cv2", "PyQt5", "PyQt6", "PySide2", "PySide6", "OpenGL", "OpenGL.GL",
 ]
+extensions = [
+    "sphinx.ext.autodoc","sphinx.ext.autosummary","sphinx.ext.mathjax",
+    "sphinx.ext.viewcode","sphinx.ext.napoleon","sphinx_rtd_theme","myst_parser",
+]
+source_suffix = {".rst":"restructuredtext",".md":"myst"}
+myst_enable_extensions = ["colon_fence","deflist","dollarmath","amsmath","front_matter"]
 # -- Project information -----------------------------------------------------
 
 project = 'gym-electric-motor'
@@ -50,12 +56,7 @@ release = '2021'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    "sphinx.ext.autodoc","sphinx.ext.autosummary","sphinx.ext.mathjax",
-    "sphinx.ext.viewcode","sphinx.ext.napoleon","sphinx_rtd_theme","myst_parser",
-]
-source_suffix = {".rst":"restructuredtext",".md":"myst"}
-myst_enable_extensions = ["colon_fence","deflist","dollarmath","amsmath","front_matter"]
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
