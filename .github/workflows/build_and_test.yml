@@ -43,7 +43,7 @@ jobs:
       with:
         pre-build-command: export QT_QPA_PLATFORM=offscreen && apt-get update && apt-get install -y git python3-tk tcl8.6 tk8.6 libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 libnss3 libxcomposite1 libxcursor1 libxdamage1 libxi6 libxtst6 && python -m pip install --upgrade pip setuptools wheel && python -m pip install sphinx sphinx_rtd_theme==1.3.0 myst-parser ipython m2r2 && python -m pip install -r requirements.txt && python -m pip install git+https://github.com/upb-lea/gem-control@main && python -m pip install git+https://github.com/upb-lea/control-block-diagram && python -m pip install .
         docs-folder: docs
-        build-command: sphinx-build -b html -W -n -T -v docs _build/html
+        build-command: sphinx-build -b html -W -n -T -v . _build/html
 
     - name: Print Sphinx log on failure
       if: failure()
