@@ -31,7 +31,7 @@ autodoc_mock_imports = [
 ]
 extensions = [
     "sphinx.ext.autodoc","sphinx.ext.autosummary","sphinx.ext.mathjax",
-    "sphinx.ext.viewcode","sphinx.ext.napoleon","sphinx_rtd_theme","myst_parser",
+    "sphinx.ext.viewcode","sphinx.ext.napoleon","sphinx_rtd_theme","myst_parser","sphinx_mdinclude"
 ]
 source_suffix = {".rst":"restructuredtext",".md":"myst"}
 myst_enable_extensions = ["colon_fence","deflist","dollarmath","amsmath","front_matter"]
