@@ -11,11 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -90,10 +90,10 @@
            <div itemprop="articleBody">
              
   <section id="random-component">
-<h1>Random Component<a class="headerlink" href="#random-component" title="Permalink to this heading"></a></h1>
+<h1>Random Component<a class="headerlink" href="#random-component" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.RandomComponent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.</span></span><span class="sig-name descname"><span class="pre">RandomComponent</span></span><a class="reference internal" href="../_modules/gym_electric_motor/random_component.html#RandomComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.RandomComponent" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.</span></span><span class="sig-name descname"><span class="pre">RandomComponent</span></span><a class="reference internal" href="../_modules/gym_electric_motor/random_component.html#RandomComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.RandomComponent" title="Link to this definition"></a></dt>
 <dd><p>Base class for all random components in the environment.</p>
 <p>Every component (e.g. ReferenceGenerator or ElectricMotor) that has any kind of random behavior has to derive from
 the RandomComponent class directly or indirectly via its own base class.</p>
@@ -135,19 +135,19 @@ no matter how long the previous episodes have been. Therefore, each random envir
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.RandomComponent.next_generator">
-<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/random_component.html#RandomComponent.next_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.RandomComponent.next_generator" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/random_component.html#RandomComponent.next_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.RandomComponent.next_generator" title="Link to this definition"></a></dt>
 <dd><p>Sets a new reference generator for a new episode.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.RandomComponent.random_generator">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.RandomComponent.random_generator" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.RandomComponent.random_generator" title="Link to this definition"></a></dt>
 <dd><p>The random generator that has to be used to draw the random numbers.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.RandomComponent.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/random_component.html#RandomComponent.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.RandomComponent.seed" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/random_component.html#RandomComponent.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.RandomComponent.seed" title="Link to this definition"></a></dt>
 <dd><p>The function to set the seed.</p>
 <p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
 to this component that is generated based on the source-seed of the env.</p>
@@ -169,7 +169,7 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.RandomComponent.seed_sequence">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.RandomComponent.seed_sequence" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.RandomComponent.seed_sequence" title="Link to this definition"></a></dt>
 <dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
 </dd></dl>
 

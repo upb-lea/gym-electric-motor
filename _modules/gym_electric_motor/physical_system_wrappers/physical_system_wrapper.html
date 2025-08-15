@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -92,7 +92,9 @@
 <span class="kn">from</span> <span class="nn">..random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 
 
-<div class="viewcode-block" id="PhysicalSystemWrapper"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper">[docs]</a><span class="k">class</span> <span class="nc">PhysicalSystemWrapper</span><span class="p">(</span><span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+<div class="viewcode-block" id="PhysicalSystemWrapper">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper">[docs]</a>
+<span class="k">class</span> <span class="nc">PhysicalSystemWrapper</span><span class="p">(</span><span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">PhysicalSystem</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A PhysicalSystemWrapper is a wrapper around the PhysicalSystem of a gem-environment.</span>
 
 <span class="sd">    It may be used to modify its states and actions. In contrast to gym-wrappers which are put around the whole</span>
@@ -181,7 +183,9 @@
         <span class="k">if</span> <span class="n">physical_system</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PhysicalSystemWrapper.set_physical_system"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="PhysicalSystemWrapper.set_physical_system">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.set_physical_system">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the inner physical system of this PhysicalSystemWrapper.</span>
 
 <span class="sd">        Args:</span>
@@ -194,28 +198,39 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tau</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">tau</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="PhysicalSystemWrapper.seed"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PhysicalSystemWrapper.seed">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.seed">[docs]</a>
+    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># docstring of super class RandomComponent</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PhysicalSystemWrapper.simulate"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="PhysicalSystemWrapper.simulate">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.simulate">[docs]</a>
+    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="c1"># Docstring of super class PhysicalSystem</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PhysicalSystemWrapper.reset"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PhysicalSystemWrapper.reset">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Docstring of super class PhysicalSystem</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">next_generator</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{}{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

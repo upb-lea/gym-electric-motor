@@ -10,11 +10,11 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -95,7 +95,9 @@
 <span class="kn">from</span> <span class="nn">...random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
 
 
-<div class="viewcode-block" id="ElectricMotor"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor">[docs]</a><span class="k">class</span> <span class="nc">ElectricMotor</span><span class="p">(</span><span class="n">RandomComponent</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotor">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor">[docs]</a>
+<span class="k">class</span> <span class="nc">ElectricMotor</span><span class="p">(</span><span class="n">RandomComponent</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all technical electrical motor models.</span>
 
 <span class="sd">    A motor consists of the ode-state. These are the dynamic quantities of its ODE.</span>
@@ -232,7 +234,9 @@
         <span class="c1"># preventing wrong user input for the basic case</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initializer</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="s2">&quot;wrong initializer&quot;</span>
 
-<div class="viewcode-block" id="ElectricMotor.electrical_ode"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectricMotor.electrical_ode">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_ode">[docs]</a>
+    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculation of the derivatives of each motor state variable for the given inputs / The motors ODE-System.</span>
 
 <span class="sd">        Args:</span>
@@ -245,7 +249,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="ElectricMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ElectricMotor.electrical_jacobian">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.electrical_jacobian">[docs]</a>
+    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculation of the jacobian of each motor ODE for the given inputs / The motors ODE-System.</span>
 
@@ -265,7 +272,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ElectricMotor.initialize"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ElectricMotor.initialize">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.initialize">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes given state values. Values can be given as a constant or</span>
 <span class="sd">        sampled random out of a statistical distribution. Initial value is in</span>
@@ -356,7 +366,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No matching Initialization Case&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ElectricMotor.reset"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ElectricMotor.reset">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_space</span><span class="p">,</span> <span class="n">state_positions</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the motors state to a new initial state. (Default 0)</span>
 
 <span class="sd">        Args:</span>
@@ -373,7 +386,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ElectricMotor.i_in"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ElectricMotor.i_in">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/electric_motor.html#gym_electric_motor.physical_systems.electric_motors.ElectricMotor.i_in">[docs]</a>
+    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            state(ndarray(float)): ODE state of the motor</span>
@@ -382,6 +398,7 @@
 <span class="sd">             list(float): List of all currents flowing into the motor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
 
     <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limits_d</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nominal_d</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace missing limits and nominal values with physical maximums.</span>
@@ -412,6 +429,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">nominal_new</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">nominal_new</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">nominal_new</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_limits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nominal_new</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

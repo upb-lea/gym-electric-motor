@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -95,7 +95,9 @@
 <span class="kn">from</span> <span class="nn">.physical_system_wrapper</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
 
 
-<div class="viewcode-block" id="FluxObserver"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver">[docs]</a><span class="k">class</span> <span class="nc">FluxObserver</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
+<div class="viewcode-block" id="FluxObserver">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver">[docs]</a>
+<span class="k">class</span> <span class="nc">FluxObserver</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The FluxObserver extends the systems state vector of induction machine environments by estimated flux states</span>
 <span class="sd">    ``psi_abs``, and ``psi_angle``. The flux is estimated as follows:</span>
 
@@ -140,7 +142,9 @@
     <span class="k">def</span> <span class="nf">_abc_to_alphabeta_transformation</span><span class="p">(</span><span class="n">i_s</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">gem</span><span class="o">.</span><span class="n">physical_systems</span><span class="o">.</span><span class="n">electric_motors</span><span class="o">.</span><span class="n">ThreePhaseMotor</span><span class="o">.</span><span class="n">t_23</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FluxObserver.set_physical_system"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="FluxObserver.set_physical_system">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="p">,</span>
@@ -166,12 +170,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_omega_idx</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="s2">&quot;omega&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FluxObserver.reset"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FluxObserver.reset">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">(),</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]))</span></div>
 
-<div class="viewcode-block" id="FluxObserver.simulate"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FluxObserver.simulate">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.simulate">[docs]</a>
+    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
         <span class="n">state_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">state_norm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">limits</span>
@@ -188,7 +198,9 @@
 
         <span class="c1"># Integrate the flux</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span> <span class="o">+=</span> <span class="n">delta_psi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">)]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">)]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+</div>
+
 </pre></div>
 
            </div>

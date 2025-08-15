@@ -10,11 +10,11 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -94,7 +94,9 @@
 <span class="kn">from</span> <span class="nn">.synchronous_motor</span> <span class="kn">import</span> <span class="n">SynchronousMotor</span>
 
 
-<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor">[docs]</a><span class="k">class</span> <span class="nc">ExternallyExcitedSynchronousMotor</span><span class="p">(</span><span class="n">SynchronousMotor</span><span class="p">):</span>
+<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor">[docs]</a>
+<span class="k">class</span> <span class="nc">ExternallyExcitedSynchronousMotor</span><span class="p">(</span><span class="n">SynchronousMotor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    =====================  ==========  ============= =================================================</span>
 <span class="sd">    Motor Parameter        Unit        Default Value Description</span>
@@ -239,7 +241,9 @@
 
         <span class="c1"># fmt: on</span>
 
-<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_ode"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_dqe</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_ode">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_ode">[docs]</a>
+    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_dqe</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The differential equation of the Synchronous Motor.</span>
 
@@ -270,6 +274,7 @@
             <span class="p">)</span>
         <span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">_torque_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
@@ -291,7 +296,9 @@
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_M&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;i_k_rs&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">]</span>
 
-<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_jacobian">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_jacobian">[docs]</a>
+    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
 
@@ -314,7 +321,9 @@
                 <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_M&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;i_k_rs&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">],</span>
                 <span class="mi">0</span><span class="p">,</span>
             <span class="p">])</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
+
         <span class="c1"># fmt: on</span>
 </pre></div>
 

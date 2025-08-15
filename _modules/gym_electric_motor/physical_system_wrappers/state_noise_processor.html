@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -90,7 +90,9 @@
 <span></span><span class="kn">from</span> <span class="nn">gym_electric_motor.physical_system_wrappers</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
 
 
-<div class="viewcode-block" id="StateNoiseProcessor"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor">[docs]</a><span class="k">class</span> <span class="nc">StateNoiseProcessor</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
+<div class="viewcode-block" id="StateNoiseProcessor">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor">[docs]</a>
+<span class="k">class</span> <span class="nc">StateNoiseProcessor</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The StateNoiseProcessor puts additional noise onto the systems state.</span>
 
 <span class="sd">    The random distribution of the noise can be selected by those available in the numpy random generator:</span>
@@ -151,23 +153,32 @@
             <span class="s2">&quot;Check https://numpy.org/doc/stable/reference/random/generator.html#distributions for distributions.&quot;</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="StateNoiseProcessor.set_physical_system"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="StateNoiseProcessor.set_physical_system">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.set_physical_system">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="c1"># Docstring from super class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_physical_system</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="n">state_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="StateNoiseProcessor.reset"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StateNoiseProcessor.reset">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring from super class</span>
         <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_new_noise</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_noise</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StateNoiseProcessor.simulate"><a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StateNoiseProcessor.simulate">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/state_noise_processor.html#gym_electric_motor.physical_system_wrappers.StateNoiseProcessor.simulate">[docs]</a>
+    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="c1"># Docstring from super class</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_length</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_new_noise</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_noise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">action</span><span class="p">))</span></div>
+
 
     <span class="k">def</span> <span class="nf">_add_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds noise to the current state.</span>
@@ -185,6 +196,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_random_pointer</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">fct</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_dist</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_noise</span> <span class="o">=</span> <span class="n">fct</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_indices</span><span class="p">)),</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_kwargs</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

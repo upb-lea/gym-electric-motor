@@ -11,11 +11,13 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -102,7 +104,7 @@
            <div itemprop="articleBody">
              
   <section id="supply-converter-motor-load-system-scml">
-<h1>Supply Converter Motor Load System (SCML)<a class="headerlink" href="#supply-converter-motor-load-system-scml" title="Permalink to this heading"></a></h1>
+<h1>Supply Converter Motor Load System (SCML)<a class="headerlink" href="#supply-converter-motor-load-system-scml" title="Link to this heading"></a></h1>
 <p>The technical structure of the SCML-Systems in the GEM-toolbox can bee seen in the figure below.</p>
 <figure class="align-default">
 <img alt="../../_images/SCML_Setting.svg" src="../../_images/SCML_Setting.svg" /></figure>
@@ -123,7 +125,7 @@ Additionally, each SCML-System has got an ODE-Solver for the simulation.</p>
 derive. They only implement private methods. Therefore, the interface to the user stays the same in all cases.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SCMLSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SCMLSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="Link to this definition"></a></dt>
 <dd><p>The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
 a technical setting consisting of these components and a solver for the electrical ODE of the motor and mechanical
 ODE of the load.</p>
@@ -143,39 +145,39 @@ Default: The jacobians are used, if available</p></li>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter" title="Link to this definition"></a></dt>
 <dd><p>The power electronic converter instance in the system</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor" title="Link to this definition"></a></dt>
 <dd><p>The electrical motor instance of the system</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load" title="Link to this definition"></a></dt>
 <dd><p>The mechanical load instance in the system</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(float): An array containing the nominal values for each state variable.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset all the systems modules to an initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -186,7 +188,7 @@ ndarray(float): An array containing the nominal values for each state variable.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.seed" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.seed" title="Link to this definition"></a></dt>
 <dd><p>The function to set the seed.</p>
 <p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
 to this component that is generated based on the source-seed of the env.</p>
@@ -208,7 +210,7 @@ entropies. The entropy of this instance has to be placed always at first place.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate">
-<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.simulate" title="Link to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -226,17 +228,17 @@ This method is called in the environment in every step to update the systems sta
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supply</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supply</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply" title="Link to this definition"></a></dt>
 <dd><p>The voltage supply instance in the physical system</p>
 </dd></dl>
 
 </dd></dl>
 
 <section id="dc-motor-system">
-<h2>Dc Motor System<a class="headerlink" href="#dc-motor-system" title="Permalink to this heading"></a></h2>
+<h2>Dc Motor System<a class="headerlink" href="#dc-motor-system" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">DcMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DcMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">DcMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DcMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem" title="Link to this definition"></a></dt>
 <dd><p>SCML-System that can be used for all DC Motors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -256,10 +258,10 @@ Default: The jacobians are used, if available</p></li>
 
 </section>
 <section id="synchronous-motor-system">
-<h2>Synchronous Motor System<a class="headerlink" href="#synchronous-motor-system" title="Permalink to this heading"></a></h2>
+<h2>Synchronous Motor System<a class="headerlink" href="#synchronous-motor-system" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abc'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abc'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem" title="Link to this definition"></a></dt>
 <dd><p>SCML-System that can be used with all Synchronous Motors</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -271,7 +273,7 @@ Default: The jacobians are used, if available</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset all the systems modules to an initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -282,7 +284,7 @@ Default: The jacobians are used, if available</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate">
-<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.simulate" title="Link to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -302,10 +304,10 @@ This method is called in the environment in every step to update the systems sta
 
 </section>
 <section id="squirrel-cage-induction-motor-system">
-<h2>Squirrel Cage Induction Motor System<a class="headerlink" href="#squirrel-cage-induction-motor-system" title="Permalink to this heading"></a></h2>
+<h2>Squirrel Cage Induction Motor System<a class="headerlink" href="#squirrel-cage-induction-motor-system" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SquirrelCageInductionMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'scipy.ode'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SquirrelCageInductionMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'scipy.ode'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem" title="Link to this definition"></a></dt>
 <dd><p>SCML-System for the Squirrel Cage Induction Motor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -317,7 +319,7 @@ This method is called in the environment in every step to update the systems sta
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset all the systems modules to an initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -328,7 +330,7 @@ This method is called in the environment in every step to update the systems sta
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate">
-<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.simulate" title="Link to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -348,10 +350,10 @@ This method is called in the environment in every step to update the systems sta
 
 </section>
 <section id="doubly-fed-induction-motor-system">
-<h2>Doubly Fed Induction Motor System<a class="headerlink" href="#doubly-fed-induction-motor-system" title="Permalink to this heading"></a></h2>
+<h2>Doubly Fed Induction Motor System<a class="headerlink" href="#doubly-fed-induction-motor-system" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">DoublyFedInductionMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'scipy.ode'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">DoublyFedInductionMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'scipy.ode'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem" title="Link to this definition"></a></dt>
 <dd><p>SCML-System for the Doubly Fed Induction Motor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -360,7 +362,7 @@ This method is called in the environment in every step to update the systems sta
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset all the systems modules to an initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -371,7 +373,7 @@ This method is called in the environment in every step to update the systems sta
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate">
-<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.simulate" title="Link to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">

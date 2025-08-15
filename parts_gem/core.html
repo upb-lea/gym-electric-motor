@@ -11,12 +11,13 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -91,10 +92,10 @@
            <div itemprop="articleBody">
              
   <section id="core">
-<h1>Core<a class="headerlink" href="#core" title="Permalink to this heading"></a></h1>
+<h1>Core<a class="headerlink" href="#core" title="Link to this heading"></a></h1>
 <figure class="align-default">
 <img alt="../_images/CoreClasses.svg" src="../_images/CoreClasses.svg" /></figure>
-<span class="target" id="module-gym_electric_motor.core"></span><p>On the core level the electric motor environment and the interface to its submodules are defined. By using these
+<p id="module-gym_electric_motor.core">On the core level the electric motor environment and the interface to its submodules are defined. By using these
 interfaces further reference generators, reward functions, visualizations or physical models can be implemented.</p>
 <p>Each ElectricMotorEnvironment contains the five following modules:</p>
 <ul class="simple">
@@ -130,7 +131,7 @@ interfaces further reference generators, reward functions, visualizations or phy
 </ul>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Callback">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">Callback</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">Callback</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback" title="Link to this definition"></a></dt>
 <dd><p>The abstract base class for Callbacks in GEM.
 Each of its functions gets called at one point in the <a class="reference internal" href="environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ElectricMotorEnvironment</span></code></a>.
 .. attribute:: _env</p>
@@ -139,37 +140,37 @@ Each of its functions gets called at one point in the <a class="reference intern
 </div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Callback.on_close">
-<span class="sig-name descname"><span class="pre">on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_close" title="Link to this definition"></a></dt>
 <dd><p>Gets called at the beginning of a close</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Callback.on_reset_begin">
-<span class="sig-name descname"><span class="pre">on_reset_begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_reset_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_reset_begin" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">on_reset_begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_reset_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_reset_begin" title="Link to this definition"></a></dt>
 <dd><p>Gets called at the beginning of each reset</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Callback.on_reset_end">
-<span class="sig-name descname"><span class="pre">on_reset_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_reset_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_reset_end" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">on_reset_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_reset_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_reset_end" title="Link to this definition"></a></dt>
 <dd><p>Gets called at the end of each reset</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Callback.on_step_begin">
-<span class="sig-name descname"><span class="pre">on_step_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_step_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_step_begin" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">on_step_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_step_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_step_begin" title="Link to this definition"></a></dt>
 <dd><p>Gets called at the beginning of each step</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Callback.on_step_end">
-<span class="sig-name descname"><span class="pre">on_step_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_step_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_step_end" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">on_step_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.on_step_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.on_step_end" title="Link to this definition"></a></dt>
 <dd><p>Gets called at the end of each step</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Callback.set_env">
-<span class="sig-name descname"><span class="pre">set_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.set_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.set_env" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback.set_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback.set_env" title="Link to this definition"></a></dt>
 <dd><p>Sets the environment of the motor.</p>
 </dd></dl>
 
@@ -177,7 +178,7 @@ Each of its functions gets called at one point in the <a class="reference intern
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ConstraintMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_violations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ConstraintMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_violations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor" title="Link to this definition"></a></dt>
 <dd><p>The ConstraintMonitor is used within the ElectricMotorEnvironment to monitor the states for illegal / undesired
 values (e.g. overcurrents).</p>
 <p>It consists of a list of multiple independent constraints. Each constraint gets the current observation of the
@@ -232,7 +233,7 @@ violation degrees to a total violation degree.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor.check_constraints">
-<span class="sig-name descname"><span class="pre">check_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.check_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.check_constraints" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.check_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.check_constraints" title="Link to this definition"></a></dt>
 <dd><p>Function to check and merge all constraints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -249,13 +250,13 @@ violation degrees to a total violation degree.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor.constraints">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraints</span></span><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.constraints" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraints</span></span><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.constraints" title="Link to this definition"></a></dt>
 <dd><p>Returns the list of all constraints the ConstraintMonitor observes.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor.set_modules">
-<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><span class="pre">PhysicalSystem</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.set_modules" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="physical_systems/physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><span class="pre">PhysicalSystem</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.set_modules" title="Link to this definition"></a></dt>
 <dd><p>The PhysicalSystem of the environment is passed to save important parameters like the index of the states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -268,7 +269,7 @@ violation degrees to a total violation degree.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ElectricMotorEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_system_wrappers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ElectricMotorEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_system_wrappers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment" title="Link to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Description:</dt><dd><p>The main class connecting all modules of the gym-electric-motor environments.</p>
 </dd>
@@ -357,13 +358,13 @@ the physical system.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.close" title="Link to this definition"></a></dt>
 <dd><p>Called when the environment is deleted. Closes all its modules.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_monitor</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_monitor</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.constraint_monitor" title="Link to this definition"></a></dt>
 <dd><p>The ConstraintMonitor of the environment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -374,45 +375,45 @@ the physical system.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.limits">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.limits" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.limits" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of limits of all states in the observation (called in state_filter) in the same order</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.nominal_state">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.nominal_state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.nominal_state" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of nominal values of all states in the observation (called in state_filter) in that order</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.physical_system">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">physical_system</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.physical_system" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">physical_system</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.physical_system" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 PhysicalSystem: The Physical System of the Environment</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.reference_generator">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_generator</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reference_generator" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_generator</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reference_generator" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ReferenceGenerator: The ReferenceGenerator of the Environment</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.reference_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_names</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reference_names" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_names</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reference_names" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of state names of all states in the observation (called in state_filter) in the same order</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.render" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.render" title="Link to this definition"></a></dt>
 <dd><p>Update the visualization of the motor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset of the environment and all its modules to an initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -424,20 +425,20 @@ info(dict): Auxiliary information (optional)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.reward_function">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward_function</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reward_function" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward_function</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.reward_function" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 RewardFunction: The RewardFunction of the environment</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.state_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.state_names" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.state_names" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of state names of all states in the observation (called in state_filter) in the same order</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.step" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorEnvironment.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.step" title="Link to this definition"></a></dt>
 <dd><p>Perform one simulation step of the environment with an action of the action space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -457,7 +458,7 @@ info(dict): Auxiliary information (optional)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorEnvironment.visualizations">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">visualizations</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.visualizations" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">visualizations</span></span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorEnvironment.visualizations" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of all active motor visualizations.</p>
 </dd></dl>
 
@@ -465,7 +466,7 @@ info(dict): Auxiliary information (optional)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorVisualization">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ElectricMotorVisualization</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorVisualization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ElectricMotorVisualization</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorVisualization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization" title="Link to this definition"></a></dt>
 <dd><p>Base class for all visualizations in GEM.
 The visualization is basically only a Callback that is extended by a render() function to update the figure.
 With the function calls that are inherited by the Callback superclass (e.g. <em>on_step_end</em>),
@@ -473,7 +474,7 @@ the data is passed from the environment to the visualization. In the render() fu
 visualized in the desired way.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorVisualization.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.render" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.render" title="Link to this definition"></a></dt>
 <dd><p>Function to update the user interface.</p>
 </dd></dl>
 
@@ -481,7 +482,7 @@ visualized in the desired way.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">PhysicalSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">PhysicalSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem" title="Link to this definition"></a></dt>
 <dd><p>The Physical System module encapsulates the physical model of the system as well as the simulation from one step
 to the next.</p>
 <dl class="field-list simple">
@@ -496,42 +497,42 @@ to the next.</p>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.action_space">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.action_space" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.action_space" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.close" title="Link to this definition"></a></dt>
 <dd><p>Called, when the environment is closed.
 Close the System and all of its submodules by closing files, saving logs etc.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.k">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.k" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.k" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 int: The current systems time step k.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.limits">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.limits" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.limits" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.nominal_state">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.nominal_state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.nominal_state" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(float): An array containing the nominal values for each state variable.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset the physical system to an initial state before a new episode starts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -545,7 +546,7 @@ ndarray(float): An array containing the nominal values for each state variable.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.simulate">
-<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.simulate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#PhysicalSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.simulate" title="Link to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -563,28 +564,28 @@ This method is called in the environment in every step to update the systems sta
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.state_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_names" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_names" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(str): Array containing the names of the systems states.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.state_positions">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_positions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_positions" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.state_space">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_space" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_space" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.unwrapped">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.unwrapped" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.unwrapped" title="Link to this definition"></a></dt>
 <dd><p>Returns this instance of the physical system.</p>
 <p>If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.</p>
 </dd></dl>
@@ -593,7 +594,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ReferenceGenerator</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ReferenceGenerator</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator" title="Link to this definition"></a></dt>
 <dd><p>The abstract base class for reference generators in gym electric motor environments.</p>
 <dl class="simple">
 <dt>reference_space:</dt><dd><p>Space of reference observations as defined in the Farama Gymnasium Toolbox.</p>
@@ -624,13 +625,13 @@ only the reference for the next time step omega_(t+1)=0.8 but also omega_(t+2)=0
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.close" title="Link to this definition"></a></dt>
 <dd><p>Called by the environment, when the environment is deleted to close files, store logs, etc.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator.get_reference">
-<span class="sig-name descname"><span class="pre">get_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.get_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.get_reference" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.get_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.get_reference" title="Link to this definition"></a></dt>
 <dd><p>Returns the reference array of the current time step.</p>
 <p>The reference array needs to be in the same shape as the state variables. For referenced states the reference
 value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</p>
@@ -649,7 +650,7 @@ value is passed. For unreferenced states a default value (e.g. Zero) can be set 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator.get_reference_observation">
-<span class="sig-name descname"><span class="pre">get_reference_observation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.get_reference_observation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.get_reference_observation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_reference_observation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.get_reference_observation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.get_reference_observation" title="Link to this definition"></a></dt>
 <dd><p>Returns the reference observation for the next time step. This observation needs to fit in the reference space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -666,7 +667,7 @@ value is passed. For unreferenced states a default value (e.g. Zero) can be set 
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator.reference_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_names</span></span><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.reference_names" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_names</span></span><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.reference_names" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 reference_names(list(str)): A list containing all names of the referenced states in the reference
 observation.</p>
@@ -674,14 +675,14 @@ observation.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator.referenced_states">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">referenced_states</span></span><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.referenced_states" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">referenced_states</span></span><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.referenced_states" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(bool): Boolean-Array with the length of the state_variables indicating which states are referenced.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset of references for a new episode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -704,7 +705,7 @@ ndarray(bool): Boolean-Array with the length of the state_variables indicating w
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ReferenceGenerator.set_modules">
-<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.set_modules" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ReferenceGenerator.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ReferenceGenerator.set_modules" title="Link to this definition"></a></dt>
 <dd><p>Announcement of the PhysicalSystem to the ReferenceGenerator.</p>
 <p>In subclasses, store all important information from the physical system to the ReferenceGenerator here.
 The environment announces the physical system to the ReferenceGenerator during its initialization.</p>
@@ -719,12 +720,12 @@ The environment announces the physical system to the ReferenceGenerator during i
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.RewardFunction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">RewardFunction</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">RewardFunction</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Link to this definition"></a></dt>
 <dd><p>The abstract base class for reward functions in gym electric motor environments.</p>
 <p>The reward function is called once per step and returns reward for the current time step.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gym_electric_motor.core.RewardFunction.reward_range">
-<span class="sig-name descname"><span class="pre">reward_range</span></span><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward_range" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reward_range</span></span><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward_range" title="Link to this definition"></a></dt>
 <dd><p>Defining lowest and highest possible rewards.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -735,13 +736,13 @@ The environment announces the physical system to the ReferenceGenerator during i
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.RewardFunction.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.close" title="Link to this definition"></a></dt>
 <dd><p>Called, when the environment is closed to store logs, close files etc.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.RewardFunction.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reset" title="Link to this definition"></a></dt>
 <dd><p>This function is called by the environment when reset.</p>
 <p>Inner states of the reward function can be reset here, if necessary.</p>
 <dl class="field-list simple">
@@ -756,7 +757,7 @@ The environment announces the physical system to the ReferenceGenerator during i
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.RewardFunction.reward">
-<span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.reward" title="Link to this definition"></a></dt>
 <dd><p>Reward calculation. If limits have been violated the reward is calculated with a separate function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -781,7 +782,7 @@ necessary.</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">reward_range</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-inf,</span> <span class="pre">inf)</span></em><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reward_range</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-inf,</span> <span class="pre">inf)</span></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
 <dd><p>Lower and upper possible reward</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -792,7 +793,7 @@ necessary.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.RewardFunction.set_modules">
-<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_monitor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.set_modules" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_monitor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#RewardFunction.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction.set_modules" title="Link to this definition"></a></dt>
 <dd><p>Setting of the physical system, to set state arrays fitting to the environments states</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -809,12 +810,12 @@ necessary.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.SimulationEnvironment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">SimulationEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#SimulationEnvironment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.SimulationEnvironment" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">SimulationEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#SimulationEnvironment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.SimulationEnvironment" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.Workspace">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">Workspace</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Workspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Workspace" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">Workspace</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Workspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Workspace" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>

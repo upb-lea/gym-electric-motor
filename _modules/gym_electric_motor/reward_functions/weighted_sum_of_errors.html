@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -95,7 +95,9 @@
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">set_state_array</span>
 
 
-<div class="viewcode-block" id="WeightedSumOfErrors"><a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors">[docs]</a><span class="k">class</span> <span class="nc">WeightedSumOfErrors</span><span class="p">(</span><span class="n">RewardFunction</span><span class="p">):</span>
+<div class="viewcode-block" id="WeightedSumOfErrors">
+<a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors">[docs]</a>
+<span class="k">class</span> <span class="nc">WeightedSumOfErrors</span><span class="p">(</span><span class="n">RewardFunction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A reward function that calculates the reward as the weighted sum of errors with a certain power.</span>
 
 <span class="sd">    .. math::</span>
@@ -174,7 +176,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span> <span class="o">=</span> <span class="n">bias</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span> <span class="o">=</span> <span class="n">violation_reward</span>
 
-<div class="viewcode-block" id="WeightedSumOfErrors.set_modules"><a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">constraint_monitor</span><span class="p">):</span>
+<div class="viewcode-block" id="WeightedSumOfErrors.set_modules">
+<a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">constraint_monitor</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">constraint_monitor</span><span class="p">)</span>
         <span class="n">ps</span> <span class="o">=</span> <span class="n">physical_system</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state_length</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span>
@@ -211,11 +215,16 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="WeightedSumOfErrors.reward"><a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward">[docs]</a>    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">violation_degree</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+
+<div class="viewcode-block" id="WeightedSumOfErrors.reward">
+<a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward">[docs]</a>
+    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">violation_degree</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">violation_degree</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wse_reward</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span> <span class="o">+</span> <span class="n">violation_degree</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span></div>
+
 
     <span class="k">def</span> <span class="nf">_wse_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
         <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">state</span> <span class="o">-</span> <span class="n">reference</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_length</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span></div>
+
 </pre></div>
 
            </div>

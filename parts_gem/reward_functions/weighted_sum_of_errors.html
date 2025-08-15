@@ -11,12 +11,13 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -95,9 +96,9 @@
            <div itemprop="articleBody">
              
   <section id="weighted-sum-of-errors">
-<h1>Weighted Sum of Errors<a class="headerlink" href="#weighted-sum-of-errors" title="Permalink to this heading"></a></h1>
+<h1>Weighted Sum of Errors<a class="headerlink" href="#weighted-sum-of-errors" title="Link to this heading"></a></h1>
 <section id="usage-guide">
-<h2>Usage Guide<a class="headerlink" href="#usage-guide" title="Permalink to this heading"></a></h2>
+<h2>Usage Guide<a class="headerlink" href="#usage-guide" title="Link to this heading"></a></h2>
 <p>To use the weighted sum of errors, you have to import the class, initialize an object and pass it to the environment.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
 <span class="kn">from</span> <span class="nn">gym_electric_motor.reward_functions</span> <span class="kn">import</span> <span class="n">WeightedSumOfErrors</span>
@@ -121,10 +122,10 @@
 </div>
 </section>
 <section id="api-documentation">
-<h2>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h2>
+<h2>API Documentation<a class="headerlink" href="#api-documentation" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.reward_functions.weighted_sum_of_errors.</span></span><span class="sig-name descname"><span class="pre">WeightedSumOfErrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reward_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_reward_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation_reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.reward_functions.weighted_sum_of_errors.</span></span><span class="sig-name descname"><span class="pre">WeightedSumOfErrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reward_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_reward_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation_reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors" title="Link to this definition"></a></dt>
 <dd><p>A reward function that calculates the reward as the weighted sum of errors with a certain power.</p>
 <div class="math notranslate nohighlight">
 \[r_{wse} = - \sum_i w_i ((|s_i-s^*_i|) / l_i) ^{n_i} + b\]</div>
@@ -187,13 +188,13 @@ Should equal agents’ discount factor gamma. Used only, if violation_reward=Non
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.close" title="Link to this definition"></a></dt>
 <dd><p>Called, when the environment is closed to store logs, close files etc.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reset" title="Link to this definition"></a></dt>
 <dd><p>This function is called by the environment when reset.</p>
 <p>Inner states of the reward function can be reset here, if necessary.</p>
 <dl class="field-list simple">
@@ -208,7 +209,7 @@ Should equal agents’ discount factor gamma. Used only, if violation_reward=Non
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward">
-<span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors.reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors.reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward" title="Link to this definition"></a></dt>
 <dd><p>Reward calculation. If limits have been violated the reward is calculated with a separate function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -233,7 +234,7 @@ necessary.</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward_range">
-<span class="sig-name descname"><span class="pre">reward_range</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-inf,</span> <span class="pre">inf)</span></em><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward_range" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reward_range</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(-inf,</span> <span class="pre">inf)</span></em><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward_range" title="Link to this definition"></a></dt>
 <dd><p>Lower and upper possible reward</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -244,7 +245,7 @@ necessary.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">
-<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_monitor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_monitor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/reward_functions/weighted_sum_of_errors.html#WeightedSumOfErrors.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules" title="Link to this definition"></a></dt>
 <dd><p>Setting of the physical system, to set state arrays fitting to the environments states</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

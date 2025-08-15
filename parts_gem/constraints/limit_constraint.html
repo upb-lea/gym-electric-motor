@@ -11,12 +11,13 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -97,10 +98,10 @@
            <div itemprop="articleBody">
              
   <section id="limit-constraint">
-<h1>Limit Constraint<a class="headerlink" href="#limit-constraint" title="Permalink to this heading"></a></h1>
+<h1>Limit Constraint<a class="headerlink" href="#limit-constraint" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.constraints.LimitConstraint">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.constraints.</span></span><span class="sig-name descname"><span class="pre">LimitConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_state_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all_states'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#LimitConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.constraints.LimitConstraint" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.constraints.</span></span><span class="sig-name descname"><span class="pre">LimitConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_state_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all_states'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#LimitConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.constraints.LimitConstraint" title="Link to this definition"></a></dt>
 <dd><p>Constraint to observe the limits on one or more system states.</p>
 <p>This constraint observes if any of the systems state values exceeds the limit specified in the PhysicalSystem.</p>
 <div class="math notranslate nohighlight">
@@ -118,7 +119,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.constraints.LimitConstraint.set_modules">
-<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#LimitConstraint.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.constraints.LimitConstraint.set_modules" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/constraints.html#LimitConstraint.set_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.constraints.LimitConstraint.set_modules" title="Link to this definition"></a></dt>
 <dd><p>Called by the environment that the Constraint can read information from the PhysicalSystem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

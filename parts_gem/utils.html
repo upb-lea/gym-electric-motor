@@ -11,11 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -90,10 +90,10 @@
            <div itemprop="articleBody">
              
   <section id="module-gym_electric_motor.utils">
-<span id="utils"></span><h1>Utils<a class="headerlink" href="#module-gym_electric_motor.utils" title="Permalink to this heading"></a></h1>
+<span id="utils"></span><h1>Utils<a class="headerlink" href="#module-gym_electric_motor.utils" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="gym_electric_motor.utils.set_state_array">
-<span class="sig-prename descclassname"><span class="pre">gym_electric_motor.utils.</span></span><span class="sig-name descname"><span class="pre">set_state_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#set_state_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.utils.set_state_array" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gym_electric_motor.utils.</span></span><span class="sig-name descname"><span class="pre">set_state_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#set_state_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.utils.set_state_array" title="Link to this definition"></a></dt>
 <dd><p>Setting of the input values to a valid state array with the shape of the physical systems state.</p>
 <p>The input values can be passed as dict with state_name: value pairs or as list  / ndarray. In the latter case the
 shape of the list has to fit the state_names shape and the list will just be returned as array. If a float is
@@ -114,7 +114,7 @@ the state_names and zero otherwise.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gym_electric_motor.utils.state_dict_to_state_array">
-<span class="sig-prename descclassname"><span class="pre">gym_electric_motor.utils.</span></span><span class="sig-name descname"><span class="pre">state_dict_to_state_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#state_dict_to_state_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.utils.state_dict_to_state_array" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gym_electric_motor.utils.</span></span><span class="sig-name descname"><span class="pre">state_dict_to_state_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#state_dict_to_state_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.utils.state_dict_to_state_array" title="Link to this definition"></a></dt>
 <dd><p>Mapping of a passed state dictionary to a fitting state array.</p>
 <p>This function is mainly used in the initialization phase to map a dictionary of passed state_name, state_value pairs
 to a numpy state array with the entries of the state_dict at the corresponding places of the state_names.</p>
@@ -131,7 +131,7 @@ to a numpy state array with the entries of the state_dict at the corresponding p
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gym_electric_motor.utils.update_parameter_dict">
-<span class="sig-prename descclassname"><span class="pre">gym_electric_motor.utils.</span></span><span class="sig-name descname"><span class="pre">update_parameter_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#update_parameter_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.utils.update_parameter_dict" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gym_electric_motor.utils.</span></span><span class="sig-name descname"><span class="pre">update_parameter_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/utils.html#update_parameter_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.utils.update_parameter_dict" title="Link to this definition"></a></dt>
 <dd><p>Merges two dictionaries (source and update) together.</p>
 <p>It is similar to pythons dict.update() method. Furthermore, it assures that all keys in the update dictionary are
 already present in the source dictionary. Otherwise a KeyError is thrown.</p>

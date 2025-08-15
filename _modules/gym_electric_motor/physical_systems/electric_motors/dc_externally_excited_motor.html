@@ -10,11 +10,11 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -92,11 +92,15 @@
 <span class="kn">from</span> <span class="nn">.dc_motor</span> <span class="kn">import</span> <span class="n">DcMotor</span>
 
 
-<div class="viewcode-block" id="DcExternallyExcitedMotor"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor">[docs]</a><span class="k">class</span> <span class="nc">DcExternallyExcitedMotor</span><span class="p">(</span><span class="n">DcMotor</span><span class="p">):</span>
+<div class="viewcode-block" id="DcExternallyExcitedMotor">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor">[docs]</a>
+<span class="k">class</span> <span class="nc">DcExternallyExcitedMotor</span><span class="p">(</span><span class="n">DcMotor</span><span class="p">):</span>
     <span class="c1"># Equals DC Base Motor</span>
     <span class="n">HAS_JACOBIAN</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="DcExternallyExcitedMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="DcExternallyExcitedMotor.electrical_jacobian">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.electrical_jacobian">[docs]</a>
+    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -114,6 +118,7 @@
             <span class="p">),</span>
         <span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
 
@@ -127,6 +132,7 @@
             <span class="s2">&quot;i_e&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_parameter</span><span class="p">[</span><span class="s2">&quot;r_e&quot;</span><span class="p">],</span>
         <span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">limit_agenda</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

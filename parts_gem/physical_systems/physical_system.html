@@ -11,11 +11,13 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -93,7 +95,7 @@
            <div itemprop="articleBody">
              
   <section id="physical-systems">
-<h1>Physical Systems<a class="headerlink" href="#physical-systems" title="Permalink to this heading"></a></h1>
+<h1>Physical Systems<a class="headerlink" href="#physical-systems" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Available Physical Systems:</span></p>
 <ul>
@@ -101,10 +103,10 @@
 </ul>
 </div>
 <section id="physical-system-base-class">
-<h2>Physical System Base Class<a class="headerlink" href="#physical-system-base-class" title="Permalink to this heading"></a></h2>
+<h2>Physical System Base Class<a class="headerlink" href="#physical-system-base-class" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">PhysicalSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">PhysicalSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem" title="Link to this definition"></a></dt>
 <dd><p>The Physical System module encapsulates the physical model of the system as well as the simulation from one step
 to the next.</p>
 <dl class="field-list simple">
@@ -119,42 +121,42 @@ to the next.</p>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.action_space">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.action_space" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.action_space" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.close" title="Link to this definition"></a></dt>
 <dd><p>Called, when the environment is closed.
 Close the System and all of its submodules by closing files, saving logs etc.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.k">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.k" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.k" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 int: The current systems time step k.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.limits">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.limits" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.limits" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.nominal_state">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.nominal_state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.nominal_state" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(float): An array containing the nominal values for each state variable.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset the physical system to an initial state before a new episode starts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -168,7 +170,7 @@ ndarray(float): An array containing the nominal values for each state variable.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.simulate">
-<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.simulate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#PhysicalSystem.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.simulate" title="Link to this definition"></a></dt>
 <dd><p>Simulation of the Physical System for one time step with the input action.
 This method is called in the environment in every step to update the systems state.</p>
 <dl class="field-list simple">
@@ -186,28 +188,28 @@ This method is called in the environment in every step to update the systems sta
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.state_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_names" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_names" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 ndarray(str): Array containing the names of the systems states.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.state_positions">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_positions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_positions" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.state_space">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_space" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.state_space" title="Link to this definition"></a></dt>
 <dd><p>Returns:
 gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.core.PhysicalSystem.unwrapped">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.unwrapped" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.core.PhysicalSystem.unwrapped" title="Link to this definition"></a></dt>
 <dd><p>Returns this instance of the physical system.</p>
 <p>If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.</p>
 </dd></dl>
