@@ -16,25 +16,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../src'))
 sys.setrecursionlimit(1500)
-os.environ.setdefault("MPLBACKEND", "Agg")
-try:
-    import matplotlib
-    matplotlib.use("Agg")
-except Exception:
-    pass
 
-autodoc_mock_imports = [
-    "tkinter", "tkinter.ttk", "tkinter.filedialog",
-    "IPython", "IPython.display",
-    # If needed later:
-    # "cv2", "PyQt5", "PyQt6", "PySide2", "PySide6", "OpenGL", "OpenGL.GL",
-]
-extensions = [
-    "sphinx.ext.autodoc","sphinx.ext.autosummary","sphinx.ext.mathjax",
-    "sphinx.ext.viewcode","sphinx.ext.napoleon","sphinx_rtd_theme","myst_parser","sphinx_mdinclude"
-]
-source_suffix = {".rst":"restructuredtext",".md":"myst"}
-myst_enable_extensions = ["colon_fence","deflist","dollarmath","amsmath","front_matter"]
 # -- Project information -----------------------------------------------------
 
 project = 'gym-electric-motor'
@@ -56,12 +38,21 @@ release = '2021'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-
-
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
+    'sphinx_rtd_theme',
+    'sphinx_mdinclude',
+    'm2r2'
+]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
+source_suffix = ['.rst', '.md']
 # You can specify multiple suffix as a list of string:
 # source_suffix = '.rst'
 
