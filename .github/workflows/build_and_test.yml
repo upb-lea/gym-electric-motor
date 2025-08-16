@@ -36,11 +36,14 @@ jobs:
   build-doc:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4 
+    - uses: actions/setup-python@v5
+      with:
+          python-version: "3.10"
     - name: Build Sphinx documentation
       uses: nicholasphair/sphinx-action@7.0.0
       with:
-         pre-build-command: "apt-get update && apt-get install -y git && python -m pip install 'sphinx==3.5.4' 'docutils==0.16' sphinx_mdinclude 'sphinx-rtd-theme==1.0.0' 'sphinxcontrib-applehelp==1.0.4' 'sphinxcontrib-devhelp==1.0.2' 'sphinxcontrib-qthelp==1.0.3' 'sphinxcontrib-serializinghtml==1.1.5' 'sphinxcontrib-htmlhelp==2.0.0' && python -m pip install -r requirements.txt && python -m pip install git+https://github.com/upb-lea/control-block-diagram && python -m pip install ."
+         pre-build-command: "apt-get update && apt-get install -y git && python -m pip install 'sphinx==4.5.0' 'docutils==0.17.1' sphinx_mdinclude 'sphinx-rtd-theme==1.0.0' 'sphinxcontrib-applehelp==1.0.4' 'sphinxcontrib-devhelp==1.0.2' 'sphinxcontrib-qthelp==1.0.3' 'sphinxcontrib-serializinghtml==1.1.5' 'sphinxcontrib-htmlhelp==2.0.0' && python -m pip install -r requirements.txt && python -m pip install git+https://github.com/upb-lea/control-block-diagram && python -m pip install ."
          docs-folder: "docs/"
       # Publish built docs to gh-pages branch.
       # ===============================
