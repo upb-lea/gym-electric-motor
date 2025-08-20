@@ -53,15 +53,22 @@ jobs:
         # pip install git+https://github.com/upb-lea/control-block-diagram
         # Install your package so autodoc can import your modules too
         pip install .
+    - name: Ensure docs/_static exists
+      run: mkdir -p docs/_static
     - name: Build docs
       working-directory: docs
-      run: sphinx-build -b html -W -n -T -v . _build/html
+      run: sphinx-build -b html -W -n -T -v -E . _build/html --keep-going -w /tmp/sphinx-log
     - name: Upload docs as Pages artifact
       if: success()
       uses: actions/upload-pages-artifact@v3
       with:
         path: docs/_build/html
-        
+    - name: Print Sphinx log on failure
+      if: failure()
+      run: |
+       echo "::group::/tmp/sphinx-log"
+       tail -n +1 /tmp/sphinx-log || true
+       echo "::endgroup::"
       # Publish built docs to gh-pages branch.
       # ===============================
     - name: Commit documentation changes
