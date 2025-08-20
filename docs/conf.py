@@ -14,9 +14,23 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../src'))
-sys.setrecursionlimit(1500)
 
+
+os.environ.setdefault("MPLBACKEND", "Agg")
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+try:
+    import matplotlib; matplotlib.use("Agg")
+except Exception:
+    pass
+
+autodoc_mock_imports = [
+    "tkinter","tkinter.ttk","tkinter.filedialog",
+    "IPython","IPython.display",
+    # add more if needed in your project:
+    "PyQt5","PyQt6","PySide2","PySide6","OpenGL","OpenGL.GL","cv2",
+    "PIL.ImageTk","wx","gi","kivy","vispy","glfw",
+]
+sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'gym-electric-motor'
@@ -45,17 +59,35 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
-    'sphinx_mdinclude',
+    'myst_parser',
+    'sphinx.ext.intersphinx'
 ]
 html_theme = "sphinx_rtd_theme"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
-source_suffix = ['.rst', '.md']
+#source_suffix = ['.rst', '.md']
 # You can specify multiple suffix as a list of string:
 # source_suffix = '.rst'
+source_suffix = { ".rst": "restructuredtext", ".md": "myst" }
 
+# MyST features
+myst_enable_extensions = ["front_matter", "colon_fence", "deflist", "dollarmath", "amsmath"]
+autosummary_generate = True
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "inherited-members": True,
+    "show-inheritance": True,
+    "member-order": "groupwise",
+}
+
+# Cross-link to external docs
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", {}),
+    "gem_control": ("https://upb-lea.github.io/gem-control/", None),
+}
 # The master toctree document.
 master_doc = 'index'
 
@@ -83,7 +115,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
