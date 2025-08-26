@@ -63,6 +63,7 @@ class DiscOutputStage(Stage):
     def to_b6_discrete(multi_discrete_action):
         """Returns the multi discrete action for a B6 brigde converter."""
         raise NotImplementedError
+        
 
     @staticmethod
     def to_multi_discrete(multi_discrete_action):

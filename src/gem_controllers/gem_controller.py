@@ -99,7 +99,10 @@ class GemController:
                 base_speed_controller=base_speed_controller,
             )
         # Wrap the controller with the adapter to map the inputs and outputs to the environment
-        controller = gc.GymElectricMotorAdapter(env, env_id, controller)
+
+        if base_current_controller != "MPC":
+
+            controller = gc.GymElectricMotorAdapter(env, env_id, controller)
 
         # Fit the controllers parameters to the environment
         controller.tune(env, env_id, **tuner_kwargs)
