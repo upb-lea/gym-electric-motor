@@ -100,7 +100,10 @@ autoclass_content = 'both'
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
 language = "en"
-
+# Don't look for translation catalogs (avoids "locale_dir ... does not exist")
+locale_dirs = []
+# (optional) keeps .po files ungrouped if you ever add i18n later
+gettext_compact = False
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
