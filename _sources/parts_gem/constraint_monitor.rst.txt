@@ -16,6 +16,10 @@ ToDo
 
 Constraint Monitor API Documentation
 ____________________________________
-.. autoclass:: gym_electric_motor.core.ConstraintMonitor
+.. note::
+   Temporarily omitted from autodoc because its docstring currently triggers
+   a Sphinx parsing error (``Unexpected indentation``). We’ll re-enable this
+   section after cleaning the docstring in ``gym_electric_motor.core``.
+
     :members:
     :inherited-members:

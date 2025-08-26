@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Callbacks &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -62,7 +62,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -95,7 +95,8 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.callbacks.RampingLimitMargin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.callbacks.</span></span><span class="sig-name descname"><span class="pre">RampingLimitMargin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_limit_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-0.1,</span> <span class="pre">0.1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_limit_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'episode'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/callbacks.html#RampingLimitMargin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin" title="Link to this definition"></a></dt>
-<dd><p>Callback used to adapt the limit margin of a reference generator during runtime.</p>
+<dd><p>Bases: <a class="reference internal" href="environments/environment.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Callback used to adapt the limit margin of a reference generator during runtime.</p>
 <p>Supports all
 <a class="reference internal" href="reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator" title="gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">SubepisodedReferenceGenerator</span></code></a>
 and <code class="xref py py-mod docutils literal notranslate"><span class="pre">SwitchedReferenceGenerator</span></code>
@@ -105,14 +106,14 @@ as sub generators.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>initial_limit_margin</strong> (<em>tuple</em><em>(</em><em>floats</em><em>)</em>) – The initial limit margin which gets updated by AdaptiveLimitMargin
+<li><p><strong>initial_limit_margin</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>(</em><em>floats</em><em>)</em>) – The initial limit margin which gets updated by AdaptiveLimitMargin
 until it reaches maximum_limit_margin</p></li>
-<li><p><strong>maximum_limit_margin</strong> (<em>tuple</em><em>(</em><em>floats</em><em>)</em>) – The maximum limit margin. This will be the limit margin after
+<li><p><strong>maximum_limit_margin</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>(</em><em>floats</em><em>)</em>) – The maximum limit margin. This will be the limit margin after
 AdaptiveLimitMargin’s last update</p></li>
-<li><p><strong>step_size</strong> (<em>float</em>) – The value by which each limit gets updated at each step</p></li>
+<li><p><strong>step_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – The value by which each limit gets updated at each step</p></li>
 <li><p><strong>update_time</strong> (<em>string</em>) – When the update happens. “step” for the end of a step, “episode”
 for the end of an episode</p></li>
-<li><p><strong>update_freq</strong> (<em>int</em>) – After how many cumulative units of update_time an update occurs</p></li>
+<li><p><strong>update_freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – After how many cumulative units of update_time an update occurs</p></li>
 </ul>
 </dd>
 </dl>
@@ -121,9 +122,27 @@ for the end of an episode</p></li>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.callbacks.RampingLimitMargin.on_close">
+<span class="sig-name descname"><span class="pre">on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin.on_close" title="Link to this definition"></a></dt>
+<dd><p>Gets called at the beginning of a close</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.callbacks.RampingLimitMargin.on_reset_begin">
+<span class="sig-name descname"><span class="pre">on_reset_begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin.on_reset_begin" title="Link to this definition"></a></dt>
+<dd><p>Gets called at the beginning of each reset</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.callbacks.RampingLimitMargin.on_reset_end">
 <span class="sig-name descname"><span class="pre">on_reset_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/callbacks.html#RampingLimitMargin.on_reset_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin.on_reset_end" title="Link to this definition"></a></dt>
 <dd><p>Gets called at the end of each reset</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.callbacks.RampingLimitMargin.on_step_begin">
+<span class="sig-name descname"><span class="pre">on_step_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.callbacks.RampingLimitMargin.on_step_begin" title="Link to this definition"></a></dt>
+<dd><p>Gets called at the beginning of each step</p>
 </dd></dl>
 
 <dl class="py method">

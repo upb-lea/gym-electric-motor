@@ -1,26 +1,24 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discontinuous Output Stage &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Block Diagrams" href="../block_diagrams/block_diagrams.html" />
-    <link rel="prev" title="Continous Output Stage" href="cont_output_stage.html" /> 
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -60,29 +58,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../gem_control.html">GEM Control API Documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="stages.html">Stages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="base_controllers/base_controller.html">Base Controller</a></li>
-<li class="toctree-l3"><a class="reference internal" href="operation_point_selection/operation_point_selection.html">Operation Point Selection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="abc_transformation.html">abc Transformation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="anti_windup.html">Anti Windup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="emf_feedforward/emf_feedforward.html">EMF Feedforward</a></li>
-<li class="toctree-l3"><a class="reference internal" href="input_stage.html">Input Stage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cont_output_stage.html">Continous Output Stage</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Discontinuous Output Stage</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../block_diagrams/block_diagrams.html">Block Diagrams</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pi_current_controller.html">PI Current Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../torque_controller.html">Torque Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pi_speed_controller.html">PI Speed Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../gem_adapter.html">GEM Adapter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference_plotter.html">Reference Plotter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utils.html">Utils</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -99,8 +77,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../gem_control.html">GEM Control API Documentation</a></li>
-          <li class="breadcrumb-item"><a href="stages.html">Stages</a></li>
       <li class="breadcrumb-item active">Discontinuous Output Stage</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/parts_gc/api_documentation/stages/disc_output_stage.rst.txt" rel="nofollow"> View page source</a>
@@ -113,15 +89,115 @@
              
   <section id="discontinuous-output-stage">
 <h1>Discontinuous Output Stage<a class="headerlink" href="#discontinuous-output-stage" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.stages.disc_output_stage.</span></span><span class="sig-name descname"><span class="pre">DiscOutputStage</span></span><a class="reference internal" href="../../../_modules/gem_controllers/stages/disc_output_stage.html#DiscOutputStage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="stages.html#gem_controllers.stages.stage.Stage" title="gem_controllers.stages.stage.Stage"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stage</span></code></a></p>
+<p>This class maps the discrete input voltages, calculated by the controller, to the scalar inputs of the used
+converter.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/disc_output_stage.html#DiscOutputStage.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.__call__" title="Link to this definition"></a></dt>
+<dd><p>Maps the input voltages to the scalar inputs of the converter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>np.ndarray</em>) – The state of the environment.</p></li>
+<li><p><strong>reference</strong> (<em>np.ndarray</em>) – The reference voltages.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>scalar action of the environment</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>action(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.reset" title="Link to this definition"></a></dt>
+<dd><p>Resets the stage to an initial state (e.g. before a new episode starts).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.to_action">
+<span class="sig-name descname"><span class="pre">to_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/disc_output_stage.html#DiscOutputStage.to_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.to_action" title="Link to this definition"></a></dt>
+<dd><p>Map the voltages to a voltage level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_state</strong> (<em>np.ndarray</em>) – The state of the environment.</p></li>
+<li><p><strong>reference</strong> (<em>np.ndarray</em>) – The reference voltages.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>volatge vector</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>action(np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.to_b6_discrete">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_b6_discrete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_discrete_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/disc_output_stage.html#DiscOutputStage.to_b6_discrete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.to_b6_discrete" title="Link to this definition"></a></dt>
+<dd><p>Returns the multi discrete action for a B6 brigde converter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.to_discrete">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_discrete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_discrete_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/disc_output_stage.html#DiscOutputStage.to_discrete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.to_discrete" title="Link to this definition"></a></dt>
+<dd><p>Transform multi discrete action to a discrete action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>multi_discrete_action</strong> (<em>np.array</em>) – Array of multi discrete actions</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>discrete action</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.to_multi_discrete">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_multi_discrete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_discrete_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/disc_output_stage.html#DiscOutputStage.to_multi_discrete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.to_multi_discrete" title="Link to this definition"></a></dt>
+<dd><p>Returns the multi discrete action.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.tune">
+<span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/disc_output_stage.html#DiscOutputStage.tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.tune" title="Link to this definition"></a></dt>
+<dd><p>Set the values for the low, idle and high action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> (<a class="reference internal" href="../../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gem_controllers.stages.disc_output_stage.DiscOutputStage.output_stage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_stage</span></span><a class="headerlink" href="#gem_controllers.stages.disc_output_stage.DiscOutputStage.output_stage" title="Link to this definition"></a></dt>
+<dd><p>Output stage of the controller</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cont_output_stage.html" class="btn btn-neutral float-left" title="Continous Output Stage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../block_diagrams/block_diagrams.html" class="btn btn-neutral float-right" title="Block Diagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

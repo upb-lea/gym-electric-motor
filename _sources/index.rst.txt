@@ -62,7 +62,7 @@ Currently, classic PI controllers are available for most of the environment type
    :caption: GEM-Control Contents:
 
    parts_gc/usage_guide/usage_guides
-   parts_gc/api_documentation/gem_control
+   parts_gc/api_documentation/gem_control_links
 
 
 

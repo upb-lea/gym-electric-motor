@@ -1,25 +1,25 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Usage Guides &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="GEM Control API Documentation" href="../api_documentation/gem_control.html" />
+    <link rel="next" title="gem-control: key API (external)" href="../api_documentation/gem_control_links.html" />
     <link rel="prev" title="Random Component" href="../../parts_gem/random_component.html" /> 
 </head>
 
@@ -67,7 +67,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#control-a-gem-environment">Control a GEM environment</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -104,11 +104,11 @@ the env_id. This specifies the action space (<cite>‘Finite’</cite> or <cite>
 the environment. In the following code block, an example for the initialization of a speed control of an PMSM is
 shown. A detailed description for the configuration of a GEM environment can be found in the
 <a class="reference external" href="https://colab.research.google.com/github/upb-lea/gym-electric-motor/blob/master/examples/environment_features/GEM_cookbook.ipynb">GEM Cookbook</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems</span> <span class="kn">import</span> <span class="n">ConstantSpeedLoad</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.reference_generators</span> <span class="kn">import</span> <span class="n">WienerProcessReferenceGenerator</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization</span> <span class="kn">import</span> <span class="n">MotorDashboard</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.physical_systems</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstantSpeedLoad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reference_generators</span><span class="w"> </span><span class="kn">import</span> <span class="n">WienerProcessReferenceGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">MotorDashboard</span>
 
 <span class="n">env_id</span> <span class="o">=</span> <span class="s1">&#39;Cont-SC-PMSM-v0&#39;</span>
 
@@ -200,7 +200,7 @@ For a detailed description see the <a class="reference external" href="https://c
 </dl>
 </li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gem_controllers</span> <span class="k">as</span> <span class="nn">gc</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gem_controllers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gc</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">GemController</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
                           <span class="n">env_id</span><span class="o">=</span><span class="n">env_id</span><span class="p">,</span>
@@ -256,7 +256,7 @@ is <cite>True</cite>, a window will open, that shows the block diagram. There ar
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../../parts_gem/random_component.html" class="btn btn-neutral float-left" title="Random Component" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api_documentation/gem_control.html" class="btn btn-neutral float-right" title="GEM Control API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../api_documentation/gem_control_links.html" class="btn btn-neutral float-right" title="gem-control: key API (external)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

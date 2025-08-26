@@ -1,26 +1,24 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reference Plotter &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Utils" href="utils.html" />
-    <link rel="prev" title="GEM Adapter" href="gem_adapter.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -60,19 +58,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="gem_control.html">GEM Control API Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="stages/stages.html">Stages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="block_diagrams/block_diagrams.html">Block Diagrams</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pi_current_controller.html">PI Current Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="torque_controller.html">Torque Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pi_speed_controller.html">PI Speed Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Reference Plotter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -89,7 +77,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="gem_control.html">GEM Control API Documentation</a></li>
       <li class="breadcrumb-item active">Reference Plotter</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/parts_gc/api_documentation/reference_plotter.rst.txt" rel="nofollow"> View page source</a>
@@ -102,15 +89,51 @@
              
   <section id="reference-plotter">
 <h1>Reference Plotter<a class="headerlink" href="#reference-plotter" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gem_controllers.reference_plotter.ReferencePlotter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.reference_plotter.</span></span><span class="sig-name descname"><span class="pre">ReferencePlotter</span></span><a class="reference internal" href="../../_modules/gem_controllers/reference_plotter.html#ReferencePlotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.reference_plotter.ReferencePlotter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class adds the reference values of the subordinate stages to the stage plots of the GEM environment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.reference_plotter.ReferencePlotter.add_maximum_reference">
+<span class="sig-name descname"><span class="pre">add_maximum_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/reference_plotter.html#ReferencePlotter.add_maximum_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.reference_plotter.ReferencePlotter.add_maximum_reference" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.reference_plotter.ReferencePlotter.tune">
+<span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">referenced_states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_references</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_reference</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/reference_plotter.html#ReferencePlotter.tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.reference_plotter.ReferencePlotter.tune" title="Link to this definition"></a></dt>
+<dd><p>Tune the reference plotter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
+<li><p><strong>referenced_states</strong> (<em>np.ndarray</em>) – Array of all referenced states.</p></li>
+<li><p><strong>plot_references</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the references of the subordinate stages should be plotted.</p></li>
+<li><p><strong>maximum_reference</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict containing all limited reference currents.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.reference_plotter.ReferencePlotter.update_plots">
+<span class="sig-name descname"><span class="pre">update_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">references</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/reference_plotter.html#ReferencePlotter.update_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.reference_plotter.ReferencePlotter.update_plots" title="Link to this definition"></a></dt>
+<dd><p>Update the state plots of the GEM environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>references</strong> (<em>np.ndarray</em>) – Array of all reference values of the subordinate stages.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="gem_adapter.html" class="btn btn-neutral float-left" title="GEM Adapter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

@@ -1,23 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supply Converter Motor Load System (SCML) &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -75,7 +75,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -126,7 +126,8 @@ derive. They only implement private methods. Therefore, the interface to the use
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SCMLSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SCMLSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="Link to this definition"></a></dt>
-<dd><p>The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
+<dd><p>Bases: <a class="reference internal" href="physical_system.html#gym_electric_motor.core.PhysicalSystem" title="gym_electric_motor.core.PhysicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">PhysicalSystem</span></code></a>, <a class="reference internal" href="../random_component.html#gym_electric_motor.RandomComponent" title="gym_electric_motor.random_component.RandomComponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomComponent</span></code></a></p>
+<p>The SCML(Supply-Converter-Motor-Load)-System is used for the simulation of
 a technical setting consisting of these components and a solver for the electrical ODE of the motor and mechanical
 ODE of the load.</p>
 <dl class="field-list simple">
@@ -137,42 +138,23 @@ ODE of the load.</p>
 <li><p><strong>load</strong> (<a class="reference internal" href="mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><em>MechanicalLoad</em></a>) – Mechanical Load of the System</p></li>
 <li><p><strong>supply</strong> (<a class="reference internal" href="voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><em>VoltageSupply</em></a>) – Voltage Supply</p></li>
 <li><p><strong>ode_solver</strong> (<a class="reference internal" href="ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><em>OdeSolver</em></a>) – Ode Solver to use in this setting</p></li>
-<li><p><strong>tau</strong> (<em>float</em>) – discrete time step of the system</p></li>
-<li><p><strong>calc_jacobian</strong> (<em>bool</em>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – discrete time step of the system</p></li>
+<li><p><strong>calc_jacobian</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
 Default: The jacobians are used, if available</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter" title="Link to this definition"></a></dt>
-<dd><p>The power electronic converter instance in the system</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.close" title="Link to this definition"></a></dt>
+<dd><p>Called, when the environment is closed.
+Close the System and all of its submodules by closing files, saving logs etc.</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor" title="Link to this definition"></a></dt>
-<dd><p>The electrical motor instance of the system</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits" title="Link to this definition"></a></dt>
-<dd><p>Returns:
-ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load" title="Link to this definition"></a></dt>
-<dd><p>The mechanical load instance in the system</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state" title="Link to this definition"></a></dt>
-<dd><p>Returns:
-ndarray(float): An array containing the nominal values for each state variable.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.next_generator">
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.next_generator" title="Link to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -203,7 +185,7 @@ If the RandomComponent holds further RandomComponent instances, the list has to 
 entropies. The entropy of this instance has to be placed always at first place.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List(int)</p>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -226,10 +208,126 @@ This method is called in the environment in every step to update the systems sta
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.CURRENTS_IDX">
+<span class="sig-name descname"><span class="pre">CURRENTS_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.CURRENTS_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.OMEGA_IDX">
+<span class="sig-name descname"><span class="pre">OMEGA_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.OMEGA_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.TORQUE_IDX">
+<span class="sig-name descname"><span class="pre">TORQUE_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.TORQUE_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.U_SUP_IDX">
+<span class="sig-name descname"><span class="pre">U_SUP_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.U_SUP_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.VOLTAGES_IDX">
+<span class="sig-name descname"><span class="pre">VOLTAGES_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.VOLTAGES_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.action_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.action_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.converter" title="Link to this definition"></a></dt>
+<dd><p>The power electronic converter instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.electrical_motor" title="Link to this definition"></a></dt>
+<dd><p>The electrical motor instance of the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.k" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+int: The current systems time step k.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.limits" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.mechanical_load" title="Link to this definition"></a></dt>
+<dd><p>The mechanical load instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.nominal_state" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the nominal values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.random_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.random_generator" title="Link to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.seed_sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.seed_sequence" title="Link to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.state_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.state_names" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(str): Array containing the names of the systems states.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.state_positions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.state_positions" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.state_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.state_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supply</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.supply" title="Link to this definition"></a></dt>
 <dd><p>The voltage supply instance in the physical system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.tau">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.tau" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SCMLSystem.unwrapped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem.unwrapped" title="Link to this definition"></a></dt>
+<dd><p>Returns this instance of the physical system.</p>
+<p>If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.</p>
 </dd></dl>
 
 </dd></dl>
@@ -239,7 +337,8 @@ This method is called in the environment in every step to update the systems sta
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">DcMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DcMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem" title="Link to this definition"></a></dt>
-<dd><p>SCML-System that can be used for all DC Motors.</p>
+<dd><p>Bases: <a class="reference internal" href="#gym_electric_motor.physical_systems.physical_systems.SCMLSystem" title="gym_electric_motor.physical_systems.physical_systems.SCMLSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">SCMLSystem</span></code></a></p>
+<p>SCML-System that can be used for all DC Motors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -248,12 +347,198 @@ This method is called in the environment in every step to update the systems sta
 <li><p><strong>load</strong> (<a class="reference internal" href="mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><em>MechanicalLoad</em></a>) – Mechanical Load of the System</p></li>
 <li><p><strong>supply</strong> (<a class="reference internal" href="voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><em>VoltageSupply</em></a>) – Voltage Supply</p></li>
 <li><p><strong>ode_solver</strong> (<a class="reference internal" href="ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><em>OdeSolver</em></a>) – Ode Solver to use in this setting</p></li>
-<li><p><strong>tau</strong> (<em>float</em>) – discrete time step of the system</p></li>
-<li><p><strong>calc_jacobian</strong> (<em>bool</em>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – discrete time step of the system</p></li>
+<li><p><strong>calc_jacobian</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
 Default: The jacobians are used, if available</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.close" title="Link to this definition"></a></dt>
+<dd><p>Called, when the environment is closed.
+Close the System and all of its submodules by closing files, saving logs etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.next_generator">
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.next_generator" title="Link to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset all the systems modules to an initial state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The new state of the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.seed" title="Link to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.simulate" title="Link to this definition"></a></dt>
+<dd><p>Simulation of the Physical System for one time step with the input action.
+This method is called in the environment in every step to update the systems state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>element</em><em> of </em><em>action_space</em>) – The action to play on the system for the next time step.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The systems state after the action was applied.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>element of state_space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.CURRENTS_IDX">
+<span class="sig-name descname"><span class="pre">CURRENTS_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.CURRENTS_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.OMEGA_IDX">
+<span class="sig-name descname"><span class="pre">OMEGA_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.OMEGA_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.TORQUE_IDX">
+<span class="sig-name descname"><span class="pre">TORQUE_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.TORQUE_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.U_SUP_IDX">
+<span class="sig-name descname"><span class="pre">U_SUP_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.U_SUP_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.VOLTAGES_IDX">
+<span class="sig-name descname"><span class="pre">VOLTAGES_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.VOLTAGES_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.action_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.action_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.converter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.converter" title="Link to this definition"></a></dt>
+<dd><p>The power electronic converter instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.electrical_motor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.electrical_motor" title="Link to this definition"></a></dt>
+<dd><p>The electrical motor instance of the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.k" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+int: The current systems time step k.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.limits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.limits" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.mechanical_load">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.mechanical_load" title="Link to this definition"></a></dt>
+<dd><p>The mechanical load instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.nominal_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.nominal_state" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the nominal values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.random_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.random_generator" title="Link to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.seed_sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.seed_sequence" title="Link to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.state_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.state_names" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(str): Array containing the names of the systems states.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.state_positions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.state_positions" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.state_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.state_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.supply">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supply</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.supply" title="Link to this definition"></a></dt>
+<dd><p>The voltage supply instance in the physical system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.tau">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.tau" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.unwrapped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DcMotorSystem.unwrapped" title="Link to this definition"></a></dt>
+<dd><p>Returns this instance of the physical system.</p>
+<p>If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -262,15 +547,147 @@ Default: The jacobians are used, if available</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abc'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem" title="Link to this definition"></a></dt>
-<dd><p>SCML-System that can be used with all Synchronous Motors</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreePhaseMotorSystem</span></code></p>
+<p>SCML-System that can be used with all Synchronous Motors</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>control_space</strong> (<em>str</em>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
+<li><p><strong>control_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
 <li><p><strong>kwargs</strong> – Further arguments to pass tp SCMLSystem</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.abc_to_alphabeta_space">
+<span class="sig-name descname"><span class="pre">abc_to_alphabeta_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abc_quantities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.abc_to_alphabeta_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from abc to alphabeta space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the alphabeta-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_alpha, quantity_beta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.abc_to_dq_space">
+<span class="sig-name descname"><span class="pre">abc_to_dq_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abc_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.abc_to_dq_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from abc to dq space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the dq-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_d, quantity_q)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.alphabeta_to_abc_space">
+<span class="sig-name descname"><span class="pre">alphabeta_to_abc_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alphabeta_quantities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.alphabeta_to_abc_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to abc space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the abc-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_a, quantity_b, quantity_c)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.alphabeta_to_dq_space">
+<span class="sig-name descname"><span class="pre">alphabeta_to_dq_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alphabeta_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.alphabeta_to_dq_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from alphabeta to dq space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the dq-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_d, quantity_q)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.close" title="Link to this definition"></a></dt>
+<dd><p>Called, when the environment is closed.
+Close the System and all of its submodules by closing files, saving logs etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.dq_to_abc_space">
+<span class="sig-name descname"><span class="pre">dq_to_abc_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.dq_to_abc_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to abc space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dq_quantities</strong> – Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the abc-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_a, quantity_b, quantity_c)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.dq_to_alphabeta_space">
+<span class="sig-name descname"><span class="pre">dq_to_alphabeta_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.dq_to_alphabeta_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to alphabeta space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dq_quantities</strong> – Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the alphabeta-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_alpha, quantity_beta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.next_generator">
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.next_generator" title="Link to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SynchronousMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.reset" title="Link to this definition"></a></dt>
@@ -278,6 +695,28 @@ Default: The jacobians are used, if available</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The new state of the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.seed" title="Link to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -300,6 +739,128 @@ This method is called in the environment in every step to update the systems sta
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.CURRENTS_IDX">
+<span class="sig-name descname"><span class="pre">CURRENTS_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.CURRENTS_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.OMEGA_IDX">
+<span class="sig-name descname"><span class="pre">OMEGA_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.OMEGA_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.TORQUE_IDX">
+<span class="sig-name descname"><span class="pre">TORQUE_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.TORQUE_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.U_SUP_IDX">
+<span class="sig-name descname"><span class="pre">U_SUP_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.U_SUP_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.VOLTAGES_IDX">
+<span class="sig-name descname"><span class="pre">VOLTAGES_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.VOLTAGES_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.action_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.action_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.converter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.converter" title="Link to this definition"></a></dt>
+<dd><p>The power electronic converter instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.electrical_motor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.electrical_motor" title="Link to this definition"></a></dt>
+<dd><p>The electrical motor instance of the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.k" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+int: The current systems time step k.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.limits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.limits" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.mechanical_load">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.mechanical_load" title="Link to this definition"></a></dt>
+<dd><p>The mechanical load instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.nominal_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.nominal_state" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the nominal values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.random_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.random_generator" title="Link to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.seed_sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.seed_sequence" title="Link to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.state_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.state_names" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(str): Array containing the names of the systems states.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.state_positions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.state_positions" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.state_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.state_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.supply">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supply</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.supply" title="Link to this definition"></a></dt>
+<dd><p>The voltage supply instance in the physical system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.tau">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.tau" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.unwrapped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SynchronousMotorSystem.unwrapped" title="Link to this definition"></a></dt>
+<dd><p>Returns this instance of the physical system.</p>
+<p>If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -308,15 +869,152 @@ This method is called in the environment in every step to update the systems sta
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">SquirrelCageInductionMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'scipy.ode'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem" title="Link to this definition"></a></dt>
-<dd><p>SCML-System for the Squirrel Cage Induction Motor</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreePhaseMotorSystem</span></code></p>
+<p>SCML-System for the Squirrel Cage Induction Motor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>control_space</strong> (<em>str</em>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
+<li><p><strong>control_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
 <li><p><strong>kwargs</strong> – Further arguments to pass tp SCMLSystem</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.abc_to_alphabeta_space">
+<span class="sig-name descname"><span class="pre">abc_to_alphabeta_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abc_quantities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.abc_to_alphabeta_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from abc to alphabeta space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the alphabeta-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_alpha, quantity_beta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.abc_to_dq_space">
+<span class="sig-name descname"><span class="pre">abc_to_dq_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abc_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.abc_to_dq_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from abc to dq space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the dq-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_d, quantity_q)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.alphabeta_to_abc_space">
+<span class="sig-name descname"><span class="pre">alphabeta_to_abc_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alphabeta_quantities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.alphabeta_to_abc_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to abc space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the abc-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_a, quantity_b, quantity_c)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.alphabeta_to_dq_space">
+<span class="sig-name descname"><span class="pre">alphabeta_to_dq_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alphabeta_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.alphabeta_to_dq_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from alphabeta to dq space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the dq-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_d, quantity_q)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.calculate_field_angle">
+<span class="sig-name descname"><span class="pre">calculate_field_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.calculate_field_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.calculate_field_angle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.close" title="Link to this definition"></a></dt>
+<dd><p>Called, when the environment is closed.
+Close the System and all of its submodules by closing files, saving logs etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.dq_to_abc_space">
+<span class="sig-name descname"><span class="pre">dq_to_abc_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.dq_to_abc_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to abc space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dq_quantities</strong> – Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the abc-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_a, quantity_b, quantity_c)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.dq_to_alphabeta_space">
+<span class="sig-name descname"><span class="pre">dq_to_alphabeta_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.dq_to_alphabeta_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to alphabeta space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dq_quantities</strong> – Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the alphabeta-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_alpha, quantity_beta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.next_generator">
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.next_generator" title="Link to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#SquirrelCageInductionMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.reset" title="Link to this definition"></a></dt>
@@ -324,6 +1022,28 @@ This method is called in the environment in every step to update the systems sta
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The new state of the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.seed" title="Link to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,6 +1066,128 @@ This method is called in the environment in every step to update the systems sta
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.CURRENTS_IDX">
+<span class="sig-name descname"><span class="pre">CURRENTS_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.CURRENTS_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.OMEGA_IDX">
+<span class="sig-name descname"><span class="pre">OMEGA_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.OMEGA_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.TORQUE_IDX">
+<span class="sig-name descname"><span class="pre">TORQUE_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.TORQUE_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.U_SUP_IDX">
+<span class="sig-name descname"><span class="pre">U_SUP_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.U_SUP_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.VOLTAGES_IDX">
+<span class="sig-name descname"><span class="pre">VOLTAGES_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.VOLTAGES_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.action_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.action_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.converter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.converter" title="Link to this definition"></a></dt>
+<dd><p>The power electronic converter instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.electrical_motor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.electrical_motor" title="Link to this definition"></a></dt>
+<dd><p>The electrical motor instance of the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.k" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+int: The current systems time step k.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.limits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.limits" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.mechanical_load">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.mechanical_load" title="Link to this definition"></a></dt>
+<dd><p>The mechanical load instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.nominal_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.nominal_state" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the nominal values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.random_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.random_generator" title="Link to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.seed_sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.seed_sequence" title="Link to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.state_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.state_names" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(str): Array containing the names of the systems states.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.state_positions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.state_positions" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.state_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.state_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.supply">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supply</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.supply" title="Link to this definition"></a></dt>
+<dd><p>The voltage supply instance in the physical system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.tau">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.tau" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.unwrapped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.SquirrelCageInductionMotorSystem.unwrapped" title="Link to this definition"></a></dt>
+<dd><p>Returns this instance of the physical system.</p>
+<p>If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -354,12 +1196,154 @@ This method is called in the environment in every step to update the systems sta
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.physical_systems.</span></span><span class="sig-name descname"><span class="pre">DoublyFedInductionMotorSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ode_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'scipy.ode'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem" title="Link to this definition"></a></dt>
-<dd><p>SCML-System for the Doubly Fed Induction Motor</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreePhaseMotorSystem</span></code></p>
+<p>SCML-System for the Doubly Fed Induction Motor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>kwargs</strong> – Further arguments to pass tp SCMLSystem</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.abc_to_alphabeta_space">
+<span class="sig-name descname"><span class="pre">abc_to_alphabeta_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abc_quantities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.abc_to_alphabeta_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from abc to alphabeta space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the alphabeta-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_alpha, quantity_beta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.abc_to_dq_space">
+<span class="sig-name descname"><span class="pre">abc_to_dq_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abc_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.abc_to_dq_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from abc to dq space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the dq-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_d, quantity_q)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.alphabeta_to_abc_space">
+<span class="sig-name descname"><span class="pre">alphabeta_to_abc_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alphabeta_quantities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.alphabeta_to_abc_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to abc space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the abc-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_a, quantity_b, quantity_c)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.alphabeta_to_dq_space">
+<span class="sig-name descname"><span class="pre">alphabeta_to_dq_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alphabeta_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.alphabeta_to_dq_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from alphabeta to dq space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the dq-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_d, quantity_q)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.calculate_field_angle">
+<span class="sig-name descname"><span class="pre">calculate_field_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.calculate_field_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.calculate_field_angle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.calculate_rotor_current">
+<span class="sig-name descname"><span class="pre">calculate_rotor_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.calculate_rotor_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.calculate_rotor_current" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.close" title="Link to this definition"></a></dt>
+<dd><p>Called, when the environment is closed.
+Close the System and all of its submodules by closing files, saving logs etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.dq_to_abc_space">
+<span class="sig-name descname"><span class="pre">dq_to_abc_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.dq_to_abc_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to abc space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dq_quantities</strong> – Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the abc-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_a, quantity_b, quantity_c)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.dq_to_alphabeta_space">
+<span class="sig-name descname"><span class="pre">dq_to_alphabeta_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normed_epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.dq_to_alphabeta_space" title="Link to this definition"></a></dt>
+<dd><p>Transformation from dq to alphabeta space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dq_quantities</strong> – Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
+<li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantities in the alphabeta-space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(quantity_alpha, quantity_beta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.next_generator">
+<span class="sig-name descname"><span class="pre">next_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.next_generator" title="Link to this definition"></a></dt>
+<dd><p>Sets a new reference generator for a new episode.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/physical_systems/physical_systems.html#DoublyFedInductionMotorSystem.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.reset" title="Link to this definition"></a></dt>
@@ -367,6 +1351,28 @@ This method is called in the environment in every step to update the systems sta
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The new state of the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.seed" title="Link to this definition"></a></dt>
+<dd><p>The function to set the seed.</p>
+<p>This function is called by within the global seed call of the environment. The environment passes the sub-seed
+to this component that is generated based on the source-seed of the env.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>(</em><em>np.random.SeedSequence</em><em>, </em><em>None</em><em>)</em>) – Seed sequence to derive new seeds and reference generators at every
+episode start. Default: None (a new SeedSequence is generated).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing all seeds within this RandomComponent. In general, this list has length 1.
+If the RandomComponent holds further RandomComponent instances, the list has to contain also these
+entropies. The entropy of this instance has to be placed always at first place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -387,6 +1393,128 @@ This method is called in the environment in every step to update the systems sta
 <dd class="field-odd"><p>element of state_space</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.CURRENTS_IDX">
+<span class="sig-name descname"><span class="pre">CURRENTS_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.CURRENTS_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.OMEGA_IDX">
+<span class="sig-name descname"><span class="pre">OMEGA_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.OMEGA_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.TORQUE_IDX">
+<span class="sig-name descname"><span class="pre">TORQUE_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.TORQUE_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.U_SUP_IDX">
+<span class="sig-name descname"><span class="pre">U_SUP_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.U_SUP_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.VOLTAGES_IDX">
+<span class="sig-name descname"><span class="pre">VOLTAGES_IDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.VOLTAGES_IDX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.action_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.action_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible actions on the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.converter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">converter</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.converter" title="Link to this definition"></a></dt>
+<dd><p>The power electronic converter instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.electrical_motor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_motor</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.electrical_motor" title="Link to this definition"></a></dt>
+<dd><p>The electrical motor instance of the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.k">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.k" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+int: The current systems time step k.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.limits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.limits" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the maximum allowed physical values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.mechanical_load">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mechanical_load</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.mechanical_load" title="Link to this definition"></a></dt>
+<dd><p>The mechanical load instance in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.nominal_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.nominal_state" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(float): An array containing the nominal values for each state variable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.random_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_generator</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.random_generator" title="Link to this definition"></a></dt>
+<dd><p>The random generator that has to be used to draw the random numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.seed_sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_sequence</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.seed_sequence" title="Link to this definition"></a></dt>
+<dd><p>The base seed sequence that generates the sub generators and sub seeds at every environment reset.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.state_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.state_names" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ndarray(str): Array containing the names of the systems states.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.state_positions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_positions</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.state_positions" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+dict(int): Dictionary mapping the state names to its positions in the state arrays</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.state_space">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.state_space" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+gymnasium.Space: An Farama Gymnasium Space that describes the possible states of the system.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.supply">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supply</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.supply" title="Link to this definition"></a></dt>
+<dd><p>The voltage supply instance in the physical system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.tau">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.tau" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.unwrapped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><a class="headerlink" href="#gym_electric_motor.physical_systems.physical_systems.DoublyFedInductionMotorSystem.unwrapped" title="Link to this definition"></a></dt>
+<dd><p>Returns this instance of the physical system.</p>
+<p>If the system is wrapped into multiple PhysicalSystemWrappers this property returns directly the innermost system.</p>
 </dd></dl>
 
 </dd></dl>

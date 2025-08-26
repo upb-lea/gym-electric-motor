@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Power Electronic Converters &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -81,7 +81,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -131,7 +131,8 @@ ContinuousDynamicallyAveragedConverter derive to be the base class for all conti
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.converters.</span></span><span class="sig-name descname"><span class="pre">PowerElectronicConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interlocking_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#PowerElectronicConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="Link to this definition"></a></dt>
-<dd><p>Base class for all converters in a SCMLSystem.</p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for all converters in a SCMLSystem.</p>
 <dl>
 <dt>Properties:</dt><dd><div class="line-block">
 <div class="line"><em>voltages(tuple(float, float))</em>: Determines which output voltage polarities the converter can generate.</div>
@@ -151,12 +152,6 @@ ContinuousDynamicallyAveragedConverter derive to be the base class for all conti
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter.action_space">
-<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.action_space" title="Link to this definition"></a></dt>
-<dd><p>gymnasium.Space that defines the set of all possible actions for the converter</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter.convert">
 <span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#PowerElectronicConverter.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.convert" title="Link to this definition"></a></dt>
@@ -166,23 +161,17 @@ for the motor might change at these times.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_out</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – All currents that flow out of the converter into the motor.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>i_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – All currents that flow out of the converter into the motor.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Current time of the system.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of all input voltages at the motor.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list(float)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents">
-<span class="sig-name descname"><span class="pre">currents</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents" title="Link to this definition"></a></dt>
-<dd><p>gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</p>
 </dd></dl>
 
 <dl class="py method">
@@ -192,13 +181,13 @@ for the motor might change at these times.</p>
 switching state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_out</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – All currents flowing out of the converter and into the motor.</p>
+<dd class="field-odd"><p><strong>i_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – All currents flowing out of the converter and into the motor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The current drawn from the supply.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -212,7 +201,7 @@ switching state.</p>
 <dd class="field-odd"><p>A default output voltage after reset(=0V).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list(float)</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,16 +214,28 @@ switching state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>action</strong> (<em>element</em><em> of </em><em>action_space</em>) – The control action on the converter.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – Time at the beginning of the simulation step in seconds.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Time at the beginning of the simulation step in seconds.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Times when a switching action occurs and the conversion function must be called by the system.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list(float)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.action_space" title="Link to this definition"></a></dt>
+<dd><p>gymnasium.Space that defines the set of all possible actions for the converter</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents">
+<span class="sig-name descname"><span class="pre">currents</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter.currents" title="Link to this definition"></a></dt>
+<dd><p>gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</p>
 </dd></dl>
 
 <dl class="py property">
@@ -262,7 +263,8 @@ switching state.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.FiniteConverter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.converters.</span></span><span class="sig-name descname"><span class="pre">FiniteConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#FiniteConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteConverter" title="Link to this definition"></a></dt>
-<dd><p>Base class for all finite converters.</p>
+<dd><p>Bases: <a class="reference internal" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="gym_electric_motor.physical_systems.converters.PowerElectronicConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">PowerElectronicConverter</span></code></a></p>
+<p>Base class for all finite converters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -271,12 +273,6 @@ switching state.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.FiniteConverter.action_space">
-<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteConverter.action_space" title="Link to this definition"></a></dt>
-<dd><p>gymnasium.Space that defines the set of all possible actions for the converter</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.FiniteConverter.convert">
 <span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#FiniteConverter.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteConverter.convert" title="Link to this definition"></a></dt>
@@ -286,23 +282,17 @@ for the motor might change at these times.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_out</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – All currents that flow out of the converter into the motor.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>i_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – All currents that flow out of the converter into the motor.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Current time of the system.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of all input voltages at the motor.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list(float)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.FiniteConverter.currents">
-<span class="sig-name descname"><span class="pre">currents</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteConverter.currents" title="Link to this definition"></a></dt>
-<dd><p>gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</p>
 </dd></dl>
 
 <dl class="py method">
@@ -312,13 +302,13 @@ for the motor might change at these times.</p>
 switching state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_out</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – All currents flowing out of the converter and into the motor.</p>
+<dd class="field-odd"><p><strong>i_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – All currents flowing out of the converter and into the motor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The current drawn from the supply.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -332,7 +322,7 @@ switching state.</p>
 <dd class="field-odd"><p>A default output voltage after reset(=0V).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list(float)</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -345,16 +335,28 @@ switching state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>action</strong> (<em>element</em><em> of </em><em>action_space</em>) – The control action on the converter.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – Time at the beginning of the simulation step in seconds.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Time at the beginning of the simulation step in seconds.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Times when a switching action occurs and the conversion function must be called by the system.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list(float)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.FiniteConverter.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteConverter.action_space" title="Link to this definition"></a></dt>
+<dd><p>gymnasium.Space that defines the set of all possible actions for the converter</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.FiniteConverter.currents">
+<span class="sig-name descname"><span class="pre">currents</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.FiniteConverter.currents" title="Link to this definition"></a></dt>
+<dd><p>gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</p>
 </dd></dl>
 
 <dl class="py property">
@@ -382,7 +384,8 @@ switching state.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.physical_systems.converters.</span></span><span class="sig-name descname"><span class="pre">ContDynamicallyAveragedConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContDynamicallyAveragedConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter" title="Link to this definition"></a></dt>
-<dd><p>Base class for all continuously controlled converters that calculate the input voltages to the motor with a
+<dd><p>Bases: <a class="reference internal" href="#gym_electric_motor.physical_systems.converters.PowerElectronicConverter" title="gym_electric_motor.physical_systems.converters.PowerElectronicConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">PowerElectronicConverter</span></code></a></p>
+<p>Base class for all continuously controlled converters that calculate the input voltages to the motor with a
 dynamically averaged model over one time step.</p>
 <p>This class also implements the interlocking time of the transistors as a discount on the output voltage.</p>
 <dl class="field-list simple">
@@ -393,12 +396,6 @@ dynamically averaged model over one time step.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.action_space">
-<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.action_space" title="Link to this definition"></a></dt>
-<dd><p>gymnasium.Space that defines the set of all possible actions for the converter</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.convert">
 <span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/physical_systems/converters.html#ContDynamicallyAveragedConverter.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.convert" title="Link to this definition"></a></dt>
@@ -408,23 +405,17 @@ for the motor might change at these times.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_out</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – All currents that flow out of the converter into the motor.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – Current time of the system.</p></li>
+<li><p><strong>i_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – All currents that flow out of the converter into the motor.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Current time of the system.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of all input voltages at the motor.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list(float)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.currents">
-<span class="sig-name descname"><span class="pre">currents</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.currents" title="Link to this definition"></a></dt>
-<dd><p>gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</p>
 </dd></dl>
 
 <dl class="py method">
@@ -434,13 +425,13 @@ for the motor might change at these times.</p>
 switching state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_out</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – All currents flowing out of the converter and into the motor.</p>
+<dd class="field-odd"><p><strong>i_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – All currents flowing out of the converter and into the motor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The current drawn from the supply.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -454,7 +445,7 @@ switching state.</p>
 <dd class="field-odd"><p>A default output voltage after reset(=0V).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list(float)</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -467,16 +458,28 @@ switching state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>action</strong> (<em>element</em><em> of </em><em>action_space</em>) – The control action on the converter.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – Time at the beginning of the simulation step in seconds.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Time at the beginning of the simulation step in seconds.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Times when a switching action occurs and the conversion function must be called by the system.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list(float)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.action_space" title="Link to this definition"></a></dt>
+<dd><p>gymnasium.Space that defines the set of all possible actions for the converter</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.currents">
+<span class="sig-name descname"><span class="pre">currents</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.physical_systems.converters.ContDynamicallyAveragedConverter.currents" title="Link to this definition"></a></dt>
+<dd><p>gymnasium.Space that defines Minimum, Maximum and Dimension of possible output current of the converter</p>
 </dd></dl>
 
 <dl class="py property">

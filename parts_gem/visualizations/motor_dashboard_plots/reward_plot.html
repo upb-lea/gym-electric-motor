@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reward Plot &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -77,7 +77,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -111,13 +111,8 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.visualization.motor_dashboard_plots.</span></span><span class="sig-name descname"><span class="pre">RewardPlot</span></span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/reward_plot.html#RewardPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot" title="Link to this definition"></a></dt>
-<dd><p>Plot to display the instantaneous reward during the episode</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.data_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_idx</span></span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.data_idx" title="Link to this definition"></a></dt>
-<dd><p>Returns the current index to access the time and data arrays.</p>
-</dd></dl>
-
+<dd><p>Bases: <a class="reference internal" href="time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot" title="gym_electric_motor.visualization.motor_dashboard_plots.base_plots.TimePlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimePlot</span></code></a></p>
+<p>Plot to display the instantaneous reward during the episode</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.initialize">
 <span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/reward_plot.html#RewardPlot.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.initialize" title="Link to this definition"></a></dt>
@@ -189,6 +184,12 @@ are scaled dynamically.</p>
 <dd class="field-odd"><p><strong>width</strong> (<em>int &gt; 0</em>) – The width of the plot</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.data_idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_idx</span></span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.RewardPlot.data_idx" title="Link to this definition"></a></dt>
+<dd><p>Returns the current index to access the time and data arrays.</p>
 </dd></dl>
 
 </dd></dl>

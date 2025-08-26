@@ -1,23 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Motor Dashboard &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -79,7 +79,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -140,9 +140,9 @@
 instantiate the dashboard and pass it to the environment.</p>
 <p>The most common plots can be quickly selected directly in the constructor of the dashboard.
 Further plots like a <em>MeanEpisodeRewardPlot</em> or self-defined ones have to be instantiated and passed to the dashboard.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization</span> <span class="kn">import</span> <span class="n">MotorDashboard</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization.motor_dashboard_plots</span> <span class="kn">import</span> <span class="n">MeanEpisodeRewardPlot</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">MotorDashboard</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.visualization.motor_dashboard_plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeanEpisodeRewardPlot</span>
 
 <span class="c1"># create the dashboard and define the plots</span>
 <span class="n">dashboard</span> <span class="o">=</span> <span class="n">MotorDashboard</span><span class="p">(</span>
@@ -162,12 +162,13 @@ Further plots like a <em>MeanEpisodeRewardPlot</em> or self-defined ones have to
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.visualization.motor_dashboard.</span></span><span class="sig-name descname"><span class="pre">MotorDashboard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">render_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MotorDashboardLegacy</span></code></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state_plots</strong> (<em>'all'/iterable</em><em>(</em><em>str</em><em>)</em>) – An iterable of state names to be shown. If ‘all’ all states will be shown.
+<li><p><strong>state_plots</strong> (<em>'all'/iterable</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>)</em>) – An iterable of state names to be shown. If ‘all’ all states will be shown.
 Default: () (no plotted states)</p></li>
-<li><p><strong>action_plots</strong> (<em>'all'/iterable</em><em>(</em><em>int</em><em>)</em>) – If action_plots=’all’, all actions will be plotted. If more than one
+<li><p><strong>action_plots</strong> (<em>'all'/iterable</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>)</em>) – If action_plots=’all’, all actions will be plotted. If more than one
 action can be applied on the environment it can be selected by its index.
 Default: () (no plotted actions).</p></li>
 <li><p><strong>reward_plot</strong> (<em>boolean</em>) – Select if the current reward is to be plotted. Default: False</p></li>
@@ -187,6 +188,11 @@ Default: None (the already selected style)</p></li>
 <span class="sig-name descname"><span class="pre">figure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.figure" title="Link to this definition"></a></dt>
 <dd><p>Get main figure (MotorDashboard)</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.force_render">
+<span class="sig-name descname"><span class="pre">force_render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.force_render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.force_render" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.initialize">
@@ -213,8 +219,8 @@ Default: None (the already selected style)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>array</em><em>(</em><em>float</em><em>)</em>) – The initial state <span class="math notranslate nohighlight">\(s_0\)</span>.</p></li>
-<li><p><strong>reference</strong> (<em>array</em><em>(</em><em>float</em><em>)</em>) – The initial reference for the first time step <span class="math notranslate nohighlight">\(s^*_0\)</span>.</p></li>
+<li><p><strong>state</strong> (<em>array</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – The initial state <span class="math notranslate nohighlight">\(s_0\)</span>.</p></li>
+<li><p><strong>reference</strong> (<em>array</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – The initial reference for the first time step <span class="math notranslate nohighlight">\(s^*_0\)</span>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -227,8 +233,8 @@ Default: None (the already selected style)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> (<em>int</em>) – The current episode step.</p></li>
-<li><p><strong>action</strong> (<em>ndarray</em><em>(</em><em>float</em><em>) </em><em>/ int</em>) – The taken action <span class="math notranslate nohighlight">\(a_k\)</span>.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The current episode step.</p></li>
+<li><p><strong>action</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>) </em><em>/ int</em>) – The taken action <span class="math notranslate nohighlight">\(a_k\)</span>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -241,12 +247,12 @@ Default: None (the already selected style)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> (<em>int</em>) – The current episode step</p></li>
-<li><p><strong>state</strong> (<em>array</em><em>(</em><em>float</em><em>)</em>) – The state of the env after the step <span class="math notranslate nohighlight">\(s_k\)</span>.</p></li>
-<li><p><strong>reference</strong> (<em>array</em><em>(</em><em>float</em><em>)</em>) – The reference corresponding to the state <span class="math notranslate nohighlight">\(s^*_k\)</span>.</p></li>
-<li><p><strong>reward</strong> (<em>float</em>) – The reward that has been received for the last action that lead to the current state
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The current episode step</p></li>
+<li><p><strong>state</strong> (<em>array</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – The state of the env after the step <span class="math notranslate nohighlight">\(s_k\)</span>.</p></li>
+<li><p><strong>reference</strong> (<em>array</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – The reference corresponding to the state <span class="math notranslate nohighlight">\(s^*_k\)</span>.</p></li>
+<li><p><strong>reward</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – The reward that has been received for the last action that lead to the current state
 <span class="math notranslate nohighlight">\(r_{k}\)</span>.</p></li>
-<li><p><strong>terminated</strong> (<em>bool</em>) – Flag, that indicates, if the last action lead to a terminal state <span class="math notranslate nohighlight">\(t_{k}\)</span>.</p></li>
+<li><p><strong>terminated</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, that indicates, if the last action lead to a terminal state <span class="math notranslate nohighlight">\(t_{k}\)</span>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -268,16 +274,36 @@ a jupyter notebook and the figures shall be plotted below a new cell.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.save_to_file">
+<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">academic_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.save_to_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_env">
 <span class="sig-name descname"><span class="pre">set_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.set_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.set_env" title="Link to this definition"></a></dt>
 <dd><p>Called during initialization of the environment to interconnect all modules. State names, references,…
 might be saved here for later processing</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>env</strong> (<a class="reference internal" href="../environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The environment.</p>
+<dd class="field-odd"><p><strong>env</strong> (<a class="reference internal" href="../environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The environment.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.show" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.show_and_hold">
+<span class="sig-name descname"><span class="pre">show_and_hold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gym_electric_motor/visualization/motor_dashboard.html#MotorDashboard.show_and_hold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.show_and_hold" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.render_mode">
+<span class="sig-name descname"><span class="pre">render_mode</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard.MotorDashboard.render_mode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard.MotorDashboard.update_interval">

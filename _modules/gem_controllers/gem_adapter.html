@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gem_controllers.gem_adapter &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gem_controllers.gem_adapter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gem_controllers.gem_adapter</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">gem_controllers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gem</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.gem_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">GemController</span>
+
+
+<div class="viewcode-block" id="GymElectricMotorAdapter">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_adapter.html#gem_controllers.gem_adapter.GymElectricMotorAdapter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GymElectricMotorAdapter</span><span class="p">(</span><span class="n">GemController</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The GymElectricMotorAdapter wraps a GemController to map the inputs and outputs to the environment.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Input stage of the controller&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_stage</span>
+
+    <span class="nd">@input_stage</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_stage</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Output stage of the controller&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span>
+
+    <span class="nd">@output_stage</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapped GemController&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_controller</span>
+
+    <span class="nd">@controller</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controller</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">block_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_diagram</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">_env</span><span class="p">:</span> <span class="p">(</span><span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">ElectricMotorEnvironment</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">env_id</span><span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">:</span> <span class="p">(</span><span class="n">GemController</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            _env(ElectricMotorEnvironment): The GEM-Environment that the controller shall be created for.</span>
+<span class="sd">            env_id(str): The corresponding environment-id to specify the concrete environment.</span>
+<span class="sd">            controller(GemController): The GemController that should be wrapped.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_stage</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">GemController</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controller</span> <span class="o">=</span> <span class="n">controller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_stage</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">stages</span><span class="o">.</span><span class="n">InputStage</span><span class="p">()</span>
+        <span class="n">action_type</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_action_type</span><span class="p">(</span><span class="n">env_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">action_type</span> <span class="o">==</span> <span class="s2">&quot;Finite&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">stages</span><span class="o">.</span><span class="n">DiscOutputStage</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">stages</span><span class="o">.</span><span class="n">ContOutputStage</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_block_diagram</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_plotter</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">ReferencePlotter</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GymElectricMotorAdapter.control">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_adapter.html#gem_controllers.gem_adapter.GymElectricMotorAdapter.control">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to calculate the action of the controller for the environment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(np.array): Array of the state of the environment.</span>
+<span class="sd">            reference(np.array): Array of the references of the referenced states.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Copy state and reference to be independent from further calculations</span>
+        <span class="n">state_</span><span class="p">,</span> <span class="n">reference_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">state</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+
+        <span class="c1"># Denormalize the state and reference</span>
+        <span class="n">denormalized_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_stage</span><span class="p">(</span><span class="n">state_</span><span class="p">,</span> <span class="n">reference_</span><span class="p">)</span>
+
+        <span class="c1"># Iterate through the controller stages to calculate the input voltages</span>
+        <span class="n">voltage_set_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_controller</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="n">state_</span><span class="p">,</span> <span class="n">denormalized_ref</span><span class="p">)</span>
+
+        <span class="c1"># Transform and normalize the input voltages</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span><span class="p">(</span><span class="n">state_</span><span class="p">,</span> <span class="n">voltage_set_point</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_plot</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_plotter</span><span class="o">.</span><span class="n">update_plots</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controller</span><span class="o">.</span><span class="n">references</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">action</span></div>
+
+
+<div class="viewcode-block" id="GymElectricMotorAdapter.tune">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_adapter.html#gem_controllers.gem_adapter.GymElectricMotorAdapter.tune">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">tune_controller</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to set the parameters of the controller stages.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env(ElectricMotorEnvironment): The GEM-Environment that the controller shall be tuned for.</span>
+<span class="sd">            env_id(str): ID of the ElectricMotorEnvironment.</span>
+<span class="sd">            tune_controller(bool): Flag, if the controller should be tuned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_stage</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tune_controller</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controller</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_plotter</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span>
+            <span class="n">env</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controller</span><span class="o">.</span><span class="n">referenced_states</span><span class="p">,</span>
+            <span class="n">plot_references</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">maximum_reference</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_controller</span><span class="o">.</span><span class="n">maximum_reference</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GymElectricMotorAdapter.build_block_diagram">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_adapter.html#gem_controllers.gem_adapter.GymElectricMotorAdapter.build_block_diagram">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_block_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">save_block_diagram_as</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_block_diagram</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">build_block_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">save_block_diagram_as</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GymElectricMotorAdapter.reset">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_adapter.html#gem_controllers.gem_adapter.GymElectricMotorAdapter.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all stages of the controller.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_stage</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controller</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_stage</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

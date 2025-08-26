@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Finite Control Set Speed Control Doubly Fed Induction Motor Environment &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -84,7 +84,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -118,7 +118,8 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.envs.</span></span><span class="sig-name descname"><span class="pre">FiniteSpeedControlDoublyFedInductionMotorEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supply=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_function=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualization=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_filter=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints=(&lt;gym_electric_motor.constraints.SquaredConstraint</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau=1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_system_wrappers=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/envs/gym_im/doubly_fed_induction_motor_envs/finite_sc_dfim_env.html#FiniteSpeedControlDoublyFedInductionMotorEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv" title="Link to this definition"></a></dt>
-<dd><dl>
+<dd><p>Bases: <a class="reference internal" href="../environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricMotorEnvironment</span></code></a></p>
+<dl>
 <dt>Description:</dt><dd><p>Environment to simulate a finite control set speed controlled doubly fed induction motor.</p>
 </dd>
 <dt>Key:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">'Finite-SC-DFIM-v0'</span></code></p>
@@ -162,8 +163,8 @@
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gym_electric_motor.reference_generators</span> <span class="kn">import</span> <span class="n">LaplaceProcessReferenceGenerator</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reference_generators</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaplaceProcessReferenceGenerator</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Select a different ode_solver with default parameters by passing a keystring</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_overridden_solver</span> <span class="o">=</span> <span class="s1">&#39;scipy.solve_ivp&#39;</span>
@@ -214,12 +215,12 @@
 <div><p>passed to the environment.</p>
 </div></blockquote>
 </p></li>
-<li><p><strong>calc_jacobian</strong> (<em>bool</em>) – Flag, if the jacobian of the environment shall be taken into account during the
+<li><p><strong>calc_jacobian</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the jacobian of the environment shall be taken into account during the
 simulation. This may lead to speed improvements. Default: True</p></li>
-<li><p><strong>tau</strong> (<em>float</em>) – Duration of one control step in seconds. Default: 1e-4.</p></li>
-<li><p><strong>state_filter</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of states that shall be returned to the agent. Default: None (no filter)</p></li>
-<li><p><strong>callbacks</strong> (<em>list</em><em>(</em><a class="reference internal" href="../../core.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks for user interaction. Default: ()</p></li>
-<li><p><strong>physical_system_wrappers</strong> (<em>list</em><em>(</em><a class="reference internal" href="../../state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper" title="gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper"><em>PhysicalSystemWrapper</em></a><em>)</em>) – List of Physical System Wrappers to modify the</p></li>
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Duration of one control step in seconds. Default: 1e-4.</p></li>
+<li><p><strong>state_filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>)</em>) – List of states that shall be returned to the agent. Default: None (no filter)</p></li>
+<li><p><strong>callbacks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference internal" href="../environment.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks for user interaction. Default: ()</p></li>
+<li><p><strong>physical_system_wrappers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference internal" href="../../state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper" title="gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper"><em>PhysicalSystemWrapper</em></a><em>)</em>) – List of Physical System Wrappers to modify the</p></li>
 <li><p><strong>Default</strong> (<em>actions to and states from the physical system before they are used in the environment.</em>) – ()</p></li>
 </ul>
 </dd>
@@ -235,6 +236,231 @@ This class is then initialized with its default parameters.
 The available strings can be looked up in the documentation. (e.g. <code class="docutils literal notranslate"><span class="pre">converter='Finite-2QC'</span></code>)</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.close" title="Link to this definition"></a></dt>
+<dd><p>Called when the environment is deleted. Closes all its modules.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.get_wrapper_attr">
+<span class="sig-name descname"><span class="pre">get_wrapper_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a></span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.get_wrapper_attr" title="Link to this definition"></a></dt>
+<dd><p>Gets the attribute <cite>name</cite> from the environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.has_wrapper_attr">
+<span class="sig-name descname"><span class="pre">has_wrapper_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.has_wrapper_attr" title="Link to this definition"></a></dt>
+<dd><p>Checks if the attribute <cite>name</cite> exists in the environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.make">
+<span class="sig-name descname"><span class="pre">make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.make" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.render" title="Link to this definition"></a></dt>
+<dd><p>Update the visualization of the motor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">__</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset of the environment and all its modules to an initial state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The initial observation consisting of the initial state and initial reference.
+info(dict): Auxiliary information (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.set_wrapper_attr">
+<span class="sig-name descname"><span class="pre">set_wrapper_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.set_wrapper_attr" title="Link to this definition"></a></dt>
+<dd><p>Sets the attribute <cite>name</cite> on the environment with <cite>value</cite>, see <cite>Wrapper.set_wrapper_attr</cite> for more info.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.step" title="Link to this definition"></a></dt>
+<dd><p>Perform one simulation step of the environment with an action of the action space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>action</strong> – Action to play on the environment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of the new state and the next reference.
+reward(float): Amount of reward received for the last step.
+terminated(bool): Flag, indicating if a reset is required before new steps can be taken.
+info(dict): Auxiliary information (optional)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>observation(Tuple(ndarray(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>),ndarray(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.action_space" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.constraint_monitor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_monitor</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.constraint_monitor" title="Link to this definition"></a></dt>
+<dd><p>The ConstraintMonitor of the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns(<a class="reference internal" href="../environment.html#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor">ConstraintMonitor</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.current_next_reference">
+<span class="sig-name descname"><span class="pre">current_next_reference</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.current_next_reference" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.current_reference">
+<span class="sig-name descname"><span class="pre">current_reference</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.current_reference" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.current_state">
+<span class="sig-name descname"><span class="pre">current_state</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.current_state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.env_id">
+<span class="sig-name descname"><span class="pre">env_id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.env_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.limits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">limits</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.limits" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of limits of all states in the observation (called in state_filter) in the same order</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'render_modes':</span> <span class="pre">[]}</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.metadata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.nominal_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_state</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.nominal_state" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of nominal values of all states in the observation (called in state_filter) in that order</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.np_random">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">np_random</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Generator</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.np_random" title="Link to this definition"></a></dt>
+<dd><p>Returns the environment’s internal <code class="xref py py-attr docutils literal notranslate"><span class="pre">_np_random</span></code> that if not set will initialise with a random seed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Instances of <cite>np.random.Generator</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.np_random_seed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">np_random_seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.np_random_seed" title="Link to this definition"></a></dt>
+<dd><p>Returns the environment’s internal <code class="xref py py-attr docutils literal notranslate"><span class="pre">_np_random_seed</span></code> that if not set will first initialise with a random int as seed.</p>
+<p>If <a class="reference internal" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.np_random_seed" title="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.np_random_seed"><code class="xref py py-attr docutils literal notranslate"><span class="pre">np_random_seed</span></code></a> was set directly instead of through <a class="reference internal" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reset" title="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code></a> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_np_random_through_seed()</span></code>,
+the seed will take the value -1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the seed of the current <cite>np_random</cite> or -1, if the seed of the rng is unknown</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.observation_space">
+<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.observation_space" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.physical_system">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">physical_system</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.physical_system" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+PhysicalSystem: The Physical System of the Environment</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reference_generator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_generator</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reference_generator" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+ReferenceGenerator: The ReferenceGenerator of the Environment</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reference_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_names</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reference_names" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of state names of all states in the observation (called in state_filter) in the same order</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.render_mode">
+<span class="sig-name descname"><span class="pre">render_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.render_mode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reward_function">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward_function</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.reward_function" title="Link to this definition"></a></dt>
+<dd><p>Returns:
+RewardFunction: The RewardFunction of the environment</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.sim">
+<span class="sig-name descname"><span class="pre">sim</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SimulationEnvironment(tau=0.0,</span> <span class="pre">step=0)</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.sim" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.spec">
+<span class="sig-name descname"><span class="pre">spec</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnvSpec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.spec" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.state_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_names</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.state_names" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of state names of all states in the observation (called in state_filter) in the same order</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.unwrapped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unwrapped</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Env</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.unwrapped" title="Link to this definition"></a></dt>
+<dd><p>Returns the base non-wrapped environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The base non-wrapped <code class="xref py py-class docutils literal notranslate"><span class="pre">gymnasium.Env</span></code> instance</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Env</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.visualizations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">visualizations</span></span><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.visualizations" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of all active motor visualizations.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.workspace">
+<span class="sig-name descname"><span class="pre">workspace</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Workspace()</span></em><a class="headerlink" href="#gym_electric_motor.envs.FiniteSpeedControlDoublyFedInductionMotorEnv.workspace" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>

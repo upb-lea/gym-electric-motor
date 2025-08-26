@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>State Plot &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -77,7 +77,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -111,18 +111,13 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.visualization.motor_dashboard_plots.</span></span><span class="sig-name descname"><span class="pre">StatePlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/state_plot.html#StatePlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot" title="Link to this definition"></a></dt>
-<dd><p>Plot to display the environments states and their references.</p>
+<dd><p>Bases: <a class="reference internal" href="time_plot.html#gym_electric_motor.visualization.motor_dashboard_plots.TimePlot" title="gym_electric_motor.visualization.motor_dashboard_plots.base_plots.TimePlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimePlot</span></code></a></p>
+<p>Plot to display the environments states and their references.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>state</strong> (<em>str</em>) – Name of the state to plot</p>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the state to plot</p>
 </dd>
 </dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.data_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_idx</span></span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.data_idx" title="Link to this definition"></a></dt>
-<dd><p>Returns the current index to access the time and data arrays.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.initialize">
 <span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/visualization/motor_dashboard_plots/state_plot.html#StatePlot.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.initialize" title="Link to this definition"></a></dt>
@@ -195,6 +190,22 @@ are scaled dynamically.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.data_idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_idx</span></span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.data_idx" title="Link to this definition"></a></dt>
+<dd><p>Returns the current index to access the time and data arrays.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.state_labels">
+<span class="sig-name descname"><span class="pre">state_labels</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'epsilon':</span> <span class="pre">'$\\epsilon$/rad',</span> <span class="pre">'i':</span> <span class="pre">'$i$/A',</span> <span class="pre">'i_a':</span> <span class="pre">'$i_{\\mathrm{a}}$/A',</span> <span class="pre">'i_b':</span> <span class="pre">'$i_{\\mathrm{b}}$/A',</span> <span class="pre">'i_c':</span> <span class="pre">'$i_{\\mathrm{c}}$/A',</span> <span class="pre">'i_e':</span> <span class="pre">'$i_{\\mathrm{e}}$/A',</span> <span class="pre">'i_sd':</span> <span class="pre">'$i_{\\mathrm{sd}}$/A',</span> <span class="pre">'i_sq':</span> <span class="pre">'$i_{\\mathrm{sq}}$/A',</span> <span class="pre">'omega':</span> <span class="pre">'$\\omega$/(1/s)',</span> <span class="pre">'torque':</span> <span class="pre">'$T$/Nm',</span> <span class="pre">'u':</span> <span class="pre">'$u$/V',</span> <span class="pre">'u_a':</span> <span class="pre">'$u_{\\mathrm{a}}$/V',</span> <span class="pre">'u_b':</span> <span class="pre">'$u_{\\mathrm{b}}$/V',</span> <span class="pre">'u_c':</span> <span class="pre">'$u_{\\mathrm{c}}$/V',</span> <span class="pre">'u_e':</span> <span class="pre">'$u_{\\mathrm{e}}$/V',</span> <span class="pre">'u_sd':</span> <span class="pre">'$u_{\\mathrm{sd}}$/V',</span> <span class="pre">'u_sq':</span> <span class="pre">'$u_{\\mathrm{sq}}$/V',</span> <span class="pre">'u_sup':</span> <span class="pre">'$u_{\\mathrm{sup}}$/V'}</span></em><a class="headerlink" href="#gym_electric_motor.visualization.motor_dashboard_plots.StatePlot.state_labels" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gem_controllers.stages.operation_point_selection.scim_ops &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/readme.html">Readme File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gem_controllers.stages.operation_point_selection.scim_ops</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gem_controllers.stages.operation_point_selection.scim_ops</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gem</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base_controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.foc_operation_point_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">FieldOrientedControllerOperationPointSelection</span>
+
+
+<div class="viewcode-block" id="SCIMOperationPointSelection">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SCIMOperationPointSelection</span><span class="p">(</span><span class="n">FieldOrientedControllerOperationPointSelection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents the operation point selection of the torque controller for the cascaded control of</span>
+<span class="sd">    induction motors. The torque controller uses LUT to find an appropriate operating point for the flux and torque.</span>
+<span class="sd">    The flux is limited by a modulation controller. A reference value for the i_sd current is then determined using</span>
+<span class="sd">    the operating point of the flux and a PI controller. In addition, a reference for the i_sq current is calculated</span>
+<span class="sd">    based on the current flux and the operating point of the torque.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">max_modulation_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">modulation_damping</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
+        <span class="n">psi_controller</span><span class="o">=</span><span class="n">PIController</span><span class="p">(</span><span class="n">control_task</span><span class="o">=</span><span class="s2">&quot;FC&quot;</span><span class="p">),</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            max_modulation_level(float): Maximum value for the modulation controller.</span>
+<span class="sd">            modulation_damping(float): Damping of the gain of the modulation controller.</span>
+<span class="sd">            psi_controller(gc.stages.BaseController): Flux controller for the i_d current.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_modulation_level</span><span class="p">,</span> <span class="n">modulation_damping</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_r</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_s</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_r</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_s</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_abs_idx</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_count</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sq_count</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_controller</span> <span class="o">=</span> <span class="n">psi_controller</span>
+
+<div class="viewcode-block" id="SCIMOperationPointSelection._psi_opt">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection._psi_opt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_psi_opt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the optimal flux for a given torque&quot;&quot;&quot;</span>
+        <span class="n">psi_opt_t</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i_sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sd_idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_count</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t_minimum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_maximum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_count</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">i_sq</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="p">(</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_r</span> <span class="o">*</span> <span class="n">i_sd</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                <span class="n">pv</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="mi">3</span>
+                    <span class="o">/</span> <span class="mi">2</span>
+                    <span class="o">*</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">r_s</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">i_sd</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">2</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_s</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_r</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">i_sq</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>  <span class="c1"># Calculate losses</span>
+
+                <span class="n">i_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">pv</span><span class="p">)</span>  <span class="c1"># Minimize losses</span>
+                <span class="n">i_sd_opt</span> <span class="o">=</span> <span class="n">i_sd</span><span class="p">[</span><span class="n">i_idx</span><span class="p">]</span>
+                <span class="n">i_sq_opt</span> <span class="o">=</span> <span class="n">i_sq</span><span class="p">[</span><span class="n">i_idx</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">i_sq_opt</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">i_sd_opt</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">psi_opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span> <span class="o">*</span> <span class="n">i_sd_opt</span>
+            <span class="n">psi_opt_t</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="n">psi_opt</span><span class="p">,</span> <span class="n">i_sd_opt</span><span class="p">,</span> <span class="n">i_sq_opt</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">psi_opt_t</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
+
+
+<div class="viewcode-block" id="SCIMOperationPointSelection._t_max">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection._t_max">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_t_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate a lookup table with the maximum torque for a given flux.&quot;&quot;&quot;</span>
+
+        <span class="c1"># The resulting torque and currents lists</span>
+        <span class="n">t_val</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i_sd_val</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i_sq_val</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_max</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_count</span><span class="p">)</span>
+
+        <span class="c1"># Calculate the maximum torque for a given flux</span>
+        <span class="k">for</span> <span class="n">psi_</span> <span class="ow">in</span> <span class="n">psi</span><span class="p">:</span>
+            <span class="n">i_sd</span> <span class="o">=</span> <span class="n">psi_</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span>
+            <span class="n">i_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nominal_value</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">u_sd_idx</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nominal_value</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">omega_idx</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_s</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">-</span> <span class="n">i_sd</span><span class="o">**</span><span class="mi">2</span>
+            <span class="p">)</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_r</span> <span class="o">*</span> <span class="n">psi_</span> <span class="o">*</span> <span class="n">i_sq</span>
+            <span class="n">t_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">i_sd_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i_sd</span><span class="p">)</span>
+            <span class="n">i_sq_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i_sq</span><span class="p">)</span>
+
+        <span class="c1"># The characteristic is symmetrical for positive and negative torques.</span>
+        <span class="n">t_val</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t_val</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">psi</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">i_sd_val</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">i_sd_val</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">i_sq_val</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i_sq_val</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">t_val</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">i_sd_val</span><span class="p">,</span> <span class="n">i_sq_val</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SCIMOperationPointSelection.tune">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection.tune">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">gem</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">ElectricMotorEnvironment</span><span class="p">,</span> <span class="n">env_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">current_safety_margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tune the operation point selcetion stage.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env(gym_electric_motor.ElectricMotorEnvironment): The environment to be controlled.</span>
+<span class="sd">            env_id(str): The id of the environment.</span>
+<span class="sd">            current_safety_margin(float): Percentage of the current margin to the current limit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">current_safety_margin</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_count</span> <span class="o">=</span> <span class="mi">1001</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_count</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_count</span> <span class="o">=</span> <span class="mi">500</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sq_count</span> <span class="o">=</span> <span class="mi">1000</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_abs_idx</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_wrapper_attr</span><span class="p">(</span><span class="s1">&#39;state_names&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;psi_abs&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_minimum</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">torque_idx</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_maximum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">torque_idx</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_m&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_sigr&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_sigs&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_r&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_s&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_wrapper_attr</span><span class="p">(</span><span class="s1">&#39;physical_system&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_controller</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_s</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_s</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_opt_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psi_opt</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_opt_t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_max_psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t_max</span><span class="p">()</span>
+
+        <span class="c1"># Set the parameters of the modulation controller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_gain</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l_s</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_s</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">**</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_high</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_low</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integrated_reset</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_low</span>  <span class="c1"># Reset value of the modulation controller</span></div>
+
+
+    <span class="c1"># Methods to get the indices of the lists for maximum torque and optimal flux</span>
+<div class="viewcode-block" id="SCIMOperationPointSelection._get_psi_opt">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection._get_psi_opt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_psi_opt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the optimal flux for a given torque&quot;&quot;&quot;</span>
+        <span class="n">torque</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">torque</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_minimum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_maximum</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">torque</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_minimum</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t_maximum</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_minimum</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="SCIMOperationPointSelection._get_t_max">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection._get_t_max">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_t_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the maximum torque for a given flux&quot;&quot;&quot;</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_max</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">psi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_max</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="SCIMOperationPointSelection._select_operating_point">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection._select_operating_point">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_select_operating_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the current operation point for a given torque reference value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">             state(np.ndarray): The state of the environment.</span>
+<span class="sd">             reference(np.ndarray): The reference of the state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            current_reference(np.ndarray): references for the current control stage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">psi</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_abs_idx</span><span class="p">]</span>
+
+        <span class="c1"># Get the optimal flux</span>
+        <span class="n">psi_opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_opt_t</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_psi_opt</span><span class="p">(</span><span class="n">reference</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+        <span class="c1"># Limit the flux by the modulation controller</span>
+        <span class="n">psi_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulation_control</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">psi_opt</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">psi_opt</span><span class="p">,</span> <span class="n">psi_max</span><span class="p">)</span>
+
+        <span class="c1"># Limit the torque</span>
+        <span class="n">t_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_max_psi</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_count</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_t_max</span><span class="p">(</span><span class="n">psi_opt</span><span class="p">)]</span>
+        <span class="n">torque</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">reference</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_max</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_max</span><span class="p">))</span>
+
+        <span class="c1"># Control the i_sd current with a PI-Controller</span>
+        <span class="n">i_sd_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_controller</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">psi</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">psi_opt</span><span class="p">]))</span>
+        <span class="n">i_sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">i_sd_</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sd_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_limit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i_sd_</span> <span class="o">==</span> <span class="n">i_sd</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_controller</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">psi</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">psi_opt</span><span class="p">]))</span>
+        <span class="n">i_sd</span> <span class="o">=</span> <span class="n">i_sd</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Calculate and limit the i_sq current</span>
+        <span class="n">i_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+            <span class="n">torque</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_r</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_m</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sq_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sq_limit</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_limit</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i_sq</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i_sd</span><span class="o">**</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">i_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_sq</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sd_limit</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">i_sd</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i_sd</span><span class="p">,</span> <span class="n">i_sq</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SCIMOperationPointSelection.reset">
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html#gem_controllers.stages.operation_point_selection.scim_ops.SCIMOperationPointSelection.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the SCIM operation point selection&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_controller</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

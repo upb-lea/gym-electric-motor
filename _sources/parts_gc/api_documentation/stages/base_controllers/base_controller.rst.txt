@@ -18,5 +18,5 @@ Base Controller
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-   :special-members: _call_
+   :special-members: __call__
    :member-order: groupwise

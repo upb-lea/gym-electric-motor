@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_electric_motor.envs.gym_dcm.series_dc_motor_env.finite_tc_series_dc_env &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=37e646e6"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -59,7 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -87,23 +87,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.envs.gym_dcm.series_dc_motor_env.finite_tc_series_dc_env</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gym_electric_motor</span> <span class="kn">import</span> <span class="n">physical_systems</span> <span class="k">as</span> <span class="n">ps</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.core</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="kn">import</span> <span class="n">physical_systems</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ElectricMotorEnvironment</span><span class="p">,</span>
     <span class="n">ElectricMotorVisualization</span><span class="p">,</span>
     <span class="n">ReferenceGenerator</span><span class="p">,</span>
     <span class="n">RewardFunction</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems.physical_systems</span> <span class="kn">import</span> <span class="n">DcMotorSystem</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.reference_generators</span> <span class="kn">import</span> <span class="n">WienerProcessReferenceGenerator</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.reward_functions</span> <span class="kn">import</span> <span class="n">WeightedSumOfErrors</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.utils</span> <span class="kn">import</span> <span class="n">initialize</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization</span> <span class="kn">import</span> <span class="n">MotorDashboard</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.physical_systems.physical_systems</span><span class="w"> </span><span class="kn">import</span> <span class="n">DcMotorSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reference_generators</span><span class="w"> </span><span class="kn">import</span> <span class="n">WienerProcessReferenceGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reward_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeightedSumOfErrors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">MotorDashboard</span>
 
 
 <div class="viewcode-block" id="FiniteTorqueControlDcSeriesMotorEnv">
 <a class="viewcode-back" href="../../../../../parts_gem/environments/series_dc/finite_tc_series.html#gym_electric_motor.envs.FiniteTorqueControlDcSeriesMotorEnv">[docs]</a>
-<span class="k">class</span> <span class="nc">FiniteTorqueControlDcSeriesMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FiniteTorqueControlDcSeriesMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description:</span>
 <span class="sd">        Environment to simulate a finite control set torque controlled series DC Motor</span>
@@ -178,7 +178,7 @@
 <span class="sd">        &gt;&gt;&gt;     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

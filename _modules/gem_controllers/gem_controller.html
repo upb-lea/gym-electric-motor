@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gem_controllers.gem_controller &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gem_controllers.gem_controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gem_controllers.gem_controller</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">gem_controllers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym_electric_motor.core</span>
+
+
+<div class="viewcode-block" id="GemController">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GemController</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The GemController is the base for all motor controllers in the gem-control package.</span>
+
+<span class="sd">    A GemController consists of multiple stages that execute different control tasks like speed-control, a reference</span>
+<span class="sd">    to current set point mapping or input and output processing.</span>
+
+<span class="sd">    Furthermore, the GemController has got a `GemController.make` factory function that automatically designs and tunes</span>
+<span class="sd">    a classical cascaded motor controller based on classic control techniques like the proportional-integral (PI)</span>
+<span class="sd">    controller to control a gym-electric-motor environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">signals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Input signals of the controller&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">signal_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Signal names of the controller&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="GemController.make">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.make">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">:</span> <span class="n">gym_electric_motor</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">ElectricMotorEnvironment</span><span class="p">,</span>
+        <span class="n">env_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">decoupling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">current_safety_margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">base_current_controller</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PI&quot;</span><span class="p">,</span>
+        <span class="n">base_speed_controller</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PI&quot;</span><span class="p">,</span>
+        <span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">should_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">plot_references</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">block_diagram</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">save_block_diagram_as</span><span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A factory function that generates (and parameterizes) a matching GemController for a given gym-electric-motor</span>
+<span class="sd">        environment `env`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env(ElectricMotorEnvironment): The GEM-Environment that the controller shall be created for.</span>
+<span class="sd">            env_id(str): The corresponding environment-id to specify the concrete environment.</span>
+<span class="sd">            decoupling(bool): Flag, if a EMF-Feedforward correction stage should be used in the pi current controller.</span>
+<span class="sd">            current_safety_margin(float in [0..1]): The ratio between the maximum current set point</span>
+<span class="sd">             the reference controller generates and the absolute current limit.</span>
+<span class="sd">            base_speed_controller(&#39;PI&#39;/&#39;PID&#39;/&#39;P&#39;/&#39;ThreePoint&#39;): Selection of the basic control algorithm for the</span>
+<span class="sd">             speed controller.</span>
+<span class="sd">            base_current_controller(&#39;PI&#39;/&#39;PID&#39;/&#39;P&#39;/&#39;ThreePoint&#39;): Selection of the basic control algorithm for the</span>
+<span class="sd">             current controller.</span>
+<span class="sd">            a(float): Tuning parameter of the symmetrical optimum.</span>
+<span class="sd">            plot_references(bool): Flag, if the reference values of the underlying control circuits should be plotted</span>
+<span class="sd">            block_diagram(bool): Selection whether the block diagram should be displayed</span>
+<span class="sd">            save_block_diagram_as(str, tuple): Selection of whether the block diagram should be saved</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            GemController: An initialized (and tuned) instance of a controller that fits to the specified environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">should_plot</span> <span class="o">=</span> <span class="n">should_plot</span>
+
+        <span class="n">control_task</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_control_task</span><span class="p">(</span><span class="n">env_id</span><span class="p">)</span>
+        <span class="n">tuner_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="c1"># Initialize the current control stage</span>
+        <span class="n">controller</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">PICurrentController</span><span class="p">(</span>
+            <span class="n">env</span><span class="p">,</span>
+            <span class="n">env_id</span><span class="p">,</span>
+            <span class="n">base_current_controller</span><span class="o">=</span><span class="n">base_current_controller</span><span class="p">,</span>
+            <span class="n">decoupling</span><span class="o">=</span><span class="n">decoupling</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">tuner_kwargs</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">tuner_kwargs</span><span class="p">[</span><span class="s2">&quot;plot_references&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_references</span>
+        <span class="k">if</span> <span class="n">control_task</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TC&quot;</span><span class="p">,</span> <span class="s2">&quot;SC&quot;</span><span class="p">]:</span>
+            <span class="c1"># Initilize the operation point selection</span>
+            <span class="n">controller</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">TorqueController</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">current_controller</span><span class="o">=</span><span class="n">controller</span><span class="p">)</span>
+            <span class="n">tuner_kwargs</span><span class="p">[</span><span class="s2">&quot;current_safety_margin&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_safety_margin</span>
+        <span class="k">if</span> <span class="n">control_task</span> <span class="o">==</span> <span class="s2">&quot;SC&quot;</span><span class="p">:</span>
+            <span class="c1"># Initilize the speed control stage</span>
+            <span class="n">controller</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">PISpeedController</span><span class="p">(</span>
+                <span class="n">env</span><span class="p">,</span>
+                <span class="n">env_id</span><span class="p">,</span>
+                <span class="n">torque_controller</span><span class="o">=</span><span class="n">controller</span><span class="p">,</span>
+                <span class="n">base_speed_controller</span><span class="o">=</span><span class="n">base_speed_controller</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1"># Wrap the controller with the adapter to map the inputs and outputs to the environment</span>
+        <span class="n">controller</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">GymElectricMotorAdapter</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">controller</span><span class="p">)</span>
+
+        <span class="c1"># Fit the controllers parameters to the environment</span>
+        <span class="n">controller</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="o">**</span><span class="n">tuner_kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">block_diagram</span><span class="p">:</span>
+            <span class="n">controller</span><span class="o">.</span><span class="n">build_block_diagram</span><span class="p">(</span><span class="n">env_id</span><span class="p">,</span> <span class="n">save_block_diagram_as</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">controller</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stages of the GEM Controller&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stages</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stages</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="GemController.get_signal_value">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.get_signal_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_signal_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of a signal calling by the signal name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            signal_name(str): Name of a signal of the state</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">signals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">signal_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">signal_name</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="GemController.control">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.control">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the voltage reference.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(np.array): state of the environment</span>
+<span class="sd">            reference(np.array): speed references</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array: reference voltage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="GemController.reset">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all stages of the controller&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stages</span><span class="p">:</span>
+            <span class="n">stage</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="GemController.tune">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.tune">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="GemController.control_environment">
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.control_environment">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">control_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">max_episode_length</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">render_env</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to control an environment with the GemController.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env(ElectricMotorEnvironment): The GEM-Environment that the controller should control.</span>
+<span class="sd">            n_steps(int): Number of iteration steps.</span>
+<span class="sd">            max_episode_length(int): Maximum length of an epsiode, after which the environment and controller should be</span>
+<span class="sd">             reset.</span>
+<span class="sd">            render_env(bool): Flag, if the states of the environment should be plotted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_diagram</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">block_diagram</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">current_episode_length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>  <span class="c1"># Simulate the environment and controller for n steps</span>
+            <span class="k">if</span> <span class="n">render_env</span><span class="p">:</span>
+                <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c1"># Plot the states</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>  <span class="c1"># Calculate the action</span>
+            <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">_</span><span class="p">,</span> <span class="n">trun</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>  <span class="c1"># Simulate one step of the environment</span>
+            <span class="k">if</span> <span class="n">done</span> <span class="ow">or</span> <span class="n">trun</span> <span class="ow">or</span> <span class="n">current_episode_length</span> <span class="o">&gt;=</span> <span class="n">max_episode_length</span><span class="p">:</span>
+                <span class="c1"># Reset the environment and controller</span>
+                <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="n">current_episode_length</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">current_episode_length</span> <span class="o">=</span> <span class="n">current_episode_length</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_diagram</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">block_diagram</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
