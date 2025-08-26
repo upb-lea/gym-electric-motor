@@ -11,7 +11,9 @@ Operation Point Selection
    foc_ops
    pmsm_ops
    eesm_ops
-   scim_ops.. autoclass:: gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection
+   scim_ops
+   
+   .. autoclass:: gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection
    :members:
    :undoc-members:
    :inherited-members:
