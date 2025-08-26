@@ -73,7 +73,7 @@ templates_path = ['_templates']
 source_suffix = { ".rst": "restructuredtext", ".md": "myst" }
 
 # MyST features
-myst_enable_extensions = ["front_matter", "colon_fence", "deflist", "dollarmath", "amsmath"]
+myst_enable_extensions = ["colon_fence", "deflist", "dollarmath", "amsmath"]
 autosummary_generate = True
 autodoc_default_options = {
     "members": True,
