@@ -5,7 +5,7 @@ Operation Point Selection
    :maxdepth: 1
 
    permex_dc_ops
-   extex_dc_ops
+   exter_dc_ops
    series_dc_ops
    shunt_dc_ops
    foc_ops
@@ -13,9 +13,7 @@ Operation Point Selection
    eesm_ops
    scim_ops
 
-.. currentmodule:: gem_controllers.stages.operation_point_selection.operation_point_selection
-
-.. autoclass:: OperationPointSelection
+.. autoclass:: gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection
    :members:
    :undoc-members:
    :inherited-members:
