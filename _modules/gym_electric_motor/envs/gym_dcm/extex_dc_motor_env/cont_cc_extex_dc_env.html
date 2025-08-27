@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_electric_motor.envs.gym_dcm.extex_dc_motor_env.cont_cc_extex_dc_env &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../../../_static/jquery.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
-        <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -41,20 +41,25 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -82,24 +87,26 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.envs.gym_dcm.extex_dc_motor_env.cont_cc_extex_dc_env</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gym_electric_motor</span> <span class="kn">import</span> <span class="n">physical_systems</span> <span class="k">as</span> <span class="n">ps</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.core</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="kn">import</span> <span class="n">physical_systems</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ElectricMotorEnvironment</span><span class="p">,</span>
     <span class="n">ElectricMotorVisualization</span><span class="p">,</span>
     <span class="n">ReferenceGenerator</span><span class="p">,</span>
     <span class="n">RewardFunction</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.physical_systems.physical_systems</span> <span class="kn">import</span> <span class="n">DcMotorSystem</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.reference_generators</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.physical_systems.physical_systems</span><span class="w"> </span><span class="kn">import</span> <span class="n">DcMotorSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reference_generators</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">MultipleReferenceGenerator</span><span class="p">,</span>
     <span class="n">WienerProcessReferenceGenerator</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.reward_functions</span> <span class="kn">import</span> <span class="n">WeightedSumOfErrors</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.utils</span> <span class="kn">import</span> <span class="n">initialize</span>
-<span class="kn">from</span> <span class="nn">gym_electric_motor.visualization</span> <span class="kn">import</span> <span class="n">MotorDashboard</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reward_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeightedSumOfErrors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">MotorDashboard</span>
 
 
-<div class="viewcode-block" id="ContCurrentControlDcExternallyExcitedMotorEnv"><a class="viewcode-back" href="../../../../../parts/environments/extex_dc/cont_cc_extex.html#gym_electric_motor.envs.ContCurrentControlDcExternallyExcitedMotorEnv">[docs]</a><span class="k">class</span> <span class="nc">ContCurrentControlDcExternallyExcitedMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
+<div class="viewcode-block" id="ContCurrentControlDcExternallyExcitedMotorEnv">
+<a class="viewcode-back" href="../../../../../parts_gem/environments/extex_dc/cont_cc_extex.html#gym_electric_motor.envs.ContCurrentControlDcExternallyExcitedMotorEnv">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContCurrentControlDcExternallyExcitedMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description:</span>
 <span class="sd">        Environment to simulate a continuous control set current controlled externally excited DC Motor</span>
@@ -174,7 +181,7 @@
 <span class="sd">        &gt;&gt;&gt;     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -285,6 +292,7 @@
             <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="n">physical_system_wrappers</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span></div>
+
 </pre></div>
 
            </div>

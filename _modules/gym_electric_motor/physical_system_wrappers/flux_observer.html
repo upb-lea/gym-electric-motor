@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_electric_motor.physical_system_wrappers.flux_observer &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -41,20 +41,25 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -82,15 +87,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.physical_system_wrappers.flux_observer</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">gym_electric_motor</span> <span class="k">as</span> <span class="nn">gem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gem</span>
 
-<span class="kn">from</span> <span class="nn">.physical_system_wrapper</span> <span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.physical_system_wrapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhysicalSystemWrapper</span>
 
 
-<div class="viewcode-block" id="FluxObserver"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver">[docs]</a><span class="k">class</span> <span class="nc">FluxObserver</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
+<div class="viewcode-block" id="FluxObserver">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FluxObserver</span><span class="p">(</span><span class="n">PhysicalSystemWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The FluxObserver extends the systems state vector of induction machine environments by estimated flux states</span>
 <span class="sd">    ``psi_abs``, and ``psi_angle``. The flux is estimated as follows:</span>
 
@@ -110,7 +117,7 @@
 <span class="sd">            \Psi_k = \sum_{i=0}^k (\Psi_{k-1} + \Delta\Psi_k) \\tau</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;i_sa&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sb&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sc&quot;</span><span class="p">),</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;i_sa&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sb&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sc&quot;</span><span class="p">),</span> <span class="n">physical_system</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            current_names(Iterable[string]): Names of the currents to be observed to estimate the flux.</span>
@@ -132,10 +139,12 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">FluxObserver</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_abc_to_alphabeta_transformation</span><span class="p">(</span><span class="n">i_s</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_abc_to_alphabeta_transformation</span><span class="p">(</span><span class="n">i_s</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">gem</span><span class="o">.</span><span class="n">physical_systems</span><span class="o">.</span><span class="n">electric_motors</span><span class="o">.</span><span class="n">ThreePhaseMotor</span><span class="o">.</span><span class="n">t_23</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FluxObserver.set_physical_system"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system">[docs]</a>    <span class="k">def</span> <span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="FluxObserver.set_physical_system">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.set_physical_system">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_physical_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="p">,</span>
@@ -161,12 +170,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_omega_idx</span> <span class="o">=</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_positions</span><span class="p">[</span><span class="s2">&quot;omega&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FluxObserver.reset"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FluxObserver.reset">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">(),</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]))</span></div>
 
-<div class="viewcode-block" id="FluxObserver.simulate"><a class="viewcode-back" href="../../../parts/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FluxObserver.simulate">
+<a class="viewcode-back" href="../../../parts_gem/state_action_processors/flux_observer.html#gym_electric_motor.physical_system_wrappers.FluxObserver.simulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="c1"># Docstring of super class</span>
         <span class="n">state_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">state_norm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">limits</span>
@@ -183,7 +198,9 @@
 
         <span class="c1"># Integrate the flux</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span> <span class="o">+=</span> <span class="n">delta_psi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physical_system</span><span class="o">.</span><span class="n">tau</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">)]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_integrated</span><span class="p">)]))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span></div>
+</div>
+
 </pre></div>
 
            </div>

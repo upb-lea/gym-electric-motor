@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_electric_motor.physical_systems.electric_motors.externally_excited_synchronous_motor &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -41,20 +41,25 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/api_documentation/gem_control_links.html">gem-control: key API (external)</a></li>
 </ul>
 
         </div>
@@ -82,14 +87,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.physical_systems.electric_motors.externally_excited_synchronous_motor</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.synchronous_motor</span> <span class="kn">import</span> <span class="n">SynchronousMotor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.synchronous_motor</span><span class="w"> </span><span class="kn">import</span> <span class="n">SynchronousMotor</span>
 
 
-<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor">[docs]</a><span class="k">class</span> <span class="nc">ExternallyExcitedSynchronousMotor</span><span class="p">(</span><span class="n">SynchronousMotor</span><span class="p">):</span>
+<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExternallyExcitedSynchronousMotor</span><span class="p">(</span><span class="n">SynchronousMotor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    =====================  ==========  ============= =================================================</span>
 <span class="sd">    Motor Parameter        Unit        Default Value Description</span>
@@ -206,7 +213,7 @@
     <span class="n">IO_VOLTAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u_a&quot;</span><span class="p">,</span> <span class="s2">&quot;u_b&quot;</span><span class="p">,</span> <span class="s2">&quot;u_c&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;u_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;u_e&quot;</span><span class="p">]</span>
     <span class="n">IO_CURRENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;i_a&quot;</span><span class="p">,</span> <span class="s2">&quot;i_b&quot;</span><span class="p">,</span> <span class="s2">&quot;i_c&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;i_e&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
 
@@ -234,7 +241,9 @@
 
         <span class="c1"># fmt: on</span>
 
-<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_ode"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_dqe</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_ode">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_ode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_dqe</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The differential equation of the Synchronous Motor.</span>
 
@@ -265,7 +274,8 @@
             <span class="p">)</span>
         <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_torque_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_torque_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="k">if</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">]:</span>
@@ -281,12 +291,17 @@
             <span class="n">i_q_opt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i_n</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">i_d_opt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">([</span><span class="n">i_d_opt</span><span class="p">,</span> <span class="n">i_q_opt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="s2">&quot;i_e&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">):</span>
+<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.torque">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.torque">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
-        <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_M&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;i_k_rs&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">]</span>
+        <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_M&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_E_IDX</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;i_k_rs&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_d&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_q&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SD_IDX</span><span class="p">])</span> <span class="o">*</span> <span class="n">currents</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ExternallyExcitedSynchronousMotor.electrical_jacobian">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/eesm.html#gym_electric_motor.physical_systems.electric_motors.ExternallyExcitedSynchronousMotor.electrical_jacobian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
 
@@ -309,7 +324,9 @@
                 <span class="mf">1.5</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_M&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;i_k_rs&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_SQ_IDX</span><span class="p">],</span>
                 <span class="mi">0</span><span class="p">,</span>
             <span class="p">])</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
+
         <span class="c1"># fmt: on</span>
 </pre></div>
 
