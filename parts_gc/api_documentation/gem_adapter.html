@@ -18,7 +18,9 @@
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reference Plotter" href="reference_plotter.html" />
+    <link rel="prev" title="PI Speed Controller" href="pi_speed_controller.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,9 +60,39 @@
 <li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gem_control_links.html">gem-control: key API (external)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gem_control.html">GEM Control API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="stages/stages.html">Stages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_diagrams/block_diagrams.html">Block Diagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pi_current_controller.html">PI Current Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="torque_controller.html">Torque Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pi_speed_controller.html">PI Speed Controller</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GEM Adapter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.build_block_diagram"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.build_block_diagram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.control"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.control()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.control_environment"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.control_environment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.get_signal_value"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.get_signal_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.make"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.make()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.reset"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.tune"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.tune()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.block_diagram"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.block_diagram</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.controller"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.controller</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.input_stage"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.input_stage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.output_stage"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.output_stage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.signal_names"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.signal_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.signals"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.signals</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_adapter.GymElectricMotorAdapter.stages"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter.stages</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gem_control.html#gem_controllers.gem_controller.GemController"><code class="docutils literal notranslate"><span class="pre">GemController</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -77,6 +109,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="gem_control.html">GEM Control API Documentation</a></li>
       <li class="breadcrumb-item active">GEM Adapter</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/parts_gc/api_documentation/gem_adapter.rst.txt" rel="nofollow"> View page source</a>
@@ -257,7 +290,10 @@ current controller.</p></li>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pi_speed_controller.html" class="btn btn-neutral float-left" title="PI Speed Controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference_plotter.html" class="btn btn-neutral float-right" title="Reference Plotter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

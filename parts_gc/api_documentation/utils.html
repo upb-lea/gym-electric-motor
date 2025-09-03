@@ -18,7 +18,8 @@
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Reference Plotter" href="reference_plotter.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,9 +59,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gem_control_links.html">gem-control: key API (external)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gem_control.html">GEM Control API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="stages/stages.html">Stages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_diagrams/block_diagrams.html">Block Diagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pi_current_controller.html">PI Current Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="torque_controller.html">Torque Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pi_speed_controller.html">PI Speed Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.utils.disc_converter_actions"><code class="docutils literal notranslate"><span class="pre">disc_converter_actions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.utils.get_action_type"><code class="docutils literal notranslate"><span class="pre">get_action_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.utils.get_control_task"><code class="docutils literal notranslate"><span class="pre">get_control_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.utils.get_motor_type"><code class="docutils literal notranslate"><span class="pre">get_motor_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.utils.non_parameterized"><code class="docutils literal notranslate"><span class="pre">non_parameterized()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.utils.split_env_id"><code class="docutils literal notranslate"><span class="pre">split_env_id()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gem_control.html#gem_controllers.gem_controller.GemController"><code class="docutils literal notranslate"><span class="pre">GemController</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -77,6 +97,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="gem_control.html">GEM Control API Documentation</a></li>
       <li class="breadcrumb-item active">Utils</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/parts_gc/api_documentation/utils.rst.txt" rel="nofollow"> View page source</a>
@@ -139,7 +160,9 @@ low_action(np.ndarray): The low switching actions</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reference_plotter.html" class="btn btn-neutral float-left" title="Reference Plotter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

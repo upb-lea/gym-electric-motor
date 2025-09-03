@@ -2,8 +2,7 @@ GEM Control API Documentation
 =============================
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Subcomponents of a GEM Controller:
+   :maxdepth: 2
 
    stages/stages
    block_diagrams/block_diagrams
@@ -15,8 +14,4 @@ GEM Control API Documentation
    utils
 
 .. autoclass:: gem_controllers.gem_controller.GemController
-   :members: make, control, reset, tune, control_environment, signals, signal_names, get_signal_value, stages
-   :undoc-members:
-   :inherited-members:
-   :show-inheritance:
-   :member-order: groupwise
+   :members:
