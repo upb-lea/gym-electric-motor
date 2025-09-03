@@ -1,4 +1,4 @@
-abc Transformation
+ABC Transformation
 ==================
 
 .. autoclass:: gem_controllers.stages.abc_transformation.AbcTransformation

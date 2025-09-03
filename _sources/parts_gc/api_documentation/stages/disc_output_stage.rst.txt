@@ -1,4 +1,4 @@
-Discontinuous Output Stage
+Discrete Output Stage
 ==========================
 
 .. autoclass:: gem_controllers.stages.disc_output_stage.DiscOutputStage
