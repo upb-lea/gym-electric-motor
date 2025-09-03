@@ -1,7 +1,7 @@
 Block Diagrams
 ==============
 
-.. currentmodule:: gem_control.block_diagrams.block_diagram
+.. toctree::
+   :maxdepth: 1
 
-.. autofunction:: build_block_diagram
-.. autofunction:: get_stages
+   block_diagram

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Block Diagrams &mdash; gym-electric-motor 2021 documentation</title>
+  <title>Block Diagram &mdash; gym-electric-motor 2021 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Block Diagram" href="block_diagram.html" />
-    <link rel="prev" title="Discontinuous Output Stage" href="../stages/disc_output_stage.html" /> 
+    <link rel="next" title="PI Current Controller" href="../pi_current_controller.html" />
+    <link rel="prev" title="Block Diagrams" href="block_diagrams.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -64,8 +64,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../usage_guide/usage_guides.html">Usage Guides</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../gem_control.html">GEM Control API Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../stages/stages.html">Stages</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Block Diagrams</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="block_diagram.html">Block Diagram</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="block_diagrams.html">Block Diagrams</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Block Diagram</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.block_diagrams.block_diagram.build_block_diagram"><code class="docutils literal notranslate"><span class="pre">build_block_diagram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.block_diagrams.block_diagram.get_stages"><code class="docutils literal notranslate"><span class="pre">get_stages()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../pi_current_controller.html">PI Current Controller</a></li>
@@ -94,9 +98,10 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../gem_control.html">GEM Control API Documentation</a></li>
-      <li class="breadcrumb-item active">Block Diagrams</li>
+          <li class="breadcrumb-item"><a href="block_diagrams.html">Block Diagrams</a></li>
+      <li class="breadcrumb-item active">Block Diagram</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/parts_gc/api_documentation/block_diagrams/block_diagrams.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/parts_gc/api_documentation/block_diagrams/block_diagram.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -104,21 +109,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="block-diagrams">
-<h1>Block Diagrams<a class="headerlink" href="#block-diagrams" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="block_diagram.html">Block Diagram</a></li>
+  <section id="block-diagram">
+<h1>Block Diagram<a class="headerlink" href="#block-diagram" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="gem_controllers.block_diagrams.block_diagram.build_block_diagram">
+<span class="sig-prename descclassname"><span class="pre">gem_controllers.block_diagrams.block_diagram.</span></span><span class="sig-name descname"><span class="pre">build_block_diagram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_block_diagram_as</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/block_diagrams/block_diagram.html#build_block_diagram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.block_diagrams.block_diagram.build_block_diagram" title="Link to this definition"></a></dt>
+<dd><p>Creates a block diagram of the controller</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>controller</strong> – GEMController</p></li>
+<li><p><strong>env_id</strong> – GEM environment id</p></li>
+<li><p><strong>save_block_diagram_as</strong> – string or tuple of strings of the data types to be saved</p></li>
 </ul>
-</div>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Control Block Diagram</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gem_controllers.block_diagrams.block_diagram.get_stages">
+<span class="sig-prename descclassname"><span class="pre">gem_controllers.block_diagrams.block_diagram.</span></span><span class="sig-name descname"><span class="pre">get_stages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/block_diagrams/block_diagram.html#get_stages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.block_diagrams.block_diagram.get_stages" title="Link to this definition"></a></dt>
+<dd><p>Function to get all block building functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>controller</strong> – GEMController</p></li>
+<li><p><strong>motor_type</strong> – type of the motor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of all block building functions</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../stages/disc_output_stage.html" class="btn btn-neutral float-left" title="Discontinuous Output Stage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="block_diagram.html" class="btn btn-neutral float-right" title="Block Diagram" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="block_diagrams.html" class="btn btn-neutral float-left" title="Block Diagrams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../pi_current_controller.html" class="btn btn-neutral float-right" title="PI Current Controller" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
