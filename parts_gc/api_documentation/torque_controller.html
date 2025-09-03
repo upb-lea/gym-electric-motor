@@ -94,7 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gem_control.html#gem_controllers.gem_controller.GemController"><code class="docutils literal notranslate"><span class="pre">GemController</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gem_controllers.html">GEM Controllers</a></li>
 </ul>
 </li>
 </ul>
@@ -129,7 +129,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gem_controllers.torque_controller.TorqueController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.torque_controller.</span></span><span class="sig-name descname"><span class="pre">TorqueController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env:</span> <span class="pre">(&lt;class</span> <span class="pre">'gym_electric_motor.core.ElectricMotorEnvironment'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None)</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id:</span> <span class="pre">(&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None)</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_controller:</span> <span class="pre">(&lt;class</span> <span class="pre">'gem_controllers.current_controller.CurrentController'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None)</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_to_current_stage:</span> <span class="pre">(&lt;class</span> <span class="pre">'gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None)</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clipping_stage:</span> <span class="pre">(&lt;class</span> <span class="pre">'gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None)</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/torque_controller.html#TorqueController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.torque_controller.TorqueController" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="gem_control.html#gem_controllers.gem_controller.GemController" title="gem_controllers.gem_controller.GemController"><code class="xref py py-class docutils literal notranslate"><span class="pre">GemController</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="gem_controllers.html#gem_controllers.gem_controller.GemController" title="gem_controllers.gem_controller.GemController"><code class="xref py py-class docutils literal notranslate"><span class="pre">GemController</span></code></a></p>
 <p>This class forms the torque controller, for any motor.</p>
 <p>Initilizes a torque control stage.</p>
 <dl class="field-list simple">
@@ -222,7 +222,7 @@ current controller.</p></li>
 <dd class="field-even"><p>An initialized (and tuned) instance of a controller that fits to the specified environment.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="gem_control.html#gem_controllers.gem_controller.GemController" title="gem_controllers.gem_controller.GemController">GemController</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="gem_controllers.html#gem_controllers.gem_controller.GemController" title="gem_controllers.gem_controller.GemController">GemController</a></p>
 </dd>
 </dl>
 </dd></dl>

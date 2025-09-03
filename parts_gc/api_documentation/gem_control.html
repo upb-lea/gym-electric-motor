@@ -71,18 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gem_controllers.gem_controller.GemController"><code class="docutils literal notranslate"><span class="pre">GemController</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.control"><code class="docutils literal notranslate"><span class="pre">GemController.control()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.control_environment"><code class="docutils literal notranslate"><span class="pre">GemController.control_environment()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.get_signal_value"><code class="docutils literal notranslate"><span class="pre">GemController.get_signal_value()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.make"><code class="docutils literal notranslate"><span class="pre">GemController.make()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.reset"><code class="docutils literal notranslate"><span class="pre">GemController.reset()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.tune"><code class="docutils literal notranslate"><span class="pre">GemController.tune()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.signal_names"><code class="docutils literal notranslate"><span class="pre">GemController.signal_names</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.signals"><code class="docutils literal notranslate"><span class="pre">GemController.signals</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.stages"><code class="docutils literal notranslate"><span class="pre">GemController.stages</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="gem_controllers.html">GEM Controllers</a></li>
 </ul>
 </li>
 </ul>
@@ -115,177 +104,17 @@
 <h1>GEM Control API Documentation<a class="headerlink" href="#gem-control-api-documentation" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="stages/stages.html">Stages</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="stages/base_controllers/base_controller.html">Base Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/operation_point_selection/operation_point_selection.html">Operation Point Selection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/abc_transformation.html">abc Transformation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/anti_windup.html">Anti Windup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/emf_feedforward/emf_feedforward.html">EMF Feedforward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/input_stage.html">Input Stage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/cont_output_stage.html">Continous Output Stage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/disc_output_stage.html">Discontinuous Output Stage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stages/stages.html#gem_controllers.stages.stage.Stage"><code class="docutils literal notranslate"><span class="pre">Stage</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="block_diagrams/block_diagrams.html">Block Diagrams</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="block_diagrams/block_diagram.html">Block Diagram</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pi_current_controller.html">PI Current Controller</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pi_current_controller.html#gem_controllers.pi_current_controller.PICurrentController"><code class="docutils literal notranslate"><span class="pre">PICurrentController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="torque_controller.html">Torque Controller</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="torque_controller.html#gem_controllers.torque_controller.TorqueController"><code class="docutils literal notranslate"><span class="pre">TorqueController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pi_speed_controller.html">PI Speed Controller</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pi_speed_controller.html#gem_controllers.pi_speed_controller.PISpeedController"><code class="docutils literal notranslate"><span class="pre">PISpeedController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gem_adapter.html#gem_controllers.gem_adapter.GymElectricMotorAdapter"><code class="docutils literal notranslate"><span class="pre">GymElectricMotorAdapter</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference_plotter.html#gem_controllers.reference_plotter.ReferencePlotter"><code class="docutils literal notranslate"><span class="pre">ReferencePlotter</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#gem_controllers.utils.disc_converter_actions"><code class="docutils literal notranslate"><span class="pre">disc_converter_actions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#gem_controllers.utils.get_action_type"><code class="docutils literal notranslate"><span class="pre">get_action_type()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#gem_controllers.utils.get_control_task"><code class="docutils literal notranslate"><span class="pre">get_control_task()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#gem_controllers.utils.get_motor_type"><code class="docutils literal notranslate"><span class="pre">get_motor_type()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#gem_controllers.utils.non_parameterized"><code class="docutils literal notranslate"><span class="pre">non_parameterized()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#gem_controllers.utils.split_env_id"><code class="docutils literal notranslate"><span class="pre">split_env_id()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="stages/stages.html">Stages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="block_diagrams/block_diagrams.html">Block Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pi_current_controller.html">PI Current Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torque_controller.html">Torque Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pi_speed_controller.html">PI Speed Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gem_controllers.html">GEM Controllers</a></li>
 </ul>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.gem_controller.</span></span><span class="sig-name descname"><span class="pre">GemController</span></span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>The GemController is the base for all motor controllers in the gem-control package.</p>
-<p>A GemController consists of multiple stages that execute different control tasks like speed-control, a reference
-to current set point mapping or input and output processing.</p>
-<p>Furthermore, the GemController has got a <cite>GemController.make</cite> factory function that automatically designs and tunes
-a classical cascaded motor controller based on classic control techniques like the proportional-integral (PI)
-controller to control a gym-electric-motor environment.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.control">
-<span class="sig-name descname"><span class="pre">control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.control" title="Link to this definition"></a></dt>
-<dd><p>Calculate the voltage reference.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>np.array</em>) – state of the environment</p></li>
-<li><p><strong>reference</strong> (<em>np.array</em>) – speed references</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>reference voltage</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.control_environment">
-<span class="sig-name descname"><span class="pre">control_environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_episode_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.control_environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.control_environment" title="Link to this definition"></a></dt>
-<dd><p>Function to control an environment with the GemController.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller should control.</p></li>
-<li><p><strong>n_steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of iteration steps.</p></li>
-<li><p><strong>max_episode_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum length of an epsiode, after which the environment and controller should be
-reset.</p></li>
-<li><p><strong>render_env</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the states of the environment should be plotted.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.get_signal_value">
-<span class="sig-name descname"><span class="pre">get_signal_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.get_signal_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.get_signal_value" title="Link to this definition"></a></dt>
-<dd><p>Get the value of a signal calling by the signal name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>signal_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of a signal of the state</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.make">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env:</span> <span class="pre">~gym_electric_motor.core.ElectricMotorEnvironment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoupling:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_safety_margin:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_current_controller:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'PI'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_speed_controller:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'PI'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">should_plot:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_references:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_diagram:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_block_diagram_as:</span> <span class="pre">(&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'tuple'&gt;)</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.make"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.make" title="Link to this definition"></a></dt>
-<dd><p>A factory function that generates (and parameterizes) a matching GemController for a given gym-electric-motor
-environment <cite>env</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
-<li><p><strong>decoupling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if a EMF-Feedforward correction stage should be used in the pi current controller.</p></li>
-<li><p><strong>current_safety_margin</strong> (<em>float in</em><em> [</em><em>0..1</em><em>]</em>) – The ratio between the maximum current set point
-the reference controller generates and the absolute current limit.</p></li>
-<li><p><strong>base_speed_controller</strong> (<em>'PI'/'PID'/'P'/'ThreePoint'</em>) – Selection of the basic control algorithm for the
-speed controller.</p></li>
-<li><p><strong>base_current_controller</strong> (<em>'PI'/'PID'/'P'/'ThreePoint'</em>) – Selection of the basic control algorithm for the
-current controller.</p></li>
-<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Tuning parameter of the symmetrical optimum.</p></li>
-<li><p><strong>plot_references</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the reference values of the underlying control circuits should be plotted</p></li>
-<li><p><strong>block_diagram</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Selection whether the block diagram should be displayed</p></li>
-<li><p><strong>save_block_diagram_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Selection of whether the block diagram should be saved</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An initialized (and tuned) instance of a controller that fits to the specified environment.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#gem_controllers.gem_controller.GemController" title="gem_controllers.gem_controller.GemController">GemController</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.reset" title="Link to this definition"></a></dt>
-<dd><p>Reset all stages of the controller</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.tune">
-<span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.tune" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.signal_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signal_names</span></span><a class="headerlink" href="#gem_controllers.gem_controller.GemController.signal_names" title="Link to this definition"></a></dt>
-<dd><p>Signal names of the controller</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.signals">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signals</span></span><a class="headerlink" href="#gem_controllers.gem_controller.GemController.signals" title="Link to this definition"></a></dt>
-<dd><p>Input signals of the controller</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.stages">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stages</span></span><a class="headerlink" href="#gem_controllers.gem_controller.GemController.stages" title="Link to this definition"></a></dt>
-<dd><p>Stages of the GEM Controller</p>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
 

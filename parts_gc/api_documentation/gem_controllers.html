@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEM Controllers &mdash; gym-electric-motor 2021 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Utils" href="utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            gym-electric-motor
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gem_control.html">GEM Control API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="stages/stages.html">Stages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="block_diagrams/block_diagrams.html">Block Diagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pi_current_controller.html">PI Current Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="torque_controller.html">Torque Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pi_speed_controller.html">PI Speed Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GEM Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.gem_controller.GemController"><code class="docutils literal notranslate"><span class="pre">GemController</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.control"><code class="docutils literal notranslate"><span class="pre">GemController.control()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.control_environment"><code class="docutils literal notranslate"><span class="pre">GemController.control_environment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.get_signal_value"><code class="docutils literal notranslate"><span class="pre">GemController.get_signal_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.make"><code class="docutils literal notranslate"><span class="pre">GemController.make()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.reset"><code class="docutils literal notranslate"><span class="pre">GemController.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.tune"><code class="docutils literal notranslate"><span class="pre">GemController.tune()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.signal_names"><code class="docutils literal notranslate"><span class="pre">GemController.signal_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.signals"><code class="docutils literal notranslate"><span class="pre">GemController.signals</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.gem_controller.GemController.stages"><code class="docutils literal notranslate"><span class="pre">GemController.stages</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gym-electric-motor</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="gem_control.html">GEM Control API Documentation</a></li>
+      <li class="breadcrumb-item active">GEM Controllers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/parts_gc/api_documentation/gem_controllers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gem-controllers">
+<h1>GEM Controllers<a class="headerlink" href="#gem-controllers" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.gem_controller.</span></span><span class="sig-name descname"><span class="pre">GemController</span></span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>The GemController is the base for all motor controllers in the gem-control package.</p>
+<p>A GemController consists of multiple stages that execute different control tasks like speed-control, a reference
+to current set point mapping or input and output processing.</p>
+<p>Furthermore, the GemController has got a <cite>GemController.make</cite> factory function that automatically designs and tunes
+a classical cascaded motor controller based on classic control techniques like the proportional-integral (PI)
+controller to control a gym-electric-motor environment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.control">
+<span class="sig-name descname"><span class="pre">control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.control" title="Link to this definition"></a></dt>
+<dd><p>Calculate the voltage reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>np.array</em>) – state of the environment</p></li>
+<li><p><strong>reference</strong> (<em>np.array</em>) – speed references</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>reference voltage</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.control_environment">
+<span class="sig-name descname"><span class="pre">control_environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_episode_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.control_environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.control_environment" title="Link to this definition"></a></dt>
+<dd><p>Function to control an environment with the GemController.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller should control.</p></li>
+<li><p><strong>n_steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of iteration steps.</p></li>
+<li><p><strong>max_episode_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum length of an epsiode, after which the environment and controller should be
+reset.</p></li>
+<li><p><strong>render_env</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the states of the environment should be plotted.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.get_signal_value">
+<span class="sig-name descname"><span class="pre">get_signal_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.get_signal_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.get_signal_value" title="Link to this definition"></a></dt>
+<dd><p>Get the value of a signal calling by the signal name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>signal_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of a signal of the state</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.make">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env:</span> <span class="pre">~gym_electric_motor.core.ElectricMotorEnvironment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoupling:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_safety_margin:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_current_controller:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'PI'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_speed_controller:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'PI'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">should_plot:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_references:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_diagram:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_block_diagram_as:</span> <span class="pre">(&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'tuple'&gt;)</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.make"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.make" title="Link to this definition"></a></dt>
+<dd><p>A factory function that generates (and parameterizes) a matching GemController for a given gym-electric-motor
+environment <cite>env</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
+<li><p><strong>decoupling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if a EMF-Feedforward correction stage should be used in the pi current controller.</p></li>
+<li><p><strong>current_safety_margin</strong> (<em>float in</em><em> [</em><em>0..1</em><em>]</em>) – The ratio between the maximum current set point
+the reference controller generates and the absolute current limit.</p></li>
+<li><p><strong>base_speed_controller</strong> (<em>'PI'/'PID'/'P'/'ThreePoint'</em>) – Selection of the basic control algorithm for the
+speed controller.</p></li>
+<li><p><strong>base_current_controller</strong> (<em>'PI'/'PID'/'P'/'ThreePoint'</em>) – Selection of the basic control algorithm for the
+current controller.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Tuning parameter of the symmetrical optimum.</p></li>
+<li><p><strong>plot_references</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the reference values of the underlying control circuits should be plotted</p></li>
+<li><p><strong>block_diagram</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Selection whether the block diagram should be displayed</p></li>
+<li><p><strong>save_block_diagram_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Selection of whether the block diagram should be saved</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An initialized (and tuned) instance of a controller that fits to the specified environment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gem_controllers.gem_controller.GemController" title="gem_controllers.gem_controller.GemController">GemController</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset all stages of the controller</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.tune">
+<span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/gem_controller.html#GemController.tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.gem_controller.GemController.tune" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.signal_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signal_names</span></span><a class="headerlink" href="#gem_controllers.gem_controller.GemController.signal_names" title="Link to this definition"></a></dt>
+<dd><p>Signal names of the controller</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.signals">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signals</span></span><a class="headerlink" href="#gem_controllers.gem_controller.GemController.signals" title="Link to this definition"></a></dt>
+<dd><p>Input signals of the controller</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gem_controllers.gem_controller.GemController.stages">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stages</span></span><a class="headerlink" href="#gem_controllers.gem_controller.GemController.stages" title="Link to this definition"></a></dt>
+<dd><p>Stages of the GEM Controller</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="utils.html" class="btn btn-neutral float-left" title="Utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

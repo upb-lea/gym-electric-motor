@@ -2,7 +2,7 @@ GEM Control API Documentation
 =============================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    stages/stages
    block_diagrams/block_diagrams
@@ -12,6 +12,4 @@ GEM Control API Documentation
    gem_adapter
    reference_plotter
    utils
-
-.. autoclass:: gem_controllers.gem_controller.GemController
-   :members:
+   gem_controllers

@@ -94,7 +94,7 @@
 
 
 <div class="viewcode-block" id="GemController">
-<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController">[docs]</a>
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_controllers.html#gem_controllers.gem_controller.GemController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GemController</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The GemController is the base for all motor controllers in the gem-control package.</span>
 
@@ -117,7 +117,7 @@
         <span class="k">return</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="GemController.make">
-<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.make">[docs]</a>
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_controllers.html#gem_controllers.gem_controller.GemController.make">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
@@ -201,7 +201,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_stages</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="GemController.get_signal_value">
-<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.get_signal_value">[docs]</a>
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_controllers.html#gem_controllers.gem_controller.GemController.get_signal_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_signal_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of a signal calling by the signal name.</span>
@@ -218,7 +218,7 @@
 
 
 <div class="viewcode-block" id="GemController.control">
-<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.control">[docs]</a>
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_controllers.html#gem_controllers.gem_controller.GemController.control">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the voltage reference.</span>
@@ -234,7 +234,7 @@
 
 
 <div class="viewcode-block" id="GemController.reset">
-<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.reset">[docs]</a>
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_controllers.html#gem_controllers.gem_controller.GemController.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all stages of the controller&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stages</span><span class="p">:</span>
@@ -242,13 +242,13 @@
 
 
 <div class="viewcode-block" id="GemController.tune">
-<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.tune">[docs]</a>
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_controllers.html#gem_controllers.gem_controller.GemController.tune">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="GemController.control_environment">
-<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_control.html#gem_controllers.gem_controller.GemController.control_environment">[docs]</a>
+<a class="viewcode-back" href="../../parts_gc/api_documentation/gem_controllers.html#gem_controllers.gem_controller.GemController.control_environment">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">control_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">max_episode_length</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">render_env</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to control an environment with the GemController.</span>
