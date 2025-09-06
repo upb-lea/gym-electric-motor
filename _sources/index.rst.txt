@@ -11,7 +11,7 @@ train and test reinforcement learning motor controllers and to compare them with
 
 
 Getting started
-***************
+***************************
 
 A quick start guide can be found in the following Readme-File.
 
@@ -19,11 +19,11 @@ A quick start guide can be found in the following Readme-File.
    :maxdepth: 1
    :caption: Gym Electric Motor Readme:
 
-   parts_gem/readme
+   parts/readme
 
 
-GEM Content
-***********
+Content
+*******
 
 In the environments section all available GEM-environments are presented with their default configuration.
 For quick start, one of these can be selected and used out of the box.
@@ -39,32 +39,17 @@ documentation specifies the basic interfaces inside a physical system.
     :titlesonly:
     :caption: gym-electric-motor Contents:
 
-    parts_gem/environments/environment
-    parts_gem/reference_generators/reference_generator
-    parts_gem/reward_functions/reward_function
-    parts_gem/physical_systems/physical_system
-    parts_gem/visualizations/visualization
-    parts_gem/constraint_monitor
-    parts_gem/core
-    parts_gem/utils
-    parts_gem/callbacks
-    parts_gem/random_component
-
-
-GEM-Control Content
-*******************
-The GEM-control is a collection of control methods to control the GEM-environments.
-Currently, classic PI controllers are available for most of the environment types.
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: GEM-Control Contents:
-
-   parts_gc/usage_guide/usage_guides
-   parts_gc/api_documentation/gem_control
-
-
+    parts/environments/environment
+    parts/reference_generators/reference_generator
+    parts/reward_functions/reward_function
+    parts/physical_systems/physical_system
+    parts/physical_system_wrappers/physical_system_wrapper
+    parts/visualizations/visualization
+    parts/constraint_monitor
+    parts/core
+    parts/utils
+    parts/callbacks
+    parts/random_component
 
 Indices and tables
 ==================
@@ -72,11 +57,6 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-.. gym-electric-motor documentation master file, created by
-   sphinx-quickstart on Tue Jul  2 15:49:19 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 
 
