@@ -156,6 +156,12 @@ class MPCCurrentController(GemController):
             u_in=0,  # inputs (or adapt for your motor)
             omega=omega
         )
+        # Local indices for motor states
+        self.local_idx = {name: i for i, name in enumerate(self.motor_state_names)}
+
+        # remove duplicated cross-coupling terms from g
+        g[0] -= self.p * self.l_q / self.l_d * x[self.local_idx['i_sq']]
+        g[1] += self.p * self.l_d / self.l_q * x[self.local_idx['i_sd']]
 
         # Pass everything needed to _simulate_sequence
         _, best_sequence = self._simulate_sequence(
