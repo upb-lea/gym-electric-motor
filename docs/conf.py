@@ -65,6 +65,7 @@ extensions = [
 html_theme = "sphinx_rtd_theme"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+suppress_warnings = ['autodoc.import_object']
 
 # The suffix(es) of source filenames.
 #source_suffix = ['.rst', '.md']
