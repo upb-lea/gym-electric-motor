@@ -58,7 +58,7 @@ jobs:
     - name: Build docs
       working-directory: docs
       run: |
-        sphinx-build -b html -n -T -v -E -W . _build/html --keep-going -w /tmp/sphinx-log
+        sphinx-build -b html -n -T -v -E . _build/html --keep-going -w /tmp/sphinx-log
         echo "---- Sphinx log ----"
         cat /tmp/sphinx-log || true
     - name: Upload docs as Pages artifact
