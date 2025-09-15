@@ -117,58 +117,18 @@
 <dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ConstraintMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_violations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Monitor constraints in an <code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricMotorEnvironment</span></code>.</p>
-<p>Each constraint receives the current observation and returns a <strong>violation
-degree</strong> in <span class="math notranslate nohighlight">\([0.0, 1.0]\)</span>. The monitor aggregates the individual
-values and returns a total violation degree.</p>
-<p class="rubric">Notes</p>
-<dl class="simple">
-<dt>Soft constraints</dt><dd><p>Constraints may return a gradual violation degree (float) instead of a
-boolean flag. When the degree is <code class="docutils literal notranslate"><span class="pre">0.0</span></code> the state is safe. For values
-between <code class="docutils literal notranslate"><span class="pre">0.0</span></code> and <code class="docutils literal notranslate"><span class="pre">1.0</span></code> the reward function can gradually penalize
-approaching unsafe regions. If the degree reaches <code class="docutils literal notranslate"><span class="pre">1.0</span></code> the episode
-is terminated.</p>
-</dd>
-<dt>Hard constraints</dt><dd><p>Pure hard constraints can be modelled by returning <code class="docutils literal notranslate"><span class="pre">0.0</span></code> in the safe
-region and switching directly to <code class="docutils literal notranslate"><span class="pre">1.0</span></code> once a violation occurs, which
-terminates the episode immediately.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>limit_constraints</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>)</em><em>/'all_states'</em>) – <dl class="simple">
-<dt>Shortcut parameter to pass all states that limits shall be observed.</dt><dd><ul>
-<li><dl class="simple">
-<dt>list(str): Pass a list with state_names and all of the states will be observed to stay within</dt><dd><p>their limits.</p>
-</dd>
-</dl>
-</li>
-<li><p>’all_states’: Shortcut for all states are observed to stay within the limits.</p></li>
-</ul>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>additional_constraints</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><em>Constraint/callable</em><em>)</em>) – Further constraints that shall be monitored. These have to be initialized first and passed to the
-ConstraintMonitor. Alternatively, constraints can be defined as a function that takes the current
-state and returns a float within [0.0, 1.0].</p></li>
-<li><p><strong>merge_violations</strong> (‘max’/’product’/callable(<a href="#id3"><span class="problematic" id="id4">*</span></a>violation_degrees) -&gt; float) – <p>Function to merge all single
-violation degrees to a total violation degree.</p>
-<blockquote>
-<div><ul>
-<li><p>’max’: Take the maximal violation degree as total violation degree.</p></li>
-<li><dl class="simple">
-<dt>’product’: Calculates the total violation degree as one minus the product of one minus all single</dt><dd><p>violation degrees.</p>
-</dd>
-</dl>
-</li>
-<li><p>callable(<a href="#id1"><span class="problematic" id="id2">*</span></a>violation_degrees) -&gt; float: User defined function to calculate the total violation.</p></li>
-</ul>
-</div></blockquote>
-</p></li>
-</ul>
-</dd>
-</dl>
+<p>API for <code class="docutils literal notranslate"><span class="pre">gym_electric_motor.core.ConstraintMonitor</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The original docstring is temporarily suppressed due to formatting issues
+upstream. Once it’s cleaned, we’ll restore the full text here.</p>
+</div>
+<p>API for <code class="docutils literal notranslate"><span class="pre">gym_electric_motor.core.ConstraintMonitor</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The original docstring is temporarily suppressed due to formatting issues
+upstream. Once it’s cleaned, we’ll restore the full text here.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ConstraintMonitor.check_constraints">
 <span class="sig-name descname"><span class="pre">check_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ConstraintMonitor.check_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ConstraintMonitor.check_constraints" title="Link to this definition"></a></dt>

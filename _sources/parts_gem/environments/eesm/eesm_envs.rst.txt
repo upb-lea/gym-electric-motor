@@ -1,5 +1,5 @@
 Externally Excited Synchronous Motor Environments
-************************************************
+*************************************************
 
 
 .. toctree::

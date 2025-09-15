@@ -133,7 +133,7 @@ interfaces further reference generators, reward functions, visualizations or phy
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">Callback</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#Callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.Callback" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>The abstract base class for Callbacks in GEM.
-Each of its functions gets called at one point in the <code class="xref py py-mod docutils literal notranslate"><span class="pre">ElectricMotorEnvironment</span></code>.
+Each of its functions gets called at one point in the <a class="reference internal" href="environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ElectricMotorEnvironment</span></code></a>.
 .. attribute:: _env</p>
 <blockquote>
 <div><p>The GEM environment. Use it to have full control over the environment on runtime.</p>
@@ -180,11 +180,11 @@ Each of its functions gets called at one point in the <code class="xref py py-mo
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorVisualization">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">ElectricMotorVisualization</span></span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorVisualization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
-<p>Base class for all visualizations in GEM.
-The visualization is basically only a Callback that is extended by a render() function to update the figure.
-With the function calls that are inherited by the Callback superclass (e.g. <em>on_step_end</em>),
-the data is passed from the environment to the visualization. In the render() function the passed data can be
-visualized in the desired way.</p>
+<p>Base class for all visualizations in GEM.</p>
+<p class="rubric">Notes</p>
+<p>This class extends <a class="reference internal" href="#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a> by adding <a class="reference internal" href="visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.render" title="gym_electric_motor.core.ElectricMotorVisualization.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a> to update the
+user interface. Data is transferred via the inherited callback hooks
+(e.g., <a class="reference internal" href="visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.on_step_end" title="gym_electric_motor.core.ElectricMotorVisualization.on_step_end"><code class="xref py py-meth docutils literal notranslate"><span class="pre">on_step_end()</span></code></a>) and rendered inside <a class="reference internal" href="visualizations/visualization.html#gym_electric_motor.core.ElectricMotorVisualization.render" title="gym_electric_motor.core.ElectricMotorVisualization.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorVisualization.on_close">
 <span class="sig-name descname"><span class="pre">on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.on_close" title="Link to this definition"></a></dt>
@@ -218,7 +218,7 @@ visualized in the desired way.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gym_electric_motor.core.ElectricMotorVisualization.render">
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gym_electric_motor/core.html#ElectricMotorVisualization.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.ElectricMotorVisualization.render" title="Link to this definition"></a></dt>
-<dd><p>Function to update the user interface.</p>
+<dd><p>Update the visualization UI.</p>
 </dd></dl>
 
 <dl class="py method">
