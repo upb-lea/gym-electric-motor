@@ -52,59 +52,87 @@ class SimulationEnvironment:
 
 class ElectricMotorEnvironment(gymnasium.core.Env):
     """
-    Description:
-        The main class connecting all modules of the gym-electric-motor environments.
+    Connects all modules of the gym-electric-motor environments.
 
-    Modules:
+    Parameters
+    ----------
+    physical_system : PhysicalSystem or type[PhysicalSystem]
+        Physical structure, simulation, technical limits, and nominal values.
+        If a type is provided, it will be instantiated with ``**kwargs``.
+    reference_generator : ReferenceGenerator or type[ReferenceGenerator]
+        Generates reference trajectories; type is instantiated with ``**kwargs``.
+    reward_function : RewardFunction or type[RewardFunction]
+        Computes the reward; type is instantiated with ``**kwargs``.
+    visualization : ElectricMotorVisualization | Sequence[ElectricMotorVisualization] | str | None, optional
+        One or more visualizations. Strings are **not** supported here.
+    state_filter : Sequence[str] | None, optional
+        Names of states to expose in the observation (order is preserved).
+        Defaults to all states of the physical system.
+    callbacks : Sequence[Callback], optional
+        Additional callbacks invoked at lifecycle hooks.
+    constraints : Sequence[Constraint | str] | ConstraintMonitor, optional
+        Either an existing :class:`ConstraintMonitor` or a list of constraints
+        and/or state names. The string ``'all'`` observes limits on every state.
+    physical_system_wrappers : Sequence[PhysicalSystemWrapper], optional
+        Wrappers placed around the physical system.
+    scale_plots : bool, default False
+        If ``True``, scale dashboard plots.
+    **kwargs
+        Forwarded to constructors when you passed types above.
 
-        Physical System:
-            Containing the physical structure and simulation of the drive system as well as information about the
-            technical limits and nominal values. Needs to be a subclass of *PhysicalSystem*
+    Attributes
+    ----------
+    sim : SimulationEnvironment
+        Simulation timing, e.g. ``tau``.
+    workspace : Workspace
+        Helper workspace.
+    env_id : str | None
+        Environment ID.
+    current_state : numpy.ndarray | None
+        Latest simulated state (internal).
+    current_reference : numpy.ndarray | None
+        Latest reference (internal).
+    current_next_reference : numpy.ndarray | None
+        Next-step reference observation (internal).
 
-        Reference Generator:
-            Generation of the reference for the motor to follow. Needs to be a subclass of *ReferenceGenerator*
+    Observation
+    -----------
+    Type
+        Tuple(State_Space, Reference_Space)
+    Description
+        The observation is a tuple of the physical system's (possibly normalized)
+        state space and the reference generator's reference space.
 
-        Reward Function:
-            Calculation of the reward based on the state of the physical system and the generated reference
-            and observation if the motor state is within the limits. Needs to be a subclass of *RewardFunction*.
+    Actions
+    -------
+    Type
+        :class:`gymnasium.spaces.Discrete` or :class:`gymnasium.spaces.Box`
+    Description
+        Matches the physical system’s converter and dynamics.
 
-        Visualization:
-            Visualization of the motors states. Needs to be a subclass of *ElectricMotorVisualization*
+    Reward
+    ------
+    The :class:`RewardFunction` returns the scalar reward and defines
+    ``reward_range``. Generally higher when the state follows the reference.
 
-        Limits:
-            Returns a list of limits of all states in the observation (called in state_filter) in the same order.
+    Starting State
+    --------------
+    Determined by the physical system and the reference generator.
 
-    State Variables:
-        Each environment has got a list of state variables that are defined by the physical system.
-        These define the names and order for all further state arrays in the modules. These states are announced to the
-        other modules by announcing the physical system to them, which contains the property ``state_names``.
+    Episode Termination
+    -------------------
+    A reference generator may end an episode when the reference finishes.
+    The :class:`ConstraintMonitor` can terminate an episode when a physical
+    limit is violated (violation degree reaches 1.0).
 
-        Example:
-            ``['omega', 'torque','i', 'u', 'u_sup']``
+    Notes
+    -----
+    - Use ``state_filter`` to select a subset of states to expose.
+    - State names are available via ``physical_system.state_names``.
+    - For example, a state name list could be::
 
-    Observation:
-        Type: Tuple(State_Space, Reference_Space)
-            The observation is always a tuple of the State Space of the Physical System and the Reference Space of the
-            Reference Generator. In all current Physical Systems and Reference Generators these Spaces are normalized,
-            continuous, multidimensional boxes in [-1, 1] or [0, 1].
+        ['omega', 'torque', 'i', 'u', 'u_sup']
 
-    Actions:
-        Type: Discrete() / Box()
-            The action space of the environments are the action spaces of the physical systems. In all current physical
-            systems the action spaces are specified by its PowerElectronicConverter and either a continuous,
-            multidimensional box or discrete.
-
-    Reward:
-        The reward and the reward range are specified by the RewardFunction. In general the reward is higher the closer
-        the motor state follows the reference trajectories.
-
-    Starting State:
-        The physical system and the reference generator define the starting state.
-
-    Episode Termination:
-        Episode terminations can be initiated by the reference generator, or the reward function.
-        A reference generator might terminate an episode, if the reference has ended.
-        The reward function can terminate an episode, if a physical limit of the motor has been violated.
     """
 
     sim = SimulationEnvironment()
@@ -741,15 +769,18 @@ class Callback:
 
 
 class ElectricMotorVisualization(Callback):
-    """Base class for all visualizations in GEM.
-    The visualization is basically only a Callback that is extended by a render() function to update the figure.
-    With the function calls that are inherited by the Callback superclass (e.g. *on_step_end*),
-    the data is passed from the environment to the visualization. In the render() function the passed data can be
-    visualized in the desired way.
+    """
+    Base class for all visualizations in GEM.
+
+    Notes
+    -----
+    This class extends :class:`Callback` by adding :meth:`render` to update the
+    user interface. Data is transferred via the inherited callback hooks
+    (e.g., :meth:`on_step_end`) and rendered inside :meth:`render`.
     """
 
     def render(self):
-        """Function to update the user interface."""
+        """Update the visualization UI."""
         raise NotImplementedError
 
 

@@ -195,12 +195,18 @@ man_pages = [
 # --- Patch broken upstream docstrings so the build doesn't fail ---
 BAD_DOCSTRINGS = {
     "gym_electric_motor.core.ElectricMotorEnvironment",
-    # if needed: "gym_electric_motor.core.ConstraintMonitor",
+    "gym_electric_motor.core.ConstraintMonitor",
 }
+BAD_DOCSTRING_PREFIXES = (
+    "gym_electric_motor.physical_systems.electric_motors.",
+    "gym_electric_motor.physical_systems.mechanical_loads.",
+    # add more if needed:
+    # "gym_electric_motor.envs.",
+)
 
 def _suppress_broken_docstrings(app, what, name, obj, options, lines):
     """Replace known-bad docstrings with a short stub so Sphinx won't error."""
-    if name in BAD_DOCSTRINGS:
+    if name in BAD_DOCSTRINGS or any(name.startswith(pfx) for pfx in BAD_DOCSTRING_PREFIXES):
         lines[:] = [
             f"API for ``{name}``.",
             "",
