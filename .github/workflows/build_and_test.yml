@@ -57,7 +57,10 @@ jobs:
       run: mkdir -p docs/_static
     - name: Build docs
       working-directory: docs
-      run: sphinx-build -b html -n -T -v -E -W. _build/html --keep-going -w /tmp/sphinx-log
+      run: |
+        sphinx-build -b html -n -T -v -E -W . _build/html --keep-going -w /tmp/sphinx-log
+        echo "---- Sphinx log ----"
+        cat /tmp/sphinx-log || true
     - name: Upload docs as Pages artifact
       if: success()
       uses: actions/upload-pages-artifact@v3
