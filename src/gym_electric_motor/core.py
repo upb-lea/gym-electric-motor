@@ -754,25 +754,25 @@ class ElectricMotorVisualization(Callback):
 
 
 class ConstraintMonitor:
-    """The ConstraintMonitor is used within the ElectricMotorEnvironment to monitor the states for illegal / undesired
-    values (e.g. overcurrents).
+    """Monitor constraints in an :class:`~gym_electric_motor.core.ElectricMotorEnvironment`.
 
-    It consists of a list of multiple independent constraints. Each constraint gets the current observation of the
-    environment as input and returns a *violation degree* within :math:`[0.0, 1.0]`.
-    All these are merged together and the ConstraintMonitor returns a total violation degree.
+    Each constraint receives the current observation and returns a **violation
+    degree** in :math:`[0.0, 1.0]`. The monitor aggregates the individual
+    values and returns a total violation degree.
 
-    **Soft Constraints:**
-        To enable a higher flexibility, the constraints return a violation degree (float) instead of a simple violation
-        flag (bool). So, even before the limits are violated, the reward function can take the limit violation degree
-        into account. If the violation degree is at 0.0, no states are in a dangerous region. For values between 0.0 and
-        1.0 the reward will be decreased gradually so that the agent will learn to avoid these state regions.
-        If the violation degree reaches 1.0 the episode is terminated.
+    Notes
+    -----
+    Soft constraints
+        Constraints may return a gradual violation degree (float) instead of a
+        boolean flag. When the degree is ``0.0`` the state is safe. For values
+        between ``0.0`` and ``1.0`` the reward function can gradually penalize
+        approaching unsafe regions. If the degree reaches ``1.0`` the episode
+        is terminated.
 
-    **Hard Constraints:**
-        With the above concept, also hard constraints that directly terminate an episode without any "danger"-region
-        can be modeled. Then, the violation degree of the constraint directly changes from 0.0 to 1.0, if a violation
-        occurs.
-
+    Hard constraints
+        Pure hard constraints can be modelled by returning ``0.0`` in the safe
+        region and switching directly to ``1.0`` once a violation occurs, which
+        terminates the episode immediately.
     """
 
     @property
