@@ -192,6 +192,26 @@ man_pages = [
     (master_doc, 'gem', 'GEM Documentation',
      [author], 1)
 ]
+# --- Patch broken upstream docstrings so the build doesn't fail ---
+BAD_DOCSTRINGS = {
+    "gym_electric_motor.core.ElectricMotorEnvironment",
+    # if needed: "gym_electric_motor.core.ConstraintMonitor",
+}
+
+def _suppress_broken_docstrings(app, what, name, obj, options, lines):
+    """Replace known-bad docstrings with a short stub so Sphinx won't error."""
+    if name in BAD_DOCSTRINGS:
+        lines[:] = [
+            f"API for ``{name}``.",
+            "",
+            ".. note::",
+            "   The original docstring is temporarily suppressed due to formatting issues",
+            "   upstream. Once it’s cleaned, we’ll restore the full text here.",
+        ]
+
+def setup(app):
+    app.connect("autodoc-process-docstring", _suppress_broken_docstrings)
+    return {"version": "1.0", "parallel_read_safe": True}
 
 
 # -- Options for Texinfo output ----------------------------------------------
