@@ -44,7 +44,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#gym-electric-motor">Gym Electric Motor</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul class="current">
@@ -115,7 +116,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.envs.FiniteCurrentControlExternallyExcitedSynchronousMotorEnv">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.envs.</span></span><span class="sig-name descname"><span class="pre">FiniteCurrentControlExternallyExcitedSynchronousMotorEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supply=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ode_solver=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_function=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_generator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualization=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_filter=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints=(&lt;gym_electric_motor.constraints.SquaredConstraint</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;gym_electric_motor.constraints.LimitConstraint</span> <span class="pre">object&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_jacobian=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau=1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_system_wrappers=()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gym_electric_motor/envs/gym_eesm/finite_cc_eesm_env.html#FiniteCurrentControlExternallyExcitedSynchronousMotorEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.envs.FiniteCurrentControlExternallyExcitedSynchronousMotorEnv" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricMotorEnvironment</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricMotorEnvironment</span></code></p>
 <dl class="simple">
 <dt>Description:</dt><dd><p>Environment to simulate a finite control set current controlled externally excited synchronous motor.</p>
 </dd>
@@ -207,7 +208,7 @@
 simulation. This may lead to speed improvements. Default: True</p></li>
 <li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Duration of one control step in seconds. Default: 1e-4.</p></li>
 <li><p><strong>state_filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>)</em>) – List of states that shall be returned to the agent. Default: None (no filter)</p></li>
-<li><p><strong>callbacks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference internal" href="../environment.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks for user interaction. Default: ()</p></li>
+<li><p><strong>callbacks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference internal" href="../../core.html#gym_electric_motor.core.Callback" title="gym_electric_motor.core.Callback"><em>Callback</em></a><em>)</em>) – Callbacks for user interaction. Default: ()</p></li>
 <li><p><strong>physical_system_wrappers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>(</em><a class="reference internal" href="../../state_action_processors/state_action_processor.html#gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper" title="gym_electric_motor.physical_system_wrappers.PhysicalSystemWrapper"><em>PhysicalSystemWrapper</em></a><em>)</em>) – List of Physical System Wrappers to modify the</p></li>
 <li><p><strong>Default</strong> (<em>actions to and states from the physical system before they are used in the environment.</em>) – ()</p></li>
 </ul>
@@ -302,7 +303,7 @@ info(dict): Auxiliary information (optional)</p>
 <dd><p>The ConstraintMonitor of the environment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Returns(<a class="reference internal" href="../environment.html#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor">ConstraintMonitor</a>)</p>
+<dd class="field-odd"><p>Returns(<a class="reference internal" href="../../constraint_monitor.html#gym_electric_motor.core.ConstraintMonitor" title="gym_electric_motor.core.ConstraintMonitor">ConstraintMonitor</a>)</p>
 </dd>
 </dl>
 </dd></dl>

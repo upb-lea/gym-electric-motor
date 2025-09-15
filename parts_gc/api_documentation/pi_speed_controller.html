@@ -44,7 +44,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parts_gem/readme.html#gym-electric-motor">Gym Electric Motor</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
@@ -135,7 +136,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>_env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
+<li><p><strong>_env</strong> (<em>ElectricMotorEnvironment</em>) – The GEM-Environment that the controller shall be created for.</p></li>
 <li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
 <li><p><strong>torque_controller</strong> (<a class="reference internal" href="torque_controller.html#gem_controllers.torque_controller.TorqueController" title="gem_controllers.torque_controller.TorqueController"><em>TorqueController</em></a>) – The underlying torque control stage</p></li>
 <li><p><strong>base_speed_controller</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Selection which base controller should be used for the speed control stage.</p></li>
@@ -169,7 +170,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller should control.</p></li>
+<li><p><strong>env</strong> (<em>ElectricMotorEnvironment</em>) – The GEM-Environment that the controller should control.</p></li>
 <li><p><strong>n_steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of iteration steps.</p></li>
 <li><p><strong>max_episode_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum length of an epsiode, after which the environment and controller should be
 reset.</p></li>
@@ -201,7 +202,7 @@ environment <cite>env</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
+<li><p><strong>env</strong> (<em>ElectricMotorEnvironment</em>) – The GEM-Environment that the controller shall be created for.</p></li>
 <li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
 <li><p><strong>decoupling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if a EMF-Feedforward correction stage should be used in the pi current controller.</p></li>
 <li><p><strong>current_safety_margin</strong> (<em>float in</em><em> [</em><em>0..1</em><em>]</em>) – The ratio between the maximum current set point
@@ -255,7 +256,7 @@ current controller.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#id5" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
+<li><p><strong>env</strong> (<em>ElectricMotorEnvironment</em>) – The GEM-Environment that the controller shall be created for.</p></li>
 <li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
 <li><p><strong>tune_torque_controller</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the underlying torque control stage should be tuned.</p></li>
 <li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Design parameter of the symmetric optimum for the base controllers</p></li>
