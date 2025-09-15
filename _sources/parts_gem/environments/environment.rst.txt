@@ -86,15 +86,15 @@ In general, all environment-ids are structured as follows:
      -
 
    * - Finite Torque Control PMSM Environment
-     - ``'Finite-TC-PMSM-v0'``
+     - ``'Continuous Finite-TC-PMSM-v0'``
    * - Torque Control PMSM Environment
      - ``'Cont-TC-PMSM-v0'``
    * - Finite Speed Control PMSM Environment
-     - ``'Finite-SC-PMSM-v0'``
+     - ``'Continuous Finite-SC-PMSM-v0'``
    * - Speed Control PMSM Environment
      - ``'Cont-SC-PMSM-v0'``
    * - Finite Current Control PMSM Environment
-     - ``'Finite-CC-PMSM-v0'``
+     - ``'Continuous Finite-CC-PMSM-v0'``
    * - Current Control PMSM Environment
      - ``'Cont-CC-PMSM-v0'``
 
@@ -102,15 +102,15 @@ In general, all environment-ids are structured as follows:
      -
 
    * - Finite Torque Control EESM Environment
-     - ``'Finite-TC-EESM-v0'``
+     - ``'Continuous Finite-TC-EESM-v0'``
    * - Torque Control EESM Environment
      - ``'Cont-TC-EESM-v0'``
    * - Finite Speed Control EESM Environment
-     - ``'Finite-SC-EESM-v0'``
+     - ``'Continuous Finite-SC-EESM-v0'``
    * - Speed Control EESM Environment
      - ``'Cont-SC-EESM-v0'``
    * - Finite Current Control EESM Environment
-     - ``'Finite-CC-EESM-v0'``
+     - ``'Continuous Finite-CC-EESM-v0'``
    * - Current Control EESM Environment
      - ``'Cont-CC-EESM-v0'``
 
@@ -118,15 +118,15 @@ In general, all environment-ids are structured as follows:
      -
 
    * - Finite Torque Control SynRM Environment
-     - ``'Finite-TC-SynRM-v0'``
+     - ``'Continuous Finite-TC-SynRM-v0'``
    * - Torque Control SynRM Environment
      - ``'Cont-TC-SynRM-v0'``
    * - Finite Speed Control SynRM Environment
-     - ``'Finite-SC-SynRM-v0'``
+     - ``'Continuous Finite-SC-SynRM-v0'``
    * - Speed Control SynRM Environment
      - ``'Cont-SC-SynRM-v0'``
    * - Finite Current Control SynRM Environment
-     - ``'Finite-CC-SynRM-v0'``
+     - ``'Continuous Finite-CC-SynRM-v0'``
    * - Current Control SynRM Environment
      - ``'Cont-CC-SynRM-v0'``
 
@@ -134,15 +134,15 @@ In general, all environment-ids are structured as follows:
      -
 
    * - Finite Torque Control SCIM Environment
-     - ``'Finite-TC-SCIM-v0'``
+     - ``'Continuous Finite-TC-SCIM-v0'``
    * - Torque Control SCIM Environment
      - ``'Cont-TC-SCIM-v0'``
    * - Finite Speed Control SCIM Environment
-     - ``'Finite-SC-SCIM-v0'``
+     - ``'Continuous Finite-SC-SCIM-v0'``
    * - Speed Control SCIM Environment
      - ``'Cont-SC-SCIM-v0'``
    * - Finite Current Control SCIM Environment
-     - ``'Finite-CC-SCIM-v0'``
+     - ``'Continuous Finite-CC-SCIM-v0'``
    * - Current Control SCIM Environment
      - ``'Cont-CC-SCIM-v0'``
 
@@ -150,15 +150,15 @@ In general, all environment-ids are structured as follows:
      -
 
    * - Finite Torque Control DFIM Environment
-     - ``'Finite-TC-DFIM-v0'``
+     - ``'Continuous Finite-TC-DFIM-v0'``
    * - Torque Control DFIM Environment
      - ``'Cont-TC-DFIM-v0'``
    * - Finite Speed Control DFIM Environment
-     - ``'Finite-SC-DFIM-v0'``
+     - ``'Continuous Finite-SC-DFIM-v0'``
    * - Speed Control DFIM Environment
      - ``'Cont-SC-DFIM-v0'``
    * - Finite Current Control DFIM Environment
-     - ``'Finite-CC-DFIM-v0'``
+     - ``'Continuous Finite-CC-DFIM-v0'``
    * - Current Control DFIM Environment
      - ``'Cont-CC-DFIM-v0'``
 
@@ -166,15 +166,15 @@ In general, all environment-ids are structured as follows:
      -
 
    * - Finite Torque Control SIXPMSM Environment
-     - ``'Finite-TC-SIXPMSM-v0'``
+     - ``'Continuous Finite-TC-SIXPMSM-v0'``
    * - Torque Control SIXPMSM Environment
      - ``'Cont-TC-SIXPMSM-v0'``
    * - Finite Speed Control SIXPMSM Environment
-     - ``'Finite-SC-SIXPMSM-v0'``
+     - ``'Continuous Finite-SC-SIXPMSM-v0'``
    * - Speed Control SIXPMSM Environment
      - ``'Cont-SC-SIXPMSM-v0'``
    * - Finite Current Control SIXPMSM Environment
-     - ``'Finite-CC-SIXPMSM-v0'``
+     - ``'Continuous Finite-CC-SIXPMSM-v0'``
    * - Current Control SIXPMSM Environment
      - ``'Cont-CC-SIXPMSM-v0'``
 
