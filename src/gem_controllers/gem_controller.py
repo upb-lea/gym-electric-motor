@@ -40,6 +40,7 @@ class GemController:
         plot_references: bool = True,
         block_diagram: bool = True,
         save_block_diagram_as: (str, tuple) = None,
+        **kwargs
     ):
         """A factory function that generates (and parameterizes) a matching GemController for a given gym-electric-motor
         environment `env`.
@@ -79,7 +80,7 @@ class GemController:
             tuner_kwargs["plot_references"] = plot_references
 
         elif base_current_controller == "MPC":
-            controller = gc.MPCCurrentController(env, env_id)            
+            controller = gc.MPCCurrentController(env, env_id, **kwargs)            
 
         else:
             raise NotImplementedError(f"Unsupported base_current_controller: {base_current_controller}")
