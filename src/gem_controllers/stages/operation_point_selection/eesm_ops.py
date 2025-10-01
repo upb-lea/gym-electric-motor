@@ -135,7 +135,10 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         import numpy as np
         import scipy.interpolate as sp_interpolate
         from scipy.optimize import minimize
-
+        SLSQP_MAXITER   = 2000      
+        SLSQP_FTOL      = 1e-12     
+        TORQUE_BAND_REL = 1e-3      
+        TORQUE_BAND_ABS = 1e-2
     # ---- pull essentials ----
         p   = float(self.p)
         Ld  = float(self.l_d)
@@ -214,61 +217,33 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
             iq_curr = i_s_lim
             iq_need = abs(Tref) / max(1.5 * p * Lm * iF, 1e-12)
             iq = s * min(iq_flux, iq_curr, iq_need)
-            id_ = 0.0
-            return np.array([id_, iq, iF])
-        def solve_mtpc_for_T(Tref):
-            T_bound = 1.5 * p * (Lm * i_f_lim + abs(Ld - Lq) * i_s_lim) * i_s_lim
-            if abs(Tref) > T_bound + 1e-9:
-                return np.array([0.0, 0.0, 0.0])
+            
+            return np.array([0.0, iq, iF], float)
+        
+        def solve_mtpc_for_T(Tref, x_prev):
+
 
             bnds = [(-i_s_lim, i_s_lim), (-i_s_lim, i_s_lim), (0.0, i_f_lim)]
-            x0   = _seed_by_hand(Tref)
-
-    
-            seeds = [x0, np.array([-0.3*i_s_lim, np.sign(Tref)*0.8*i_s_lim, 0.5*i_f_lim])]
-            for s0 in seeds:
-                try:
-                    res = minimize(obj_loss, s0, method='SLSQP',
-                                   bounds=bnds, constraints=cons_for_T(Tref),
-                                   options=dict(maxiter=200, ftol=1e-9, disp=False))
-                    if res.success and feasible(*res.x):
-                        return res.x
-                except Exception:
-                    pass
-
-        # If infeasible: relax torque to minimize |Te - Tref|, then reduce loss
-            def obj_torque_err(x):
-                 return (torque(x[0], x[1], x[2]) - Tref)**2
-
-            cons_soft = [
-                {'type': 'ineq', 'fun': lambda x: i_s_lim - np.hypot(x[0], x[1])},
-                {'type': 'ineq', 'fun': lambda x: x[2]},
-                {'type': 'ineq', 'fun': lambda x: i_f_lim - x[2]},
-                {'type': 'ineq', 'fun': lambda x: V_over_omega**2
-                           - ((Lq * x[1])**2 + (Lm * x[2] + Ld * x[0])**2)},
-                ]      
-
-            try:
-                res1 = minimize(obj_torque_err, x0, method='SLSQP',
-                                bounds=bnds, constraints=cons_soft,
-                                options=dict(maxiter=200, ftol=1e-9, disp=False))
-                if res1.success and feasible(*res1.x):
-                    res2 = minimize(obj_loss, res1.x, method='SLSQP',
-                                    bounds=bnds, constraints=cons_soft,
-                                    options=dict(maxiter=200, ftol=1e-9, disp=False))
-                    if res2.success and feasible(*res2.x):
-                        return res2.x
-                    return res1.x
-            except Exception:
-                pass
-
+            #x0   = x_prev if x_prev is not None else _seed_by_hand(Tref)
+            cons = cons_for_T(Tref)
+            x0   = np.asarray(x_prev, float)
+            res = minimize(obj_loss, x0, method='SLSQP',
+                            bounds=bnds, constraints=cons_for_T(Tref),
+                            options=dict(maxiter=SLSQP_MAXITER, ftol=SLSQP_FTOL, disp=False))
+            if res.success and feasible(*res.x):
+                return res.x
             return x0
 
     # ----  solve MTPCL, collect optimal points ----
-        T_vec = np.linspace(0.0, t_lim, t_count)  # |T| only; sign applied later
+        T_curr_cap = 1.5 * p * Lm * i_f_lim * i_s_lim
+        T_cap = float(min(t_lim, T_curr_cap))
+        T_vec = np.linspace(0.0, T_cap, t_count)  
+        x_prev = _seed_by_hand(max(1e-3, 0.05*T_cap))
         rows = []  # [T, psi, id, |iq|, if]
         for T in T_vec:
-            id_opt, iq_opt, if_opt = solve_mtpc_for_T(T)
+            x_star = solve_mtpc_for_T(T, x_prev)
+            id_opt, iq_opt, if_opt = x_star
+            x_prev = x_star
             psi_d = Lm * if_opt + Ld * id_opt
             psi_q = Lq * iq_opt
             psi   = np.hypot(psi_d, psi_q)
@@ -279,7 +254,7 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         if bp.shape[0] == 0:
             bp = np.array([[0.0, 0.0, 0.0, 0.0, 0.0]], dtype=float)
 
-    # Guard: at least 2 points for cubic 1D
+    
         if bp.shape[0] == 1:
             eps = max(1e-6, 1e-3 * t_lim)
             bp = np.vstack([bp, bp + [eps, 0, 0, 0, 0]])
