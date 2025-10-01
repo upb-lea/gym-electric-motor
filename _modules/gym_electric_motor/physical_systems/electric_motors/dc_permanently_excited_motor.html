@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_electric_motor.physical_systems.electric_motors.dc_permanently_excited_motor &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=37e646e6"></script>
+      <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -41,20 +41,26 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/readme.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/readme.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/readme.html#gym-electric-motor">Gym Electric Motor</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts/random_component.html">Random Component</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/random_component.html">Random Component</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
 </ul>
 
         </div>
@@ -82,12 +88,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.physical_systems.electric_motors.dc_permanently_excited_motor</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.dc_motor</span> <span class="kn">import</span> <span class="n">DcMotor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dc_motor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DcMotor</span>
 
 
-<div class="viewcode-block" id="DcPermanentlyExcitedMotor"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor">[docs]</a><span class="k">class</span> <span class="nc">DcPermanentlyExcitedMotor</span><span class="p">(</span><span class="n">DcMotor</span><span class="p">):</span>
+<div class="viewcode-block" id="DcPermanentlyExcitedMotor">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DcPermanentlyExcitedMotor</span><span class="p">(</span><span class="n">DcMotor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The DcPermanentlyExcitedMotor is a DcMotor with a Permanent Magnet instead of the excitation circuit.</span>
 
 <span class="sd">    =====================  ==========  ============= ===========================================</span>
@@ -148,26 +156,37 @@
     <span class="c1"># placeholder for omega, currents and u_in</span>
     <span class="n">_ode_placeholder</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">CURRENTS_IDX</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<div class="viewcode-block" id="DcPermanentlyExcitedMotor.torque">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.torque">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;psi_e&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span><span class="p">[</span><span class="s2">&quot;psi_e&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">_update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;psi_e&quot;</span><span class="p">],</span> <span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">]])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">]</span> <span class="o">/=</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="DcPermanentlyExcitedMotor.i_in"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.i_in">[docs]</a>    <span class="k">def</span> <span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<div class="viewcode-block" id="DcPermanentlyExcitedMotor.i_in">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.i_in">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="k">return</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">CURRENTS_IDX</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="DcPermanentlyExcitedMotor.electrical_ode"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.electrical_ode">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DcPermanentlyExcitedMotor.electrical_ode">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.electrical_ode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">electrical_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ode_placeholder</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">omega</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">I_IDX</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">u_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ode_placeholder</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DcPermanentlyExcitedMotor.electrical_jacobian"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.electrical_jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DcPermanentlyExcitedMotor.electrical_jacobian">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.electrical_jacobian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">electrical_jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">u_in</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
         <span class="n">mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_motor_parameter</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;r_a&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">mp</span><span class="p">[</span><span class="s2">&quot;l_a&quot;</span><span class="p">]]]),</span>
@@ -175,7 +194,8 @@
             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mp</span><span class="p">[</span><span class="s2">&quot;psi_e&quot;</span><span class="p">]]),</span>
         <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
 
         <span class="c1"># R_a might be 0, protect against that</span>
@@ -187,7 +207,9 @@
         <span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_limits</span><span class="p">(</span><span class="n">limits_agenda</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DcPermanentlyExcitedMotor.get_state_space"><a class="viewcode-back" href="../../../../parts/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.get_state_space">[docs]</a>    <span class="k">def</span> <span class="nf">get_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_currents</span><span class="p">,</span> <span class="n">input_voltages</span><span class="p">):</span>
+<div class="viewcode-block" id="DcPermanentlyExcitedMotor.get_state_space">
+<a class="viewcode-back" href="../../../../parts_gem/physical_systems/electric_motors/permex.html#gym_electric_motor.physical_systems.electric_motors.DcPermanentlyExcitedMotor.get_state_space">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_state_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_currents</span><span class="p">,</span> <span class="n">input_voltages</span><span class="p">):</span>
         <span class="c1"># Docstring of superclass</span>
         <span class="n">low</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;omega&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">input_voltages</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
@@ -201,7 +223,9 @@
             <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span></div></div>
+        <span class="k">return</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span></div>
+</div>
+
 </pre></div>
 
            </div>
