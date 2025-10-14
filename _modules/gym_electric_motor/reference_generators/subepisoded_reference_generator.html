@@ -1,20 +1,20 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_electric_motor.reference_generators.subepisoded_reference_generator &mdash; gym-electric-motor 2021 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
-
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=37e646e6"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -41,26 +41,20 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Gym Electric Motor Readme:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html">Readme</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/readme.html#gym-electric-motor">Gym Electric Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/readme.html">Readme File</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">gym-electric-motor Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/environments/environment.html">Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reference_generators/reference_generator.html">Reference Generators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/reward_functions/reward_function.html">Reward Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/physical_systems/physical_system.html">Physical Systems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/visualizations/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/constraint_monitor.html">Constraint Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/callbacks.html">Callbacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/environments/environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reference_generators/reference_generator.html">Reference Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/reward_functions/reward_function.html">Reward Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/physical_systems/physical_system.html">Physical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/visualizations/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/constraint_monitor.html">Constraint Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/callbacks.html">Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parts/random_component.html">Random Component</a></li>
 </ul>
 
         </div>
@@ -88,22 +82,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_electric_motor.reference_generators.subepisoded_reference_generator</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.spaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">Box</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">gymnasium.spaces</span> <span class="kn">import</span> <span class="n">Box</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReferenceGenerator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..random_component</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomComponent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_state_array</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ReferenceGenerator</span>
+<span class="kn">from</span> <span class="nn">..random_component</span> <span class="kn">import</span> <span class="n">RandomComponent</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">set_state_array</span>
 
 
-<div class="viewcode-block" id="SubepisodedReferenceGenerator">
-<a class="viewcode-back" href="../../../parts_gem/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SubepisodedReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
+<div class="viewcode-block" id="SubepisodedReferenceGenerator"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator">[docs]</a><span class="k">class</span> <span class="nc">SubepisodedReferenceGenerator</span><span class="p">(</span><span class="n">ReferenceGenerator</span><span class="p">,</span> <span class="n">RandomComponent</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base Class for Reference Generators, which change their parameters in certain ranges after a random number of</span>
 <span class="sd">    time steps and can pre-calculate their references in these &quot;sub episodes&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">reference_state</span><span class="o">=</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span>
         <span class="n">episode_lengths</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">),</span>
@@ -134,9 +126,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_names</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_state</span><span class="p">]</span>
 
-<div class="viewcode-block" id="SubepisodedReferenceGenerator.set_modules">
-<a class="viewcode-back" href="../../../parts_gem/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.set_modules">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
+<div class="viewcode-block" id="SubepisodedReferenceGenerator.set_modules"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.set_modules">[docs]</a>    <span class="k">def</span> <span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_state</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span>
@@ -157,10 +147,7 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown type for the limit margin.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">lower_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper_margin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SubepisodedReferenceGenerator.reset">
-<a class="viewcode-back" href="../../../parts_gem/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.reset">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SubepisodedReferenceGenerator.reset"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The references are reset. If an initial reference is passed, this value will be the first reference value of</span>
 <span class="sd">        the next episode. Otherwise it will be 0.</span>
@@ -182,18 +169,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">initial_state</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SubepisodedReferenceGenerator.get_reference">
-<a class="viewcode-back" href="../../../parts_gem/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.get_reference">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="SubepisodedReferenceGenerator.get_reference"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.get_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="n">reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">reference</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_referenced_states</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_value</span>
         <span class="k">return</span> <span class="n">reference</span></div>
 
-
-<div class="viewcode-block" id="SubepisodedReferenceGenerator.get_reference_observation">
-<a class="viewcode-back" href="../../../parts_gem/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.get_reference_observation">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
+<div class="viewcode-block" id="SubepisodedReferenceGenerator.get_reference_observation"><a class="viewcode-back" href="../../../parts/reference_generators/subepisoded_reference_generator.html#gym_electric_motor.reference_generators.subepisoded_reference_generator.SubepisodedReferenceGenerator.get_reference_observation">[docs]</a>    <span class="k">def</span> <span class="nf">get_reference_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="o">**</span><span class="n">__</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_current_episode_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_current_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_len_range</span><span class="p">))</span>
@@ -202,15 +183,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_value</span><span class="p">])</span></div>
 
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_reset_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subclasses implement in this method its generation of the references for the next self._current_episode_length</span>
 <span class="sd">        time steps and write it into self._reference.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_current_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_range</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_current_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_range</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a uniform distributed value for the next sub episode.</span>
 
@@ -221,7 +201,6 @@
             <span class="k">return</span> <span class="n">value_range</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_range</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">value_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">value_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_generator</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">+</span> <span class="n">value_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
-
 </pre></div>
 
            </div>
