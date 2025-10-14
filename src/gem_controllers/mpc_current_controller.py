@@ -2,23 +2,27 @@ import numpy as np
 from .gem_controller import GemController
 
 class MPCCurrentController(GemController):
-    def __init__(self, env, env_id, prediction_horizon=1, w_d=1.0, w_q=1.0, Deadtimpstep=0):
+    def __init__(self, env, env_id, prediction_horizon=1, w_d=1.0, w_q=1.0):
         """
         Args:
             env: Gym environment instance
             env_id: Environment ID string
             prediction_horizon: Prediction horizon (N)
             w_d: Weight for d-axis current error
-            w_q: Weight for q-axis current errory
-            Deadtimpstep = 0 -> without delay compensation
-            Deadtimpstep = 1 -> with delay compensation
+            w_q: Weight for q-axis current error
         """
         super().__init__()
         self.env_id = env_id
         self.prediction_horizon = prediction_horizon
         self.w_d = w_d
-        self.w_q = w_q
-        self.step = Deadtimpstep
+        self.w_q = w_q        
+
+        
+        # Assign self.step from the wrapper
+        ps_wrapper = env.unwrapped.physical_system
+        self.step = getattr(ps_wrapper, 'dead_time', 0)  # default to 0 if no DeadTimeProcessor
+        print(f"DeadTimeProcessor steps: {self.step}")   
+
 
         # environment info
         self.state_names = env.get_wrapper_attr('state_names')
@@ -55,8 +59,10 @@ class MPCCurrentController(GemController):
         self.extrapolation_order = 2
 
     # -------- Delay Compensation Helpers ----------
+    """
+    #Extrapolation of reference for delay compensation. This can be used when working the sine-wave reference for e.g. alfa-beta current control.
     def _extrapolate_reference(self, current_ref, n=2):
-        """Extrapolate future reference."""
+        
         self.past_references.append(current_ref.copy())
         if len(self.past_references) > n + 1:
             self.past_references.pop(0)
@@ -67,6 +73,9 @@ class MPCCurrentController(GemController):
         ref_km2 = self.past_references[-3]
         return 6 * ref_k - 8 * ref_km1 + 3 * ref_km2
 
+    """
+
+    #current estimation for delay compensation.
     def _estimate_currents(self, model_constants, x, omega, voltage_idx):
         """Estimate currents at k+1 using the previous optimal voltage."""
         v_abc = self.u_abc_k1[voltage_idx]
@@ -129,11 +138,9 @@ class MPCCurrentController(GemController):
             )
         else:
             # === with delay compensation ===
-            x_est = self._estimate_currents(self._model_constants, x_measured, omega, self.previous_voltage_idx)
-            ref_k_plus_2 = self._extrapolate_reference(np.array([ref_i_d, ref_i_q]))
-            ref_i_d_future, ref_i_q_future = ref_k_plus_2
+            x_est = self._estimate_currents(self._model_constants, x_measured, omega, self.previous_voltage_idx)            
             _, best_sequence = self._simulate_sequence(
-                self._model_constants, x_est, omega, ref_i_d_future, ref_i_q_future, depth=0
+                self._model_constants, x_est, omega, ref_i_d, ref_i_q, depth=0
             )
 
         best_idx = best_sequence[0] if best_sequence else 0
