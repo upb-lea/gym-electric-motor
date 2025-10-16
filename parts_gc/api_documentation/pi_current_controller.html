@@ -138,9 +138,9 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
-<li><p><strong>base_current_controller</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Selection which base controller should be used for the current control stage.</p></li>
-<li><p><strong>decoupling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if a EMF-Feedforward correction stage should be used in the PI current controller.</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
+<li><p><strong>base_current_controller</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Selection which base controller should be used for the current control stage.</p></li>
+<li><p><strong>decoupling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag, if a EMF-Feedforward correction stage should be used in the PI current controller.</p></li>
 </ul>
 </dd>
 </dl>
@@ -172,10 +172,10 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller should control.</p></li>
-<li><p><strong>n_steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of iteration steps.</p></li>
-<li><p><strong>max_episode_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Maximum length of an epsiode, after which the environment and controller should be
+<li><p><strong>n_steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of iteration steps.</p></li>
+<li><p><strong>max_episode_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum length of an epsiode, after which the environment and controller should be
 reset.</p></li>
-<li><p><strong>render_env</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the states of the environment should be plotted.</p></li>
+<li><p><strong>render_env</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag, if the states of the environment should be plotted.</p></li>
 </ul>
 </dd>
 </dl>
@@ -207,7 +207,7 @@ reset.</p></li>
 <dd><p>Get the value of a signal calling by the signal name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>signal_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of a signal of the state</p>
+<dd class="field-odd"><p><strong>signal_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of a signal of the state</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -224,18 +224,18 @@ environment <cite>env</cite>.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
-<li><p><strong>decoupling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if a EMF-Feedforward correction stage should be used in the pi current controller.</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
+<li><p><strong>decoupling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag, if a EMF-Feedforward correction stage should be used in the pi current controller.</p></li>
 <li><p><strong>current_safety_margin</strong> (<em>float in</em><em> [</em><em>0..1</em><em>]</em>) – The ratio between the maximum current set point
 the reference controller generates and the absolute current limit.</p></li>
 <li><p><strong>base_speed_controller</strong> (<em>'PI'/'PID'/'P'/'ThreePoint'</em>) – Selection of the basic control algorithm for the
 speed controller.</p></li>
 <li><p><strong>base_current_controller</strong> (<em>'PI'/'PID'/'P'/'ThreePoint'</em>) – Selection of the basic control algorithm for the
 current controller.</p></li>
-<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Tuning parameter of the symmetrical optimum.</p></li>
-<li><p><strong>plot_references</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag, if the reference values of the underlying control circuits should be plotted</p></li>
-<li><p><strong>block_diagram</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Selection whether the block diagram should be displayed</p></li>
-<li><p><strong>save_block_diagram_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Selection of whether the block diagram should be saved</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Tuning parameter of the symmetrical optimum.</p></li>
+<li><p><strong>plot_references</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag, if the reference values of the underlying control circuits should be plotted</p></li>
+<li><p><strong>block_diagram</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Selection whether the block diagram should be displayed</p></li>
+<li><p><strong>save_block_diagram_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Selection of whether the block diagram should be saved</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -261,8 +261,8 @@ current controller.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env</strong> (<a class="reference internal" href="../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
-<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Design parameter of the symmetric optimum for the base controllers</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Design parameter of the symmetric optimum for the base controllers</p></li>
 </ul>
 </dd>
 </dl>

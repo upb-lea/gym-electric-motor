@@ -114,14 +114,14 @@ time steps and can pre-calculate their references in these “sub episodes”.</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>reference_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the state that this reference generator is referencing.</p></li>
-<li><p><strong>episode_lengths</strong> (<em>Tuple</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>)</em>) – Minimum and maximum length of a sub episode.</p></li>
-<li><p><strong>limit_margin</strong> (<em>Tuple</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em><em>/float/None</em>) – Factor, how close the references should get to the limits.
+<li><p><strong>reference_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the state that this reference generator is referencing.</p></li>
+<li><p><strong>episode_lengths</strong> (<em>Tuple</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>)</em>) – Minimum and maximum length of a sub episode.</p></li>
+<li><p><strong>limit_margin</strong> (<em>Tuple</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em><em>/float/None</em>) – Factor, how close the references should get to the limits.
 If a tuple is passed, then the lower[0] and upper[1] margin might differ.
 If a float is passed, both margins are equal.
 If None(default), the limit margin equals (nominal values/limits).
 In general, the limit margin should not exceed (-1, 1)</p></li>
-<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Keyword arguments to be passed to the base class ReferenceGenerator</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Keyword arguments to be passed to the base class ReferenceGenerator</p></li>
 </ul>
 </dd>
 </dl>
@@ -139,13 +139,13 @@ In general, the limit margin should not exceed (-1, 1)</p></li>
 value is passed. For unreferenced states a default value (e.g. Zero) can be set in the reference array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – Current state array of the environment.</p>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – Current state array of the environment.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Current reference array.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>))</p>
+<dd class="field-odd"><p>ndarray(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>))</p>
 </dd>
 </dl>
 </dd></dl>
@@ -156,7 +156,7 @@ value is passed. For unreferenced states a default value (e.g. Zero) can be set 
 <dd><p>Returns the reference observation for the next time step. This observation needs to fit in the reference space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – Current state array of the environment.</p>
+<dd class="field-odd"><p><strong>state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – Current state array of the environment.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Observation for the next reference time step.</p>
@@ -181,8 +181,8 @@ the next episode. Otherwise it will be 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – The initial state of the physical system.</p></li>
-<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – (Optional) The first reference value.</p></li>
+<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – The initial state of the physical system.</p></li>
+<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – (Optional) The first reference value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -191,7 +191,7 @@ initial_reference_observation(element of reference_space): An initial observatio
 trajectory(None): No initial trajectory is passed.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>initial_reference(ndarray(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>))</p>
+<dd class="field-odd"><p>initial_reference(ndarray(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>))</p>
 </dd>
 </dl>
 </dd></dl>
@@ -213,7 +213,7 @@ If the RandomComponent holds further RandomComponent instances, the list has to 
 entropies. The entropy of this instance has to be placed always at first place.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>

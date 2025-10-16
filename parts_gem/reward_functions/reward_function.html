@@ -108,7 +108,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gym_electric_motor.core.RewardFunction">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_electric_motor.core.</span></span><span class="sig-name descname"><span class="pre">RewardFunction</span></span><a class="reference internal" href="../../_modules/gym_electric_motor/core.html#RewardFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_electric_motor.core.RewardFunction" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>The abstract base class for reward functions in gym electric motor environments.</p>
 <p>The reward function is called once per step and returns reward for the current time step.</p>
 <dl class="py attribute">
@@ -117,7 +117,7 @@
 <dd><p>Defining lowest and highest possible rewards.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
+<dd class="field-odd"><p>Tuple(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -136,8 +136,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – Initial state array of the Environment</p></li>
-<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – Initial reference array of the environment.</p></li>
+<li><p><strong>initial_state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – Initial state array of the Environment</p></li>
+<li><p><strong>initial_reference</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – Initial reference array of the environment.</p></li>
 </ul>
 </dd>
 </dl>
@@ -150,9 +150,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – Environments state array.</p></li>
-<li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>)</em>) – Environments reference array.</p></li>
-<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Systems momentary time-step</p></li>
+<li><p><strong>state</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – Environments state array.</p></li>
+<li><p><strong>reference</strong> (<em>ndarray</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>)</em>) – Environments reference array.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Systems momentary time-step</p></li>
 <li><p><strong>action</strong> (<em>element</em><em> of </em><em>action space</em>) – The previously taken action.</p></li>
 <li><p><strong>violation_degree</strong> (<em>float in</em><em> [</em><em>0.0</em><em>, </em><em>1.0</em><em>]</em>) – Degree of violation of the constraints. 0.0 indicates that all
 constraints are complied. 1.0 indicates that the constraints have been so much violated, that a reset is
@@ -163,7 +163,7 @@ necessary.</p></li>
 <dd class="field-even"><p>Reward for this state, reference, action tuple.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,7 +189,7 @@ necessary.</p></li>
 <dd><p>Lower and upper possible reward</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>,<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>Tuple(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>,<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>

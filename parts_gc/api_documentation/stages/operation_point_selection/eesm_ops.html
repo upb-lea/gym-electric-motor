@@ -131,7 +131,7 @@
 <h1>EESM Operation Point Selection<a class="headerlink" href="#eesm-operation-point-selection" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="gem_controllers.stages.operation_point_selection.eesm_ops.EESMOperationPointSelection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.stages.operation_point_selection.eesm_ops.</span></span><span class="sig-name descname"><span class="pre">EESMOperationPointSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_modulation_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">np.float64(1.1547005383792517)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_damping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/operation_point_selection/eesm_ops.html#EESMOperationPointSelection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.operation_point_selection.eesm_ops.EESMOperationPointSelection" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.stages.operation_point_selection.eesm_ops.</span></span><span class="sig-name descname"><span class="pre">EESMOperationPointSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_modulation_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">np.float64(1.1547005383792517)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_damping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/operation_point_selection/eesm_ops.html#EESMOperationPointSelection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.operation_point_selection.eesm_ops.EESMOperationPointSelection" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="foc_ops.html#gem_controllers.stages.operation_point_selection.foc_operation_point_selection.FieldOrientedControllerOperationPointSelection" title="gem_controllers.stages.operation_point_selection.foc_operation_point_selection.FieldOrientedControllerOperationPointSelection"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldOrientedControllerOperationPointSelection</span></code></a></p>
 <p>This class represents the operation point selection of the torque controller for cascaded control of an
 externally synchronous motor. The operating point is selected in the analog to that of the PMSM and SynRM, but
@@ -139,8 +139,8 @@ the excitation current is also included in the optimization of the operating poi
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>max_modulation_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum value for the modulation controller.</p></li>
-<li><p><strong>modulation_damping</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Damping of the gain of the modulation controller.</p></li>
+<li><p><strong>max_modulation_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum value for the modulation controller.</p></li>
+<li><p><strong>modulation_damping</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Damping of the gain of the modulation controller.</p></li>
 </ul>
 </dd>
 </dl>
@@ -156,13 +156,13 @@ the excitation current is also included in the optimization of the operating poi
 <dd><p>Get the index of the lookup tables for a given flux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – optimal magnetic flux.</p>
+<dd class="field-odd"><p><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – optimal magnetic flux.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>index of the lookup tables of the currents</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>index(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>index(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -173,13 +173,13 @@ the excitation current is also included in the optimization of the operating poi
 <dd><p>Get the index of the lookup tables for a given torque.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>torque</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – The clipped torque reference value.</p>
+<dd class="field-odd"><p><strong>torque</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The clipped torque reference value.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>index of the lookup tables of the currents</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>index(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>index(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -227,9 +227,9 @@ which can be solved analytically.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>torque</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – The torque reference value.</p></li>
-<li><p><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – The optimal flux value.</p></li>
-<li><p><strong>i_e</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – The excitation current.</p></li>
+<li><p><strong>torque</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The torque reference value.</p></li>
+<li><p><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The optimal flux value.</p></li>
+<li><p><strong>i_e</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The excitation current.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -237,7 +237,7 @@ which can be solved analytically.</p>
 i_q(flaot): optimal i_sq current</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>i_d(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>)</p>
+<dd class="field-odd"><p>i_d(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -250,8 +250,8 @@ i_q(flaot): optimal i_sq current</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env</strong> (<em>gym_electric_motor.ElectricMotorEnvironment</em>) – The environment to be controlled.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The id of the environment.</p></li>
-<li><p><strong>current_safety_margin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Percentage of the current margin to the current limit.</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The id of the environment.</p></li>
+<li><p><strong>current_safety_margin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Percentage of the current margin to the current limit.</p></li>
 </ul>
 </dd>
 </dl>

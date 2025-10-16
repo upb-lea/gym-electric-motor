@@ -123,14 +123,14 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="gem_controllers.stages.anti_windup.AntiWindup">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.stages.anti_windup.</span></span><span class="sig-name descname"><span class="pre">AntiWindup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CC'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/anti_windup.html#AntiWindup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.anti_windup.AntiWindup" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>This class should prevent a Windup of a the intgration part of the controller. A windup arises when a reference
 variable is in the limit and the I controller is still integrated, so that it takes more time for the controlled
 variable to go under the limit again. To prevent this, only the I controllers whose controlled variable is below the
 limits are integrated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>control_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Control task of the controller.</p>
+<dd class="field-odd"><p><strong>control_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Control task of the controller.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -164,7 +164,7 @@ controller.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env</strong> (<a class="reference internal" href="../../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
 </ul>
 </dd>
 </dl>

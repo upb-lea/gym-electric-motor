@@ -139,8 +139,8 @@ ODE of the load.</p>
 <li><p><strong>load</strong> (<a class="reference internal" href="mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><em>MechanicalLoad</em></a>) – Mechanical Load of the System</p></li>
 <li><p><strong>supply</strong> (<a class="reference internal" href="voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><em>VoltageSupply</em></a>) – Voltage Supply</p></li>
 <li><p><strong>ode_solver</strong> (<a class="reference internal" href="ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><em>OdeSolver</em></a>) – Ode Solver to use in this setting</p></li>
-<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – discrete time step of the system</p></li>
-<li><p><strong>calc_jacobian</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – discrete time step of the system</p></li>
+<li><p><strong>calc_jacobian</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
 Default: The jacobians are used, if available</p></li>
 </ul>
 </dd>
@@ -186,7 +186,7 @@ If the RandomComponent holds further RandomComponent instances, the list has to 
 entropies. The entropy of this instance has to be placed always at first place.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -348,8 +348,8 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <li><p><strong>load</strong> (<a class="reference internal" href="mechanical_loads/mechanical_load.html#gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad" title="gym_electric_motor.physical_systems.mechanical_loads.MechanicalLoad"><em>MechanicalLoad</em></a>) – Mechanical Load of the System</p></li>
 <li><p><strong>supply</strong> (<a class="reference internal" href="voltage_supplies/voltage_supply.html#gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply" title="gym_electric_motor.physical_systems.voltage_supplies.VoltageSupply"><em>VoltageSupply</em></a>) – Voltage Supply</p></li>
 <li><p><strong>ode_solver</strong> (<a class="reference internal" href="ode_solvers/ode_solver.html#gym_electric_motor.physical_systems.solvers.OdeSolver" title="gym_electric_motor.physical_systems.solvers.OdeSolver"><em>OdeSolver</em></a>) – Ode Solver to use in this setting</p></li>
-<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – discrete time step of the system</p></li>
-<li><p><strong>calc_jacobian</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – discrete time step of the system</p></li>
+<li><p><strong>calc_jacobian</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, the jacobian matrices will be taken into account for the ode-solvers.
 Default: The jacobians are used, if available</p></li>
 </ul>
 </dd>
@@ -395,7 +395,7 @@ If the RandomComponent holds further RandomComponent instances, the list has to 
 entropies. The entropy of this instance has to be placed always at first place.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -553,7 +553,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>control_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
+<li><p><strong>control_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
 <li><p><strong>kwargs</strong> – Further arguments to pass tp SCMLSystem</p></li>
 </ul>
 </dd>
@@ -584,7 +584,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -622,7 +622,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -650,7 +650,7 @@ Close the System and all of its submodules by closing files, saving logs etc.</p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dq_quantities</strong> – Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -671,7 +671,7 @@ Close the System and all of its submodules by closing files, saving logs etc.</p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dq_quantities</strong> – Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -717,7 +717,7 @@ If the RandomComponent holds further RandomComponent instances, the list has to 
 entropies. The entropy of this instance has to be placed always at first place.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -875,7 +875,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>control_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
+<li><p><strong>control_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – (‘abc’ or ‘dq’) Choose, if actions the actions space is in dq or abc space</p></li>
 <li><p><strong>kwargs</strong> – Further arguments to pass tp SCMLSystem</p></li>
 </ul>
 </dd>
@@ -906,7 +906,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -944,7 +944,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -977,7 +977,7 @@ Close the System and all of its submodules by closing files, saving logs etc.</p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dq_quantities</strong> – Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -998,7 +998,7 @@ Close the System and all of its submodules by closing files, saving logs etc.</p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dq_quantities</strong> – Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1044,7 +1044,7 @@ If the RandomComponent holds further RandomComponent instances, the list has to 
 entropies. The entropy of this instance has to be placed always at first place.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1230,7 +1230,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>abc_quantities</strong> – Three quantities in abc-space (e.g. (u_a, u_b, u_c) or (i_a, i_b, i_c))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1268,7 +1268,7 @@ gymnasium.Space: An Farama Gymnasium Space that describes the possible states of
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>alphabeta_quantities</strong> – Two quantities in alphabeta-space (e.g. (u_alpha, u_beta) or (i_alpha, i_beta))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1306,7 +1306,7 @@ Close the System and all of its submodules by closing files, saving logs etc.</p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dq_quantities</strong> – Three quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1327,7 +1327,7 @@ Close the System and all of its submodules by closing files, saving logs etc.</p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dq_quantities</strong> – Two quantities in dq-space (e.g. (u_d, u_q) or (i_d, i_q))</p></li>
 <li><p><strong>epsilon_el</strong> – Electrical angle of the motor</p></li>
-<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
+<li><p><strong>normed_epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True, if epsilon is normed to [-1,1] else in [-pi, pi] (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1373,7 +1373,7 @@ If the RandomComponent holds further RandomComponent instances, the list has to 
 entropies. The entropy of this instance has to be placed always at first place.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>)</p>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
