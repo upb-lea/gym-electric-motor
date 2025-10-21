@@ -14,10 +14,4 @@ Stages
    input_stage
    cont_output_stage
    disc_output_stage
-.. autoclass:: gem_controllers.stages.stage.Stage
-   :members:
-   :undoc-members:
-   :inherited-members:
-   :show-inheritance:
-   :special-members: __call__
-   :member-order: groupwise
+   stage
