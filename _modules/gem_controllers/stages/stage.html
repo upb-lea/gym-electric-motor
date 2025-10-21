@@ -290,6 +290,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/input_stage.html">Input Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/cont_output_stage.html">Continous Output Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/disc_output_stage.html">Discrete Output Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/stage.html">Stage</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/block_diagrams/block_diagrams.html">Block Diagrams</a><ul>
@@ -333,12 +334,12 @@
              
   <h1>Source code for gem_controllers.stages.stage</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="Stage">
-<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stages.html#gem_controllers.stages.stage.Stage">[docs]</a>
+<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stage.html#gem_controllers.stages.stage.Stage">[docs]</a>
 <span></span><span class="k">class</span><span class="w"> </span><span class="nc">Stage</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The stage is the basic module in the gem-controller structure.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Stage.__call__">
-<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stages.html#gem_controllers.stages.stage.Stage.__call__">[docs]</a>
+<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stage.html#gem_controllers.stages.stage.Stage.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The stages control function.</span>
 
@@ -352,14 +353,14 @@
 
 
 <div class="viewcode-block" id="Stage.reset">
-<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stages.html#gem_controllers.stages.stage.Stage.reset">[docs]</a>
+<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stage.html#gem_controllers.stages.stage.Stage.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the stage to an initial state (e.g. before a new episode starts).&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="Stage.tune">
-<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stages.html#gem_controllers.stages.stage.Stage.tune">[docs]</a>
+<a class="viewcode-back" href="../../../parts_gc/api_documentation/stages/stage.html#gem_controllers.stages.stage.Stage.tune">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fits the stages parameters to the passed environment.</span>
 

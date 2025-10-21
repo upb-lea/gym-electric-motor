@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.reward_functions.weighted_sum_of_errors &mdash; gym-electric-motor 2021 documentation</title>
+  <title>Stage &mdash; gym-electric-motor 2021 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -17,7 +18,9 @@
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Block Diagrams" href="../block_diagrams/block_diagrams.html" />
+    <link rel="prev" title="Discrete Output Stage" href="disc_output_stage.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -251,59 +254,59 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/stages.html">Stages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/base_controllers/base_controller.html">Base Controller</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/base_controllers/p_controller.html">P Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/base_controllers/i_controller.html">I Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/base_controllers/pi_controller.html">PI Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/base_controllers/pid_controller.html">PID Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/base_controllers/three_point_controller.html">Three Point Controller</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../gem_control.html">GEM Control API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="stages.html">Stages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="base_controllers/base_controller.html">Base Controller</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="base_controllers/p_controller.html">P Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="base_controllers/i_controller.html">I Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="base_controllers/pi_controller.html">PI Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="base_controllers/pid_controller.html">PID Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="base_controllers/three_point_controller.html">Three Point Controller</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html">Operation Point Selection</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html">External Exited DC Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/pmsm_ops.html">PMSM Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/eesm_ops.html">EESM Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html">SCIM Operation Point Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation_point_selection/operation_point_selection.html">Operation Point Selection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/exter_dc_ops.html">External Exited DC Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/pmsm_ops.html">PMSM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/eesm_ops.html">EESM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selection/scim_ops.html">SCIM Operation Point Selection</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stage.html">Clipping Stages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/clipping_stages/absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/clipping_stages/combined_clipping_stages.html">Combined Clipping Stage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/clipping_stages/squared_clipping_stage.html">Squared Clipping Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clipping_stages/clipping_stage.html">Clipping Stages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clipping_stages/absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clipping_stages/combined_clipping_stages.html">Combined Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clipping_stages/squared_clipping_stage.html">Squared Clipping Stage</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/abc_transformation.html">ABC Transformation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/anti_windup.html">Anti Windup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/emf_feedforward/emf_feedforward.html">EMF Feedforward</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/emf_feedforward/emf_feedforward_ind.html">EMF Feedforward IM</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/emf_feedforward/emf_feedforward_eesm.html">EMF Feedforward EESM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abc_transformation.html">ABC Transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="anti_windup.html">Anti Windup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="emf_feedforward/emf_feedforward.html">EMF Feedforward</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="emf_feedforward/emf_feedforward_ind.html">EMF Feedforward IM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="emf_feedforward/emf_feedforward_eesm.html">EMF Feedforward EESM</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/input_stage.html">Input Stage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/cont_output_stage.html">Continous Output Stage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/disc_output_stage.html">Discrete Output Stage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/stages/stage.html">Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_stage.html">Input Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cont_output_stage.html">Continous Output Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="disc_output_stage.html">Discrete Output Stage</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Stage</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/block_diagrams/block_diagrams.html">Block Diagrams</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../parts_gc/api_documentation/block_diagrams/block_diagram.html">Block Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../block_diagrams/block_diagrams.html">Block Diagrams</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../block_diagrams/block_diagram.html">Block Diagram</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/pi_current_controller.html">PI Current Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/torque_controller.html">Torque Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/pi_speed_controller.html">PI Speed Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_adapter.html">GEM Adapter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/reference_plotter.html">Reference Plotter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/utils.html">Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../parts_gc/api_documentation/gem_controllers.html">GEM Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pi_current_controller.html">PI Current Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../torque_controller.html">Torque Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pi_speed_controller.html">PI Speed Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gem_adapter.html">GEM Adapter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference_plotter.html">Reference Plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gem_controllers.html">GEM Controllers</a></li>
 </ul>
 </li>
 </ul>
@@ -322,9 +325,11 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">gym_electric_motor.reward_functions.weighted_sum_of_errors</li>
+          <li class="breadcrumb-item"><a href="../gem_control.html">GEM Control API Documentation</a></li>
+          <li class="breadcrumb-item"><a href="stages.html">Stages</a></li>
+      <li class="breadcrumb-item active">Stage</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/parts_gc/api_documentation/stages/stage.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -332,150 +337,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for gym_electric_motor.reward_functions.weighted_sum_of_errors</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+  <section id="stage">
+<h1>Stage<a class="headerlink" href="#stage" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gem_controllers.stages.stage.Stage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.stages.stage.</span></span><span class="sig-name descname"><span class="pre">Stage</span></span><a class="reference internal" href="../../../_modules/gem_controllers/stages/stage.html#Stage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.stage.Stage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>The stage is the basic module in the gem-controller structure.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.stage.Stage.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/stage.html#Stage.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.stage.Stage.__call__" title="Link to this definition"></a></dt>
+<dd><p>The stages control function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>numpy.ndarray</em>) – The denormalized state of the environment.</p></li>
+<li><p><strong>reference</strong> (<em>numpy.ndarray</em>) – The actual reference value for this stage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new reference-value for the next state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.stage.Stage.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/stage.html#Stage.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.stage.Stage.reset" title="Link to this definition"></a></dt>
+<dd><p>Resets the stage to an initial state (e.g. before a new episode starts).</p>
+</dd></dl>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..core</span><span class="w"> </span><span class="kn">import</span> <span class="n">RewardFunction</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_state_array</span>
+<dl class="py method">
+<dt class="sig sig-object py" id="gem_controllers.stages.stage.Stage.tune">
+<span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/gem_controllers/stages/stage.html#Stage.tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.stage.Stage.tune" title="Link to this definition"></a></dt>
+<dd><p>Fits the stages parameters to the passed environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> (<em>gym_electric_motor.ElectricMotorEnvironment</em>) – The environment to be controlled.</p></li>
+<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The id of the environment.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Optional further parameters to tune the stages.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
+</dd></dl>
 
-<div class="viewcode-block" id="WeightedSumOfErrors">
-<a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">WeightedSumOfErrors</span><span class="p">(</span><span class="n">RewardFunction</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A reward function that calculates the reward as the weighted sum of errors with a certain power.</span>
+</section>
 
-<span class="sd">    .. math::</span>
-<span class="sd">        r_{wse} = - \sum_i w_i ((|s_i-s^*_i|) / l_i) ^{n_i} + b</span>
-
-<span class="sd">    Notation:</span>
-<span class="sd">        - :math:`r_\mathrm{wse}`: Weighted sum of error reward</span>
-<span class="sd">        - :math:`w_{i}`: Reward weight of state :math:`i`</span>
-<span class="sd">        - :math:`s_{i}`: State value of state :math:`i`</span>
-<span class="sd">        - :math:`s^*_{i}`: Reference value of state :math:`i`</span>
-<span class="sd">        - :math:`l_{i}`: State length of state :math:`i`</span>
-<span class="sd">        - :math:`n_{i}`: Reward power of state :math:`i`</span>
-<span class="sd">        - :math:`b`: Bias</span>
-
-<span class="sd">    | :math:`l_i = 1` for states with positive values only.</span>
-<span class="sd">    | :math:`l_i = 2` for states with positive and negative values.</span>
-
-<span class="sd">    If environments constraints are violated to a certain degree, a special violation reward is returned as follows:</span>
-
-<span class="sd">    .. math::</span>
-<span class="sd">        r_{total} = (1.0 - d_{violation})  r_{wse} + d_{violation} r_{violation}</span>
-
-<span class="sd">    Notation:</span>
-<span class="sd">        - :math:`r_{total}`: Total reward</span>
-<span class="sd">        - :math:`r_{wse}`: Weighted sum of error reward</span>
-<span class="sd">        - :math:`r_{violation}`: Constraint violation reward</span>
-<span class="sd">        - :math:`d_{violation}`: Limit violation degree :math:`d_{violation} \in [0,1]`</span>
-
-
-<span class="sd">    The violation reward can be chosen freely by the user and shall punish the agents to comply with the constraints.</span>
-<span class="sd">    Per default, the violation reward is selected so that it is always the worst expected reward the agent could get.</span>
-
-<span class="sd">    .. math::</span>
-<span class="sd">        r_{violation} = r_{wse,min} / (1 - \gamma)</span>
-
-<span class="sd">    :math:`r_{wse,min}` is the minimal :math:`r_{wse}` (=reward_range[0]) and :math:`\gamma` the agents discount factor.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">reward_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">normed_reward_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">violation_reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-        <span class="n">reward_power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            reward_weights(dict/list/ndarray(float)): Dict mapping state names to reward_weights, 0 otherwise.</span>
-<span class="sd">                Or an array with the reward_weights on the position of the state_names.</span>
-
-<span class="sd">            normed_reward_weights(bool): If True, the reward weights will be normalized to sum up to 1.</span>
-
-<span class="sd">            violation_reward(None/float): The punishment reward if constraints have been violated.</span>
-
-<span class="sd">                - None(default): Per default, the violation reward is calculated as described above.</span>
-<span class="sd">                - float: This value is taken as limit violation reward.</span>
-
-<span class="sd">            gamma(float in [0.0, 1.0]): Discount factor for the reward punishment.</span>
-<span class="sd">                Should equal agents&#39; discount factor gamma. Used only, if violation_reward=None.</span>
-
-<span class="sd">            reward_power(dict/list(float)/float): Reward power for each of the systems states.</span>
-
-<span class="sd">            bias(float/&#39;positive&#39;): Additional bias that is added to the reward.</span>
-
-<span class="sd">                - float: The value that is added</span>
-<span class="sd">                - &#39;positive&#39;: The bias is selected so that the minimal reward is zero and all further are positive.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n</span> <span class="o">=</span> <span class="n">reward_power</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">=</span> <span class="n">reward_weights</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_length</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_normed</span> <span class="o">=</span> <span class="n">normed_reward_weights</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span> <span class="o">=</span> <span class="n">gamma</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span> <span class="o">=</span> <span class="n">bias</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span> <span class="o">=</span> <span class="n">violation_reward</span>
-
-<div class="viewcode-block" id="WeightedSumOfErrors.set_modules">
-<a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.set_modules">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">constraint_monitor</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_modules</span><span class="p">(</span><span class="n">physical_system</span><span class="p">,</span> <span class="n">reference_generator</span><span class="p">,</span> <span class="n">constraint_monitor</span><span class="p">)</span>
-        <span class="n">ps</span> <span class="o">=</span> <span class="n">physical_system</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state_length</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_space</span><span class="o">.</span><span class="n">low</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span>
-        <span class="n">referenced_states</span> <span class="o">=</span> <span class="n">reference_generator</span><span class="o">.</span><span class="n">referenced_states</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># If there are any referenced states reward weights are equally distributed over them</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">referenced_states</span><span class="p">):</span>
-                <span class="n">reward_weights</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)[</span><span class="n">referenced_states</span><span class="p">],</span>
-                    <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)[</span><span class="n">referenced_states</span><span class="p">]),</span>
-                <span class="p">)</span>
-            <span class="c1"># If no referenced states and no reward weights passed, uniform reward over all states</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">reward_weights</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">),</span>
-                    <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">physical_system</span><span class="o">.</span><span class="n">state_names</span><span class="p">)),</span>
-                <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">reward_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">=</span> <span class="n">set_state_array</span><span class="p">(</span><span class="n">reward_weights</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">state_names</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;All reward weights sum up to zero&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">rw_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normed</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span> <span class="o">==</span> <span class="s2">&quot;positive&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">/</span> <span class="n">rw_sum</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span> <span class="o">==</span> <span class="s2">&quot;positive&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span> <span class="o">=</span> <span class="n">rw_sum</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">rw_sum</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="WeightedSumOfErrors.reward">
-<a class="viewcode-back" href="../../../parts_gem/reward_functions/weighted_sum_of_errors.html#gym_electric_motor.reward_functions.weighted_sum_of_errors.WeightedSumOfErrors.reward">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">violation_degree</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">violation_degree</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wse_reward</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span> <span class="o">+</span> <span class="n">violation_degree</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_violation_reward</span></div>
-
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_wse_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
-        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reward_weights</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">state</span> <span class="o">-</span> <span class="n">reference</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_length</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bias</span></div>
-
-</pre></div>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="disc_output_stage.html" class="btn btn-neutral float-left" title="Discrete Output Stage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../block_diagrams/block_diagrams.html" class="btn btn-neutral float-right" title="Block Diagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
