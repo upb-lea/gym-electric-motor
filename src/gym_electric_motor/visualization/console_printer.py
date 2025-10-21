@@ -5,10 +5,9 @@ from ..core import ElectricMotorVisualization
 
 class ConsolePrinter(ElectricMotorVisualization):
     """Prints current training values of the environment on the console.
-
-    These include environment state and reference values as well as the number of training steps, the rewards
-    and the cumulative reward. It also shows why an episode has terminated (external, constraint violation)
-    """
+       These include environment state and reference values as well as the number of training steps, the rewards
+       and the cumulative reward. It also shows why an episode has terminated (external, constraint violation)
+       """
 
     def __init__(self, verbose=0, update_freq=1):
         """
