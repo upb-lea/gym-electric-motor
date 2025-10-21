@@ -21,15 +21,15 @@ In general, all environment-ids are structured as follows:
    * - **Permanently Excited DC Motor Environments**
      - 
 
-   * - Discrete Torque Control Permanently Excited DC Motor Environment
+   * - Finite Torque Control Permanently Excited DC Motor Environment
      - ``'Finite-TC-PermExDc-v0'``
    * - Continuous Torque Control Permanently Excited DC Motor Environment
      - ``'Cont-TC-PermExDc-v0'``
-   * - Discrete Speed Control Permanently Excited DC Motor Environment
+   * - Finite Speed Control Permanently Excited DC Motor Environment
      - ``'Finite-SC-PermExDc-v0'``
    * - Continuous Speed Control Permanently Excited DC Motor Environment
      - ``'Cont-SC-PermExDc-v0'``
-   * - Discrete Current Control Permanently Excited DC Motor Environment
+   * - Finite Current Control Permanently Excited DC Motor Environment
      - ``'Finite-CC-PermExDc-v0'``
    * - Continuous Current Control Permanently Excited DC Motor Environment
      - ``'Cont-CC-PermExDc-v0'``
@@ -37,15 +37,15 @@ In general, all environment-ids are structured as follows:
    * - **Externally Excited DC Motor Environments**
      -
 
-   * - Discrete Torque Control Externally Excited DC Motor Environment
+   * - Finite Torque Control Externally Excited DC Motor Environment
      - ``'Finite-TC-ExtExDc-v0'``
    * - Continuous Torque Control Externally Excited DC Motor Environment
      - ``'Cont-TC-ExtExDc-v0'``
-   * - Discrete Speed Control Externally Excited DC Motor Environment
+   * - Finite Speed Control Externally Excited DC Motor Environment
      - ``'Finite-SC-ExtExDc-v0'``
    * - Continuous Speed Control Externally Excited DC Motor Environment
      - ``'Cont-SC-ExtExDc-v0'``
-   * - Discrete Current Control Externally Excited DC Motor Environment
+   * - Finite Current Control Externally Excited DC Motor Environment
      - ``'Finite-CC-ExtExDc-v0'``
    * - Continuous Current Control Externally Excited DC Motor Environment
      - ``'Cont-CC-ExtExDc-v0'``
@@ -53,15 +53,15 @@ In general, all environment-ids are structured as follows:
    * - **Series DC Motor Environments**
      -
 
-   * - Discrete Torque Control Series DC Motor Environment
+   * - Finite Torque Control Series DC Motor Environment
      - ``'Finite-TC-SeriesDc-v0'``
    * - Continuous Torque Control Series DC Motor Environment
      - ``'Cont-TC-SeriesDc-v0'``
-   * - Discrete Speed Control Series DC Motor Environment
+   * - Finite Speed Control Series DC Motor Environment
      - ``'Finite-SC-SeriesDc-v0'``
    * - Continuous Speed Control Series DC Motor Environment
      - ``'Cont-SC-SeriesDc-v0'``
-   * - Discrete Current Control Series DC Motor Environment
+   * - Finite Current Control Series DC Motor Environment
      - ``'Finite-CC-SeriesDc-v0'``
    * - Continuous Current Control Series DC Motor Environment
      - ``'Cont-CC-SeriesDc-v0'``
@@ -69,15 +69,15 @@ In general, all environment-ids are structured as follows:
    * - **Shunt DC Motor Environments**
      -
 
-   * - Discrete Torque Control Shunt DC Motor Environment
+   * - Finite Torque Control Shunt DC Motor Environment
      - ``'Finite-TC-ShuntDc-v0'``
    * - Continuous Torque Control Shunt DC Motor Environment
      - ``'Cont-TC-ShuntDc-v0'``
-   * - Discrete Speed Control Shunt DC Motor Environment
+   * - Finite Speed Control Shunt DC Motor Environment
      - ``'Finite-SC-ShuntDc-v0'``
    * - Continuous Speed Control Shunt DC Motor Environment
      - ``'Cont-SC-ShuntDc-v0'``
-   * - Discrete Current Control Shunt DC Motor Environment
+   * - Finite Current Control Shunt DC Motor Environment
      - ``'Finite-CC-ShuntDc-v0'``
    * - Continuous Current Control Shunt DC Motor Environment
      - ``'Cont-CC-ShuntDc-v0'``
@@ -87,15 +87,15 @@ In general, all environment-ids are structured as follows:
 
    * - Finite Torque Control PMSM Environment
      - ``'Continuous Finite-TC-PMSM-v0'``
-   * - Torque Control PMSM Environment
+   * - Continuous Torque Control PMSM Environment
      - ``'Cont-TC-PMSM-v0'``
    * - Finite Speed Control PMSM Environment
      - ``'Continuous Finite-SC-PMSM-v0'``
-   * - Speed Control PMSM Environment
+   * - Continuous Speed Control PMSM Environment
      - ``'Cont-SC-PMSM-v0'``
    * - Finite Current Control PMSM Environment
      - ``'Continuous Finite-CC-PMSM-v0'``
-   * - Current Control PMSM Environment
+   * - Continuous Current Control PMSM Environment
      - ``'Cont-CC-PMSM-v0'``
 
    * - **Externally Excited Synchronous Motor (EESM) Environments**
@@ -103,15 +103,15 @@ In general, all environment-ids are structured as follows:
 
    * - Finite Torque Control EESM Environment
      - ``'Continuous Finite-TC-EESM-v0'``
-   * - Torque Control EESM Environment
+   * - ContinuousTorque Control EESM Environment
      - ``'Cont-TC-EESM-v0'``
    * - Finite Speed Control EESM Environment
      - ``'Continuous Finite-SC-EESM-v0'``
-   * - Speed Control EESM Environment
+   * - Continuous Speed Control EESM Environment
      - ``'Cont-SC-EESM-v0'``
    * - Finite Current Control EESM Environment
      - ``'Continuous Finite-CC-EESM-v0'``
-   * - Current Control EESM Environment
+   * - Continuous Current Control EESM Environment
      - ``'Cont-CC-EESM-v0'``
 
    * - **Synchronous Reluctance Motor (SynRM) Environments**
@@ -119,15 +119,15 @@ In general, all environment-ids are structured as follows:
 
    * - Finite Torque Control SynRM Environment
      - ``'Continuous Finite-TC-SynRM-v0'``
-   * - Torque Control SynRM Environment
+   * - Continuous Torque Control SynRM Environment
      - ``'Cont-TC-SynRM-v0'``
    * - Finite Speed Control SynRM Environment
      - ``'Continuous Finite-SC-SynRM-v0'``
-   * - Speed Control SynRM Environment
+   * - Continuous Speed Control SynRM Environment
      - ``'Cont-SC-SynRM-v0'``
    * - Finite Current Control SynRM Environment
      - ``'Continuous Finite-CC-SynRM-v0'``
-   * - Current Control SynRM Environment
+   * - Continuous Current Control SynRM Environment
      - ``'Cont-CC-SynRM-v0'``
 
    * - **Squirrel Cage Induction Motor (SCIM) Environments**
@@ -135,15 +135,15 @@ In general, all environment-ids are structured as follows:
 
    * - Finite Torque Control SCIM Environment
      - ``'Continuous Finite-TC-SCIM-v0'``
-   * - Torque Control SCIM Environment
+   * - Continuous Torque Control SCIM Environment
      - ``'Cont-TC-SCIM-v0'``
    * - Finite Speed Control SCIM Environment
      - ``'Continuous Finite-SC-SCIM-v0'``
-   * - Speed Control SCIM Environment
+   * - Continuous Speed Control SCIM Environment
      - ``'Cont-SC-SCIM-v0'``
    * - Finite Current Control SCIM Environment
      - ``'Continuous Finite-CC-SCIM-v0'``
-   * - Current Control SCIM Environment
+   * - Continuous Current Control SCIM Environment
      - ``'Cont-CC-SCIM-v0'``
 
    * - **Doubly Fed Induction Motor (DFIM) Environments**
@@ -151,15 +151,15 @@ In general, all environment-ids are structured as follows:
 
    * - Finite Torque Control DFIM Environment
      - ``'Continuous Finite-TC-DFIM-v0'``
-   * - Torque Control DFIM Environment
+   * - Continuous Torque Control DFIM Environment
      - ``'Cont-TC-DFIM-v0'``
    * - Finite Speed Control DFIM Environment
      - ``'Continuous Finite-SC-DFIM-v0'``
-   * - Speed Control DFIM Environment
+   * - Continuous Speed Control DFIM Environment
      - ``'Cont-SC-DFIM-v0'``
    * - Finite Current Control DFIM Environment
      - ``'Continuous Finite-CC-DFIM-v0'``
-   * - Current Control DFIM Environment
+   * - Continuous Current Control DFIM Environment
      - ``'Cont-CC-DFIM-v0'``
 
    * - **Six Phase PMSM (SIXPMSM) Environments**
@@ -167,15 +167,15 @@ In general, all environment-ids are structured as follows:
 
    * - Finite Torque Control SIXPMSM Environment
      - ``'Continuous Finite-TC-SIXPMSM-v0'``
-   * - Torque Control SIXPMSM Environment
+   * - Continuous Torque Control SIXPMSM Environment
      - ``'Cont-TC-SIXPMSM-v0'``
    * - Finite Speed Control SIXPMSM Environment
      - ``'Continuous Finite-SC-SIXPMSM-v0'``
-   * - Speed Control SIXPMSM Environment
+   * - Continuous Speed Control SIXPMSM Environment
      - ``'Cont-SC-SIXPMSM-v0'``
    * - Finite Current Control SIXPMSM Environment
      - ``'Continuous Finite-CC-SIXPMSM-v0'``
-   * - Current Control SIXPMSM Environment
+   * - Continuous Current Control SIXPMSM Environment
      - ``'Cont-CC-SIXPMSM-v0'``
 
 .. toctree::
