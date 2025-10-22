@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Absolute Clipping Stage" href="absolute_clipping_stage.html" />
-    <link rel="prev" title="SCIM Operation Point Selection" href="../operation_point_selection/scim_ops.html" /> 
+    <link rel="prev" title="&lt;no title&gt;" href="../operation_point_selection/operation_point_selections.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -275,12 +275,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../operation_point_selection/pmsm_ops.html">PMSM Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../operation_point_selection/eesm_ops.html">EESM Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../operation_point_selection/scim_ops.html">SCIM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_point_selection/operation_point_selections.html"><code class="docutils literal notranslate"><span class="pre">OperationPointSelection</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Clipping Stages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="combined_clipping_stages.html">Combined Clipping Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="squared_clipping_stage.html">Squared Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clipping_stages.html"><code class="docutils literal notranslate"><span class="pre">ClippingStage</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../abc_transformation.html">ABC Transformation</a></li>
@@ -344,55 +346,16 @@
 <li class="toctree-l1"><a class="reference internal" href="absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="combined_clipping_stages.html">Combined Clipping Stage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="squared_clipping_stage.html">Squared Clipping Stage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clipping_stages.html"><code class="docutils literal notranslate"><span class="pre">ClippingStage</span></code></a></li>
 </ul>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.stages.clipping_stages.clipping_stage.</span></span><span class="sig-name descname"><span class="pre">ClippingStage</span></span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/clipping_stages/clipping_stage.html#ClippingStage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../stage.html#gem_controllers.stages.stage.Stage" title="gem_controllers.stages.stage.Stage"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stage</span></code></a></p>
-<p>This is the base class for all clipping stages.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.reset" title="Link to this definition"></a></dt>
-<dd><p>Resets the stage to an initial state (e.g. before a new episode starts).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.tune">
-<span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><span class="pre">ElectricMotorEnvironment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/clipping_stages/clipping_stage.html#ClippingStage.tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.tune" title="Link to this definition"></a></dt>
-<dd><p>Set the limits for the clipped states.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<em>gym_electric_motor.ElectricMotorEnvironment</em>) – The environment to be controlled.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The id of the environment.</p></li>
-<li><p><strong>margin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Percentage, how far the value should be clipped below the limit.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.clipped">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clipped</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.clipped" title="Link to this definition"></a></dt>
-<dd><p>Flag, if the references have been clipped</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.clipping_difference">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clipping_difference</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.clipping_difference" title="Link to this definition"></a></dt>
-<dd><p>Difference between the reference and the clipped reference</p>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../operation_point_selection/scim_ops.html" class="btn btn-neutral float-left" title="SCIM Operation Point Selection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../operation_point_selection/operation_point_selections.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="absolute_clipping_stage.html" class="btn btn-neutral float-right" title="Absolute Clipping Stage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

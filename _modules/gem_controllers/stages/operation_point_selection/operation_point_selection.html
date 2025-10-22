@@ -272,12 +272,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/pmsm_ops.html">PMSM Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/eesm_ops.html">EESM Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html">SCIM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html"><code class="docutils literal notranslate"><span class="pre">OperationPointSelection</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stage.html">Clipping Stages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/combined_clipping_stages.html">Combined Clipping Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/squared_clipping_stage.html">Squared Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stages.html"><code class="docutils literal notranslate"><span class="pre">ClippingStage</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/abc_transformation.html">ABC Transformation</a></li>
@@ -337,12 +339,12 @@
 
 
 <div class="viewcode-block" id="OperationPointSelection">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OperationPointSelection</span><span class="p">(</span><span class="n">Stage</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all operation point selections.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="OperationPointSelection.__call__">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.__call__">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the current operation point for a given torque reference value.</span>
@@ -359,7 +361,7 @@
 
 
 <div class="viewcode-block" id="OperationPointSelection._select_operating_point">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection._select_operating_point">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection._select_operating_point">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_select_operating_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interal calculation of the operation point</span>
@@ -376,7 +378,7 @@
 
 
 <div class="viewcode-block" id="OperationPointSelection.tune">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.tune">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.tune">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">current_safety_margin</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the motor parameters, limits and indices of a operation point selection class.</span>

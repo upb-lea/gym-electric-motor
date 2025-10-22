@@ -272,12 +272,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/pmsm_ops.html">PMSM Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/eesm_ops.html">EESM Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html">SCIM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html"><code class="docutils literal notranslate"><span class="pre">OperationPointSelection</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stage.html">Clipping Stages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/combined_clipping_stages.html">Combined Clipping Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/squared_clipping_stage.html">Squared Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stages.html"><code class="docutils literal notranslate"><span class="pre">ClippingStage</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/abc_transformation.html">ABC Transformation</a></li>
@@ -341,7 +343,7 @@
 
 
 <div class="viewcode-block" id="ClippingStage">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stage.html#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stages.html#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClippingStage</span><span class="p">(</span><span class="n">Stage</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the base class for all clipping stages.&quot;&quot;&quot;</span>
 
@@ -369,7 +371,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 <div class="viewcode-block" id="ClippingStage.tune">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stage.html#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.tune">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stages.html#gem_controllers.stages.clipping_stages.clipping_stage.ClippingStage.tune">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">gym_electric_motor</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">ElectricMotorEnvironment</span><span class="p">,</span> <span class="n">env_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the limits for the clipped states.</span>
