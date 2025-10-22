@@ -18,9 +18,7 @@
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Clipping Stages" href="../clipping_stages/clipping_stage.html" />
-    <link rel="prev" title="SCIM Operation Point Selection" href="scim_ops.html" /> 
+    <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -254,10 +252,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../gem_control.html">GEM Control API Documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../stages.html">Stages</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../gem_control.html">GEM Control API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../stages.html">Stages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../base_controllers/base_controller.html">Base Controller</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../base_controllers/p_controller.html">P Controller</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../base_controllers/i_controller.html">I Controller</a></li>
@@ -267,17 +265,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../base_controllers/base_controllers.html">Base Controller</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="operation_point_selection.html">Operation Point Selection</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pmsm_ops.html">PMSM Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="eesm_ops.html">EESM Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scim_ops.html">SCIM Operation Point Selection</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Operation Point Selection</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="operation_point_selection.html">Operation Point Selection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../clipping_stages/clipping_stage.html">Clipping Stages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../clipping_stages/absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../clipping_stages/combined_clipping_stages.html">Combined Clipping Stage</a></li>
@@ -327,9 +315,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../gem_control.html">GEM Control API Documentation</a></li>
-          <li class="breadcrumb-item"><a href="../stages.html">Stages</a></li>
-          <li class="breadcrumb-item"><a href="operation_point_selection.html">Operation Point Selection</a></li>
       <li class="breadcrumb-item active">Operation Point Selection</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../../_sources/parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.rst.txt" rel="nofollow"> View page source</a>
@@ -342,83 +327,24 @@
              
   <section id="operation-point-selection">
 <h1>Operation Point Selection<a class="headerlink" href="#operation-point-selection" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.stages.operation_point_selection.operation_point_selection.</span></span><span class="sig-name descname"><span class="pre">OperationPointSelection</span></span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/operation_point_selection/operation_point_selection.html#OperationPointSelection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../stage.html#gem_controllers.stages.stage.Stage" title="gem_controllers.stages.stage.Stage"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stage</span></code></a></p>
-<p>Base class for all operation point selections.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/operation_point_selection/operation_point_selection.html#OperationPointSelection.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.__call__" title="Link to this definition"></a></dt>
-<dd><p>Calculate the current operation point for a given torque reference value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>np.ndarray</em>) – The state of the environment.</p></li>
-<li><p><strong>reference</strong> (<em>np.ndarray</em>) – The reference of the state.</p></li>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Subcomponents of Operation Point Selection</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pmsm_ops.html">PMSM Operation Point Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eesm_ops.html">EESM Operation Point Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scim_ops.html">SCIM Operation Point Selection</a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>references for the current control stage</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>current_reference(np.ndarray)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection._select_operating_point">
-<span class="sig-name descname"><span class="pre">_select_operating_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/operation_point_selection/operation_point_selection.html#OperationPointSelection._select_operating_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection._select_operating_point" title="Link to this definition"></a></dt>
-<dd><p>Interal calculation of the operation point</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>np.ndarray</em>) – The state of the environment.</p></li>
-<li><p><strong>reference</strong> (<em>np.ndarray</em>) – The reference of the state.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>current refernce values</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.reset" title="Link to this definition"></a></dt>
-<dd><p>Resets the stage to an initial state (e.g. before a new episode starts).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.tune">
-<span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_safety_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/gem_controllers/stages/operation_point_selection/operation_point_selection.html#OperationPointSelection.tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.tune" title="Link to this definition"></a></dt>
-<dd><p>Set the motor parameters, limits and indices of a operation point selection class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<a class="reference internal" href="../../../../parts_gem/environments/environment.html#gym_electric_motor.core.ElectricMotorEnvironment" title="gym_electric_motor.core.ElectricMotorEnvironment"><em>ElectricMotorEnvironment</em></a>) – The GEM-Environment that the controller shall be created for.</p></li>
-<li><p><strong>env_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The corresponding environment-id to specify the concrete environment.</p></li>
-<li><p><strong>current_safety_margin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Percentage of the current margin to the current limit.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+</div>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="scim_ops.html" class="btn btn-neutral float-left" title="SCIM Operation Point Selection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../clipping_stages/clipping_stage.html" class="btn btn-neutral float-right" title="Clipping Stages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 
