@@ -13,4 +13,4 @@ Operation Point Selection
    pmsm_ops
    eesm_ops
    scim_ops
-   operation_point_selections
+   operation_point_selection
