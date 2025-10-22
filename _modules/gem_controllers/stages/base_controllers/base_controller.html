@@ -261,6 +261,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/pi_controller.html">PI Controller</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/pid_controller.html">PID Controller</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/three_point_controller.html">Three Point Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controllers.html"><code class="docutils literal notranslate"><span class="pre">BaseController</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html">Operation Point Selection</a><ul>
@@ -337,7 +338,7 @@
 
 
 <div class="viewcode-block" id="BaseController">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controller.html#gem_controllers.stages.base_controllers.base_controller.BaseController">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controllers.html#gem_controllers.stages.base_controllers.base_controller.BaseController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseController</span><span class="p">(</span><span class="n">Stage</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The base controller is the base class for all dynamic control stages like the P-I-D controllers or the</span>
 <span class="sd">    Three-Point controller.</span>
@@ -354,7 +355,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_control_task</span> <span class="o">=</span> <span class="n">EBaseControllerTask</span><span class="o">.</span><span class="n">get_control_task</span><span class="p">(</span><span class="n">control_task</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseController.__call__">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controller.html#gem_controllers.stages.base_controllers.base_controller.BaseController.__call__">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controllers.html#gem_controllers.stages.base_controllers.base_controller.BaseController.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the reference value of the base controller.</span>
@@ -370,7 +371,7 @@
 
 
 <div class="viewcode-block" id="BaseController.tune">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controller.html#gem_controllers.stages.base_controllers.base_controller.BaseController.tune">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controllers.html#gem_controllers.stages.base_controllers.base_controller.BaseController.tune">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="o">**</span><span class="n">base_controller_kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tune a base controller.</span>
@@ -384,7 +385,7 @@
 
 
 <div class="viewcode-block" id="BaseController.feedback">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controller.html#gem_controllers.stages.base_controllers.base_controller.BaseController.feedback">[docs]</a>
+<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controllers.html#gem_controllers.stages.base_controllers.base_controller.BaseController.feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">clipped_reference</span><span class="p">):</span>
         <span class="k">pass</span></div>
 </div>
