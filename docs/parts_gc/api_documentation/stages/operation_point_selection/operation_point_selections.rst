@@ -1,3 +1,5 @@
+Operation Point Selection
+=========================
 .. currentmodule:: gem_controllers.stages.operation_point_selection.operation_point_selection
 
 .. autoclass:: OperationPointSelection
