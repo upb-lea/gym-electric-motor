@@ -3,9 +3,10 @@ Operation Point Selection
 
 .. toctree::
    :maxdepth: 1
+   :caption: Subcomponents of Operation Point Selection
 
    permex_dc_ops
-   exter_dc_ops
+   extex_dc_ops
    series_dc_ops
    shunt_dc_ops
    foc_ops
@@ -13,7 +14,9 @@ Operation Point Selection
    eesm_ops
    scim_ops
 
-.. autoclass:: gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection
+.. currentmodule:: gem_controllers.stages.operation_point_selection.operation_point_selection
+
+.. autoclass:: OperationPointSelection
    :members:
    :undoc-members:
    :inherited-members:
