@@ -1,3 +1,5 @@
+Base Controller
+===============
 .. currentmodule:: gem_controllers.stages.base_controllers.base_controller
 
 .. autoclass:: BaseController
