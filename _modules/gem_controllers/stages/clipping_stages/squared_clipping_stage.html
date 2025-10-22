@@ -265,7 +265,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html">Operation Point Selection</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html">External Exited DC Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
@@ -376,8 +375,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_control_task</span> <span class="o">=</span> <span class="n">control_task</span>
 
-<div class="viewcode-block" id="SquaredClippingStage.__call__">
-<a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/clipping_stages/squared_clipping_stage.html#gem_controllers.stages.clipping_stages.squared_clipping_stage.SquaredClippingStage.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clips a reference to the limits.</span>
@@ -398,8 +395,7 @@
             <span class="k">else</span> <span class="n">reference</span> <span class="o">/</span> <span class="n">relative_reference_length</span> <span class="o">*</span> <span class="n">relative_maximum</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clipping_difference</span> <span class="o">=</span> <span class="n">reference</span> <span class="o">-</span> <span class="n">clipped</span>
-        <span class="k">return</span> <span class="n">clipped</span></div>
-
+        <span class="k">return</span> <span class="n">clipped</span>
 
 <div class="viewcode-block" id="SquaredClippingStage.tune">
 <a class="viewcode-back" href="../../../../parts_gc/api_documentation/stages/clipping_stages/squared_clipping_stage.html#gem_controllers.stages.clipping_stages.squared_clipping_stage.SquaredClippingStage.tune">[docs]</a>
