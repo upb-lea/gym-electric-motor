@@ -266,7 +266,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html">Operation Point Selection</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="parts_gc/api_documentation/stages/operation_point_selection/permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="parts_gc/api_documentation/stages/operation_point_selection/extex_dc_ttc.html">Externally Excited DC Motor Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html">Externally Excited DC Motor Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="parts_gc/api_documentation/stages/operation_point_selection/series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="parts_gc/api_documentation/stages/operation_point_selection/foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
@@ -399,6 +399,8 @@
         <li><a href="parts_gc/api_documentation/stages/emf_feedforward/emf_feedforward_ind.html#gem_controllers.stages.emf_feedforward_ind.EMFFeedforwardInd.__call__">(gem_controllers.stages.emf_feedforward_ind.EMFFeedforwardInd method)</a>
 </li>
         <li><a href="parts_gc/api_documentation/stages/input_stage.html#gem_controllers.stages.input_stage.InputStage.__call__">(gem_controllers.stages.input_stage.InputStage method)</a>
+</li>
+        <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection.__call__">(gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection method)</a>
 </li>
         <li><a href="parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.__call__">(gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection method)</a>
 </li>
@@ -1283,9 +1285,11 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/series_dc_ops.html#gem_controllers.stages.operation_point_selection.series_dc_ops.SeriesDcOperationPointSelection.cross_inductance">cross_inductance (gem_controllers.stages.operation_point_selection.series_dc_ops.SeriesDcOperationPointSelection property)</a>
+      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection.cross_inductance">cross_inductance (gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection property)</a>
 
       <ul>
+        <li><a href="parts_gc/api_documentation/stages/operation_point_selection/series_dc_ops.html#gem_controllers.stages.operation_point_selection.series_dc_ops.SeriesDcOperationPointSelection.cross_inductance">(gem_controllers.stages.operation_point_selection.series_dc_ops.SeriesDcOperationPointSelection property)</a>
+</li>
         <li><a href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html#gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection.cross_inductance">(gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection property)</a>
 </li>
       </ul></li>
@@ -2105,6 +2109,8 @@
 </li>
       <li><a href="parts_gem/physical_systems/mechanical_loads/ext_speed_load.html#gym_electric_motor.physical_systems.mechanical_loads.ExternalSpeedLoad">ExternalSpeedLoad (class in gym_electric_motor.physical_systems.mechanical_loads)</a>
 </li>
+      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection">ExtExDcOperationPointSelection (class in gem_controllers.stages.operation_point_selection.extex_dc_ttc)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -2673,8 +2679,12 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html#gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection.i_a_idx">i_a_idx (gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection property)</a>
+      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection.i_a_idx">i_a_idx (gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection property)</a>
+
+      <ul>
+        <li><a href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html#gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection.i_a_idx">(gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection property)</a>
 </li>
+      </ul></li>
       <li><a href="parts_gem/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.I_A_IDX">I_A_IDX (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor attribute)</a>
 
       <ul>
@@ -2689,8 +2699,12 @@
       </ul></li>
       <li><a href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html#gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection.i_a_limit">i_a_limit (gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection property)</a>
 </li>
-      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html#gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection.i_e_idx">i_e_idx (gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection property)</a>
+      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection.i_e_idx">i_e_idx (gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection property)</a>
+
+      <ul>
+        <li><a href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html#gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection.i_e_idx">(gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection property)</a>
 </li>
+      </ul></li>
       <li><a href="parts_gem/physical_systems/electric_motors/extex.html#gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor.I_E_IDX">I_E_IDX (gym_electric_motor.physical_systems.electric_motors.DcExternallyExcitedMotor attribute)</a>
 
       <ul>
@@ -2706,6 +2720,8 @@
 </li>
       </ul></li>
       <li><a href="parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html#gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection.i_e_limit">i_e_limit (gem_controllers.stages.operation_point_selection.shunt_dc_ops.ShuntDcOperationPointSelection property)</a>
+</li>
+      <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection.i_e_policy">i_e_policy (gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection property)</a>
 </li>
       <li><a href="parts_gc/api_documentation/stages/base_controllers/i_controller.html#gem_controllers.stages.base_controllers.i_controller.IController.i_gain">i_gain (gem_controllers.stages.base_controllers.i_controller.IController property)</a>
 
@@ -5569,6 +5585,8 @@
 </li>
         <li><a href="parts_gc/api_documentation/stages/operation_point_selection/eesm_ops.html#gem_controllers.stages.operation_point_selection.eesm_ops.EESMOperationPointSelection.reset">(gem_controllers.stages.operation_point_selection.eesm_ops.EESMOperationPointSelection method)</a>
 </li>
+        <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection.reset">(gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection method)</a>
+</li>
         <li><a href="parts_gc/api_documentation/stages/operation_point_selection/foc_ops.html#gem_controllers.stages.operation_point_selection.foc_operation_point_selection.FieldOrientedControllerOperationPointSelection.reset">(gem_controllers.stages.operation_point_selection.foc_operation_point_selection.FieldOrientedControllerOperationPointSelection method)</a>
 </li>
         <li><a href="parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html#gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection.reset">(gem_controllers.stages.operation_point_selection.operation_point_selection.OperationPointSelection method)</a>
@@ -7500,6 +7518,8 @@
         <li><a href="parts_gc/api_documentation/stages/input_stage.html#gem_controllers.stages.input_stage.InputStage.tune">(gem_controllers.stages.input_stage.InputStage method)</a>
 </li>
         <li><a href="parts_gc/api_documentation/stages/operation_point_selection/eesm_ops.html#gem_controllers.stages.operation_point_selection.eesm_ops.EESMOperationPointSelection.tune">(gem_controllers.stages.operation_point_selection.eesm_ops.EESMOperationPointSelection method)</a>
+</li>
+        <li><a href="parts_gc/api_documentation/stages/operation_point_selection/exter_dc_ops.html#gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection.tune">(gem_controllers.stages.operation_point_selection.extex_dc_ttc.ExtExDcOperationPointSelection method)</a>
 </li>
         <li><a href="parts_gc/api_documentation/stages/operation_point_selection/foc_ops.html#gem_controllers.stages.operation_point_selection.foc_operation_point_selection.FieldOrientedControllerOperationPointSelection.tune">(gem_controllers.stages.operation_point_selection.foc_operation_point_selection.FieldOrientedControllerOperationPointSelection method)</a>
 </li>
