@@ -6,7 +6,7 @@ Operation Point Selection
    :caption: Subcomponents of Operation Point Selection
 
    permex_dc_ops
-   extex_dc_ops
+   exter_dc_ops
    series_dc_ops
    shunt_dc_ops
    foc_ops
