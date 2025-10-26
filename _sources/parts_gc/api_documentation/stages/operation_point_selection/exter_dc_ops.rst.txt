@@ -1,7 +1,7 @@
 Externally Excited DC Motor Operation Point Selection
 =====================================================
 
-.. autoclass:: gem_controllers.stages.operation_point_selection.exter_dc_ttc.ExtExDcOperationPointSelection
+.. autoclass:: gem_controllers.stages.operation_point_selection.exter_dc_ops.ExternallyExcitedDcMotorOperationPointSelection
    :members:
    :undoc-members:
    :inherited-members:
