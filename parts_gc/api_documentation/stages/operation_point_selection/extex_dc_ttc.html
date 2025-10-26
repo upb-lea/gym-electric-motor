@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_electric_motor.envs.gym_sixphase_pmsm.finite_cc_sixpmsm_env &mdash; gym-electric-motor 2021 documentation</title>
+  <title>Externally Excited DC Motor Operation Point Selection &mdash; gym-electric-motor 2021 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
@@ -17,7 +18,9 @@
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Series DC Motor Operation Point Selection" href="series_dc_ops.html" />
+    <link rel="prev" title="Permanent Magnet Exited DC Operation Point Selection" href="permex_dc_ops.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -251,62 +254,62 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../parts_gem/random_component.html">Random Component</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">GEM-Control Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/usage_guide/usage_guides.html">Usage Guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../parts_gc/api_documentation/gem_control.html">GEM Control API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/stages.html">Stages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controller.html">Base Controller</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/p_controller.html">P Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/i_controller.html">I Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/pi_controller.html">PI Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/pid_controller.html">PID Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/three_point_controller.html">Three Point Controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/base_controllers/base_controllers.html">Base Controller</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../usage_guide/usage_guides.html">Usage Guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../gem_control.html">GEM Control API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../stages.html">Stages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../base_controllers/base_controller.html">Base Controller</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../base_controllers/p_controller.html">P Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../base_controllers/i_controller.html">I Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../base_controllers/pi_controller.html">PI Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../base_controllers/pid_controller.html">PID Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../base_controllers/three_point_controller.html">Three Point Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../base_controllers/base_controllers.html">Base Controller</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selection.html">Operation Point Selection</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/extex_dc_ttc.html">Externally Excited DC Motor Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/pmsm_ops.html">PMSM Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/eesm_ops.html">EESM Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/scim_ops.html">SCIM Operation Point Selection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/operation_point_selection/operation_point_selections.html">Operation Point Selection</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="operation_point_selection.html">Operation Point Selection</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="permex_dc_ops.html">Permanent Magnet Exited DC Operation Point Selection</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Externally Excited DC Motor Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="series_dc_ops.html">Series DC Motor Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shunt_dc_ops.html">Shunt DC Motor Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="foc_ops.html">Field Oriented Controller Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pmsm_ops.html">PMSM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eesm_ops.html">EESM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scim_ops.html">SCIM Operation Point Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operation_point_selections.html">Operation Point Selection</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stage.html">Clipping Stages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/combined_clipping_stages.html">Combined Clipping Stage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/squared_clipping_stage.html">Squared Clipping Stage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/clipping_stages/clipping_stages.html">Clipping Stages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clipping_stages/clipping_stage.html">Clipping Stages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../clipping_stages/absolute_clipping_stage.html">Absolute Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../clipping_stages/combined_clipping_stages.html">Combined Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../clipping_stages/squared_clipping_stage.html">Squared Clipping Stage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../clipping_stages/clipping_stages.html">Clipping Stages</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/abc_transformation.html">ABC Transformation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/anti_windup.html">Anti Windup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/emf_feedforward/emf_feedforward.html">EMF Feedforward</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/emf_feedforward/emf_feedforward_ind.html">EMF Feedforward IM</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/emf_feedforward/emf_feedforward_eesm.html">EMF Feedforward EESM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abc_transformation.html">ABC Transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../anti_windup.html">Anti Windup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../emf_feedforward/emf_feedforward.html">EMF Feedforward</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../emf_feedforward/emf_feedforward_ind.html">EMF Feedforward IM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../emf_feedforward/emf_feedforward_eesm.html">EMF Feedforward EESM</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/input_stage.html">Input Stage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/cont_output_stage.html">Continous Output Stage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/disc_output_stage.html">Discrete Output Stage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/stages/stage.html">Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../input_stage.html">Input Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cont_output_stage.html">Continous Output Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../disc_output_stage.html">Discrete Output Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stage.html">Stage</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/block_diagrams/block_diagrams.html">Block Diagrams</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../parts_gc/api_documentation/block_diagrams/block_diagram.html">Block Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../block_diagrams/block_diagrams.html">Block Diagrams</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../block_diagrams/block_diagram.html">Block Diagram</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/pi_current_controller.html">PI Current Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/torque_controller.html">Torque Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/pi_speed_controller.html">PI Speed Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/gem_adapter.html">GEM Adapter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/reference_plotter.html">Reference Plotter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/utils.html">Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../parts_gc/api_documentation/gem_controllers.html">GEM Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../pi_current_controller.html">PI Current Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../torque_controller.html">Torque Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../pi_speed_controller.html">PI Speed Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gem_adapter.html">GEM Adapter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference_plotter.html">Reference Plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gem_controllers.html">GEM Controllers</a></li>
 </ul>
 </li>
 </ul>
@@ -325,9 +328,12 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">gym_electric_motor.envs.gym_sixphase_pmsm.finite_cc_sixpmsm_env</li>
+          <li class="breadcrumb-item"><a href="../../gem_control.html">GEM Control API Documentation</a></li>
+          <li class="breadcrumb-item"><a href="../stages.html">Stages</a></li>
+          <li class="breadcrumb-item"><a href="operation_point_selection.html">Operation Point Selection</a></li>
+      <li class="breadcrumb-item active">Externally Excited DC Motor Operation Point Selection</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/parts_gc/api_documentation/stages/operation_point_selection/extex_dc_ttc.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -335,208 +341,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for gym_electric_motor.envs.gym_sixphase_pmsm.finite_cc_sixpmsm_env</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor</span><span class="w"> </span><span class="kn">import</span> <span class="n">physical_systems</span> <span class="k">as</span> <span class="n">ps</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.constraints</span><span class="w"> </span><span class="kn">import</span> <span class="n">SquaredConstraint</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ElectricMotorEnvironment</span><span class="p">,</span>
-    <span class="n">ElectricMotorVisualization</span><span class="p">,</span>
-    <span class="n">ReferenceGenerator</span><span class="p">,</span>
-    <span class="n">RewardFunction</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.physical_systems.physical_systems</span><span class="w"> </span><span class="kn">import</span> <span class="n">SixPhasePMSM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reference_generators</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">MultipleReferenceGenerator</span><span class="p">,</span>
-    <span class="n">WienerProcessReferenceGenerator</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.reward_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeightedSumOfErrors</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">gym_electric_motor.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">MotorDashboard</span>
+  <section id="externally-excited-dc-motor-operation-point-selection">
+<h1>Externally Excited DC Motor Operation Point Selection<a class="headerlink" href="#externally-excited-dc-motor-operation-point-selection" title="Link to this heading"></a></h1>
+</section>
 
-
-<div class="viewcode-block" id="FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv">
-<a class="viewcode-back" href="../../../../parts_gem/environments/sixpmsm/finite_cc_sixpmsm.html#gym_electric_motor.envs.FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FiniteCurrentControlSixPhasePermanentMagnetSynchronousMotorEnv</span><span class="p">(</span><span class="n">ElectricMotorEnvironment</span><span class="p">):</span>
-<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description:</span>
-<span class="sd">        Environment to simulate finite control set current controlled six phase permanent magnet synchr. motor.</span>
-
-<span class="sd">    Key:</span>
-<span class="sd">        ``&#39;Finite-CC-SIXPMSM-v0&#39;``</span>
-
-<span class="sd">    Default Components:</span>
-<span class="sd">        - Supply: :py:class:`.IdealVoltageSupply`</span>
-<span class="sd">        - Converter: :py:class:`.FiniteB6BridgeConverter`</span>
-<span class="sd">        - Motor: :py:class:`.SixPhasePMSM`</span>
-<span class="sd">        - Load: :py:class:`.ConstantSpeedLoad`</span>
-<span class="sd">        - Ode-Solver: :py:class:`.ScipyOdeSolver`</span>
-
-<span class="sd">        - Reference Generator: :py:class:`.WienerProcessReferenceGenerator` *Reference Quantity:* ``&#39;i_sd&#39;, &#39;i_sq&#39;, &#39;i_sx&#39;, &#39;i_sy&#39;``</span>
-
-<span class="sd">        - Reward Function: :py:class:`.WeightedSumOfErrors` reward_weights: ``&#39;i_sd&#39; = 0.5, &#39;i_sq&#39; = 0.5, &#39;i_sx&#39; = 0.5, &#39;i_sy&#39; = 0.5``</span>
-
-<span class="sd">        - Visualization: :py:class:`.MotorDashboard` current and action plots</span>
-
-<span class="sd">        - Constraints: :py:class:`.SquaredConstraint` on the currents  ``&#39;i_sd&#39;, &#39;i_sq&#39;, &#39;i_sx&#39;, &#39;i_sy&#39;``</span>
-
-<span class="sd">    State Variables:</span>
-<span class="sd">        ``[&#39;omega&#39; , &#39;torque&#39;, &#39;i_a1&#39;, &#39;i_b1&#39;, &#39;i_c1&#39;, &#39;i_a2&#39;, &#39;i_b2&#39;, &#39;i_c2&#39;, &#39;i_sd&#39;, &#39;i_sq&#39;, &#39;i_sx&#39;, &#39;i_sy&#39;, &#39;u_a1&#39;, &#39;u_b1&#39;, &#39;u_c1&#39;, &#39;u_a2&#39;, &#39;u_b2&#39;, &#39;u_c2&#39;, &#39;u_sd&#39;, &#39;u_sq&#39;, &#39;u_sx&#39;, &#39;u_sy&#39;, &#39;epsilon&#39;, &#39;u_sup&#39;]``</span>
-
-<span class="sd">    Reference Variables:</span>
-<span class="sd">        ``[&#39;i_sd&#39;, &#39;i_sq&#39;, &#39;i_sx&#39;, &#39;i_sy&#39;]``</span>
-
-<span class="sd">    Control Cycle Time:</span>
-<span class="sd">        tau = 1e-4 seconds</span>
-
-<span class="sd">    Observation Space:</span>
-<span class="sd">        Type: Tuple(State_Space, Reference_Space)</span>
-
-<span class="sd">    State Space:</span>
-<span class="sd">        Box(low=23 * [-1], high=23 * [1])</span>
-
-<span class="sd">    Reference Space:</span>
-<span class="sd">        Box(low=[-1, -1], high=[1, 1])</span>
-
-<span class="sd">    Action Space:</span>
-<span class="sd">       </span>
-
-<span class="sd">    Initial State:</span>
-<span class="sd">        Zeros on all state variables.</span>
-
-<span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; import gym_electric_motor as gem</span>
-<span class="sd">        &gt;&gt;&gt; from gym_electric_motor.reference_generators import LaplaceProcessReferenceGenerator</span>
-<span class="sd">        &gt;&gt;&gt; # Update the default arguments to the voltage supply by passing a parameter dict</span>
-<span class="sd">        &gt;&gt;&gt; my_changed_voltage_supply_args = {&#39;u_nominal&#39;: 400.0}</span>
-<span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt; # Replace the reference generator by passing a new instance</span>
-<span class="sd">        &gt;&gt;&gt; my_new_ref_gen_instance = LaplaceProcessReferenceGenerator(</span>
-<span class="sd">        ...     reference_state=&#39;i_sq&#39;,</span>
-<span class="sd">        ...     sigma_range=(1e-3, 1e-2)</span>
-<span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; env = gem.make(</span>
-<span class="sd">        ...     &quot;Finite-CC-SIXPMSM-v0&quot;,</span>
-<span class="sd">        ...     voltage_supply=my_changed_voltage_supply_args,</span>
-<span class="sd">        ...     reference_generator=my_new_ref_gen_instance</span>
-<span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; terminated = True</span>
-<span class="sd">        &gt;&gt;&gt; for _ in range(1000):</span>
-<span class="sd">        &gt;&gt;&gt;     if terminated:</span>
-<span class="sd">        &gt;&gt;&gt;         state, reference = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt;     (state, reference), reward, terminated, truncated, _ = env.step(env.action_space.sample())</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-   
-   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">supply</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">motor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">ode_solver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">reward_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">reference_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">visualization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">state_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">callbacks</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="n">SquaredConstraint</span><span class="p">((</span><span class="s2">&quot;i_sq&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sx&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sy&quot;</span><span class="p">)),),</span>
-        <span class="n">calc_jacobian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">tau</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
-        <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="p">(),</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            supply(env-arg): Specification of the :py:class:`.VoltageSupply` for the environment</span>
-<span class="sd">            converter(env-arg): Specification of the :py:class:`.PowerElectronicConverter` for the environment</span>
-<span class="sd">            motor(env-arg): Specification of the :py:class:`.ElectricMotor` for the environment</span>
-<span class="sd">            load(env-arg): Specification of the :py:class:`.MechanicalLoad` for the environment</span>
-<span class="sd">            ode_solver(env-arg): Specification of the :py:class:`.OdeSolver` for the environment</span>
-<span class="sd">            reward_function(env-arg): Specification of the :py:class:`.RewardFunction` for the environment</span>
-<span class="sd">            reference_generator(env-arg): Specification of the :py:class:`.ReferenceGenerator` for the environment</span>
-<span class="sd">            visualization(env-arg): Specification of the :py:class:`.ElectricMotorVisualization` for the environment</span>
-<span class="sd">            constraints(iterable(str/Constraint)): All Constraints of the environment. \n</span>
-<span class="sd">                - str: A LimitConstraints for states (episode terminates, if the quantity exceeds the limit)</span>
-<span class="sd">                 can be directly specified by passing the state name here (e.g. &#39;i&#39;, &#39;omega&#39;) \n</span>
-<span class="sd">                - instance of Constraint: More complex constraints (e.g. the SquaredConstraint can be initialized and</span>
-<span class="sd">                 passed to the environment.</span>
-<span class="sd">            calc_jacobian(bool): Flag, if the jacobian of the environment shall be taken into account during the</span>
-<span class="sd">                simulation. This may lead to speed improvements. Default: True</span>
-<span class="sd">            tau(float): Duration of one control step in seconds. Default: 1e-4.</span>
-<span class="sd">            state_filter(list(str)): List of states that shall be returned to the agent. Default: None (no filter)</span>
-<span class="sd">            callbacks(list(Callback)): Callbacks for user interaction. Default: ()</span>
-<span class="sd">            physical_system_wrappers(list(PhysicalSystemWrapper)): List of Physical System Wrappers to modify the</span>
-<span class="sd">            actions to and states from the physical system before they are used in the environment. Default: ()</span>
-
-<span class="sd">        Note on the env-arg type:</span>
-<span class="sd">            All parameters of type env-arg can be selected as one of the following types:</span>
-
-<span class="sd">            **instance:** Pass an already instantiated object derived from the corresponding base class</span>
-<span class="sd">            (e.g. ``reward_function=MyRewardFunction()``). This is directly used in the environment.</span>
-
-<span class="sd">            **dict:** Pass a dict to update the default parameters of the default type.</span>
-<span class="sd">            (e.g. ``visualization=dict(state_plots=(&#39;omega&#39;, &#39;u&#39;))``)</span>
-
-<span class="sd">            **str:** Pass a string out of the registered classes to select a different class for the component.</span>
-<span class="sd">            This class is then initialized with its default parameters.</span>
-<span class="sd">            The available strings can be looked up in the documentation. (e.g. ``converter=&#39;Finite-2QC&#39;``)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
- 
-        <span class="n">default_subgenerators</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">WienerProcessReferenceGenerator</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s2">&quot;i_sd&quot;</span><span class="p">),</span>
-            <span class="n">WienerProcessReferenceGenerator</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s2">&quot;i_sq&quot;</span><span class="p">),</span>
-            <span class="n">WienerProcessReferenceGenerator</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s2">&quot;i_sx&quot;</span><span class="p">),</span>
-            <span class="n">WienerProcessReferenceGenerator</span><span class="p">(</span><span class="n">reference_state</span><span class="o">=</span><span class="s2">&quot;i_sy&quot;</span><span class="p">),</span>
-        <span class="p">)</span>
-        <span class="n">default_sub_converters</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">ps</span><span class="o">.</span><span class="n">FiniteB6BridgeConverter</span><span class="p">(),</span>
-            <span class="n">ps</span><span class="o">.</span><span class="n">FiniteB6BridgeConverter</span><span class="p">(),</span>
-          <span class="p">)</span>
-
-        <span class="n">physical_system</span> <span class="o">=</span> <span class="n">SixPhasePMSM</span><span class="p">(</span>
-            <span class="n">supply</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">VoltageSupply</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">IdealVoltageSupply</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">u_nominal</span><span class="o">=</span><span class="mf">300.0</span><span class="p">)),</span>
-            <span class="n">converter</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">PowerElectronicConverter</span><span class="p">,</span><span class="n">converter</span><span class="p">,</span><span class="n">ps</span><span class="o">.</span><span class="n">FiniteMultiConverter</span><span class="p">,</span><span class="nb">dict</span><span class="p">(</span><span class="n">subconverters</span><span class="o">=</span><span class="n">default_sub_converters</span><span class="p">),),</span>
-            <span class="n">motor</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">ElectricMotor</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">electric_motors</span><span class="o">.</span><span class="n">SixPhasePMSM</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
-            <span class="n">load</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">MechanicalLoad</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ConstantSpeedLoad</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">omega_fixed</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)),</span>
-            <span class="n">ode_solver</span><span class="o">=</span><span class="n">initialize</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">OdeSolver</span><span class="p">,</span> <span class="n">ode_solver</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">ScipyOdeSolver</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span>
-            <span class="n">calc_jacobian</span><span class="o">=</span><span class="n">calc_jacobian</span><span class="p">,</span>
-            <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">reference_generator</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">ReferenceGenerator</span><span class="p">,</span>
-            <span class="n">reference_generator</span><span class="p">,</span>
-            <span class="n">MultipleReferenceGenerator</span><span class="p">,</span>
-            <span class="nb">dict</span><span class="p">(</span><span class="n">sub_generators</span><span class="o">=</span><span class="n">default_subgenerators</span><span class="p">),</span>
-        <span class="p">)</span>
-        <span class="n">reward_function</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">RewardFunction</span><span class="p">,</span>
-            <span class="n">reward_function</span><span class="p">,</span>
-            <span class="n">WeightedSumOfErrors</span><span class="p">,</span>
-            <span class="nb">dict</span><span class="p">(</span><span class="n">reward_weights</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">i_sd</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i_sq</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i_sx</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i_sy</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,)),</span>
-        <span class="p">)</span>
-        <span class="n">visualization</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">(</span>
-            <span class="n">ElectricMotorVisualization</span><span class="p">,</span>
-            <span class="n">visualization</span><span class="p">,</span>
-            <span class="n">MotorDashboard</span><span class="p">,</span>
-            <span class="nb">dict</span><span class="p">(</span><span class="n">state_plots</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;i_sd&quot;</span><span class="p">,</span> <span class="s2">&quot;i_sq&quot;</span><span class="p">),</span> <span class="n">action_plots</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">),</span>
-        <span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">physical_system</span><span class="o">=</span><span class="n">physical_system</span><span class="p">,</span>
-            <span class="n">reference_generator</span><span class="o">=</span><span class="n">reference_generator</span><span class="p">,</span>
-            <span class="n">reward_function</span><span class="o">=</span><span class="n">reward_function</span><span class="p">,</span>
-            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span>
-            <span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span>
-            <span class="n">state_filter</span><span class="o">=</span><span class="n">state_filter</span><span class="p">,</span>
-            <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-            <span class="n">physical_system_wrappers</span><span class="o">=</span><span class="n">physical_system_wrappers</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span></div>
-
-</pre></div>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="permex_dc_ops.html" class="btn btn-neutral float-left" title="Permanent Magnet Exited DC Operation Point Selection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="series_dc_ops.html" class="btn btn-neutral float-right" title="Series DC Motor Operation Point Selection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
