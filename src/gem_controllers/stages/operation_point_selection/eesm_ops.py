@@ -181,7 +181,7 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.i_e_opt = sp_interpolate.interp1d(best_params[:, 0], best_params[:, 4], kind="cubic")
 
         self.t_grid, self.psi_grid = np.mgrid[
-            0 : self.t_max : np.complex(0, self.t_grid_count), 0 : self.psi_max : np.complex(self.psi_grid_count)
+            0 : self.t_max : np.complex128(0, self.t_grid_count), 0 : self.psi_max : np.complex128(self.psi_grid_count)
         ]
 
         self.i_d_inter = sp_interpolate.griddata(
