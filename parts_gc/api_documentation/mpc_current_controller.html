@@ -69,27 +69,15 @@
 <li class="toctree-l2"><a class="reference internal" href="pi_current_controller.html">PI Current Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="torque_controller.html">Torque Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pi_speed_controller.html">PI Speed Controller</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Finite-Control-Set Model Predictive Control (FCS-MPC)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mpc-current-controller">MPC Current Controller</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.control"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.control()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.control_environment"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.control_environment()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.get_signal_value"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.get_signal_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.make"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.make()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.reset"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.reset()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.tune"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.tune()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.signal_names"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.signal_names</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.signals"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.signals</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.stages"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.stages</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.u_abc_k1"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.u_abc_k1</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.u_lim"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.u_lim</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController.w_q"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController.w_q</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Finite-Control-Set Model Predictive Control (FCS-MPC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mpc-current-controller">MPC Current Controller</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gem_controllers.mpc_current_controller.MPCCurrentController"><code class="docutils literal notranslate"><span class="pre">MPCCurrentController</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-results">Simulation Results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#example-usage">Example Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#simulation-results">Simulation Results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gem_adapter.html">GEM Adapter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_plotter.html">Reference Plotter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
@@ -130,11 +118,11 @@ current control of a permanent magnet synchronous motor (PMSM) and Synchronous R
 Motor (SRM) in rotor field-oriented coordinates. Unlike continuous-control set (CCS) MPC,
 FCS-MPC directly evaluates a finite set of switching states to optimize the control input
 based on a cost function over a prediction horizon.</p>
-<figure class="align-center">
-<img alt="MPC structure diagram" src="../plots/mpc_structure.png" />
+<figure class="align-default">
+<img alt="../plots/mpc_structure.png" src="../plots/mpc_structure.png" />
 </figure>
-<figure class="align-center">
-<img alt="MPC control scheme" src="../plots/mpc_scheme.png" />
+<figure class="align-default">
+<img alt="../plots/mpc_scheme.png" src="../plots/mpc_scheme.png" />
 </figure>
 <p>With the help of the system model, the output variables are predicted for each possible
 switching state in the finite control set. The optimizer evaluates a cost function
@@ -147,9 +135,8 @@ evaluating only the physically realizable switching states of the converter.
 The computational efficiency of FCS-MPC comes from the direct enumeration and evaluation
 of the finite number of possible switching states, rather than solving an optimization
 problem with constraints.</p>
-</section>
 <section id="mpc-current-controller">
-<h1>MPC Current Controller<a class="headerlink" href="#mpc-current-controller" title="Link to this heading"></a></h1>
+<h2>MPC Current Controller<a class="headerlink" href="#mpc-current-controller" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.mpc_current_controller.</span></span><span class="sig-name descname"><span class="pre">MPCCurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/mpc_current_controller.html#MPCCurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController" title="Link to this definition"></a></dt>
@@ -299,7 +286,7 @@ current controller.</p></li>
 
 </section>
 <section id="example-usage">
-<h1>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h1>
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h2>
 <p>The following example demonstrates how to apply the <code class="xref py py-class docutils literal notranslate"><span class="pre">MPCCurrentController</span></code> to
 control a permanent magnet synchronous motor (PMSM) using a finite-control-set MPC approach
 within the <code class="docutils literal notranslate"><span class="pre">gym-electric-motor</span></code> simulation environment.</p>
@@ -396,17 +383,18 @@ within the <code class="docutils literal notranslate"><span class="pre">gym-elec
 </div>
 </section>
 <section id="simulation-results">
-<h1>Simulation Results<a class="headerlink" href="#simulation-results" title="Link to this heading"></a></h1>
+<h2>Simulation Results<a class="headerlink" href="#simulation-results" title="Link to this heading"></a></h2>
 <p>The following figures illustrate the performance of the FCS-MPC controller in current control of the PMSM under varying reference trajectories.
 The controller accurately tracks both the d- and q-axis current references while ensuring smooth control actions.</p>
-<figure class="align-center" id="id1">
-<a class="reference internal image-reference" href="../plots/MPC_Time_Plots.png"><img alt="FCS-MPC tracking performance" src="../plots/MPC_Time_Plots.png" style="width: 80%;" /></a>
+<figure class="align-default" id="id1">
+<img alt="../plots/MPC_Time_Plots.png" src="../plots/MPC_Time_Plots.png" />
 <figcaption>
 <p><span class="caption-text">FCS-MPC current tracking of <em>i&lt;sub&gt;d&lt;/sub&gt;</em> and <em>i&lt;sub&gt;q&lt;/sub&gt;</em>.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The results show that the finite-control-set MPC effectively minimizes the current tracking error within each sampling period while satisfying the converter switching
 constraints. Compared to conventional PI controllers, the FCS-MPC achieves faster dynamic response and improved steady-state performance without overshoot.</p>
+</section>
 </section>
 
 

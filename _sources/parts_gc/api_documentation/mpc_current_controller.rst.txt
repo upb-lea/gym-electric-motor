@@ -8,12 +8,10 @@ FCS-MPC directly evaluates a finite set of switching states to optimize the cont
 based on a cost function over a prediction horizon.
 
 .. figure:: ../../../plots/mpc_structure.png
-   :align: center
-   :alt: MPC structure diagram
+   
 
 .. figure:: ../../../plots/mpc_scheme.png
-   :align: center
-   :alt: MPC control scheme
+   
 
 With the help of the system model, the output variables are predicted for each possible 
 switching state in the finite control set. The optimizer evaluates a cost function 
@@ -30,7 +28,7 @@ problem with constraints.
 
 
 MPC Current Controller
-**********************
+======================
 
 .. autoclass:: gem_controllers.mpc_current_controller.MPCCurrentController
    :members:
@@ -41,7 +39,7 @@ MPC Current Controller
 
 
 Example Usage
-*************
+=============
 
 The following example demonstrates how to apply the :class:`MPCCurrentController` to 
 control a permanent magnet synchronous motor (PMSM) using a finite-control-set MPC approach 
@@ -140,15 +138,12 @@ within the ``gym-electric-motor`` simulation environment.
     env.close()
 
 Simulation Results
-******************
+==================
 
 The following figures illustrate the performance of the FCS-MPC controller in current control of the PMSM under varying reference trajectories. 
 The controller accurately tracks both the d- and q-axis current references while ensuring smooth control actions.
 
-.. figure:: ../../../plots/MPC_Time_Plots.png
-   :align: center
-   :alt: FCS-MPC tracking performance
-   :width: 80%
+.. figure:: ../../../plots/MPC_Time_Plots.png   
 
    FCS-MPC current tracking of *i<sub>d</sub>* and *i<sub>q</sub>*.
 
