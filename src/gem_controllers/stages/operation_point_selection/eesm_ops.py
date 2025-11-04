@@ -135,10 +135,11 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         import numpy as np
         import scipy.interpolate as sp_interpolate
         from scipy.optimize import minimize
-        SLSQP_MAXITER   = 2000      
-        SLSQP_FTOL      = 1e-12     
-        TORQUE_BAND_REL = 1e-3      
+        SLSQP_MAXITER   = 300      
+        SLSQP_FTOL      = 5e-13     
+        TORQUE_BAND_REL = 5e-4      
         TORQUE_BAND_ABS = 1e-2
+        SLSQP_MAXITER_FBK  = 600
     # ---- pull essentials ----
         p   = float(self.p)
         Ld  = float(self.l_d)
@@ -225,30 +226,102 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
 
             bnds = [(-i_s_lim, i_s_lim), (-i_s_lim, i_s_lim), (0.0, i_f_lim)]
             #x0   = x_prev if x_prev is not None else _seed_by_hand(Tref)
-            cons = cons_for_T(Tref)
-            x0   = np.asarray(x_prev, float)
-            res = minimize(obj_loss, x0, method='SLSQP',
-                            bounds=bnds, constraints=cons_for_T(Tref),
-                            options=dict(maxiter=SLSQP_MAXITER, ftol=SLSQP_FTOL, disp=False))
-            if res.success and feasible(*res.x):
-                return res.x
-            return x0
+            cons_eq = cons_for_T(Tref)
+            x0   = np.asarray(x_prev, float) if x_prev is not None else _seed_by_hand(Tref)
+            x_keep = np.asarray(x0, float)
+            stats = {
+                "nit_eq": 0, "nfev_eq": None,
+                "nit_fbk1": 0, "nfev_fbk1": None,
+                "nit_fbk2": 0, "nfev_fbk2": None
+            }
 
+    # --- equality-constrained loss minimization ---
+            _ctr_eq = {"k": 0}
+            def _cb_eq(_xk): _ctr_eq["k"] += 1
+            try:
+                res = minimize(
+                        obj_loss, x0, method='SLSQP',
+                        bounds=bnds, constraints=cons_for_T(Tref),
+                        options=dict(maxiter=SLSQP_MAXITER, ftol=SLSQP_FTOL, disp=False)
+                    )
+                stats["nit_eq"]  = getattr(res, "nit",  None)
+                stats["nfev_eq"] = getattr(res, "nfev", None)
+                if res.success and feasible(*res.x):
+                   return res.x, stats
+            except Exception:
+                   pass
+            def obj_torque_err(x):
+                return (torque(x[0], x[1], x[2]) - Tref)**2
+
+            cons_soft = [
+                 {'type': 'ineq', 'fun': lambda x: i_s_lim - np.hypot(x[0], x[1])},   # |is| <=
+                 {'type': 'ineq', 'fun': lambda x: x[2]},                              # i_f >= 0
+                 {'type': 'ineq', 'fun': lambda x: i_f_lim - x[2]},                    # i_f <=
+                 {'type': 'ineq', 'fun': lambda x: V_over_omega**2
+                              - ((Lq * x[1])**2 + (Lm * x[2] + Ld * x[0])**2)},
+            ]
+            
+    # 2a) minimize torque error
+            try:
+                res1 = minimize(
+                    obj_torque_err, x0, method='SLSQP',
+                    bounds=bnds, constraints=cons_soft,
+                    options=dict(maxiter=SLSQP_MAXITER_FBK, ftol=SLSQP_FTOL, disp=False)
+                )
+                stats["nit_fbk1"]  = getattr(res, "nit",  None)
+                stats["nfev_fbk1"] = getattr(res1, "nfev", None)
+                if res1.success and feasible(*res1.x):
+                    T_reach = torque(*res1.x)
+                    band    = max(abs(T_reach)*TORQUE_BAND_REL, TORQUE_BAND_ABS)
+                    lo, hi  = T_reach - band, T_reach + band
+
+            # 2b) keep torque in [lo, hi] while minimizing loss
+                cons_keep = cons_soft + [
+                    {'type': 'ineq', 'fun': lambda x, lo=lo: torque(x[0], x[1], x[2]) - lo},
+                    {'type': 'ineq', 'fun': lambda x, hi=hi: hi - torque(x[0], x[1], x[2])},
+                ]
+                
+
+                res2 = minimize(
+                    obj_loss, res1.x, method='SLSQP',
+                    bounds=bnds, constraints=cons_keep,
+                    options=dict(maxiter=SLSQP_MAXITER_FBK, ftol=SLSQP_FTOL, disp=False)
+                )
+                stats["nit_fbk2"]  = getattr(res, "nit",  None)
+                stats["nfev_fbk2"] = getattr(res2, "nfev", None)
+                if res2.success and feasible(*res2.x):
+                    T2 = torque(*res2.x)
+                    if lo <= T2 <= hi:
+                        return res2.x, stats
+            # if loss-min step fails the band, keep the torque-closest point
+                return res1.x, stats
+            except Exception:
+                pass
+
+    # as a last resort, keep previous point (keeps curves continuous)
+            return x_keep, stats
     # ----  solve MTPCL, collect optimal points ----
         T_curr_cap = 1.5 * p * Lm * i_f_lim * i_s_lim
         T_cap = float(min(t_lim, T_curr_cap))
+        iters_eq, iters_f1, iters_f2 = [], [], []
         T_vec = np.linspace(0.0, T_cap, t_count)  
         x_prev = _seed_by_hand(max(1e-3, 0.05*T_cap))
         rows = []  # [T, psi, id, |iq|, if]
         for T in T_vec:
-            x_star = solve_mtpc_for_T(T, x_prev)
+            x_star, st = solve_mtpc_for_T(T, x_prev)
             id_opt, iq_opt, if_opt = x_star
             x_prev = x_star
+            iters_eq.append(st["nit_eq"] or 0)
+            iters_f1.append(st["nit_fbk1"] or 0)
+            iters_f2.append(st["nit_fbk2"] or 0)
             psi_d = Lm * if_opt + Ld * id_opt
             psi_q = Lq * iq_opt
             psi   = np.hypot(psi_d, psi_q)
             rows.append([T, psi, id_opt, abs(iq_opt), if_opt])
-
+        print(
+            f"SLSQP iters — eq mean={np.mean(iters_eq):.1f} max={np.max(iters_eq)}; "
+            f"fbk1 mean={np.mean(iters_f1):.1f}; fbk2 mean={np.mean(iters_f2):.1f}"
+        )
         bp = np.array(rows, dtype=float)
         bp = bp[np.all(np.isfinite(bp), axis=1)]
         if bp.shape[0] == 0:
@@ -366,7 +439,7 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         torque = float(np.clip(torque, 0.0, t_max))
         rows = int(self.t_grid_count) - 1
         return int(round((torque / t_max) * rows))
-
+    
     def _select_operating_point(self, state, reference):
         import numpy as np
 
