@@ -9,6 +9,7 @@ GEM Control API Documentation
    pi_current_controller
    torque_controller
    pi_speed_controller
+   mpc_current_controller
    gem_adapter
    reference_plotter
    utils
