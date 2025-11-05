@@ -93,6 +93,8 @@ within the ``gym-electric-motor`` simulation environment.
         ActionType.Finite
     )
 
+    #physical_system_wrapper = [DeadTimeProcessor(steps=1)] # Dead time processor with 1 step delay 
+    #uncomment the above line to activate the DeadTimeProcessor
     env = gem.make(
         motor.env_id(),
         visualization=visu,
@@ -108,6 +110,8 @@ within the ``gym-electric-motor`` simulation environment.
             limit_values=limit_values,
             nominal_values=nominal_values
         ),
+        #physical_system_wrappers=physical_system_wrapper,
+        #uncomment the above line to activate the DeadTimeProcessor
     )
 
     visu.initialize()
