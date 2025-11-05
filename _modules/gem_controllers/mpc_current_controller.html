@@ -339,27 +339,33 @@
 <div class="viewcode-block" id="MPCCurrentController">
 <a class="viewcode-back" href="../../parts_gc/api_documentation/mpc_current_controller.html#gem_controllers.mpc_current_controller.MPCCurrentController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MPCCurrentController</span><span class="p">(</span><span class="n">GemController</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finite-Control Set Model Predictive Current Controller for PMSM and SynRM motors.</span>
+<span class="sd">    </span>
+<span class="sd">    This controller implements FCS-MPC to directly evaluate switching states</span>
+<span class="sd">    and optimize current tracking in field-oriented coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        env: Gym environment instance</span>
+<span class="sd">        env_id: Environment ID string</span>
+<span class="sd">        prediction_horizon: Prediction horizon length (default: 1)</span>
+<span class="sd">        w_d: Weight for d-axis current error (default: 1.0)</span>
+<span class="sd">        w_q: Weight for q-axis current error (default: 1.0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">prediction_horizon</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">w_d</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">w_q</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            env: Gym environment instance</span>
-<span class="sd">            env_id: Environment ID string</span>
-<span class="sd">            prediction_horizon: Prediction horizon (N)</span>
-<span class="sd">            w_d: Weight for d-axis current error</span>
-<span class="sd">            w_q: Weight for q-axis current error</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env_id</span> <span class="o">=</span> <span class="n">env_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prediction_horizon</span> <span class="o">=</span> <span class="n">prediction_horizon</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_d</span> <span class="o">=</span> <span class="n">w_d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_q</span> <span class="o">=</span> <span class="n">w_q</span>        
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign self.step from the environment wrapper, default to 0 if no DeadTimeProcessor&quot;&quot;&quot;</span>
+        <span class="c1"># Assign self.step from the environment wrapper, default to 0 if no DeadTimeProcessor</span>
         <span class="n">ps_wrapper</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">physical_system</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ps_wrapper</span><span class="p">,</span> <span class="s1">&#39;dead_time&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DeadTimeProcessor steps: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve environment info and motor parameters&quot;&quot;&quot;</span>
+        <span class="c1"># Retrieve environment info and motor parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state_names</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_wrapper_attr</span><span class="p">(</span><span class="s1">&#39;state_names&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_wrapper_attr</span><span class="p">(</span><span class="s1">&#39;physical_system&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">tau</span>
@@ -368,19 +374,19 @@
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify indices of key states and inputs&quot;&quot;&quot;</span>
+        <span class="c1"># Identify indices of key states and inputs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;i_sd&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_sq_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;i_sq&#39;</span><span class="p">)</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">omega_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;omega&#39;</span><span class="p">)</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;u_sd&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">u_sd_idx</span><span class="p">]</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup coordinate transforms and precompute voltage combinations&quot;&quot;&quot;</span>
+        <span class="c1"># Setup coordinate transforms and precompute voltage combinations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">abc_to_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">abc_to_dq_space</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subactions</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">_subactions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_abc_k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_lim</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">subactions</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load motor model constants and motor-specific state names&quot;&quot;&quot;</span>
+        <span class="c1"># Load motor model constants and motor-specific state names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="o">.</span><span class="n">_model_constants</span>
         <span class="n">motor_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_system</span><span class="o">.</span><span class="n">electrical_motor</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="k">if</span> <span class="n">motor_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;PermanentMagnetSynchronousMotor&quot;</span><span class="p">,</span> <span class="s2">&quot;SynchronousReluctanceMotor&quot;</span><span class="p">]:</span>
@@ -388,15 +394,31 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MPC controller not implemented for motor type: </span><span class="si">{</span><span class="n">motor_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize delay compensation variables&quot;&quot;&quot;</span>
+        <span class="c1"># Initialize delay compensation variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_voltage_idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">past_references</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extrapolation_order</span> <span class="o">=</span> <span class="mi">2</span>
 
-    <span class="c1"># -------- Delay Compensation Helpers ----------</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    # Extrapolate reference for delay compensation using past references. (works for sinusodia only for e.g. alfa-beta frames)</span>
-<span class="sd">    def _extrapolate_reference(self, current_ref, n=2):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extrapolate_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_ref</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        [REFERENCE IMPLEMENTATION - Not currently active]</span>
+<span class="sd">        </span>
+<span class="sd">        Extrapolate reference for delay compensation using past references. </span>
+<span class="sd">        Works for sinusoidal signals in alpha-beta frames.</span>
+<span class="sd">        </span>
+<span class="sd">        This method uses polynomial extrapolation to predict future reference</span>
+<span class="sd">        values based on past samples. Useful for systems with computational delays.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            current_ref: Current reference value</span>
+<span class="sd">            n: Extrapolation order (default: 2 for quadratic extrapolation)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            extrapolated_ref: Extrapolated reference value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Implementation kept as reference for future use</span>
+        <span class="c1"># Uncomment and modify as needed for specific applications</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        self.past_references.append(current_ref.copy())</span>
 <span class="sd">        if len(self.past_references) &gt; n + 1:</span>
 <span class="sd">            self.past_references.pop(0)</span>
@@ -406,10 +428,23 @@
 <span class="sd">        ref_km1 = self.past_references[-2]</span>
 <span class="sd">        ref_km2 = self.past_references[-3]</span>
 <span class="sd">        return 6 * ref_k - 8 * ref_km1 + 3 * ref_km2</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Currently using state estimation instead of reference extrapolation</span>
+        <span class="k">return</span> <span class="n">current_ref</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate currents at next timestep using previous voltage for delay compensation&quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_constants</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">voltage_idx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimate currents at next timestep using previous voltage for delay compensation.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            model_constants: Motor model constants matrix</span>
+<span class="sd">            x: Current state vector [i_sd, i_sq, epsilon]</span>
+<span class="sd">            omega: Electrical rotor speed</span>
+<span class="sd">            voltage_idx: Index of previously applied voltage vector</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated state vector at next timestep</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">v_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_abc_k1</span><span class="p">[</span><span class="n">voltage_idx</span><span class="p">]</span>
         <span class="n">v_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">abc_to_dq</span><span class="p">(</span><span class="n">v_abc</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)])</span>
@@ -421,9 +456,22 @@
         <span class="n">dx</span> <span class="o">=</span> <span class="n">model_constants</span> <span class="o">@</span> <span class="n">ext_vec</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="n">dx</span>
 
-    <span class="c1"># -------- Prediction / Cost Evaluation ----------</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate all possible voltage sequences to find the one minimizing the cost&quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_simulate_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_constants</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">ref_i_d</span><span class="p">,</span> <span class="n">ref_i_q</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulate all possible voltage sequences to find the one minimizing the cost.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            model_constants: Motor model constants matrix</span>
+<span class="sd">            x: Current state vector</span>
+<span class="sd">            omega: Electrical rotor speed</span>
+<span class="sd">            ref_i_d: D-axis current reference</span>
+<span class="sd">            ref_i_q: Q-axis current reference</span>
+<span class="sd">            depth: Current depth in prediction horizon</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            min_cost: Minimum cost found</span>
+<span class="sd">            best_sequence: Best voltage sequence</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">min_cost</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
         <span class="n">best_sequence</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -438,7 +486,7 @@
             <span class="n">dx</span> <span class="o">=</span> <span class="n">model_constants</span> <span class="o">@</span> <span class="n">ext_vec</span>
             <span class="n">x_next</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="n">dx</span>
 
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Compute cost based on tracking error&quot;&quot;&quot;</span>
+            <span class="c1"># Compute cost based on tracking error</span>
             <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_d</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_next</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref_i_d</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_q</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_next</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref_i_q</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 
             <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_horizon</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
@@ -456,11 +504,19 @@
 
         <span class="k">return</span> <span class="n">min_cost</span><span class="p">,</span> <span class="n">best_sequence</span>
 
-    <span class="c1"># -------- Control Interface ----------</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the best voltage index based on current state and reference&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="MPCCurrentController.control">
 <a class="viewcode-back" href="../../parts_gc/api_documentation/mpc_current_controller.html#gem_controllers.mpc_current_controller.MPCCurrentController.control">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the optimal voltage vector based on current state and reference.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            state: Current motor state vector</span>
+<span class="sd">            reference: Current reference vector [i_sd_ref, i_sq_ref]</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            best_idx: Index of optimal voltage vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x_measured</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
                                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_state_names</span><span class="p">])</span>
         <span class="n">omega</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">omega_idx</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">omega_idx</span><span class="p">]</span>        
@@ -468,12 +524,12 @@
         <span class="n">ref_i_q</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sq_idx</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Without delay compensation&quot;&quot;&quot;</span>
+            <span class="c1"># Without delay compensation</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">best_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulate_sequence</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">,</span> <span class="n">x_measured</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">ref_i_d</span><span class="p">,</span> <span class="n">ref_i_q</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;With delay compensation&quot;&quot;&quot;</span>
+            <span class="c1"># With delay compensation</span>
             <span class="n">x_est</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_currents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">,</span> <span class="n">x_measured</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_voltage_idx</span><span class="p">)</span>            
             <span class="n">_</span><span class="p">,</span> <span class="n">best_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulate_sequence</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_model_constants</span><span class="p">,</span> <span class="n">x_est</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">ref_i_d</span><span class="p">,</span> <span class="n">ref_i_q</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span>
@@ -484,10 +540,12 @@
         <span class="k">return</span> <span class="n">best_idx</span></div>
 
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset delay compensation state&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="MPCCurrentController.reset">
 <a class="viewcode-back" href="../../parts_gc/api_documentation/mpc_current_controller.html#gem_controllers.mpc_current_controller.MPCCurrentController.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the controller state including delay compensation variables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_voltage_idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">past_references</span> <span class="o">=</span> <span class="p">[]</span></div>
 </div>

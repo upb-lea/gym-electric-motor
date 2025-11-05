@@ -366,33 +366,36 @@ problem with constraints.</p>
 <dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gem_controllers.mpc_current_controller.</span></span><span class="sig-name descname"><span class="pre">MPCCurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/mpc_current_controller.html#MPCCurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="gem_controllers.html#gem_controllers.gem_controller.GemController" title="gem_controllers.gem_controller.GemController"><code class="xref py py-class docutils literal notranslate"><span class="pre">GemController</span></code></a></p>
+<p>Finite-Control Set Model Predictive Current Controller for PMSM and SynRM motors.</p>
+<p>This controller implements FCS-MPC to directly evaluate switching states
+and optimize current tracking in field-oriented coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env</strong> – Gym environment instance</p></li>
 <li><p><strong>env_id</strong> – Environment ID string</p></li>
-<li><p><strong>prediction_horizon</strong> – Prediction horizon (N)</p></li>
-<li><p><strong>w_d</strong> – Weight for d-axis current error</p></li>
-<li><p><strong>w_q</strong> – Weight for q-axis current error</p></li>
+<li><p><strong>prediction_horizon</strong> – Prediction horizon length (default: 1)</p></li>
+<li><p><strong>w_d</strong> – Weight for d-axis current error (default: 1.0)</p></li>
+<li><p><strong>w_q</strong> – Weight for q-axis current error (default: 1.0)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController.control">
 <span class="sig-name descname"><span class="pre">control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/mpc_current_controller.html#MPCCurrentController.control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController.control" title="Link to this definition"></a></dt>
-<dd><p>Calculate the voltage reference.</p>
+<dd><p>Compute the optimal voltage vector based on current state and reference.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>np.array</em>) – state of the environment</p></li>
-<li><p><strong>reference</strong> (<em>np.array</em>) – speed references</p></li>
+<li><p><strong>state</strong> – Current motor state vector</p></li>
+<li><p><strong>reference</strong> – Current reference vector [i_sd_ref, i_sq_ref]</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>reference voltage</p>
+<dd class="field-even"><p>Index of optimal voltage vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p>best_idx</p>
 </dd>
 </dl>
 </dd></dl>
@@ -463,7 +466,7 @@ current controller.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gem_controllers/mpc_current_controller.html#MPCCurrentController.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController.reset" title="Link to this definition"></a></dt>
-<dd><p>Reset all stages of the controller</p>
+<dd><p>Reset the controller state including delay compensation variables.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -487,24 +490,6 @@ current controller.</p></li>
 <dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController.stages">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stages</span></span><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController.stages" title="Link to this definition"></a></dt>
 <dd><p>Stages of the GEM Controller</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController.u_abc_k1">
-<span class="sig-name descname"><span class="pre">u_abc_k1</span></span><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController.u_abc_k1" title="Link to this definition"></a></dt>
-<dd><p>Load motor model constants and motor-specific state names</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController.u_lim">
-<span class="sig-name descname"><span class="pre">u_lim</span></span><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController.u_lim" title="Link to this definition"></a></dt>
-<dd><p>Setup coordinate transforms and precompute voltage combinations</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gem_controllers.mpc_current_controller.MPCCurrentController.w_q">
-<span class="sig-name descname"><span class="pre">w_q</span></span><a class="headerlink" href="#gem_controllers.mpc_current_controller.MPCCurrentController.w_q" title="Link to this definition"></a></dt>
-<dd><p>Assign self.step from the environment wrapper, default to 0 if no DeadTimeProcessor</p>
 </dd></dl>
 
 </dd></dl>
@@ -561,6 +546,8 @@ within the <code class="docutils literal notranslate"><span class="pre">gym-elec
     <span class="n">ActionType</span><span class="o">.</span><span class="n">Finite</span>
 <span class="p">)</span>
 
+<span class="c1">#physical_system_wrapper = [DeadTimeProcessor(steps=1)] # Dead time processor with 1 step delay</span>
+<span class="c1">#uncomment the above line to activate the DeadTimeProcessor</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
     <span class="n">motor</span><span class="o">.</span><span class="n">env_id</span><span class="p">(),</span>
     <span class="n">visualization</span><span class="o">=</span><span class="n">visu</span><span class="p">,</span>
@@ -576,6 +563,8 @@ within the <code class="docutils literal notranslate"><span class="pre">gym-elec
         <span class="n">limit_values</span><span class="o">=</span><span class="n">limit_values</span><span class="p">,</span>
         <span class="n">nominal_values</span><span class="o">=</span><span class="n">nominal_values</span>
     <span class="p">),</span>
+    <span class="c1">#physical_system_wrappers=physical_system_wrapper,</span>
+    <span class="c1">#uncomment the above line to activate the DeadTimeProcessor</span>
 <span class="p">)</span>
 
 <span class="n">visu</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
