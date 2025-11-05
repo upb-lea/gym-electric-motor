@@ -7,10 +7,10 @@ Motor (SRM) in rotor field-oriented coordinates. Unlike continuous-control set (
 FCS-MPC directly evaluates a finite set of switching states to optimize the control input 
 based on a cost function over a prediction horizon.
 
-.. figure:: ../../../plots/mpc_structure.png
+.. figure:: ../../plots/mpc_structure.png
    
 
-.. figure:: ../../../plots/mpc_scheme.png
+.. figure:: ../../plots/mpc_scheme.png
    
 
 With the help of the system model, the output variables are predicted for each possible 
@@ -143,7 +143,7 @@ Simulation Results
 The following figures illustrate the performance of the FCS-MPC controller in current control of the PMSM under varying reference trajectories. 
 The controller accurately tracks both the d- and q-axis current references while ensuring smooth control actions.
 
-.. figure:: ../../../plots/MPC_Time_Plots.png   
+.. figure:: ../../plots/MPC_Time_Plots.png   
 
    FCS-MPC current tracking of *i<sub>d</sub>* and *i<sub>q</sub>*.
 
