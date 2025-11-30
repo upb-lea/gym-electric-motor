@@ -9,3 +9,4 @@ from .pi_current_controller import PICurrentController
 from .pi_speed_controller import PISpeedController
 from .reference_plotter import ReferencePlotter
 from .torque_controller import TorqueController
+from .dtc_pmsm import DTC_PMSM_Controller

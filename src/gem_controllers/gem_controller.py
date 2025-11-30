@@ -10,7 +10,7 @@ class GemController:
     A GemController consists of multiple stages that execute different control tasks like speed-control, a reference
     to current set point mapping or input and output processing.
 
-    Furthermore, the GemController has got a `GemController.make` factory function that automatically designs and tunes
+    Furthermore, the GemController has got a GemController.make factory function that automatically designs and tunes
     a classical cascaded motor controller based on classic control techniques like the proportional-integral (PI)
     controller to control a gym-electric-motor environment.
     """
@@ -39,9 +39,10 @@ class GemController:
         plot_references: bool = True,
         block_diagram: bool = True,
         save_block_diagram_as: (str, tuple) = None,
+        **kwargs
     ):
         """A factory function that generates (and parameterizes) a matching GemController for a given gym-electric-motor
-        environment `env`.
+        environment env.
 
         Args:
             env(ElectricMotorEnvironment): The GEM-Environment that the controller shall be created for.
@@ -66,32 +67,53 @@ class GemController:
         control_task = gc.utils.get_control_task(env_id)
         tuner_kwargs = dict()
 
-        # Initialize the current control stage
-        controller = gc.PICurrentController(
-            env,
-            env_id,
-            base_current_controller=base_current_controller,
-            decoupling=decoupling,
-        )
-        tuner_kwargs["a"] = a
-        tuner_kwargs["plot_references"] = plot_references
-        if control_task in ["TC", "SC"]:
-            # Initilize the operation point selection
-            controller = gc.TorqueController(env, env_id, current_controller=controller)
-            tuner_kwargs["current_safety_margin"] = current_safety_margin
+
+        # Initialize the current control stage        
+        if base_current_controller == "PI":
+            controller = gc.PICurrentController(
+                env,
+                env_id,
+                base_current_controller=base_current_controller,
+                decoupling=decoupling,
+            )
+            tuner_kwargs["a"] = a
+            tuner_kwargs["plot_references"] = plot_references
+
+        #elif base_current_controller == "DTC":
+        #    torque_hyst = kwargs.pop('torque_hyst', 0.05)  # default 5%
+        #    flux_hyst = kwargs.pop('flux_hyst', 0.02)
+        #    controller = gc.DTC_PMSM_Controller(env, env_id, torque_hyst, flux_hyst)   
+
+        elif base_current_controller == "DTC":
+            torque_hyst = kwargs.pop('torque_hyst', 0.05)  # default 5%
+            flux_hyst = kwargs.pop('flux_hyst', 0.02)
+            controller = gc.DTC_PMSM_Controller(env, env_id, torque_hyst, flux_hyst)            
+        else:
+            raise NotImplementedError(f"Unsupported base_current_controller: {base_current_controller}")
+        
+        if base_current_controller != "DTC":
+            if control_task in ["TC", "SC"] :
+                # Initilize the operation point selection
+                controller = gc.TorqueController(env, env_id, current_controller=controller)
+                tuner_kwargs["current_safety_margin"] = current_safety_margin
+        
         if control_task == "SC":
             # Initilize the speed control stage
             controller = gc.PISpeedController(
-                env,
-                env_id,
-                torque_controller=controller,
-                base_speed_controller=base_speed_controller,
+                    env,
+                    env_id,
+                    torque_controller=controller,
+                    base_speed_controller=base_speed_controller,
             )
-        # Wrap the controller with the adapter to map the inputs and outputs to the environment
-        controller = gc.GymElectricMotorAdapter(env, env_id, controller)
+            # Wrap the controller with the adapter to map the inputs and outputs to the environment
+        
+
+        
 
         # Fit the controllers parameters to the environment
-        controller.tune(env, env_id, **tuner_kwargs)
+        if base_current_controller != "DTC":
+            controller = gc.GymElectricMotorAdapter(env, env_id, controller)
+            controller.tune(env, env_id, **tuner_kwargs)
 
         if block_diagram:
             controller.build_block_diagram(env_id, save_block_diagram_as)
@@ -103,7 +125,7 @@ class GemController:
         """Stages of the GEM Controller"""
         return self._stages
 
-    def __init__(self):
+    def _init_(self):
         self._stages = []
 
     def get_signal_value(self, signal_name):
