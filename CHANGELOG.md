@@ -14,16 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated testing of the existing examples
 - Automated testing of the electric motors
 - 2x3 phase PMSM environment with tests and documentation
-- finite-control-set MPC example
-- finite-control-set model predicitve current control as base current control in gem-control for PMSM and SynRM (Currently working not with superimposed speed and/or torque control)
+- finite-control-set model predictive current control example
+- finite-control-set model predicitve current control is now available in gem-control for PMSM and SynRM (currently working not with superimposed speed and / or torque control)
 - merged gem-control documentation into the gem docs
 ## Changed
-- Changed minimal required gymnasium version to 0.29.1.
+- Changed minimum required gymnasium version to 0.29.1.
 - Updated the code of gem-control to be compatible with gymnasium v1.0.0
 ## Fixed
 - Updated syntax in the classic_controllers to run with gymnasium v1.0.0 
-- #263 updated the sb3, mpc and gem-control examples to run with gymnasium v1.0.0
-- exchanged widget to ipympl in the examples to run the visualization in visual studio code
+- #263 updated the stable-baselines3, model predictive control and gem-control examples to run with gymnasium v1.0.0
+- exchanged widget to ipympl within the examples to run the visualization in visual studio code
 
 ## [3.0.2] - 2024-11-19
 ## Added
