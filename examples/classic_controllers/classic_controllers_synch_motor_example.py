@@ -72,5 +72,5 @@ if __name__ == "__main__":
             env.reset()
             controller.reset()
    
-    motor_dashboard.show_and_hold()
+    motor_dashboard.show()
     env.close()

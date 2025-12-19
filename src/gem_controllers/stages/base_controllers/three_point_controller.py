@@ -121,10 +121,10 @@ class ThreePointController(BaseController):
         motor_type = gc.utils.get_motor_type(env_id)
         voltages = reader.voltages[motor_type]
         currents = reader.currents[motor_type]
-        voltage_indices = [env.state_names.index(voltage) for voltage in voltages]
-        current_indices = [env.state_names.index(current) for current in currents]
+        voltage_indices = [env.get_wrapper_attr('state_names').index(voltage) for voltage in voltages]
+        current_indices = [env.get_wrapper_attr('state_names').index(current) for current in currents]
         self.referenced_state_indices = current_indices
-        voltage_limits = env.limits[voltage_indices]
+        voltage_limits = env.get_wrapper_attr('limits')[voltage_indices]
 
         action_range = (
             env.observation_space[0].low[voltage_indices] * voltage_limits,
@@ -146,8 +146,8 @@ class ThreePointController(BaseController):
             _env_id(str): The corresponding environment-id to specify the concrete environment.
         """
 
-        torque_index = [env.state_names.index("reference")]
-        torque_limit = env.limits[torque_index]
+        torque_index = [env.get_wrapper_attr('state_names').index("reference")]
+        torque_limit = env.get_wrapper_attr('limits')[torque_index]
         self.referenced_state_indices = torque_index
         action_range = (
             env.observation_space[0].low[torque_index] * torque_limit,

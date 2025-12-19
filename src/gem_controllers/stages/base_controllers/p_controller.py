@@ -109,12 +109,12 @@ class PController(BaseController):
 
         action_type, control_task, motor_type = gc.utils.split_env_id(env_id)
         l_ = reader.l_reader[motor_type](env)
-        tau = env.physical_system.tau
+        tau = env.get_wrapper_attr('physical_system').tau
         currents = reader.currents[motor_type]
         voltages = reader.voltages[motor_type]
-        voltage_indices = [env.state_names.index(voltage) for voltage in voltages]
-        current_indices = [env.state_names.index(current) for current in currents]
-        voltage_limits = env.limits[voltage_indices]
+        voltage_indices = [env.get_wrapper_attr('state_names').index(voltage) for voltage in voltages]
+        current_indices = [env.get_wrapper_attr('state_names').index(current) for current in currents]
+        voltage_limits = env.get_wrapper_attr('limits')[voltage_indices]
         self.p_gain = l_ / (tau * a)
 
         self.action_range = (
@@ -135,11 +135,11 @@ class PController(BaseController):
         """
 
         if t_n is None:
-            t_n = env.physical_system.tau
-        j_total = env.physical_system.mechanical_load.j_total
-        torque_index = env.state_names.index("torque")
-        speed_index = env.state_names.index("omega")
-        torque_limit = env.limits[torque_index]
+            t_n = env.get_wrapper_attr('physical_system').tau
+        j_total = env.get_wrapper_attr('physical_system').mechanical_load.j_total
+        torque_index = env.get_wrapper_attr('state_names').index("torque")
+        speed_index = env.get_wrapper_attr('state_names').index("omega")
+        torque_limit = env.get_wrapper_attr('limits')[torque_index]
         p_gain = j_total / (a * t_n)
         self.p_gain = np.array([p_gain])
         self.state_indices = [speed_index]

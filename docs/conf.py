@@ -14,8 +14,23 @@
 #
 import os
 import sys
+
+
+os.environ.setdefault("MPLBACKEND", "Agg")
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+try:
+    import matplotlib; matplotlib.use("Agg")
+except Exception:
+    pass
+
+autodoc_mock_imports = [
+    "tkinter","tkinter.ttk","tkinter.filedialog",
+    "IPython","IPython.display",
+    # add more if needed in your project:
+    "PyQt5","PyQt6","PySide2","PySide6","OpenGL","OpenGL.GL","cv2",
+    "PIL.ImageTk","wx","gi","kivy","vispy","glfw",
+]
 sys.path.insert(0, os.path.abspath('..'))
-sys.setrecursionlimit(1500)
 # -- Project information -----------------------------------------------------
 
 project = 'gym-electric-motor'
@@ -39,23 +54,41 @@ release = '2021'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.coverage',
+    'sphinx.ext.autosummary',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
-    'm2r2'
+    'myst_parser',
+    'sphinx.ext.intersphinx'
 ]
-
+html_theme = "sphinx_rtd_theme"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+suppress_warnings = ['autodoc.import_object']
 
 # The suffix(es) of source filenames.
+#source_suffix = ['.rst', '.md']
 # You can specify multiple suffix as a list of string:
-#
-source_suffix = ['.rst', '.md']
 # source_suffix = '.rst'
+source_suffix = { ".rst": "restructuredtext", ".md": "myst" }
 
+# MyST features
+myst_enable_extensions = ["colon_fence", "deflist", "dollarmath", "amsmath"]
+autosummary_generate = True
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "inherited-members": True,
+    "show-inheritance": True,
+    "member-order": "groupwise",
+}
+
+# Cross-link to external docs
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", {}),
+    "gem_control": ("https://upb-lea.github.io/gem-control/", None),
+}
 # The master toctree document.
 master_doc = 'index'
 
@@ -67,8 +100,11 @@ autoclass_content = 'both'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
-
+language = "en"
+# Don't look for translation catalogs (avoids "locale_dir ... does not exist")
+locale_dirs = []
+# (optional) keeps .po files ungrouped if you ever add i18n later
+gettext_compact = False
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
@@ -83,13 +119,17 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = { 
+    "collapse_navigation": False,  # keep the tree expanded (optional)
+    "navigation_depth": 4,         # how deep the *page* tree goes
+    "titles_only": True,
+    }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -110,7 +150,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'LEA-RLdoc'
+htmlhelp_basename = 'GEM-doc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -129,20 +169,22 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': r'''
+\usepackage{amsmath}
+''',
 
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
-    'packages': latex_packages
+    #'packages': latex_packages
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'LEA-RL.tex', 'LEA-RL Documentation',
-     'Arne Traue, Gerrit Book', 'manual'),
+    (master_doc, 'gem-doc.tex', 'GEM Documentation',
+     'Praneeth Balakrishna, Gerrit Book, Felix Book, Darius Jakobeit, Wilhelm Kirchgässner, Maximilian Schenke, Arne Traue, Oliver Wallscheid', 'manual'),
 ]
 
 
@@ -151,9 +193,35 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'lea-rl', 'LEA-RL Documentation',
+    (master_doc, 'gem', 'GEM Documentation',
      [author], 1)
 ]
+# --- Patch broken upstream docstrings so the build doesn't fail ---
+BAD_DOCSTRINGS = {
+    "gym_electric_motor.core.ElectricMotorEnvironment",
+    "gym_electric_motor.core.ConstraintMonitor",
+}
+BAD_DOCSTRING_PREFIXES = (
+    "gym_electric_motor.physical_systems.electric_motors.",
+    "gym_electric_motor.physical_systems.mechanical_loads.",
+    # add more if needed:
+    # "gym_electric_motor.envs.",
+)
+
+def _suppress_broken_docstrings(app, what, name, obj, options, lines):
+    """Replace known-bad docstrings with a short stub so Sphinx won't error."""
+    if name in BAD_DOCSTRINGS or any(name.startswith(pfx) for pfx in BAD_DOCSTRING_PREFIXES):
+        lines[:] = [
+            f"API for ``{name}``.",
+            "",
+            ".. note::",
+            "   The original docstring is temporarily suppressed due to formatting issues",
+            "   upstream. Once it’s cleaned, we’ll restore the full text here.",
+        ]
+
+def setup(app):
+    app.connect("autodoc-process-docstring", _suppress_broken_docstrings)
+    return {"version": "1.0", "parallel_read_safe": True}
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -162,10 +230,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'LEA-RL', 'LEA-RL Documentation',
-     author, 'LEA-RL', 'One line description of project.',
+    (master_doc, 'GEM', 'GEM Documentation',
+     author, 'GEM', 'A package to simulate and control electrical drives.',
      'Miscellaneous'),
 ]
-
-
 # -- Extension configuration -------------------------------------------------

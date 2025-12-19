@@ -66,9 +66,9 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.r_s = self.mp["r_s"]
         self.r_e = self.mp["r_e"]
         self.p = self.mp["p"]
-        self.i_e_lim = env.limits[env.state_names.index("i_e")] * (1 - current_safety_margin)
-        self.i_q_lim = env.limits[env.state_names.index("i_sq")] * (1 - current_safety_margin)
-        self.t_lim = env.limits[env.state_names.index("torque")]
+        self.i_e_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("i_e")] * (1 - current_safety_margin)
+        self.i_q_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("i_sq")] * (1 - current_safety_margin)
+        self.t_lim = env.get_wrapper_attr('limits')[env.get_wrapper_attr('state_names').index("torque")]
 
         self.t_count = 50
         self.psi_count = 100
@@ -181,7 +181,7 @@ class EESMOperationPointSelection(FieldOrientedControllerOperationPointSelection
         self.i_e_opt = sp_interpolate.interp1d(best_params[:, 0], best_params[:, 4], kind="cubic")
 
         self.t_grid, self.psi_grid = np.mgrid[
-            0 : self.t_max : np.complex(0, self.t_grid_count), 0 : self.psi_max : np.complex(self.psi_grid_count)
+            0 : self.t_max : np.complex128(0, self.t_grid_count), 0 : self.psi_max : np.complex128(self.psi_grid_count)
         ]
 
         self.i_d_inter = sp_interpolate.griddata(

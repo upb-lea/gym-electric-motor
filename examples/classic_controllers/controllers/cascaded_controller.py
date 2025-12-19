@@ -27,28 +27,28 @@ class CascadedController:
     ):
         self.env = environment
         self.visualization = visualization
-        self.action_space = environment.action_space
-        self.state_space = environment.unwrapped.physical_system.state_space
-        self.state_names = environment.unwrapped.state_names
+        self.action_space = environment.get_wrapper_attr('action_space')
+        self.state_space = environment.get_wrapper_attr('physical_system').state_space
+        self.state_names = environment.get_wrapper_attr('state_names')
 
-        self.i_e_idx = environment.unwrapped.physical_system.CURRENTS_IDX[-1]
-        self.i_a_idx = environment.unwrapped.physical_system.CURRENTS_IDX[0]
-        self.u_idx = environment.unwrapped.physical_system.VOLTAGES_IDX[-1]
-        self.omega_idx = environment.unwrapped.state_names.index("omega")
-        self.torque_idx = environment.unwrapped.state_names.index("torque")
+        self.i_e_idx = environment.get_wrapper_attr('physical_system').CURRENTS_IDX[-1]
+        self.i_a_idx = environment.get_wrapper_attr('physical_system').CURRENTS_IDX[0]
+        self.u_idx = environment.get_wrapper_attr('physical_system').VOLTAGES_IDX[-1]
+        self.omega_idx = environment.get_wrapper_attr('state_names').index("omega")
+        self.torque_idx = environment.get_wrapper_attr('state_names').index("torque")
         self.ref_idx = np.where(ref_states != "i_e")[0][0]
         self.ref_state_idx = [
             self.i_a_idx,
-            environment.unwrapped.state_names.index(ref_states[self.ref_idx]),
+            environment.get_wrapper_attr('state_names').index(ref_states[self.ref_idx]),
         ]
 
-        self.limit = environment.unwrapped.physical_system.limits[environment.unwrapped.state_filter]
-        self.nominal_values = environment.unwrapped.physical_system.nominal_state[environment.unwrapped.state_filter]
+        self.limit = environment.get_wrapper_attr('physical_system').limits[environment.get_wrapper_attr('state_filter')]
+        self.nominal_values = environment.get_wrapper_attr('physical_system').nominal_state[environment.get_wrapper_attr('state_filter')]
 
-        self.control_e = isinstance(environment.unwrapped.physical_system.electrical_motor, DcExternallyExcitedMotor)
+        self.control_e = isinstance(environment.get_wrapper_attr('physical_system').electrical_motor, DcExternallyExcitedMotor)
         self.control_omega = 0
 
-        mp = environment.unwrapped.physical_system.electrical_motor.motor_parameter
+        mp = environment.get_wrapper_attr('physical_system').electrical_motor.motor_parameter
         self.psi_e = mp.get("psie_e", False)
         self.l_e = mp.get("l_e_prime", False)
         self.r_e = mp.get("r_e", None)
@@ -110,7 +110,7 @@ class CascadedController:
 
         # Set up the plots
         self.external_ref_plots = external_ref_plots
-        internal_refs = np.array([environment.unwrapped.state_names[i] for i in self.ref_state_idx])
+        internal_refs = np.array([environment.get_wrapper_attr('state_names')[i] for i in self.ref_state_idx])
         ref_states_plotted = np.unique(np.append(ref_states, internal_refs))
         for external_plots in self.external_ref_plots:
             external_plots.set_reference(ref_states_plotted)
