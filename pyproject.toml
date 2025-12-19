@@ -1,6 +1,6 @@
 [project]
 name = "gym_electric_motor"
-version = "3.0.2"
+version = "3.0.3"
 authors = [
     { name = "Arne Traue" },
     { name = "Gerrit Book" },
@@ -16,6 +16,9 @@ authors = [
     { name = "Stefan Arndt" },
     { name = "Marius Köhler" },
     { name = "Ranil Thomas" },
+    { name = "Manjeet Jha" },
+    { name = "Valliammai Annamalai" },
+    { name = "Mounica Vadivelu" },
 ]
 description = "A Farama Gymnasium environment for electric motor control."
 readme = "README.md"
