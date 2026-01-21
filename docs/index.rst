@@ -66,6 +66,21 @@ Currently, classic PI controllers are available for most of the environment type
 
 
 
+.. toctree::
+   :maxdepth: 1
+:caption: Gym Electric Control Readme:
+
+   parts/read_me
+
+.. toctree::
+    :maxdepth: 4
+    :titlesonly:
+    :caption: Gym-Electric-Control Contents:
+
+
+    parts/usage_guide/usage_guides
+    parts/api_documentation/gem_control
+
 Indices and tables
 ==================
 
